@@ -1,0 +1,14 @@
+--- a/FrameworkDispatcher.cs
++++ b/FrameworkDispatcher.cs
+@@ -15,1 +15,1 @@
+-using MediaPlayer = Microsoft.Xna.Framework.Media.MediaPlayer;
++using FNAMediaPlayer = Microsoft.Xna.Framework.Media.MediaPlayer;
+@@ -57,1 +57,1 @@
+-			MediaPlayer.Update();
++			FNAMediaPlayer.Update();
+@@ -60,1 +60,1 @@
+-				MediaPlayer.OnActiveSongChanged();
++				FNAMediaPlayer.OnActiveSongChanged();
+@@ -65,1 +65,1 @@
+-				MediaPlayer.OnMediaStateChanged();
++				FNAMediaPlayer.OnMediaStateChanged();

@@ -1,0 +1,34 @@
+{
+  "schemaVersion": 1,
+  "fnaRevision": "d52b4ce61e4086b785c51a96d331dbf106975a58",
+  "sources": {
+    "FNA3D.cs": {
+      "source": "FNA/src/Graphics/FNA3D.cs",
+      "sha256": "0b8d783c79a69b970a138c0c2dacd92ac315508fd1a066e2221d174f278fc31f"
+    },
+    "FAudio.cs": {
+      "source": "sources/FAudio/csharp/FAudio.cs",
+      "revision": "0e39055a3fb3c27de8dc02d650fe6a3da6c4de2c",
+      "sha256": "de0553839de88d76780658eed05ad2920968fe344f294983948767d1877b2222"
+    },
+    "FrameworkDispatcher.cs": {
+      "source": "FNA/src/FrameworkDispatcher.cs",
+      "sha256": "743ca0005a9cb3ce69e0f7af98c754b71c4afbea04d4ac54d1a0de5b234ac39c"
+    },
+    "SDL2.cs": {
+      "source": "sources/SDL2-CS-bindings/src/SDL2.cs",
+      "revision": "2b8d237fd4585d14ea837764ac247d4cd200158f",
+      "sha256": "4e72177db89bfb6dc47385f53665eeb2df92c139a854507c23919d38d6ea1ae7"
+    },
+    "Theorafile.cs": {
+      "source": "sources/Theorafile/csharp/Theorafile.cs",
+      "revision": "0c5504658a3108919e53b625287786a87529de42",
+      "sha256": "5b08930b7bd7d899716af92e31d9b09c4b930b466a6ded598a5de971736376c5"
+    }
+  },
+  "patches": [
+    "tvos/patches/FNA/0001-map-static-native-imports-to-internal.patch",
+    "tvos/patches/FNA/0002-disambiguate-mediaplayer-alias.patch"
+  ],
+  "purpose": "Compile-time mapping of pinned FNA native imports to statically linked symbols in the modern tvOS executable."
+}

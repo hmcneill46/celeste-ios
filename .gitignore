@@ -5,3 +5,11 @@ celeste/
 # Generated Stage 1 tvOS native sources, intermediates, logs and packages.
 .build/tvos-native/
 artifacts/tvos-native/
+
+# Generated Stage 2 host inputs, app bundles, logs, screenshots, and local signing.
+.build/tvos-host/
+.build/tvos-dotnet/
+artifacts/tvos-host/
+tvos/Local.Build.props
+tvos/**/bin/
+tvos/**/obj/

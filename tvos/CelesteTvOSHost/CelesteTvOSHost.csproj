@@ -1,0 +1,73 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0-tvos</TargetFramework>
+    <OutputType>Exe</OutputType>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <SupportedOSPlatformVersion>16.0</SupportedOSPlatformVersion>
+    <TargetPlatformMinVersion>16.0</TargetPlatformMinVersion>
+    <ApplicationId>io.github.roootthefox.celestetvos.stage2</ApplicationId>
+    <ApplicationTitle>FNA tvOS Stage 2</ApplicationTitle>
+    <ApplicationDisplayVersion>2.0</ApplicationDisplayVersion>
+    <ApplicationVersion>1</ApplicationVersion>
+    <TvOSHostStageRoot>$(MSBuildThisFileDirectory)..\..\.build\tvos-host</TvOSHostStageRoot>
+    <TvOSHostNativeRoot>$(TvOSHostStageRoot)\native</TvOSHostNativeRoot>
+    <CodesignEntitlements>Entitlements.plist</CodesignEntitlements>
+    <TrimMode Condition="'$(Configuration)' == 'Release'">full</TrimMode>
+    <MtouchLink Condition="'$(Configuration)' == 'Release'">Full</MtouchLink>
+    <UseInterpreter>false</UseInterpreter>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\FNA.TvOS\FNA.TvOS.csproj" />
+    <BundleResource Include="PrivacyInfo.xcprivacy" LogicalName="PrivacyInfo.xcprivacy" />
+  </ItemGroup>
+
+  <!-- ForceLoad is intentional: the managed bindings resolve static exports
+       through __Internal, so dead stripping must not discard those exports.
+       The framework list is the exhaustive Stage 1 link-probe result. -->
+  <ItemGroup>
+    <NativeReference Include="$(TvOSHostNativeRoot)\SDL2.xcframework">
+      <Kind>Static</Kind>
+      <SmartLink>false</SmartLink>
+      <ForceLoad>true</ForceLoad>
+      <Frameworks>Foundation UIKit AVFoundation AudioToolbox CoreBluetooth CoreGraphics CoreHaptics GameController IOSurface Metal OpenGLES QuartzCore</Frameworks>
+    </NativeReference>
+    <NativeReference Include="$(TvOSHostNativeRoot)\FNA3D.xcframework">
+      <Kind>Static</Kind>
+      <SmartLink>false</SmartLink>
+      <ForceLoad>true</ForceLoad>
+    </NativeReference>
+    <NativeReference Include="$(TvOSHostNativeRoot)\FAudio.xcframework">
+      <Kind>Static</Kind>
+      <SmartLink>false</SmartLink>
+      <ForceLoad>true</ForceLoad>
+    </NativeReference>
+    <NativeReference Include="$(TvOSHostNativeRoot)\Theorafile.xcframework">
+      <Kind>Static</Kind>
+      <SmartLink>false</SmartLink>
+      <ForceLoad>true</ForceLoad>
+    </NativeReference>
+    <NativeReference Include="$(TvOSHostNativeRoot)\tvStubs.xcframework">
+      <Kind>Static</Kind>
+      <SmartLink>false</SmartLink>
+      <ForceLoad>true</ForceLoad>
+    </NativeReference>
+    <NativeReference Include="$(TvOSHostNativeRoot)\MoltenVK.xcframework">
+      <Kind>Static</Kind>
+      <SmartLink>false</SmartLink>
+      <ForceLoad>true</ForceLoad>
+      <IsCxx>true</IsCxx>
+    </NativeReference>
+  </ItemGroup>
+
+  <Target Name="ValidatePreparedNativeInputs" BeforeTargets="PrepareForBuild">
+    <Error Condition="!Exists('$(TvOSHostStageRoot)\normalized-manifest.json')"
+           Text="Stage 2 native inputs are missing. Run scripts/prepare-tvos-host-native.sh first." />
+    <Error Condition="!Exists('$(TvOSHostNativeRoot)\MoltenVK.xcframework\Info.plist')"
+           Text="The prepared Stage 2 native set is incomplete." />
+  </Target>
+
+  <Import Project="..\Local.Build.props" Condition="Exists('..\Local.Build.props')" />
+</Project>

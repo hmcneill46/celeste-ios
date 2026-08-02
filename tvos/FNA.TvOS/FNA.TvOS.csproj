@@ -1,0 +1,54 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <!-- Library projects otherwise default to the compatibility tvOS 26.0
+         pack; pin 26.5 so this adapter matches the installed workload/Xcode. -->
+    <TargetFramework>net10.0-tvos26.5</TargetFramework>
+    <AssemblyName>FNA</AssemblyName>
+    <RootNamespace>Microsoft.Xna.Framework</RootNamespace>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <Nullable>disable</Nullable>
+    <ImplicitUsings>false</ImplicitUsings>
+    <DefineConstants>$(DefineConstants);NETSTANDARD2_0</DefineConstants>
+    <SupportedOSPlatformVersion>16.0</SupportedOSPlatformVersion>
+    <TvOSHostStageRoot>$(MSBuildThisFileDirectory)..\..\.build\tvos-host</TvOSHostStageRoot>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Keep the pinned submodule pristine. FNA3D.cs is staged with its focused
+         __Internal import patch; XamarinHelper.cs is replaced by the real
+         modern Microsoft.tvOS MonoPInvokeCallbackAttribute. -->
+    <Compile Include="$(MSBuildThisFileDirectory)..\..\FNA\src\**\*.cs"
+             Exclude="$(MSBuildThisFileDirectory)..\..\FNA\src\Graphics\FNA3D.cs;$(MSBuildThisFileDirectory)..\..\FNA\src\FrameworkDispatcher.cs;$(MSBuildThisFileDirectory)..\..\FNA\src\Utilities\XamarinHelper.cs" />
+    <Compile Include="$(TvOSHostStageRoot)\managed\SDL2.cs" />
+    <Compile Include="$(TvOSHostStageRoot)\managed\FNA3D.cs" />
+    <Compile Include="$(TvOSHostStageRoot)\managed\FAudio.cs" />
+    <Compile Include="$(TvOSHostStageRoot)\managed\Theorafile.cs" />
+    <Compile Include="$(TvOSHostStageRoot)\managed\FrameworkDispatcher.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)..\..\FNA\src\Graphics\Effect\StockEffects\FXB\AlphaTestEffect.fxb"
+                      LogicalName="Microsoft.Xna.Framework.Graphics.Effect.Resources.AlphaTestEffect.fxb" />
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)..\..\FNA\src\Graphics\Effect\StockEffects\FXB\BasicEffect.fxb"
+                      LogicalName="Microsoft.Xna.Framework.Graphics.Effect.Resources.BasicEffect.fxb" />
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)..\..\FNA\src\Graphics\Effect\StockEffects\FXB\DualTextureEffect.fxb"
+                      LogicalName="Microsoft.Xna.Framework.Graphics.Effect.Resources.DualTextureEffect.fxb" />
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)..\..\FNA\src\Graphics\Effect\StockEffects\FXB\EnvironmentMapEffect.fxb"
+                      LogicalName="Microsoft.Xna.Framework.Graphics.Effect.Resources.EnvironmentMapEffect.fxb" />
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)..\..\FNA\src\Graphics\Effect\StockEffects\FXB\SkinnedEffect.fxb"
+                      LogicalName="Microsoft.Xna.Framework.Graphics.Effect.Resources.SkinnedEffect.fxb" />
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)..\..\FNA\src\Graphics\Effect\StockEffects\FXB\SpriteEffect.fxb"
+                      LogicalName="Microsoft.Xna.Framework.Graphics.Effect.Resources.SpriteEffect.fxb" />
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)..\..\FNA\src\Graphics\Effect\YUVToRGBA\YUVToRGBAEffect.fxb"
+                      LogicalName="Microsoft.Xna.Framework.Graphics.Effect.Resources.YUVToRGBAEffect.fxb" />
+  </ItemGroup>
+
+  <Target Name="ValidatePreparedFnaInputs" BeforeTargets="PrepareForBuild">
+    <Error Condition="!Exists('$(TvOSHostStageRoot)\managed\SDL2.cs')"
+           Text="Stage 2 managed inputs are missing. Run scripts/prepare-tvos-host-native.sh first." />
+    <Error Condition="!Exists('$(TvOSHostStageRoot)\managed\FNA3D.cs')"
+           Text="Stage 2 managed inputs are missing. Run scripts/prepare-tvos-host-native.sh first." />
+  </Target>
+</Project>

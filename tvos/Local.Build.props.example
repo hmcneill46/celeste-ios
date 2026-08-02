@@ -1,0 +1,9 @@
+<Project>
+  <!-- Copy this file to tvos/Local.Build.props. The copy is ignored by Git. -->
+  <PropertyGroup>
+    <ApplicationId>com.example.tvos-stage2</ApplicationId>
+    <CodesignKey>Apple Development</CodesignKey>
+    <DevelopmentTeam>TEAM_ID</DevelopmentTeam>
+    <CodesignProvision>PROVISIONING_PROFILE_NAME_OR_UUID</CodesignProvision>
+  </PropertyGroup>
+</Project>
