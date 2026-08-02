@@ -1,0 +1,20 @@
+diff --git a/Xcode-iOS/FNA3D.xcodeproj/project.pbxproj b/Xcode-iOS/FNA3D.xcodeproj/project.pbxproj
+index 74b3708..c64ec0f 100644
+--- a/Xcode-iOS/FNA3D.xcodeproj/project.pbxproj
++++ b/Xcode-iOS/FNA3D.xcodeproj/project.pbxproj
+@@ -74,6 +74,7 @@
+ 		7BF8206B2445254300736AB0 /* FNA3D_Driver_Metal.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = FNA3D_Driver_Metal.c; path = ../src/FNA3D_Driver_Metal.c; sourceTree = "<group>"; };
+ 		7BF8206C2445254300736AB0 /* FNA3D_Image.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = FNA3D_Image.c; path = ../src/FNA3D_Image.c; sourceTree = "<group>"; };
+ 		7BF8206E2445254300736AB0 /* FNA3D_PipelineCache.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = FNA3D_PipelineCache.c; path = ../src/FNA3D_PipelineCache.c; sourceTree = "<group>"; };
++		DE273F7829CB906F002EAB1D /* FNA3D_SysRenderer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FNA3D_SysRenderer.h; path = ../include/FNA3D_SysRenderer.h; sourceTree = "<group>"; };
+ /* End PBXFileReference section */
+ 
+ /* Begin PBXFrameworksBuildPhase section */
+@@ -97,6 +98,7 @@
+ 		7B1CDD3C2190C0A200175C7B = {
+ 			isa = PBXGroup;
+ 			children = (
++				DE273F7829CB906F002EAB1D /* FNA3D_SysRenderer.h */,
+ 				7B8B6CB624452656001C08D6 /* MojoShader */,
+ 				7B1CDDA72190C52900175C7B /* Public Headers */,
+ 				7B1CDDA62190C50300175C7B /* Library Source */,

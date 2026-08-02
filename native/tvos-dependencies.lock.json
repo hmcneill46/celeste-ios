@@ -1,0 +1,190 @@
+{
+  "schemaVersion": 1,
+  "deploymentTarget": "16.0",
+  "dependencies": [
+    {
+      "name": "SDL2",
+      "component": "SDL2",
+      "url": "https://github.com/libsdl-org/SDL.git",
+      "revision": "257cacab183b312bbe60bd7967eee44a3ad7be85",
+      "path": "SDL2",
+      "licensePaths": ["LICENSE.txt", "src/hidapi/LICENSE.txt", "src/hidapi/LICENSE-bsd.txt", "src/hidapi/LICENSE-gpl3.txt", "src/hidapi/LICENSE-orig.txt", "src/video/yuv2rgb/LICENSE"],
+      "tvosTarget": "Static Library-tvOS",
+      "xcodeProject": "Xcode/SDL/SDL.xcodeproj",
+      "patches": ["native/patches/SDL2/0001-tvos-use-pregenerated-metal-shaders.patch"]
+    },
+    {
+      "name": "FNA3D",
+      "component": "FNA3D",
+      "url": "https://github.com/FNA-XNA/FNA3D.git",
+      "revision": "dba98a71514cc30f3c19dc19fc0a479be7c90d52",
+      "path": "FNA3D",
+      "licensePaths": ["LICENSE"],
+      "tvosTarget": "FNA3D-tv",
+      "xcodeProject": "Xcode-iOS/FNA3D.xcodeproj",
+      "patches": ["native/patches/FNA3D/0001-add-sysrenderer-header-to-xcode-project.patch"]
+    },
+    {
+      "name": "FNA3D-MojoShader",
+      "component": "FNA3D",
+      "url": "https://github.com/FNA-XNA/MojoShader.git",
+      "revision": "c9037d90fa2f59b6be65d1391ca11d345356bad1",
+      "path": "FNA3D/MojoShader",
+      "licensePaths": ["LICENSE.txt"],
+      "parent": "FNA3D"
+    },
+    {
+      "name": "FNA3D-Vulkan-Headers",
+      "component": "FNA3D",
+      "url": "https://github.com/KhronosGroup/Vulkan-Headers.git",
+      "revision": "85470b32ad5d0d7d67fdf411b6e7b502c09c9c52",
+      "path": "FNA3D/Vulkan-Headers",
+      "licensePaths": ["LICENSE.txt"],
+      "parent": "FNA3D"
+    },
+    {
+      "name": "FAudio",
+      "component": "FAudio",
+      "url": "https://github.com/FNA-XNA/FAudio.git",
+      "revision": "0e39055a3fb3c27de8dc02d650fe6a3da6c4de2c",
+      "path": "FAudio",
+      "licensePaths": ["LICENSE"],
+      "tvosTarget": "FAudio-tv",
+      "xcodeProject": "Xcode-iOS/FAudio.xcodeproj",
+      "patches": ["native/patches/FAudio/0001-align-static-distance-curves-for-ld64.patch"]
+    },
+    {
+      "name": "Theorafile",
+      "component": "Theorafile",
+      "url": "https://github.com/FNA-XNA/Theorafile.git",
+      "revision": "0c5504658a3108919e53b625287786a87529de42",
+      "path": "Theorafile",
+      "licensePaths": ["licenses/LICENSE"],
+      "tvosTarget": "theorafile-tv",
+      "xcodeProject": "Xcode-iOS/theorafile.xcodeproj",
+      "patches": []
+    },
+    {
+      "name": "MoltenVK",
+      "component": "MoltenVK",
+      "url": "https://github.com/KhronosGroup/MoltenVK.git",
+      "tag": "v1.2.9",
+      "revision": "bf097edc74ec3b6dfafdcd5a38d3ce14b11952d6",
+      "path": "MoltenVK",
+      "licensePaths": ["LICENSE"],
+      "tvosTarget": "tvos,tvossim",
+      "patches": ["native/patches/MoltenVK/0001-do-not-refetch-locked-glslang-dependencies.patch"]
+    },
+    {
+      "name": "MoltenVK-cereal",
+      "component": "MoltenVK",
+      "url": "https://github.com/USCiLab/cereal.git",
+      "revision": "51cbda5f30e56c801c07fe3d3aba5d7fb9e6cca4",
+      "path": "MoltenVK/External/cereal",
+      "licensePaths": ["LICENSE", "include/cereal/external/rapidxml/license.txt"],
+      "parent": "MoltenVK"
+    },
+    {
+      "name": "MoltenVK-Vulkan-Headers",
+      "component": "MoltenVK",
+      "url": "https://github.com/KhronosGroup/Vulkan-Headers.git",
+      "revision": "eaa319dade959cb61ed2229c8ea42e307cc8f8b3",
+      "path": "MoltenVK/External/Vulkan-Headers",
+      "licensePaths": ["LICENSE.md"],
+      "parent": "MoltenVK"
+    },
+    {
+      "name": "MoltenVK-SPIRV-Cross",
+      "component": "MoltenVK",
+      "url": "https://github.com/KhronosGroup/SPIRV-Cross.git",
+      "revision": "84cdc3b68e5ef5a15ecfacda77c61f24a9080cf9",
+      "path": "MoltenVK/External/SPIRV-Cross",
+      "licensePaths": ["LICENSE", "LICENSES/LicenseRef-KhronosFreeUse.txt"],
+      "parent": "MoltenVK"
+    },
+    {
+      "name": "MoltenVK-glslang",
+      "component": "MoltenVK",
+      "url": "https://github.com/KhronosGroup/glslang.git",
+      "revision": "e8dd0b6903b34f1879520b444634c75ea2deedf5",
+      "path": "MoltenVK/External/glslang",
+      "licensePaths": ["LICENSE.txt"],
+      "parent": "MoltenVK"
+    },
+    {
+      "name": "glslang-SPIRV-Tools",
+      "component": "MoltenVK",
+      "url": "https://github.com/KhronosGroup/SPIRV-Tools.git",
+      "revision": "dd4b663e13c07fea4fbb3f70c1c91c86731099f7",
+      "path": "MoltenVK/External/glslang/External/spirv-tools",
+      "licensePaths": ["LICENSE"],
+      "parent": "MoltenVK-glslang"
+    },
+    {
+      "name": "SPIRV-Tools-SPIRV-Headers",
+      "component": "MoltenVK",
+      "url": "https://github.com/KhronosGroup/SPIRV-Headers.git",
+      "revision": "4f7b471f1a66b6d06462cd4ba57628cc0cd087d7",
+      "path": "MoltenVK/External/glslang/External/spirv-tools/external/spirv-headers",
+      "licensePaths": ["LICENSE"],
+      "parent": "glslang-SPIRV-Tools"
+    },
+    {
+      "name": "glslang-googletest",
+      "component": "MoltenVK",
+      "url": "https://github.com/google/googletest.git",
+      "tag": "v1.14.0",
+      "revision": "f8d7d77c06936315286eb55f8de22cd23c188571",
+      "path": "MoltenVK/External/glslang/External/googletest",
+      "licensePaths": ["LICENSE"],
+      "parent": "MoltenVK-glslang"
+    },
+    {
+      "name": "MoltenVK-Vulkan-Tools",
+      "component": "MoltenVK",
+      "url": "https://github.com/KhronosGroup/Vulkan-Tools.git",
+      "revision": "09f5cc6b0758a05ccd6bcde1342256c15c76670e",
+      "path": "MoltenVK/External/Vulkan-Tools",
+      "licensePaths": ["LICENSE.txt"],
+      "parent": "MoltenVK"
+    },
+    {
+      "name": "MoltenVK-Volk",
+      "component": "MoltenVK",
+      "url": "https://github.com/zeux/volk.git",
+      "revision": "3a8068a57417940cf2bf9d837a7bb60d015ca2f1",
+      "path": "MoltenVK/External/Volk",
+      "licensePaths": ["LICENSE.md"],
+      "parent": "MoltenVK"
+    },
+    {
+      "name": "tvStubs-source",
+      "component": "tvStubs",
+      "url": "https://github.com/RoootTheFox/fnalibs-ios-builder-celeste.git",
+      "revision": "41e34f66f8e74181d13e3a6e372d5085e3e1a344",
+      "path": "NativeBuilder",
+      "licensePaths": [],
+      "tvosTarget": "tvStubs",
+      "xcodeProject": "tvStubs/tvStubs.xcodeproj",
+      "patches": []
+    },
+    {
+      "name": "FNA-managed-bindings",
+      "component": "symbol-expectations",
+      "url": "https://github.com/FNA-XNA/FNA.git",
+      "revision": "d52b4ce61e4086b785c51a96d331dbf106975a58",
+      "path": "FNA-bindings",
+      "licensePaths": ["licenses/LICENSE"],
+      "patches": []
+    },
+    {
+      "name": "SDL2-CS-bindings",
+      "component": "symbol-expectations",
+      "url": "https://github.com/flibitijibibo/SDL2-CS.git",
+      "revision": "2b8d237fd4585d14ea837764ac247d4cd200158f",
+      "path": "SDL2-CS-bindings",
+      "licensePaths": ["LICENSE"],
+      "patches": []
+    }
+  ]
+}

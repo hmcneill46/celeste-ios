@@ -1,0 +1,26 @@
+diff --git a/src/F3DAudio.c b/src/F3DAudio.c
+index bc2b9ed..954f9a2 100644
+--- a/src/F3DAudio.c
++++ b/src/F3DAudio.c
+@@ -1449,7 +1449,7 @@ void F3DAudioCalculate(
+ 			{ x1, y1 }, \
+ 			{ x2, y2 } \
+ 		}; \
+-		static F3DAUDIO_DISTANCE_CURVE name##Default = \
++		static F3DAUDIO_DISTANCE_CURVE name##Default __attribute__((aligned(8))) = \
+ 		{ \
+ 			(F3DAUDIO_DISTANCE_CURVE_POINT*) &name##Points[0], 2 \
+ 		};
+diff --git a/src/FACT3D.c b/src/FACT3D.c
+index c9a8f61..76df29c 100644
+--- a/src/FACT3D.c
++++ b/src/FACT3D.c
+@@ -69,7 +69,7 @@ uint32_t FACT3DCalculate(
+ 		{ 0.0f, 1.0f },
+ 		{ 1.0f, 1.0f }
+ 	};
+-	static F3DAUDIO_DISTANCE_CURVE DefaultCurve =
++	static F3DAUDIO_DISTANCE_CURVE DefaultCurve __attribute__((aligned(8))) =
+ 	{
+ 		(F3DAUDIO_DISTANCE_CURVE_POINT*) &DefaultCurvePoints[0], 2
+ 	};

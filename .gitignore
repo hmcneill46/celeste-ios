@@ -1,3 +1,7 @@
 _celeste_game/
 _celeste_decomp/
 celeste/
+
+# Generated Stage 1 tvOS native sources, intermediates, logs and packages.
+.build/tvos-native/
+artifacts/tvos-native/

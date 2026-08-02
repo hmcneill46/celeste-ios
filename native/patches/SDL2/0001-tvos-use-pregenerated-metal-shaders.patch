@@ -1,0 +1,12 @@
+diff --git a/Xcode/SDL/SDL.xcodeproj/project.pbxproj b/Xcode/SDL/SDL.xcodeproj/project.pbxproj
+index 9c086f1..b79c929 100644
+--- a/Xcode/SDL/SDL.xcodeproj/project.pbxproj
++++ b/Xcode/SDL/SDL.xcodeproj/project.pbxproj
+@@ -8208,7 +8208,6 @@
+ 				A769B1CD23E259AE00872273 /* SDL_syspower.c in Sources */,
+ 				A769B1CF23E259AE00872273 /* SDL_iconv.c in Sources */,
+ 				A769B1D023E259AE00872273 /* s_fabs.c in Sources */,
+-				A769B1D323E259AE00872273 /* SDL_shaders_metal.metal in Sources */,
+ 				5616CA5E252BB35E005D5928 /* SDL_url.c in Sources */,
+ 				A769B1D423E259AE00872273 /* SDL_uikitwindow.m in Sources */,
+ 				A769B1D523E259AE00872273 /* SDL_render.c in Sources */,

@@ -1,0 +1,27 @@
+diff --git a/Makefile b/Makefile
+index a1102bb..0c9c184 100644
+--- a/Makefile
++++ b/Makefile
+@@ -1,7 +1,9 @@
+ XC_PROJ := MoltenVKPackaging.xcodeproj
+ XC_SCHEME := MoltenVK Package
+ 
+-XCODEBUILD := set -o pipefail && $(shell command -v xcodebuild)
++# Keep Xcode intermediates inside the caller-selected generated build root.
++MVK_DERIVED_DATA_ARG := $(if $(MVK_DERIVED_DATA_PATH),-derivedDataPath "$(MVK_DERIVED_DATA_PATH)")
++XCODEBUILD := set -o pipefail && $(shell command -v xcodebuild) $(MVK_DERIVED_DATA_ARG)
+ # Used to determine if xcpretty is available
+ XCPRETTY_PATH := $(shell command -v xcpretty 2> /dev/null)
+ 
+diff --git a/fetchDependencies b/fetchDependencies
+index 59a1bec..ba76a7f 100755
+--- a/fetchDependencies
++++ b/fetchDependencies
+@@ -364,7 +364,6 @@ else
+ 	update_repo ${REPO_NAME} ${REPO_URL} ${REPO_REV}
+ 
+ 	cd ${REPO_NAME}
+-	./update_glslang_sources.py
+ 	rm -rf build
+ 	./build_info.py .        \
+ 		-i build_info.h.tmpl  \
