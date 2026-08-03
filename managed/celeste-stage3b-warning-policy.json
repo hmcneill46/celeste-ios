@@ -1,0 +1,119 @@
+{
+  "schemaVersion": 1,
+  "scope": "Trim analysis diagnostics accepted for the Stage 3B first-frame boundary",
+  "policy": "Every Release/device linker diagnostic must match one listed site; no warning is globally suppressed.",
+  "rules": [
+    {
+      "code": "IL2026",
+      "messageContains": "Monocle.Commands.BuildCommandsList()",
+      "category": "reflection discovery",
+      "disposition": "focused roots plus runtime equality",
+      "evidence": "All 75 command methods have exact roots and identical sorted hashes in Debug, trimmed simulator and full-AOT device preflight."
+    },
+    {
+      "code": "IL2065",
+      "messageContains": "Monocle.Commands.BuildCommandsList()",
+      "category": "reflection discovery",
+      "disposition": "focused roots plus runtime equality",
+      "evidence": "All 75 command methods have exact roots and identical sorted hashes in Debug, trimmed simulator and full-AOT device preflight."
+    },
+    {
+      "code": "IL2026",
+      "messageContains": "Celeste.Commands.CmdLogSession(): Using member 'System.Xml.Serialization.XmlSerializer.XmlSerializer(Type)'",
+      "category": "desktop debug serializer",
+      "disposition": "intentionally unreachable for Stage 3B",
+      "evidence": "The debug console log-session command is discovered for manifest parity but is never invoked by startup/title flow. Save serialization is rejected at the Stage 3B UserIO boundary and remains Stage 6 work."
+    },
+    {
+      "code": "IL2026",
+      "messageContains": "Celeste.Commands.CmdLogSession(): Using member 'System.Xml.Serialization.XmlSerializer.Serialize(TextWriter, Object)'",
+      "category": "desktop debug serializer",
+      "disposition": "intentionally unreachable for Stage 3B",
+      "evidence": "The debug console log-session command is discovered for manifest parity but is never invoked by startup/title flow. Save serialization is rejected at the Stage 3B UserIO boundary and remains Stage 6 work."
+    },
+    {
+      "code": "IL2026",
+      "messageContains": "Celeste.Overworld.ReloadMenus(Overworld.StartMode)",
+      "category": "Oui reflection",
+      "disposition": "focused roots plus runtime equality",
+      "evidence": "The exact ten concrete Oui types and required constructors match across all preflights; the accepted runtime enters Celeste.Overworld."
+    },
+    {
+      "code": "IL2062",
+      "messageContains": "Celeste.Overworld.ReloadMenus(Overworld.StartMode)",
+      "category": "Oui reflection",
+      "disposition": "focused roots plus runtime equality",
+      "evidence": "The exact ten concrete Oui types and required constructors match across all preflights; the accepted runtime enters Celeste.Overworld."
+    },
+    {
+      "code": "IL2026",
+      "messageContains": "Monocle.Pooler.Pooler()",
+      "category": "pooled type reflection",
+      "disposition": "focused roots plus runtime equality",
+      "evidence": "The 12 pooled roots and 12 initialized pool entries have the same sorted hash in Debug, trimmed simulator and full-AOT device."
+    },
+    {
+      "code": "IL2065",
+      "messageContains": "Monocle.Pooler.Pooler()",
+      "category": "pooled constructor reflection",
+      "disposition": "focused roots plus runtime equality",
+      "evidence": "Exact parameterless constructors are rooted only for reflected pooled types and initialized successfully on both targets."
+    },
+    {
+      "code": "IL2026",
+      "messageContains": "Monocle.Tracker.GetSubclasses(Type)",
+      "category": "tracked type reflection",
+      "disposition": "focused roots plus runtime equality",
+      "evidence": "Tracked root, expanded and actual initialized sets have identical counts and hashes across all preflights."
+    },
+    {
+      "code": "IL2026",
+      "messageContains": "Monocle.Tracker.Initialize()",
+      "category": "tracked type reflection",
+      "disposition": "focused roots plus runtime equality",
+      "evidence": "Tracked root, expanded and actual initialized sets have identical counts and hashes across all preflights."
+    },
+    {
+      "code": "IL2045",
+      "messageContains": "MonoGame.Utilities.AssemblyHelper.GetDefaultWindowTitle()",
+      "category": "desktop window metadata",
+      "disposition": "unreachable on the tvOS SDL/UIKit path",
+      "evidence": "The tvOS host owns application display metadata and both accepted runs create SDL/Metal without using the desktop window-title helper result."
+    },
+    {
+      "code": "IL2070",
+      "messageContains": "Microsoft.Xna.Framework.Content.ContentExtensions.GetDefaultConstructor(Type)",
+      "category": "FNA content reflection",
+      "disposition": "focused reader roots plus real asset preflight",
+      "evidence": "The exact seven readers and required constructors load two representative validated XNBs through ContentManager on trimmed simulator and full-AOT device."
+    },
+    {
+      "code": "IL2057",
+      "messageContains": "Microsoft.Xna.Framework.Content.ContentTypeReaderManager.GetTypeReader(Type)",
+      "category": "FNA reader discovery",
+      "disposition": "focused reader roots plus real asset preflight",
+      "evidence": "All seven inventoried reader types load through the real reader manager on trimmed simulator and full-AOT device."
+    },
+    {
+      "code": "IL2057",
+      "messageContains": "Microsoft.Xna.Framework.Content.ContentTypeReaderManager.LoadAssetReaders(ContentReader)",
+      "category": "FNA reader discovery",
+      "disposition": "focused reader roots plus real asset preflight",
+      "evidence": "All seven inventoried reader types load through the real reader manager on trimmed simulator and full-AOT device."
+    },
+    {
+      "code": "IL2067",
+      "messageContains": "Microsoft.Xna.Framework.Graphics.VertexDeclaration.FromType(Type)",
+      "category": "FNA vertex declaration reflection",
+      "disposition": "runtime graphics evidence",
+      "evidence": "Effect/SpriteFont preflight and sustained real Celeste Metal frames complete on simulator and Apple A15 device without a missing vertex declaration constructor."
+    },
+    {
+      "code": "IL2104",
+      "messageContains": "Assembly 'System.Private.Xml' produced trim warnings",
+      "category": "XML umbrella diagnostic",
+      "disposition": "explicit Settings serializer plus deferred debug command",
+      "evidence": "The reflection-free Settings serializer passes six focused cases under trimming/full AOT; the remaining XmlSerializer site is the unreachable CmdLogSession debug command documented above."
+    }
+  ]
+}

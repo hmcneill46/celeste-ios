@@ -1,0 +1,8 @@
+<Project>
+  <!-- Imported only into Stage 3B's FNA project graph. The Stage 2 adapter and
+       its normal diagnostic build remain unchanged. -->
+  <ItemGroup Condition="'$(AssemblyName)' == 'FNA'">
+    <Compile Include="$(MSBuildThisFileDirectory)Stage3BLegacyXnbReaders.cs"
+             Link="Stage3B\Stage3BLegacyXnbReaders.cs" />
+  </ItemGroup>
+</Project>

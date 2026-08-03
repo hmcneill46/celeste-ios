@@ -1,0 +1,119 @@
+{
+  "schemaVersion": 1,
+  "scope": "Stage 3B first-frame runtime adaptations for the locked Celeste 1.4.0.0 generated source",
+  "entries": [
+    {
+      "id": "stage3b-audio-disabled-boundary",
+      "category": "native interop issue",
+      "originalFailure": "Celeste startup ordinarily initializes FMOD Studio and loads native banks, but Stage 3B must not link or stage FMOD.",
+      "affectedSymbols": [
+        "Celeste.Audio"
+      ],
+      "transformation": "Compile the original high-level Audio implementation out only under TVOS_AUDIO_DISABLED and compile a deterministic inert implementation with compatible handle/state behavior. Route every one of the 490 generated low-level FMOD guards through a counted fail-fast boundary.",
+      "behavioralRationale": "First-frame execution does not require audible output, while game state expects ordinary music, ambience and SFX calls to be safe. A low-level call remains a hard failure and cannot masquerade as working audio.",
+      "validation": "Simulator and device preflight plus sustained Celeste runs require fmod-low-level=0 and report aggregate no-audio use.",
+      "temporary": true,
+      "futureStage": "Stage 5 replaces this source-level boundary with the licensed FMOD 1.10.09 native integration."
+    },
+    {
+      "id": "stage3b-settings-aot-serializer",
+      "category": "XML/serialization issue",
+      "originalFailure": "System.Xml.Serialization runtime code generation is not a safe startup dependency for a trimmed full-AOT tvOS application.",
+      "affectedSymbols": [
+        "Celeste.UserIO.Deserialize<T>",
+        "Celeste.UserIO.Serialize<T>",
+        "Celeste.Settings"
+      ],
+      "transformation": "Route Settings only through an explicit reflection-free serializer for the locked public Settings field set. Reject unknown elements and reject SaveData serialization in Stage 3B.",
+      "behavioralRationale": "The explicit implementation preserves first-run defaults and the expected XML field representation without runtime serializer generation. Durable save handling remains deliberately out of scope.",
+      "validation": "First-run, default and non-default round trips, UserIO round trip, malformed/unknown XML, and representative legacy XML pass on trimmed simulator and full-AOT device.",
+      "temporary": true,
+      "futureStage": "Stage 6 supplies durable save/settings persistence and expands serializer coverage deliberately."
+    },
+    {
+      "id": "stage3b-ephemeral-runtime-path",
+      "category": "removed or unavailable platform API",
+      "originalFailure": "Legacy desktop/iOS path selection does not define the isolated temporary-only Stage 3B settings contract and may address non-durable tvOS locations implicitly.",
+      "affectedSymbols": [
+        "Celeste.UserIO.GetSavePath",
+        "Monocle.ErrorLog.GetLogPath"
+      ],
+      "transformation": "Require CELESTE_TVOS_SESSION_ROOT supplied by the host and place settings/error output only beneath that ignored per-process temporary directory.",
+      "behavioralRationale": "This permits serializer and startup testing without claiming durable saves or selecting a final tvOS persistence model.",
+      "validation": "Host creates a fresh process-scoped temporary directory; settings preflight writes and reads only there.",
+      "temporary": true,
+      "futureStage": "Stage 6 replaces the ephemeral path with the durable save bridge."
+    },
+    {
+      "id": "stage3b-gc-latency-mode",
+      "category": "removed or unavailable platform API",
+      "originalFailure": "Setting GCSettings.LatencyMode to SustainedLowLatency threw PlatformNotSupportedException on the arm64 tvOS simulator.",
+      "affectedSymbols": [
+        "Monocle.Engine.Run"
+      ],
+      "transformation": "Under TVOS_STAGE3B, retain the platform default GC mode and emit one checkpoint instead of assigning the unsupported mode.",
+      "behavioralRationale": "The change avoids an unsupported tuning request; it does not alter game data or bypass engine initialization.",
+      "validation": "Trimmed simulator and full-AOT device enter the normal update/draw loop and sustain frames.",
+      "temporary": false,
+      "futureStage": "Retain unless a future supported .NET tvOS runtime exposes an equivalent tuning control."
+    },
+    {
+      "id": "stage3b-thread-priority",
+      "category": "removed or unavailable platform API",
+      "originalFailure": "Managed thread-priority mutation is unsupported or non-portable in the tvOS sandbox and is only a desktop loading optimization.",
+      "affectedSymbols": [
+        "Celeste.GameLoader",
+        "Celeste.OverworldLoader",
+        "Celeste.RunThread"
+      ],
+      "transformation": "Suppress priority mutation only under TVOS_STAGE3B while preserving thread creation, joins, work and failure propagation.",
+      "behavioralRationale": "Scheduling hints are not correctness requirements; loader behavior and exception visibility remain intact.",
+      "validation": "Normal opening/title flow reaches Celeste.Overworld on simulator and device without loader failure.",
+      "temporary": false,
+      "futureStage": "Reassess only if a supported tvOS scheduling API is shown necessary by profiling."
+    },
+    {
+      "id": "stage3b-desktop-process-launch",
+      "category": "removed or unavailable platform API",
+      "originalFailure": "Celeste desktop helpers can launch child processes or open log files, operations unavailable in a tvOS application sandbox.",
+      "affectedSymbols": [
+        "Celeste.Celeste.CallProcess",
+        "Monocle.ErrorLog.Open"
+      ],
+      "transformation": "Make error-log opening an explicit logged no-op and make any unexpected general process launch fail with PlatformNotSupportedException under TVOS_STAGE3B.",
+      "behavioralRationale": "No shell/process launch is hidden; unreachable desktop behavior cannot invoke a tvStub or escape the application.",
+      "validation": "Accepted startup logs contain no process-launch attempt, tvStubs call or swallowed fatal exception.",
+      "temporary": false,
+      "futureStage": "Keep as the explicit tvOS platform behavior."
+    },
+    {
+      "id": "stage3b-legacy-xnb-list-reader",
+      "category": "FNA API or assembly-identity difference",
+      "originalFailure": "The validated SpriteFont XNB requested Microsoft.Xna.Framework.Content.ListReader<System.Char, mscorlib>, which modern FNA could not resolve because the legacy core-library identity is absent.",
+      "affectedSymbols": [
+        "Microsoft.Xna.Framework.Content.ContentTypeReaderManager"
+      ],
+      "transformation": "Compile a Stage 3B-only FNA extension that maps the one exact validated legacy reader spelling to a directly constructed ListReader<char>. Do not edit the pinned FNA submodule.",
+      "behavioralRationale": "The generic element type is unchanged; only the obsolete assembly-qualified mscorlib spelling is normalized at the content-reader boundary.",
+      "validation": "The actual ContentManager loads Monocle/MonocleDefault and all six reader nodes in its graph on trimmed simulator and full-AOT device.",
+      "temporary": false,
+      "futureStage": "Retain as content compatibility for the locked 1.4.0.0 assets."
+    },
+    {
+      "id": "stage3b-focused-reflection-roots",
+      "category": "reflection issue",
+      "originalFailure": "A trimmed Release preflight initially discovered empty reflection sets because constructors, command methods and reflected type metadata were removed.",
+      "affectedSymbols": [
+        "Celeste Oui discovery",
+        "Monocle Tracker discovery",
+        "Monocle Pooler discovery",
+        "Monocle Commands discovery"
+      ],
+      "transformation": "Root 196 exact type metadata entries, 22 exact constructors and 75 exact command methods, plus the seven exact FNA content readers. Do not preserve the complete Celeste assembly.",
+      "behavioralRationale": "The roots correspond to measured attribute/reflection discovery sets and exclude blanket preservation.",
+      "validation": "Deterministic category counts and hashes match between Debug reference, trimmed simulator Release and full-AOT physical-device preflight.",
+      "temporary": false,
+      "futureStage": "Extend only when later gameplay evidence proves another focused reflected member is required."
+    }
+  ]
+}

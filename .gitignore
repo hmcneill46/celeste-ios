@@ -18,3 +18,8 @@ tvos/**/obj/
 # diagnostics, and local repository-scoped tool/package state for Stage 3A.
 .build/celeste-managed/
 artifacts/celeste-managed/
+
+# User-owned Stage 3B runtime content, regenerated managed source, app bundles,
+# runtime logs, screenshots, manifests, and device evidence.
+.build/celeste-runtime/
+artifacts/celeste-runtime/

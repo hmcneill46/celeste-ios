@@ -1,0 +1,339 @@
+<linker>
+  <!-- Exact FNA reader roots proven by the two validated Celeste XNBs. -->
+  <assembly fullname="FNA">
+    <type fullname="Microsoft.Xna.Framework.Content.CharReader" preserve="all" />
+    <type fullname="Microsoft.Xna.Framework.Content.EffectReader" preserve="all" />
+    <type fullname="Microsoft.Xna.Framework.Content.ListReader`1" preserve="all" />
+    <type fullname="Microsoft.Xna.Framework.Content.RectangleReader" preserve="all" />
+    <type fullname="Microsoft.Xna.Framework.Content.SpriteFontReader" preserve="all" />
+    <type fullname="Microsoft.Xna.Framework.Content.Texture2DReader" preserve="all" />
+    <type fullname="Microsoft.Xna.Framework.Content.Vector3Reader" preserve="all" />
+  </assembly>
+
+  <!-- Focused Celeste reflection roots from the untrimmed Debug preflight.
+       tracked-expanded: count=180, sha256=4272ab69ba06f09c583b8cf6a55dd0cb50b0ccaf7624a2126def0da6db928857
+       Oui: count=10, sha256=04d92579a7f6393c7867e8e632e5843a4cf31cb24af17046aad83b259738b52a
+       pooled: count=12, sha256=e8e3e500bc572c39035ed0cd89cd3d435cb4a1575e067e92e9a64eb9e259d084
+       commands: count=75, sha256=5ef019aacb1f89ae49e41cae9c07423276488d19f6bb94c262bb3fe94339dac2
+       preserve="nothing" keeps type/attribute metadata only. Constructors
+       and command methods are rooted only where reflection invokes them. -->
+  <assembly fullname="Celeste">
+    <type fullname="Celeste.Actor" preserve="nothing" />
+    <type fullname="Celeste.AltMusicTrigger" preserve="nothing" />
+    <type fullname="Celeste.AmbienceParamTrigger" preserve="nothing" />
+    <type fullname="Celeste.AngryOshiro" preserve="nothing" />
+    <type fullname="Celeste.BadelineOldsite" preserve="nothing" />
+    <type fullname="Celeste.BeforeRenderHook" preserve="nothing" />
+    <type fullname="Celeste.Billboard" preserve="nothing" />
+    <type fullname="Celeste.BirdNPC" preserve="nothing" />
+    <type fullname="Celeste.BirdPathTrigger" preserve="nothing" />
+    <type fullname="Celeste.BlackholeStrengthTrigger" preserve="nothing" />
+    <type fullname="Celeste.BlockField" preserve="nothing" />
+    <type fullname="Celeste.BloomFadeTrigger" preserve="nothing" />
+    <type fullname="Celeste.BloomPoint" preserve="nothing" />
+    <type fullname="Celeste.Bonfire" preserve="nothing" />
+    <type fullname="Celeste.BounceBlock" preserve="nothing" />
+    <type fullname="Celeste.BounceBlock/BreakDebris" preserve="nothing">
+      <method signature="System.Void .ctor()" />
+    </type>
+    <type fullname="Celeste.BounceBlock/RespawnDebris" preserve="nothing">
+      <method signature="System.Void .ctor()" />
+    </type>
+    <type fullname="Celeste.BridgeFixed" preserve="nothing" />
+    <type fullname="Celeste.BridgeTile" preserve="nothing" />
+    <type fullname="Celeste.ButtonConfigUI" preserve="nothing" />
+    <type fullname="Celeste.CameraAdvanceTargetTrigger" preserve="nothing" />
+    <type fullname="Celeste.CameraLocker" preserve="nothing" />
+    <type fullname="Celeste.CameraOffsetTrigger" preserve="nothing" />
+    <type fullname="Celeste.CameraTargetTrigger" preserve="nothing" />
+    <type fullname="Celeste.CassetteBlock" preserve="nothing" />
+    <type fullname="Celeste.CassetteBlockManager" preserve="nothing" />
+    <type fullname="Celeste.ChangeRespawnTrigger" preserve="nothing" />
+    <type fullname="Celeste.ChaserBarrier" preserve="nothing" />
+    <type fullname="Celeste.CheckpointBlockerTrigger" preserve="nothing" />
+    <type fullname="Celeste.ClimbBlocker" preserve="nothing" />
+    <type fullname="Celeste.Cloud" preserve="nothing" />
+    <type fullname="Celeste.ClutterBlockBase" preserve="nothing" />
+    <type fullname="Celeste.ClutterCabinet" preserve="nothing" />
+    <type fullname="Celeste.ClutterDoor" preserve="nothing" />
+    <type fullname="Celeste.ClutterSwitch" preserve="nothing" />
+    <type fullname="Celeste.Commands" preserve="nothing">
+      <method name="CmdAssist" />
+      <method name="CmdAudio" />
+      <method name="CmdBerriesOrder" />
+      <method name="CmdBlackHoleStrength" />
+      <method name="CmdBounce" />
+      <method name="CmdCapture" />
+      <method name="CmdCheat" />
+      <method name="CmdCheckLangauge" />
+      <method name="CmdCheckLangauges" />
+      <method name="CmdClearSave" />
+      <method name="CmdColorGrading" />
+      <method name="CmdComplete" />
+      <method name="CmdCore" />
+      <method name="CmdDFlag" />
+      <method name="CmdDetailedLevels" />
+      <method name="CmdDialog" />
+      <method name="CmdDreamDash" />
+      <method name="CmdE" />
+      <method name="CmdExportDialog" />
+      <method name="CmdFlag" />
+      <method name="CmdFonts" />
+      <method name="CmdGiveGolden" />
+      <method name="CmdGiveKey" />
+      <method name="CmdHard" />
+      <method name="CmdHeartGem" />
+      <method name="CmdHearts" />
+      <method name="CmdInputGui" />
+      <method name="CmdLeaf" />
+      <method name="CmdLevelFlag" />
+      <method name="CmdLighting" />
+      <method name="CmdLightning" />
+      <method name="CmdLines" />
+      <method name="CmdLoad" />
+      <method name="CmdLogSession" />
+      <method name="CmdMapEdit" />
+      <method name="CmdMeet" />
+      <method name="CmdMusProgress" />
+      <method name="CmdMusic" />
+      <method name="CmdMusicVol" />
+      <method name="CmdOWComplete" />
+      <method name="CmdOWReflectionFall" />
+      <method name="CmdOverworld" />
+      <method name="CmdPico" />
+      <method name="CmdPlayback" />
+      <method name="CmdPortraits" />
+      <method name="CmdPostcard" />
+      <method name="CmdPostcardCside" />
+      <method name="CmdPostcardVariants" />
+      <method name="CmdRMX2" />
+      <method name="CmdRefFall" />
+      <method name="CmdRename" />
+      <method name="CmdSFXVol" />
+      <method name="CmdSay" />
+      <method name="CmdScreenPadding" />
+      <method name="CmdSounds" />
+      <method name="CmdStrawberries" />
+      <method name="CmdSummitGem" />
+      <method name="CmdTextCharacters" />
+      <method name="CmdTextures" />
+      <method name="CmdTime" />
+      <method name="CmdTitlescreen" />
+      <method name="CmdTotalLevels" />
+      <method name="CmdTwoDashes" />
+      <method name="CmdUnlockDoors" />
+      <method name="CmdVariants" />
+      <method name="CmdWipes" />
+    </type>
+    <type fullname="Celeste.CoreModeListener" preserve="nothing" />
+    <type fullname="Celeste.CoverupWall" preserve="nothing" />
+    <type fullname="Celeste.CreditsTrigger" preserve="nothing" />
+    <type fullname="Celeste.CrumblePlatform" preserve="nothing" />
+    <type fullname="Celeste.CrumbleWallOnRumble" preserve="nothing" />
+    <type fullname="Celeste.CrushBlock" preserve="nothing" />
+    <type fullname="Celeste.CrystalDebris" preserve="nothing">
+      <method signature="System.Void .ctor()" />
+    </type>
+    <type fullname="Celeste.CrystalStaticSpinner" preserve="nothing" />
+    <type fullname="Celeste.CustomBloom" preserve="nothing" />
+    <type fullname="Celeste.CutsceneNode" preserve="nothing" />
+    <type fullname="Celeste.DashBlock" preserve="nothing" />
+    <type fullname="Celeste.DashListener" preserve="nothing" />
+    <type fullname="Celeste.DashSwitch" preserve="nothing" />
+    <type fullname="Celeste.Debris" preserve="nothing">
+      <method signature="System.Void .ctor()" />
+    </type>
+    <type fullname="Celeste.DetachStrawberryTrigger" preserve="nothing" />
+    <type fullname="Celeste.DisplacementRenderHook" preserve="nothing" />
+    <type fullname="Celeste.Door" preserve="nothing" />
+    <type fullname="Celeste.DreamBlock" preserve="nothing" />
+    <type fullname="Celeste.DustEdge" preserve="nothing" />
+    <type fullname="Celeste.DustEdges" preserve="nothing" />
+    <type fullname="Celeste.DustGraphic" preserve="nothing" />
+    <type fullname="Celeste.DustStaticSpinner" preserve="nothing" />
+    <type fullname="Celeste.EffectCutout" preserve="nothing" />
+    <type fullname="Celeste.EventTrigger" preserve="nothing" />
+    <type fullname="Celeste.ExitBlock" preserve="nothing" />
+    <type fullname="Celeste.FakeWall" preserve="nothing" />
+    <type fullname="Celeste.FallEffects" preserve="nothing" />
+    <type fullname="Celeste.FallingBlock" preserve="nothing" />
+    <type fullname="Celeste.FinalBoss" preserve="nothing" />
+    <type fullname="Celeste.FinalBossBeam" preserve="nothing">
+      <method signature="System.Void .ctor()" />
+    </type>
+    <type fullname="Celeste.FinalBossMovingBlock" preserve="nothing" />
+    <type fullname="Celeste.FinalBossShot" preserve="nothing">
+      <method signature="System.Void .ctor()" />
+    </type>
+    <type fullname="Celeste.FloatingDebris" preserve="nothing" />
+    <type fullname="Celeste.FloatySpaceBlock" preserve="nothing" />
+    <type fullname="Celeste.FlutterBird" preserve="nothing" />
+    <type fullname="Celeste.FlyFeather" preserve="nothing" />
+    <type fullname="Celeste.GlassBlock" preserve="nothing" />
+    <type fullname="Celeste.Glider" preserve="nothing" />
+    <type fullname="Celeste.GoldBerryCollectTrigger" preserve="nothing" />
+    <type fullname="Celeste.GoldenBlock" preserve="nothing" />
+    <type fullname="Celeste.Gondola" preserve="nothing" />
+    <type fullname="Celeste.HeartGem" preserve="nothing" />
+    <type fullname="Celeste.Holdable" preserve="nothing" />
+    <type fullname="Celeste.HoldableCollider" preserve="nothing" />
+    <type fullname="Celeste.IntroCar" preserve="nothing" />
+    <type fullname="Celeste.IntroCrusher" preserve="nothing" />
+    <type fullname="Celeste.IntroPavement" preserve="nothing" />
+    <type fullname="Celeste.InvisibleBarrier" preserve="nothing" />
+    <type fullname="Celeste.JumpThru" preserve="nothing" />
+    <type fullname="Celeste.JumpthruPlatform" preserve="nothing" />
+    <type fullname="Celeste.KevinsPC" preserve="nothing" />
+    <type fullname="Celeste.KeyboardConfigUI" preserve="nothing" />
+    <type fullname="Celeste.Killbox" preserve="nothing" />
+    <type fullname="Celeste.LedgeBlocker" preserve="nothing" />
+    <type fullname="Celeste.LevelEndingHook" preserve="nothing" />
+    <type fullname="Celeste.LightFadeTrigger" preserve="nothing" />
+    <type fullname="Celeste.LightOcclude" preserve="nothing" />
+    <type fullname="Celeste.LightningBreakerBox" preserve="nothing" />
+    <type fullname="Celeste.LightningRenderer" preserve="nothing" />
+    <type fullname="Celeste.LockBlock" preserve="nothing" />
+    <type fullname="Celeste.Lookout" preserve="nothing" />
+    <type fullname="Celeste.LookoutBlocker" preserve="nothing" />
+    <type fullname="Celeste.MainMenuClimb" preserve="nothing" />
+    <type fullname="Celeste.MainMenuSmallButton" preserve="nothing" />
+    <type fullname="Celeste.MenuButton" preserve="nothing" />
+    <type fullname="Celeste.MiniTextbox" preserve="nothing" />
+    <type fullname="Celeste.MiniTextboxTrigger" preserve="nothing" />
+    <type fullname="Celeste.MirrorReflection" preserve="nothing" />
+    <type fullname="Celeste.MirrorSurface" preserve="nothing" />
+    <type fullname="Celeste.MirrorSurfaces" preserve="nothing" />
+    <type fullname="Celeste.MoonGlitchBackgroundTrigger" preserve="nothing" />
+    <type fullname="Celeste.MoonParticle3D/Particle" preserve="nothing" />
+    <type fullname="Celeste.MoveBlock" preserve="nothing" />
+    <type fullname="Celeste.MoveBlock/Debris" preserve="nothing">
+      <method signature="System.Void .ctor()" />
+    </type>
+    <type fullname="Celeste.MovingPlatform" preserve="nothing" />
+    <type fullname="Celeste.MrOshiroDoor" preserve="nothing" />
+    <type fullname="Celeste.MusicFadeTrigger" preserve="nothing" />
+    <type fullname="Celeste.MusicTrigger" preserve="nothing" />
+    <type fullname="Celeste.NegaBlock" preserve="nothing" />
+    <type fullname="Celeste.NoRefillTrigger" preserve="nothing" />
+    <type fullname="Celeste.OshiroTrigger" preserve="nothing" />
+    <type fullname="Celeste.OuiAssistMode" preserve="nothing">
+      <method signature="System.Void .ctor()" />
+    </type>
+    <type fullname="Celeste.OuiChapterPanel" preserve="nothing">
+      <method signature="System.Void .ctor()" />
+    </type>
+    <type fullname="Celeste.OuiChapterSelect" preserve="nothing">
+      <method signature="System.Void .ctor()" />
+    </type>
+    <type fullname="Celeste.OuiCredits" preserve="nothing">
+      <method signature="System.Void .ctor()" />
+    </type>
+    <type fullname="Celeste.OuiFileNaming" preserve="nothing">
+      <method signature="System.Void .ctor()" />
+    </type>
+    <type fullname="Celeste.OuiFileSelect" preserve="nothing">
+      <method signature="System.Void .ctor()" />
+    </type>
+    <type fullname="Celeste.OuiJournal" preserve="nothing">
+      <method signature="System.Void .ctor()" />
+    </type>
+    <type fullname="Celeste.OuiMainMenu" preserve="nothing">
+      <method signature="System.Void .ctor()" />
+    </type>
+    <type fullname="Celeste.OuiOptions" preserve="nothing">
+      <method signature="System.Void .ctor()" />
+    </type>
+    <type fullname="Celeste.OuiTitleScreen" preserve="nothing">
+      <method signature="System.Void .ctor()" />
+    </type>
+    <type fullname="Celeste.Payphone" preserve="nothing" />
+    <type fullname="Celeste.Plateau" preserve="nothing" />
+    <type fullname="Celeste.Platform" preserve="nothing" />
+    <type fullname="Celeste.PlaybackBillboard" preserve="nothing" />
+    <type fullname="Celeste.Player" preserve="nothing" />
+    <type fullname="Celeste.PlayerCollider" preserve="nothing" />
+    <type fullname="Celeste.PlayerDashAssist" preserve="nothing" />
+    <type fullname="Celeste.PlayerHair" preserve="nothing" />
+    <type fullname="Celeste.PlayerSeeker" preserve="nothing" />
+    <type fullname="Celeste.PostUpdateHook" preserve="nothing" />
+    <type fullname="Celeste.Puffer" preserve="nothing" />
+    <type fullname="Celeste.PufferCollider" preserve="nothing" />
+    <type fullname="Celeste.ReflectionTentacles" preserve="nothing" />
+    <type fullname="Celeste.ResortRoofEnding" preserve="nothing" />
+    <type fullname="Celeste.RespawnTargetTrigger" preserve="nothing" />
+    <type fullname="Celeste.RidgeGate" preserve="nothing" />
+    <type fullname="Celeste.RotatingPlatform" preserve="nothing" />
+    <type fullname="Celeste.RumbleTrigger" preserve="nothing" />
+    <type fullname="Celeste.SafeGroundBlocker" preserve="nothing" />
+    <type fullname="Celeste.Seeker" preserve="nothing" />
+    <type fullname="Celeste.Seeker/RecoverBlast" preserve="nothing">
+      <method signature="System.Void .ctor()" />
+    </type>
+    <type fullname="Celeste.SeekerBarrier" preserve="nothing" />
+    <type fullname="Celeste.SeekerBarrierRenderer" preserve="nothing" />
+    <type fullname="Celeste.SeekerCollider" preserve="nothing" />
+    <type fullname="Celeste.SinkingPlatform" preserve="nothing" />
+    <type fullname="Celeste.SlashFx" preserve="nothing">
+      <method signature="System.Void .ctor()" />
+    </type>
+    <type fullname="Celeste.Snow3D/Particle" preserve="nothing" />
+    <type fullname="Celeste.Solid" preserve="nothing" />
+    <type fullname="Celeste.SolidOnInvinciblePlayer" preserve="nothing" />
+    <type fullname="Celeste.SolidTiles" preserve="nothing" />
+    <type fullname="Celeste.SoundSource" preserve="nothing" />
+    <type fullname="Celeste.SpawnFacingTrigger" preserve="nothing" />
+    <type fullname="Celeste.SpeedRing" preserve="nothing">
+      <method signature="System.Void .ctor()" />
+    </type>
+    <type fullname="Celeste.Spikes" preserve="nothing" />
+    <type fullname="Celeste.StarJumpBlock" preserve="nothing" />
+    <type fullname="Celeste.StarJumpController" preserve="nothing" />
+    <type fullname="Celeste.StaticMover" preserve="nothing" />
+    <type fullname="Celeste.StopBoostTrigger" preserve="nothing" />
+    <type fullname="Celeste.StrawberryPoints" preserve="nothing" />
+    <type fullname="Celeste.StrawberrySeed" preserve="nothing" />
+    <type fullname="Celeste.SwapBlock" preserve="nothing" />
+    <type fullname="Celeste.Switch" preserve="nothing" />
+    <type fullname="Celeste.SwitchGate" preserve="nothing" />
+    <type fullname="Celeste.TempleBigEyeballShockwave" preserve="nothing">
+      <method signature="System.Void .ctor()" />
+    </type>
+    <type fullname="Celeste.TempleCrackedBlock" preserve="nothing" />
+    <type fullname="Celeste.TempleGate" preserve="nothing" />
+    <type fullname="Celeste.TempleMirrorPortal/Curtain" preserve="nothing" />
+    <type fullname="Celeste.Textbox" preserve="nothing" />
+    <type fullname="Celeste.TheoCrystal" preserve="nothing" />
+    <type fullname="Celeste.TheoCrystalPedestal" preserve="nothing" />
+    <type fullname="Celeste.TileInterceptor" preserve="nothing" />
+    <type fullname="Celeste.TouchSwitch" preserve="nothing" />
+    <type fullname="Celeste.TrailManager" preserve="nothing" />
+    <type fullname="Celeste.TrailManager/Snapshot" preserve="nothing">
+      <method signature="System.Void .ctor()" />
+    </type>
+    <type fullname="Celeste.TransitionListener" preserve="nothing" />
+    <type fullname="Celeste.Trigger" preserve="nothing" />
+    <type fullname="Celeste.VertexLight" preserve="nothing" />
+    <type fullname="Celeste.WallBooster" preserve="nothing" />
+    <type fullname="Celeste.Water" preserve="nothing" />
+    <type fullname="Celeste.WaterFall" preserve="nothing" />
+    <type fullname="Celeste.WaterInteraction" preserve="nothing" />
+    <type fullname="Celeste.WaterSurface" preserve="nothing" />
+    <type fullname="Celeste.WaveDashTutorialMachine" preserve="nothing" />
+    <type fullname="Celeste.WhiteBlock" preserve="nothing" />
+    <type fullname="Celeste.WindAttackTrigger" preserve="nothing" />
+    <type fullname="Celeste.WindMover" preserve="nothing" />
+    <type fullname="Celeste.WindTrigger" preserve="nothing" />
+    <type fullname="Celeste.ZipMover" preserve="nothing" />
+    <type fullname="Monocle.Commands" preserve="nothing">
+      <method name="Clear" />
+      <method name="Count" />
+      <method name="Exit" />
+      <method name="Fullscreen" />
+      <method name="Help" />
+      <method name="Pooler" />
+      <method name="Tracker" />
+      <method name="Vsync" />
+      <method name="Window" />
+    </type>
+  </assembly>
+</linker>

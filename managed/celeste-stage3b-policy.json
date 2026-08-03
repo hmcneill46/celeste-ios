@@ -1,0 +1,117 @@
+{
+  "schemaVersion": 1,
+  "stage3ABaseline": {
+    "gameVersion": "1.4.0.0",
+    "patchedSourceFileCount": 922,
+    "patchedSourceLogicalSha256": "127ed90934780c2af00ad497d875a6ca03f9c5a185761b4da82366578e1bd5b0"
+  },
+  "stage3BOutput": {
+    "fileCount": 925,
+    "logicalSha256": "0dcc35b9a2b55fd69174a450db9fb21d7ebab9a7e092ccae75810d9041374dee"
+  },
+  "compileSymbols": [
+    "TVOS",
+    "TVOS_AUDIO_DISABLED",
+    "TVOS_STAGE3B"
+  ],
+  "content": {
+    "source": "$CELESTE_GAME_ROOT/Content",
+    "excludedPrefixes": [
+      "FMOD/"
+    ],
+    "exclusionRationale": "Stage 3B has explicit source-level no-audio behavior and must not stage FMOD banks.",
+    "expectedStagedFileCount": 1209,
+    "expectedStagedTotalBytes": 492943607,
+    "expectedStagedAggregateSha256": "0c2802322adb06f2281ca7f8358d56c75e6a5c48ba759171f4dc51a5c049d348",
+    "expectedExcludedFileCount": 7,
+    "expectedExcludedTotalBytes": 665721576,
+    "representativeXnbAssets": [
+      {
+        "assetName": "Effects/Border",
+        "relativePath": "Effects/Border.xnb",
+        "sha256": "055a66a81f73a1774432d3d6f410c811df5372f9243b346f5541c4253ec87393",
+        "expectedManagedType": "Microsoft.Xna.Framework.Graphics.Effect",
+        "readerTypes": [
+          "EffectReader"
+        ]
+      },
+      {
+        "assetName": "Monocle/MonocleDefault",
+        "relativePath": "Monocle/MonocleDefault.xnb",
+        "sha256": "28fe2928006120440659862f889723fc052e56ed73c6faa449b24232e132494a",
+        "expectedManagedType": "Microsoft.Xna.Framework.Graphics.SpriteFont",
+        "readerTypes": [
+          "CharReader",
+          "ListReader<T>",
+          "RectangleReader",
+          "SpriteFontReader",
+          "Texture2DReader",
+          "Vector3Reader"
+        ]
+      }
+    ]
+  },
+  "settingsSerializer": {
+    "unknownElementPolicy": "reject-with-InvalidDataException",
+    "scalarFields": [
+      "Version",
+      "DefaultFileName",
+      "Fullscreen",
+      "WindowScale",
+      "ViewportPadding",
+      "VSync",
+      "DisableFlashes",
+      "ScreenShake",
+      "Rumble",
+      "GrabMode",
+      "CrouchDashMode",
+      "MusicVolume",
+      "SFXVolume",
+      "SpeedrunClock",
+      "LastSaveFile",
+      "Language",
+      "Pico8OnMainMenu",
+      "SetViewportOnce",
+      "VariantsUnlocked",
+      "LaunchWithFMODLiveUpdate",
+      "LaunchInDebugMode"
+    ],
+    "bindingFields": [
+      "Left",
+      "Right",
+      "Down",
+      "Up",
+      "MenuLeft",
+      "MenuRight",
+      "MenuDown",
+      "MenuUp",
+      "Grab",
+      "Jump",
+      "Dash",
+      "Talk",
+      "Pause",
+      "Confirm",
+      "Cancel",
+      "Journal",
+      "QuickRestart",
+      "DemoDash",
+      "RightMoveOnly",
+      "LeftMoveOnly",
+      "UpMoveOnly",
+      "DownMoveOnly",
+      "RightDashOnly",
+      "LeftDashOnly",
+      "UpDashOnly",
+      "DownDashOnly"
+    ]
+  },
+  "transformations": [
+    "replace Celeste.Audio only under TVOS_AUDIO_DISABLED",
+    "route Settings XML through the explicit AOT-safe serializer under TVOS_STAGE3B",
+    "route saves/settings to a host-supplied ephemeral session root under TVOS_STAGE3B",
+    "instrument Celeste construction, update, draw, scene and fatal-error checkpoints",
+    "suppress process launching, unsupported GC latency mode, and unsupported thread-priority changes on tvOS",
+    "fail explicitly if Stage 3B reaches deferred SaveData XML serialization",
+    "retain all 490 Stage 3A FMOD throws as centrally counted fail-fast guards"
+  ]
+}
