@@ -38,6 +38,8 @@ internal sealed class CelestePreflightGame : Game
             ?? throw new InvalidOperationException("Preflight session root is unavailable.");
         string settings = TvOSStage3Bridge.RunSettingsPreflight(sessionRoot);
         Stage3BLog.Info($"settings preflight PASS: {settings}");
+        string saveData = TvOSStage3CBridge.RunSaveDataPreflight(sessionRoot);
+        Stage3BLog.Info($"SaveData preflight PASS: {saveData}");
 
         foreach (string manifest in TvOSStage3Bridge.DiscoveryManifestLines())
         {
@@ -77,7 +79,7 @@ internal sealed class CelestePreflightGame : Game
             throw new InvalidOperationException("Preflight reached an FMOD low-level guard.");
         }
         passed = true;
-        TvOSStage3Bridge.Checkpoint("preflight-complete", "settings=PASS; reflection=PASS; xnb-readers=7/7; fmod-low-level=0");
+        TvOSStage3Bridge.Checkpoint("preflight-complete", "settings=PASS; savedata=PASS; reflection=PASS; xnb-readers=7/7; fmod-low-level=0");
     }
 
     protected override void Update(GameTime gameTime)

@@ -1,0 +1,73 @@
+{
+  "schemaVersion": 1,
+  "baselineCommit": "e5bc7bae395cc97832d7f60f140c157ae6302f2f",
+  "gameVersion": "1.4.0.0",
+  "stage3BInput": {
+    "fileCount": 925,
+    "logicalSha256": "0dcc35b9a2b55fd69174a450db9fb21d7ebab9a7e092ccae75810d9041374dee"
+  },
+  "stage3COutput": {
+    "fileCount": 927,
+    "logicalSha256": "a5ffcde2252c527d71bae43418751ff8dbf100bf2aa344c7400e7b722f2341c7"
+  },
+  "compileSymbol": "TVOS_STAGE3C",
+  "prologueDiagnostic": {
+    "areaId": 0,
+    "areaMode": "Normal",
+    "room": "3",
+    "normalScenario": "normal",
+    "skipScenario": "skip",
+    "manualScenario": "manual"
+  },
+  "saveDataGraph": {
+    "unknownElementPolicy": "reject-with-InvalidDataException",
+    "sourceFiles": {
+      "Celeste/AreaKey.cs": "274aabdf01ed68bd565281d26e86fcea0c50dc25dbd4f99bced7efac2848c172",
+      "Celeste/AreaModeStats.cs": "ec466ddc07c3899930410cfa1305e22418f75ec47d68c36ca01182fcd7f10658",
+      "Celeste/AreaStats.cs": "7e725f22047340c6eb1de9ba0d97b64456d9c4544eebe1be5d29d63f40b13cf9",
+      "Celeste/Assists.cs": "066babf3f358ce58ea689c9fcfb72885a81cc1c72cfcf54d57bc02bd3fc00359",
+      "Celeste/AudioState.cs": "f8079d26785611236bd3f80a35c221a77bc2fff247fe7ed86723b63ed1a12238",
+      "Celeste/AudioTrackState.cs": "3a76ce1d4ea7598012b9a49a2f3dcc468f6867800ed2680c839ea65a826f12d7",
+      "Celeste/EntityID.cs": "6e0fad7ea2b4015f23bfd092fb4654c03900766cdba3d0ebc3c987983f05ff87",
+      "Celeste/MEP.cs": "cece15c70865b4b588a21ee52e91514d756e9d181bd0c20e507aa52f658a5480",
+      "Celeste/PlayerInventory.cs": "fca9bed434019cba9bbe937e18e5d170c420cbbe51740926a4e9d70aeac7ec5f",
+      "Celeste/SaveData.cs": "4d5effbda2d6dc7b142eee6b84c019f9335cb0212e0fcf282045a205a1739472",
+      "Celeste/Session.cs": "d1dd0f1a06c1dcb80524ee6c6e03f64465ecd9f291085cc1777522e0efb2f659"
+    },
+    "serializedTypes": [
+      "Celeste.SaveData",
+      "Celeste.Assists",
+      "Celeste.AreaKey",
+      "Celeste.Session",
+      "Celeste.Session.Counter",
+      "Celeste.AudioState",
+      "Celeste.AudioTrackState",
+      "Celeste.MEP",
+      "Celeste.PlayerInventory",
+      "Celeste.AreaStats",
+      "Celeste.AreaModeStats",
+      "Celeste.EntityID",
+      "Microsoft.Xna.Framework.Vector2"
+    ]
+  },
+  "rumble": {
+    "timerClock": "Engine.RawDeltaTime",
+    "nonContinuousWatchdogSeconds": 3.0,
+    "watchdogRule": "max(3.0, intended-duration + 0.5)",
+    "manualDisconnectProbeSeconds": 12.0,
+    "stopReasons": [
+      "duration-expired",
+      "explicit-zero",
+      "cutscene-complete",
+      "cutscene-skip",
+      "scene-transition",
+      "resign-active",
+      "background",
+      "controller-disconnect",
+      "unhandled-exception",
+      "game-disposal",
+      "shutdown",
+      "watchdog"
+    ]
+  }
+}

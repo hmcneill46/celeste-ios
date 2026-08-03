@@ -143,7 +143,8 @@ if [[ "$MODE" == "CelestePreflight" ]]; then
   wait "$CONSOLE_PID" || true
   CONSOLE_PID=""
   grep -Fq "mode=CelestePreflight" "$EVIDENCE_DIR/console.log" || { echo "error: app was not built in CelestePreflight mode" >&2; exit 1; }
-  grep -Fq "name=preflight-complete; settings=PASS; reflection=PASS; xnb-readers=7/7; fmod-low-level=0" "$EVIDENCE_DIR/console.log" || {
+  grep -Fq "name=preflight-complete; settings=PASS;" "$EVIDENCE_DIR/console.log" &&
+    grep -Fq "reflection=PASS; xnb-readers=7/7; fmod-low-level=0" "$EVIDENCE_DIR/console.log" || {
     echo "error: preflight did not complete" >&2; exit 1;
   }
   echo "PASS: simulator CelestePreflight completed"

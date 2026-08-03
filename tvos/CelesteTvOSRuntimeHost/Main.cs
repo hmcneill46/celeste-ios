@@ -27,6 +27,9 @@ internal static class Program
     {
         Stage3BLog.Info($"managed startup: SDL main callback entered; mode={LaunchMode}; argc={argc}");
         using var lifecycle = new LifecycleMonitor();
+#if CELESTE_RUNTIME
+        using var hapticLifecycle = new Stage3CHapticLifecycle();
+#endif
 
         try
         {
@@ -75,6 +78,9 @@ internal static class Program
         }
         catch (Exception exception)
         {
+#if CELESTE_RUNTIME
+            TvOSStage3CBridge.Fatal(exception, "tvOS host");
+#endif
             Stage3BLog.Error($"unhandled managed exception: {exception}");
             return 1;
         }
@@ -116,6 +122,11 @@ internal static class Program
         Directory.CreateDirectory(sessionRoot);
 
         Environment.SetEnvironmentVariable("CELESTE_TVOS_SESSION_ROOT", sessionRoot);
+#if CELESTE_PROLOGUE_DIAGNOSTIC
+        Environment.SetEnvironmentVariable("CELESTE_TVOS_PROLOGUE_SCENARIO", PrologueScenario);
+#else
+        Environment.SetEnvironmentVariable("CELESTE_TVOS_PROLOGUE_SCENARIO", null);
+#endif
         Environment.SetEnvironmentVariable("FNA_AUDIO_DISABLE_SOUND", "1");
         Environment.SetEnvironmentVariable("FNA3D_FORCE_DRIVER", "Metal");
         Directory.SetCurrentDirectory(resources);
@@ -153,6 +164,8 @@ internal static class Program
         {
 #if CELESTE_PREFLIGHT
             return "CelestePreflight";
+#elif CELESTE_PROLOGUE_DIAGNOSTIC
+            return "CelestePrologueDiagnostic";
 #elif CELESTE_GAME
             return "Celeste";
 #else
@@ -160,4 +173,20 @@ internal static class Program
 #endif
         }
     }
+
+#if CELESTE_PROLOGUE_DIAGNOSTIC
+    private static string PrologueScenario
+    {
+        get
+        {
+#if STAGE3C_SCENARIO_SKIP
+            return "skip";
+#elif STAGE3C_SCENARIO_MANUAL
+            return "manual";
+#else
+            return "normal";
+#endif
+        }
+    }
+#endif
 }
