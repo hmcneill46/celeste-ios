@@ -1,0 +1,24 @@
+diff --git a/Celeste/Celeste.cs b/Celeste/Celeste.cs
+--- a/Celeste/Celeste.cs
++++ b/Celeste/Celeste.cs
+@@ -164 +164 @@
+-	private static void Main(string[] args)
++	public static void Run(string[] args)
+diff --git a/Monocle/SaveLoad.cs b/Monocle/SaveLoad.cs
+--- a/Monocle/SaveLoad.cs
++++ b/Monocle/SaveLoad.cs
+@@ -2 +2 @@
+-using System.Runtime.Serialization.Formatters.Binary;
++using System;
+@@ -21,2 +21 @@
+-			new BinaryFormatter().Serialize(fileStream, obj);
+-			break;
++			throw new PlatformNotSupportedException("BinaryFormatter is unavailable on the modern tvOS target.");
+@@ -47 +46 @@
+-			return (T)new BinaryFormatter().Deserialize(fileStream);
++			throw new PlatformNotSupportedException("BinaryFormatter is unavailable on the modern tvOS target.");
+diff --git a/Properties/AssemblyInfo.cs b/Properties/AssemblyInfo.cs
+--- a/Properties/AssemblyInfo.cs
++++ b/Properties/AssemblyInfo.cs
+@@ -7 +6,0 @@
+-using System.Security.Permissions;

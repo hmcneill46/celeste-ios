@@ -1,0 +1,30 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0-tvos26.5</TargetFramework>
+    <OutputType>Library</OutputType>
+    <AssemblyName>Celeste</AssemblyName>
+    <RootNamespace>Celeste</RootNamespace>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <LangVersion>10.0</LangVersion>
+    <Nullable>disable</Nullable>
+    <ImplicitUsings>false</ImplicitUsings>
+    <DefineConstants>$(DefineConstants);TVOS;TVOS_AUDIO_DISABLED</DefineConstants>
+    <SupportedOSPlatformVersion>16.0</SupportedOSPlatformVersion>
+    <IsTrimmable>true</IsTrimmable>
+    <EnableTrimAnalyzer>true</EnableTrimAnalyzer>
+    <EnableAotAnalyzer>true</EnableAotAnalyzer>
+    <TrimmerSingleWarn>false</TrimmerSingleWarn>
+    <Deterministic>true</Deterministic>
+    <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+    <PathMap>$(CelesteManagedGeneratedRoot)=/_/celeste-managed</PathMap>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Remove="Stage3AContentIdentity.cs" />
+    <ProjectReference Include="$(CelesteTvOSRepoRoot)/tvos/FNA.TvOS/FNA.TvOS.csproj" />
+  </ItemGroup>
+  <Target Name="ValidateCelesteTvOSRepoRoot" BeforeTargets="PrepareForBuild">
+    <Error Condition="'$(CelesteTvOSRepoRoot)' == ''"
+           Text="CelesteTvOSRepoRoot must point to the repository root." />
+  </Target>
+</Project>

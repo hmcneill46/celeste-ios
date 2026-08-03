@@ -1,0 +1,92 @@
+{
+  "schemaVersion": 1,
+  "entries": [
+    {
+      "category": "reflection issue",
+      "diagnostic": "Assembly.GetEntryAssembly resolves to the closure/host instead of generated Celeste",
+      "patch": "patches/crash-fixes.patch",
+      "symbols": [
+        "Celeste.Overworld.ReloadMenus",
+        "Monocle.Commands.BuildCommandsList",
+        "Monocle.Engine.AssemblyDirectory",
+        "Monocle.Pooler..ctor",
+        "Monocle.Tracker.Initialize",
+        "Monocle.Tracker.GetSubclasses"
+      ],
+      "transformation": "Use Assembly.GetExecutingAssembly for discovery owned by the Celeste library.",
+      "behaviouralRationale": "The modern Celeste assembly is a library loaded by a separate tvOS executable.",
+      "stage3BTest": "verify tracked/pooled type discovery, overworld Oui discovery and command registration before first frame"
+    },
+    {
+      "category": "XML/serialization issue",
+      "diagnostic": "Settings.XmlComment reconstruction is incompatible with the serializer path used by the legacy iOS pipeline",
+      "patch": "patches/crash-fixes.patch",
+      "symbols": [
+        "Celeste.Settings.DebugModeComment"
+      ],
+      "transformation": "Remove the informational XML comment-only property.",
+      "behaviouralRationale": "The property carries no settings state and existed only to emit explanatory text.",
+      "stage3BTest": "round-trip default Settings without the comment node in ignored temporary storage"
+    },
+    {
+      "category": "legacy .NET Framework API difference",
+      "diagnostic": "SYSLIB0011: BinaryFormatter is obsolete and disabled in modern .NET",
+      "patch": "managed/patches/game/0001-modern-library-boundary-and-bcl.patch",
+      "symbols": [
+        "Monocle.SaveLoad.Serialize",
+        "Monocle.SaveLoad.Deserialize"
+      ],
+      "transformation": "Throw PlatformNotSupportedException only for the Binary mode; retain XML mode.",
+      "behaviouralRationale": "No generated Celeste call site uses Monocle.SaveLoad, and unsafe binary serialization must not be silently re-enabled.",
+      "stage3BTest": "assert the Binary mode fails loudly and confirm no normal startup call site reaches it"
+    },
+    {
+      "category": "launcher/entrypoint behaviour",
+      "diagnostic": "The decompiler emits a private executable Main method, but Stage 3A produces a library",
+      "patch": "managed/patches/game/0001-modern-library-boundary-and-bcl.patch",
+      "symbols": [
+        "Celeste.Celeste.Main"
+      ],
+      "transformation": "Rename it to public static Run(string[]) without invoking it.",
+      "behaviouralRationale": "Stage 3B needs a controlled non-reflected callable boundary; Stage 3A only roots it for AOT closure.",
+      "stage3BTest": "invoke Run only after the modern SDL lifecycle hands control to the managed host"
+    },
+    {
+      "category": "legacy .NET Framework API difference",
+      "diagnostic": "System.Security.Permissions is absent from the modern target",
+      "patch": "managed/patches/game/0001-modern-library-boundary-and-bcl.patch",
+      "symbols": [
+        "Properties.AssemblyInfo"
+      ],
+      "transformation": "Remove an unused using directive; retain the remaining assembly metadata.",
+      "behaviouralRationale": "No permission attribute is present or required.",
+      "stage3BTest": "verify Celeste assembly identity and reflected metadata"
+    },
+    {
+      "category": "AOT/reflection issue",
+      "diagnostic": "IL3050/IL2026 on Type-based Enum and Marshal overloads with statically known types",
+      "patch": "managed/patches/game/0002-use-aot-safe-generic-runtime-apis.patch",
+      "symbols": [
+        "Celeste.AreaStats",
+        "Celeste.OuiJournalGlobal",
+        "FMOD.DSP",
+        "FMOD.Studio.SOUND_INFO_INTERNAL",
+        "FMOD.Studio.System"
+      ],
+      "transformation": "Use equivalent generic Enum.GetValues, Marshal.SizeOf and Marshal.PtrToStructure overloads.",
+      "behaviouralRationale": "The types are compile-time constants; generic overloads preserve behaviour and make AOT requirements explicit.",
+      "stage3BTest": "exercise area stats/journal construction; FMOD marshaling remains deferred to Stage 5"
+    },
+    {
+      "category": "native interop issue",
+      "diagnostic": "Device AOT links rooted FMOD P/Invoke wrappers, but Stage 3A is prohibited from linking native FMOD",
+      "patch": "scripts/celeste-managed.py#patch-fmod",
+      "symbols": [
+        "generated fmod/fmodstudio/fmod_SDL native imports"
+      ],
+      "transformation": "Deterministically replace only generated FMOD extern declarations with managed PlatformNotSupportedException bodies and record every symbol.",
+      "behaviouralRationale": "This is an ignored, compile-only source boundary, not a native stub or audio implementation; any reached call fails loudly.",
+      "stage3BTest": "replace or deliberately bypass Audio.Init before runtime; restore exact FMOD 1.10.x native resolution only in Stage 5"
+    }
+  ]
+}

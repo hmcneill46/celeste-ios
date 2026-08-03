@@ -13,3 +13,8 @@ artifacts/tvos-host/
 tvos/Local.Build.props
 tvos/**/bin/
 tvos/**/obj/
+
+# User-owned Celeste input, generated/decompiled managed source, build output,
+# diagnostics, and local repository-scoped tool/package state for Stage 3A.
+.build/celeste-managed/
+artifacts/celeste-managed/

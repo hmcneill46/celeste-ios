@@ -1,0 +1,143 @@
+{
+  "schemaVersion": 1,
+  "supportedInput": {
+    "distribution": "unmodified FNA-based Celeste release (non-Everest)",
+    "gameVersion": "1.4.0.0",
+    "files": {
+      "Celeste.exe": {
+        "assemblyIdentity": {
+          "name": "Celeste",
+          "version": "1.0.0.0"
+        },
+        "sha256": "fd73f8a2311fa5737ded550cbad4b75c85b7686b36432f59185e940fcb65fcfe"
+      },
+      "Celeste.Content.dll": {
+        "assemblyIdentity": {
+          "name": "Celeste.Content",
+          "version": "0.0.0.0"
+        },
+        "sha256": "0b8d6195992c8970e8602bf48a7bf89104b83a98e34a07dc0c18d01581711d15"
+      },
+      "FNA.dll": {
+        "assemblyIdentity": {
+          "name": "FNA",
+          "version": "21.3.5.0"
+        },
+        "sha256": "00349b572636c0ed4c97d4e4f74344b3450160c42d4a6b52bcf5e0f2d5193a31"
+      }
+    },
+    "content": {
+      "aggregateSha256": "30a1c147d1a3ab0aa45762094e393ed7fd69951dd66e5af063447641e0699c46",
+      "fileCount": 1216,
+      "totalBytes": 1158665183
+    },
+    "celesteAssemblyReferences": [
+      {
+        "name": "FNA",
+        "version": "21.3.5.0"
+      },
+      {
+        "name": "mscorlib",
+        "version": "4.0.0.0"
+      },
+      {
+        "name": "System",
+        "version": "4.0.0.0"
+      },
+      {
+        "name": "System.Core",
+        "version": "4.0.0.0"
+      },
+      {
+        "name": "System.Xml",
+        "version": "4.0.0.0"
+      }
+    ]
+  },
+  "generationTool": {
+    "command": "dotnet tool run ilspycmd -- -p --nested-directories -lv CSharp10_0 -o $DECOMPILED_ROOT -r $INPUT_ROOT $INPUT_ROOT/Celeste.exe",
+    "manifest": ".config/dotnet-tools.json",
+    "name": "ilspycmd",
+    "package": "ilspycmd",
+    "packageSha256": "9f2fe20986177e444b4bd9126a37514b073d49646a2df71b750d4a839cb97424",
+    "packageSource": "https://api.nuget.org/v3/index.json",
+    "nugetContentHashSha512Base64": "U07rhGuph4zAX8sXUR1jOcpk1j0NbDdMv74PXp7C2h2eOXmaAXj4UKlyTqZADbhrCvOQDziQ2LyH/YqlKnDkHA==",
+    "reportedDecompilerVersion": "8.0.0.7246",
+    "version": "8.0.0.7246-preview3"
+  },
+  "generatedProjectTemplateVersion": 1,
+  "expectedGeneration": {
+    "decompiledSource": {
+      "fileCount": 920,
+      "logicalSha256": "db7b722159fbdef8625c81608165aea162957dce956fcd5b16eeceaa1089a273"
+    },
+    "patchedSource": {
+      "fileCount": 922,
+      "logicalSha256": "127ed90934780c2af00ad497d875a6ca03f9c5a185761b4da82366578e1bd5b0"
+    }
+  },
+  "targetAssemblies": [
+    {
+      "generatedIdentity": "Celeste, Version=1.0.0.0",
+      "input": "Celeste.exe",
+      "outputType": "Library",
+      "targetFramework": "net10.0-tvos26.5"
+    },
+    {
+      "generatedIdentity": "Celeste.Content, Version=0.0.0.0",
+      "input": "Celeste.Content.dll",
+      "outputType": "Library",
+      "targetFramework": "net10.0-tvos26.5"
+    }
+  ],
+  "modernFna": {
+    "assemblyIdentity": "FNA",
+    "project": "tvos/FNA.TvOS/FNA.TvOS.csproj",
+    "revision": "d52b4ce61e4086b785c51a96d331dbf106975a58"
+  },
+  "stage1NativeLogicalSha256": "61c1d97b7a585144b2b60ec0ed46f2d70f1f6239ec1732a17cc3101c3293fe39",
+  "patchOrder": [
+    {
+      "path": "patches/crash-fixes.patch",
+      "sha256": "fc20eabc07d59f8b932377ecc814d00b90adc6259295c1bf237b25a89daf72f6"
+    },
+    {
+      "path": "managed/patches/game/0001-modern-library-boundary-and-bcl.patch",
+      "sha256": "ca1afef7cb294c1e328856027a992e38983963902bff6f32682143a0160d740e"
+    },
+    {
+      "path": "managed/patches/game/0002-use-aot-safe-generic-runtime-apis.patch",
+      "sha256": "ea5f975b75511811e7073ad0fbde39d2b0e9ac31f09d98d2be323d5c5a92011f"
+    },
+    {
+      "expectedNativeImportCount": 490,
+      "path": "scripts/celeste-managed.py#patch-fmod",
+      "policy": "replace only generated fmod/fmodstudio/fmod_SDL DllImport declarations with explicit PlatformNotSupportedException bodies; generated source stays ignored",
+      "sha256": "26f4c39b06a59bd5ad3f76290ebe66cfe9910a8733c4041c9f6ff8cea8d89377"
+    }
+  ],
+  "templates": [
+    {
+      "path": "managed/templates/Celeste.Modern.csproj",
+      "sha256": "aa7be5b5c2d8163ae974cc21d81a025dcd23c875e863ea5b503f536a8b2caca4"
+    },
+    {
+      "path": "managed/templates/Celeste.Content.Modern.csproj",
+      "sha256": "cea004047ffcf2ebb2c8ca8b1b871835ed0e2f29d22a4c4714bf26d27600bdce"
+    },
+    {
+      "path": "managed/templates/Stage3AContentIdentity.cs",
+      "sha256": "1e648ee93cd0fb370411caffab8c04d4f93043283a247d49b9d5a9b375ed2fb7"
+    }
+  ],
+  "normalisation": {
+    "compiledPeByteIdentityRequired": false,
+    "diagnostics": "replace repository/generated absolute paths with placeholders; de-duplicate and sort by severity, code, file, line and message",
+    "source": "sort relative POSIX paths; SHA-256 each file; logical SHA-256 of relative-path NUL file-sha256 newline",
+    "volatileFieldsExcluded": [
+      "file modification times",
+      "absolute local paths in raw build logs",
+      "compiled PE/Mach-O timestamps and UUIDs"
+    ]
+  }
+}

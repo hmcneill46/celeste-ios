@@ -1,0 +1,129 @@
+{
+  "schemaVersion": 1,
+  "policy": "Every retained compiler, trim and AOT diagnostic must match a focused rule. This file suppresses nothing.",
+  "rules": [
+    {
+      "id": "fna-callback-platform-guard",
+      "codeRegex": "CA1416",
+      "fileRegex": "^(FNA/|\\.build/tvos-host/)",
+      "classification": "statically safe",
+      "rationale": "The modern project targets tvOS 16.0; MonoPInvokeCallbackAttribute is supported on tvOS 12.2 and later. Stage 2 already executed these callback paths on device AOT.",
+      "stage3BTest": "retain the Stage 2 lifecycle/native callback self-tests when Celeste is integrated"
+    },
+    {
+      "id": "pinned-fna-code-quality-baseline",
+      "codeRegex": "CA2014|CA2022|CA2200",
+      "fileRegex": "^FNA/",
+      "classification": "inferred runtime risk",
+      "rationale": "These are focused pre-existing diagnostics in the pinned FNA revision, not a modern-retarget or AOT closure failure.",
+      "stage3BTest": "exercise SDL event loops and representative compressed ContentManager reads without changing the pinned submodule"
+    },
+    {
+      "id": "celeste-stream-read-baseline",
+      "codeRegex": "CA2022",
+      "fileRegex": "^Monocle/VirtualTexture\\.cs$",
+      "classification": "inferred runtime risk",
+      "rationale": "The decompiled legacy code assumes complete FileStream reads; the warning is unrelated to trimming but requires content-load evidence.",
+      "stage3BTest": "load representative virtual textures and verify exact byte counts before first-frame acceptance"
+    },
+    {
+      "id": "legacy-lowercase-type-identifiers",
+      "codeRegex": "CS8981",
+      "fileRegex": ".*",
+      "classification": "statically safe",
+      "rationale": "Legacy PICO-8/FNA lowercase type names compile unchanged; the warning concerns possible future C# reserved names.",
+      "stage3BTest": "none beyond compilation"
+    },
+    {
+      "id": "decompiler-nullable-annotation-context",
+      "codeRegex": "CS8632",
+      "fileRegex": "^(Celeste/BirdTutorialGui|Monocle/Atlas)\\.cs$",
+      "classification": "decompiler artefact",
+      "rationale": "Two reconstructed nullable annotations appear in otherwise nullable-oblivious legacy source and do not alter emitted runtime semantics.",
+      "stage3BTest": "exercise tutorial GUI and atlas lookup through normal first-frame loading"
+    },
+    {
+      "id": "decompiler-unused-locals",
+      "codeRegex": "CS0219",
+      "fileRegex": "^Celeste/",
+      "classification": "decompiler artefact",
+      "rationale": "The exact supported binary decompiles with three dead local assignments; no source transformation is justified without runtime evidence.",
+      "stage3BTest": "exercise input, autotiling and wipe paths when reachable"
+    },
+    {
+      "id": "fmod-managed-layout-fields",
+      "codeRegex": "CS0169|CS0649",
+      "fileRegex": "^FMOD/",
+      "classification": "FMOD compile-only boundary",
+      "rationale": "Private fields are populated through native marshaling in the exact managed FMOD 1.10.20 API. Native FMOD is intentionally absent until Stage 5.",
+      "stage3BTest": "unreachable while the explicit Stage 3A FMOD boundary is active; validate with exact native SDK only in Stage 5"
+    },
+    {
+      "id": "legacy-unused-game-fields",
+      "codeRegex": "CS0169|CS0649",
+      "fileRegex": "^Celeste/",
+      "classification": "decompiler/legacy platform artefact",
+      "rationale": "These fields belong to inactive Stadia/editor/cutscene or reconstructed state and are not trim/reflection diagnostics.",
+      "stage3BTest": "cover their owning feature only if the target startup path reaches it"
+    },
+    {
+      "id": "settings-save-xmlserializer",
+      "codeRegex": "IL2026|IL3050",
+      "fileRegex": "Celeste/UserIO\\.cs$",
+      "messageRegex": "XmlSerializer|Serialize|Deserialize",
+      "classification": "requires runtime rewrite",
+      "rationale": "Settings is reachable before first frame and SaveData is required later; runtime XmlSerializer code generation cannot be assumed under full device AOT.",
+      "stage3BTest": "replace with a focused AOT-safe serializer path, then round-trip Settings and SaveData in ignored temporary storage on device"
+    },
+    {
+      "id": "debug-session-xmlserializer",
+      "codeRegex": "IL2026|IL3050",
+      "fileRegex": "^Celeste/Commands\\.cs$",
+      "messageRegex": "XmlSerializer|Serialize",
+      "classification": "unreachable on target",
+      "rationale": "This serializer is used only by a debug command that must remain disabled in the tvOS runtime lane.",
+      "stage3BTest": "prove the retail tvOS command console and Session export command are unreachable"
+    },
+    {
+      "id": "generic-monocle-xmlserializer",
+      "codeRegex": "IL2026|IL3050",
+      "fileRegex": "^Monocle/(Calc|SaveLoad)\\.cs$",
+      "messageRegex": "XmlSerializer|Serialize|Deserialize",
+      "classification": "deferred until Stage 3B evidence",
+      "rationale": "Static call-site inventory finds no normal startup use of SaveLoad and no concrete Calc serializer root; blanket preservation would be unjustified.",
+      "stage3BTest": "instrument startup and fail if either generic helper is reached before selecting a concrete serializer root"
+    },
+    {
+      "id": "celeste-reflected-discovery",
+      "codeRegex": "IL2026|IL2062|IL2065|IL2072|IL2075|IL2090",
+      "fileRegex": "(Celeste/(Overworld|SpawnManager)|Monocle/(Commands|Pooler|Tracker|Calc|MethodHandle))\\.cs$",
+      "classification": "requires focused preservation",
+      "rationale": "Celeste discovers Oui, tracked/pooled entities, spawn/command methods and delegate targets from its own assembly. The generated reflection inventory records each site; a preserve-all descriptor is prohibited.",
+      "stage3BTest": "compare discovered type/method sets before and after trimming and add only exact roots proven necessary"
+    },
+    {
+      "id": "fna-dynamic-content-readers",
+      "codeRegex": "IL2046|IL2057|IL2067|IL2070|IL2075|IL2087",
+      "fileRegex": "^FNA/src/(Content|Graphics/Vertices|Design)/",
+      "classification": "requires focused preservation",
+      "rationale": "Pinned FNA constructs content readers, reflective members and vertex declarations dynamically. The content reader inventory narrows the user input to seven reader types.",
+      "stage3BTest": "load representative XNB files for all inventoried reader types and exercise the concrete vertex declarations under device AOT"
+    },
+    {
+      "id": "fna-window-title-attribute",
+      "codeRegex": "IL2045",
+      "fileRegex": "^FNA/src/Utilities/AssemblyHelper\\.cs$",
+      "classification": "inferred runtime risk",
+      "rationale": "The pinned helper reflects AssemblyTitleAttribute while the platform trimmer removes attribute instances; the host supplies an explicit application title.",
+      "stage3BTest": "verify the title lookup fallback remains non-fatal when Celeste creates its FNA Game"
+    },
+    {
+      "id": "platform-xmlserializer-attribute-removal",
+      "codeRegex": "IL2045",
+      "fileRegex": "^ILLink$",
+      "classification": "requires runtime rewrite",
+      "rationale": "The platform XmlSerializer implementation reflects ObsoleteAttribute while the Apple trimmer removes it; this reinforces the explicit serializer blocker rather than justifying preserve-all.",
+      "stage3BTest": "resolve through the focused AOT-safe Settings/SaveData serializer work before first-frame acceptance"
+    }
+  ]
+}

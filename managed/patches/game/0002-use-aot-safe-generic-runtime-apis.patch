@@ -1,0 +1,39 @@
+diff --git a/Celeste/AreaStats.cs b/Celeste/AreaStats.cs
+--- a/Celeste/AreaStats.cs
++++ b/Celeste/AreaStats.cs
+@@ -99 +99 @@
+-		int length = Enum.GetValues(typeof(AreaMode)).Length;
++		int length = Enum.GetValues<AreaMode>().Length;
+@@ -109 +109 @@
+-		int length = Enum.GetValues(typeof(AreaMode)).Length;
++		int length = Enum.GetValues<AreaMode>().Length;
+@@ -133 +133 @@
+-		foreach (AreaMode value in Enum.GetValues(typeof(AreaMode)))
++		foreach (AreaMode value in Enum.GetValues<AreaMode>())
+diff --git a/Celeste/OuiJournalGlobal.cs b/Celeste/OuiJournalGlobal.cs
+--- a/Celeste/OuiJournalGlobal.cs
++++ b/Celeste/OuiJournalGlobal.cs
+@@ -16 +16 @@
+-		foreach (Stat value in Enum.GetValues(typeof(Stat)))
++		foreach (Stat value in Enum.GetValues<Stat>())
+diff --git a/FMOD/DSP.cs b/FMOD/DSP.cs
+--- a/FMOD/DSP.cs
++++ b/FMOD/DSP.cs
+@@ -184 +184 @@
+-			desc = (DSP_PARAMETER_DESC)Marshal.PtrToStructure(desc2, typeof(DSP_PARAMETER_DESC));
++			desc = Marshal.PtrToStructure<DSP_PARAMETER_DESC>(desc2);
+diff --git a/FMOD/Studio/SOUND_INFO_INTERNAL.cs b/FMOD/Studio/SOUND_INFO_INTERNAL.cs
+--- a/FMOD/Studio/SOUND_INFO_INTERNAL.cs
++++ b/FMOD/Studio/SOUND_INFO_INTERNAL.cs
+@@ -21 +21 @@
+-		publicInfo.exinfo.inclusionlist = Marshal.AllocHGlobal(Marshal.SizeOf(typeof(int)));
++		publicInfo.exinfo.inclusionlist = Marshal.AllocHGlobal(Marshal.SizeOf<int>());
+diff --git a/FMOD/Studio/System.cs b/FMOD/Studio/System.cs
+--- a/FMOD/Studio/System.cs
++++ b/FMOD/Studio/System.cs
+@@ -24 +24 @@
+-		settings.cbsize = Marshal.SizeOf(typeof(ADVANCEDSETTINGS));
++		settings.cbsize = Marshal.SizeOf<ADVANCEDSETTINGS>();
+@@ -30 +30 @@
+-		settings.cbsize = Marshal.SizeOf(typeof(ADVANCEDSETTINGS));
++		settings.cbsize = Marshal.SizeOf<ADVANCEDSETTINGS>();
