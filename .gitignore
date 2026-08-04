@@ -28,3 +28,11 @@ artifacts/celeste-runtime/
 # physical-device evidence. Proprietary inputs and private logs stay local.
 .build/fmod-tvos/
 artifacts/fmod-tvos/
+
+# Generated Stage 8 self-build configuration, local artwork, application
+# bundles, IPAs, signing evidence, and privacy-safe user-facing outputs.
+.build/tvos-self-build/
+artifacts/tvos-self-build/
+dist/
+
+.DS_Store

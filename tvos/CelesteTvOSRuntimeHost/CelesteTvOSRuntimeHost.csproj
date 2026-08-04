@@ -7,9 +7,9 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <SupportedOSPlatformVersion>16.0</SupportedOSPlatformVersion>
     <TargetPlatformMinVersion>16.0</TargetPlatformMinVersion>
-    <ApplicationId>io.github.roootthefox.celestetvos.stage3b</ApplicationId>
-    <ApplicationTitle>Celeste tvOS</ApplicationTitle>
-    <ApplicationDisplayVersion>6.0</ApplicationDisplayVersion>
+    <ApplicationId Condition="'$(ApplicationId)' == ''">com.example.celeste-tvos</ApplicationId>
+    <ApplicationTitle>Celeste</ApplicationTitle>
+    <ApplicationDisplayVersion>8.0</ApplicationDisplayVersion>
     <ApplicationVersion>1</ApplicationVersion>
     <AssemblyInformationalVersion>6.0.0+stage6</AssemblyInformationalVersion>
     <CelesteLaunchMode Condition="'$(CelesteLaunchMode)' == ''">Stage2Diagnostic</CelesteLaunchMode>
@@ -29,9 +29,15 @@
     <CelesteRuntimeContentRoot>$(CelesteRuntimeRoot)\content\Content</CelesteRuntimeContentRoot>
     <FmodDiagnosticStageRoot Condition="'$(FmodDiagnosticStageRoot)' == ''">$(CelesteTvOSRepoRoot)\.build\fmod-tvos\current</FmodDiagnosticStageRoot>
     <FmodNativeEnabled Condition="'$(FmodDiagnosticEnabled)' == 'true' or '$(CelesteAudioEnabled)' == 'true'">true</FmodNativeEnabled>
+    <CelesteBrandingEnabled Condition="'$(CelesteBrandingEnabled)' == ''">false</CelesteBrandingEnabled>
+    <CelesteBrandAssetsRoot Condition="'$(CelesteBrandAssetsRoot)' == ''">$(CelesteTvOSRepoRoot)\.build\tvos-self-build\artwork\Assets.xcassets</CelesteBrandAssetsRoot>
+    <AppIcon Condition="'$(CelesteBrandingEnabled)' == 'true'">App Icon</AppIcon>
     <Stage3BFnaExtensionTargets>$(MSBuildThisFileDirectory)Stage3BFnaExtension.targets</Stage3BFnaExtensionTargets>
     <CodesignEntitlements>Entitlements.plist</CodesignEntitlements>
     <TrimMode Condition="'$(Configuration)' == 'Release'">full</TrimMode>
+    <DebugSymbols Condition="'$(Configuration)' == 'Release'">false</DebugSymbols>
+    <DebugType Condition="'$(Configuration)' == 'Release'">none</DebugType>
+    <TrimmerRemoveSymbols Condition="'$(Configuration)' == 'Release'">true</TrimmerRemoveSymbols>
     <MtouchLink Condition="'$(Configuration)' == 'Release'">Full</MtouchLink>
     <UseInterpreter>false</UseInterpreter>
     <DefineConstants Condition="'$(CelesteLaunchMode)' == 'Stage2Diagnostic'">$(DefineConstants);STAGE2_DIAGNOSTIC</DefineConstants>
@@ -66,6 +72,13 @@
     <Compile Include="..\CelesteTvOSHost\NativeInteropSelfTest.cs" Link="Stage2Diagnostic\NativeInteropSelfTest.cs" />
     <Compile Include="..\CelesteTvOSHost\LifecycleMonitor.cs" Link="Stage2Diagnostic\LifecycleMonitor.cs" />
     <BundleResource Include="PrivacyInfo.xcprivacy" LogicalName="PrivacyInfo.xcprivacy" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(CelesteBrandingEnabled)' == 'true'">
+    <ImageAsset Include="$(CelesteBrandAssetsRoot)\**\*.*">
+      <Link>Assets.xcassets\%(RecursiveDir)%(Filename)%(Extension)</Link>
+      <Visible>false</Visible>
+    </ImageAsset>
   </ItemGroup>
 
   <ItemGroup Condition="'$(CelesteRuntimeEnabled)' == 'true'">
@@ -129,6 +142,8 @@
            Text="Stage5BAudioScenario must be normal, prologue-normal, or prologue-skip." />
     <Error Condition="'$(CelesteLaunchMode)' == 'CelestePrologueDiagnostic' and '$(Stage3CPrologueScenario)' != 'normal' and '$(Stage3CPrologueScenario)' != 'skip' and '$(Stage3CPrologueScenario)' != 'manual'"
            Text="Stage3CPrologueScenario must be normal, skip, or manual." />
+    <Error Condition="'$(CelesteBrandingEnabled)' == 'true' and !Exists('$(CelesteBrandAssetsRoot)\App Icon.brandassets\Contents.json')"
+           Text="Local Celeste tvOS artwork is missing. Run scripts/generate-celeste-tvos-artwork.sh." />
     <Error Condition="!Exists('$(TvOSHostStageRoot)\normalized-manifest.json')"
            Text="Prepared Stage 1 native inputs are missing. Run scripts/prepare-tvos-host-native.sh." />
     <Error Condition="'$(CelesteRuntimeEnabled)' == 'true' and !Exists('$(CelesteRuntimeManagedRoot)\Celeste.Modern.csproj')"
