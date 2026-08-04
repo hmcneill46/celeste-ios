@@ -45,6 +45,17 @@ internal static class Program
             Stage3BLog.Info("Stage2Diagnostic: proven geometric FNA scene constructed; entering run loop");
             diagnostic.Run();
             Stage3BLog.Info("Stage2Diagnostic: run loop returned cleanly");
+#elif FMOD_DIAGNOSTIC_DEVICE
+            using var fmodDiagnostic = new FmodDiagnosticGame();
+            Stage3BLog.Info("FmodDiagnostic: real FMOD 1.10.09 device lane constructed; entering run loop");
+            fmodDiagnostic.Run();
+            Stage3BLog.Info("FmodDiagnostic: run loop returned cleanly");
+#elif FMOD_DIAGNOSTIC_UNAVAILABLE
+            Stage3BLog.Warning(
+                "FmodDiagnostic: native FMOD is device-only for arm64; supplied tvOS simulator archives are x86_64-only"
+            );
+            using var unavailableDiagnostic = new Stage2Game();
+            unavailableDiagnostic.Run();
 #elif CELESTE_PREFLIGHT
             PrepareCelesteRuntimeContext();
             using var preflight = new CelestePreflightGame();
@@ -164,6 +175,8 @@ internal static class Program
         {
 #if CELESTE_PREFLIGHT
             return "CelestePreflight";
+#elif FMOD_DIAGNOSTIC_DEVICE || FMOD_DIAGNOSTIC_UNAVAILABLE
+            return "FmodDiagnostic";
 #elif CELESTE_PROLOGUE_DIAGNOSTIC
             return "CelestePrologueDiagnostic";
 #elif CELESTE_GAME

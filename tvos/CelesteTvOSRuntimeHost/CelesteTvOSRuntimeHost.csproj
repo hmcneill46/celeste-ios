@@ -14,18 +14,22 @@
     <AssemblyInformationalVersion>3.0.0+stage3b</AssemblyInformationalVersion>
     <CelesteLaunchMode Condition="'$(CelesteLaunchMode)' == ''">Stage2Diagnostic</CelesteLaunchMode>
     <CelesteRuntimeEnabled Condition="'$(CelesteLaunchMode)' == 'CelestePreflight' or '$(CelesteLaunchMode)' == 'Celeste' or '$(CelesteLaunchMode)' == 'CelestePrologueDiagnostic'">true</CelesteRuntimeEnabled>
+    <FmodDiagnosticEnabled Condition="'$(CelesteLaunchMode)' == 'FmodDiagnostic'">true</FmodDiagnosticEnabled>
     <CelesteTvOSRepoRoot>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\..'))</CelesteTvOSRepoRoot>
     <TvOSHostStageRoot>$(CelesteTvOSRepoRoot)\.build\tvos-host</TvOSHostStageRoot>
     <TvOSHostNativeRoot>$(TvOSHostStageRoot)\native</TvOSHostNativeRoot>
     <CelesteRuntimeRoot Condition="'$(CelesteRuntimeRoot)' == ''">$(CelesteTvOSRepoRoot)\.build\celeste-runtime\stage3c-current</CelesteRuntimeRoot>
     <CelesteRuntimeManagedRoot>$(CelesteRuntimeRoot)\managed</CelesteRuntimeManagedRoot>
     <CelesteRuntimeContentRoot>$(CelesteRuntimeRoot)\content\Content</CelesteRuntimeContentRoot>
+    <FmodDiagnosticStageRoot Condition="'$(FmodDiagnosticStageRoot)' == ''">$(CelesteTvOSRepoRoot)\.build\fmod-tvos\current</FmodDiagnosticStageRoot>
     <Stage3BFnaExtensionTargets>$(MSBuildThisFileDirectory)Stage3BFnaExtension.targets</Stage3BFnaExtensionTargets>
     <CodesignEntitlements>Entitlements.plist</CodesignEntitlements>
     <TrimMode Condition="'$(Configuration)' == 'Release'">full</TrimMode>
     <MtouchLink Condition="'$(Configuration)' == 'Release'">Full</MtouchLink>
     <UseInterpreter>false</UseInterpreter>
     <DefineConstants Condition="'$(CelesteLaunchMode)' == 'Stage2Diagnostic'">$(DefineConstants);STAGE2_DIAGNOSTIC</DefineConstants>
+    <DefineConstants Condition="'$(CelesteLaunchMode)' == 'FmodDiagnostic' and '$(RuntimeIdentifier)' == 'tvos-arm64'">$(DefineConstants);FMOD_DIAGNOSTIC_DEVICE</DefineConstants>
+    <DefineConstants Condition="'$(CelesteLaunchMode)' == 'FmodDiagnostic' and '$(RuntimeIdentifier)' != 'tvos-arm64'">$(DefineConstants);FMOD_DIAGNOSTIC_UNAVAILABLE</DefineConstants>
     <DefineConstants Condition="'$(CelesteLaunchMode)' == 'CelestePreflight'">$(DefineConstants);CELESTE_RUNTIME;CELESTE_PREFLIGHT</DefineConstants>
     <DefineConstants Condition="'$(CelesteLaunchMode)' == 'Celeste'">$(DefineConstants);CELESTE_RUNTIME;CELESTE_GAME</DefineConstants>
     <Stage3CPrologueScenario Condition="'$(Stage3CPrologueScenario)' == ''">normal</Stage3CPrologueScenario>
@@ -56,6 +60,20 @@
     <TrimmerRootDescriptor Include="Stage3BLinker.xml" />
   </ItemGroup>
 
+  <ItemGroup Condition="'$(FmodDiagnosticEnabled)' == 'true' and '$(RuntimeIdentifier)' == 'tvos-arm64'">
+    <BundleResource Include="$(FmodDiagnosticStageRoot)\banks\Content\FMOD\**\*.bank"
+                    LogicalName="Content\FMOD\%(RecursiveDir)%(Filename)%(Extension)" />
+    <NativeReference Include="$(FmodDiagnosticStageRoot)\xcframeworks\FMOD.xcframework">
+      <Kind>Static</Kind><SmartLink>false</SmartLink><ForceLoad>true</ForceLoad>
+    </NativeReference>
+    <NativeReference Include="$(FmodDiagnosticStageRoot)\xcframeworks\FMODStudio.xcframework">
+      <Kind>Static</Kind><SmartLink>false</SmartLink><ForceLoad>true</ForceLoad><IsCxx>true</IsCxx>
+    </NativeReference>
+    <NativeReference Include="$(FmodDiagnosticStageRoot)\xcframeworks\FMODSDL.xcframework">
+      <Kind>Static</Kind><SmartLink>false</SmartLink><ForceLoad>true</ForceLoad>
+    </NativeReference>
+  </ItemGroup>
+
   <!-- Static imports resolve through __Internal. ForceLoad retains those
        exports; the framework list remains the accepted Stage 1 link-probe set. -->
   <ItemGroup>
@@ -81,8 +99,8 @@
   </ItemGroup>
 
   <Target Name="ValidateCelesteLaunchMode" BeforeTargets="PrepareForBuild">
-    <Error Condition="'$(CelesteLaunchMode)' != 'Stage2Diagnostic' and '$(CelesteLaunchMode)' != 'CelestePreflight' and '$(CelesteLaunchMode)' != 'Celeste' and '$(CelesteLaunchMode)' != 'CelestePrologueDiagnostic'"
-           Text="CelesteLaunchMode must be Stage2Diagnostic, CelestePreflight, Celeste, or CelestePrologueDiagnostic." />
+    <Error Condition="'$(CelesteLaunchMode)' != 'Stage2Diagnostic' and '$(CelesteLaunchMode)' != 'CelestePreflight' and '$(CelesteLaunchMode)' != 'Celeste' and '$(CelesteLaunchMode)' != 'CelestePrologueDiagnostic' and '$(CelesteLaunchMode)' != 'FmodDiagnostic'"
+           Text="CelesteLaunchMode must be Stage2Diagnostic, CelestePreflight, Celeste, CelestePrologueDiagnostic, or FmodDiagnostic." />
     <Error Condition="'$(CelesteLaunchMode)' == 'CelestePrologueDiagnostic' and '$(Stage3CPrologueScenario)' != 'normal' and '$(Stage3CPrologueScenario)' != 'skip' and '$(Stage3CPrologueScenario)' != 'manual'"
            Text="Stage3CPrologueScenario must be normal, skip, or manual." />
     <Error Condition="!Exists('$(TvOSHostStageRoot)\normalized-manifest.json')"
@@ -93,6 +111,10 @@
            Text="Stage 3B Content input is missing. Run scripts/prepare-celeste-tvos-runtime.sh without --managed-only." />
     <Error Condition="'$(CelesteRuntimeEnabled)' == 'true' and Exists('$(CelesteRuntimeContentRoot)\FMOD')"
            Text="Stage 3B Content must not contain the FMOD tree." />
+    <Error Condition="'$(FmodDiagnosticEnabled)' == 'true' and '$(RuntimeIdentifier)' == 'tvos-arm64' and !Exists('$(FmodDiagnosticStageRoot)\logical-manifest.json')"
+           Text="Prepared Stage 5A FMOD inputs are missing. Run scripts/prepare-fmod-tvos.sh." />
+    <Error Condition="'$(FmodDiagnosticEnabled)' == 'true' and '$(RuntimeIdentifier)' == 'tvos-arm64' and !Exists('$(FmodDiagnosticStageRoot)\banks\Content\FMOD\Desktop\Master Bank.bank')"
+           Text="Prepared Stage 5A FMOD banks are missing." />
   </Target>
 
   <Import Project="..\Local.Build.props" Condition="Exists('..\Local.Build.props')" />

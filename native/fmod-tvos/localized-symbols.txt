@@ -1,0 +1,10 @@
+# FMOD 1.10.09 and the accepted Theorafile archive both embed these private
+# Ogg/Vorbis helpers. Stage 5A makes only FMOD's copy local in an ignored,
+# derived link archive. FMOD_* public exports and the original SDK archive are
+# unchanged. The list is verified as the complete duplicate intersection.
+_drft_backward
+_drft_clear
+_drft_forward
+_drft_init
+_vorbis_lpc_from_data
+_vorbis_lpc_predict

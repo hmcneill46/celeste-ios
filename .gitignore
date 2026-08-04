@@ -23,3 +23,8 @@ artifacts/celeste-managed/
 # runtime logs, screenshots, manifests, and device evidence.
 .build/celeste-runtime/
 artifacts/celeste-runtime/
+
+# User-supplied FMOD SDK staging, banks, bridge builds, diagnostic apps, and
+# physical-device evidence. Proprietary inputs and private logs stay local.
+.build/fmod-tvos/
+artifacts/fmod-tvos/

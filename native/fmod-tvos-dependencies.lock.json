@@ -1,0 +1,43 @@
+{
+  "schemaVersion": 1,
+  "deploymentTarget": "16.0",
+  "fmodSdk": {
+    "distribution": "FMOD Engine iOS/tvOS SDK (user supplied; never fetched by this repository)",
+    "version": "1.10.09",
+    "build": 97915,
+    "headerVersion": "0x00011009",
+    "deviceArchives": {
+      "lowLevel": "api/lowlevel/lib/libfmod_appletvos.a",
+      "studio": "api/studio/lib/libfmodstudio_appletvos.a"
+    },
+    "licensePolicy": "The user must obtain and use the SDK under FMOD's applicable licence. No SDK file is tracked."
+  },
+  "managedApi": {
+    "provenance": "Celeste 1.4.0.0 embedded managed binding",
+    "version": "1.10.20",
+    "headerVersion": "0x00011014",
+    "policy": "The diagnostic reports and tests the mismatch; neither version is rewritten."
+  },
+  "fmodSdl": {
+    "component": "FMOD_SDL",
+    "sourceUrl": "https://github.com/flibitijibibo/FMOD_SDL.git",
+    "immutableTag": "19.09.16",
+    "commit": "947df759501d9f5a7df702101c453efc3e06ba22",
+    "sourcePath": "FMOD_SDL.c",
+    "sourceSha256": "0f5a4c25298e0c223ef7a42c3a479ee26fbd2f79509cfd814afadcbe9472d392",
+    "licensePath": "LICENSE",
+    "licenseSha256": "ab25f1e6bc56f1531d6f3c955a1c76d446d23fbbf52a858e2ae7cedf56788212",
+    "license": "zlib",
+    "pluginVersion": 190916,
+    "exportedSymbols": [
+      "FMOD_SDL_Register"
+    ],
+    "provenanceEvidence": "Both user-owned Celeste Linux bridge binaries embed FMOD_SDL plugin version 190916 and export FMOD_SDL_Register."
+  },
+  "linkCompatibility": {
+    "reason": "FMOD 1.10.09 and the accepted Theorafile archive both export six bundled Ogg/Vorbis helper symbols.",
+    "method": "Run Apple nmedit -R on an ignored copy of FMOD's single device object so only the six listed helpers become local, then create a derived deterministic static archive.",
+    "symbolList": "native/fmod-tvos/localized-symbols.txt",
+    "runtimePolicy": "The original SDK archive remains staged and hash-verified; every FMOD_* export remains global; Stage 1 is unchanged."
+  }
+}
