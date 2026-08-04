@@ -13,15 +13,18 @@
     <ApplicationVersion>1</ApplicationVersion>
     <AssemblyInformationalVersion>3.0.0+stage3b</AssemblyInformationalVersion>
     <CelesteLaunchMode Condition="'$(CelesteLaunchMode)' == ''">Stage2Diagnostic</CelesteLaunchMode>
-    <CelesteRuntimeEnabled Condition="'$(CelesteLaunchMode)' == 'CelestePreflight' or '$(CelesteLaunchMode)' == 'Celeste' or '$(CelesteLaunchMode)' == 'CelestePrologueDiagnostic'">true</CelesteRuntimeEnabled>
+    <CelesteRuntimeEnabled Condition="'$(CelesteLaunchMode)' == 'CelestePreflight' or '$(CelesteLaunchMode)' == 'Celeste' or '$(CelesteLaunchMode)' == 'CelestePrologueDiagnostic' or '$(CelesteLaunchMode)' == 'CelesteAudio'">true</CelesteRuntimeEnabled>
     <FmodDiagnosticEnabled Condition="'$(CelesteLaunchMode)' == 'FmodDiagnostic'">true</FmodDiagnosticEnabled>
+    <CelesteAudioEnabled Condition="'$(CelesteLaunchMode)' == 'CelesteAudio'">true</CelesteAudioEnabled>
     <CelesteTvOSRepoRoot>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\..'))</CelesteTvOSRepoRoot>
     <TvOSHostStageRoot>$(CelesteTvOSRepoRoot)\.build\tvos-host</TvOSHostStageRoot>
     <TvOSHostNativeRoot>$(TvOSHostStageRoot)\native</TvOSHostNativeRoot>
+    <CelesteRuntimeRoot Condition="'$(CelesteRuntimeRoot)' == '' and '$(CelesteAudioEnabled)' == 'true'">$(CelesteTvOSRepoRoot)\.build\celeste-runtime\stage5b-current</CelesteRuntimeRoot>
     <CelesteRuntimeRoot Condition="'$(CelesteRuntimeRoot)' == ''">$(CelesteTvOSRepoRoot)\.build\celeste-runtime\stage3c-current</CelesteRuntimeRoot>
     <CelesteRuntimeManagedRoot>$(CelesteRuntimeRoot)\managed</CelesteRuntimeManagedRoot>
     <CelesteRuntimeContentRoot>$(CelesteRuntimeRoot)\content\Content</CelesteRuntimeContentRoot>
     <FmodDiagnosticStageRoot Condition="'$(FmodDiagnosticStageRoot)' == ''">$(CelesteTvOSRepoRoot)\.build\fmod-tvos\current</FmodDiagnosticStageRoot>
+    <FmodNativeEnabled Condition="'$(FmodDiagnosticEnabled)' == 'true' or '$(CelesteAudioEnabled)' == 'true'">true</FmodNativeEnabled>
     <Stage3BFnaExtensionTargets>$(MSBuildThisFileDirectory)Stage3BFnaExtension.targets</Stage3BFnaExtensionTargets>
     <CodesignEntitlements>Entitlements.plist</CodesignEntitlements>
     <TrimMode Condition="'$(Configuration)' == 'Release'">full</TrimMode>
@@ -32,6 +35,11 @@
     <DefineConstants Condition="'$(CelesteLaunchMode)' == 'FmodDiagnostic' and '$(RuntimeIdentifier)' != 'tvos-arm64'">$(DefineConstants);FMOD_DIAGNOSTIC_UNAVAILABLE</DefineConstants>
     <DefineConstants Condition="'$(CelesteLaunchMode)' == 'CelestePreflight'">$(DefineConstants);CELESTE_RUNTIME;CELESTE_PREFLIGHT</DefineConstants>
     <DefineConstants Condition="'$(CelesteLaunchMode)' == 'Celeste'">$(DefineConstants);CELESTE_RUNTIME;CELESTE_GAME</DefineConstants>
+    <DefineConstants Condition="'$(CelesteLaunchMode)' == 'CelesteAudio' and '$(RuntimeIdentifier)' == 'tvos-arm64'">$(DefineConstants);CELESTE_RUNTIME;CELESTE_GAME;CELESTE_AUDIO</DefineConstants>
+    <Stage5BAudioScenario Condition="'$(Stage5BAudioScenario)' == ''">normal</Stage5BAudioScenario>
+    <DefineConstants Condition="'$(CelesteLaunchMode)' == 'CelesteAudio' and ('$(Stage5BAudioScenario)' == 'prologue-normal' or '$(Stage5BAudioScenario)' == 'prologue-skip')">$(DefineConstants);CELESTE_PROLOGUE_DIAGNOSTIC</DefineConstants>
+    <DefineConstants Condition="'$(CelesteLaunchMode)' == 'CelesteAudio' and '$(Stage5BAudioScenario)' == 'prologue-normal'">$(DefineConstants);STAGE3C_SCENARIO_NORMAL</DefineConstants>
+    <DefineConstants Condition="'$(CelesteLaunchMode)' == 'CelesteAudio' and '$(Stage5BAudioScenario)' == 'prologue-skip'">$(DefineConstants);STAGE3C_SCENARIO_SKIP</DefineConstants>
     <Stage3CPrologueScenario Condition="'$(Stage3CPrologueScenario)' == ''">normal</Stage3CPrologueScenario>
     <DefineConstants Condition="'$(CelesteLaunchMode)' == 'CelestePrologueDiagnostic'">$(DefineConstants);CELESTE_RUNTIME;CELESTE_GAME;CELESTE_PROLOGUE_DIAGNOSTIC</DefineConstants>
     <DefineConstants Condition="'$(CelesteLaunchMode)' == 'CelestePrologueDiagnostic' and '$(Stage3CPrologueScenario)' == 'normal'">$(DefineConstants);STAGE3C_SCENARIO_NORMAL</DefineConstants>
@@ -60,7 +68,7 @@
     <TrimmerRootDescriptor Include="Stage3BLinker.xml" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(FmodDiagnosticEnabled)' == 'true' and '$(RuntimeIdentifier)' == 'tvos-arm64'">
+  <ItemGroup Condition="'$(FmodNativeEnabled)' == 'true' and '$(RuntimeIdentifier)' == 'tvos-arm64'">
     <BundleResource Include="$(FmodDiagnosticStageRoot)\banks\Content\FMOD\**\*.bank"
                     LogicalName="Content\FMOD\%(RecursiveDir)%(Filename)%(Extension)" />
     <NativeReference Include="$(FmodDiagnosticStageRoot)\xcframeworks\FMOD.xcframework">
@@ -99,8 +107,12 @@
   </ItemGroup>
 
   <Target Name="ValidateCelesteLaunchMode" BeforeTargets="PrepareForBuild">
-    <Error Condition="'$(CelesteLaunchMode)' != 'Stage2Diagnostic' and '$(CelesteLaunchMode)' != 'CelestePreflight' and '$(CelesteLaunchMode)' != 'Celeste' and '$(CelesteLaunchMode)' != 'CelestePrologueDiagnostic' and '$(CelesteLaunchMode)' != 'FmodDiagnostic'"
-           Text="CelesteLaunchMode must be Stage2Diagnostic, CelestePreflight, Celeste, CelestePrologueDiagnostic, or FmodDiagnostic." />
+    <Error Condition="'$(CelesteLaunchMode)' != 'Stage2Diagnostic' and '$(CelesteLaunchMode)' != 'CelestePreflight' and '$(CelesteLaunchMode)' != 'Celeste' and '$(CelesteLaunchMode)' != 'CelestePrologueDiagnostic' and '$(CelesteLaunchMode)' != 'FmodDiagnostic' and '$(CelesteLaunchMode)' != 'CelesteAudio'"
+           Text="CelesteLaunchMode must be Stage2Diagnostic, CelestePreflight, Celeste, CelestePrologueDiagnostic, FmodDiagnostic, or CelesteAudio." />
+    <Error Condition="'$(CelesteAudioEnabled)' == 'true' and '$(RuntimeIdentifier)' != 'tvos-arm64'"
+           Text="CelesteAudio is device-only. Use Celeste for the arm64 simulator no-audio lane." />
+    <Error Condition="'$(CelesteAudioEnabled)' == 'true' and '$(Stage5BAudioScenario)' != 'normal' and '$(Stage5BAudioScenario)' != 'prologue-normal' and '$(Stage5BAudioScenario)' != 'prologue-skip'"
+           Text="Stage5BAudioScenario must be normal, prologue-normal, or prologue-skip." />
     <Error Condition="'$(CelesteLaunchMode)' == 'CelestePrologueDiagnostic' and '$(Stage3CPrologueScenario)' != 'normal' and '$(Stage3CPrologueScenario)' != 'skip' and '$(Stage3CPrologueScenario)' != 'manual'"
            Text="Stage3CPrologueScenario must be normal, skip, or manual." />
     <Error Condition="!Exists('$(TvOSHostStageRoot)\normalized-manifest.json')"
@@ -110,11 +122,13 @@
     <Error Condition="'$(CelesteRuntimeEnabled)' == 'true' and !Exists('$(CelesteRuntimeContentRoot)\Effects\Border.xnb')"
            Text="Stage 3B Content input is missing. Run scripts/prepare-celeste-tvos-runtime.sh without --managed-only." />
     <Error Condition="'$(CelesteRuntimeEnabled)' == 'true' and Exists('$(CelesteRuntimeContentRoot)\FMOD')"
-           Text="Stage 3B Content must not contain the FMOD tree." />
-    <Error Condition="'$(FmodDiagnosticEnabled)' == 'true' and '$(RuntimeIdentifier)' == 'tvos-arm64' and !Exists('$(FmodDiagnosticStageRoot)\logical-manifest.json')"
+           Text="Generated Celeste Content must not contain FMOD; device audio banks come only from accepted Stage 5A staging." />
+    <Error Condition="'$(FmodNativeEnabled)' == 'true' and '$(RuntimeIdentifier)' == 'tvos-arm64' and !Exists('$(FmodDiagnosticStageRoot)\logical-manifest.json')"
            Text="Prepared Stage 5A FMOD inputs are missing. Run scripts/prepare-fmod-tvos.sh." />
-    <Error Condition="'$(FmodDiagnosticEnabled)' == 'true' and '$(RuntimeIdentifier)' == 'tvos-arm64' and !Exists('$(FmodDiagnosticStageRoot)\banks\Content\FMOD\Desktop\Master Bank.bank')"
+    <Error Condition="'$(FmodNativeEnabled)' == 'true' and '$(RuntimeIdentifier)' == 'tvos-arm64' and !Exists('$(FmodDiagnosticStageRoot)\banks\Content\FMOD\Desktop\Master Bank.bank')"
            Text="Prepared Stage 5A FMOD banks are missing." />
+    <Error Condition="'$(CelesteAudioEnabled)' == 'true' and !Exists('$(CelesteRuntimeManagedRoot)\Celeste\TvOSStage5BAudioBridge.cs')"
+           Text="CelesteAudio requires the separately generated Stage 5B real-audio managed tree." />
   </Target>
 
   <Import Project="..\Local.Build.props" Condition="Exists('..\Local.Build.props')" />

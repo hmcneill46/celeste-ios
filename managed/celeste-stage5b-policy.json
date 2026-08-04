@@ -1,0 +1,43 @@
+{
+  "schemaVersion": 1,
+  "gameVersion": "1.4.0.0",
+  "stage3CInput": {
+    "fileCount": 927,
+    "logicalSha256": "a5ffcde2252c527d71bae43418751ff8dbf100bf2aa344c7400e7b722f2341c7"
+  },
+  "generatedFmodApi": {
+    "managedVersion": "1.10.20",
+    "managedHeaderVersion": "0x00011014",
+    "restoredImportCount": 490,
+    "importsByOriginalLibrary": {
+      "fmod": 320,
+      "fmod_SDL": 1,
+      "fmodstudio": 169
+    },
+    "deviceImportName": "__Internal"
+  },
+  "nativeFmod": {
+    "version": "1.10.09",
+    "build": 97915,
+    "headerVersion": "0x00011009",
+    "acceptedStage5ALogicalSha256": "b32fc89dbefdda69ab7bf20ea9ece37826dce51787a4f70446493e292b12603d"
+  },
+  "banks": [
+    "Master Bank.bank",
+    "Master Bank.strings.bank",
+    "dlc_music.bank",
+    "dlc_sfx.bank",
+    "music.bank",
+    "sfx.bank",
+    "ui.bank"
+  ],
+  "audioModes": {
+    "real": "TVOS_REAL_AUDIO",
+    "disabled": "TVOS_AUDIO_DISABLED",
+    "mutualExclusion": "exactly one high-level Celeste.Audio implementation must compile"
+  },
+  "stage5BOutput": {
+    "fileCount": 928,
+    "logicalSha256": "4e4e96f3d15815430a2f8ad063a4c4cdff004273b7513cf972d56ecd0b04460d"
+  }
+}

@@ -130,7 +130,23 @@ git -C "$REPO_ROOT" diff --quiet "$BASELINE_COMMIT" -- \
   exit 1
 }
 git -C "$REPO_ROOT" diff --quiet "$BASELINE_COMMIT" -- \
-  managed scripts/celeste-stage3b.py scripts/celeste-stage3c.py \
+  managed/celeste-analysis-policy.json \
+  managed/celeste-compatibility-ledger.json \
+  managed/celeste-generation.lock.json \
+  managed/celeste-stage3b-compatibility.json \
+  managed/celeste-stage3b-policy.json \
+  managed/celeste-stage3b-warning-policy.json \
+  managed/celeste-stage3c-policy.json \
+  managed/patches \
+  managed/templates/Audio.TvOSDisabled.cs \
+  managed/templates/Celeste.Content.Modern.csproj \
+  managed/templates/Celeste.Modern.csproj \
+  managed/templates/Stage3AContentIdentity.cs \
+  managed/templates/TvOSSaveDataSerializer.cs \
+  managed/templates/TvOSSettingsSerializer.cs \
+  managed/templates/TvOSStage3Bridge.cs \
+  managed/templates/TvOSStage3CBridge.cs \
+  scripts/celeste-stage3b.py scripts/celeste-stage3c.py \
   scripts/prepare-celeste-tvos-runtime.sh scripts/prepare-celeste-tvos-stage3c.sh || {
   echo "error: accepted Stage 3 managed/no-audio pipeline changed" >&2
   exit 1

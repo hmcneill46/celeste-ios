@@ -30,6 +30,9 @@ internal static class Program
 #if CELESTE_RUNTIME
         using var hapticLifecycle = new Stage3CHapticLifecycle();
 #endif
+#if CELESTE_AUDIO
+        using var audioLifecycle = new Stage5BAudioLifecycle();
+#endif
 
         try
         {
@@ -76,13 +79,19 @@ internal static class Program
             TvOSStage3Bridge.Checkpoint("celeste-entry-invocation", "method=Celeste.Celeste.Run");
             global::Celeste.Celeste.Run(Array.Empty<string>());
             TvOSStage3Bridge.ThrowIfFatal();
+#if !CELESTE_AUDIO
             if (TvOSStage3Bridge.LowLevelFmodCallCount != 0)
             {
                 throw new InvalidOperationException("Celeste reached an FMOD low-level guard.");
             }
+#endif
             Stage3BLog.Info(
                 $"Celeste run loop returned; updates={TvOSStage3Bridge.UpdateCount}; " +
+#if CELESTE_AUDIO
+                $"draws={TvOSStage3Bridge.DrawCount}; audio=real-fmod"
+#else
                 $"draws={TvOSStage3Bridge.DrawCount}; no-audio={TvOSStage3Bridge.NoAudioSummary()}"
+#endif
             );
 #endif
             return 0;
@@ -91,6 +100,10 @@ internal static class Program
         {
 #if CELESTE_RUNTIME
             TvOSStage3CBridge.Fatal(exception, "tvOS host");
+#endif
+#if CELESTE_AUDIO
+            TvOSStage5BAudioBridge.Fatal(exception, "tvOS host");
+            TvOSStage5BAudioBridge.ShutdownSafely("host-exception");
 #endif
             Stage3BLog.Error($"unhandled managed exception: {exception}");
             return 1;
@@ -115,10 +128,21 @@ internal static class Program
         {
             throw new InvalidOperationException("Validated Stage 3B representative Content is not packaged.");
         }
+#if CELESTE_AUDIO
+        string bankRoot = Path.Combine(resources, "Content", "FMOD", "Desktop");
+        string[] requiredBanks =
+        {
+            "Master Bank.bank", "Master Bank.strings.bank", "music.bank", "sfx.bank", "ui.bank",
+            "dlc_music.bank", "dlc_sfx.bank"
+        };
+        if (requiredBanks.Any(name => !File.Exists(Path.Combine(bankRoot, name))))
+            throw new InvalidOperationException("The accepted seven Stage 5A FMOD banks are not packaged.");
+#else
         if (Directory.Exists(Path.Combine(content, "FMOD")))
         {
-            throw new InvalidOperationException("Stage 3B package unexpectedly contains FMOD content.");
+            throw new InvalidOperationException("A no-audio Celeste package unexpectedly contains FMOD material.");
         }
+#endif
 
         string temporaryBase = Path.GetFullPath(Path.GetTempPath());
         string sessionRoot = Path.GetFullPath(Path.Combine(temporaryBase, $"celeste-stage3b-{Environment.ProcessId}"));
@@ -141,7 +165,11 @@ internal static class Program
         Environment.SetEnvironmentVariable("FNA_AUDIO_DISABLE_SOUND", "1");
         Environment.SetEnvironmentVariable("FNA3D_FORCE_DRIVER", "Metal");
         Directory.SetCurrentDirectory(resources);
+#if CELESTE_AUDIO
+        Stage3BLog.Info("runtime context: validated non-audio Content plus seven accepted device-only FMOD banks; real Celeste audio enabled");
+#else
         Stage3BLog.Info("runtime context: validated bundled non-audio Content; ephemeral settings root configured");
+#endif
     }
 #endif
 
@@ -177,6 +205,8 @@ internal static class Program
             return "CelestePreflight";
 #elif FMOD_DIAGNOSTIC_DEVICE || FMOD_DIAGNOSTIC_UNAVAILABLE
             return "FmodDiagnostic";
+#elif CELESTE_AUDIO
+            return "CelesteAudio";
 #elif CELESTE_PROLOGUE_DIAGNOSTIC
             return "CelestePrologueDiagnostic";
 #elif CELESTE_GAME
