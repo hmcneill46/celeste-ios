@@ -1,0 +1,85 @@
+{
+  "schemaVersion": 1,
+  "gameVersion": "1.4.0.0",
+  "storage": {
+    "formatVersion": 1,
+    "legacyMigrationVersion": 0,
+    "keyPrefix": "CelesteTvOS.Persistence",
+    "slotNames": ["A", "B"],
+    "hardTotalBudgetBytes": 262144,
+    "hardEnvelopeBudgetBytes": 126976,
+    "celesteIdentitySha256": "fd73f8a2311fa5737ded550cbad4b75c85b7686b36432f59185e940fcb65fcfe",
+    "settingsSchemaVersion": 1,
+    "saveDataSchemaVersion": 1
+  },
+  "generatedInputs": {
+    "noAudio": {
+      "fileCount": 927,
+      "logicalSha256": "a5ffcde2252c527d71bae43418751ff8dbf100bf2aa344c7400e7b722f2341c7"
+    },
+    "realAudio": {
+      "fileCount": 928,
+      "logicalSha256": "4e4e96f3d15815430a2f8ad063a4c4cdff004273b7513cf972d56ecd0b04460d"
+    }
+  },
+  "generatedOutputs": {
+    "noAudio": {
+      "fileCount": 928,
+      "logicalSha256": "4f7caded99bb95e4ef562ecb091d5a3dd53cba4150ab539a44f5a747775cf4a4"
+    },
+    "realAudio": {
+      "fileCount": 929,
+      "logicalSha256": "1e40cae65e964e08f04f9ccc0767812cb794339dc5925a0ed6985141ad3bf55a"
+    }
+  },
+  "writableFiles": [
+    {
+      "logicalName": "settings",
+      "canonicalPath": "Saves/settings.celeste",
+      "backupPath": "Backups/settings.celeste",
+      "serializer": "TvOSSettingsSerializer",
+      "maximumPayloadBytes": 24576,
+      "absenceMeaningful": true,
+      "deletionPersists": true,
+      "durable": true
+    },
+    {
+      "logicalName": "0",
+      "canonicalPath": "Saves/0.celeste",
+      "backupPath": "Backups/0.celeste",
+      "serializer": "TvOSSaveDataSerializer",
+      "maximumPayloadBytes": 32768,
+      "absenceMeaningful": true,
+      "deletionPersists": true,
+      "durable": true
+    },
+    {
+      "logicalName": "1",
+      "canonicalPath": "Saves/1.celeste",
+      "backupPath": "Backups/1.celeste",
+      "serializer": "TvOSSaveDataSerializer",
+      "maximumPayloadBytes": 32768,
+      "absenceMeaningful": true,
+      "deletionPersists": true,
+      "durable": true
+    },
+    {
+      "logicalName": "2",
+      "canonicalPath": "Saves/2.celeste",
+      "backupPath": "Backups/2.celeste",
+      "serializer": "TvOSSaveDataSerializer",
+      "maximumPayloadBytes": 32768,
+      "absenceMeaningful": true,
+      "deletionPersists": true,
+      "durable": true
+    }
+  ],
+  "excludedWritableRoles": [
+    "debug-save-slot",
+    "error-and-crash-logs",
+    "screenshots",
+    "map-editor-output",
+    "content-and-fmod-data",
+    "temporary-files"
+  ]
+}

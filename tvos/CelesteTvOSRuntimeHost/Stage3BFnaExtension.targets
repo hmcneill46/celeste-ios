@@ -5,4 +5,14 @@
     <Compile Include="$(MSBuildThisFileDirectory)Stage3BLegacyXnbReaders.cs"
              Link="Stage3B\Stage3BLegacyXnbReaders.cs" />
   </ItemGroup>
+
+  <!-- .NET 10's Unix FileStream marshaller attempts to emit a SafeFileHandle
+       constructor wrapper at runtime on full-AOT tvOS. Only the Stage 6 graph
+       substitutes FNA's bundle reader with an NSData-backed equivalent; the
+       pinned FNA submodule and all prior-stage project graphs remain intact. -->
+  <ItemGroup Condition="'$(AssemblyName)' == 'FNA' and '$(Stage6PersistenceEnabled)' == 'true'">
+    <Compile Remove="$(CelesteTvOSRepoRoot)\FNA\src\TitleContainer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Stage6TitleContainer.cs"
+             Link="Stage6\TitleContainer.cs" />
+  </ItemGroup>
 </Project>
