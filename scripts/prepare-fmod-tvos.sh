@@ -41,6 +41,7 @@ GAME_ROOT=""
 STAGE_DIR="$REPO_ROOT/.build/fmod-tvos/current"
 SOURCE_DIR="$REPO_ROOT/.build/fmod-tvos/sources/FMOD_SDL"
 STAGE1_ARTIFACT_DIR="$REPO_ROOT/artifacts/tvos-native/rebuild-e"
+DIAGNOSTIC_DIR="$REPO_ROOT/.build/fmod-tvos/diagnostics"
 CLEAN=0
 
 repo_path() {
@@ -145,6 +146,9 @@ grep -Fq '#define FMOD_SDL_VERSION 190916' "$SOURCE_DIR/FMOD_SDL.c" || {
 }
 
 mkdir -p "$(dirname -- "$STAGE_DIR")"
+mkdir -p "$DIAGNOSTIC_DIR"
+rm -f -- "$DIAGNOSTIC_DIR/duplicate-symbol-mismatch.txt" \
+  "$DIAGNOSTIC_DIR/post-localization-duplicate-symbols.txt"
 TEMP_STAGE="$(mktemp -d "$(dirname -- "$STAGE_DIR")/.fmod-stage5a.prepare.XXXXXX")"
 cleanup() {
   rm -rf -- "$TEMP_STAGE"
@@ -211,23 +215,60 @@ mkdir -p "$TEMP_STAGE/build/fmod-extract"
 FMOD_MASTER_OBJECT="$(find "$TEMP_STAGE/build/fmod-extract" -maxdepth 1 -type f ! -name '__.SYMDEF*' -print -quit)"
 [[ -n "$FMOD_MASTER_OBJECT" ]] || { echo "error: FMOD device archive has no extractable object" >&2; exit 1; }
 THEORAFILE_ARCHIVE="$STAGE1_ARTIFACT_DIR/Theorafile.xcframework/tvos-arm64/libTheorafile.a"
-comm -12 \
+LC_ALL=C comm -12 \
   <(nm -gjU "$TEMP_STAGE/sdk/lib/libfmod_appletvos.a" | sed '/:$/d; /^$/d' | LC_ALL=C sort -u) \
   <(nm -gjU "$THEORAFILE_ARCHIVE" | sed '/:$/d; /^$/d' | LC_ALL=C sort -u) \
   > "$TEMP_STAGE/build/duplicate-symbols.txt"
 grep -v '^#' "$REPO_ROOT/native/fmod-tvos/localized-symbols.txt" | sed '/^[[:space:]]*$/d' \
   > "$TEMP_STAGE/build/expected-duplicate-symbols.txt"
+LC_ALL=C sort -cu "$TEMP_STAGE/build/expected-duplicate-symbols.txt" || {
+  echo "error: reviewed FMOD/Theorafile duplicate-symbol policy is not C-locale sorted and unique" >&2
+  exit 1
+}
 cmp -s "$TEMP_STAGE/build/duplicate-symbols.txt" "$TEMP_STAGE/build/expected-duplicate-symbols.txt" || {
+  mismatch_report="$DIAGNOSTIC_DIR/duplicate-symbol-mismatch.txt"
+  missing_symbols="$TEMP_STAGE/build/missing-duplicate-symbols.txt"
+  unexpected_symbols="$TEMP_STAGE/build/unexpected-duplicate-symbols.txt"
+  LC_ALL=C comm -23 \
+    "$TEMP_STAGE/build/expected-duplicate-symbols.txt" \
+    "$TEMP_STAGE/build/duplicate-symbols.txt" > "$missing_symbols"
+  LC_ALL=C comm -13 \
+    "$TEMP_STAGE/build/expected-duplicate-symbols.txt" \
+    "$TEMP_STAGE/build/duplicate-symbols.txt" > "$unexpected_symbols"
+  expected_count="$(wc -l < "$TEMP_STAGE/build/expected-duplicate-symbols.txt" | tr -d ' ')"
+  actual_count="$(wc -l < "$TEMP_STAGE/build/duplicate-symbols.txt" | tr -d ' ')"
+  missing_count="$(wc -l < "$missing_symbols" | tr -d ' ')"
+  unexpected_count="$(wc -l < "$unexpected_symbols" | tr -d ' ')"
+  {
+    printf 'FMOD/Theorafile duplicate-symbol mismatch\n'
+    printf 'expected-count: %s\n' "$expected_count"
+    printf 'actual-count: %s\n' "$actual_count"
+    printf 'missing-count: %s\n' "$missing_count"
+    printf 'unexpected-count: %s\n' "$unexpected_count"
+    printf '\nMissing from actual intersection:\n'
+    if [[ "$missing_count" -eq 0 ]]; then printf '<none>\n'; else cat "$missing_symbols"; fi
+    printf '\nUnexpected duplicate symbols:\n'
+    if [[ "$unexpected_count" -eq 0 ]]; then printf '<none>\n'; else cat "$unexpected_symbols"; fi
+  } > "$mismatch_report"
   echo "error: FMOD/Theorafile duplicate-symbol set differs from the reviewed six-symbol policy" >&2
+  echo "error: expected $expected_count symbols; found $actual_count; missing $missing_count; unexpected $unexpected_count" >&2
+  echo "error: complete symbol differences: .build/fmod-tvos/diagnostics/duplicate-symbol-mismatch.txt" >&2
   exit 1
 }
 xcrun nmedit -R "$TEMP_STAGE/build/expected-duplicate-symbols.txt" \
   -o "$TEMP_STAGE/build/FMOD-localized.o" "$FMOD_MASTER_OBJECT"
 ZERO_AR_DATE=1 "$AR" rcs "$TEMP_STAGE/build/libfmod_appletvos-localized.a" "$TEMP_STAGE/build/FMOD-localized.o"
-remaining_duplicates="$(comm -12 \
+remaining_duplicates="$(LC_ALL=C comm -12 \
   <(nm -gjU "$TEMP_STAGE/build/libfmod_appletvos-localized.a" | sed '/:$/d; /^$/d' | LC_ALL=C sort -u) \
   <(nm -gjU "$THEORAFILE_ARCHIVE" | sed '/:$/d; /^$/d' | LC_ALL=C sort -u))"
-[[ -z "$remaining_duplicates" ]] || { echo "error: derived FMOD archive still shadows Theorafile symbols" >&2; exit 1; }
+if [[ -n "$remaining_duplicates" ]]; then
+  post_localization_report="$DIAGNOSTIC_DIR/post-localization-duplicate-symbols.txt"
+  printf '%s\n' "$remaining_duplicates" > "$post_localization_report"
+  remaining_count="$(wc -l < "$post_localization_report" | tr -d ' ')"
+  echo "error: derived FMOD archive still shadows $remaining_count Theorafile symbols" >&2
+  echo "error: complete symbol list: .build/fmod-tvos/diagnostics/post-localization-duplicate-symbols.txt" >&2
+  exit 1
+fi
 localized_fmod_exports="$(nm -gjU "$TEMP_STAGE/build/libfmod_appletvos-localized.a" | sed '/:$/d; /^$/d' | LC_ALL=C sort -u)"
 for required_export in _FMOD_System_Create _FMOD_System_GetVersion _FMOD_System_Init _FMOD_System_Release; do
   grep -Fxq "$required_export" <<<"$localized_fmod_exports" || {

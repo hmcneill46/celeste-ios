@@ -18,6 +18,7 @@ REQUIRED_DOCS = (
     "docs/STATUS.md",
     "CONTRIBUTING.md",
     "TVOS_PUBLIC_PREREQUISITES_STAGE8C_REPORT.md",
+    "TVOS_LOCALE_REPRODUCIBILITY_STAGE8D_REPORT.md",
 )
 PUBLIC_TEXT = REQUIRED_DOCS + (
     ".github/ISSUE_TEMPLATE/bug_report.yml",
@@ -142,6 +143,11 @@ def main() -> None:
     ):
         if required_error_fact not in builder_text:
             fail(f"builder omits Stage 8C failure UX: {required_error_fact}")
+
+    fmod_prepare = (repo / "scripts/prepare-fmod-tvos.sh").read_text(encoding="utf-8")
+    comm_lines = [line.strip() for line in fmod_prepare.splitlines() if re.search(r"\bcomm\b", line)]
+    if len(comm_lines) != 4 or any("LC_ALL=C comm" not in line for line in comm_lines):
+        fail("FMOD sorted-set comparisons are not all pinned to C collation")
 
     tracked = run("git", "-C", str(repo), "ls-files", "-z").stdout.split("\0")
     tracked = [item for item in tracked if item]

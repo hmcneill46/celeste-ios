@@ -142,6 +142,7 @@ need them for normal builds.
 - [Friendly self-build and branding](../TVOS_SELF_BUILD_STAGE8A_REPORT.md)
 - [Public repository release](../TVOS_REPOSITORY_RELEASE_STAGE8B_REPORT.md)
 - [Public prerequisite and failure-UX hardening](../TVOS_PUBLIC_PREREQUISITES_STAGE8C_REPORT.md)
+- [Locale-independent FMOD/Theorafile symbol validation](../TVOS_LOCALE_REPRODUCIBILITY_STAGE8D_REPORT.md)
 
 ## Isolation and licensing
 
