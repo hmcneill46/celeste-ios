@@ -312,14 +312,14 @@ fi
 
 section 'Diagnostic summary'
 if command -v cmake >/dev/null 2>&1; then
-    printf 'cmake: available\n'
+    printf 'cmake: available (legacy/manual lanes only; public self-builder does not require it)\n'
 else
-    printf 'cmake: MISSING (required by fnalibs-ios-builder-celeste/updatelibs.sh)\n'
+    printf 'cmake: absent (acceptable for the public self-builder; legacy updatelibs.sh may require it)\n'
 fi
 if command -v ninja >/dev/null 2>&1; then
-    printf 'ninja: available\n'
+    printf 'ninja: available (not required by the public self-builder)\n'
 else
-    printf 'ninja: MISSING (recommended for reproducible native builds)\n'
+    printf 'ninja: absent (acceptable for the public self-builder)\n'
 fi
 if command -v dotnet >/dev/null 2>&1 && dotnet workload list 2>/dev/null | grep -Eq '^[[:space:]]*tvos[[:space:]]'; then
     printf '.NET tvOS workload: installed\n'

@@ -138,7 +138,7 @@ grep -Fq "lifecycle resign-active" "$RAW_LOG" || { echo "error: resign-active wa
 grep -Fq "lifecycle background" "$RAW_LOG" || { echo "error: background was not observed" >&2; exit 1; }
 grep -Fq "lifecycle foreground" "$RAW_LOG" || { echo "error: foreground was not observed" >&2; exit 1; }
 grep -Fq "lifecycle active" "$RAW_LOG" || { echo "error: active was not observed" >&2; exit 1; }
-if rg -n 'EntryPointNotFoundException|DllNotFoundException|unhandled managed exception|graphics device.*fail|tvStubs (invoked|call detected)' "$RAW_LOG"; then
+if grep -n -E 'EntryPointNotFoundException|DllNotFoundException|unhandled managed exception|graphics device.*fail|tvStubs (invoked|call detected)' "$RAW_LOG"; then
   echo "error: a forbidden runtime failure was detected" >&2
   exit 1
 fi

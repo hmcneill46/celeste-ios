@@ -104,7 +104,7 @@ case "$EXPECTED_PLATFORM" in
   *) echo "error: --platform must be tvos or tvossimulator" >&2; exit 2 ;;
 esac
 
-for command in git python3 dotnet rg shasum; do
+for command in git python3 dotnet shasum; do
   command -v "$command" >/dev/null || { echo "error: required tool is missing: $command" >&2; exit 1; }
 done
 if [[ "$CHECK_TOOLCHAIN" -eq 1 ]]; then
@@ -359,10 +359,10 @@ if [[ -n "$APP_DIR" ]]; then
   }
   executable_name="$(plutil -extract CFBundleExecutable raw "$APP_DIR/Info.plist")"
   executable="$APP_DIR/$executable_name"
-  if nm -u "$executable" 2>/dev/null | rg '_FMOD_' >/dev/null; then
+  if nm -u "$executable" 2>/dev/null | grep -E '_FMOD_' >/dev/null; then
     echo "error: app executable has an unresolved native FMOD symbol" >&2; exit 1
   fi
-  if otool -L "$executable" | rg -i 'iPhoneOS|iOSSimulator|MacOSX|fmod' >/dev/null; then
+  if otool -L "$executable" | grep -E -i 'iPhoneOS|iOSSimulator|MacOSX|fmod' >/dev/null; then
     echo "error: app executable references a forbidden platform or FMOD binary" >&2; exit 1
   fi
   echo "PASS: $EXPECTED_PLATFORM app is arm64, platform-correct, and contains no FMOD/save material"

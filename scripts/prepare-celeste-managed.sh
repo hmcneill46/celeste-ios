@@ -241,7 +241,7 @@ grep -Fq '<ProjectReference Include="$(CelesteTvOSRepoRoot)/tvos/FNA.TvOS/FNA.Tv
   echo "error: generated project does not reference FNA.TvOS" >&2
   exit 1
 }
-if rg -n 'net452|mscorlib\.dll|FNA\.dll|Steamworks' "$BUILD_DIR/patched" --glob '*.csproj' >/dev/null; then
+if grep -R -n -E --include='*.csproj' 'net452|mscorlib\.dll|FNA\.dll|Steamworks' "$BUILD_DIR/patched" >/dev/null; then
   echo "error: generated modern project retained a legacy framework/game reference" >&2
   exit 1
 fi

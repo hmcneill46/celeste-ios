@@ -67,7 +67,7 @@ if [[ -n "$COMPARE_RUNTIME_ROOT" || -n "$COMPARE_ARTIFACT_DIR" ]]; then
     echo "error: both comparison roots are required" >&2; exit 2;
   }
 fi
-for command in dotnet git python3 rg xcrun nm shasum; do
+for command in dotnet git python3 xcrun nm shasum; do
   command -v "$command" >/dev/null || { echo "error: missing existing tool: $command" >&2; exit 1; }
 done
 if [[ "$SKIP_TOOLCHAIN" -eq 0 ]]; then
@@ -206,7 +206,7 @@ git -C "$REPO_ROOT" diff --quiet "$BASELINE_COMMIT" -- \
     echo "error: existing iOS or accepted Stage 1/2/3A/3B/3C/5A foundation changed" >&2; exit 1;
   }
 (cd "$REPO_ROOT" && shasum -a 256 -c tvos/stage2-ios-native-baseline.sha256 >/dev/null)
-if rg -n 'com\.apple\.developer\.user-management' "$REPO_ROOT/tvos" >/dev/null; then
+if grep -R -n -E 'com\.apple\.developer\.user-management' "$REPO_ROOT/tvos" >/dev/null; then
   echo "error: Stage 5B must not add User Management" >&2; exit 1
 fi
 echo "PASS: accepted prior stages, iOS archives, and storage/entitlement boundaries remain isolated"
@@ -228,7 +228,7 @@ if [[ -n "$APP_DIR" ]]; then
   for symbol in FMOD_System_GetVersion FMOD_Studio_System_Create FMOD_Studio_System_Initialize FMOD_Studio_System_LoadBankFile FMOD_Studio_EventInstance_TriggerCue FMOD_SDL_Register; do
     grep -Fxq "_$symbol" "$temporary_dir/app-defined.txt" || { echo "error: signed app lacks real export $symbol" >&2; exit 1; }
   done
-  if rg -q 'FMOD_DSP_GetCPUUsage' "$temporary_dir/app-defined.txt" "$temporary_dir/app-undefined.txt"; then
+  if grep -E -q 'FMOD_DSP_GetCPUUsage' "$temporary_dir/app-defined.txt" "$temporary_dir/app-undefined.txt"; then
     echo "error: unreachable 1.10.20 telemetry import survived trimming" >&2; exit 1
   fi
 
@@ -252,7 +252,7 @@ PY
   [[ "$profile_count" == "1" && -f "$APP_DIR/embedded.mobileprovision" ]] || {
     echo "error: signed development app must contain exactly its one embedded profile" >&2; exit 1;
   }
-  if rg -a -n 'platform[[:space:]]+(IOS|IOSSIMULATOR|TVOSSIMULATOR|MACOS)' "$APP_DIR" >/dev/null; then
+  if grep -a -R -n -E 'platform[[:space:]]+(IOS|IOSSIMULATOR|TVOSSIMULATOR|MACOS)' "$APP_DIR" >/dev/null; then
     echo "error: app contains evidence of a non-device-tvOS native slice" >&2; exit 1
   fi
   echo "PASS: signed full-AOT arm64 TVOS app, real FMOD exports, exact banks, and clean package boundary"

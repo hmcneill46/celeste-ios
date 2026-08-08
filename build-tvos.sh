@@ -20,6 +20,7 @@ Options:
   --bundle-id ID          Unique local bundle identifier
   --team-id ID            Personal Team identifier for direct installation
   --device-id ID          Paired Apple TV identifier for direct installation
+  --check-host            Check only Mac/Xcode/.NET/tool prerequisites
   --clean                 Clean only Stage 8 build/output caches
   --reset-config          Remove the ignored saved local configuration and exit
   -h, --help              Show this help
@@ -45,6 +46,7 @@ CONFIG_FILE="$CONFIG_ROOT/config.json"
 VALIDATION_ROOT="$CONFIG_ROOT/validation"
 BUILD_ROOT="$CONFIG_ROOT/build"
 LOG_ROOT="$REPO_ROOT/dist/logs"
+LAST_ERROR="$LOG_ROOT/last-error.txt"
 DIST_ROOT="$REPO_ROOT/dist"
 ARTWORK_ROOT="$CONFIG_ROOT/artwork/Assets.xcassets"
 PROJECT="$REPO_ROOT/tvos/CelesteTvOSRuntimeHost/CelesteTvOSRuntimeHost.csproj"
@@ -57,12 +59,44 @@ FMOD_ROOT_ARG=""
 BUNDLE_ID_ARG=""
 TEAM_ID_ARG=""
 DEVICE_ID_ARG=""
+CHECK_HOST=0
+CURRENT_PHASE="Reading options"
+STOPPING=0
+
+redact_error_log() {
+  /usr/bin/sed -E \
+    -e 's#/Users/[^/[:space:]]+#$HOME#g' \
+    -e 's#/Volumes/[^/[:space:]]+#$FMOD_SDK_ROOT#g' \
+    -e 's#[A-Fa-f0-9]{8}-[A-Fa-f0-9-]{27,}#<DEVICE_ID>#g' \
+    -e 's#[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}#<APPLE_ID>#g' \
+    -e 's#(^|[^A-Z0-9])[A-Z0-9]{10}([^A-Z0-9]|$)#\1<TEAM_ID>\2#g' \
+    -e 's#(com|org|net)\.[A-Za-z0-9.-]+#<BUNDLE_ID>#g'
+}
+
+write_last_error() {
+  local problem="$1" detected="$2" required="$3" fix="$4" command_log="${5:-}"
+  mkdir -p "$LOG_ROOT" 2>/dev/null || return 0
+  {
+    printf 'Celeste for Apple TV builder failure\n\n'
+    printf 'Phase:\n%s\n\n' "$CURRENT_PHASE"
+    printf 'Problem:\n%s\n\n' "$problem"
+    printf 'Detected:\n%s\n\n' "$detected"
+    printf 'Required:\n%s\n\n' "$required"
+    printf 'Fix:\n%s\n' "$fix"
+    if [[ -n "$command_log" ]]; then
+      printf '\nFull command log:\n%s\n' "$command_log"
+    fi
+  } | redact_error_log > "$LAST_ERROR" || true
+}
 
 stop_build() {
-  local problem="$1" detected="$2" required="$3" fix="$4"
+  local problem="$1" detected="$2" required="$3" fix="$4" command_log="${5:-}"
+  STOPPING=1
+  write_last_error "$problem" "$detected" "$required" "$fix" "$command_log"
   cat >&2 <<EOF
 
-Build stopped
+Build stopped during:
+$CURRENT_PHASE
 
 Problem:
 $problem
@@ -76,11 +110,33 @@ $required
 Fix:
 $fix
 
+Details saved to:
+  dist/logs/last-error.txt
+EOF
+  if [[ -n "$command_log" ]]; then
+    cat >&2 <<EOF
+
+Full command log:
+  $command_log
+EOF
+  fi
+  cat >&2 <<'EOF'
+
 Then run:
 ./build-tvos.sh
 EOF
   exit 1
 }
+
+unexpected_error() {
+  local exit_code=$?
+  [[ "$STOPPING" -eq 0 ]] || exit "$exit_code"
+  stop_build "An unexpected builder command failed" \
+    "exit status $exit_code near shell line ${BASH_LINENO[0]:-unknown}" \
+    "the current builder phase to complete" \
+    "Read the terminal error and last-error.txt; if a phase log is named there, inspect its first meaningful error."
+}
+trap unexpected_error ERR
 
 repo_path() { case "$1" in /*) printf '%s\n' "$1" ;; *) printf '%s/%s\n' "$REPO_ROOT" "$1" ;; esac; }
 config_get() {
@@ -124,7 +180,8 @@ run_logged() {
   } > "$LOG_ROOT/$label.log" 2>&1 || {
     echo "  failed; the last diagnostic lines are:" >&2
     tail -40 "$LOG_ROOT/$label.log" >&2
-    stop_build "$label failed" "See dist/logs/$label.log" "A successful $label" "Correct the first error shown above."
+    stop_build "$label failed" "the command exited unsuccessfully" "A successful $label" \
+      "Correct the first error shown above." "dist/logs/$label.log"
   }
   printf '  done\n'
 }
@@ -146,16 +203,17 @@ PY
 while (($#)); do
   case "$1" in
     --non-interactive) NON_INTERACTIVE=1; shift ;;
-    --mode) [[ $# -ge 2 ]] || exit 2; MODE="$2"; shift 2 ;;
-    --game-root) [[ $# -ge 2 ]] || exit 2; GAME_ROOT_ARG="$2"; shift 2 ;;
-    --fmod-root) [[ $# -ge 2 ]] || exit 2; FMOD_ROOT_ARG="$2"; shift 2 ;;
-    --bundle-id) [[ $# -ge 2 ]] || exit 2; BUNDLE_ID_ARG="$2"; shift 2 ;;
-    --team-id) [[ $# -ge 2 ]] || exit 2; TEAM_ID_ARG="$2"; shift 2 ;;
-    --device-id) [[ $# -ge 2 ]] || exit 2; DEVICE_ID_ARG="$2"; shift 2 ;;
+    --mode) [[ $# -ge 2 ]] || stop_build "An option value is missing" "--mode has no value" "--mode install, ipa, both, or validate" "Add the intended value and rerun."; MODE="$2"; shift 2 ;;
+    --game-root) [[ $# -ge 2 ]] || stop_build "An option value is missing" "--game-root has no value" "a Celeste directory after --game-root" "Add the path and rerun."; GAME_ROOT_ARG="$2"; shift 2 ;;
+    --fmod-root) [[ $# -ge 2 ]] || stop_build "An option value is missing" "--fmod-root has no value" "an FMOD SDK directory after --fmod-root" "Add the path and rerun."; FMOD_ROOT_ARG="$2"; shift 2 ;;
+    --bundle-id) [[ $# -ge 2 ]] || stop_build "An option value is missing" "--bundle-id has no value" "a reverse-DNS identifier after --bundle-id" "Add the identifier and rerun."; BUNDLE_ID_ARG="$2"; shift 2 ;;
+    --team-id) [[ $# -ge 2 ]] || stop_build "An option value is missing" "--team-id has no value" "a Personal Team identifier after --team-id" "Add the ignored local value and rerun."; TEAM_ID_ARG="$2"; shift 2 ;;
+    --device-id) [[ $# -ge 2 ]] || stop_build "An option value is missing" "--device-id has no value" "a paired device identifier after --device-id" "Add the ignored local value and rerun."; DEVICE_ID_ARG="$2"; shift 2 ;;
+    --check-host) CHECK_HOST=1; shift ;;
     --clean) CLEAN=1; shift ;;
     --reset-config) RESET_CONFIG=1; shift ;;
     -h|--help) usage; exit 0 ;;
-    *) echo "error: unknown option: $1" >&2; usage >&2; exit 2 ;;
+    *) stop_build "The option is not recognised" "$1" "an option shown by ./build-tvos.sh --help" "Correct or remove the option, then rerun." ;;
   esac
 done
 
@@ -171,16 +229,91 @@ if [[ "$CLEAN" -eq 1 ]]; then
   done
 fi
 mkdir -p "$CONFIG_ROOT" "$VALIDATION_ROOT" "$DIST_ROOT" "$LOG_ROOT"
+rm -f -- "$LAST_ERROR"
 
 printf '\nCeleste for Apple TV Builder\n\n'
+printf 'Logs: dist/logs/\n\n'
+CURRENT_PHASE="Checking this Mac"
 printf '[1/8] Checking this Mac\n'
 [[ "$(uname -s)" == Darwin ]] || stop_build "This builder requires macOS" "$(uname -s)" "macOS" "Run it on a Mac with Xcode installed."
 HOST_ARCH="$(uname -m)"
 [[ "$HOST_ARCH" == arm64 ]] || echo "  Warning: $HOST_ARCH is untested; Apple silicon arm64 is the supported host."
 [[ -w "$REPO_ROOT" ]] || stop_build "The repository is not writable" "read-only path" "writable clone" "Move or change permissions on the clone."
-for tool in git python3 dotnet xcodebuild xcrun swift cmake ninja gmake patch plutil codesign security shasum ditto lipo nm nmedit monodis file rg; do
-  command -v "$tool" >/dev/null || stop_build "A required tool is missing" "$tool not found" "$tool on PATH" "Install/select the documented prerequisite yourself; this script installs nothing."
+tool_names=(git python3 dotnet xcodebuild xcrun swift gmake patch plutil codesign security shasum ditto lipo nm nmedit monodis file)
+tool_reasons=(
+  "source and submodule revision checks"
+  "deterministic validation and source generation"
+  "the modern tvOS build and full AOT"
+  "native Xcode projects, assets, and signing"
+  "tvOS SDK, archive, inspection, and device tools"
+  "local icon and Top Shelf artwork generation"
+  "the pinned MoltenVK tvOS targets"
+  "tracked generated-source compatibility patches"
+  "property-list validation"
+  "development signature verification"
+  "certificate and provisioning inspection"
+  "deterministic SHA-256 manifests"
+  "app copying and IPA archive creation"
+  "archive architecture validation"
+  "native export/import validation"
+  "the exact FMOD duplicate-symbol localisation step"
+  "managed Celeste assembly identity validation"
+  "managed/native input architecture checks"
+)
+missing_tools=()
+missing_details=""
+missing_xcode=0
+missing_dotnet=0
+missing_gmake=0
+missing_monodis=0
+for ((tool_index=0; tool_index<${#tool_names[@]}; tool_index++)); do
+  tool="${tool_names[$tool_index]}"
+  reason="${tool_reasons[$tool_index]}"
+  if ! command -v "$tool" >/dev/null 2>&1; then
+    missing_tools+=("$tool")
+    missing_details+="  - $tool: $reason"$'\n'
+    case "$tool" in
+      dotnet) missing_dotnet=1 ;;
+      gmake) missing_gmake=1 ;;
+      monodis) missing_monodis=1 ;;
+      *) missing_xcode=1 ;;
+    esac
+  fi
 done
+if ((${#missing_tools[@]})); then
+  printf '\nSome required tools are missing:\n\n' >&2
+  for ((tool_index=0; tool_index<${#tool_names[@]}; tool_index++)); do
+    tool="${tool_names[$tool_index]}"
+    reason="${tool_reasons[$tool_index]}"
+    command -v "$tool" >/dev/null 2>&1 || printf '  ✗ %-10s %s\n' "$tool" "$reason" >&2
+  done
+  printf '\nAlready available: %d of %d required commands.\n' \
+    "$((${#tool_names[@]}-${#missing_tools[@]}))" "${#tool_names[@]}" >&2
+  printf '\nInstallation guidance:\n' >&2
+  if [[ "$missing_xcode" -eq 1 ]]; then
+    printf '  - Install/open full Xcode, finish first launch, and select its developer directory.\n' >&2
+  fi
+  if [[ "$missing_dotnet" -eq 1 ]]; then
+    printf '  - Install .NET SDK 10.0.302 from Microsoft, then install workload set 10.0.302.0.\n' >&2
+  fi
+  homebrew_formulas=()
+  [[ "$missing_gmake" -eq 0 ]] || homebrew_formulas+=(make)
+  [[ "$missing_monodis" -eq 0 ]] || homebrew_formulas+=(mono)
+  if ((${#homebrew_formulas[@]})); then
+    printf '  - Install GNU Make and/or Mono from their official distributions.\n' >&2
+    printf '    If you use Homebrew (optional): brew install' >&2
+    printf ' %s' "${homebrew_formulas[@]}" >&2
+    printf '\n' >&2
+  fi
+  missing_csv="$(IFS=', '; echo "${missing_tools[*]}")"
+  stop_build "${#missing_tools[@]} required tools are missing." \
+    "${missing_details%$'\n'}" "all required host commands on PATH" \
+    "Follow the installation guidance above or docs/TROUBLESHOOTING.md#missing-build-tools. This builder installs nothing."
+fi
+echo "  Host commands: all ${#tool_names[@]} required commands are available."
+PYTHON_VERSION="$(python3 -c 'import platform; print(platform.python_version())')"
+python3 -c 'import sys; raise SystemExit(0 if sys.version_info >= (3, 9) else 1)' || \
+  stop_build "The Python version is unsupported" "$PYTHON_VERSION" "Python 3.9 or newer" "Use the Python 3 supplied with the supported Xcode tools or install a current Python 3 release."
 DEVELOPER_DIR_DETECTED="$(xcode-select -p 2>/dev/null || true)"
 [[ -d "$DEVELOPER_DIR_DETECTED" && -x "$DEVELOPER_DIR_DETECTED/usr/bin/xcodebuild" ]] || stop_build "The selected Xcode developer directory is invalid" "${DEVELOPER_DIR_DETECTED:-none}" "A complete Xcode installation" "Run sudo xcode-select -s /Applications/Xcode.app/Contents/Developer after installing Xcode."
 xcodebuild -checkFirstLaunchStatus >/dev/null 2>&1 || stop_build "Xcode first-launch tasks or licence acceptance are incomplete" "xcodebuild check failed" "Xcode ready for command-line builds" "Open Xcode once, review its licence, and let it finish installing components."
@@ -200,6 +333,14 @@ fi
 echo "  macOS $(sw_vers -productVersion), $HOST_ARCH; Xcode $(xcodebuild -version | head -1 | awk '{print $2}'); tvOS SDK $TVOS_SDK"
 echo "  .NET $DOTNET_VERSION; workload set $WORKLOAD_SET; $((FREE_KIB/1024/1024)) GiB free"
 
+if [[ "$CHECK_HOST" -eq 1 ]]; then
+  echo
+  echo "Host prerequisite check passed. Celeste, FMOD, signing, and building were not requested."
+  rm -f -- "$LAST_ERROR"
+  exit 0
+fi
+
+CURRENT_PHASE="Finding Celeste"
 printf '[2/8] Finding Celeste\n'
 GAME_ROOT="${GAME_ROOT_ARG:-${CELESTE_GAME_ROOT:-$(config_get celesteGameRoot)}}"
 if [[ -z "$GAME_ROOT" && "$NON_INTERACTIVE" -eq 0 ]]; then
@@ -213,6 +354,7 @@ for item in Celeste.exe Celeste.Content.dll FNA.dll Content Celeste.png Content/
 done
 run_logged validate-celeste "$REPO_ROOT/scripts/validate-celeste-input.sh" --game-root "$GAME_ROOT" --output "$VALIDATION_ROOT/celeste-input.json"
 
+CURRENT_PHASE="Finding FMOD"
 printf '[3/8] Finding FMOD\n'
 FMOD_ROOT="${FMOD_ROOT_ARG:-${FMOD_SDK_ROOT:-$(config_get fmodSdkRoot)}}"
 if [[ -z "$FMOD_ROOT" ]]; then
@@ -277,6 +419,7 @@ current.update({"schemaVersion":1,"celesteGameRoot":sys.argv[2],"fmodSdkRoot":sy
 path.write_text(json.dumps(current,indent=2,sort_keys=True)+"\n")
 PY
 
+CURRENT_PHASE="Checking Apple tooling"
 printf '[4/8] Checking Apple tooling\n'
 TEAM_ID="${TEAM_ID_ARG:-$(config_get developmentTeam)}"
 [[ -n "$TEAM_ID" ]] || TEAM_ID="$(local_prop DevelopmentTeam)"
@@ -336,6 +479,7 @@ else
   echo "  Signing is not required for mode: $MODE"
 fi
 
+CURRENT_PHASE="Generating artwork"
 printf '[5/8] Generating artwork\n'
 run_logged generate-artwork "$REPO_ROOT/scripts/generate-celeste-tvos-artwork.sh" --game-root "$GAME_ROOT" --output "$ARTWORK_ROOT" --clean
 
@@ -349,6 +493,7 @@ if [[ "$MODE" == validate ]]; then
   exit 0
 fi
 
+CURRENT_PHASE="Preparing the game"
 printf '[6/8] Preparing the game\n'
 if [[ ! -f "$REPO_ROOT/.build/tvos-host/normalized-manifest.json" ]] || ! python3 - "$REPO_ROOT/.build/tvos-host/normalized-manifest.json" "$EXPECTED_STAGE1_HASH" <<'PY'
 import json,pathlib,sys
@@ -423,6 +568,7 @@ INPUT_KEY="$({
   printf '%s\n' "$BUNDLE_ID" 'Release' 'tvos-arm64' 'CelesteAudio' 'full-AOT' 'full-trim' 'no-interpreter'
 } | shasum -a 256 | awk '{print $1}')"
 
+CURRENT_PHASE="Building"
 printf '[7/8] Building\n'
 SIGNED_APP=""
 UNSIGNED_APP=""
@@ -464,6 +610,7 @@ if [[ "$MODE" == install || "$MODE" == both ]]; then
   fi
 fi
 
+CURRENT_PHASE="Packaging or installing"
 printf '[8/8] Packaging or installing\n'
 rm -f -- "$DIST_ROOT/SHA256SUMS" "$DIST_ROOT/build-summary.txt"
 if [[ -n "$UNSIGNED_APP" ]]; then
@@ -553,3 +700,4 @@ private signing/device values: omitted
 EOF
 echo "  Privacy-safe summary: $DIST_ROOT/build-summary.txt"
 echo "  Complete logs: $DIST_ROOT/logs/"
+rm -f -- "$LAST_ERROR"

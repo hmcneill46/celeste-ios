@@ -174,12 +174,12 @@ if entitlements:
 print("PASS: project, Info.plist, and entitlement isolation")
 PY
 
-if rg -n -i 'fmod|Celeste\.(exe|dll)|decompil|/Content/' \
+if grep -R -n -E -i 'fmod|Celeste\.(exe|dll)|decompil|/Content/' \
   "$REPO_ROOT/tvos/CelesteTvOSHost" "$REPO_ROOT/tvos/FNA.TvOS" >/dev/null; then
   echo "error: host project contains a Celeste executable/content/decompilation or FMOD reference" >&2
   exit 1
 fi
-if rg -n 'com\.apple\.developer\.user-management' "$REPO_ROOT/tvos" >/dev/null; then
+if grep -R -n -E 'com\.apple\.developer\.user-management' "$REPO_ROOT/tvos" >/dev/null; then
   echo "error: Stage 2 must not request Apple TV User Management" >&2
   exit 1
 fi

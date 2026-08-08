@@ -117,7 +117,7 @@ grep -Fq "'\$(CelesteLaunchMode)' == 'FmodDiagnostic' and '\$(RuntimeIdentifier)
   echo "error: FMOD native references are not isolated to the device diagnostic" >&2
   exit 1
 }
-if rg -n 'com\.apple\.developer\.user-management' "$REPO_ROOT/tvos" >/dev/null; then
+if grep -R -n -E 'com\.apple\.developer\.user-management' "$REPO_ROOT/tvos" >/dev/null; then
   echo "error: User Management is out of scope" >&2
   exit 1
 fi

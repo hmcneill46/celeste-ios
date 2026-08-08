@@ -141,6 +141,7 @@ need them for normal builds.
 - [Durable persistence](../TVOS_CELESTE_PERSISTENCE_STAGE6_REPORT.md)
 - [Friendly self-build and branding](../TVOS_SELF_BUILD_STAGE8A_REPORT.md)
 - [Public repository release](../TVOS_REPOSITORY_RELEASE_STAGE8B_REPORT.md)
+- [Public prerequisite and failure-UX hardening](../TVOS_PUBLIC_PREREQUISITES_STAGE8C_REPORT.md)
 
 ## Isolation and licensing
 

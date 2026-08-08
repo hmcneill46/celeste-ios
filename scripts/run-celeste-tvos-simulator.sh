@@ -170,7 +170,7 @@ grep -Fq "name=first-celeste-draw" "$EVIDENCE_DIR/console.log" || { echo "error:
 grep -Fq "lifecycle foreground" "$EVIDENCE_DIR/console.log" || { echo "error: foreground lifecycle was not observed" >&2; exit 1; }
 grep -Fq "scene=Celeste.Overworld" "$EVIDENCE_DIR/console.log" || { echo "error: Celeste.Overworld was not observed" >&2; exit 1; }
 grep -Fq "name=first-celeste-draw" "$EVIDENCE_DIR/second-launch.log" || { echo "error: second launch did not draw" >&2; exit 1; }
-if rg -n 'unhandled managed exception|STAGE3B_FATAL|FMOD LOW-LEVEL|fmod-low-level=[1-9]|tvStubs (invoked|call detected)|ContentLoadException' \
+if grep -n -E 'unhandled managed exception|STAGE3B_FATAL|FMOD LOW-LEVEL|fmod-low-level=[1-9]|tvStubs (invoked|call detected)|ContentLoadException' \
   "$EVIDENCE_DIR/console.log" "$EVIDENCE_DIR/second-launch.log"; then
   echo "error: forbidden Stage 3B runtime failure detected" >&2
   exit 1

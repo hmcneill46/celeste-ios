@@ -59,7 +59,7 @@ fi
 if [[ -n "$APP_DIR" || -n "$PLATFORM" ]]; then
   [[ -n "$APP_DIR" && "$PLATFORM" =~ ^(tvos|tvossimulator)$ ]] || { echo "error: --app requires --platform tvos or tvossimulator" >&2; exit 2; }
 fi
-for command in dotnet git python3 rg; do command -v "$command" >/dev/null || { echo "error: missing tool: $command" >&2; exit 1; }; done
+for command in dotnet git python3; do command -v "$command" >/dev/null || { echo "error: missing tool: $command" >&2; exit 1; }; done
 for root in "$RUNTIME_ROOT" "$ARTIFACT_DIR" ${COMPARE_RUNTIME_ROOT:+"$COMPARE_RUNTIME_ROOT"} ${COMPARE_ARTIFACT_DIR:+"$COMPARE_ARTIFACT_DIR"}; do
   case "$root" in "$REPO_ROOT"/*) relative="${root#$REPO_ROOT/}" ;; *) echo "error: generated root must be below repository" >&2; exit 1 ;; esac
   git -C "$REPO_ROOT" check-ignore --no-index -q -- "$relative/$MARKER" || { echo "error: generated root is not ignored: \$REPO_ROOT/$relative" >&2; exit 1; }

@@ -19,6 +19,7 @@ body:
     attributes:
       label: Builder mode
       options:
+        - Host check (`--check-host`)
         - Validate only
         - Direct Personal Team install
         - Signing-ready unsigned IPA
@@ -49,7 +50,7 @@ body:
     id: stopped
     attributes:
       label: Builder's redacted “Build stopped” block
-      description: Remove absolute paths and all private signing/device/account values.
+      description: Include the privacy-safe `dist/logs/last-error.txt` text when available. Redact any remaining absolute paths and private signing/device/account values; never attach the whole app or proprietary inputs.
     validations:
       required: true
   - type: textarea

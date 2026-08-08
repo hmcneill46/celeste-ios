@@ -44,7 +44,7 @@ while (($#)); do
     *) echo "error: unknown option: $1" >&2; exit 2 ;;
   esac
 done
-for command in dotnet git python3 plutil rg shasum; do command -v "$command" >/dev/null || { echo "error: missing tool: $command" >&2; exit 1; }; done
+for command in dotnet git python3 plutil shasum; do command -v "$command" >/dev/null || { echo "error: missing tool: $command" >&2; exit 1; }; done
 if [[ -n "$APP_DIR" ]]; then
   for command in xcrun codesign nm; do command -v "$command" >/dev/null || { echo "error: missing app-verification tool: $command" >&2; exit 1; }; done
 fi
@@ -104,7 +104,7 @@ entries=value.get("NSPrivacyAccessedAPITypes", [])
 expected={"NSPrivacyAccessedAPIType":"NSPrivacyAccessedAPICategoryUserDefaults","NSPrivacyAccessedAPITypeReasons":["CA92.1"]}
 if expected not in entries: raise SystemExit("error: UserDefaults CA92.1 privacy reason missing")
 PY
-if rg -n 'com\.apple\.developer\.user-management|com\.apple\.developer\.ubiquity|iCloud' "$REPO_ROOT/tvos/CelesteTvOSRuntimeHost" >/dev/null; then
+if grep -R -n -E 'com\.apple\.developer\.user-management|com\.apple\.developer\.ubiquity|iCloud' "$REPO_ROOT/tvos/CelesteTvOSRuntimeHost" >/dev/null; then
   echo "error: Stage 6 introduced User Management or iCloud" >&2; exit 1
 fi
 git -C "$REPO_ROOT" diff --quiet "$BASELINE_COMMIT" -- build.sh celestemeow fnalibs-ios-builder-celeste FNA native tvos/CelesteTvOSHost tvos/FNA.TvOS tvos/stage2-ios-native-baseline.sha256 || {
@@ -129,7 +129,7 @@ if [[ -n "$APP_DIR" ]]; then
   else
     grep -Eq 'platform[[:space:]]+TVOSSIMULATOR$' <<<"$build_info" || { echo "error: simulator app platform mismatch" >&2; exit 1; }
     if find "$APP_DIR/Content/FMOD" -type f 2>/dev/null | grep -q .; then echo "error: simulator app contains FMOD banks" >&2; exit 1; fi
-    if nm -gjU "$executable" | rg -q 'FMOD_(System|Studio)_'; then echo "error: simulator app defines FMOD" >&2; exit 1; fi
+    if nm -gjU "$executable" | grep -E -q 'FMOD_(System|Studio)_'; then echo "error: simulator app defines FMOD" >&2; exit 1; fi
   fi
   echo "PASS: $PLATFORM package, privacy manifest, and proprietary writable-state isolation"
 fi

@@ -36,9 +36,6 @@ limitations.
 
 - An Apple silicon Mac. The proven host used macOS 26.3.
 - Full Xcode 26.6 with the tvOS 26.5 SDK and command-line tools selected.
-- .NET SDK 10.0.302 and tvOS workload set 10.0.302.0.
-- Git, Python 3, Mono's `monodis`, CMake, Ninja, GNU Make (`gmake`), and the
-  native tools checked by the builder.
 - A paired, developer-ready arm64 Apple TV running tvOS 16 or later. The tested
   device is an Apple TV 4K (3rd generation).
 - An extended Bluetooth game controller. DualSense is tested.
@@ -49,6 +46,38 @@ limitations.
 Exact tested and potentially compatible configurations are separated in
 [`docs/STATUS.md`](docs/STATUS.md).
 
+### Comes with macOS and full Xcode
+
+The supported full-Xcode setup supplies Git, Python 3, Swift, the tvOS SDK and
+Apple command-line utilities used for compilation, archives, assets, signing,
+inspection, and packaging. Command Line Tools by themselves are not a
+substitute for full Xcode.
+
+### Install separately
+
+- [**.NET SDK 10.0.302**](https://dotnet.microsoft.com/download/dotnet/10.0),
+  followed by tvOS workload set **10.0.302.0**.
+- [**GNU Make**](https://www.gnu.org/software/make/), which provides the
+  `gmake` command used by pinned MoltenVK.
+- [**Mono**](https://www.mono-project.com/download/stable/), which provides
+  `monodis` for validating Celeste's managed assembly identity.
+
+If you already use Homebrew, the last two can be installed together with
+`brew install make mono`. Homebrew is optional, and the builder never invokes
+it. CMake, Ninja, and ripgrep are **not** required by the public self-builder.
+
+### Builder validates automatically
+
+Before locating Celeste or FMOD, check only the Mac and tools:
+
+```bash
+./build-tvos.sh --check-host
+```
+
+It reports every missing command in one run, explains why it is needed, and
+writes a privacy-safe failure summary to `dist/logs/last-error.txt`. It installs
+nothing.
+
 ## Quick start
 
 ```bash
@@ -56,6 +85,7 @@ git clone https://github.com/hmcneill46/celeste-ios.git
 cd celeste-ios
 git -c url.https://github.com/.insteadOf=git://github.com/ \
   submodule update --init --recursive
+./build-tvos.sh --check-host
 ./build-tvos.sh
 ```
 
@@ -252,10 +282,11 @@ have not been physically tested here.
 ## Troubleshooting
 
 Start with [`docs/TROUBLESHOOTING.md`](docs/TROUBLESHOOTING.md). Complete logs
-are written below ignored `dist/logs/`, and `dist/build-summary.txt` contains a
-privacy-safe summary. Do not post game files, FMOD files, signed apps/IPAs,
-provisioning profiles, certificates, account details, Team IDs, or device IDs
-in an issue.
+are written below ignored `dist/logs/`. Every stopped builder invocation names
+`dist/logs/last-error.txt`; a failed build phase also names its complete command
+log. `dist/build-summary.txt` contains a privacy-safe success summary. Do not
+post game files, FMOD files, signed apps/IPAs, provisioning profiles,
+certificates, account details, Team IDs, or device IDs in an issue.
 
 ## Advanced/manual build
 

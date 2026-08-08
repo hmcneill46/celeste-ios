@@ -17,6 +17,7 @@ REQUIRED_DOCS = (
     "docs/TROUBLESHOOTING.md",
     "docs/STATUS.md",
     "CONTRIBUTING.md",
+    "TVOS_PUBLIC_PREREQUISITES_STAGE8C_REPORT.md",
 )
 PUBLIC_TEXT = REQUIRED_DOCS + (
     ".github/ISSUE_TEMPLATE/bug_report.yml",
@@ -68,6 +69,9 @@ def main() -> None:
         "shared between Apple TV users",
         "DualSense",
         "Siri Remote",
+        "./build-tvos.sh --check-host",
+        "dist/logs/last-error.txt",
+        "CMake, Ninja, and ripgrep are **not** required",
     )
     for value in required_readme:
         if value not in readme:
@@ -120,11 +124,24 @@ def main() -> None:
         "--game-root DIR",
         "--fmod-root DIR",
         "--bundle-id ID",
+        "--check-host",
         "--clean",
         "--reset-config",
     ):
         if option not in help_result.stdout:
             fail(f"builder help omits documented option: {option}")
+
+    builder_text = builder.read_text(encoding="utf-8")
+    for avoidable in (" rg", " cmake", " ninja"):
+        if re.search(rf"(^|[ (]){avoidable.strip()}([ )]|$)", builder_text, re.MULTILINE):
+            fail(f"builder retained avoidable public prerequisite: {avoidable.strip()}")
+    for required_error_fact in (
+        "Some required tools are missing:",
+        "dist/logs/last-error.txt",
+        "Full command log:",
+    ):
+        if required_error_fact not in builder_text:
+            fail(f"builder omits Stage 8C failure UX: {required_error_fact}")
 
     tracked = run("git", "-C", str(repo), "ls-files", "-z").stdout.split("\0")
     tracked = [item for item in tracked if item]

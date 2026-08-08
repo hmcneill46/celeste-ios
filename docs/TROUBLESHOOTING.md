@@ -1,9 +1,15 @@
 # Troubleshooting
 
-Start by rerunning the builder and reading its final `Build stopped` block. It
-reports the detected value, required value, and a focused remedy. Complete
-ignored logs are under `dist/logs/`; redact local paths and signing/device
-details before sharing excerpts.
+Start with a host-only check:
+
+```bash
+./build-tvos.sh --check-host
+```
+
+It needs neither Celeste nor FMOD. If the builder stops, read the terminal
+block and `dist/logs/last-error.txt`. A failed build phase also names its full
+`dist/logs/<phase>.log`. Redact local paths and signing/device details before
+sharing excerpts.
 
 Do not attach Celeste files, generated Celeste source, FMOD SDK files or banks,
 an app/IPA containing game content, Apple credentials or two-factor codes,
@@ -94,25 +100,47 @@ dotnet workload list
 The list must show workload version `10.0.302.0` and `tvos`. The builder never
 installs or updates workloads automatically.
 
-## A required native tool is missing
+## Missing build tools
 
 **Symptom**
 
 ```text
 Problem:
-A required tool is missing
+3 required tools are missing.
 ```
 
 **Cause**
 
-One of Git, Python 3, Swift/Xcode tools, CMake, Ninja, GNU Make (`gmake`), Mono
-`monodis`, `patch`, `rg`, or another named native tool is not on `PATH`.
+The preflight could not find one or more commands. It reports the complete set
+in one run rather than stopping at the first missing tool. CMake, Ninja, and
+ripgrep are not required by the supported public builder.
 
 **Fix**
 
-Install the exact named tool using its official distribution or your normal Mac
-development-tool manager, then rerun. The project intentionally does not run
-Homebrew, `sudo`, or any package installer for you.
+Use the guidance printed for the named group:
+
+- Xcode/Apple commands: install full Xcode, complete first launch, and select
+  its developer directory. The supported setup also supplies Git, Python 3,
+  Swift, `patch`, `file`, and the Apple inspection/packaging utilities.
+- `dotnet`: install Microsoft's .NET SDK 10.0.302, then workload set
+  10.0.302.0 as described below.
+- `gmake`: install [GNU Make](https://www.gnu.org/software/make/) from its
+  official distribution. With optional Homebrew: `brew install make`.
+- `monodis`: install [Mono](https://www.mono-project.com/download/stable/) from
+  its official distribution. With optional Homebrew: `brew install mono`.
+
+For both independently installed native tools, an optional combined command is:
+
+```bash
+brew install make mono
+```
+
+Homebrew is not mandatory. The project never runs Homebrew, `sudo`, licence
+acceptance, or a package installer for you. After installing/selecting tools:
+
+```bash
+./build-tvos.sh --check-host
+```
 
 ## Incorrect Xcode selection
 

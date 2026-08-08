@@ -33,7 +33,7 @@ cd celeste-ios
 Do not substitute the original upstream `main` branch; that is the legacy iOS
 project and does not contain the completed self-builder.
 
-## Pinned toolchain
+## Pinned toolchain and command audit
 
 The builder requires macOS and a complete Xcode installation. The accepted
 toolchain is:
@@ -47,9 +47,35 @@ toolchain is:
 | tvOS SDK | 26.5 |
 | Deployment target | 16.0 |
 
-The preflight also requires Git, Python 3, Swift, CMake, Ninja, GNU Make as
-`gmake`, Mono's `monodis`, `patch`, `rg`, and Apple/Xcode command-line tools.
-It verifies at least 8 GiB free. No script installs tools or accepts licences.
+The public builder's command surface was audited transitively from
+`build-tvos.sh` through native, managed, FMOD, artwork, verification, signing,
+and packaging scripts. These are the authoritative command groups:
+
+| Command(s) | Supplied by | Builder modes | Why required | Separate install |
+| --- | --- | --- | --- | --- |
+| `git`, `python3`, `patch`, `file` | macOS/Xcode Command Line Tools selected with full Xcode | all | locked source state, validation, deterministic transforms | no additional package on the supported Xcode host |
+| `xcodebuild`, `xcrun`, `swift` | full Xcode | all | tvOS projects/SDK tools and local artwork generation | install full Xcode |
+| `plutil`, `codesign`, `security`, `shasum`, `ditto`, `lipo`, `nm`, `nmedit` | macOS/Xcode | applicable validation, FMOD, signing, and packaging phases | plist/signature/profile/hash/archive/symbol work | no additional package on the supported Xcode host |
+| `dotnet` | Microsoft .NET SDK 10.0.302 | all | managed tooling, full AOT, trimming, tvOS publish | **yes**; official .NET installer, then workload set 10.0.302.0 |
+| `gmake` | [GNU Make](https://www.gnu.org/software/make/) | builds | pinned MoltenVK `tvos` and `tvossim` targets | **yes**; official GNU Make or optional `brew install make` |
+| `monodis` | [Mono](https://www.mono-project.com/download/stable/) | input validation/builds | managed Celeste assembly identities/references | **yes**; official Mono or optional `brew install mono` |
+| POSIX/macOS basics: `awk`, `grep`, `sed`, `find`, `sort`, `xargs`, `cp`, `mkdir`, `rm`, `stat`, `df`, `du`, `tail`, `head`, `cut`, `tr`, `wc`, `nl`, `kill`, `sleep`, `defaults`, `sw_vers`, `xcode-select` | macOS | as applicable | orchestration and bounded diagnostics | no |
+| `clang`, `ar`, `otool`, `vtool` | selected through `xcrun` | native/FMOD/package verification | compile bridge and inspect Mach-O/archive members | no separate command check; covered by Xcode/SDK validation |
+
+CMake and Ninja are historical/manual-lane tools but are not invoked by the
+supported self-builder. Ripgrep was an avoidable verifier dependency and has
+been replaced with macOS `grep`; it is not required. The builder verifies at
+least 8 GiB free. No script installs tools or accepts licences.
+
+Check the host without game files, FMOD, signing, or a build:
+
+```bash
+./build-tvos.sh --check-host
+```
+
+Missing commands are collected and reported together. Wrong .NET/workload,
+Xcode-selection, SDK, first-launch, submodule, disk, and entitlement states use
+separate focused diagnostics.
 
 To inspect the host without changing it:
 
@@ -245,6 +271,12 @@ dist/
 Depending on the selected mode, only the relevant product is present. The
 summary omits private signing/device values and source paths. Detailed logs are
 local and may contain private local values; redact them before sharing.
+
+The builder announces `Logs: dist/logs/` before preflight. Every public failure
+writes `dist/logs/last-error.txt` with its phase, problem, detected/required
+state, remedy, and the relevant command-log name when one exists. A failed
+`run_logged` phase also identifies `dist/logs/<phase>.log` in the terminal.
+Successful runs remove stale `last-error.txt` and write `build-summary.txt`.
 
 Other generated roots include:
 
