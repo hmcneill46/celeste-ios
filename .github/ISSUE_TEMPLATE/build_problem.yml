@@ -1,0 +1,59 @@
+name: Build or installation problem
+description: Get help with the self-builder, signing, or installation
+title: "[Build]: "
+labels: [build]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Read `docs/TROUBLESHOOTING.md` first. Never attach Celeste/FMOD files, generated game source, apps/IPAs containing game content, Apple passwords or 2FA codes, certificates, provisioning profiles, Team IDs, device IDs, account emails, bundle IDs you consider private, or `tvos/Local.Build.props`.
+  - type: textarea
+    id: environment
+    attributes:
+      label: Host and target versions
+      description: Mac model/architecture, macOS, Xcode, `dotnet --version`, workload version, tvOS version, Apple TV model, controller.
+    validations:
+      required: true
+  - type: dropdown
+    id: mode
+    attributes:
+      label: Builder mode
+      options:
+        - Validate only
+        - Direct Personal Team install
+        - Signing-ready unsigned IPA
+        - Both
+    validations:
+      required: true
+  - type: dropdown
+    id: celeste
+    attributes:
+      label: Celeste validator
+      options:
+        - Passed (itch.io Linux 1.4.0.0)
+        - Failed
+        - Not reached
+    validations:
+      required: true
+  - type: dropdown
+    id: fmod
+    attributes:
+      label: FMOD validator
+      options:
+        - Passed (1.10.09 build 97915)
+        - Failed
+        - Not reached
+    validations:
+      required: true
+  - type: textarea
+    id: stopped
+    attributes:
+      label: Builder's redacted “Build stopped” block
+      description: Remove absolute paths and all private signing/device/account values.
+    validations:
+      required: true
+  - type: textarea
+    id: attempted
+    attributes:
+      label: What you tried
+      description: Include the exact public command and troubleshooting steps, but no secrets.

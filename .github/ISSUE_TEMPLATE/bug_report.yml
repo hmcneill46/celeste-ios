@@ -1,0 +1,62 @@
+name: Runtime bug
+description: Report a reproducible problem in an installed Celeste tvOS build
+title: "[Bug]: "
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Do **not** attach Celeste files, generated source, FMOD SDK files or banks, signed apps/IPAs, saves, Apple credentials or 2FA codes, certificates, provisioning profiles, Team IDs, device identifiers, account email addresses, or raw private configuration. Redact logs before sharing.
+  - type: input
+    id: commit
+    attributes:
+      label: Repository commit
+      description: Output of `git rev-parse HEAD`.
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: Mac model/architecture, macOS, Xcode, .NET/workload, tvOS, Apple TV model, and controller. Omit device IDs.
+    validations:
+      required: true
+  - type: dropdown
+    id: mode
+    attributes:
+      label: Builder mode
+      options:
+        - Direct Personal Team install
+        - Signing-ready unsigned IPA
+        - External signer installation
+        - Other/manual
+    validations:
+      required: true
+  - type: dropdown
+    id: inputs
+    attributes:
+      label: Did both Celeste and FMOD validation pass?
+      options:
+        - "Yes"
+        - "No"
+        - "Unsure"
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Steps to reproduce
+      description: Include the scene/action and whether it reproduces after a clean launch.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected and actual behaviour
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Redacted log excerpt
+      description: Paste only the first relevant redacted error/stack. Do not upload the complete private evidence directory.

@@ -54,8 +54,12 @@ done
 xcrun --sdk appletvos --show-sdk-path >/dev/null
 xcrun --sdk appletvsimulator --show-sdk-path >/dev/null
 
-BUILD_DIR="$(python3 -c 'import os,sys; print(os.path.abspath(sys.argv[1]))' "$BUILD_DIR")"
-OUTPUT_DIR="$(python3 -c 'import os,sys; print(os.path.abspath(sys.argv[1]))' "$OUTPUT_DIR")"
+# Xcode canonicalises /tmp to /private/tmp before compiling. Resolve symlinks
+# here as well so SDL2's -ffile-prefix-map matches the path embedded by clang;
+# otherwise an independent mktemp clone leaks its absolute path into one object
+# and produces a different logical Stage 1 checksum.
+BUILD_DIR="$(python3 -c 'import os,sys; print(os.path.realpath(sys.argv[1]))' "$BUILD_DIR")"
+OUTPUT_DIR="$(python3 -c 'import os,sys; print(os.path.realpath(sys.argv[1]))' "$OUTPUT_DIR")"
 SOURCES_DIR="$BUILD_DIR/sources"
 WORK_DIR="$BUILD_DIR/work"
 STAGE_DIR="$BUILD_DIR/stage"
@@ -232,8 +236,15 @@ build_xcode_archive() {
   local definitions='$(inherited)'
   local cflags='$(inherited)'
   if [[ "$component" == SDL2 ]]; then
+    local sdl_source="$SOURCES_DIR/SDL2"
     definitions='$(inherited) SDL_MAIN_HANDLED=1'
-    cflags="\$(inherited) -ffile-prefix-map=$SOURCES_DIR/SDL2=/STAGE1_SOURCES/SDL2"
+    cflags="\$(inherited) -ffile-prefix-map=$sdl_source=/STAGE1_SOURCES/SDL2"
+    # Xcode can pass a source path using the user-facing /tmp alias even when
+    # its project/build roots were resolved to /private/tmp. Cover that one
+    # equivalent spelling so __FILE__ remains independent of clone location.
+    if [[ "$sdl_source" == /private/tmp/* ]]; then
+      cflags+=" -ffile-prefix-map=/${sdl_source#/private/}=/STAGE1_SOURCES/SDL2"
+    fi
   fi
   mkdir -p -- "$derived" "$products" "$module_cache"
   echo "[$component/$variant] target=$target sdk=$sdk archs=$archs revision=$(git -C "$(dirname "$(dirname "$project")")" rev-parse HEAD 2>/dev/null || echo locked-nested-project)"

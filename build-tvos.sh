@@ -15,7 +15,7 @@ Without --non-interactive it prompts for missing paths and build choices.
 Options:
   --non-interactive       Never prompt; require all needed choices
   --mode MODE             install, ipa, both, or validate
-  --game-root DIR         Lawful unmodified FNA Celeste 1.4.0.0 root
+  --game-root DIR         Tested itch.io Linux Celeste 1.4.0.0 root
   --fmod-root DIR         Mounted FMOD Engine iOS/tvOS 1.10.09 SDK root
   --bundle-id ID          Unique local bundle identifier
   --team-id ID            Personal Team identifier for direct installation
@@ -178,7 +178,7 @@ printf '[1/8] Checking this Mac\n'
 HOST_ARCH="$(uname -m)"
 [[ "$HOST_ARCH" == arm64 ]] || echo "  Warning: $HOST_ARCH is untested; Apple silicon arm64 is the supported host."
 [[ -w "$REPO_ROOT" ]] || stop_build "The repository is not writable" "read-only path" "writable clone" "Move or change permissions on the clone."
-for tool in git python3 dotnet xcodebuild xcrun swift cmake ninja patch plutil codesign security shasum ditto lipo nm; do
+for tool in git python3 dotnet xcodebuild xcrun swift cmake ninja gmake patch plutil codesign security shasum ditto lipo nm nmedit monodis file rg; do
   command -v "$tool" >/dev/null || stop_build "A required tool is missing" "$tool not found" "$tool on PATH" "Install/select the documented prerequisite yourself; this script installs nothing."
 done
 DEVELOPER_DIR_DETECTED="$(xcode-select -p 2>/dev/null || true)"
@@ -206,10 +206,10 @@ if [[ -z "$GAME_ROOT" && "$NON_INTERACTIVE" -eq 0 ]]; then
   read -r -p "  Drag the Celeste folder here, or paste its path: " answer
   GAME_ROOT="$(normalize_pasted_path "$answer")"
 fi
-[[ -n "$GAME_ROOT" ]] || stop_build "The Celeste installation was not provided" "no path" "your lawful unmodified FNA Celeste 1.4.0.0 folder" "Set CELESTE_GAME_ROOT or rerun and paste the folder path."
+[[ -n "$GAME_ROOT" ]] || stop_build "The Celeste installation was not provided" "no path" "your lawful unmodified itch.io Linux Celeste 1.4.0.0 folder" "Set CELESTE_GAME_ROOT or rerun and paste the extracted Linux folder path."
 [[ -d "$GAME_ROOT" ]] || stop_build "The Celeste directory was not found" "the selected path does not exist" "a folder containing Celeste.exe, Celeste.Content.dll, FNA.dll, and Content" "Mount or locate your own game installation and rerun."
 for item in Celeste.exe Celeste.Content.dll FNA.dll Content Celeste.png Content/Graphics/SplashScreen.png; do
-  [[ -e "$GAME_ROOT/$item" ]] || stop_build "The Celeste installation is incomplete" "missing $item" "unmodified FNA Celeste 1.4.0.0 plus its local artwork" "Select the original FNA game installation, not Everest or a partial copy."
+  [[ -e "$GAME_ROOT/$item" ]] || stop_build "The Celeste installation is incomplete" "missing $item" "the tested itch.io Linux Celeste 1.4.0.0 files plus local artwork" "Select the extracted, unmodified itch.io Linux game installation, not Everest or a partial copy. Steam and other distributions are untested."
 done
 run_logged validate-celeste "$REPO_ROOT/scripts/validate-celeste-input.sh" --game-root "$GAME_ROOT" --output "$VALIDATION_ROOT/celeste-input.json"
 
@@ -246,7 +246,9 @@ CHOICES
   read -r -p "  Choice [1-4]: " choice
   case "$choice" in 1) MODE=install ;; 2) MODE=ipa ;; 3) MODE=both ;; 4) MODE=validate ;; *) stop_build "The build choice was not recognised" "$choice" "1, 2, 3, or 4" "Rerun and select one numbered choice." ;; esac
 fi
-[[ -n "$MODE" ]] || MODE=validate
+if [[ -z "$MODE" && "$NON_INTERACTIVE" -eq 1 ]]; then
+  stop_build "Non-interactive mode needs an explicit build choice" "no --mode value" "--mode install, ipa, both, or validate" "Add the intended --mode option and rerun."
+fi
 case "$MODE" in install|ipa|both|validate) ;; *) stop_build "The build mode is invalid" "$MODE" "install, ipa, both, or validate" "Use --mode with a supported value." ;; esac
 
 BUNDLE_ID="${BUNDLE_ID_ARG:-$(config_get bundleIdentifier)}"
@@ -370,8 +372,23 @@ else
   echo "  reusing accepted Stage 1 native set ($EXPECTED_STAGE1_HASH)"
 fi
 
+STAGE1_ARTIFACT_FOR_FMOD="$(python3 - "$REPO_ROOT/.build/tvos-host/staging-manifest.json" <<'PY'
+import json,pathlib,sys
+path=pathlib.Path(sys.argv[1])
+if not path.is_file(): raise SystemExit("error: Stage 2 host staging manifest is missing")
+value=json.loads(path.read_text()).get("stage1ArtifactDirectory","")
+if not value: raise SystemExit("error: Stage 2 host staging does not identify its Stage 1 artifact set")
+print(pathlib.Path(value).resolve())
+PY
+)"
+case "$STAGE1_ARTIFACT_FOR_FMOD" in
+  "$REPO_ROOT/artifacts/tvos-native/"*) ;;
+  *) stop_build "The staged native artifact path is unsafe" "path outside artifacts/tvos-native" "the verified repository-local Stage 1 set" "Clean the Stage 8 cache and rerun." ;;
+esac
+[[ -f "$STAGE1_ARTIFACT_FOR_FMOD/normalized-manifest.json" ]] || stop_build "The staged native artifact set is unavailable" "missing normalized manifest" "the verified Stage 1 set used by host staging" "Clean the Stage 8 cache and rerun."
+
 if ! "$REPO_ROOT/scripts/verify-fmod-tvos.sh" --stage-dir .build/fmod-tvos/current > "$LOG_ROOT/verify-fmod-stage.log" 2>&1; then
-  fmod_args=(--sdk-root "$FMOD_ROOT" --game-root "$GAME_ROOT")
+  fmod_args=(--sdk-root "$FMOD_ROOT" --game-root "$GAME_ROOT" --stage1-artifact-dir "$STAGE1_ARTIFACT_FOR_FMOD")
   [[ -d "$REPO_ROOT/.build/fmod-tvos/current" ]] && fmod_args+=(--clean)
   run_logged prepare-fmod "$REPO_ROOT/scripts/prepare-fmod-tvos.sh" "${fmod_args[@]}"
 else
