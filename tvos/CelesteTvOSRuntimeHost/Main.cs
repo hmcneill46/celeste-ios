@@ -74,6 +74,7 @@ internal static class Program
 #if TVOS_STAGE6_HOST
             using Stage6PersistenceStore? persistence = PrepareCelesteRuntimeContext(enablePersistence: true);
             using Stage6PersistenceLifecycle? persistenceLifecycle = persistence == null ? null : new Stage6PersistenceLifecycle(persistence);
+            using Stage10ASaveManager? saveManager = persistence == null ? null : new Stage10ASaveManager(persistence);
 #else
             PrepareCelesteRuntimeContext(enablePersistence: false);
 #endif
@@ -226,7 +227,7 @@ internal static class Program
             ?? "unknown";
         bool simulator = !string.IsNullOrEmpty(Environment.GetEnvironmentVariable("SIMULATOR_DEVICE_NAME"));
         Stage3BLog.Info(
-            $"host version={version}; repository baseline=2e17b013e7af46c993858ee6ef3ff1a13e4d6784; mode={LaunchMode}"
+            $"host version={version}; repository baseline=7d689dbb0ee6b1ac4f655573eb33b3b8c12b57ac; mode={LaunchMode}"
         );
         Stage3BLog.Info($"runtime={RuntimeInformation.FrameworkDescription}; architecture={RuntimeInformation.ProcessArchitecture}");
         Stage3BLog.Info(

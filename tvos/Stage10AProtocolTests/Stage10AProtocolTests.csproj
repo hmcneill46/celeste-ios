@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <DefineConstants>$(DefineConstants);CELESTE_RUNTIME;TVOS_STAGE6_HOST</DefineConstants>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="..\CelesteTvOSRuntimeHost\Stage10AHttpProtocol.cs" Link="Stage10AHttpProtocol.cs" />
+    <Compile Include="..\CelesteTvOSRuntimeHost\Stage10ALanAddressPolicy.cs" Link="Stage10ALanAddressPolicy.cs" />
+  </ItemGroup>
+</Project>

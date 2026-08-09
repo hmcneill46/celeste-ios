@@ -324,9 +324,30 @@ internal sealed class Stage6PersistenceStore : IDisposable
     {
         lock (gate)
         {
+            ThrowIfDisposed();
             _ = Policy(logicalName);
             Entry? entry = selected?.Entries.Single(value => value.Name == logicalName);
             return entry is { Present: true } ? entry.Payload.ToArray() : null;
+        }
+    }
+
+    internal Stage10AExportSnapshot CreateReadOnlySaveManagerSnapshot()
+    {
+        lock (gate)
+        {
+            ThrowIfDisposed();
+            if (!Commit("save-manager-read-snapshot"))
+                throw Failure("save-manager-flush", "The durable generation could not be verified before export.");
+
+            Dictionary<string, byte[]?> files = new(StringComparer.Ordinal);
+            foreach (string logicalName in new[] { "settings", "0", "1", "2" })
+                files.Add(logicalName, ExportLogicalPayloadForFutureSaveManager(logicalName));
+
+            return new Stage10AExportSnapshot(
+                selected?.Generation ?? 0,
+                selected?.LogicalHash ?? "none",
+                files
+            );
         }
     }
 

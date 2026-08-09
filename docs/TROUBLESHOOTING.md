@@ -549,6 +549,47 @@ with the same bundle identifier. Do not uninstall the existing app. Existing
 v1 saves load unchanged and migrate automatically on the next successful
 changed save. No manual save conversion is required.
 
+## Save Manager says no local network is available
+
+**Symptom**
+
+The tvOS Save Manager screen cannot display a usable numeric address.
+
+**Cause**
+
+The Apple TV has no active Ethernet/Wi-Fi LAN address, or only an unsuitable
+loopback, tunnel, or link-local path is available.
+
+**Fix**
+
+Connect the Apple TV and the browser device to the same normal local network,
+then leave and reopen **Options > Save Manager** so it recalculates the address
+and system-selected port. Do not configure port forwarding or a public route.
+
+## Save Manager page does not open or the code stops working
+
+**Symptom**
+
+The displayed URL times out, a previous code is rejected, or a previously open
+page stops downloading.
+
+**Cause**
+
+Save Manager deliberately stops when its screen closes, Celeste backgrounds,
+the listener fails, or the inactivity timeout expires. Codes and browser
+sessions exist only in memory and are erased on every stop.
+
+**Fix**
+
+Keep Celeste in the foreground, reopen **Options > Save Manager**, use the new
+numeric URL and new six-digit code, and confirm both devices are on the same
+LAN. For a complete backup, prefer **Download all files (.zip)**: some mobile
+browsers throttle several separate downloads from one page even though the
+server has completed them. Individual file links remain available. Current tvOS
+does not present the iOS Local Network permission prompt, so
+there is no permission switch to enable. Stage 10A supports downloads only;
+upload, replacement, editing, and deletion are intentionally unavailable.
+
 ## Unsigned IPA will not install directly
 
 **Symptom**

@@ -49,16 +49,55 @@ def transform(root: pathlib.Path, templates: pathlib.Path, policy: dict[str, Any
     project = root / "Celeste.Modern.csproj"
     if mode == "realAudio":
         old_constants = "<DefineConstants>$(DefineConstants);TVOS;TVOS_STAGE3B;TVOS_STAGE3C;TVOS_STAGE5B;TVOS_REAL_AUDIO</DefineConstants>"
-        new_constants = "<DefineConstants>$(DefineConstants);TVOS;TVOS_STAGE3B;TVOS_STAGE3C;TVOS_STAGE5B;TVOS_STAGE6;TVOS_REAL_AUDIO</DefineConstants>"
+        new_constants = "<DefineConstants>$(DefineConstants);TVOS;TVOS_STAGE3B;TVOS_STAGE3C;TVOS_STAGE5B;TVOS_STAGE6;TVOS_STAGE10A;TVOS_REAL_AUDIO</DefineConstants>"
     else:
         old_constants = "<DefineConstants>$(DefineConstants);TVOS;TVOS_AUDIO_DISABLED;TVOS_STAGE3B;TVOS_STAGE3C</DefineConstants>"
-        new_constants = "<DefineConstants>$(DefineConstants);TVOS;TVOS_AUDIO_DISABLED;TVOS_STAGE3B;TVOS_STAGE3C;TVOS_STAGE6</DefineConstants>"
+        new_constants = "<DefineConstants>$(DefineConstants);TVOS;TVOS_AUDIO_DISABLED;TVOS_STAGE3B;TVOS_STAGE3C;TVOS_STAGE6;TVOS_STAGE10A</DefineConstants>"
     replace_once(project, old_constants, new_constants, "exclusive Stage 6 compile symbol")
 
     hook = templates / "TvOSStage6PersistenceHooks.cs"
     if not hook.is_file():
         raise SystemExit("error: Stage 6 persistence hook template is missing")
     shutil.copyfile(hook, root / "Celeste" / hook.name)
+
+    save_manager = templates / "TvOSSaveManagerBridge.cs"
+    if not save_manager.is_file():
+        raise SystemExit("error: Stage 10A Save Manager bridge template is missing")
+    shutil.copyfile(save_manager, root / "Celeste" / save_manager.name)
+
+    menu_options = root / "Celeste" / "MenuOptions.cs"
+    replace_once(
+        menu_options,
+        "\t\tviewport.Visible = Settings.Instance.Fullscreen;",
+        "\t\t#if TVOS_STAGE10A\n"
+        "\t\tmenu.Add(new TextMenu.SubHeader(\"APPLE TV\"));\n"
+        "\t\tmenu.Add(new TextMenu.Button(\"Save Manager\").Pressed(OpenSaveManager));\n"
+        "\t\t#endif\n"
+        "\t\tviewport.Visible = Settings.Instance.Fullscreen;",
+        "tvOS-only Save Manager Options entry",
+    )
+    replace_once(
+        menu_options,
+        "\tprivate static void OpenViewportAdjustment()\n\t{",
+        "\t#if TVOS_STAGE10A\n"
+        "\tprivate static void OpenSaveManager()\n"
+        "\t{\n"
+        "\t\tmenu.Visible = false;\n"
+        "\t\tmenu.Focused = false;\n"
+        "\t\tif (Engine.Scene is Overworld overworld) overworld.ShowConfirmUI = false;\n"
+        "\t\tTvOSSaveManagerUI manager = new TvOSSaveManagerUI();\n"
+        "\t\tmanager.OnClose = delegate\n"
+        "\t\t{\n"
+        "\t\t\tmenu.Visible = true;\n"
+        "\t\t\tmenu.Focused = true;\n"
+        "\t\t\tif (Engine.Scene is Overworld current) current.ShowConfirmUI = true;\n"
+        "\t\t};\n"
+        "\t\tEngine.Scene.Add(manager);\n"
+        "\t}\n"
+        "\t#endif\n\n"
+        "\tprivate static void OpenViewportAdjustment()\n\t{",
+        "Save Manager host-modal integration",
+    )
 
     user_io = root / "Celeste" / "UserIO.cs"
     replace_once(
@@ -270,6 +309,7 @@ def transform(root: pathlib.Path, templates: pathlib.Path, policy: dict[str, Any
         "input": {"fileCount": actual["fileCount"], "logicalSha256": actual["logicalSha256"]},
         "output": output,
         "hook": "Celeste/TvOSStage6PersistenceHooks.cs",
+        "saveManagerBridge": "Celeste/TvOSSaveManagerBridge.cs",
         "allowListedLogicalNames": [item["logicalName"] for item in policy["writableFiles"]],
         "generatedSourceTracked": False,
     }

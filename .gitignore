@@ -35,4 +35,8 @@ artifacts/fmod-tvos/
 artifacts/tvos-self-build/
 dist/
 
+# Generated Stage 10A full-AOT automation app. This contains regenerated
+# user-owned Celeste assemblies, content, FMOD banks, and private device logs.
+.build/tvos-stage10a-automation/
+
 .DS_Store

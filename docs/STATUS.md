@@ -41,6 +41,7 @@ flowchart LR
     P --> D["Personal Team install"]
     P --> I["Signing-ready unsigned IPA"]
     P --> S["Dual-generation standard UserDefaults storage"]
+    S --> W["Explicit read-only LAN Save Manager"]
 ```
 
 ### Modern sibling host
@@ -97,6 +98,25 @@ There is no User Management entitlement. The same standard app domain is
 shared between Apple TV users. There is no iCloud, cloud sync, cross-device
 sync, or uninstall-survival guarantee.
 
+### Read-only Save Manager
+
+The tvOS-only Options entry opens a Celeste-rendered host modal; it does not add
+another `Oui` subtype or reflection root. Only that explicit action flushes and
+read-back verifies the current Stage 9B generation, then starts a bounded
+Network-framework `NWListener` on a system-selected port. The screen presents
+the current numeric LAN URL and a new cryptographically random access code.
+
+The listener advertises `_celeste-save._tcp` over Bonjour only while open. Its
+fixed-purpose HTTP boundary authenticates into an in-memory ten-minute session
+and permits one all-files ZIP plus individual downloads of only `settings`, `0`,
+`1`, and `2`. Every archive entry and individual response is the exact ordinary
+uncompressed `.celeste` payload already validated by the persistence store; the
+server cannot see internal A/B keys or compressed v2 envelopes. Background,
+screen exit, listener failure, shutdown, or twelve minutes of inactivity stop
+the listener and erase all credentials. Current Apple platform documentation
+does not apply the Local Network privacy authorization prompt to tvOS; the app
+still declares its focused Bonjour service and usage description.
+
 ### Branding and packaging
 
 `build-tvos.sh` generates a black-backed layered strawberry icon from
@@ -118,6 +138,7 @@ or an unsigned conventional tvOS IPA containing `Payload/Celeste.app`.
 - Newest-generation corruption fallback
 - Layered icon/parallax and static Top Shelf artwork on physical Apple TV
 - Free Personal Team signed installation and verified unsigned IPA structure
+- Explicit read-only Save Manager with temporary same-LAN authentication
 
 ## Known limitations
 
@@ -131,6 +152,7 @@ or an unsigned conventional tvOS IPA containing `Payload/Celeste.app`.
 - The app is roughly 1.1 GiB before IPA compression.
 - Actual atvloadly physical installation has not been project-tested; only the
   conventional unsigned IPA structure is statically verified.
+- Save Manager can export but cannot yet import, replace, or delete saves.
 - No App Store, distribution-profile, paid entitlement, or universal hardware
   claim is made.
 
@@ -153,6 +175,7 @@ need them for normal builds.
 - [Public repository release](../TVOS_REPOSITORY_RELEASE_STAGE8B_REPORT.md)
 - [Public prerequisite and failure-UX hardening](../TVOS_PUBLIC_PREREQUISITES_STAGE8C_REPORT.md)
 - [Locale-independent FMOD/Theorafile symbol validation](../TVOS_LOCALE_REPRODUCIBILITY_STAGE8D_REPORT.md)
+- [Read-only local-network Save Manager](../TVOS_READONLY_SAVE_MANAGER_STAGE10A_REPORT.md)
 
 ## Isolation and licensing
 

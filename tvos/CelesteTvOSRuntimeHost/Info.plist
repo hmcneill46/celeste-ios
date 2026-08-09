@@ -7,7 +7,7 @@
   <key>CFBundleName</key>
   <string>Celeste</string>
   <key>CFBundleShortVersionString</key>
-  <string>8.0</string>
+  <string>10.0</string>
   <key>CFBundleVersion</key>
   <string>1</string>
   <key>LSRequiresIPhoneOS</key>
@@ -24,5 +24,11 @@
   </array>
   <key>UIApplicationSupportsIndirectInputEvents</key>
   <true/>
+  <key>NSLocalNetworkUsageDescription</key>
+  <string>Celeste uses your local network only while you explicitly open the read-only Save Manager.</string>
+  <key>NSBonjourServices</key>
+  <array>
+    <string>_celeste-save._tcp</string>
+  </array>
 </dict>
 </plist>

@@ -30,6 +30,7 @@ limitations.
 - Durable Settings and all three normal save slots
 - Transparent compressed storage that fixes the later-game 32 KiB save limit
 - Recovery from a corrupt newest save generation
+- Explicitly activated, read-only local-network Save Manager downloads
 - Local generation of the layered strawberry icon and static Top Shelf artwork
 - Direct Personal Team installation or a signing-ready unsigned IPA
 
@@ -248,6 +249,26 @@ Teams cannot provision the Apple User Management entitlement used for
 automatic per-user app storage, so this project intentionally uses one normal
 app-private defaults domain.
 
+## Read-only Save Manager
+
+To download a backup of the ordinary Celeste Settings or any present save slot:
+
+1. In Celeste, open **Options** and choose **Save Manager**.
+2. On a phone or computer connected to the same local network, open the numeric
+   address displayed on the Apple TV.
+3. Enter the temporary six-digit access code shown on the TV.
+4. Choose **Download all files (.zip)** for one reliable backup containing every
+   present ordinary `.celeste` file. Individual `settings.celeste`,
+   `0.celeste`, `1.celeste`, and `2.celeste` downloads remain available.
+5. Press Back/Stop on the TV when finished.
+
+Stage 10A is deliberately read-only: it cannot upload, replace, edit, or delete
+saves. The listener and Bonjour advertisement remain completely dormant during
+normal gameplay, start only after this menu choice, and stop when the screen is
+closed, the app backgrounds, or its short inactivity limit expires. It is a
+temporary same-LAN personal tool, not cloud or internet access. No fixed IP or
+manual port setup is required.
+
 ## Controllers
 
 An extended physical controller is the intended gameplay input. DualSense was
@@ -278,6 +299,7 @@ have not been physically tested here.
 - Personal-use self-build only; no App Store package or support.
 - Personal Team installs need re-signing about every seven days.
 - Saves are shared between Apple TV users and do not sync to the cloud.
+- Save Manager is read-only; restore/import operations are not implemented.
 - Steam and non-itch.io-Linux game inputs are untested.
 - DualSense is the only physically accepted controller; the Siri Remote is not
   a gameplay controller.
