@@ -143,7 +143,15 @@ def verify_repo(repo):
         if paid in entitlements: fail(f"tracked forbidden entitlement present: {paid}")
     for required in ("<UseInterpreter>false</UseInterpreter>","<TrimMode Condition=\"'$(Configuration)' == 'Release'\">full</TrimMode>","CelesteBrandingEnabled"):
         if required not in project: fail(f"tracked release requirement is missing: {required}")
-    for required in ("NSUserDefaults.StandardUserDefaults",'"CelesteTvOS.Persistence.v1"'):
+    for required in (
+        "NSUserDefaults.StandardUserDefaults",
+        '"CelesteTvOS.Persistence.v1"',
+        "FormatVersion = 2",
+        "ZLibStream",
+        "CompressionLevel.SmallestSize",
+        '"compressed-hash-mismatch"',
+        '"uncompressed-hash-mismatch"',
+    ):
         if required not in store: fail(f"Stage 6 standard-defaults persistence is missing: {required}")
     for required in (".build/tvos-self-build/","artifacts/tvos-self-build/","dist/"):
         if required not in ignore: fail(f"generated Stage 8 path is not ignored: {required}")

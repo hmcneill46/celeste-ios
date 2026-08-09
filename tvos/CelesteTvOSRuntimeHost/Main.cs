@@ -105,6 +105,16 @@ internal static class Program
             {
                 Stage6PersistenceDiagnostic.Run(persistence, Environment.GetEnvironmentVariable("CELESTE_TVOS_SESSION_ROOT")!);
             }
+#elif CELESTE_PERSISTENCE_INSPECT
+            using (Stage6PersistenceStore persistence = PrepareCelesteRuntimeContext(enablePersistence: true)
+                ?? throw new InvalidOperationException("Stage 9B production persistence inspection was not enabled."))
+            {
+                Stage3BLog.Info(
+                    $"STAGE9B_PRODUCTION_INSPECT result=PASS; generation={persistence.Generation}; " +
+                    $"format=v{persistence.SelectedFormatVersion}; logical={persistence.LogicalHash}; " +
+                    $"bridge-bytes={persistence.BridgeBytes()}; mutation=none"
+                );
+            }
 #endif
             return 0;
         }
@@ -240,6 +250,8 @@ internal static class Program
             return "CelestePreflight";
 #elif CELESTE_PERSISTENCE_DIAGNOSTIC
             return "CelestePersistenceDiagnostic";
+#elif CELESTE_PERSISTENCE_INSPECT
+            return "CelestePersistenceInspect";
 #elif FMOD_DIAGNOSTIC_DEVICE || FMOD_DIAGNOSTIC_UNAVAILABLE
             return "FmodDiagnostic";
 #elif CELESTE_AUDIO

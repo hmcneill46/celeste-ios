@@ -19,6 +19,7 @@ REQUIRED_DOCS = (
     "CONTRIBUTING.md",
     "TVOS_PUBLIC_PREREQUISITES_STAGE8C_REPORT.md",
     "TVOS_LOCALE_REPRODUCIBILITY_STAGE8D_REPORT.md",
+    "TVOS_COMPRESSED_PERSISTENCE_STAGE9B_REPORT.md",
 )
 PUBLIC_TEXT = REQUIRED_DOCS + (
     ".github/ISSUE_TEMPLATE/bug_report.yml",
@@ -73,6 +74,8 @@ def main() -> None:
         "./build-tvos.sh --check-host",
         "dist/logs/last-error.txt",
         "CMake, Ninja, and ripgrep are **not** required",
+        "Transparent compressed storage",
+        "Existing v1 installs require no manual migration",
     )
     for value in required_readme:
         if value not in readme:

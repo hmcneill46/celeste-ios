@@ -60,11 +60,17 @@ import hashlib, json, pathlib, sys
 repo, runtime, artifacts = map(pathlib.Path, sys.argv[1:4])
 stage1 = sys.argv[4]
 policy = json.loads((repo / "managed/celeste-stage6-policy.json").read_text())
-if policy["storage"]["hardTotalBudgetBytes"] != 262144 or policy["storage"]["formatVersion"] != 1:
+storage = policy["storage"]
+if (storage["hardTotalBudgetBytes"] != 262144 or storage["hardEnvelopeBudgetBytes"] != 126976 or
+    storage["hardCompressedEntryBudgetBytes"] != 98304 or storage["formatVersion"] != 2 or
+    storage["previousFormatVersion"] != 1 or storage["legacyMigrationVersion"] != 0 or
+    storage["compression"] != {"algorithmId":1,"name":"zlib","level":9,"scope":"independent-logical-entry"}):
     raise SystemExit("error: Stage 6 format or budget lock changed")
 files = policy["writableFiles"]
 if [item["logicalName"] for item in files] != ["settings", "0", "1", "2"] or not all(item["durable"] for item in files):
     raise SystemExit("error: durable writable-file allow-list changed")
+if [item["maximumPayloadBytes"] for item in files] != [65536, 262144, 262144, 262144]:
+    raise SystemExit("error: v2 uncompressed serializer safety limits changed")
 for tree, mode in (("noaudio", "noAudio"), ("audio", "realAudio")):
     manifest = json.loads((artifacts / f"{tree}-generated-manifest.json").read_text())
     if manifest["mode"] != mode or manifest["allowListedLogicalNames"] != ["settings", "0", "1", "2"]:
@@ -104,7 +110,7 @@ entries=value.get("NSPrivacyAccessedAPITypes", [])
 expected={"NSPrivacyAccessedAPIType":"NSPrivacyAccessedAPICategoryUserDefaults","NSPrivacyAccessedAPITypeReasons":["CA92.1"]}
 if expected not in entries: raise SystemExit("error: UserDefaults CA92.1 privacy reason missing")
 PY
-if grep -R -n -E 'com\.apple\.developer\.user-management|com\.apple\.developer\.ubiquity|iCloud' "$REPO_ROOT/tvos/CelesteTvOSRuntimeHost" >/dev/null; then
+if git -C "$REPO_ROOT" grep -n -E 'com\.apple\.developer\.user-management|com\.apple\.developer\.ubiquity|iCloud' -- tvos/CelesteTvOSRuntimeHost >/dev/null; then
   echo "error: Stage 6 introduced User Management or iCloud" >&2; exit 1
 fi
 git -C "$REPO_ROOT" diff --quiet "$BASELINE_COMMIT" -- build.sh celestemeow fnalibs-ios-builder-celeste FNA native tvos/CelesteTvOSHost tvos/FNA.TvOS tvos/stage2-ios-native-baseline.sha256 || {

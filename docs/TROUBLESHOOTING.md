@@ -529,6 +529,26 @@ identifier creates a separate defaults domain.
 Rebuild/re-sign with the exact previous local bundle identifier and install it
 as a replacement. The project does not migrate data between bundle IDs.
 
+## "Unable to save" during later Chapter 5 progress
+
+**Symptom**
+
+An older build displays Celeste's normal save-failure prompt around the first
+Chapter 5 room where Theo can be carried.
+
+**Cause**
+
+Stage 6 originally imposed a port-specific 32 KiB raw limit per save slot.
+Ordinary Chapter 5 progression can exceed it; Theo does not introduce an
+unsupported save type, and Apple's UserDefaults size limit was not involved.
+
+**Fix**
+
+Pull a build containing persistence format v2 and install it as a replacement
+with the same bundle identifier. Do not uninstall the existing app. Existing
+v1 saves load unchanged and migrate automatically on the next successful
+changed save. No manual save conversion is required.
+
 ## Unsigned IPA will not install directly
 
 **Symptom**

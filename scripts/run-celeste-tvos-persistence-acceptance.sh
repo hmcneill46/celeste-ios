@@ -9,7 +9,7 @@ Install and capture a signed Stage 6 app on the unique paired AppleTV14,1.
 Raw device data remains below an ignored evidence directory.
 
 Phases:
-  diagnostic              Run the isolated 34-test persistence suite
+  diagnostic              Run the isolated 90+ test v0/v1/v2 persistence suite
   process-kill-prepare     Let the user save state, then externally terminate
   process-kill-verify      Relaunch and verify the prior generation/hash
   prepare-before-restart   Save a restart token and print READY FOR APPLE TV RESTART
@@ -132,7 +132,7 @@ case "$PHASE" in
     python3 - "$OUT/console.log" "$EVIDENCE_DIR/restart-token.json" <<'PY'
 import json,pathlib,re,sys
 text=pathlib.Path(sys.argv[1]).read_text(errors="replace")
-matches=re.findall(r"STAGE6_COMMIT .*result=committed; .*generation=(\d+); logical=([0-9a-f]{64});",text)
+matches=re.findall(r"STAGE6_COMMIT .*result=committed; .*generation=(\d+);(?: format=v\d+;)? logical=([0-9a-f]{64});",text)
 if not matches: raise SystemExit("error: no complete generation")
 generation,digest=matches[-1]
 pathlib.Path(sys.argv[2]).write_text(json.dumps({"schemaVersion":1,"generation":int(generation),"logicalSha256":digest},indent=2,sort_keys=True)+"\n")
@@ -153,7 +153,7 @@ PY
     python3 - "$OUT/console.log" "$EVIDENCE_DIR/restart-token.json" <<'PY'
 import json,pathlib,re,sys
 text=pathlib.Path(sys.argv[1]).read_text(errors="replace")
-matches=re.findall(r"STAGE6_COMMIT .*result=committed; .*generation=(\d+); logical=([0-9a-f]{64});",text)
+matches=re.findall(r"STAGE6_COMMIT .*result=committed; .*generation=(\d+);(?: format=v\d+;)? logical=([0-9a-f]{64});",text)
 if not matches: raise SystemExit("error: no complete generation")
 generation,digest=matches[-1]
 pathlib.Path(sys.argv[2]).write_text(json.dumps({"schemaVersion":1,"generation":int(generation),"logicalSha256":digest},indent=2,sort_keys=True)+"\n")

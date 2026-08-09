@@ -1,13 +1,21 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "gameVersion": "1.4.0.0",
   "storage": {
-    "formatVersion": 1,
+    "formatVersion": 2,
+    "previousFormatVersion": 1,
     "legacyMigrationVersion": 0,
     "keyPrefix": "CelesteTvOS.Persistence",
     "slotNames": ["A", "B"],
     "hardTotalBudgetBytes": 262144,
     "hardEnvelopeBudgetBytes": 126976,
+    "hardCompressedEntryBudgetBytes": 98304,
+    "compression": {
+      "algorithmId": 1,
+      "name": "zlib",
+      "level": 9,
+      "scope": "independent-logical-entry"
+    },
     "celesteIdentitySha256": "fd73f8a2311fa5737ded550cbad4b75c85b7686b36432f59185e940fcb65fcfe",
     "settingsSchemaVersion": 1,
     "saveDataSchemaVersion": 1
@@ -38,7 +46,7 @@
       "canonicalPath": "Saves/settings.celeste",
       "backupPath": "Backups/settings.celeste",
       "serializer": "TvOSSettingsSerializer",
-      "maximumPayloadBytes": 24576,
+      "maximumPayloadBytes": 65536,
       "absenceMeaningful": true,
       "deletionPersists": true,
       "durable": true
@@ -48,7 +56,7 @@
       "canonicalPath": "Saves/0.celeste",
       "backupPath": "Backups/0.celeste",
       "serializer": "TvOSSaveDataSerializer",
-      "maximumPayloadBytes": 32768,
+      "maximumPayloadBytes": 262144,
       "absenceMeaningful": true,
       "deletionPersists": true,
       "durable": true
@@ -58,7 +66,7 @@
       "canonicalPath": "Saves/1.celeste",
       "backupPath": "Backups/1.celeste",
       "serializer": "TvOSSaveDataSerializer",
-      "maximumPayloadBytes": 32768,
+      "maximumPayloadBytes": 262144,
       "absenceMeaningful": true,
       "deletionPersists": true,
       "durable": true
@@ -68,7 +76,7 @@
       "canonicalPath": "Saves/2.celeste",
       "backupPath": "Backups/2.celeste",
       "serializer": "TvOSSaveDataSerializer",
-      "maximumPayloadBytes": 32768,
+      "maximumPayloadBytes": 262144,
       "absenceMeaningful": true,
       "deletionPersists": true,
       "durable": true

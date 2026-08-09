@@ -81,9 +81,17 @@ available FMOD 1.10.09 simulator archives are x86_64-only.
 Celeste sees normal materialized Settings/save files during execution. The
 bridge stores only four allow-listed logical entries—Settings and save slots
 0, 1, and 2—in two complete checksummed envelopes under standard app-private
-UserDefaults keys. Commits rotate slots, read back and validate, retain the
-older generation, enforce a 256 KiB total budget, and recover from a corrupt
-newest slot.
+UserDefaults keys. Persistence format v2 independently compresses each present
+entry with deterministic zlib level 9, retains compressed and uncompressed
+SHA-256 values plus an outer envelope hash, and strictly bounds decompression.
+Commits rotate slots, read back and validate, retain the older generation,
+enforce a 256 KiB stored total budget, and recover from a corrupt newest slot.
+
+Legacy v0 and production v1 generations remain readable. A v1 install is not
+rewritten merely by launching; its next intentional changed save writes v2 to
+the older slot and preserves the selected v1 generation until verification is
+complete. The physical Chapter 5 save that exceeded the old 32 KiB port limit
+now commits and restores successfully.
 
 There is no User Management entitlement. The same standard app domain is
 shared between Apple TV users. There is no iCloud, cloud sync, cross-device
@@ -106,6 +114,7 @@ or an unsigned conventional tvOS IPA containing `Payload/Celeste.app`.
 - Prologue normal and skip transitions
 - Settings and three save slots across termination, restart, and replacement
   install with the same app identity
+- Transparent v2 compression and the formerly failing Chapter 5 save boundary
 - Newest-generation corruption fallback
 - Layered icon/parallax and static Top Shelf artwork on physical Apple TV
 - Free Personal Team signed installation and verified unsigned IPA structure
@@ -139,6 +148,7 @@ need them for normal builds.
 - [FMOD diagnostic](../TVOS_FMOD_DIAGNOSTIC_STAGE5A_REPORT.md)
 - [Normal gameplay audio](../TVOS_CELESTE_AUDIO_STAGE5B_REPORT.md)
 - [Durable persistence](../TVOS_CELESTE_PERSISTENCE_STAGE6_REPORT.md)
+- [Compressed persistence migration](../TVOS_COMPRESSED_PERSISTENCE_STAGE9B_REPORT.md)
 - [Friendly self-build and branding](../TVOS_SELF_BUILD_STAGE8A_REPORT.md)
 - [Public repository release](../TVOS_REPOSITORY_RELEASE_STAGE8B_REPORT.md)
 - [Public prerequisite and failure-UX hardening](../TVOS_PUBLIC_PREREQUISITES_STAGE8C_REPORT.md)

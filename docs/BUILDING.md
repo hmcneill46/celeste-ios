@@ -321,6 +321,20 @@ evidence, real FMOD exports, exact bank set, compiled branding, privacy
 manifest, forbidden entitlements, signature/profile state, persistence code,
 and Git isolation.
 
+Persistence format v2 is verified independently with:
+
+```bash
+scripts/verify-celeste-tvos-stage9b.sh
+```
+
+The product keeps the existing standard UserDefaults A/B keys. It reads legacy
+v0 and production v1 envelopes, materializes ordinary uncompressed Celeste
+files, and independently zlib-compresses each allow-listed entry only in the
+durable v2 representation. A v1 installation migrates on its next changed save,
+not on launch. The stored limits remain 124 KiB per generation and 256 KiB for
+A+B; the separate decompression safety ceilings are 64 KiB for Settings and
+256 KiB for each save slot.
+
 ## Incremental build keys
 
 Safe reuse is keyed by repository revision and relevant source diff, exact

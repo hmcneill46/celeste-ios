@@ -14,7 +14,7 @@ Apple Account is sufficient for direct installation.
 
 The personal-use tvOS build is playable on physical Apple TV hardware. It uses
 .NET 10, FNA, Metal, full AOT, full trimming, real FMOD audio, and a
-corruption-recoverable UserDefaults save bridge.
+compressed, corruption-recoverable UserDefaults save bridge.
 
 The tested game input is **Celeste 1.4.0.0 from the itch.io Linux download**.
 Steam and other platform/store builds have not been tested. See
@@ -28,6 +28,7 @@ limitations.
 - Extended game controllers; Sony DualSense was physically tested
 - Movement, Jump, Dash, Grab, Confirm, Cancel, Pause, cutscene skip, and rumble
 - Durable Settings and all three normal save slots
+- Transparent compressed storage that fixes the later-game 32 KiB save limit
 - Recovery from a corrupt newest save generation
 - Local generation of the layered strawberry icon and static Top Shelf artwork
 - Direct Personal Team installation or a signing-ready unsigned IPA
@@ -230,9 +231,16 @@ local paths and choices without touching installed Apple TV saves.
 ## Saves
 
 Settings and save slots 0, 1, and 2 are durable. The storage bridge maintains
-two complete checksummed generations and falls back to the older valid one if
-the newest is corrupt. Accepted testing covered process termination, Apple TV
-restart, and replacement installation with the same app identity.
+two complete checksummed generations, compresses each logical file separately,
+and falls back to the older valid one if the newest is corrupt. Celeste still
+reads and writes ordinary uncompressed save files while it runs. This fixes the
+old 32 KiB per-slot limit that could reject normal progress in Chapter 5.
+
+Existing v1 installs require no manual migration. They load unchanged and move
+to v2 on the next successful changed save while retaining the older recovery
+generation. Accepted testing covered the original Chapter 5 failure,
+termination, Apple TV restart, and replacement installation with the same app
+identity.
 
 There is no iCloud, cloud backup, cross-device sync, or uninstall-survival
 guarantee. Saves are currently **shared between Apple TV users**. Personal

@@ -9,8 +9,8 @@ import pathlib
 import re
 
 
-RESTORE = re.compile(r"STAGE6_RESTORE .*generation=(\d+); logical=([0-9a-f]{64});")
-COMMIT = re.compile(r"STAGE6_COMMIT .*result=committed; .*generation=(\d+); logical=([0-9a-f]{64}); slot-bytes=(\d+); bridge-bytes=(\d+);")
+RESTORE = re.compile(r"STAGE6_RESTORE .*generation=(\d+);(?: format=v\d+;)? logical=([0-9a-f]{64});")
+COMMIT = re.compile(r"STAGE6_COMMIT .*result=committed; .*generation=(\d+);(?: format=v\d+;)? logical=([0-9a-f]{64});.*slot-bytes=(\d+); bridge-bytes=(\d+);")
 
 
 def main() -> int:
@@ -33,10 +33,18 @@ def main() -> int:
     if args.scenario == "diagnostic":
         tests = set(re.findall(r"STAGE6_TEST name=([^;]+); result=PASS", text))
         required = {
-            "oversized-payload-prior-generation-established",
-            "oversized-payload-retains-prior-generation",
+            "v1-startup-does-not-rewrite",
+            "first-v2-write-preserves-old-v1",
+            "compressed-checksum-corruption",
+            "trailing-compressed-data-rejected",
+            "save-uncompressed-limit-inclusive",
+            "save-uncompressed-limit-plus-one",
+            "large-three-slot-two-generation-headroom",
+            "actual-userio-save-slot-write",
+            "eight-concurrent-commits-serialize",
+            "size-warning-injection-retains-prior",
         }
-        if "STAGE6_DIAGNOSTIC_PASS" not in text or len(tests) < 34 or not required.issubset(tests):
+        if "STAGE9B_DIAGNOSTIC_PASS" not in text or len(tests) < 90 or not required.issubset(tests):
             raise SystemExit(f"error: incomplete failure-injection suite ({len(tests)} tests)")
     elif args.scenario in {"game", "restart-prepare", "process-kill"}:
         if not commits:
