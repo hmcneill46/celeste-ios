@@ -73,7 +73,7 @@
     },
     "patchedSource": {
       "fileCount": 922,
-      "logicalSha256": "127ed90934780c2af00ad497d875a6ca03f9c5a185761b4da82366578e1bd5b0"
+      "logicalSha256": "0c6515adadf58251ab2da66c6c61a1f61bd19b85f5dcdd4f1280552af650a4b5"
     }
   },
   "targetAssemblies": [
@@ -119,7 +119,7 @@
   "templates": [
     {
       "path": "managed/templates/Celeste.Modern.csproj",
-      "sha256": "aa7be5b5c2d8163ae974cc21d81a025dcd23c875e863ea5b503f536a8b2caca4"
+      "sha256": "97dc42071250e692665be25e44f9252cd9646f573cecf6c2334f3393a2af0e81"
     },
     {
       "path": "managed/templates/Celeste.Content.Modern.csproj",

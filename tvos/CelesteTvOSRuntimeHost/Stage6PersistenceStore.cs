@@ -46,6 +46,11 @@ internal sealed class Stage6PersistenceStore : IDisposable
     private Snapshot? selected;
     private bool disposed;
     private bool sizeWarningObserved;
+    // A browser mutation changes durable state without changing the already
+    // running Celeste object graph. Once that happens, lifecycle/UserIO flushes
+    // must never recapture the stale materialized files over the import. The
+    // next process restores the newly selected durable generation normally.
+    private bool externalMutationRequiresRestart;
     internal bool SimulateMaterializationFailure { get; set; }
     internal string LastFailureCategory { get; private set; } = "none";
 
@@ -68,6 +73,7 @@ internal sealed class Stage6PersistenceStore : IDisposable
     internal ushort SelectedFormatVersion { get { lock (gate) return selected?.SourceFormatVersion ?? FormatVersion; } }
     internal string LogicalHash { get { lock (gate) return selected?.LogicalHash ?? "none"; } }
     internal bool SizeWarningObserved { get { lock (gate) return sizeWarningObserved; } }
+    internal bool ExternalMutationRequiresRestart { get { lock (gate) return externalMutationRequiresRestart; } }
     internal string NamespaceCategory => keyPrefix.Contains(".Tests.", StringComparison.Ordinal) ? "tests" :
         keyPrefix.Contains(".Acceptance.", StringComparison.Ordinal) ? "acceptance" :
         keyPrefix.Contains(".Restart.", StringComparison.Ordinal) ? "restart" : "production";
@@ -80,6 +86,7 @@ internal sealed class Stage6PersistenceStore : IDisposable
             Candidate a = ReadCandidate("A");
             Candidate b = ReadCandidate("B");
             selected = Select(a, b);
+            externalMutationRequiresRestart = false;
             ClearMaterializedFiles();
             if (selected == null)
             {
@@ -112,6 +119,14 @@ internal sealed class Stage6PersistenceStore : IDisposable
                 LastFailureCategory = "none";
                 if (sizeWarningObserved)
                     throw Failure("userdefaults-size-warning", "A UserDefaults size-limit warning was observed.");
+                if (externalMutationRequiresRestart)
+                {
+                    Stage3BLog.Info(
+                        $"STAGE10B_STALE_COMMIT_SUPPRESSED reason={SanitizeReason(reason)}; generation={selected?.Generation ?? 0}; " +
+                        "restart-required=true; materialized-runtime-capture=false"
+                    );
+                    return true;
+                }
 
                 Snapshot candidate = Capture((selected?.Generation ?? HighestStoredGeneration()) + 1);
                 if (selected == null && candidate.Entries.All(entry => !entry.Present))
@@ -351,6 +366,125 @@ internal sealed class Stage6PersistenceStore : IDisposable
         }
     }
 
+    internal Stage10BMutationResult MutateFromSaveManager(Stage10BMutationCommand command)
+    {
+        lock (gate)
+        {
+            string operation = command.Payload == null ? "delete" : "replace";
+            int rawBytes = command.Payload?.Length ?? 0;
+            try
+            {
+                ThrowIfDisposed();
+                LastFailureCategory = "none";
+                if (sizeWarningObserved)
+                    throw Failure("userdefaults-size-warning", "A UserDefaults size-limit warning was observed.");
+
+                FilePolicy policy = Policy(command.LogicalName);
+                ulong currentGeneration = selected?.Generation ?? 0;
+                string currentHash = selected?.LogicalHash ?? "none";
+                if (command.ExpectedGeneration != currentGeneration ||
+                    !CryptographicOperations.FixedTimeEquals(
+                        Encoding.ASCII.GetBytes(command.ExpectedLogicalHash),
+                        Encoding.ASCII.GetBytes(currentHash)))
+                {
+                    Stage3BLog.Warning(
+                        $"STAGE10B_MUTATION operation={operation}; target={command.LogicalName}; result=conflict; " +
+                        $"expected-generation={command.ExpectedGeneration}; current-generation={currentGeneration}; raw-bytes={rawBytes}"
+                    );
+                    return Stage10BMutationResult.ConflictResult(CreateExportSnapshotUnsafe());
+                }
+
+                byte[]? acceptedPayload = command.Payload?.ToArray();
+                if (acceptedPayload != null) ValidatePayload(policy, acceptedPayload);
+
+                List<Entry> entries = Files.Select(file =>
+                {
+                    Entry? existing = selected?.Entries.Single(value => value.Name == file.LogicalName);
+                    return existing == null
+                        ? new Entry(file.LogicalName, false, file.Serializer, Array.Empty<byte>())
+                        : new Entry(existing.Name, existing.Present, existing.Serializer, existing.Payload.ToArray());
+                }).ToList();
+                int index = entries.FindIndex(entry => entry.Name == command.LogicalName);
+                Entry prior = entries[index];
+                bool changed = acceptedPayload == null
+                    ? prior.Present
+                    : !prior.Present || !CryptographicOperations.FixedTimeEquals(prior.Payload, acceptedPayload);
+                if (!changed)
+                {
+                    Stage3BLog.Info(
+                        $"STAGE10B_MUTATION operation={operation}; target={command.LogicalName}; result=unchanged; " +
+                        $"generation={currentGeneration}; raw-bytes={rawBytes}; restart-required={externalMutationRequiresRestart.ToString().ToLowerInvariant()}"
+                    );
+                    return Stage10BMutationResult.Unchanged(CreateExportSnapshotUnsafe(), externalMutationRequiresRestart);
+                }
+
+                entries[index] = acceptedPayload == null
+                    ? new Entry(command.LogicalName, false, policy.Serializer, Array.Empty<byte>())
+                    : new Entry(command.LogicalName, true, policy.Serializer, acceptedPayload);
+                Snapshot candidate = Snapshot.Create(
+                    checked(Math.Max(currentGeneration, HighestStoredGeneration()) + 1),
+                    entries,
+                    FormatVersion
+                );
+                byte[] encoded = Encode(candidate, FormatVersion);
+                ValidateEnvelopeLength(encoded.Length);
+
+                Candidate a = ReadCandidate("A");
+                Candidate b = ReadCandidate("B");
+                string target = ChooseTarget(a, b);
+                int otherBytes = target == "A" ? b.RawSize : a.RawSize;
+                ValidateBridgeLength(encoded.Length, otherBytes);
+
+                using (NSString key = new(Key(target)))
+                using (NSData data = NSData.FromArray(encoded))
+                    defaults.SetValueForKey(data, key);
+                defaults.Synchronize();
+
+                Candidate readBack = ReadCandidate(target);
+                if (readBack.Snapshot == null || readBack.Snapshot.SourceFormatVersion != FormatVersion ||
+                    readBack.Snapshot.Generation != candidate.Generation ||
+                    readBack.Snapshot.LogicalHash != candidate.LogicalHash)
+                {
+                    throw Failure("userdefaults-readback", "The imported generation did not pass durable read-back verification.");
+                }
+
+                // Do not materialize into the active process. Its in-memory
+                // Settings/SaveData are stale and may only be reconciled by a
+                // clean launch. Commit() is suppressed from this point onward.
+                selected = readBack.Snapshot;
+                externalMutationRequiresRestart = true;
+                Stage10AExportSnapshot exported = CreateExportSnapshotUnsafe();
+                Stage3BLog.Info(
+                    $"STAGE10B_MUTATION operation={operation}; target={command.LogicalName}; result=committed; " +
+                    $"raw-bytes={rawBytes}; generation={selected.Generation}; envelope-bytes={encoded.Length}; " +
+                    $"bridge-bytes={BridgeBytes()}; logical={selected.LogicalHash}; restart-required=true"
+                );
+                return Stage10BMutationResult.Committed(exported, encoded.Length, BridgeBytes());
+            }
+            catch (Exception exception)
+            {
+                LastFailureCategory = Category(exception);
+                Stage3BLog.Error(
+                    $"STAGE10B_MUTATION operation={operation}; target={SanitizeReason(command.LogicalName)}; result=failed; " +
+                    $"category={LastFailureCategory}; type={exception.GetType().Name}; raw-bytes={rawBytes}; " +
+                    $"prior-generation={selected?.Generation ?? 0}; restart-required={externalMutationRequiresRestart.ToString().ToLowerInvariant()}"
+                );
+                return Stage10BMutationResult.Failed(LastFailureCategory, CreateExportSnapshotUnsafe(), externalMutationRequiresRestart);
+            }
+        }
+    }
+
+    private Stage10AExportSnapshot CreateExportSnapshotUnsafe()
+    {
+        Dictionary<string, byte[]?> files = new(StringComparer.Ordinal);
+        foreach (string logicalName in new[] { "settings", "0", "1", "2" })
+        {
+            Entry? entry = selected?.Entries.Single(value => value.Name == logicalName);
+            files.Add(logicalName, entry is { Present: true } ? entry.Payload.ToArray() : null);
+        }
+        return new Stage10AExportSnapshot(selected?.Generation ?? 0, selected?.LogicalHash ?? "none", files);
+    }
+
     internal void ClearNamespaceForDiagnostics()
     {
         EnsureNonProductionDiagnosticNamespace();
@@ -360,6 +494,7 @@ internal sealed class Stage6PersistenceStore : IDisposable
             defaults.RemoveObject(Key("B"));
             defaults.Synchronize();
             selected = null;
+            externalMutationRequiresRestart = false;
             ClearMaterializedFiles();
             LastFailureCategory = "none";
             sizeWarningObserved = false;

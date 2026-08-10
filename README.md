@@ -249,24 +249,32 @@ Teams cannot provision the Apple User Management entitlement used for
 automatic per-user app storage, so this project intentionally uses one normal
 app-private defaults domain.
 
-## Read-only Save Manager
+## Save Manager
 
-To download a backup of the ordinary Celeste Settings or any present save slot:
+To back up or restore the ordinary Celeste Settings and save slots:
 
 1. In Celeste, open **Options** and choose **Save Manager**.
 2. On a phone or computer connected to the same local network, open the numeric
    address displayed on the Apple TV.
 3. Enter the temporary six-digit access code shown on the TV.
-4. Choose **Download all files (.zip)** for one reliable backup containing every
-   present ordinary `.celeste` file. Individual `settings.celeste`,
-   `0.celeste`, `1.celeste`, and `2.celeste` downloads remain available.
-5. Press Back/Stop on the TV when finished.
+4. Choose **Download backup (.zip)** for one archive containing every present
+   ordinary `.celeste` file, or download an individual file.
+5. To restore one file, choose its fixed target, select the matching `.celeste`
+   file, and confirm **Replace**. Settings and SaveData are validated by the
+   same exact AOT-safe serializers used by the game before anything is stored.
+6. A save slot can be deliberately deleted; **Reset Settings** makes Celeste
+   recreate safe defaults on its next launch. Invalid, oversized, stale, or
+   interrupted requests keep the previous durable generation.
+7. After any successful change, return to the Apple TV Home Screen and reopen
+   Celeste. The TV intentionally blocks the stale running game from resuming.
 
-Stage 10A is deliberately read-only: it cannot upload, replace, edit, or delete
-saves. The listener and Bonjour advertisement remain completely dormant during
+Exported and imported files are normal uncompressed Celeste `.celeste` files;
+the internal compressed A/B format is never exposed. Editing remains an offline
+workflow: download a file, edit it locally, then replace the matching fixed
+target. The listener and Bonjour advertisement remain completely dormant during
 normal gameplay, start only after this menu choice, and stop when the screen is
 closed, the app backgrounds, or its short inactivity limit expires. It is a
-temporary same-LAN personal tool, not cloud or internet access. No fixed IP or
+temporary same-LAN personal tool, not cloud or internet sync. No fixed IP or
 manual port setup is required.
 
 ## Controllers

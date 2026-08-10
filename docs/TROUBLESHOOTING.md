@@ -583,12 +583,51 @@ sessions exist only in memory and are erased on every stop.
 
 Keep Celeste in the foreground, reopen **Options > Save Manager**, use the new
 numeric URL and new six-digit code, and confirm both devices are on the same
-LAN. For a complete backup, prefer **Download all files (.zip)**: some mobile
+LAN. For a complete backup, prefer **Download backup (.zip)**: some mobile
 browsers throttle several separate downloads from one page even though the
 server has completed them. Individual file links remain available. Current tvOS
-does not present the iOS Local Network permission prompt, so
-there is no permission switch to enable. Stage 10A supports downloads only;
-upload, replacement, editing, and deletion are intentionally unavailable.
+does not present the iOS Local Network permission prompt, so there is no
+permission switch to enable.
+
+## Save Manager rejects a replacement
+
+**Symptom**
+
+The browser says the selected file is invalid, too large, or the save changed
+since the page was opened.
+
+**Cause**
+
+Each fixed target accepts only its exact type: `settings.celeste` must contain
+valid Settings, while `0.celeste`, `1.celeste`, and `2.celeste` must contain
+valid SaveData. The same strict serializers and Stage 9B size budgets used by
+the game validate every upload. A page with an older revision cannot overwrite
+a newer durable generation.
+
+**Fix**
+
+Check that the file came from the matching Celeste Save Manager target. Refresh
+the authenticated page after a conflict and retry only if the newer state is
+the one you intended to replace. Invalid and interrupted uploads do not replace
+the previous valid generation. There is no arbitrary XML editor in the web UI.
+
+## Save Manager says Celeste must restart
+
+**Symptom**
+
+After replacing, deleting, or resetting a file, the TV no longer offers a way
+back into gameplay.
+
+**Cause**
+
+This is a safety boundary. The running game still holds its old Settings and
+SaveData in memory; resuming could autosave that stale state over the import.
+
+**Fix**
+
+Return to the Apple TV Home Screen and reopen Celeste. The newly verified durable
+generation is materialized during the clean launch. Additional Save Manager
+operations may be completed before restarting.
 
 ## Unsigned IPA will not install directly
 

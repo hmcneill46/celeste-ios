@@ -39,4 +39,11 @@ dist/
 # user-owned Celeste assemblies, content, FMOD banks, and private device logs.
 .build/tvos-stage10a-automation/
 
+# Generated Stage 10B regeneration logs and full-AOT acceptance apps. These
+# contain regenerated Celeste assemblies, game content, FMOD banks, and local
+# device/signing evidence and must never become repository candidates.
+.build/stage10b-*.log
+.build/tvos-stage10b-*.log
+.build/tvos-stage10b-*/
+
 .DS_Store

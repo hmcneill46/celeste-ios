@@ -3,11 +3,11 @@
   "stage3ABaseline": {
     "gameVersion": "1.4.0.0",
     "patchedSourceFileCount": 922,
-    "patchedSourceLogicalSha256": "127ed90934780c2af00ad497d875a6ca03f9c5a185761b4da82366578e1bd5b0"
+    "patchedSourceLogicalSha256": "0c6515adadf58251ab2da66c6c61a1f61bd19b85f5dcdd4f1280552af650a4b5"
   },
   "stage3BOutput": {
     "fileCount": 925,
-    "logicalSha256": "0dcc35b9a2b55fd69174a450db9fb21d7ebab9a7e092ccae75810d9041374dee"
+    "logicalSha256": "e3f26514599defa8c30b729712c3cc330c539ad352537f17e23dfdc4f5d5bb65"
   },
   "compileSymbols": [
     "TVOS",

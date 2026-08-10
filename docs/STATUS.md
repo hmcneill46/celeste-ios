@@ -138,7 +138,8 @@ or an unsigned conventional tvOS IPA containing `Payload/Celeste.app`.
 - Newest-generation corruption fallback
 - Layered icon/parallax and static Top Shelf artwork on physical Apple TV
 - Free Personal Team signed installation and verified unsigned IPA structure
-- Explicit read-only Save Manager with temporary same-LAN authentication
+- Explicit Save Manager with temporary same-LAN authentication, ordinary-file
+  backup, exact validated replacement, slot deletion, and Settings reset
 
 ## Known limitations
 
@@ -152,7 +153,9 @@ or an unsigned conventional tvOS IPA containing `Payload/Celeste.app`.
 - The app is roughly 1.1 GiB before IPA compression.
 - Actual atvloadly physical installation has not been project-tested; only the
   conventional unsigned IPA structure is statically verified.
-- Save Manager can export but cannot yet import, replace, or delete saves.
+- Save Manager operations are deliberate and local only; there is no unattended
+  sync, cloud service, or in-browser XML editor. Celeste must be restarted after
+  a successful mutation.
 - No App Store, distribution-profile, paid entitlement, or universal hardware
   claim is made.
 

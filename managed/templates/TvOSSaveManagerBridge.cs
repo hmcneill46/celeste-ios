@@ -11,6 +11,7 @@ public sealed class TvOSSaveManagerDisplayState
     public string[] Urls { get; init; } = Array.Empty<string>();
     public string AccessCode { get; init; } = "";
     public string Detail { get; init; } = "";
+    public bool RestartRequired { get; init; }
 }
 
 public static class TvOSSaveManagerHooks
@@ -68,6 +69,13 @@ public sealed class TvOSSaveManagerUI : Entity
         if (!closing && (Input.MenuCancel.Pressed || Input.MenuConfirm.Pressed))
         {
             closing = true;
+            if (state.RestartRequired)
+            {
+                // Stop networking and erase browser credentials, but retain
+                // this modal so stale in-memory game state cannot resume.
+                TvOSSaveManagerHooks.Stop("ui-restart-required");
+                return;
+            }
             TvOSSaveManagerHooks.Stop("ui-back");
             RemoveSelf();
             OnClose?.Invoke();
@@ -94,7 +102,16 @@ public sealed class TvOSSaveManagerUI : Entity
         DrawLine("Make sure this Apple TV and your phone or computer", 350f, 0.62f, Color.LightGray);
         DrawLine("are connected to the same network.", 400f, 0.62f, Color.LightGray);
 
-        if (state.Phase == "starting")
+        if (state.RestartRequired || state.Phase == "restart-required")
+        {
+            DrawLine("Changes saved successfully.", 500f, 0.9f, Color.White);
+            DrawLine("Restart Celeste before continuing so the new save data can be loaded.", 585f, 0.6f, Color.LightGray);
+            DrawLine("Return to the Apple TV Home Screen, then reopen Celeste.", 655f, 0.58f, Color.LightGray);
+            DrawLine("This screen intentionally blocks the stale running game.", 745f, 0.5f, Color.Gray);
+            if (state.Phase == "ready")
+                DrawLine("Press Confirm or Back to stop Save Manager networking.", 850f, 0.5f, Color.Gray);
+        }
+        else if (state.Phase == "starting")
         {
             DrawLine("Starting Save Manager...", 525f, 0.9f, Color.White);
         }
@@ -121,7 +138,8 @@ public sealed class TvOSSaveManagerUI : Entity
             DrawLine("Save Manager has stopped.", 525f, 0.82f, Color.White);
         }
 
-        DrawLine("Press Confirm or Back to stop and return to Options", 965f, 0.58f, Color.LightGray);
+        if (!state.RestartRequired)
+            DrawLine("Press Confirm or Back to stop and return to Options", 965f, 0.58f, Color.LightGray);
     }
 
     private static string GroupCode(string value) => value?.Length == 6 ? value[..3] + " " + value[3..] : "";

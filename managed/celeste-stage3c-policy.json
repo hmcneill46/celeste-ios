@@ -4,11 +4,11 @@
   "gameVersion": "1.4.0.0",
   "stage3BInput": {
     "fileCount": 925,
-    "logicalSha256": "0dcc35b9a2b55fd69174a450db9fb21d7ebab9a7e092ccae75810d9041374dee"
+    "logicalSha256": "e3f26514599defa8c30b729712c3cc330c539ad352537f17e23dfdc4f5d5bb65"
   },
   "stage3COutput": {
     "fileCount": 927,
-    "logicalSha256": "a5ffcde2252c527d71bae43418751ff8dbf100bf2aa344c7400e7b722f2341c7"
+    "logicalSha256": "398f746984f0aae7d984d8c161f5aabf816710795ae5d467da5b72857b4f5a33"
   },
   "compileSymbol": "TVOS_STAGE3C",
   "prologueDiagnostic": {

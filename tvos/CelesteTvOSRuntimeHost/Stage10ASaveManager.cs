@@ -27,6 +27,7 @@ internal sealed class Stage10ASaveManager : IDisposable
     private TvOSSaveManagerDisplayState status = new();
     private bool disposed;
     private bool idleTimerSuppressed;
+    private bool restartRequired;
     private int bonjourAdds;
     private int bonjourRemoves;
 
@@ -85,7 +86,10 @@ internal sealed class Stage10ASaveManager : IDisposable
                 return;
             }
 
-            Stage10AHttpProtocol nextProtocol = new(stableSnapshot);
+            Stage10AHttpProtocol nextProtocol = new(
+                stableSnapshot,
+                mutationHandler: persistence.MutateFromSaveManager
+            );
             using NWParameters parameters = NWParameters.CreateTcp(_ => { });
             parameters.ReuseLocalAddress = true;
             NWListener nextListener = NWListener.Create(parameters)
@@ -218,7 +222,13 @@ internal sealed class Stage10ASaveManager : IDisposable
 
     private void Receive(NWConnection connection)
     {
-        connection.Receive(1, (uint)(Stage10AHttpProtocol.MaximumHeaderBytes + Stage10AHttpProtocol.MaximumAuthBodyBytes),
+        uint maximumReceive;
+        lock (gate)
+        {
+            if (!connections.TryGetValue(connection, out ConnectionState? pending)) return;
+            maximumReceive = checked((uint)Math.Max(1, pending.NextReceiveMaximum));
+        }
+        connection.Receive(1, maximumReceive,
             (data, size, _, complete, error) =>
             {
                 try
@@ -234,17 +244,31 @@ internal sealed class Stage10ASaveManager : IDisposable
                             Marshal.Copy(data, chunk, 0, count);
                             state.Buffer.Write(chunk, 0, chunk.Length);
                         }
-                        if (state.Buffer.Length > Stage10AHttpProtocol.MaximumHeaderBytes + Stage10AHttpProtocol.MaximumAuthBodyBytes)
+                        byte[] buffered = state.Buffer.ToArray();
+                        Stage10ARequestProgress progress = Stage10AHttpProtocol.InspectRequestProgress(buffered);
+                        if (progress.Rejection != null)
                         {
-                            SendResponse(connection, ErrorResponse(431, "Request Header Fields Too Large"), headOnly: false);
+                            SendResponse(connection, progress.Rejection, headOnly: false);
                             return;
                         }
-                        byte[] buffered = state.Buffer.ToArray();
-                        if (!RequestComplete(buffered) && !complete) { Receive(connection); return; }
+                        if (!progress.Complete && !complete)
+                        {
+                            int ceiling = progress.ExpectedBytes > 0
+                                ? progress.ExpectedBytes
+                                : Stage10AHttpProtocol.MaximumHeaderBytes;
+                            state.NextReceiveMaximum = Math.Max(1, ceiling - buffered.Length);
+                            Receive(connection);
+                            return;
+                        }
                         Stage10AHttpProtocol? current = protocol;
                         if (current == null) { CloseConnection(connection, "server-stopped"); return; }
                         bool headOnly = buffered.AsSpan().StartsWith("HEAD "u8);
                         Stage10AHttpResponse response = current.Handle(buffered);
+                        if (current.RestartRequired)
+                        {
+                            restartRequired = true;
+                            status = CopyStatus(status, restartRequired: true);
+                        }
                         string payloadEvidence = response.Headers.TryGetValue("X-Celeste-Content-SHA256", out string? payloadHash) &&
                             response.Headers.TryGetValue("X-Celeste-Logical-Name", out string? logicalName)
                             ? $"; logical={logicalName}; download-sha256={payloadHash}"
@@ -305,7 +329,7 @@ internal sealed class Stage10ASaveManager : IDisposable
 
     private TvOSSaveManagerDisplayState Status()
     {
-        lock (gate) return CopyStatus(status);
+        lock (gate) return CopyStatus(status, restartRequired);
     }
 
     private void Stop(string reason)
@@ -336,7 +360,12 @@ internal sealed class Stage10ASaveManager : IDisposable
                 listener.Dispose();
                 listener = null;
             }
-            if (clearStatus) status = new TvOSSaveManagerDisplayState { Phase = "stopped" };
+            if (clearStatus)
+            {
+                status = restartRequired
+                    ? new TvOSSaveManagerDisplayState { Phase = "restart-required", RestartRequired = true }
+                    : new TvOSSaveManagerDisplayState { Phase = "stopped" };
+            }
         }
     }
 
@@ -386,33 +415,6 @@ internal sealed class Stage10ASaveManager : IDisposable
             .Select(value => value.Address).Distinct(StringComparer.Ordinal).Take(3).ToArray();
     }
 
-    private static bool RequestComplete(byte[] value)
-    {
-        ReadOnlySpan<byte> marker = "\r\n\r\n"u8;
-        int separator = -1;
-        for (int i = 0; i <= value.Length - marker.Length; i++) if (value.AsSpan(i, marker.Length).SequenceEqual(marker)) { separator = i; break; }
-        if (separator < 0) return false;
-        string headers = System.Text.Encoding.ASCII.GetString(value, 0, separator);
-        int length = 0;
-        foreach (string line in headers.Split("\r\n"))
-        {
-            if (line.StartsWith("Content-Length:", StringComparison.OrdinalIgnoreCase))
-                _ = int.TryParse(line[15..].Trim(), out length);
-        }
-        return value.Length >= separator + 4 + length;
-    }
-
-    private static Stage10AHttpResponse ErrorResponse(int code, string reason)
-    {
-        byte[] body = System.Text.Encoding.UTF8.GetBytes("Request rejected.\n");
-        return new Stage10AHttpResponse(code, reason, new Dictionary<string, string>
-        {
-            ["Content-Type"] = "text/plain; charset=utf-8",
-            ["Content-Length"] = body.Length.ToString(),
-            ["Cache-Control"] = "no-store"
-        }, body);
-    }
-
     private static string SafeError(NWError? error) => error == null ? "none" : $"domain={error.ErrorDomain}; code={error.ErrorCode}";
     private static string SanitizeReason(string value) => new(value.Where(character => char.IsAsciiLetterOrDigit(character) || character == '-').Take(48).ToArray());
 
@@ -435,12 +437,13 @@ internal sealed class Stage10ASaveManager : IDisposable
 
     [DllImport("__Internal", EntryPoint = "freeifaddrs")]
     private static extern void FreeIfAddrs(IntPtr addresses);
-    private static TvOSSaveManagerDisplayState CopyStatus(TvOSSaveManagerDisplayState value) => new()
+    private static TvOSSaveManagerDisplayState CopyStatus(TvOSSaveManagerDisplayState value, bool? restartRequired = null) => new()
     {
         Phase = value.Phase,
         Urls = value.Urls.ToArray(),
         AccessCode = value.AccessCode,
-        Detail = value.Detail
+        Detail = value.Detail,
+        RestartRequired = restartRequired ?? value.RestartRequired
     };
 
     private void ThrowIfDisposed() { if (disposed) throw new ObjectDisposedException(nameof(Stage10ASaveManager)); }
@@ -469,6 +472,7 @@ internal sealed class Stage10ASaveManager : IDisposable
         internal MemoryStream Buffer { get; } = new();
         internal Timer Timer { get; }
         internal bool ResponsePending { get; set; }
+        internal int NextReceiveMaximum { get; set; } = Stage10AHttpProtocol.MaximumHeaderBytes;
 
         internal ConnectionState(NWConnection connection, TimeSpan lifetime, Action<NWConnection> timeout) =>
             Timer = new Timer(_ => timeout(connection), null, lifetime, Timeout.InfiniteTimeSpan);

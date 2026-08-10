@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Verify the tracked Stage 10A boundary and an optional built app."""
+"""Verify the preserved Stage 10A network/security boundary and an optional app."""
 
 from __future__ import annotations
 
@@ -23,7 +23,7 @@ def require(text: str, tokens: tuple[str, ...], label: str) -> None:
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Verify the read-only tvOS Save Manager")
+    parser = argparse.ArgumentParser(description="Verify the Stage 10A tvOS Save Manager foundation")
     parser.add_argument("--repo-root", type=pathlib.Path)
     parser.add_argument("--app", type=pathlib.Path)
     parser.add_argument("--output", type=pathlib.Path)
@@ -47,9 +47,9 @@ def main() -> int:
         "SessionLifetime = TimeSpan.FromMinutes(10)", "RandomNumberGenerator.GetInt32",
         "CryptographicOperations.FixedTimeEquals", "HttpOnly; SameSite=Strict",
         '"/download/all"', '"/download/settings"', '"/download/0"', '"/download/1"', '"/download/2"',
-        'request.Method == "POST"', 'request.Path != "/auth"',
+        'request.Method == "POST" && request.Path == "/auth"',
         'headers.ContainsKey("transfer-encoding")', "X-Celeste-Logical-Name", "X-Celeste-Content-SHA256",
-        '"X-Celeste-Authentication"] = "accepted"', "Download all files (.zip)",
+        '"X-Celeste-Authentication"] = "accepted"', "Download backup (.zip)",
     ), "HTTP protocol")
     require(manager, (
         'BonjourServiceType = "_celeste-save._tcp"', "Stage10AHttpProtocol.MaximumConcurrentConnections",
@@ -149,7 +149,7 @@ def main() -> int:
     if args.output:
         args.output.parent.mkdir(parents=True, exist_ok=True)
         args.output.write_text(json.dumps(summary, indent=2, sort_keys=True) + "\n")
-    print("PASS: Stage 10A fixed routes, bounded HTTP, authentication, lifecycle, and narrow export boundary")
+    print("PASS: Stage 10A network, bounded HTTP, authentication, lifecycle, and narrow export boundary remain intact")
     if app_summary:
         print("PASS: built app contains the Stage 10A listener and required Info.plist declarations")
     return 0

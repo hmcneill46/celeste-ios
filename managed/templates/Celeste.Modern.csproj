@@ -21,7 +21,8 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Remove="Stage3AContentIdentity.cs" />
-    <ProjectReference Include="$(CelesteTvOSRepoRoot)/tvos/FNA.TvOS/FNA.TvOS.csproj" />
+    <ProjectReference Include="$(CelesteTvOSRepoRoot)/tvos/FNA.TvOS/FNA.TvOS.csproj"
+                      AdditionalProperties="CustomAfterMicrosoftCommonTargets=$(CelesteTvOSRepoRoot)/tvos/CelesteTvOSRuntimeHost/Stage3BFnaExtension.targets;Stage6PersistenceEnabled=$(Stage6PersistenceEnabled);CelesteTvOSRepoRoot=$(CelesteTvOSRepoRoot)" />
   </ItemGroup>
   <Target Name="ValidateCelesteTvOSRepoRoot" BeforeTargets="PrepareForBuild">
     <Error Condition="'$(CelesteTvOSRepoRoot)' == ''"

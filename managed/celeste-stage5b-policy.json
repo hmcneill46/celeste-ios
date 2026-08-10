@@ -3,7 +3,7 @@
   "gameVersion": "1.4.0.0",
   "stage3CInput": {
     "fileCount": 927,
-    "logicalSha256": "a5ffcde2252c527d71bae43418751ff8dbf100bf2aa344c7400e7b722f2341c7"
+    "logicalSha256": "398f746984f0aae7d984d8c161f5aabf816710795ae5d467da5b72857b4f5a33"
   },
   "generatedFmodApi": {
     "managedVersion": "1.10.20",
@@ -38,6 +38,6 @@
   },
   "stage5BOutput": {
     "fileCount": 928,
-    "logicalSha256": "4e4e96f3d15815430a2f8ad063a4c4cdff004273b7513cf972d56ecd0b04460d"
+    "logicalSha256": "95711d3e940c123de7a980278998e0c8101426064d49d428f09a8ac7cf36b0e7"
   }
 }

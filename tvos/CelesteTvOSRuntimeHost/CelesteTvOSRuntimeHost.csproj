@@ -11,7 +11,7 @@
     <ApplicationTitle>Celeste</ApplicationTitle>
     <ApplicationDisplayVersion>10.0</ApplicationDisplayVersion>
     <ApplicationVersion>1</ApplicationVersion>
-    <AssemblyInformationalVersion>10.0.0+stage10a</AssemblyInformationalVersion>
+    <AssemblyInformationalVersion>10.1.0+stage10b</AssemblyInformationalVersion>
     <CelesteLaunchMode Condition="'$(CelesteLaunchMode)' == ''">Stage2Diagnostic</CelesteLaunchMode>
     <CelesteRuntimeEnabled Condition="'$(CelesteLaunchMode)' == 'CelestePreflight' or '$(CelesteLaunchMode)' == 'Celeste' or '$(CelesteLaunchMode)' == 'CelestePrologueDiagnostic' or '$(CelesteLaunchMode)' == 'CelesteAudio' or '$(CelesteLaunchMode)' == 'CelestePersistenceDiagnostic' or '$(CelesteLaunchMode)' == 'CelestePersistenceInspect'">true</CelesteRuntimeEnabled>
     <Stage6PersistenceEnabled Condition="'$(Stage6PersistenceEnabled)' == '' and '$(CelesteRuntimeEnabled)' == 'true'">true</Stage6PersistenceEnabled>
@@ -86,7 +86,7 @@
 
   <ItemGroup Condition="'$(CelesteRuntimeEnabled)' == 'true'">
     <ProjectReference Include="$(CelesteRuntimeManagedRoot)\Celeste.Modern.csproj"
-                      AdditionalProperties="CelesteTvOSRepoRoot=$(CelesteTvOSRepoRoot);CelesteManagedGeneratedRoot=$(CelesteRuntimeManagedRoot);CustomAfterMicrosoftCommonTargets=$(Stage3BFnaExtensionTargets)" />
+                      AdditionalProperties="CelesteTvOSRepoRoot=$(CelesteTvOSRepoRoot);CelesteManagedGeneratedRoot=$(CelesteRuntimeManagedRoot);CustomAfterMicrosoftCommonTargets=$(Stage3BFnaExtensionTargets);Stage6PersistenceEnabled=$(Stage6PersistenceEnabled)" />
     <ProjectReference Include="$(CelesteRuntimeManagedRoot)\Celeste.Content.Modern.csproj"
                       AdditionalProperties="CelesteManagedGeneratedRoot=$(CelesteRuntimeManagedRoot)" />
     <BundleResource Include="$(CelesteRuntimeContentRoot)\**\*"

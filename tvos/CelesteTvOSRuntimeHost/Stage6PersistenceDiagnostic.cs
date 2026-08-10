@@ -32,6 +32,7 @@ internal static class Stage6PersistenceDiagnostic
         Migration(store, sessionRoot, settingsA, settingsB, oneSaveEntries, twoSaveEntries, emptyEntries);
         LimitBoundaries(store, sessionRoot, settingsA);
         ExistingBehavior(store, sessionRoot, settingsA, saveA, oneSaveEntries, emptyEntries);
+        SaveManagerMutationSuite(store, sessionRoot, settingsA, settingsB, saveA, saveB, oneSaveEntries);
         LargeFixtureSuite();
 #if STAGE9B_RETAINED_FIXTURES
         RetainedPhysicalFixtureSuite();
@@ -323,6 +324,112 @@ internal static class Stage6PersistenceDiagnostic
         WriteSessionFile(sessionRoot, "settings", settings);
         Assert(!store.Commit("injected-size-warning") && store.LastFailureCategory == "userdefaults-size-warning" &&
             store.ReadRawForDiagnostics("B") == null, "size-warning-injection-retains-prior");
+        store.ClearNamespaceForDiagnostics();
+    }
+
+    private static void SaveManagerMutationSuite(
+        Stage6PersistenceStore store,
+        string sessionRoot,
+        byte[] settingsA,
+        byte[] settingsB,
+        byte[] saveA,
+        byte[] saveB,
+        IReadOnlyList<Stage6PersistenceStore.DiagnosticEntry> initialEntries
+    )
+    {
+        store.ClearNamespaceForDiagnostics();
+        byte[] priorGeneration = Stage6PersistenceStore.EncodeForDiagnostics(200, initialEntries);
+        store.WriteRawForDiagnostics("A", priorGeneration);
+        Assert(store.Restore().Generation == 200, "save-manager-prior-generation-restored");
+        Stage10AExportSnapshot before = store.CreateReadOnlySaveManagerSnapshot();
+
+        Stage10BMutationResult replaced = store.MutateFromSaveManager(new Stage10BMutationCommand(
+            "0", saveB, before.Generation, before.LogicalHash));
+        Assert(replaced.Success && replaced.Changed && replaced.Snapshot.Generation == 201,
+            "save-manager-replace-advances-once");
+        Assert(replaced.Snapshot.Files["0"]!.SequenceEqual(saveB), "save-manager-replace-preserves-exact-bytes");
+        Assert(store.ReadRawForDiagnostics("A")!.SequenceEqual(priorGeneration),
+            "save-manager-replace-retains-prior-slot-byte-for-byte");
+        Assert(store.ReadRawForDiagnostics("B") != null &&
+            Stage6PersistenceStore.DecodeForDiagnostics(store.ReadRawForDiagnostics("B")!).Generation == 201,
+            "save-manager-replace-readback-verified-v2");
+        Assert(store.ExternalMutationRequiresRestart, "save-manager-replace-requires-restart");
+
+        byte[] staleMaterialized = SettingsBytes(1, 1);
+        WriteSessionFile(sessionRoot, "settings", staleMaterialized);
+        Assert(store.Commit("stale-running-game") && store.Generation == 201 &&
+            store.ExportLogicalPayloadForFutureSaveManager("settings")!.SequenceEqual(settingsA),
+            "save-manager-stale-runtime-commit-suppressed");
+
+        Stage10BMutationResult stale = store.MutateFromSaveManager(new Stage10BMutationCommand(
+            "2", saveA, before.Generation, before.LogicalHash));
+        Assert(stale.Conflict && store.Generation == 201, "save-manager-stale-revision-conflict");
+
+        byte[] rawA = store.ReadRawForDiagnostics("A")!.ToArray();
+        byte[] rawB = store.ReadRawForDiagnostics("B")!.ToArray();
+        Stage10BMutationResult malformed = store.MutateFromSaveManager(new Stage10BMutationCommand(
+            "settings", Encoding.UTF8.GetBytes("<Settings><MusicVolume>invalid</MusicVolume></Settings>"),
+            replaced.Snapshot.Generation, replaced.Snapshot.LogicalHash));
+        Assert(!malformed.Success && malformed.FailureCategory == "serializer-invalid" &&
+            store.ReadRawForDiagnostics("A")!.SequenceEqual(rawA) && store.ReadRawForDiagnostics("B")!.SequenceEqual(rawB),
+            "save-manager-malformed-upload-keeps-both-generations");
+
+        byte[] oversized = ExactSaveBytes(Stage6PersistenceStore.MaximumSaveDataBytes + 1);
+        Stage10BMutationResult tooLarge = store.MutateFromSaveManager(new Stage10BMutationCommand(
+            "1", oversized, replaced.Snapshot.Generation, replaced.Snapshot.LogicalHash));
+        Assert(!tooLarge.Success && tooLarge.FailureCategory == "raw-uncompressed-limit" && store.Generation == 201,
+            "save-manager-oversized-upload-keeps-selected-generation");
+
+        Stage10BMutationResult deleted = store.MutateFromSaveManager(new Stage10BMutationCommand(
+            "0", null, replaced.Snapshot.Generation, replaced.Snapshot.LogicalHash));
+        Assert(deleted.Success && deleted.Changed && deleted.Snapshot.Generation == 202 &&
+            deleted.Snapshot.Files["0"] == null, "save-manager-delete-populated-slot");
+        Stage10BMutationResult deleteAgain = store.MutateFromSaveManager(new Stage10BMutationCommand(
+            "0", null, deleted.Snapshot.Generation, deleted.Snapshot.LogicalHash));
+        Assert(deleteAgain.Success && !deleteAgain.Changed && deleteAgain.Snapshot.Generation == 202,
+            "save-manager-delete-absent-is-noop");
+
+        Stage10BMutationResult reset = store.MutateFromSaveManager(new Stage10BMutationCommand(
+            "settings", null, deleted.Snapshot.Generation, deleted.Snapshot.LogicalHash));
+        Assert(reset.Success && reset.Changed && reset.Snapshot.Generation == 203 &&
+            reset.Snapshot.Files["settings"] == null, "save-manager-settings-reset-uses-absence");
+        Assert(reset.Snapshot.Files["1"] == null && reset.Snapshot.Files["2"] == null,
+            "save-manager-reset-does-not-create-save-slots");
+
+        Stage10BMutationResult settingsReplace = store.MutateFromSaveManager(new Stage10BMutationCommand(
+            "settings", settingsB, reset.Snapshot.Generation, reset.Snapshot.LogicalHash));
+        Assert(settingsReplace.Success && settingsReplace.Snapshot.Files["settings"]!.SequenceEqual(settingsB),
+            "save-manager-multiple-mutations-one-activation");
+
+        byte[] newest = store.ReadRawForDiagnostics("A") != null &&
+            Stage6PersistenceStore.DecodeFailureCategoryForDiagnostics(store.ReadRawForDiagnostics("A")!) == "none" &&
+            Stage6PersistenceStore.DecodeForDiagnostics(store.ReadRawForDiagnostics("A")!).Generation == store.Generation
+            ? store.ReadRawForDiagnostics("A")!.ToArray()
+            : store.ReadRawForDiagnostics("B")!.ToArray();
+        string newestSlot = store.ReadRawForDiagnostics("A") != null &&
+            Stage6PersistenceStore.DecodeFailureCategoryForDiagnostics(store.ReadRawForDiagnostics("A")!) == "none" &&
+            Stage6PersistenceStore.DecodeForDiagnostics(store.ReadRawForDiagnostics("A")!).Generation == store.Generation ? "A" : "B";
+        newest[^1] ^= 1;
+        store.WriteRawForDiagnostics(newestSlot, newest);
+        Stage6PersistenceStore.RestoreResult fallback = store.Restore();
+        Assert(fallback.Generation == settingsReplace.Snapshot.Generation - 1,
+            "save-manager-corrupt-newest-falls-back-to-prior-generation");
+
+        store.ClearNamespaceForDiagnostics();
+        store.WriteRawForDiagnostics("A", Stage6PersistenceStore.EncodeForDiagnostics(300, initialEntries));
+        Assert(store.Restore().Generation == 300, "save-manager-concurrency-baseline");
+        Stage10AExportSnapshot concurrentBefore = store.CreateReadOnlySaveManagerSnapshot();
+        Stage10BMutationCommand first = new("1", saveA, concurrentBefore.Generation, concurrentBefore.LogicalHash);
+        Stage10BMutationCommand second = new("2", saveB, concurrentBefore.Generation, concurrentBefore.LogicalHash);
+        Task<Stage10BMutationResult>[] concurrent =
+        {
+            Task.Run(() => store.MutateFromSaveManager(first)),
+            Task.Run(() => store.MutateFromSaveManager(second))
+        };
+        Task.WaitAll(concurrent);
+        Assert(concurrent.Count(task => task.Result.Success && task.Result.Changed) == 1 &&
+            concurrent.Count(task => task.Result.Conflict) == 1 && store.Generation == 301,
+            "save-manager-concurrent-stale-mutation-conflict");
         store.ClearNamespaceForDiagnostics();
     }
 

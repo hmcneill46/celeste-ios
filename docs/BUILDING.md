@@ -233,7 +233,7 @@ build implementation:
 7. [`generate-celeste-tvos-artwork.sh`](../scripts/generate-celeste-tvos-artwork.sh)
    creates the layered icon and static Top Shelf catalog from the user's game.
 
-The Stage 6 transformation also installs the Stage 10A Options entry and its
+The Stage 6 transformation also installs the Stage 10A/10B Options entry and its
 host-modal bridge into ignored generated source. The product links Apple's
 Network framework; no third-party HTTP server or networking package is added.
 
@@ -339,17 +339,18 @@ not on launch. The stored limits remain 124 KiB per generation and 256 KiB for
 A+B; the separate decompression safety ceilings are 64 KiB for Settings and
 256 KiB for each save slot.
 
-Verify the read-only Save Manager source/protocol boundary:
+Verify the writable Save Manager and preserved Stage 10A boundary:
 
 ```bash
-scripts/verify-celeste-tvos-stage10a.sh
+scripts/verify-celeste-tvos-stage10b.sh
 ```
 
 An optional built app can be checked with `--app ... --platform device
 --signed`; an unsigned package can be passed with `--ipa`. The verifier runs
-the deterministic HTTP/authentication suite, Stage 9B checks, Info.plist and
-entitlement isolation, the exact four-name export boundary, and built-product
-checks. The physical runner is:
+the deterministic HTTP/authentication/mutation suite, Stage 9B checks,
+Info.plist and entitlement isolation, the exact four-name persistence boundary,
+restart-required safety, and built-product checks. The interactive read/browser
+physical runner remains:
 
 ```bash
 scripts/run-celeste-tvos-save-manager-acceptance.sh --app dist/Celeste.app
@@ -357,8 +358,24 @@ scripts/run-celeste-tvos-save-manager-acceptance.sh --app dist/Celeste.app
 
 It stores device, console, Bonjour, and browser-download evidence only below an
 ignored output root. It never prints or persists the on-screen access code.
-The accepted web page offers a deterministic all-files ZIP as the primary
-backup action, while retaining the four fixed individual download routes.
+The accepted web page offers a deterministic all-files ZIP, four fixed download
+routes, fixed replace/delete actions, and Settings reset. Uploads use a bounded
+`application/octet-stream` body; they never expose or construct the compressed
+UserDefaults envelope. Successful mutations pass through the Stage 9B A/B
+authority and force an app restart before gameplay can continue.
+
+For isolated automation, build only an explicitly local acceptance app with
+`Stage10AAutomation=true` and `Stage6StorageNamespace=acceptance`, then use:
+
+```bash
+scripts/run-celeste-tvos-save-manager-write-automated.sh \
+  --app /path/to/signed-acceptance.app \
+  --settings /ignored/path/settings.celeste \
+  --save /ignored/path/0.celeste
+```
+
+This runner rejects production namespaces and requires ignored serializer-valid
+fixtures. It is acceptance tooling, not part of the public interactive build.
 
 ## Incremental build keys
 

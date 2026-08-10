@@ -25,7 +25,7 @@
   <key>UIApplicationSupportsIndirectInputEvents</key>
   <true/>
   <key>NSLocalNetworkUsageDescription</key>
-  <string>Celeste uses your local network only while you explicitly open the read-only Save Manager.</string>
+  <string>Celeste uses your local network only while you explicitly open Save Manager.</string>
   <key>NSBonjourServices</key>
   <array>
     <string>_celeste-save._tcp</string>
