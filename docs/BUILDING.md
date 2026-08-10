@@ -229,13 +229,19 @@ build implementation:
    user-owned banks.
 6. [`prepare-celeste-tvos-stage6.sh`](../scripts/prepare-celeste-tvos-stage6.sh)
    regenerates/patches modern Celeste source and stages content under ignored
-   roots with the durable-storage integration.
+   roots with the durable-storage, Save Manager, and controller-prompt
+   integrations. [`inventory-celeste-controller-prompts.py`](../scripts/inventory-celeste-controller-prompts.py)
+   validates the exact locked GUI atlas metadata without copying artwork.
 7. [`generate-celeste-tvos-artwork.sh`](../scripts/generate-celeste-tvos-artwork.sh)
    creates the layered icon and static Top Shelf catalog from the user's game.
 
 The Stage 6 transformation also installs the Stage 10A/10B Options entry and its
-host-modal bridge into ignored generated source. The product links Apple's
-Network framework; no third-party HTTP server or networking package is added.
+host-modal bridge, plus the Stage 11 Controller Prompts slider and narrow input
+prefix hook, into ignored generated source. The host stores that prompt choice
+under the fixed `CelesteTvOS.ControllerPrompts.v1` standard-UserDefaults key;
+it is intentionally outside Settings XML and the Stage 9B A/B envelope. The
+product links Apple's Network and GameController frameworks; no third-party
+HTTP server, networking, or controller-identification package is added.
 
 The source locks and tracked transforms are reviewable; downloaded repositories,
 decompiled/generated Celeste source, binaries, content, banks, and artwork are
@@ -363,6 +369,19 @@ routes, fixed replace/delete actions, and Settings reset. Uploads use a bounded
 `application/octet-stream` body; they never expose or construct the compressed
 UserDefaults envelope. Successful mutations pass through the Stage 9B A/B
 authority and force an app restart before gameplay can continue.
+
+Verify the Stage 11 prompt inventory, artwork-only policy, generated Settings
+schema isolation, prior persistence/Save Manager gates, and optional product:
+
+```bash
+scripts/verify-celeste-tvos-stage11.sh \
+  --game-root "$CELESTE_GAME_ROOT" \
+  --generated-root .build/celeste-runtime/stage6-current/audio/managed
+```
+
+Pass `--app ... --platform device --signed` or `--ipa ...` to inspect a built
+product. The public builder runs the focused inventory/source checks before
+publish and checks Stage 11 product tokens in both signed and unsigned modes.
 
 For isolated automation, build only an explicitly local acceptance app with
 `Stage10AAutomation=true` and `Stage6StorageNamespace=acceptance`, then use:

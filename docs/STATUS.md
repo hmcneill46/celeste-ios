@@ -42,6 +42,7 @@ flowchart LR
     P --> I["Signing-ready unsigned IPA"]
     P --> S["Dual-generation standard UserDefaults storage"]
     S --> W["Explicit authenticated LAN Save Manager"]
+    H --> B["Host-only controller prompt preference"]
 ```
 
 ### Modern sibling host
@@ -119,6 +120,26 @@ credentials. Current Apple platform documentation does not apply the Local
 Network privacy authorization prompt to tvOS; the app still declares its
 focused Bonjour service and usage description.
 
+### Controller prompts
+
+The generated tvOS Options menu contains a normal Celeste slider for
+Automatic, Xbox, PlayStation, Nintendo Switch, and Stadia prompt artwork. It
+wraps the existing `Input.GuiInputPrefix` family choice and does not touch
+bindings, FNA button values, Settings XML, SaveData, or the Stage 9B envelope.
+All four manual families resolve the locked game's complete 24-input matrix;
+family-specific assets fall back through Celeste's own `controls/fallback`
+paths where designed.
+
+The selected mode is one validated scalar under the standard app-private
+`CelesteTvOS.ControllerPrompts.v1` UserDefaults key. Automatic prefers
+Celeste/FNA's exact PlayStation, Nintendo, and Stadia GUID knowledge, then the
+current Apple Game Controller product category for DualSense, DualShock 4, and
+Xbox. Siri Remote categories are excluded, multiple controllers prefer the
+current controller and then stable connection order, and unknown controllers
+retain Celeste's existing fallback. Nintendo/Stadia automatic selection is not
+claimed beyond Celeste's locked known identifiers; their manual modes remain
+fully available.
+
 ### Branding and packaging
 
 `build-tvos.sh` generates a black-backed layered strawberry icon from
@@ -133,6 +154,8 @@ or an unsigned conventional tvOS IPA containing `Payload/Celeste.app`.
 - Metal on the physical Apple TV GPU
 - Title, UI, gameplay, Prologue, cutscene, death/respawn, and lifecycle audio
 - DualSense gameplay controls and standard whole-controller rumble
+- Artwork-only controller prompt selection, including physically verified
+  DualSense Automatic → PlayStation
 - Prologue normal and skip transitions
 - Settings and three save slots across termination, restart, and replacement
   install with the same app identity
@@ -151,6 +174,8 @@ or an unsigned conventional tvOS IPA containing `Payload/Celeste.app`.
 - Uninstall survival, cloud backup, and cross-device sync are not provided.
 - DualSense is the only physically accepted controller; Siri Remote gameplay is
   unsupported.
+- Automatic Nintendo Switch/Stadia classification is limited to Celeste's
+  locked known controller identities; use the manual prompt choice otherwise.
 - Steam and other Celeste distributions are untested.
 - The app is roughly 1.1 GiB before IPA compression.
 - Actual atvloadly physical installation has not been project-tested; only the
@@ -182,6 +207,7 @@ need them for normal builds.
 - [Locale-independent FMOD/Theorafile symbol validation](../TVOS_LOCALE_REPRODUCIBILITY_STAGE8D_REPORT.md)
 - [Read-only local-network Save Manager](../TVOS_READONLY_SAVE_MANAGER_STAGE10A_REPORT.md)
 - [Writable local-network Save Manager](../TVOS_WRITABLE_SAVE_MANAGER_STAGE10B_REPORT.md)
+- [Controller prompt selector](../TVOS_CONTROLLER_PROMPTS_STAGE11_REPORT.md)
 
 ## Isolation and licensing
 

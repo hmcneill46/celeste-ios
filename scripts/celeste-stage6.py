@@ -49,11 +49,11 @@ def transform(root: pathlib.Path, templates: pathlib.Path, policy: dict[str, Any
     project = root / "Celeste.Modern.csproj"
     if mode == "realAudio":
         old_constants = "<DefineConstants>$(DefineConstants);TVOS;TVOS_STAGE3B;TVOS_STAGE3C;TVOS_STAGE5B;TVOS_REAL_AUDIO</DefineConstants>"
-        new_constants = "<DefineConstants>$(DefineConstants);TVOS;TVOS_STAGE3B;TVOS_STAGE3C;TVOS_STAGE5B;TVOS_STAGE6;TVOS_STAGE10A;TVOS_REAL_AUDIO</DefineConstants>"
+        new_constants = "<DefineConstants>$(DefineConstants);TVOS;TVOS_STAGE3B;TVOS_STAGE3C;TVOS_STAGE5B;TVOS_STAGE6;TVOS_STAGE10A;TVOS_STAGE11;TVOS_REAL_AUDIO</DefineConstants>"
     else:
         old_constants = "<DefineConstants>$(DefineConstants);TVOS;TVOS_AUDIO_DISABLED;TVOS_STAGE3B;TVOS_STAGE3C</DefineConstants>"
-        new_constants = "<DefineConstants>$(DefineConstants);TVOS;TVOS_AUDIO_DISABLED;TVOS_STAGE3B;TVOS_STAGE3C;TVOS_STAGE6;TVOS_STAGE10A</DefineConstants>"
-    replace_once(project, old_constants, new_constants, "exclusive Stage 6 compile symbol")
+        new_constants = "<DefineConstants>$(DefineConstants);TVOS;TVOS_AUDIO_DISABLED;TVOS_STAGE3B;TVOS_STAGE3C;TVOS_STAGE6;TVOS_STAGE10A;TVOS_STAGE11</DefineConstants>"
+    replace_once(project, old_constants, new_constants, "exclusive Stage 6/10A/11 compile symbols")
 
     hook = templates / "TvOSStage6PersistenceHooks.cs"
     if not hook.is_file():
@@ -65,16 +65,27 @@ def transform(root: pathlib.Path, templates: pathlib.Path, policy: dict[str, Any
         raise SystemExit("error: Stage 10A Save Manager bridge template is missing")
     shutil.copyfile(save_manager, root / "Celeste" / save_manager.name)
 
+    controller_prompts = templates / "TvOSControllerPromptBridge.cs"
+    if not controller_prompts.is_file():
+        raise SystemExit("error: Stage 11 controller-prompt bridge template is missing")
+    shutil.copyfile(controller_prompts, root / "Celeste" / controller_prompts.name)
+
     menu_options = root / "Celeste" / "MenuOptions.cs"
     replace_once(
         menu_options,
         "\t\tviewport.Visible = Settings.Instance.Fullscreen;",
         "\t\t#if TVOS_STAGE10A\n"
         "\t\tmenu.Add(new TextMenu.SubHeader(\"APPLE TV\"));\n"
+        "\t\t#if TVOS_STAGE11\n"
+        "\t\tmenu.Add(new TextMenu.Slider(\"Controller Prompts\", TvOSControllerPromptHooks.DisplayName, 0, 4, (int)TvOSControllerPromptHooks.Mode).Change(delegate(int value)\n"
+        "\t\t{\n"
+        "\t\t\tTvOSControllerPromptHooks.SetMode((TvOSControllerPromptMode)value);\n"
+        "\t\t}));\n"
+        "\t\t#endif\n"
         "\t\tmenu.Add(new TextMenu.Button(\"Save Manager\").Pressed(OpenSaveManager));\n"
         "\t\t#endif\n"
         "\t\tviewport.Visible = Settings.Instance.Fullscreen;",
-        "tvOS-only Save Manager Options entry",
+        "tvOS-only controller-prompt and Save Manager Options entries",
     )
     replace_once(
         menu_options,
@@ -97,6 +108,23 @@ def transform(root: pathlib.Path, templates: pathlib.Path, policy: dict[str, Any
         "\t#endif\n\n"
         "\tprivate static void OpenViewportAdjustment()\n\t{",
         "Save Manager host-modal integration",
+    )
+
+    input_source = root / "Celeste" / "Input.cs"
+    replace_once(
+        input_source,
+        "\tpublic static string GuiInputPrefix(PrefixMode mode = PrefixMode.Latest)\n\t{",
+        "\tpublic static string GuiInputPrefix(PrefixMode mode = PrefixMode.Latest)\n"
+        "\t{\n"
+        "\t\tstring automaticPrefix = GuiInputPrefixAutomatic(mode);\n"
+        "\t\t#if TVOS_STAGE11\n"
+        "\t\treturn TvOSControllerPromptHooks.ResolvePrefix(automaticPrefix);\n"
+        "\t\t#else\n"
+        "\t\treturn automaticPrefix;\n"
+        "\t\t#endif\n"
+        "\t}\n\n"
+        "\tprivate static string GuiInputPrefixAutomatic(PrefixMode mode = PrefixMode.Latest)\n\t{",
+        "artwork-only controller-prompt prefix bridge",
     )
 
     user_io = root / "Celeste" / "UserIO.cs"
@@ -303,6 +331,9 @@ def transform(root: pathlib.Path, templates: pathlib.Path, policy: dict[str, Any
     )
 
     output = logical_manifest(root)
+    expected_output = policy["generatedOutputs"][mode]
+    if output["fileCount"] != expected_output["fileCount"] or output["logicalSha256"] != expected_output["logicalSha256"]:
+        raise SystemExit(f"error: {mode} output is not the locked Stage 6/10/11 generated source")
     return {
         "schemaVersion": 1,
         "mode": mode,
@@ -310,6 +341,7 @@ def transform(root: pathlib.Path, templates: pathlib.Path, policy: dict[str, Any
         "output": output,
         "hook": "Celeste/TvOSStage6PersistenceHooks.cs",
         "saveManagerBridge": "Celeste/TvOSSaveManagerBridge.cs",
+        "controllerPromptBridge": "Celeste/TvOSControllerPromptBridge.cs",
         "allowListedLogicalNames": [item["logicalName"] for item in policy["writableFiles"]],
         "generatedSourceTracked": False,
     }

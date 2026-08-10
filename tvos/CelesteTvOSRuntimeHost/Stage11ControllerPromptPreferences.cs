@@ -1,0 +1,147 @@
+#if CELESTE_RUNTIME && TVOS_STAGE6_HOST
+using Celeste;
+using Foundation;
+using GameController;
+
+namespace CelesteTvOSHost;
+
+internal sealed class Stage11ControllerPromptPreferences : IDisposable
+{
+    private readonly object gate = new();
+    private readonly Stage11PromptPreferenceState preference;
+    private readonly List<NSObject> observers = new();
+    private Stage11AppleControllerFamily appleFamily;
+    private bool disposed;
+
+    internal Stage11ControllerPromptPreferences()
+    {
+        preference = new Stage11PromptPreferenceState(new UserDefaultsStore());
+        RefreshControllers();
+        Observe(GCController.DidConnectNotification);
+        Observe(GCController.DidDisconnectNotification);
+        Observe(GCController.DidBecomeCurrentNotification);
+        Observe(GCController.DidStopBeingCurrentNotification);
+        TvOSControllerPromptHooks.ModeRequested = GetMode;
+        TvOSControllerPromptHooks.ModeChanged = SetMode;
+        TvOSControllerPromptHooks.PrefixRequested = ResolvePrefix;
+        Stage3BLog.Info($"STAGE11_PROMPTS ready=true; requested={preference.Mode}; effective={EffectiveFamilyForLog()}; key-schema=v1");
+    }
+
+    private TvOSControllerPromptMode GetMode()
+    {
+        lock (gate) return (TvOSControllerPromptMode)(int)preference.Mode;
+    }
+
+    private void SetMode(TvOSControllerPromptMode requested)
+    {
+        lock (gate)
+        {
+            Stage11PromptMode mode = (Stage11PromptMode)(int)requested;
+            bool changed = preference.Set(mode);
+            Stage3BLog.Info($"STAGE11_PROMPTS requested={preference.Mode}; effective={EffectiveFamilyForLog()}; persisted={(changed ? "changed" : "unchanged")}; bindings=untouched");
+        }
+    }
+
+    private string ResolvePrefix(string automaticPrefix)
+    {
+        lock (gate)
+            return Stage11ControllerPromptPolicy.ResolvePrefix(preference.Mode, automaticPrefix, appleFamily);
+    }
+
+    private void Observe(NSString notification) =>
+        observers.Add(NSNotificationCenter.DefaultCenter.AddObserver(notification, _ => RefreshControllers()));
+
+    private void RefreshControllers()
+    {
+        lock (gate)
+        {
+            GCController? current = GCController.Current;
+            GCController[] connected = GCController.Controllers ?? Array.Empty<GCController>();
+            List<Stage11ControllerCandidate> candidates = new(connected.Length + 1);
+            for (int index = 0; index < connected.Length; index++)
+            {
+                GCController controller = connected[index];
+                candidates.Add(new Stage11ControllerCandidate(
+                    SameController(controller, current),
+                    controller.ExtendedGamepad != null,
+                    Classify(controller.ProductCategory),
+                    index
+                ));
+            }
+            if (current != null && !connected.Any(controller => SameController(controller, current)))
+            {
+                candidates.Add(new Stage11ControllerCandidate(
+                    true,
+                    current.ExtendedGamepad != null,
+                    Classify(current.ProductCategory),
+                    connected.Length
+                ));
+            }
+            Stage11AppleControllerFamily previous = appleFamily;
+            appleFamily = Stage11ControllerPromptPolicy.SelectAppleFamily(candidates);
+            if (previous != appleFamily)
+                Stage3BLog.Info($"STAGE11_CONTROLLER_CHANGE apple-family={appleFamily}; connected-extended={candidates.Count(candidate => candidate.HasExtendedGamepad)}; private-identity=not-logged");
+        }
+    }
+
+    private static Stage11AppleControllerFamily Classify(string? productCategory)
+    {
+        if (EqualsCategory(productCategory, GCProductCategory.DualSense) ||
+            EqualsCategory(productCategory, GCProductCategory.DualShock4))
+            return Stage11AppleControllerFamily.PlayStation;
+        if (EqualsCategory(productCategory, GCProductCategory.XboxOne))
+            return Stage11AppleControllerFamily.Xbox;
+        if (EqualsCategory(productCategory, GCProductCategory.SiriRemote1stGen) ||
+            EqualsCategory(productCategory, GCProductCategory.SiriRemote2ndGen) ||
+            EqualsCategory(productCategory, GCProductCategory.ControlCenterRemote) ||
+            EqualsCategory(productCategory, GCProductCategory.UniversalElectronicsRemote) ||
+            EqualsCategory(productCategory, GCProductCategory.CoalescedRemote))
+            return Stage11AppleControllerFamily.Remote;
+        return Stage11AppleControllerFamily.Unknown;
+    }
+
+    private static bool EqualsCategory(string? value, NSString category) =>
+        string.Equals(value, category.ToString(), StringComparison.Ordinal);
+
+    private static bool SameController(GCController controller, GCController? other) =>
+        other != null && controller.Handle == other.Handle;
+
+    private string EffectiveFamilyForLog() =>
+        Stage11ControllerPromptPolicy.ResolvePrefix(preference.Mode, "xb1", appleFamily) switch
+        {
+            "ps4" => "PlayStation",
+            "ns" => "NintendoSwitch",
+            "stadia" => "Stadia",
+            _ => "Xbox"
+        };
+
+    public void Dispose()
+    {
+        lock (gate)
+        {
+            if (disposed) return;
+            TvOSControllerPromptHooks.Reset();
+            foreach (NSObject observer in observers)
+            {
+                NSNotificationCenter.DefaultCenter.RemoveObserver(observer);
+                observer.Dispose();
+            }
+            observers.Clear();
+            disposed = true;
+        }
+    }
+
+    private sealed class UserDefaultsStore : IStage11PromptPreferenceStore
+    {
+        private readonly NSUserDefaults defaults = NSUserDefaults.StandardUserDefaults;
+
+        public string? Read() => defaults.StringForKey(Stage11ControllerPromptPolicy.PreferenceKey);
+
+        public void Write(string value)
+        {
+            defaults.SetString(value, Stage11ControllerPromptPolicy.PreferenceKey);
+            defaults.Synchronize();
+        }
+    }
+}
+#endif

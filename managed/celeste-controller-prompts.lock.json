@@ -1,0 +1,74 @@
+{
+  "schemaVersion": 1,
+  "gameVersion": "1.4.0.0",
+  "atlas": {
+    "relativePath": "Content/Graphics/Atlases/Gui.meta",
+    "sha256": "884ea39e604e34e3a45b005d164a5249de9a985e58fde7ef730193c47363525b",
+    "textureCount": 422,
+    "lookupIsCaseInsensitive": true
+  },
+  "requiredButtons": [
+    "A",
+    "B",
+    "X",
+    "Y",
+    "LeftShoulder",
+    "RightShoulder",
+    "LeftTrigger",
+    "RightTrigger",
+    "Start",
+    "Back",
+    "LeftStick",
+    "RightStick",
+    "DPadUp",
+    "DPadDown",
+    "DPadLeft",
+    "DPadRight",
+    "LeftThumbstickUp",
+    "LeftThumbstickDown",
+    "LeftThumbstickLeft",
+    "LeftThumbstickRight",
+    "RightThumbstickUp",
+    "RightThumbstickDown",
+    "RightThumbstickLeft",
+    "RightThumbstickRight"
+  ],
+  "families": [
+    {
+      "displayName": "Xbox",
+      "prefix": "xb1",
+      "atlasAssetCount": 10,
+      "directResolutionCount": 10,
+      "fallbackResolutionCount": 14,
+      "complete": true,
+      "selectable": true
+    },
+    {
+      "displayName": "PlayStation",
+      "prefix": "ps4",
+      "atlasAssetCount": 15,
+      "directResolutionCount": 14,
+      "fallbackResolutionCount": 10,
+      "complete": true,
+      "selectable": true
+    },
+    {
+      "displayName": "Nintendo Switch",
+      "prefix": "ns",
+      "atlasAssetCount": 24,
+      "directResolutionCount": 24,
+      "fallbackResolutionCount": 0,
+      "complete": true,
+      "selectable": true
+    },
+    {
+      "displayName": "Stadia",
+      "prefix": "stadia",
+      "atlasAssetCount": 10,
+      "directResolutionCount": 10,
+      "fallbackResolutionCount": 14,
+      "complete": true,
+      "selectable": true
+    }
+  ]
+}

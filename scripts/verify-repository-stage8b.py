@@ -20,6 +20,7 @@ REQUIRED_DOCS = (
     "TVOS_PUBLIC_PREREQUISITES_STAGE8C_REPORT.md",
     "TVOS_LOCALE_REPRODUCIBILITY_STAGE8D_REPORT.md",
     "TVOS_COMPRESSED_PERSISTENCE_STAGE9B_REPORT.md",
+    "TVOS_CONTROLLER_PROMPTS_STAGE11_REPORT.md",
 )
 PUBLIC_TEXT = REQUIRED_DOCS + (
     ".github/ISSUE_TEMPLATE/bug_report.yml",
@@ -76,6 +77,8 @@ def main() -> None:
         "CMake, Ninja, and ripgrep are **not** required",
         "Transparent compressed storage",
         "Existing v1 installs require no manual migration",
+        "Options → Controller Prompts",
+        "on-screen button artwork",
     )
     for value in required_readme:
         if value not in readme:

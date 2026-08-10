@@ -513,6 +513,44 @@ Pair/connect an extended Bluetooth controller in tvOS Settings before launch.
 DualSense is the physically tested controller. Relaunch after reconnecting if
 necessary.
 
+## Controller prompts show the wrong family
+
+**Symptom**
+
+The connected controller works, but Celeste shows an unexpected button style.
+
+**Cause**
+
+Automatic can authoritatively identify DualSense, DualShock 4, and Xbox through
+Apple's current-controller product category, and retains Celeste/FNA's locked
+known PlayStation, Nintendo, and Stadia identities. A generic controller may
+not expose enough stable information for a more specific choice.
+
+**Fix**
+
+Open **Options → Controller Prompts** and select the desired family manually.
+This changes artwork only; do not change gameplay bindings to correct a glyph.
+Return to Automatic after reconnecting if you want current-controller
+detection again.
+
+## Controller prompt preference did not follow imported Settings
+
+**Symptom**
+
+Replacing or resetting `settings.celeste` in Save Manager leaves Controller
+Prompts unchanged.
+
+**Cause**
+
+This is intentional. The prompt mode is a tvOS host display preference stored
+under its own fixed standard-UserDefaults key, not part of portable Celeste
+Settings, SaveData, or the four-file Save Manager boundary.
+
+**Fix**
+
+Choose the desired mode again under **Options → Controller Prompts**. No save
+repair or Settings re-import is needed.
+
 ## Saves appear missing after changing the bundle ID
 
 **Symptom**

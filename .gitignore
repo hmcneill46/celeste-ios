@@ -24,6 +24,12 @@ artifacts/celeste-managed/
 .build/celeste-runtime/
 artifacts/celeste-runtime/
 
+# Privacy-safe Stage 11 controller-prompt inventory derived from the user's
+# locked Gui atlas metadata. The report contains no artwork but remains a local
+# input-verification artifact.
+.build/celeste-controller-prompts/
+.build/stage11-logs/
+
 # User-supplied FMOD SDK staging, banks, bridge builds, diagnostic apps, and
 # physical-device evidence. Proprietary inputs and private logs stay local.
 .build/fmod-tvos/

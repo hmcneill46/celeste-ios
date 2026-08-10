@@ -27,6 +27,7 @@ limitations.
 - Music, ambience, UI audio, gameplay effects, and cutscene audio
 - Extended game controllers; Sony DualSense was physically tested
 - Movement, Jump, Dash, Grab, Confirm, Cancel, Pause, cutscene skip, and rumble
+- Selectable Automatic, Xbox, PlayStation, Nintendo Switch, and Stadia prompts
 - Durable Settings and all three normal save slots
 - Transparent compressed storage that fixes the later-game 32 KiB save limit
 - Recovery from a corrupt newest save generation
@@ -285,6 +286,24 @@ cutscene skip, and rumble/haptic cleanup. Other Xbox, DualShock, and MFi-style
 extended controllers may work through normal SDL/FNA mappings but have not been
 certified by this project. The Siri Remote is not an intended Celeste gameplay
 controller.
+
+### Controller button prompts
+
+Open **Options → Controller Prompts** and choose **Automatic**, **Xbox**,
+**PlayStation**, **Nintendo Switch**, or **Stadia**. The choice updates the
+on-screen button artwork; it never remaps controls or changes which physical
+button performs Jump, Dash, Grab, Confirm, or Cancel.
+
+Automatic uses Celeste/FNA's known controller identities first, then Apple's
+current-controller product category for DualSense, DualShock 4, and Xbox
+controllers. DualSense-to-PlayStation selection is physically verified.
+Nintendo Switch and Stadia retain Celeste's exact known-controller detection,
+with manual selection available when tvOS cannot identify the family reliably.
+Unknown extended controllers keep Celeste's safe existing/default artwork.
+
+This is a small host preference stored separately from `settings.celeste`.
+Importing or resetting Settings through Save Manager therefore does not change
+the selected prompt family.
 
 ## Tested hardware and software
 
