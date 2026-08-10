@@ -46,6 +46,9 @@ public static class TvOSSaveManagerHooks
 public sealed class TvOSSaveManagerUI : Entity
 {
     private TvOSSaveManagerDisplayState state = new();
+    #if TVOS_STAGE13B
+    private TvOSSoftReloadDisplayState reload = new();
+    #endif
     private bool closing;
 
     public Action OnClose { get; set; }
@@ -66,16 +69,26 @@ public sealed class TvOSSaveManagerUI : Entity
     {
         base.Update();
         state = TvOSSaveManagerHooks.Status();
+        #if TVOS_STAGE13B
+        reload = TvOSSoftReloadHooks.Status();
+        #endif
         if (!closing && (Input.MenuCancel.Pressed || Input.MenuConfirm.Pressed))
         {
-            closing = true;
             if (state.RestartRequired)
             {
-                // Stop networking and erase browser credentials, but retain
-                // this modal so stale in-memory game state cannot resume.
+                // A successful external mutation makes the old game graph
+                // stale. Back may stop networking, but can never resume it.
+                if (Input.MenuCancel.Pressed)
+                    TvOSSaveManagerHooks.Stop("ui-reload-required-back-blocked");
+                #if TVOS_STAGE13B
+                else if (reload.CanRequest)
+                    _ = TvOSSoftReloadHooks.RequestReload();
+                #else
                 TvOSSaveManagerHooks.Stop("ui-restart-required");
+                #endif
                 return;
             }
+            closing = true;
             TvOSSaveManagerHooks.Stop("ui-back");
             RemoveSelf();
             OnClose?.Invoke();
@@ -104,13 +117,34 @@ public sealed class TvOSSaveManagerUI : Entity
 
         if (state.RestartRequired || state.Phase == "restart-required")
         {
+            #if TVOS_STAGE13B
+            if (reload.Phase == TvOSSoftReloadPhase.Failure)
+            {
+                DrawLine("RELOAD FAILED", 450f, 1.05f, Color.White);
+                DrawLine("Your changes are safely stored,", 535f, 0.68f, Color.White);
+                DrawLine("but Celeste could not reload them.", 600f, 0.68f, Color.White);
+                DrawLine("Fully close Celeste from the Apple TV app switcher,", 690f, 0.54f, Color.LightGray);
+                DrawLine("then open it again.", 750f, 0.54f, Color.LightGray);
+            }
+            else if (reload.IsActive)
+            {
+                DrawLine("RELOADING CELESTE...", 525f, 1.0f, Color.White);
+                DrawLine("Please keep Celeste open.", 620f, 0.6f, Color.LightGray);
+            }
+            else
+            {
+                DrawLine("CHANGES SAVED", 450f, 1.05f, Color.White);
+                DrawLine("Your changes were saved successfully.", 535f, 0.68f, Color.White);
+                DrawLine("Press Confirm to reload Celeste", 620f, 0.65f, Color.White);
+                DrawLine("and use the new save data.", 680f, 0.65f, Color.White);
+                DrawLine("If reloading fails, fully close Celeste from the", 780f, 0.5f, Color.LightGray);
+                DrawLine("Apple TV app switcher and reopen it.", 830f, 0.5f, Color.LightGray);
+            }
+            #else
             DrawLine("RESTART CELESTE", 450f, 1.05f, Color.White);
             DrawLine("Your changes were saved successfully.", 535f, 0.68f, Color.White);
-            DrawLine("Celeste must be fully closed before the new save data can be loaded.", 620f, 0.55f, Color.LightGray);
-            DrawLine("Returning to the Home Screen is not enough.", 685f, 0.6f, Color.LightGray);
-            DrawLine("Close Celeste from the Apple TV app switcher, then open it again.", 750f, 0.53f, Color.LightGray);
-            if (state.Phase == "ready")
-                DrawLine("Press Confirm or Back to stop Save Manager networking.", 860f, 0.5f, Color.Gray);
+            DrawLine("Close Celeste from the Apple TV app switcher, then open it again.", 700f, 0.53f, Color.LightGray);
+            #endif
         }
         else if (state.Phase == "starting")
         {

@@ -264,12 +264,11 @@ To back up or restore the ordinary Celeste Settings and save slots:
    file, and confirm **Replace**. Settings and SaveData are validated by the
    same exact AOT-safe serializers used by the game before anything is stored.
 6. A save slot can be deliberately deleted; **Reset Settings** makes Celeste
-   recreate safe defaults on its next launch. Invalid, oversized, stale, or
+   recreate safe defaults during the following reload. Invalid, oversized, stale, or
    interrupted requests keep the previous durable generation.
-7. After any successful change, fully close Celeste from the Apple TV app
-   switcher, then open it again. Returning to the Home Screen alone is not a
-   restart: tvOS normally suspends the same process, whose in-memory game state
-   is intentionally blocked after an import.
+7. After a successful change, return to the Apple TV and press **Confirm**.
+   Celeste performs a verified high-level soft reload and returns to its main
+   menu with the new save/settings state.
 
 Exported and imported files are normal uncompressed Celeste `.celeste` files;
 the internal compressed A/B format is never exposed. Editing remains an offline
@@ -279,6 +278,13 @@ normal gameplay, start only after this menu choice, and stop when the screen is
 closed, the app backgrounds, or its short inactivity limit expires. It is a
 temporary same-LAN personal tool, not cloud or internet sync. No fixed IP or
 manual port setup is required.
+
+The soft reload retains the original SDL/FNA/FMOD runtime. It discards the old
+Celeste scene, Settings, input bindings, SaveData and file-select inventory only
+after the imported durable generation has been re-materialized and verified.
+Gameplay stays blocked until the new main menu passes verification. If reload
+fails, the already stored change remains safe; fully close Celeste from the
+Apple TV app switcher and reopen it as the recovery fallback.
 
 ## Controllers
 
@@ -320,9 +326,9 @@ While the guidance is still in the foreground, **Back** returns directly to the
 main menu. Pause-menu **Save and Quit** remains the separate Celeste command
 that saves and returns to the main menu.
 
-This normal Quit flow is not a substitute for the full process restart required
-after a successful Save Manager replace, delete, or Settings reset. In that
-case, close Celeste from the Apple TV app switcher before launching it again.
+The Save Manager normally uses its own Confirm-driven soft reload. Closing from
+the Apple TV app switcher is needed only if that reload reports a verification
+failure.
 
 ## Tested hardware and software
 
@@ -347,8 +353,8 @@ have not been physically tested here.
 - Saves are shared between Apple TV users and do not sync to the cloud.
 - Save Manager supports fixed validated replace/reset/delete operations, but no
   unattended sync, cloud service, or in-browser XML editor.
-- A successful Save Manager mutation requires closing Celeste from the Apple TV
-  app switcher; returning Home alone only backgrounds the stale process.
+- Save Manager changes reload in the existing runtime; the Apple TV app
+  switcher remains the conservative fallback if reload verification fails.
 - Steam and non-itch.io-Linux game inputs are untested.
 - DualSense is the only physically accepted controller; the Siri Remote is not
   a gameplay controller.

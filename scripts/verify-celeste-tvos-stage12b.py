@@ -39,7 +39,7 @@ def scan_app(app: pathlib.Path) -> dict[str, object]:
     executable = app / str(info.get("CFBundleExecutable", ""))
     candidates = (executable, app / "CelesteTvOSRuntimeHost.dll", app / "Celeste.dll")
     blobs = [path.read_bytes() for path in candidates if path.is_file()]
-    for token in ("LEAVE CELESTE", "STAGE12B_QUIT", "Returning to the Home Screen is not enough"):
+    for token in ("LEAVE CELESTE", "STAGE12B_QUIT", "Apple TV app switcher"):
         encoded = (token.encode(), token.encode("utf-16le"))
         if not any(any(value in blob for value in encoded) for blob in blobs):
             fail(f"built app lacks Stage 12B product token: {token}")
@@ -99,10 +99,10 @@ def main() -> int:
     ), "Quit state machine")
     require(manager, ("RestartRequired", "StopForLeave"), "Save Manager lifecycle bridge")
     require(save_ui, (
-        "Returning to the Home Screen is not enough.", "Apple TV app switcher", "RESTART CELESTE",
+        "CHANGES SAVED", "Apple TV app switcher", "TvOSSoftReloadHooks.RequestReload",
     ), "TV restart-required guidance")
     require(http, (
-        "Returning to the Apple TV Home Screen is not enough", "Apple TV app switcher",
+        "press Confirm to reload Celeste", "Apple TV app switcher",
     ), "browser restart-required guidance")
     required_tests = (
         "idle begins one Quit request", "duplicate Quit is suppressed", "active save leaves state preparing",

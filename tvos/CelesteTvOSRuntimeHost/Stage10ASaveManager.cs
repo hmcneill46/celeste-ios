@@ -58,12 +58,44 @@ internal sealed class Stage10ASaveManager : IDisposable
     internal int BonjourRemoveCount { get { lock (gate) return bonjourRemoves; } }
 
     internal void StopForLeave() => Stop("stage12b-user-leave");
+    internal void StopForSoftReload() => Stop("stage13b-soft-reload");
+
+    internal void CompleteSoftReload()
+    {
+        lock (gate)
+        {
+            ThrowIfDisposed();
+            StopNetworkObjects(clearStatus: false);
+            restartRequired = false;
+            status = new TvOSSaveManagerDisplayState { Phase = "stopped" };
+            Stage3BLog.Info("STAGE13B_MANAGER result=complete; restart-required=false; listener=false; sessions=cleared");
+        }
+    }
+
+    internal void MarkSoftReloadFailed(string category)
+    {
+        lock (gate)
+        {
+            if (disposed) return;
+            StopNetworkObjects(clearStatus: false);
+            restartRequired = true;
+            status = new TvOSSaveManagerDisplayState
+            {
+                Phase = "restart-required",
+                RestartRequired = true,
+                Detail = category
+            };
+            Stage3BLog.Warning($"STAGE13B_MANAGER result=reload-failed; category={SanitizeReason(category)}; restart-required=true");
+        }
+    }
 
     private TvOSSaveManagerDisplayState Start()
     {
         lock (gate)
         {
             ThrowIfDisposed();
+            if (restartRequired)
+                return new TvOSSaveManagerDisplayState { Phase = "restart-required", RestartRequired = true };
             if (status.Phase is "starting" or "ready") return CopyStatus(status);
             status = new TvOSSaveManagerDisplayState { Phase = "starting" };
             SetIdleTimerSuppressed(true);

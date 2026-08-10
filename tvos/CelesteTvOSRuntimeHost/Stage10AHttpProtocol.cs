@@ -314,6 +314,7 @@ internal sealed class Stage10AHttpProtocol
         {
             ["X-Celeste-Mutation"] = result.Changed ? "committed" : "unchanged",
             ["X-Celeste-Mutation-Target"] = route.LogicalName,
+            ["X-Celeste-Reload-Required"] = restartRequired ? "true" : "false",
             ["X-Celeste-Restart-Required"] = restartRequired ? "true" : "false"
         };
         return response with { Headers = headers };
@@ -559,7 +560,7 @@ internal sealed class Stage10AHttpProtocol
         StringBuilder body = new("<p>Connected to your Apple TV.</p>");
         if (!string.IsNullOrEmpty(notice)) body.Append("<p class=success>").Append(notice).Append("</p>");
         if (restartRequired)
-            body.Append("<p class=warning><strong>Fully close and restart Celeste before continuing.</strong><br>Changes are safely stored, but the running game still has its old state. Returning to the Apple TV Home Screen is not enough. Close Celeste from the Apple TV app switcher, then open it again.</p>");
+            body.Append("<p class=warning><strong>Return to your Apple TV and press Confirm to reload Celeste.</strong><br>Celeste will validate and load the new state without quitting the app. If reload fails, fully close Celeste from the Apple TV app switcher and reopen it.</p>");
         body.Append("<p><a href=/download/all download=Celeste-saves.zip>Download backup (.zip)</a></p><ul>");
         foreach (string logicalName in LogicalNames)
         {
@@ -586,7 +587,7 @@ internal sealed class Stage10AHttpProtocol
             .Append("async function act(path,body,type,target){const r=await fetch(path,{method:'POST',credentials:'same-origin',headers:{'X-Celeste-CSRF':csrf,'X-Celeste-Revision':revision,...(type?{'Content-Type':type}:{})},body});const t=await r.text();if(r.ok){location.replace('/');}else{const e=document.getElementById('result-'+target);e.textContent='Request failed ('+r.status+'). '+new DOMParser().parseFromString(t,'text/html').body.innerText;}}")
             .Append("document.querySelectorAll('[data-replace]').forEach(b=>b.onclick=()=>{const n=b.dataset.replace,f=document.querySelector('[data-file=\"'+n+'\"]').files[0];if(!f){document.getElementById('result-'+n).textContent='Choose a .celeste file first.';return;}const label=n==='settings'?'Settings':'Save Slot '+(Number(n)+1);if(confirm('Replace '+label+' with '+f.name+' ('+f.size+' bytes)?'))act('/replace/'+n,f,'application/octet-stream',n);});")
             .Append("document.querySelectorAll('[data-delete]').forEach(b=>b.onclick=()=>{const n=b.dataset.delete;if(confirm('Delete Save Slot '+(Number(n)+1)+'? This intentionally changes the current save state.'))act('/delete/'+n,null,null,n);});")
-            .Append("document.querySelectorAll('[data-reset]').forEach(b=>b.onclick=()=>{if(confirm('Reset Settings to Celeste defaults on the next launch? Save slots are not changed.'))act('/reset/settings',null,null,'settings');});")
+            .Append("document.querySelectorAll('[data-reset]').forEach(b=>b.onclick=()=>{if(confirm('Reset Settings to Celeste defaults? Save slots are not changed. Return to the Apple TV and press Confirm to reload.'))act('/reset/settings',null,null,'settings');});")
             .Append("</script>");
         return Page("Celeste Save Manager", body.ToString());
     }

@@ -42,6 +42,7 @@ flowchart LR
     P --> I["Signing-ready unsigned IPA"]
     P --> S["Dual-generation standard UserDefaults storage"]
     S --> W["Explicit authenticated LAN Save Manager"]
+    W --> R["Verified high-level soft reload"]
     H --> B["Host-only controller prompt preference"]
     H --> Q["Foreground/background-aware Leave Celeste flow"]
 ```
@@ -156,10 +157,12 @@ focus. Merely resigning active is not treated as Home/background completion.
 This replaces the former desktop exit path that disposed FNA while leaving an
 empty UIKit/SDL application surface.
 
-Save Manager mutations remain a separate safety state. Because the current
-runtime holds stale Settings/SaveData after an import, Home alone does not
-restart it; the user must fully close Celeste from the Apple TV app switcher.
-That restart-required state always takes precedence over normal Leave recovery.
+Save Manager mutations enter a separate stale-write safety state. Confirm now
+performs a ticketed high-level soft reload: it re-materializes the exact selected
+generation, reloads Settings/Input, clears old SaveData/session state and lands
+at a normal main menu in the existing FNA runtime. The guard clears only after
+that state verifies. If verification fails, gameplay stays blocked and fully
+closing Celeste from the Apple TV app switcher remains the fallback.
 
 ### Branding and packaging
 
@@ -186,6 +189,8 @@ or an unsigned conventional tvOS IPA containing `Payload/Celeste.app`.
 - Free Personal Team signed installation and verified unsigned IPA structure
 - Explicit Save Manager with temporary same-LAN authentication, ordinary-file
   backup, exact validated replacement, slot deletion, and Settings reset
+- Confirm-driven Save Manager soft reload with exact generation/hash tickets;
+  no second SDL/FNA/FMOD runtime
 - Main-menu Quit verifies durable state and provides a safe Home/background
   flow without destroying the FNA runtime or leaving a blank surface
 
@@ -204,9 +209,8 @@ or an unsigned conventional tvOS IPA containing `Payload/Celeste.app`.
 - Actual atvloadly physical installation has not been project-tested; only the
   conventional unsigned IPA structure is statically verified.
 - Save Manager operations are deliberate and local only; there is no unattended
-  sync, cloud service, or in-browser XML editor. After a successful mutation,
-  Celeste must be fully closed from the app switcher and relaunched; Home alone
-  normally suspends the stale process.
+  sync, cloud service, or in-browser XML editor. If soft reload validation fails,
+  fully close Celeste from the app switcher and reopen it.
 - Apple Game Mode is not declared: the current public Apple keys do not document
   tvOS availability, and this project makes no Apple TV Game Mode claim.
 - No App Store, distribution-profile, paid entitlement, or universal hardware

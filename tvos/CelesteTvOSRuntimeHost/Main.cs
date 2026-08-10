@@ -75,8 +75,10 @@ internal static class Program
             using Stage6PersistenceStore? persistence = PrepareCelesteRuntimeContext(enablePersistence: true);
             using Stage6PersistenceLifecycle? persistenceLifecycle = persistence == null ? null : new Stage6PersistenceLifecycle(persistence);
             using Stage10ASaveManager? saveManager = persistence == null ? null : new Stage10ASaveManager(persistence);
-            using Stage12BQuitCoordinator? quitCoordinator = saveManager == null ? null : new Stage12BQuitCoordinator(saveManager);
             using Stage11ControllerPromptPreferences? controllerPrompts = persistence == null ? null : new Stage11ControllerPromptPreferences();
+            using Stage13BSoftReloadCoordinator? softReloadCoordinator = saveManager == null || persistence == null
+                ? null : new Stage13BSoftReloadCoordinator(persistence, saveManager);
+            using Stage12BQuitCoordinator? quitCoordinator = saveManager == null ? null : new Stage12BQuitCoordinator(saveManager);
 #else
             PrepareCelesteRuntimeContext(enablePersistence: false);
 #endif

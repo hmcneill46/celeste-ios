@@ -474,6 +474,80 @@ internal sealed class Stage6PersistenceStore : IDisposable
         }
     }
 
+    // Stage 13B keeps the external-mutation guard set while it rebuilds only
+    // Celeste's high-level state.  This ticket is deliberately made from the
+    // durable A/B authority, not from the stale in-process materialisation.
+    internal ExternalMutationReloadTicket PrepareExternalMutationReload()
+    {
+        lock (gate)
+        {
+            ThrowIfDisposed();
+            if (!externalMutationRequiresRestart || selected == null)
+                throw Failure("reload-not-required", "No verified external mutation is waiting to be reloaded.");
+
+            Candidate a = ReadCandidate("A");
+            Candidate b = ReadCandidate("B");
+            Snapshot durable = Select(a, b)
+                ?? throw Failure("reload-generation-missing", "Neither durable slot contains a supported reload generation.");
+            if (durable.Generation != selected.Generation || durable.LogicalHash != selected.LogicalHash)
+                throw Failure("reload-generation-mismatch", "The selected durable generation changed before reload preparation.");
+
+            ClearMaterializedFiles();
+            Materialize(durable);
+            Snapshot recaptured = Capture(durable.Generation);
+            if (recaptured.Generation != durable.Generation || recaptured.LogicalHash != durable.LogicalHash)
+                throw Failure("reload-materialization-mismatch", "Re-materialised files do not match the selected durable generation.");
+
+            ExternalMutationReloadTicket ticket = new(
+                durable.Generation,
+                durable.LogicalHash,
+                durable.Entries.Single(value => value.Name == "settings").Present,
+                durable.Entries.Single(value => value.Name == "0").Present,
+                durable.Entries.Single(value => value.Name == "1").Present,
+                durable.Entries.Single(value => value.Name == "2").Present
+            );
+            Stage3BLog.Info(
+                $"STAGE13B_PREPARE result=PASS; generation={ticket.Generation}; logical={ticket.LogicalHash}; " +
+                $"presence={ticket.PresenceSummary}; generation-advanced=false; stale-guard=true"
+            );
+            return ticket;
+        }
+    }
+
+    // The host calls this only after the new Settings/Input graph and a normal
+    // Overworld/OuiMainMenu have independently passed validation.  Re-read A/B
+    // and re-capture the materialised files one final time before permitting
+    // UserIO writes again.
+    internal void CompleteExternalMutationReload(ExternalMutationReloadTicket ticket)
+    {
+        lock (gate)
+        {
+            ThrowIfDisposed();
+            if (!externalMutationRequiresRestart || selected == null)
+                throw Failure("reload-guard-missing", "The external-mutation guard was cleared before reload completion.");
+
+            Candidate a = ReadCandidate("A");
+            Candidate b = ReadCandidate("B");
+            Snapshot durable = Select(a, b)
+                ?? throw Failure("reload-generation-missing", "The durable reload generation disappeared before completion.");
+            if (durable.Generation != ticket.Generation || durable.LogicalHash != ticket.LogicalHash ||
+                selected.Generation != ticket.Generation || selected.LogicalHash != ticket.LogicalHash)
+            {
+                throw Failure("reload-completion-ticket-mismatch", "The durable reload ticket no longer identifies the selected generation.");
+            }
+
+            Snapshot recaptured = Capture(ticket.Generation);
+            if (recaptured.LogicalHash != ticket.LogicalHash)
+                throw Failure("reload-completion-hash-mismatch", "Materialised files changed before reload completion.");
+
+            externalMutationRequiresRestart = false;
+            Stage3BLog.Info(
+                $"STAGE13B_COMPLETE result=PASS; generation={ticket.Generation}; logical={ticket.LogicalHash}; " +
+                "generation-advanced=false; stale-guard=false"
+            );
+        }
+    }
+
     private Stage10AExportSnapshot CreateExportSnapshotUnsafe()
     {
         Dictionary<string, byte[]?> files = new(StringComparer.Ordinal);
@@ -904,6 +978,28 @@ internal sealed class Stage6PersistenceStore : IDisposable
         IReadOnlyList<DiagnosticEntrySize> Entries
     );
     internal enum SerializerKind : byte { Settings = 1, SaveData = 2 }
+    internal sealed record ExternalMutationReloadTicket(
+        ulong Generation,
+        string LogicalHash,
+        bool SettingsPresent,
+        bool Slot0Present,
+        bool Slot1Present,
+        bool Slot2Present)
+    {
+        internal bool ExpectedPresent(string logicalName) => logicalName switch
+        {
+            "settings" => SettingsPresent,
+            "0" => Slot0Present,
+            "1" => Slot1Present,
+            "2" => Slot2Present,
+            _ => throw new ArgumentOutOfRangeException(nameof(logicalName))
+        };
+
+        internal string PresenceSummary =>
+            $"settings:{Bit(SettingsPresent)},0:{Bit(Slot0Present)},1:{Bit(Slot1Present)},2:{Bit(Slot2Present)}";
+
+        private static int Bit(bool value) => value ? 1 : 0;
+    }
     private sealed record FilePolicy(string LogicalName, string PrimaryPath, string BackupPath, SerializerKind Serializer, int MaximumBytes);
     private sealed record Entry(string Name, bool Present, SerializerKind Serializer, byte[] Payload);
     private sealed record Snapshot(ulong Generation, IReadOnlyList<Entry> Entries, string LogicalHash, ushort SourceFormatVersion)

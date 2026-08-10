@@ -649,26 +649,27 @@ the authenticated page after a conflict and retry only if the newer state is
 the one you intended to replace. Invalid and interrupted uploads do not replace
 the previous valid generation. There is no arbitrary XML editor in the web UI.
 
-## Save Manager says Celeste must restart
+## Save Manager soft reload fails
 
 **Symptom**
 
-After replacing, deleting, or resetting a file, the TV no longer offers a way
-back into gameplay.
+After replacing, deleting, or resetting a file, Confirm shows **Reload Failed**
+instead of returning to the main menu.
 
 **Cause**
 
-This is a safety boundary. The running game still holds its old Settings and
-SaveData in memory; resuming could autosave that stale state over the import.
+The new generation is safely stored, but one of the generation/hash,
+materialisation, Settings/Input, main-menu, runtime-identity, or completion
+checks failed. Resuming could autosave stale state over the import, so the guard
+correctly remains active.
 
 **Fix**
 
 Fully close Celeste from the Apple TV app switcher, then launch it again. Merely
-returning to the Home Screen is not enough: tvOS normally suspends and later
-resumes the same process, whose in-memory Settings/SaveData are intentionally
-blocked after a mutation. The newly verified durable generation is materialized
-only during a clean process launch. Additional Save Manager operations may be
-completed before closing the app.
+returning to the Home Screen is not enough for this failure fallback: tvOS may
+resume the same blocked process. A cold launch restores the already verified
+durable generation. In normal operation, return to the TV and press Confirm;
+the high-level soft reload completes without app-switcher interaction.
 
 ## Main-menu Quit used to leave a blank or frosted screen
 

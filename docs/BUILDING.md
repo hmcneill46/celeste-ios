@@ -355,7 +355,7 @@ An optional built app can be checked with `--app ... --platform device
 --signed`; an unsigned package can be passed with `--ipa`. The verifier runs
 the deterministic HTTP/authentication/mutation suite, Stage 9B checks,
 Info.plist and entitlement isolation, the exact four-name persistence boundary,
-restart-required safety, and built-product checks. The interactive read/browser
+stale-write safety, and built-product checks. The interactive read/browser
 physical runner remains:
 
 ```bash
@@ -368,13 +368,12 @@ The accepted web page offers a deterministic all-files ZIP, four fixed download
 routes, fixed replace/delete actions, and Settings reset. Uploads use a bounded
 `application/octet-stream` body; they never expose or construct the compressed
 UserDefaults envelope. Successful mutations pass through the Stage 9B A/B
-authority and force an app restart before gameplay can continue.
-
-On Apple TV, returning to the Home Screen normally backgrounds the current
-process; it does not satisfy that restart requirement. After a successful
-replace, delete, or Settings reset, fully close Celeste from the Apple TV app
-switcher and launch it again. The restart-required screen remains in force if
-the same resident process is merely foregrounded.
+authority and enter a blocked reload-ready state before gameplay can continue.
+Return to the Apple TV and press Confirm. The Stage 13B high-level soft reload
+keeps the original FNA/FMOD runtime, verifies a generation/hash ticket before
+and after re-materialisation, rebuilds Settings/Input and normal main-menu state,
+then clears the stale-write guard. The Apple TV app switcher is only the fallback
+if reload verification fails.
 
 Verify the Stage 11 prompt inventory, artwork-only policy, generated Settings
 schema isolation, prior persistence/Save Manager gates, and optional product:
@@ -403,6 +402,20 @@ screen before `Engine.Exit`; Pause-menu Save and Quit remains unchanged. Home
 backgrounds the retained runtime, and a resident-process foreground return is
 reset to the main menu. Neither `LSSupportsGameMode` nor the deprecated
 `GCSupportsGameMode` is declared for tvOS.
+
+Verify the Stage 13B production soft reload, all prior gates, generated hook,
+and optional package:
+
+```bash
+scripts/verify-celeste-tvos-stage13b.sh \
+  --generated-root .build/celeste-runtime/stage6-current/audio/managed
+```
+
+Pass `--app ... --platform device --signed` or `--ipa ...` for product checks.
+The verifier requires one FNA game/runtime, one generated main-thread update
+hook, ticketed persistence preparation/completion, blocked failure fallback,
+and the 20 deterministic reload-state tests. If the soft reload fails on a
+device, fully close Celeste from the Apple TV app switcher and reopen it.
 
 For isolated automation, build only an explicitly local acceptance app with
 `Stage10AAutomation=true` and `Stage6StorageNamespace=acceptance`, then use:

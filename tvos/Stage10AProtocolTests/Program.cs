@@ -314,7 +314,7 @@ Test("zip-download-reflects-replacement", () =>
     using MemoryStream extracted = new(); stream.CopyTo(extracted);
     return extracted.ToArray().SequenceEqual(exact);
 });
-Test("restart-required-only-after-success", () =>
+Test("reload-required-only-after-success", () =>
 {
     Stage10AHttpProtocol writable = NewWritableProtocol(out _);
     AuthInfo auth = AuthenticateWithTokens(writable);
@@ -323,7 +323,7 @@ Test("restart-required-only-after-success", () =>
     Stage10AHttpResponse changed = writable.Handle(MutationRequest("/replace/0", auth.Session, auth.Csrf, auth.Revision, "save-valid"u8.ToArray()));
     string html = Encoding.UTF8.GetString(changed.Body);
     return writable.RestartRequired &&
-        html.Contains("Returning to the Apple TV Home Screen is not enough", StringComparison.Ordinal) &&
+        html.Contains("press Confirm to reload Celeste", StringComparison.Ordinal) &&
         html.Contains("app switcher", StringComparison.Ordinal);
 });
 Test("premature-body-eof-rejected", () =>

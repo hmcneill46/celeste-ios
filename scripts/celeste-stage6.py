@@ -49,10 +49,10 @@ def transform(root: pathlib.Path, templates: pathlib.Path, policy: dict[str, Any
     project = root / "Celeste.Modern.csproj"
     if mode == "realAudio":
         old_constants = "<DefineConstants>$(DefineConstants);TVOS;TVOS_STAGE3B;TVOS_STAGE3C;TVOS_STAGE5B;TVOS_REAL_AUDIO</DefineConstants>"
-        new_constants = "<DefineConstants>$(DefineConstants);TVOS;TVOS_STAGE3B;TVOS_STAGE3C;TVOS_STAGE5B;TVOS_STAGE6;TVOS_STAGE10A;TVOS_STAGE11;TVOS_STAGE12B;TVOS_REAL_AUDIO</DefineConstants>"
+        new_constants = "<DefineConstants>$(DefineConstants);TVOS;TVOS_STAGE3B;TVOS_STAGE3C;TVOS_STAGE5B;TVOS_STAGE6;TVOS_STAGE10A;TVOS_STAGE11;TVOS_STAGE12B;TVOS_STAGE13B;TVOS_REAL_AUDIO</DefineConstants>"
     else:
         old_constants = "<DefineConstants>$(DefineConstants);TVOS;TVOS_AUDIO_DISABLED;TVOS_STAGE3B;TVOS_STAGE3C</DefineConstants>"
-        new_constants = "<DefineConstants>$(DefineConstants);TVOS;TVOS_AUDIO_DISABLED;TVOS_STAGE3B;TVOS_STAGE3C;TVOS_STAGE6;TVOS_STAGE10A;TVOS_STAGE11;TVOS_STAGE12B</DefineConstants>"
+        new_constants = "<DefineConstants>$(DefineConstants);TVOS;TVOS_AUDIO_DISABLED;TVOS_STAGE3B;TVOS_STAGE3C;TVOS_STAGE6;TVOS_STAGE10A;TVOS_STAGE11;TVOS_STAGE12B;TVOS_STAGE13B</DefineConstants>"
     replace_once(project, old_constants, new_constants, "exclusive Stage 6/10A/11/12B compile symbols")
 
     hook = templates / "TvOSStage6PersistenceHooks.cs"
@@ -74,6 +74,23 @@ def transform(root: pathlib.Path, templates: pathlib.Path, policy: dict[str, Any
     if not quit_bridge.is_file():
         raise SystemExit("error: Stage 12B graceful Quit bridge template is missing")
     shutil.copyfile(quit_bridge, root / "Celeste" / quit_bridge.name)
+
+    soft_reload = templates / "TvOSSoftReloadBridge.cs"
+    if not soft_reload.is_file():
+        raise SystemExit("error: Stage 13B soft-reload bridge template is missing")
+    shutil.copyfile(soft_reload, root / "Celeste" / soft_reload.name)
+
+    celeste_game = root / "Celeste" / "Celeste.cs"
+    replace_once(
+        celeste_game,
+        "\t\tInput.UpdateGrab();\n\t}",
+        "\t\tInput.UpdateGrab();\n"
+        "\t\t#if TVOS_STAGE13B\n"
+        "\t\tTvOSSoftReloadHooks.Update();\n"
+        "\t\t#endif\n"
+        "\t}",
+        "Stage 13B main-thread soft-reload update hook",
+    )
 
     main_menu = root / "Celeste" / "OuiMainMenu.cs"
     replace_once(
@@ -379,6 +396,7 @@ def transform(root: pathlib.Path, templates: pathlib.Path, policy: dict[str, Any
         "saveManagerBridge": "Celeste/TvOSSaveManagerBridge.cs",
         "controllerPromptBridge": "Celeste/TvOSControllerPromptBridge.cs",
         "quitBridge": "Celeste/TvOSQuitBridge.cs",
+        "softReloadBridge": "Celeste/TvOSSoftReloadBridge.cs",
         "allowListedLogicalNames": [item["logicalName"] for item in policy["writableFiles"]],
         "generatedSourceTracked": False,
     }
