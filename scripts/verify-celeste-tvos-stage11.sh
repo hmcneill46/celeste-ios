@@ -54,7 +54,11 @@ stage10_args=()
 [[ -z "$APP" ]] || stage10_args+=(--app "$APP" --platform "$PLATFORM")
 [[ "$SIGNED" -eq 0 ]] || stage10_args+=(--signed)
 [[ -z "$IPA" ]] || stage10_args+=(--ipa "$IPA")
-"$REPO_ROOT/scripts/verify-celeste-tvos-stage10b.sh" "${stage10_args[@]}"
+if ((${#stage10_args[@]})); then
+  "$REPO_ROOT/scripts/verify-celeste-tvos-stage10b.sh" "${stage10_args[@]}"
+else
+  "$REPO_ROOT/scripts/verify-celeste-tvos-stage10b.sh"
+fi
 
 python_args=(--repo-root "$REPO_ROOT")
 [[ -z "$GENERATED_ROOT" ]] || python_args+=(--generated-root "$GENERATED_ROOT")

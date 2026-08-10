@@ -53,8 +53,11 @@ internal sealed class Stage10ASaveManager : IDisposable
     }
 
     internal bool IsListening { get { lock (gate) return listener != null && status.Phase == "ready"; } }
+    internal bool RestartRequired { get { lock (gate) return restartRequired; } }
     internal int BonjourAddCount { get { lock (gate) return bonjourAdds; } }
     internal int BonjourRemoveCount { get { lock (gate) return bonjourRemoves; } }
+
+    internal void StopForLeave() => Stop("stage12b-user-leave");
 
     private TvOSSaveManagerDisplayState Start()
     {

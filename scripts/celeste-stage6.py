@@ -49,11 +49,11 @@ def transform(root: pathlib.Path, templates: pathlib.Path, policy: dict[str, Any
     project = root / "Celeste.Modern.csproj"
     if mode == "realAudio":
         old_constants = "<DefineConstants>$(DefineConstants);TVOS;TVOS_STAGE3B;TVOS_STAGE3C;TVOS_STAGE5B;TVOS_REAL_AUDIO</DefineConstants>"
-        new_constants = "<DefineConstants>$(DefineConstants);TVOS;TVOS_STAGE3B;TVOS_STAGE3C;TVOS_STAGE5B;TVOS_STAGE6;TVOS_STAGE10A;TVOS_STAGE11;TVOS_REAL_AUDIO</DefineConstants>"
+        new_constants = "<DefineConstants>$(DefineConstants);TVOS;TVOS_STAGE3B;TVOS_STAGE3C;TVOS_STAGE5B;TVOS_STAGE6;TVOS_STAGE10A;TVOS_STAGE11;TVOS_STAGE12B;TVOS_REAL_AUDIO</DefineConstants>"
     else:
         old_constants = "<DefineConstants>$(DefineConstants);TVOS;TVOS_AUDIO_DISABLED;TVOS_STAGE3B;TVOS_STAGE3C</DefineConstants>"
-        new_constants = "<DefineConstants>$(DefineConstants);TVOS;TVOS_AUDIO_DISABLED;TVOS_STAGE3B;TVOS_STAGE3C;TVOS_STAGE6;TVOS_STAGE10A;TVOS_STAGE11</DefineConstants>"
-    replace_once(project, old_constants, new_constants, "exclusive Stage 6/10A/11 compile symbols")
+        new_constants = "<DefineConstants>$(DefineConstants);TVOS;TVOS_AUDIO_DISABLED;TVOS_STAGE3B;TVOS_STAGE3C;TVOS_STAGE6;TVOS_STAGE10A;TVOS_STAGE11;TVOS_STAGE12B</DefineConstants>"
+    replace_once(project, old_constants, new_constants, "exclusive Stage 6/10A/11/12B compile symbols")
 
     hook = templates / "TvOSStage6PersistenceHooks.cs"
     if not hook.is_file():
@@ -69,6 +69,42 @@ def transform(root: pathlib.Path, templates: pathlib.Path, policy: dict[str, Any
     if not controller_prompts.is_file():
         raise SystemExit("error: Stage 11 controller-prompt bridge template is missing")
     shutil.copyfile(controller_prompts, root / "Celeste" / controller_prompts.name)
+
+    quit_bridge = templates / "TvOSQuitBridge.cs"
+    if not quit_bridge.is_file():
+        raise SystemExit("error: Stage 12B graceful Quit bridge template is missing")
+    shutil.copyfile(quit_bridge, root / "Celeste" / quit_bridge.name)
+
+    main_menu = root / "Celeste" / "OuiMainMenu.cs"
+    replace_once(
+        main_menu,
+        "\tprivate void OnExit()\n"
+        "\t{\n"
+        "\t\tAudio.Play(\"event:/ui/main/button_select\");\n"
+        "\t\tFocused = false;\n"
+        "\t\tnew FadeWipe(base.Scene, wipeIn: false, delegate\n"
+        "\t\t{\n"
+        "\t\t\tEngine.Scene = new Scene();\n"
+        "\t\t\tEngine.Instance.Exit();\n"
+        "\t\t});\n"
+        "\t}\n",
+        "\tprivate void OnExit()\n"
+        "\t{\n"
+        "\t\tAudio.Play(\"event:/ui/main/button_select\");\n"
+        "\t\t#if TVOS_STAGE12B\n"
+        "\t\tFocused = false;\n"
+        "\t\tif (!TvOSQuitHooks.Show(delegate { Focused = true; })) Focused = true;\n"
+        "\t\t#else\n"
+        "\t\tFocused = false;\n"
+        "\t\tnew FadeWipe(base.Scene, wipeIn: false, delegate\n"
+        "\t\t{\n"
+        "\t\t\tEngine.Scene = new Scene();\n"
+        "\t\t\tEngine.Instance.Exit();\n"
+        "\t\t});\n"
+        "\t\t#endif\n"
+        "\t}\n",
+        "tvOS-only main-menu application Quit interception",
+    )
 
     menu_options = root / "Celeste" / "MenuOptions.cs"
     replace_once(
@@ -342,6 +378,7 @@ def transform(root: pathlib.Path, templates: pathlib.Path, policy: dict[str, Any
         "hook": "Celeste/TvOSStage6PersistenceHooks.cs",
         "saveManagerBridge": "Celeste/TvOSSaveManagerBridge.cs",
         "controllerPromptBridge": "Celeste/TvOSControllerPromptBridge.cs",
+        "quitBridge": "Celeste/TvOSQuitBridge.cs",
         "allowListedLogicalNames": [item["logicalName"] for item in policy["writableFiles"]],
         "generatedSourceTracked": False,
     }

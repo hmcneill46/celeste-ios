@@ -266,8 +266,10 @@ To back up or restore the ordinary Celeste Settings and save slots:
 6. A save slot can be deliberately deleted; **Reset Settings** makes Celeste
    recreate safe defaults on its next launch. Invalid, oversized, stale, or
    interrupted requests keep the previous durable generation.
-7. After any successful change, return to the Apple TV Home Screen and reopen
-   Celeste. The TV intentionally blocks the stale running game from resuming.
+7. After any successful change, fully close Celeste from the Apple TV app
+   switcher, then open it again. Returning to the Home Screen alone is not a
+   restart: tvOS normally suspends the same process, whose in-memory game state
+   is intentionally blocked after an import.
 
 Exported and imported files are normal uncompressed Celeste `.celeste` files;
 the internal compressed A/B format is never exposed. Editing remains an offline
@@ -305,6 +307,23 @@ This is a small host preference stored separately from `settings.celeste`.
 Importing or resetting Settings through Save Manager therefore does not change
 the selected prompt family.
 
+## Leaving Celeste
+
+Choosing **Quit** from Celeste's main menu safely verifies durable progress and
+opens a **Leave Celeste** screen. Use the Apple TV TV/Home control to return to
+the Home Screen. tvOS normally backgrounds rather than terminates applications,
+so reopening Celeste may resume the same process; the port removes the guidance
+screen and returns that still-valid runtime to the main menu instead of leaving
+the old blank/frosted surface.
+
+While the guidance is still in the foreground, **Back** returns directly to the
+main menu. Pause-menu **Save and Quit** remains the separate Celeste command
+that saves and returns to the main menu.
+
+This normal Quit flow is not a substitute for the full process restart required
+after a successful Save Manager replace, delete, or Settings reset. In that
+case, close Celeste from the Apple TV app switcher before launching it again.
+
 ## Tested hardware and software
 
 | Item | Proven configuration |
@@ -328,6 +347,8 @@ have not been physically tested here.
 - Saves are shared between Apple TV users and do not sync to the cloud.
 - Save Manager supports fixed validated replace/reset/delete operations, but no
   unattended sync, cloud service, or in-browser XML editor.
+- A successful Save Manager mutation requires closing Celeste from the Apple TV
+  app switcher; returning Home alone only backgrounds the stale process.
 - Steam and non-itch.io-Linux game inputs are untested.
 - DualSense is the only physically accepted controller; the Siri Remote is not
   a gameplay controller.

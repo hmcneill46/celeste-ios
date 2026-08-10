@@ -559,7 +559,7 @@ internal sealed class Stage10AHttpProtocol
         StringBuilder body = new("<p>Connected to your Apple TV.</p>");
         if (!string.IsNullOrEmpty(notice)) body.Append("<p class=success>").Append(notice).Append("</p>");
         if (restartRequired)
-            body.Append("<p class=warning><strong>Restart Celeste before continuing.</strong><br>Changes are safely stored, but the running game still has its old state.</p>");
+            body.Append("<p class=warning><strong>Fully close and restart Celeste before continuing.</strong><br>Changes are safely stored, but the running game still has its old state. Returning to the Apple TV Home Screen is not enough. Close Celeste from the Apple TV app switcher, then open it again.</p>");
         body.Append("<p><a href=/download/all download=Celeste-saves.zip>Download backup (.zip)</a></p><ul>");
         foreach (string logicalName in LogicalNames)
         {

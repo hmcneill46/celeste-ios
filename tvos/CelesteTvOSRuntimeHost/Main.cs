@@ -75,6 +75,7 @@ internal static class Program
             using Stage6PersistenceStore? persistence = PrepareCelesteRuntimeContext(enablePersistence: true);
             using Stage6PersistenceLifecycle? persistenceLifecycle = persistence == null ? null : new Stage6PersistenceLifecycle(persistence);
             using Stage10ASaveManager? saveManager = persistence == null ? null : new Stage10ASaveManager(persistence);
+            using Stage12BQuitCoordinator? quitCoordinator = saveManager == null ? null : new Stage12BQuitCoordinator(saveManager);
             using Stage11ControllerPromptPreferences? controllerPrompts = persistence == null ? null : new Stage11ControllerPromptPreferences();
 #else
             PrepareCelesteRuntimeContext(enablePersistence: false);
@@ -228,7 +229,7 @@ internal static class Program
             ?? "unknown";
         bool simulator = !string.IsNullOrEmpty(Environment.GetEnvironmentVariable("SIMULATOR_DEVICE_NAME"));
         Stage3BLog.Info(
-            $"host version={version}; repository baseline=6c44d6e7017d2c5551d6ca9121110edf47757eb6; mode={LaunchMode}"
+            $"host version={version}; repository baseline=6118e5e2f6fd13657e55ebeeab52dee313d5306d; mode={LaunchMode}"
         );
         Stage3BLog.Info($"runtime={RuntimeInformation.FrameworkDescription}; architecture={RuntimeInformation.ProcessArchitecture}");
         Stage3BLog.Info(

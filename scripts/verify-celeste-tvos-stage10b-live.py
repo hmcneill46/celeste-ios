@@ -103,7 +103,7 @@ def main() -> int:
     if status != 422:
         fail("SaveData payload was accepted by the Settings route")
     status, _, root_before = request(args.url, cookie_header)
-    if status != 200 or b"Restart Celeste before continuing" in root_before:
+    if status != 200 or b"Fully close and restart Celeste before continuing" in root_before:
         fail("failed mutations incorrectly forced restart-required")
 
     connection = http.client.HTTPConnection(parsed.hostname, parsed.port, timeout=10)
@@ -216,7 +216,7 @@ def main() -> int:
             fail("post-mutation ZIP payload differs from accepted bytes")
 
     status, _, final_page = request(args.url, cookie_header)
-    if status != 200 or b"Restart Celeste before continuing" not in final_page:
+    if status != 200 or b"Fully close and restart Celeste before continuing" not in final_page:
         fail("successful mutation did not leave the browser in restart-required state")
 
     args.output.parent.mkdir(parents=True, exist_ok=True)

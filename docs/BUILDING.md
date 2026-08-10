@@ -370,6 +370,12 @@ routes, fixed replace/delete actions, and Settings reset. Uploads use a bounded
 UserDefaults envelope. Successful mutations pass through the Stage 9B A/B
 authority and force an app restart before gameplay can continue.
 
+On Apple TV, returning to the Home Screen normally backgrounds the current
+process; it does not satisfy that restart requirement. After a successful
+replace, delete, or Settings reset, fully close Celeste from the Apple TV app
+switcher and launch it again. The restart-required screen remains in force if
+the same resident process is merely foregrounded.
+
 Verify the Stage 11 prompt inventory, artwork-only policy, generated Settings
 schema isolation, prior persistence/Save Manager gates, and optional product:
 
@@ -382,6 +388,21 @@ scripts/verify-celeste-tvos-stage11.sh \
 Pass `--app ... --platform device --signed` or `--ipa ...` to inspect a built
 product. The public builder runs the focused inventory/source checks before
 publish and checks Stage 11 product tokens in both signed and unsigned modes.
+
+Verify the Stage 12B main-menu Quit interception, host state machine, preserved
+Stage 9B/10B/11 foundations, and optional product:
+
+```bash
+scripts/verify-celeste-tvos-stage12b.sh \
+  --generated-root .build/celeste-runtime/stage6-current/audio/managed
+```
+
+Pass `--app ... --platform device --signed` or `--ipa ...` for product checks.
+The generated tvOS main-menu Quit call site opens the Celeste-rendered Leave
+screen before `Engine.Exit`; Pause-menu Save and Quit remains unchanged. Home
+backgrounds the retained runtime, and a resident-process foreground return is
+reset to the main menu. Neither `LSSupportsGameMode` nor the deprecated
+`GCSupportsGameMode` is declared for tvOS.
 
 For isolated automation, build only an explicitly local acceptance app with
 `Stage10AAutomation=true` and `Stage6StorageNamespace=acceptance`, then use:

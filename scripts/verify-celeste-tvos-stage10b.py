@@ -50,7 +50,7 @@ def main() -> int:
         "CsrfHeaderName", "RevisionHeaderName", "HMACSHA256.HashData",
         "CryptographicOperations.FixedTimeEquals", "application/octet-stream",
         "Content-Length", "transfer-encoding", "connect-src 'self'", "location.replace('/')",
-        "Restart Celeste before continuing", "mutator(new Stage10BMutationCommand",
+        "Fully close and restart Celeste before continuing", "mutator(new Stage10BMutationCommand",
         "The save changed since this page was opened", "The durable write could not be verified",
     ), "writable HTTP protocol")
     require(store, (
@@ -65,7 +65,8 @@ def main() -> int:
         "NextReceiveMaximum", "InspectRequestProgress", "restart-required",
     ), "listener mutation integration")
     require(bridge, (
-        "RestartRequired", "ui-restart-required", "This screen intentionally blocks the stale running game",
+        "RestartRequired", "ui-restart-required", "Returning to the Home Screen is not enough.",
+        "Apple TV app switcher",
     ), "restart-required TV UI")
     if ": Oui" in bridge or "class TvOSSaveManagerUI : Oui" in bridge:
         fail("Stage 10B unexpectedly added a new Oui subtype")
@@ -132,7 +133,7 @@ def main() -> int:
         built_info = plistlib.loads(built_info_path.read_bytes())
         executable = app / str(built_info.get("CFBundleExecutable", ""))
         candidates = [path for path in (executable, app / "CelesteTvOSRuntimeHost.dll") if path.is_file()]
-        for token in ("STAGE10B_MUTATION", "/replace/settings", "Restart Celeste before continuing"):
+        for token in ("STAGE10B_MUTATION", "/replace/settings", "Fully close and restart Celeste before continuing"):
             encoded = (token.encode("ascii"), token.encode("utf-16le"))
             if not any(any(item in candidate.read_bytes() for item in encoded) for candidate in candidates):
                 fail(f"built app lacks Stage 10B token: {token}")

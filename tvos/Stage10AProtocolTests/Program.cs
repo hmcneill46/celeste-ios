@@ -320,8 +320,11 @@ Test("restart-required-only-after-success", () =>
     AuthInfo auth = AuthenticateWithTokens(writable);
     _ = writable.Handle(MutationRequest("/replace/0", auth.Session, auth.Csrf, auth.Revision, "invalid"u8.ToArray()));
     if (writable.RestartRequired) return false;
-    _ = writable.Handle(MutationRequest("/replace/0", auth.Session, auth.Csrf, auth.Revision, "save-valid"u8.ToArray()));
-    return writable.RestartRequired;
+    Stage10AHttpResponse changed = writable.Handle(MutationRequest("/replace/0", auth.Session, auth.Csrf, auth.Revision, "save-valid"u8.ToArray()));
+    string html = Encoding.UTF8.GetString(changed.Body);
+    return writable.RestartRequired &&
+        html.Contains("Returning to the Apple TV Home Screen is not enough", StringComparison.Ordinal) &&
+        html.Contains("app switcher", StringComparison.Ordinal);
 });
 Test("premature-body-eof-rejected", () =>
 {

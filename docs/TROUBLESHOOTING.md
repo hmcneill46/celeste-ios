@@ -663,9 +663,33 @@ SaveData in memory; resuming could autosave that stale state over the import.
 
 **Fix**
 
-Return to the Apple TV Home Screen and reopen Celeste. The newly verified durable
-generation is materialized during the clean launch. Additional Save Manager
-operations may be completed before restarting.
+Fully close Celeste from the Apple TV app switcher, then launch it again. Merely
+returning to the Home Screen is not enough: tvOS normally suspends and later
+resumes the same process, whose in-memory Settings/SaveData are intentionally
+blocked after a mutation. The newly verified durable generation is materialized
+only during a clean process launch. Additional Save Manager operations may be
+completed before closing the app.
+
+## Main-menu Quit used to leave a blank or frosted screen
+
+**Symptom**
+
+An older build ran Celeste's desktop Quit path, disposed the FNA game, and left
+the tvOS application process showing an empty/frosted surface.
+
+**Cause**
+
+tvOS has no supported public API for an application to send itself Home, and
+pressing Home normally backgrounds rather than terminates an app. The old game
+runtime returned while its SDL/UIKit host remained alive.
+
+**Fix**
+
+Use a current build. Main-menu **Quit** now verifies durable state and displays
+**Leave Celeste** without destroying the runtime. Press TV/Home to leave; when
+the same process is reopened, Celeste returns to its main menu. Back dismisses
+the guidance while it remains foregrounded. Pause-menu **Save and Quit** still
+means save and return to the main menu.
 
 ## Unsigned IPA will not install directly
 

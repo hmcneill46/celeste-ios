@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "gameVersion": "1.4.0.0",
+  "userFacingApplicationExitRoutes": [
+    {
+      "source": "Celeste/OuiMainMenu.cs",
+      "method": "OnExit",
+      "originalTerminalCall": "Engine.Instance.Exit()",
+      "tvOSTerminalCall": "TvOSQuitHooks.Show",
+      "intercepted": true
+    }
+  ],
+  "nonApplicationExitRoutes": [
+    {
+      "source": "Celeste/LevelExit.cs",
+      "role": "Pause Save and Quit",
+      "result": "OverworldLoader",
+      "intercepted": false
+    }
+  ],
+  "preservedEngineExitRoutes": [
+    "Celeste/RunThread.cs",
+    "Celeste/TvOSStage3CBridge.cs",
+    "Monocle/Engine.cs"
+  ],
+  "preparationOrder": [
+    "wait-userio",
+    "verify-stage9b-flush",
+    "stop-save-manager",
+    "stop-haptics",
+    "show-leave-ready"
+  ],
+  "gameModeKeysForbidden": [
+    "LSSupportsGameMode",
+    "GCSupportsGameMode"
+  ]
+}

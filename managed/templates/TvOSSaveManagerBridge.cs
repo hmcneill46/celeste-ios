@@ -104,12 +104,13 @@ public sealed class TvOSSaveManagerUI : Entity
 
         if (state.RestartRequired || state.Phase == "restart-required")
         {
-            DrawLine("Changes saved successfully.", 500f, 0.9f, Color.White);
-            DrawLine("Restart Celeste before continuing so the new save data can be loaded.", 585f, 0.6f, Color.LightGray);
-            DrawLine("Return to the Apple TV Home Screen, then reopen Celeste.", 655f, 0.58f, Color.LightGray);
-            DrawLine("This screen intentionally blocks the stale running game.", 745f, 0.5f, Color.Gray);
+            DrawLine("RESTART CELESTE", 450f, 1.05f, Color.White);
+            DrawLine("Your changes were saved successfully.", 535f, 0.68f, Color.White);
+            DrawLine("Celeste must be fully closed before the new save data can be loaded.", 620f, 0.55f, Color.LightGray);
+            DrawLine("Returning to the Home Screen is not enough.", 685f, 0.6f, Color.LightGray);
+            DrawLine("Close Celeste from the Apple TV app switcher, then open it again.", 750f, 0.53f, Color.LightGray);
             if (state.Phase == "ready")
-                DrawLine("Press Confirm or Back to stop Save Manager networking.", 850f, 0.5f, Color.Gray);
+                DrawLine("Press Confirm or Back to stop Save Manager networking.", 860f, 0.5f, Color.Gray);
         }
         else if (state.Phase == "starting")
         {

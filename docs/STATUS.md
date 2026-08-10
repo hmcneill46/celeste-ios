@@ -43,6 +43,7 @@ flowchart LR
     P --> S["Dual-generation standard UserDefaults storage"]
     S --> W["Explicit authenticated LAN Save Manager"]
     H --> B["Host-only controller prompt preference"]
+    H --> Q["Foreground/background-aware Leave Celeste flow"]
 ```
 
 ### Modern sibling host
@@ -140,6 +141,26 @@ retain Celeste's existing fallback. Nintendo/Stadia automatic selection is not
 claimed beyond Celeste's locked known identifiers; their manual modes remain
 fully available.
 
+### Graceful main-menu Quit
+
+The tvOS generated main-menu Quit route is intercepted at its single locked
+user-facing call site before `Engine.Exit`. The host waits for an active
+`UserIO` save, read-back verifies the Stage 9B durable state, stops any Save
+Manager listener, and clears haptics before showing a Celeste-rendered **Leave
+Celeste** screen. It deliberately keeps the valid FNA/Celeste runtime alive.
+
+Back dismisses the screen to the existing main menu. If the app genuinely
+enters the background, the in-memory Leave state records completion; on a
+same-process foreground return the screen is removed and the main menu regains
+focus. Merely resigning active is not treated as Home/background completion.
+This replaces the former desktop exit path that disposed FNA while leaving an
+empty UIKit/SDL application surface.
+
+Save Manager mutations remain a separate safety state. Because the current
+runtime holds stale Settings/SaveData after an import, Home alone does not
+restart it; the user must fully close Celeste from the Apple TV app switcher.
+That restart-required state always takes precedence over normal Leave recovery.
+
 ### Branding and packaging
 
 `build-tvos.sh` generates a black-backed layered strawberry icon from
@@ -165,6 +186,8 @@ or an unsigned conventional tvOS IPA containing `Payload/Celeste.app`.
 - Free Personal Team signed installation and verified unsigned IPA structure
 - Explicit Save Manager with temporary same-LAN authentication, ordinary-file
   backup, exact validated replacement, slot deletion, and Settings reset
+- Main-menu Quit verifies durable state and provides a safe Home/background
+  flow without destroying the FNA runtime or leaving a blank surface
 
 ## Known limitations
 
@@ -181,8 +204,11 @@ or an unsigned conventional tvOS IPA containing `Payload/Celeste.app`.
 - Actual atvloadly physical installation has not been project-tested; only the
   conventional unsigned IPA structure is statically verified.
 - Save Manager operations are deliberate and local only; there is no unattended
-  sync, cloud service, or in-browser XML editor. Celeste must be restarted after
-  a successful mutation.
+  sync, cloud service, or in-browser XML editor. After a successful mutation,
+  Celeste must be fully closed from the app switcher and relaunched; Home alone
+  normally suspends the stale process.
+- Apple Game Mode is not declared: the current public Apple keys do not document
+  tvOS availability, and this project makes no Apple TV Game Mode claim.
 - No App Store, distribution-profile, paid entitlement, or universal hardware
   claim is made.
 
@@ -208,6 +234,7 @@ need them for normal builds.
 - [Read-only local-network Save Manager](../TVOS_READONLY_SAVE_MANAGER_STAGE10A_REPORT.md)
 - [Writable local-network Save Manager](../TVOS_WRITABLE_SAVE_MANAGER_STAGE10B_REPORT.md)
 - [Controller prompt selector](../TVOS_CONTROLLER_PROMPTS_STAGE11_REPORT.md)
+- [Graceful main-menu Quit](../TVOS_GRACEFUL_QUIT_STAGE12B_REPORT.md)
 
 ## Isolation and licensing
 
