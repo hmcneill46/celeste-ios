@@ -150,7 +150,6 @@ fi
 "$REPO_ROOT/scripts/verify-tvos-host.sh" >/dev/null
 git -C "$REPO_ROOT" diff --quiet "$BASELINE_COMMIT" -- \
   build.sh celestemeow fnalibs-ios-builder-celeste FNA \
-  TVOS_PORT_PLAN.md TVOS_NATIVE_BUILD_REPORT.md TVOS_HOST_STAGE2_REPORT.md \
   native scripts/fetch-tvos-deps.sh scripts/build-tvos-native.sh \
   scripts/verify-tvos-native.sh scripts/verify-tvos-artifacts.py \
   scripts/prepare-tvos-host-native.sh scripts/verify-tvos-host.sh \
@@ -168,7 +167,6 @@ output = subprocess.check_output([
     "scripts/validate-celeste-input.sh", "scripts/prepare-celeste-managed.sh",
     "scripts/build-celeste-managed.sh", "scripts/verify-celeste-managed.sh",
     "scripts/celeste-managed.py", "tvos/CelesteManagedAotClosure",
-    "TVOS_CELESTE_MANAGED_STAGE3A_REPORT.md",
 ], text=True)
 for relative in output.splitlines():
     path = root / relative

@@ -1,4 +1,10 @@
-# Celeste tvOS Port Audit and Implementation Plan
+# Original Celeste tvOS Port Audit and Implementation Plan
+
+> **Historical document:** this was the initial feasibility audit and plan.
+> Its “not yet demonstrated” status and proposed stage boundaries describe the
+> repository at the audit date, not the current port. See the root
+> [`README.md`](../../README.md) and current [`STATUS.md`](../STATUS.md) for the
+> implemented and physically accepted result.
 
 Audit date: 2026-08-01 (Europe/London)
 Repository: `RoootTheFox/celeste-ios`

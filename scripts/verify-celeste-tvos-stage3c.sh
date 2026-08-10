@@ -137,8 +137,6 @@ fi
 
 git -C "$REPO_ROOT" diff --quiet "$BASELINE_COMMIT" -- \
   build.sh celestemeow fnalibs-ios-builder-celeste FNA native \
-  TVOS_PORT_PLAN.md TVOS_NATIVE_BUILD_REPORT.md TVOS_HOST_STAGE2_REPORT.md \
-  TVOS_CELESTE_MANAGED_STAGE3A_REPORT.md TVOS_CELESTE_RUNTIME_STAGE3B_REPORT.md \
   global.json managed/celeste-analysis-policy.json managed/celeste-compatibility-ledger.json \
   managed/celeste-generation.lock.json managed/celeste-stage3b-policy.json managed/patches \
   scripts/fetch-tvos-deps.sh scripts/build-tvos-native.sh scripts/verify-tvos-native.sh \

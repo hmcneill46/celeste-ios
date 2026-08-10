@@ -5,6 +5,11 @@ your own game files. Gameplay, extended-controller input, FMOD audio, durable
 saves, a layered home-screen icon, and Top Shelf artwork are working on the
 tested hardware.
 
+The original repository is an iOS/FNA port. The `tvos-port` branch preserves
+that legacy lane while adding the modern .NET tvOS host, reproducible
+self-builder, Apple TV lifecycle support, and the accepted tvOS features
+described below.
+
 This repository contains no Celeste game content and no proprietary FMOD SDK
 material. You must own Celeste and obtain FMOD from FMOD's official website.
 The recommended entry point is [`./build-tvos.sh`](build-tvos.sh), and a free
@@ -264,8 +269,8 @@ To back up or restore the ordinary Celeste Settings and save slots:
    file, and confirm **Replace**. Settings and SaveData are validated by the
    same exact AOT-safe serializers used by the game before anything is stored.
 6. A save slot can be deliberately deleted; **Reset Settings** makes Celeste
-   recreate safe defaults during the following reload. Invalid, oversized, stale, or
-   interrupted requests keep the previous durable generation.
+   recreate safe defaults during the following reload. Invalid, oversized,
+   stale, or interrupted requests keep the previous durable generation.
 7. After a successful change, return to the Apple TV and press **Confirm**.
    Celeste performs a verified high-level soft reload and returns to its main
    menu with the new save/settings state.
@@ -377,9 +382,10 @@ certificates, account details, Team IDs, or device IDs in an issue.
 
 [`docs/BUILDING.md`](docs/BUILDING.md) documents noninteractive builder flags,
 ignored outputs, and internal verification. [`docs/STATUS.md`](docs/STATUS.md)
-summarizes the architecture and links the historical audit reports. The
-original legacy Xamarin.iOS project remains in the repository but is not the
-recommended tvOS workflow.
+summarizes the architecture. The [documentation index](docs/README.md) links
+current guides and the preserved [engineering history](docs/history/README.md).
+The original legacy Xamarin.iOS project remains in the repository but is not
+the recommended tvOS workflow.
 
 ## Credits
 

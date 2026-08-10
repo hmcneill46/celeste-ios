@@ -203,10 +203,10 @@ git -C "$REPO_ROOT" diff --quiet "$BASELINE_COMMIT" -- \
   exit 1
 }
 git -C "$REPO_ROOT" diff --quiet "$BASELINE_COMMIT" -- \
-  TVOS_PORT_PLAN.md TVOS_NATIVE_BUILD_REPORT.md native \
+  native \
   scripts/fetch-tvos-deps.sh scripts/build-tvos-native.sh \
   scripts/verify-tvos-native.sh scripts/verify-tvos-artifacts.py || {
-  echo "error: Stage 1 lock, patches, report, or pipeline changed" >&2
+  echo "error: Stage 1 lock, patches, or pipeline changed" >&2
   exit 1
 }
 echo "PASS: existing iOS lane and Stage 1 remain byte-for-byte isolated"
@@ -215,7 +215,7 @@ python3 - "$REPO_ROOT" <<'PY'
 import pathlib, re, subprocess, sys
 root = pathlib.Path(sys.argv[1])
 output = subprocess.check_output(
-    ["git", "-C", str(root), "ls-files", "--cached", "--others", "--exclude-standard", "--", ".gitignore", "global.json", "scripts/prepare-tvos-host-native.sh", "scripts/verify-tvos-host.sh", "scripts/run-tvos-host-simulator.sh", "tvos", "TVOS_HOST_STAGE2_REPORT.md"],
+    ["git", "-C", str(root), "ls-files", "--cached", "--others", "--exclude-standard", "--", ".gitignore", "global.json", "scripts/prepare-tvos-host-native.sh", "scripts/verify-tvos-host.sh", "scripts/run-tvos-host-simulator.sh", "tvos"],
     text=True,
 )
 paths = [root / line for line in output.splitlines() if line]

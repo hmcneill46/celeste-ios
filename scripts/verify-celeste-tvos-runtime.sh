@@ -324,8 +324,7 @@ fi
 
 git -C "$REPO_ROOT" diff --quiet "$BASELINE_COMMIT" -- \
   build.sh celestemeow fnalibs-ios-builder-celeste FNA \
-  TVOS_PORT_PLAN.md TVOS_NATIVE_BUILD_REPORT.md TVOS_HOST_STAGE2_REPORT.md \
-  TVOS_CELESTE_MANAGED_STAGE3A_REPORT.md global.json native \
+  global.json native \
   managed/celeste-analysis-policy.json managed/celeste-compatibility-ledger.json \
   managed/celeste-generation.lock.json managed/patches \
   managed/templates/Celeste.Content.Modern.csproj managed/templates/Celeste.Modern.csproj \

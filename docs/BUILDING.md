@@ -440,7 +440,7 @@ trimming, and signing mode. A mismatch forces the applicable lane to rebuild.
 
 ## Manual historical lanes
 
-The historical Stage reports document individual audit gates and commands.
-They are useful when modifying the port but are not the public build workflow.
-The root `build.sh` and `celestemeow/` project are the original legacy iOS lane;
-Stage 8 does not change them.
+The [historical engineering records](history/README.md) document individual
+audit gates and commands. They are useful when modifying the port but are not
+the public build workflow. The root `build.sh` and `celestemeow/` project are
+the original legacy iOS lane; the tvOS self-builder does not replace them.

@@ -116,11 +116,11 @@ delete, and Settings-reset actions for only `settings`, `0`, `1`, and `2`.
 Imported and exported data is the exact ordinary uncompressed `.celeste`
 payload validated by the persistence authority; the server cannot see internal
 A/B keys or compressed v2 envelopes. A successful mutation blocks stale
-gameplay until Celeste is restarted. Background, screen exit, listener failure,
-shutdown, or twelve minutes of inactivity stop the listener and erase all
-credentials. Current Apple platform documentation does not apply the Local
-Network privacy authorization prompt to tvOS; the app still declares its
-focused Bonjour service and usage description.
+gameplay until the Confirm-driven high-level reload verifies the new state.
+Background, screen exit, listener failure, shutdown, or twelve minutes of
+inactivity stop the listener and erase all credentials. Current Apple platform
+documentation does not apply the Local Network privacy authorization prompt to
+tvOS; the app still declares its focused Bonjour service and usage description.
 
 ### Controller prompts
 
@@ -218,27 +218,10 @@ or an unsigned conventional tvOS IPA containing `Payload/Celeste.app`.
 
 ## Audit history
 
-These reports preserve the evidence and stage-by-stage decisions. Users do not
-need them for normal builds.
-
-- [Initial feasibility and port plan](../TVOS_PORT_PLAN.md)
-- [Native dependency pipeline](../TVOS_NATIVE_BUILD_REPORT.md)
-- [Modern FNA host](../TVOS_HOST_STAGE2_REPORT.md)
-- [Managed retarget](../TVOS_CELESTE_MANAGED_STAGE3A_REPORT.md)
-- [First real Celeste frame](../TVOS_CELESTE_RUNTIME_STAGE3B_REPORT.md)
-- [Prologue/save/haptic correction](../TVOS_CELESTE_PROLOGUE_STAGE3C_REPORT.md)
-- [FMOD diagnostic](../TVOS_FMOD_DIAGNOSTIC_STAGE5A_REPORT.md)
-- [Normal gameplay audio](../TVOS_CELESTE_AUDIO_STAGE5B_REPORT.md)
-- [Durable persistence](../TVOS_CELESTE_PERSISTENCE_STAGE6_REPORT.md)
-- [Compressed persistence migration](../TVOS_COMPRESSED_PERSISTENCE_STAGE9B_REPORT.md)
-- [Friendly self-build and branding](../TVOS_SELF_BUILD_STAGE8A_REPORT.md)
-- [Public repository release](../TVOS_REPOSITORY_RELEASE_STAGE8B_REPORT.md)
-- [Public prerequisite and failure-UX hardening](../TVOS_PUBLIC_PREREQUISITES_STAGE8C_REPORT.md)
-- [Locale-independent FMOD/Theorafile symbol validation](../TVOS_LOCALE_REPRODUCIBILITY_STAGE8D_REPORT.md)
-- [Read-only local-network Save Manager](../TVOS_READONLY_SAVE_MANAGER_STAGE10A_REPORT.md)
-- [Writable local-network Save Manager](../TVOS_WRITABLE_SAVE_MANAGER_STAGE10B_REPORT.md)
-- [Controller prompt selector](../TVOS_CONTROLLER_PROMPTS_STAGE11_REPORT.md)
-- [Graceful main-menu Quit](../TVOS_GRACEFUL_QUIT_STAGE12B_REPORT.md)
+The concise [history index](history/README.md) preserves the original plan,
+stage-by-stage engineering evidence, failures, corrections, and physical
+acceptance records. These historical documents are useful when modifying or
+debugging the port but are not required for the normal build workflow.
 
 ## Isolation and licensing
 
