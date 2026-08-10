@@ -30,7 +30,7 @@ limitations.
 - Durable Settings and all three normal save slots
 - Transparent compressed storage that fixes the later-game 32 KiB save limit
 - Recovery from a corrupt newest save generation
-- Explicitly activated, read-only local-network Save Manager downloads
+- Explicitly activated local-network Save Manager backup and validated restore
 - Local generation of the layered strawberry icon and static Top Shelf artwork
 - Direct Personal Team installation or a signing-ready unsigned IPA
 
@@ -307,7 +307,8 @@ have not been physically tested here.
 - Personal-use self-build only; no App Store package or support.
 - Personal Team installs need re-signing about every seven days.
 - Saves are shared between Apple TV users and do not sync to the cloud.
-- Save Manager is read-only; restore/import operations are not implemented.
+- Save Manager supports fixed validated replace/reset/delete operations, but no
+  unattended sync, cloud service, or in-browser XML editor.
 - Steam and non-itch.io-Linux game inputs are untested.
 - DualSense is the only physically accepted controller; the Siri Remote is not
   a gameplay controller.

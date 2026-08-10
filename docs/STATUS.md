@@ -41,7 +41,7 @@ flowchart LR
     P --> D["Personal Team install"]
     P --> I["Signing-ready unsigned IPA"]
     P --> S["Dual-generation standard UserDefaults storage"]
-    S --> W["Explicit read-only LAN Save Manager"]
+    S --> W["Explicit authenticated LAN Save Manager"]
 ```
 
 ### Modern sibling host
@@ -98,7 +98,7 @@ There is no User Management entitlement. The same standard app domain is
 shared between Apple TV users. There is no iCloud, cloud sync, cross-device
 sync, or uninstall-survival guarantee.
 
-### Read-only Save Manager
+### Save Manager
 
 The tvOS-only Options entry opens a Celeste-rendered host modal; it does not add
 another `Oui` subtype or reflection root. Only that explicit action flushes and
@@ -108,14 +108,16 @@ the current numeric LAN URL and a new cryptographically random access code.
 
 The listener advertises `_celeste-save._tcp` over Bonjour only while open. Its
 fixed-purpose HTTP boundary authenticates into an in-memory ten-minute session
-and permits one all-files ZIP plus individual downloads of only `settings`, `0`,
-`1`, and `2`. Every archive entry and individual response is the exact ordinary
-uncompressed `.celeste` payload already validated by the persistence store; the
-server cannot see internal A/B keys or compressed v2 envelopes. Background,
-screen exit, listener failure, shutdown, or twelve minutes of inactivity stop
-the listener and erase all credentials. Current Apple platform documentation
-does not apply the Local Network privacy authorization prompt to tvOS; the app
-still declares its focused Bonjour service and usage description.
+and permits one all-files ZIP plus fixed download, validated replace, save-slot
+delete, and Settings-reset actions for only `settings`, `0`, `1`, and `2`.
+Imported and exported data is the exact ordinary uncompressed `.celeste`
+payload validated by the persistence authority; the server cannot see internal
+A/B keys or compressed v2 envelopes. A successful mutation blocks stale
+gameplay until Celeste is restarted. Background, screen exit, listener failure,
+shutdown, or twelve minutes of inactivity stop the listener and erase all
+credentials. Current Apple platform documentation does not apply the Local
+Network privacy authorization prompt to tvOS; the app still declares its
+focused Bonjour service and usage description.
 
 ### Branding and packaging
 
@@ -179,6 +181,7 @@ need them for normal builds.
 - [Public prerequisite and failure-UX hardening](../TVOS_PUBLIC_PREREQUISITES_STAGE8C_REPORT.md)
 - [Locale-independent FMOD/Theorafile symbol validation](../TVOS_LOCALE_REPRODUCIBILITY_STAGE8D_REPORT.md)
 - [Read-only local-network Save Manager](../TVOS_READONLY_SAVE_MANAGER_STAGE10A_REPORT.md)
+- [Writable local-network Save Manager](../TVOS_WRITABLE_SAVE_MANAGER_STAGE10B_REPORT.md)
 
 ## Isolation and licensing
 
