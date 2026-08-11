@@ -7,6 +7,13 @@ from user-owned inputs. The accepted device build runs Celeste 1.4.0.0 with
 Metal graphics, real FMOD audio, extended-controller gameplay, and durable
 Settings/save slots. It is not an App Store distribution.
 
+The integrated Stage 14 release-candidate audit passed a fresh public-clone
+native/managed/full-AOT build, unsigned-package verification, same-identity
+physical installation, all-chapter loading, Save Manager/soft reload, real
+Apple TV restart, replacement-install, controller, audio, lifecycle, branding,
+privacy, and repository gates. See the
+[release-candidate record](history/stages/TVOS_RELEASE_CANDIDATE_STAGE14_REPORT.md).
+
 ## Proven support matrix
 
 | Area | Proven configuration |

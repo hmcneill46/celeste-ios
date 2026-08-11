@@ -1,0 +1,87 @@
+{
+  "schemaVersion": 1,
+  "stage": "14",
+  "featureFreezeCommit": "a7a2baf1a386fbdec4f44fb33a36f151fbe2e92f",
+  "stage1LogicalSha256": "61c1d97b7a585144b2b60ec0ed46f2d70f1f6239ec1732a17cc3101c3293fe39",
+  "build": {
+    "configuration": "Release",
+    "runtimeIdentifier": "tvos-arm64",
+    "minimumTvOS": "16.0",
+    "trimMode": "full",
+    "fullAot": true,
+    "useInterpreter": false,
+    "renderer": "Metal"
+  },
+  "nativeComponents": [
+    "SDL2",
+    "FNA3D",
+    "FAudio",
+    "Theorafile",
+    "tvStubs",
+    "MoltenVK"
+  ],
+  "audio": {
+    "engine": "FMOD 1.10.09 build 97915",
+    "bankCount": 7,
+    "deviceMode": "CelesteAudio",
+    "simulatorMode": "no-audio"
+  },
+  "persistence": {
+    "logicalFiles": [
+      "settings",
+      "0",
+      "1",
+      "2"
+    ],
+    "readableFormats": [
+      0,
+      1,
+      2
+    ],
+    "currentWriteFormat": 2,
+    "dualGeneration": true,
+    "compression": "deterministic-zlib-level-9"
+  },
+  "saveManager": {
+    "explicitActivationOnly": true,
+    "localLanOnly": true,
+    "authentication": "six-digit-code-and-memory-session",
+    "csrfProtection": true,
+    "revisionProtection": true,
+    "ordinaryCelesteFiles": true,
+    "writable": true,
+    "confirmDrivenSoftReload": true
+  },
+  "controllerPrompts": [
+    "Automatic",
+    "Xbox",
+    "PlayStation",
+    "Nintendo Switch",
+    "Stadia"
+  ],
+  "lifecycle": {
+    "gracefulMainMenuQuit": true,
+    "sameProcessForegroundReturn": true,
+    "oneFnaRuntimeDuringSoftReload": true,
+    "appSwitcherFallbackOnReloadFailure": true
+  },
+  "distribution": {
+    "personalTeamInstall": true,
+    "signingReadyUnsignedIpa": true,
+    "locallyGeneratedBranding": true,
+    "topShelfArtwork": true
+  },
+  "deterministicTests": {
+    "saveManagerProtocol": 66,
+    "controllerPrompts": 38,
+    "gracefulQuit": 16,
+    "softReload": 20
+  },
+  "forbiddenClaims": [
+    "Apple User Management",
+    "iCloud or cloud sync",
+    "Apple Game Mode",
+    "Everest or mod support",
+    "App Store distribution"
+  ]
+}
