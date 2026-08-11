@@ -20,7 +20,7 @@
     "version": "1.10.09",
     "build": 97915,
     "headerVersion": "0x00011009",
-    "acceptedStage5ALogicalSha256": "b32fc89dbefdda69ab7bf20ea9ece37826dce51787a4f70446493e292b12603d"
+    "acceptedStage5ALogicalSha256": "40e9fb6ce63d1551611e2ed365934a4dfa56c616be1393e249a4a550fdfdeccc"
   },
   "banks": [
     "Master Bank.bank",

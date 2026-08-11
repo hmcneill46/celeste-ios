@@ -33,6 +33,7 @@ limitations.
 - Extended game controllers; Sony DualSense was physically tested
 - Movement, Jump, Dash, Grab, Confirm, Cancel, Pause, cutscene skip, and rumble
 - Selectable Automatic, Xbox, PlayStation, Nintendo Switch, and Stadia prompts
+- Live tvOS-only toggle for Apple's native Metal Performance HUD
 - Durable Settings and all three normal save slots
 - Transparent compressed storage that fixes the later-game 32 KiB save limit
 - Recovery from a corrupt newest save generation
@@ -323,6 +324,21 @@ This is a small host preference stored separately from `settings.celeste`.
 Importing or resetting Settings through Save Manager therefore does not change
 the selected prompt family.
 
+### Metal Performance HUD
+
+Open **Options → Performance HUD** to show or hide Apple's native Metal
+Performance HUD immediately. It reports Apple-controlled diagnostics such as
+FPS, frame interval, GPU time, presentation information, memory, and a frame
+graph; the exact layout can vary by tvOS release.
+
+The default is **Off**. The selection is a tiny host-only preference and
+survives relaunch; it is not part of `settings.celeste`, SaveData, Stage 9B
+storage, or Save Manager import/export. No Celeste restart, Xcode connection,
+or Apple TV **Developer → Graphics HUD** setting is required. HUD logging stays
+disabled. Accepted testing found no measurable practical difference while the
+overlay was Off, though any enabled diagnostic overlay can theoretically add
+small measurement overhead.
+
 ## Leaving Celeste
 
 Choosing **Quit** from Celeste's main menu safely verifies durable progress and
@@ -372,6 +388,8 @@ have not been physically tested here.
   a gameplay controller.
 - The arm64 simulator remains deliberately no-audio because the required FMOD
   1.10.09 simulator archives are x86_64-only.
+- Apple's native Performance HUD layout and available metrics may change with
+  tvOS; it is a diagnostics aid rather than a stable gameplay interface.
 - The app is large (roughly 1.1 GiB before IPA compression) because it packages
   the user's full content and seven FMOD banks.
 - External IPA re-signing/install tools remain outside this project's control.

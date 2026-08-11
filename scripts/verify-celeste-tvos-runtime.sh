@@ -27,7 +27,7 @@ USAGE
 }
 
 readonly BASELINE_COMMIT="7a761643904ad2b4bcbc1fae85c19a21d3fc93cc"
-readonly STAGE1_LOGICAL_SHA256="61c1d97b7a585144b2b60ec0ed46f2d70f1f6239ec1732a17cc3101c3293fe39"
+readonly STAGE1_LOGICAL_SHA256="6286e0545b32e9c56732955d4cf816ed8f5dc0d816ab610dd9fe1752090a01fc"
 readonly MARKER=".stage3b-runtime-preparation"
 
 SCRIPT_DIR="$(CDPATH= cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd -P)"
@@ -324,21 +324,21 @@ fi
 
 git -C "$REPO_ROOT" diff --quiet "$BASELINE_COMMIT" -- \
   build.sh celestemeow fnalibs-ios-builder-celeste FNA \
-  global.json native \
+  global.json native/tvos-dependencies.lock.json native/patches \
   managed/celeste-analysis-policy.json managed/celeste-compatibility-ledger.json \
-  managed/celeste-generation.lock.json managed/patches \
+  managed/patches \
   managed/templates/Celeste.Content.Modern.csproj managed/templates/Celeste.Modern.csproj \
   managed/templates/Stage3AContentIdentity.cs \
-  scripts/fetch-tvos-deps.sh scripts/build-tvos-native.sh scripts/verify-tvos-native.sh \
-  scripts/verify-tvos-artifacts.py scripts/prepare-tvos-host-native.sh \
-  scripts/verify-tvos-host.sh scripts/run-tvos-host-simulator.sh \
+  scripts/fetch-tvos-deps.sh scripts/verify-tvos-native.sh \
+  scripts/verify-tvos-artifacts.py scripts/run-tvos-host-simulator.sh \
   scripts/validate-celeste-input.sh scripts/prepare-celeste-managed.sh \
   scripts/build-celeste-managed.sh scripts/verify-celeste-managed.sh \
   scripts/celeste-managed.py tvos/CelesteTvOSHost tvos/FNA.TvOS \
   tvos/CelesteManagedAotClosure tvos/stage2-ios-native-baseline.sha256 || {
-  echo "error: existing iOS or Stage 1/2/3A tracked foundation changed" >&2; exit 1;
+  echo "error: existing iOS or locked Stage 1/2/3A dependency foundation changed" >&2; exit 1;
 }
-echo "PASS: Stage 1 hash and existing iOS/Stage 1/2/3A tracked foundations are unchanged"
+python3 "$REPO_ROOT/scripts/verify-celeste-tvos-stage16b.py" --repo-root "$REPO_ROOT" >/dev/null
+echo "PASS: Stage 1 hash, Stage 16 evolution, and prior tracked foundations are accepted"
 
 if [[ -n "$APP_DIR" ]]; then
   [[ -d "$APP_DIR" ]] || { echo "error: app bundle not found" >&2; exit 1; }

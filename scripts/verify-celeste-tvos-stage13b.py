@@ -83,8 +83,10 @@ def main() -> int:
         "Stage 13B main-thread soft-reload update hook",
     ), "locked generated transformation")
     require(project, ("UseInterpreter>false",), "host project")
-    if "13.0.0+stage13b" not in project and "15.0.0+stage15" not in project:
-        fail("host project no longer identifies the accepted Stage 13B boundary or its Stage 15 successor")
+    if not any(version in project for version in (
+        "13.0.0+stage13b", "15.0.0+stage15", "16.0.0+stage16b"
+    )):
+        fail("host project no longer identifies the accepted Stage 13B boundary or an accepted successor")
 
     forbidden_calls = (
         "Process.Start(", "Environment.Exit(", "Engine.Instance.Exit(", ".Game.Exit(",

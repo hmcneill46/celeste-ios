@@ -37,7 +37,7 @@ ARTIFACT_DIR="$REPO_ROOT/artifacts/celeste-runtime/stage5b-current"
 MANAGED_ONLY=0
 CLEAN=0
 MARKER=".stage5b-runtime-preparation"
-EXPECTED_FMOD_LOGICAL_SHA="b32fc89dbefdda69ab7bf20ea9ece37826dce51787a4f70446493e292b12603d"
+EXPECTED_FMOD_LOGICAL_SHA="40e9fb6ce63d1551611e2ed365934a4dfa56c616be1393e249a4a550fdfdeccc"
 
 repo_path() {
   case "$1" in
@@ -128,7 +128,7 @@ pathlib.Path(sys.argv[1]).write_text(json.dumps({
     "schemaVersion": 1,
     "gameRoot": "$CELESTE_GAME_ROOT",
     "stage3CRegenerated": True,
-    "stage5AStagingLogicalSha256": "b32fc89dbefdda69ab7bf20ea9ece37826dce51787a4f70446493e292b12603d",
+    "stage5AStagingLogicalSha256": "40e9fb6ce63d1551611e2ed365934a4dfa56c616be1393e249a4a550fdfdeccc",
     "contentStaged": sys.argv[2] == "0",
     "fmodBanksRemainInStage5AStaging": True,
     "fmodSdkRead": False,

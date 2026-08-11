@@ -133,7 +133,9 @@ whose removal makes a probe fail.
 
 tvStubs supplies 25 Windows, Android, WinRT, Linux, and Emscripten SDL symbols
 retained by the pinned cross-platform managed bindings. A tvOS call to any of
-them would be a bug. Verification requires all 25 exports and fails if any
+them would be a bug. Stage 16B adds one separate repository-owned force-link
+export whose object contains the public-Foundation Metal Performance HUD
+capability bootstrap. Verification requires all 26 exports and fails if any
 symbol is also supplied by SDL2, FNA3D, FAudio, Theorafile, or MoltenVK.
 
 The locked native-builder checkout contains no standalone license file. The

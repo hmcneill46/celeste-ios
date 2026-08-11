@@ -840,8 +840,11 @@
     "tvStubs": {
       "bindingSha256": "db9436441826ed30d0fe6ddcf1d78aef6e1496eb648e8cd9346f3f7bb4e96e12",
       "bindingSource": "NativeBuilder/tvStubs/stubs.c",
-      "note": "Non-tvOS SDL entry points retained for static Xamarin/FNA binding resolution only.",
+      "note": "Non-tvOS SDL entry points retained for static Xamarin/FNA binding resolution plus the public-Foundation tvOS Metal HUD capability bootstrap.",
+      "repositoryBootstrapSha256": "74f040083fe16aab7791c21ecef617a8f4655405b7736ba8cc4bd790ab3e737a",
+      "repositoryBootstrapSource": "native/tvstubs/MetalPerformanceHudBootstrap.m",
       "symbols": [
+        "CelesteTvOSMetalHudBootstrapForceLink",
         "INTERNAL_SDL_AndroidGetExternalStoragePath",
         "SDL_AndroidBackButton",
         "SDL_AndroidGetActivity",

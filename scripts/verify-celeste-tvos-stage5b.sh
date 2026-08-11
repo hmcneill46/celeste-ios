@@ -29,9 +29,9 @@ USAGE
 }
 
 readonly BASELINE_COMMIT="e9134d8129c5d3bf7b97c42c598f85df2e3cdc23"
-readonly EXPECTED_STAGE1_SHA="61c1d97b7a585144b2b60ec0ed46f2d70f1f6239ec1732a17cc3101c3293fe39"
-readonly EXPECTED_STAGE5A_SHA="b32fc89dbefdda69ab7bf20ea9ece37826dce51787a4f70446493e292b12603d"
-readonly EXPECTED_STAGE5A_VERIFIER_SHA="dc33936e72d361a3e3399f228cb4f33c85eeba25cd9f4199ec23ba3afb623058"
+readonly EXPECTED_STAGE1_SHA="6286e0545b32e9c56732955d4cf816ed8f5dc0d816ab610dd9fe1752090a01fc"
+readonly EXPECTED_STAGE5A_SHA="40e9fb6ce63d1551611e2ed365934a4dfa56c616be1393e249a4a550fdfdeccc"
+readonly EXPECTED_STAGE5A_VERIFIER_SHA="f480b8557bde034c40bddf7331d89999dbb18960f04b7ee31165c1c3b0fdff24"
 readonly EXPECTED_STAGE5B_SHA="4e4e96f3d15815430a2f8ad063a4c4cdff004273b7513cf972d56ecd0b04460d"
 readonly EXPECTED_STAGE5B_FILES=928
 readonly MARKER=".stage5b-runtime-preparation"
@@ -190,23 +190,23 @@ if [[ -n "$COMPARE_RUNTIME_ROOT" ]]; then
 fi
 
 git -C "$REPO_ROOT" diff --quiet "$BASELINE_COMMIT" -- \
-  build.sh celestemeow fnalibs-ios-builder-celeste FNA native \
-  global.json managed/celeste-generation.lock.json managed/celeste-stage3b-policy.json \
+  build.sh celestemeow fnalibs-ios-builder-celeste FNA \
+  global.json managed/celeste-stage3b-policy.json \
   managed/celeste-stage3c-policy.json managed/patches \
-  scripts/fetch-tvos-deps.sh scripts/build-tvos-native.sh scripts/verify-tvos-native.sh \
   scripts/validate-celeste-input.sh scripts/prepare-celeste-managed.sh scripts/celeste-managed.py \
   scripts/prepare-celeste-tvos-runtime.sh scripts/celeste-stage3b.py \
   scripts/prepare-celeste-tvos-stage3c.sh scripts/celeste-stage3c.py \
-  scripts/validate-fmod-tvos-sdk.sh scripts/prepare-fmod-tvos.sh \
+  scripts/validate-fmod-tvos-sdk.sh \
   native/fmod-tvos tvos/CelesteTvOSHost tvos/FNA.TvOS tvos/CelesteManagedAotClosure \
   tvos/stage2-ios-native-baseline.sha256 || {
-    echo "error: existing iOS or accepted Stage 1/2/3A/3B/3C/5A foundation changed" >&2; exit 1;
+    echo "error: existing iOS or accepted Stage 2/3A/3B/3C/5A foundation changed" >&2; exit 1;
   }
+python3 "$REPO_ROOT/scripts/verify-celeste-tvos-stage16b.py" --repo-root "$REPO_ROOT" >/dev/null
 (cd "$REPO_ROOT" && shasum -a 256 -c tvos/stage2-ios-native-baseline.sha256 >/dev/null)
-if grep -R -n -E 'com\.apple\.developer\.user-management' "$REPO_ROOT/tvos" >/dev/null; then
+if git -C "$REPO_ROOT" grep -n -E 'com\.apple\.developer\.user-management' -- tvos >/dev/null; then
   echo "error: Stage 5B must not add User Management" >&2; exit 1
 fi
-echo "PASS: accepted prior stages, iOS archives, and storage/entitlement boundaries remain isolated"
+echo "PASS: accepted prior stages plus Stage 16 native evolution remain isolated"
 
 if [[ -n "$APP_DIR" ]]; then
   [[ -d "$APP_DIR" ]] || { echo "error: --app must name a built app" >&2; exit 2; }

@@ -9,9 +9,9 @@
     <TargetPlatformMinVersion>16.0</TargetPlatformMinVersion>
     <ApplicationId Condition="'$(ApplicationId)' == ''">com.example.celeste-tvos</ApplicationId>
     <ApplicationTitle>Celeste</ApplicationTitle>
-    <ApplicationDisplayVersion>15.0</ApplicationDisplayVersion>
+    <ApplicationDisplayVersion>16.0</ApplicationDisplayVersion>
     <ApplicationVersion>1</ApplicationVersion>
-    <AssemblyInformationalVersion>15.0.0+stage15</AssemblyInformationalVersion>
+    <AssemblyInformationalVersion>16.0.0+stage16b</AssemblyInformationalVersion>
     <CelesteLaunchMode Condition="'$(CelesteLaunchMode)' == ''">Stage2Diagnostic</CelesteLaunchMode>
     <CelesteRuntimeEnabled Condition="'$(CelesteLaunchMode)' == 'CelestePreflight' or '$(CelesteLaunchMode)' == 'Celeste' or '$(CelesteLaunchMode)' == 'CelestePrologueDiagnostic' or '$(CelesteLaunchMode)' == 'CelesteAudio' or '$(CelesteLaunchMode)' == 'CelestePersistenceDiagnostic' or '$(CelesteLaunchMode)' == 'CelestePersistenceInspect'">true</CelesteRuntimeEnabled>
     <Stage6PersistenceEnabled Condition="'$(Stage6PersistenceEnabled)' == '' and '$(CelesteRuntimeEnabled)' == 'true'">true</Stage6PersistenceEnabled>
@@ -178,6 +178,8 @@
            Text="Stage 11 controller prompts require scripts/prepare-celeste-tvos-stage6.sh output." />
     <Error Condition="'$(Stage6PersistenceEnabled)' == 'true' and !Exists('$(CelesteRuntimeManagedRoot)\Celeste\TvOSQuitBridge.cs')"
            Text="Stage 12B graceful Quit requires scripts/prepare-celeste-tvos-stage6.sh output." />
+    <Error Condition="'$(Stage6PersistenceEnabled)' == 'true' and !Exists('$(CelesteRuntimeManagedRoot)\Celeste\TvOSPerformanceHudBridge.cs')"
+           Text="Stage 16B Performance HUD requires scripts/prepare-celeste-tvos-stage6.sh output." />
   </Target>
 
   <!-- Apple workload incremental builds share one app-bundle directory across

@@ -76,6 +76,7 @@ internal static class Program
             using Stage6PersistenceLifecycle? persistenceLifecycle = persistence == null ? null : new Stage6PersistenceLifecycle(persistence);
             using Stage10ASaveManager? saveManager = persistence == null ? null : new Stage10ASaveManager(persistence);
             using Stage11ControllerPromptPreferences? controllerPrompts = persistence == null ? null : new Stage11ControllerPromptPreferences();
+            using Stage16PerformanceHudCoordinator performanceHud = new();
             using Stage13BSoftReloadCoordinator? softReloadCoordinator = saveManager == null || persistence == null
                 ? null : new Stage13BSoftReloadCoordinator(persistence, saveManager);
             using Stage12BQuitCoordinator? quitCoordinator = saveManager == null ? null : new Stage12BQuitCoordinator(saveManager);

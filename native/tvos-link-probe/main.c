@@ -17,6 +17,7 @@ int main(void)
         (const void *) tf_fopen,
         (const void *) vkGetInstanceProcAddr,
         (const void *) SDL_AndroidGetJNIEnv,
+        (const void *) CelesteTvOSMetalHudBootstrapForceLink,
     };
     return symbols[0] == 0;
 }

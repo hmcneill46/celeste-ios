@@ -2,7 +2,7 @@
 set -euo pipefail
 
 readonly BASELINE_COMMIT="5c59ba1b2cb353d241f6026caa8da1d8e1822e24"
-readonly EXPECTED_LOGICAL_SHA256="61c1d97b7a585144b2b60ec0ed46f2d70f1f6239ec1732a17cc3101c3293fe39"
+readonly EXPECTED_LOGICAL_SHA256="6286e0545b32e9c56732955d4cf816ed8f5dc0d816ab610dd9fe1752090a01fc"
 readonly COMPONENTS=(SDL2 FNA3D FAudio Theorafile tvStubs MoltenVK)
 readonly REQUIRED_EXPORTS=(SDL_GetVersion FNA3D_LinkedVersion FAudioLinkedVersion tf_fopen vkGetInstanceProcAddr)
 
@@ -179,7 +179,7 @@ if grep -R -n -E -i 'fmod|Celeste\.(exe|dll)|decompil|/Content/' \
   echo "error: host project contains a Celeste executable/content/decompilation or FMOD reference" >&2
   exit 1
 fi
-if grep -R -n -E 'com\.apple\.developer\.user-management' "$REPO_ROOT/tvos" >/dev/null; then
+if git -C "$REPO_ROOT" grep -n -E 'com\.apple\.developer\.user-management' -- tvos >/dev/null; then
   echo "error: Stage 2 must not request Apple TV User Management" >&2
   exit 1
 fi
@@ -203,13 +203,14 @@ git -C "$REPO_ROOT" diff --quiet "$BASELINE_COMMIT" -- \
   exit 1
 }
 git -C "$REPO_ROOT" diff --quiet "$BASELINE_COMMIT" -- \
-  native \
-  scripts/fetch-tvos-deps.sh scripts/build-tvos-native.sh \
-  scripts/verify-tvos-native.sh scripts/verify-tvos-artifacts.py || {
-  echo "error: Stage 1 lock, patches, or pipeline changed" >&2
+  native/tvos-dependencies.lock.json native/patches \
+  scripts/fetch-tvos-deps.sh scripts/verify-tvos-native.sh \
+  scripts/verify-tvos-artifacts.py || {
+  echo "error: locked Stage 1 dependencies, patches, or base verifier changed" >&2
   exit 1
 }
-echo "PASS: existing iOS lane and Stage 1 remain byte-for-byte isolated"
+python3 "$REPO_ROOT/scripts/verify-celeste-tvos-stage16b.py" --repo-root "$REPO_ROOT" >/dev/null
+echo "PASS: existing iOS lane and accepted Stage 16 native evolution are isolated"
 
 python3 - "$REPO_ROOT" <<'PY'
 import pathlib, re, subprocess, sys

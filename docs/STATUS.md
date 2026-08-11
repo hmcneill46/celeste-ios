@@ -13,9 +13,10 @@ physical installation, all-chapter loading, Save Manager/soft reload, real
 Apple TV restart, replacement-install, controller, audio, lifecycle, branding,
 privacy, and repository gates. See the
 [release-candidate record](history/stages/TVOS_RELEASE_CANDIDATE_STAGE14_REPORT.md).
-Stage 15 is the first post-RC feature and adds one-time scan-to-connect QR
-pairing on the separate `feature/save-manager-qr` branch without changing the
-immutable `v1.0.0-rc.1` recovery point.
+Stage 15 added integrated one-time scan-to-connect QR pairing. Stage 16B adds a
+live Apple Metal Performance HUD control on the separate
+`feature/metal-performance-hud` branch without changing the immutable
+`v1.0.0-rc.1` recovery point.
 
 ## Proven support matrix
 
@@ -55,6 +56,7 @@ flowchart LR
     W --> P["One-time QR or manual code pairing"]
     W --> R["Verified high-level soft reload"]
     H --> B["Host-only controller prompt preference"]
+    H --> X["Host-only native Metal HUD preference"]
     H --> Q["Foreground/background-aware Leave Celeste flow"]
 ```
 
@@ -161,6 +163,33 @@ retain Celeste's existing fallback. Nintendo/Stadia automatic selection is not
 claimed beyond Celeste's locked known identifiers; their manual modes remain
 fully available.
 
+### Metal Performance HUD
+
+The generated tvOS Options menu adds one normal Celeste `OnOff` row named
+**Performance HUD**. A force-loaded repository-owned Objective-C constructor
+uses public Foundation defaults before SDL/FNA creates the presentation layer
+to make Apple's HUD facility available. It sets both Apple's current documented
+`MetalHUDForceEnabled` spelling and the historical official Tech Talk
+`MetalForceHudEnabled` compatibility spelling because only the latter activated
+the accepted physical tvOS release during Stage 16A. No HUD Info.plist key,
+private selector, Xcode environment, or device-global Graphics HUD setting is
+used.
+
+After `new Celeste()` creates the window and before first draw, the host resolves
+the exact SDL `UIWindow` with `SDL_GetWindowWMInfo`, requires its root layer to
+be the sole validated `CAMetalLayer`, and compares it with
+`SDL_Metal_GetDrawableSize`. The public .NET 10
+`CAMetalLayer.DeveloperHudProperties` binding applies either
+`mode=disabled` or `mode=default` immediately; `logging=disabled` is fixed in
+both states. Missing/invalid preference data resolves Off, and any layer/API
+invariant failure keeps gameplay running with the feature unavailable.
+
+Only `Off` or `On` is stored under
+`CelesteTvOS.PerformanceHUD.v1` in app-private UserDefaults. It is independent
+of Settings XML, SaveData, Stage 9B A/B, Save Manager, and Controller Prompts.
+The accepted physical test found no visible default-Off startup flash and no
+measurable practical Off-state performance cost.
+
 ### Graceful main-menu Quit
 
 The tvOS generated main-menu Quit route is intercepted at its single locked
@@ -214,6 +243,8 @@ or an unsigned conventional tvOS IPA containing `Payload/Celeste.app`.
   no second SDL/FNA/FMOD runtime
 - Main-menu Quit verifies durable state and provides a safe Home/background
   flow without destroying the FNA runtime or leaving a blank surface
+- Apple's native Metal Performance HUD can be shown/hidden live from Options;
+  default Off, logging disabled, and no Developer Graphics HUD prerequisite
 
 ## Known limitations
 
@@ -236,6 +267,8 @@ or an unsigned conventional tvOS IPA containing `Payload/Celeste.app`.
   an expired or consumed QR falls back to the displayed URL and access code.
 - Apple Game Mode is not declared: the current public Apple keys do not document
   tvOS availability, and this project makes no Apple TV Game Mode claim.
+- Apple's Metal HUD presentation and metric set are system-controlled and may
+  change between tvOS releases; visible diagnostics can carry small overhead.
 - No App Store, distribution-profile, paid entitlement, or universal hardware
   claim is made.
 

@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-readonly EXPECTED_STAGE1_HASH="61c1d97b7a585144b2b60ec0ed46f2d70f1f6239ec1732a17cc3101c3293fe39"
+readonly EXPECTED_STAGE1_HASH="6286e0545b32e9c56732955d4cf816ed8f5dc0d816ab610dd9fe1752090a01fc"
 readonly FMOD_SDL_URL="https://github.com/flibitijibibo/FMOD_SDL.git"
 readonly FMOD_SDL_COMMIT="947df759501d9f5a7df702101c453efc3e06ba22"
 readonly DEPLOYMENT_TARGET="${TVOS_DEPLOYMENT_TARGET:-16.0}"
@@ -335,7 +335,7 @@ localized_fmod_archive = root / "build" / "libfmod_appletvos-localized.a"
 manifest = {
     "schemaVersion": 1,
     "deploymentTarget": "16.0",
-    "stage1LogicalSha256": "61c1d97b7a585144b2b60ec0ed46f2d70f1f6239ec1732a17cc3101c3293fe39",
+    "stage1LogicalSha256": "6286e0545b32e9c56732955d4cf816ed8f5dc0d816ab610dd9fe1752090a01fc",
     "fmodSdk": sdk,
     "banks": banks,
     "fmodSdl": {

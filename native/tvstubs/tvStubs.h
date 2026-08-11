@@ -18,6 +18,9 @@ void *SDL_AndroidGetActivity(void);
 void emscripten_set_main_loop(void *function, int fps, int simulate_infinite_loop);
 void emscripten_cancel_main_loop(void);
 
+/* Repository-owned, public-Foundation Metal HUD capability bootstrap. */
+void CelesteTvOSMetalHudBootstrapForceLink(void);
+
 #ifdef __cplusplus
 }
 #endif

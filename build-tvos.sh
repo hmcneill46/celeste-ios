@@ -3,7 +3,7 @@ set -euo pipefail
 
 readonly REQUIRED_DOTNET="10.0.302"
 readonly REQUIRED_WORKLOAD_SET="10.0.302.0"
-readonly EXPECTED_STAGE1_HASH="61c1d97b7a585144b2b60ec0ed46f2d70f1f6239ec1732a17cc3101c3293fe39"
+readonly EXPECTED_STAGE1_HASH="6286e0545b32e9c56732955d4cf816ed8f5dc0d816ab610dd9fe1752090a01fc"
 
 usage() {
   cat <<'USAGE'
@@ -500,7 +500,11 @@ import json,pathlib,sys
 raise SystemExit(0 if json.loads(pathlib.Path(sys.argv[1]).read_text()).get("logicalSetSha256")==sys.argv[2] else 1)
 PY
 then
-  if [[ ! -f "$REPO_ROOT/artifacts/tvos-native/rebuild-e/normalized-manifest.json" ]]; then
+  if [[ ! -f "$REPO_ROOT/artifacts/tvos-native/rebuild-e/normalized-manifest.json" ]] || ! python3 - "$REPO_ROOT/artifacts/tvos-native/rebuild-e/normalized-manifest.json" "$EXPECTED_STAGE1_HASH" <<'PY'
+import json,pathlib,sys
+raise SystemExit(0 if json.loads(pathlib.Path(sys.argv[1]).read_text()).get("logicalSetSha256")==sys.argv[2] else 1)
+PY
+  then
     run_logged fetch-native "$REPO_ROOT/scripts/fetch-tvos-deps.sh" --build-dir .build/tvos-native/self-build
     run_logged build-native "$REPO_ROOT/scripts/build-tvos-native.sh" --build-dir .build/tvos-native/self-build --output-dir artifacts/tvos-native/self-build --clean
     run_logged verify-native "$REPO_ROOT/scripts/verify-tvos-native.sh" --build-dir .build/tvos-native/self-build --output-dir artifacts/tvos-native/self-build
@@ -564,6 +568,11 @@ run_logged verify-qr-pairing-source "$REPO_ROOT/scripts/verify-celeste-tvos-stag
   --repo-root "$REPO_ROOT" \
   --generated-root "$REPO_ROOT/.build/celeste-runtime/stage6-current/audio/managed" \
   --output "$REPO_ROOT/artifacts/celeste-runtime/stage6-current/stage15-verification.json"
+run_logged verify-performance-hud-source "$REPO_ROOT/scripts/verify-celeste-tvos-stage16b.py" \
+  --repo-root "$REPO_ROOT" \
+  --generated-root "$REPO_ROOT/.build/celeste-runtime/stage6-current/audio/managed" \
+  --native-manifest "$REPO_ROOT/.build/tvos-host/normalized-manifest.json" \
+  --output "$REPO_ROOT/artifacts/celeste-runtime/stage6-current/stage16b-verification.json"
 
 COMMON_PUBLISH=(dotnet publish "$PROJECT" -c Release -r tvos-arm64 -m:1 -p:BuildInParallel=false
   -p:CelesteLaunchMode=CelesteAudio -p:Stage5BAudioScenario=normal
@@ -647,6 +656,7 @@ if [[ -n "$UNSIGNED_APP" ]]; then
   run_logged verify-stage12b-unsigned "$REPO_ROOT/scripts/verify-celeste-tvos-stage12b.py" --repo-root "$REPO_ROOT" --generated-root "$REPO_ROOT/.build/celeste-runtime/stage6-current/audio/managed" --ipa "$IPA"
   run_logged verify-stage13b-unsigned "$REPO_ROOT/scripts/verify-celeste-tvos-stage13b.py" --repo-root "$REPO_ROOT" --generated-root "$REPO_ROOT/.build/celeste-runtime/stage6-current/audio/managed" --ipa "$IPA"
   run_logged verify-stage15-unsigned "$REPO_ROOT/scripts/verify-celeste-tvos-stage15.py" --repo-root "$REPO_ROOT" --generated-root "$REPO_ROOT/.build/celeste-runtime/stage6-current/audio/managed" --ipa "$IPA"
+  run_logged verify-stage16b-unsigned "$REPO_ROOT/scripts/verify-celeste-tvos-stage16b.py" --repo-root "$REPO_ROOT" --generated-root "$REPO_ROOT/.build/celeste-runtime/stage6-current/audio/managed" --native-manifest "$REPO_ROOT/.build/tvos-host/normalized-manifest.json" --ipa "$IPA"
   IPA_HASH="$(shasum -a 256 "$IPA" | awk '{print $1}')"
   IPA_BYTES="$(stat -f %z "$IPA")"
   printf '%s  %s\n' "$IPA_HASH" "Celeste-tvOS-unsigned.ipa" >> "$DIST_ROOT/SHA256SUMS"
@@ -668,6 +678,7 @@ if [[ -n "$SIGNED_APP" ]]; then
   run_logged verify-stage12b-signed "$REPO_ROOT/scripts/verify-celeste-tvos-stage12b.py" --repo-root "$REPO_ROOT" --generated-root "$REPO_ROOT/.build/celeste-runtime/stage6-current/audio/managed" --app "$DIST_ROOT/Celeste.app"
   run_logged verify-stage13b-signed "$REPO_ROOT/scripts/verify-celeste-tvos-stage13b.py" --repo-root "$REPO_ROOT" --generated-root "$REPO_ROOT/.build/celeste-runtime/stage6-current/audio/managed" --app "$DIST_ROOT/Celeste.app"
   run_logged verify-stage15-signed "$REPO_ROOT/scripts/verify-celeste-tvos-stage15.py" --repo-root "$REPO_ROOT" --generated-root "$REPO_ROOT/.build/celeste-runtime/stage6-current/audio/managed" --app "$DIST_ROOT/Celeste.app"
+  run_logged verify-stage16b-signed "$REPO_ROOT/scripts/verify-celeste-tvos-stage16b.py" --repo-root "$REPO_ROOT" --generated-root "$REPO_ROOT/.build/celeste-runtime/stage6-current/audio/managed" --native-manifest "$REPO_ROOT/.build/tvos-host/normalized-manifest.json" --app "$DIST_ROOT/Celeste.app"
   run_logged install-apple-tv xcrun devicectl device install app --quiet --device "$DEVICE_ID" "$DIST_ROOT/Celeste.app" --json-output "$CONFIG_ROOT/install-private.json" --log-output "$CONFIG_ROOT/install-private.log"
   CONSOLE="$CONFIG_ROOT/launch-console-private.log"
   xcrun devicectl device process launch --console --terminate-existing --timeout 120 --device "$DEVICE_ID" "$BUNDLE_ID" --json-output "$CONFIG_ROOT/launch-private.json" --log-output "$CONFIG_ROOT/launch-tool-private.log" > "$CONSOLE" 2>&1 &

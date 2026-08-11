@@ -64,6 +64,7 @@ def pinvoke_symbols(text: str) -> list[str]:
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--sources-dir", required=True, type=pathlib.Path)
+    parser.add_argument("--hud-bootstrap-source", required=True, type=pathlib.Path)
     parser.add_argument("--output", required=True, type=pathlib.Path)
     args = parser.parse_args()
 
@@ -103,8 +104,10 @@ def main() -> int:
     components["tvStubs"] = {
         "bindingSource": "NativeBuilder/tvStubs/stubs.c",
         "bindingSha256": hashlib.sha256(stubs_data).hexdigest(),
-        "note": "Non-tvOS SDL entry points retained for static Xamarin/FNA binding resolution only.",
-        "symbols": derived_stubs,
+        "repositoryBootstrapSource": "native/tvstubs/MetalPerformanceHudBootstrap.m",
+        "repositoryBootstrapSha256": hashlib.sha256(args.hud_bootstrap_source.read_bytes()).hexdigest(),
+        "note": "Non-tvOS SDL entry points retained for static Xamarin/FNA binding resolution plus the public-Foundation tvOS Metal HUD capability bootstrap.",
+        "symbols": sorted(derived_stubs + ["CelesteTvOSMetalHudBootstrapForceLink"]),
     }
 
     output = {

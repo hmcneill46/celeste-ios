@@ -37,6 +37,7 @@ support matrix, and limitations are in [project status](../STATUS.md).
 19. [Stage 13C — repository documentation cleanup](stages/TVOS_REPOSITORY_CLEANUP_STAGE13C_REPORT.md)
 20. [Stage 14 — integrated release-candidate validation](stages/TVOS_RELEASE_CANDIDATE_STAGE14_REPORT.md)
 21. [Stage 15 — one-time Save Manager QR pairing](stages/TVOS_SAVE_MANAGER_QR_STAGE15_REPORT.md)
+22. [Stage 16B — native Metal Performance HUD toggle](stages/TVOS_METAL_PERFORMANCE_HUD_STAGE16B_REPORT.md)
 
 Diagnostic-only stages whose evidence was intentionally kept in ignored local
 build directories are not reconstructed here. The index covers every tracked

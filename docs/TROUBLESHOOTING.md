@@ -551,6 +551,31 @@ Settings, SaveData, or the four-file Save Manager boundary.
 Choose the desired mode again under **Options → Controller Prompts**. No save
 repair or Settings re-import is needed.
 
+## Performance HUD does not appear or does not turn off
+
+**Symptom**
+
+Changing **Options → Performance HUD** does not visibly show/hide Apple's Metal
+overlay.
+
+**Cause**
+
+The current build may predate Stage 16B, or the host safely rejected a changed
+or ambiguous presentation-layer state. The feature deliberately fails closed
+rather than selecting an arbitrary Metal layer. Apple controls the HUD's exact
+layout and may change it between tvOS releases.
+
+**Fix**
+
+Use a current Stage 16B build and toggle the row once more. No Celeste restart,
+Xcode connection, or Apple TV **Developer → Graphics HUD** setting is normally
+required. If the option remains unavailable, keep it Off and collect the
+privacy-safe `STAGE16B_HUD` category lines from a local launch log; do not post
+device/signing identifiers.
+
+The HUD preference is host-only. Replacing or resetting `settings.celeste`
+does not change it, and changing it does not advance a Stage 9B save generation.
+
 ## Saves appear missing after changing the bundle ID
 
 **Symptom**

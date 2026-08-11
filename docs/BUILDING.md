@@ -229,17 +229,20 @@ build implementation:
    user-owned banks.
 6. [`prepare-celeste-tvos-stage6.sh`](../scripts/prepare-celeste-tvos-stage6.sh)
    regenerates/patches modern Celeste source and stages content under ignored
-   roots with the durable-storage, Save Manager, and controller-prompt
-   integrations. [`inventory-celeste-controller-prompts.py`](../scripts/inventory-celeste-controller-prompts.py)
+   roots with the durable-storage, Save Manager, controller-prompt, and Metal
+   Performance HUD integrations.
+   [`inventory-celeste-controller-prompts.py`](../scripts/inventory-celeste-controller-prompts.py)
    validates the exact locked GUI atlas metadata without copying artwork.
 7. [`generate-celeste-tvos-artwork.sh`](../scripts/generate-celeste-tvos-artwork.sh)
    creates the layered icon and static Top Shelf catalog from the user's game.
 
 The Stage 6 transformation also installs the Stage 10A/10B Options entry and its
-host-modal bridge, plus the Stage 11 Controller Prompts slider and narrow input
-prefix hook, into ignored generated source. The host stores that prompt choice
-under the fixed `CelesteTvOS.ControllerPrompts.v1` standard-UserDefaults key;
-it is intentionally outside Settings XML and the Stage 9B A/B envelope. The
+host-modal bridge, plus the Stage 11 Controller Prompts slider, narrow input
+prefix hook, and Stage 16B Performance HUD `OnOff` bridge into ignored generated
+source. The host stores the prompt choice under the fixed
+`CelesteTvOS.ControllerPrompts.v1` standard-UserDefaults key; the HUD uses the
+separate fixed `CelesteTvOS.PerformanceHUD.v1` key. Both are
+intentionally outside Settings XML and the Stage 9B A/B envelope. The
 product links Apple's Network and GameController frameworks; no third-party
 HTTP server, networking, or controller-identification package is added.
 
@@ -431,6 +434,22 @@ expiry, atomic one-time consumption, session/CSRF integration, parser limits,
 shutdown invalidation, and the unchanged manual six-digit fallback. The QR is
 generated locally with Core Image and requires no extra build dependency,
 entitlement, camera permission, or external service.
+
+Verify Stage 16B Performance HUD policy, the generated startup/Options hooks,
+post-Stage16 native set, and the complete prior chain with:
+
+```bash
+scripts/verify-celeste-tvos-stage16b.sh \
+  --generated-root .build/celeste-runtime/stage6-current/audio/managed \
+  --native-manifest .build/tvos-host/normalized-manifest.json
+```
+
+Pass `--app ... --platform device --signed` or `--ipa ...` for product checks.
+The Stage 16B layer adds 39 deterministic preference/layer/application/isolation
+tests. It locks the public-Foundation constructor and both official bootstrap
+spellings, the exact SDL/UIWindow/CAMetalLayer acquisition path, default Off,
+logging disabled, no HUD plist/environment dependency, and full-AOT product
+tokens. Apple's device-global Developer Graphics HUD setting is not required.
 
 For isolated automation, build only an explicitly local acceptance app with
 `Stage10AAutomation=true` and `Stage6StorageNamespace=acceptance`, then use:

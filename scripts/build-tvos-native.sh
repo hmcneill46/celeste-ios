@@ -286,6 +286,46 @@ build_pair FAudio "$SOURCES_DIR/FAudio/Xcode-iOS/FAudio.xcodeproj" "FAudio-tv" l
 build_pair Theorafile "$SOURCES_DIR/Theorafile/Xcode-iOS/theorafile.xcodeproj" "theorafile-tv" libtheorafile-tv.a
 build_pair tvStubs "$SOURCES_DIR/NativeBuilder/tvStubs/tvStubs.xcodeproj" "tvStubs" libtvStubs.a
 
+append_metal_hud_bootstrap() {
+  local source="$REPO_ROOT/native/tvstubs/MetalPerformanceHudBootstrap.m"
+  local objects="$WORK_DIR/tvStubs-hud-bootstrap"
+  local device_sdk simulator_sdk
+  device_sdk="$(xcrun --sdk appletvos --show-sdk-path)"
+  simulator_sdk="$(xcrun --sdk appletvsimulator --show-sdk-path)"
+  mkdir -p -- "$objects"
+
+  xcrun --sdk appletvos clang \
+    -target "arm64-apple-tvos${DEPLOYMENT_TARGET}" -isysroot "$device_sdk" \
+    -fobjc-arc -fvisibility=hidden -fno-ident -Os -c "$source" \
+    -o "$objects/device-arm64.o"
+  xcrun --sdk appletvsimulator clang \
+    -target "arm64-apple-tvos${DEPLOYMENT_TARGET}-simulator" -isysroot "$simulator_sdk" \
+    -fobjc-arc -fvisibility=hidden -fno-ident -Os -c "$source" \
+    -o "$objects/simulator-arm64.o"
+  xcrun --sdk appletvsimulator clang \
+    -target "x86_64-apple-tvos${DEPLOYMENT_TARGET}-simulator" -isysroot "$simulator_sdk" \
+    -fobjc-arc -fvisibility=hidden -fno-ident -Os -c "$source" \
+    -o "$objects/simulator-x86_64.o"
+
+  xcrun libtool -static -o "$objects/device-combined.a" \
+    "$STAGE_DIR/tvStubs/device/libtvStubs.a" "$objects/device-arm64.o"
+  mv -- "$objects/device-combined.a" "$STAGE_DIR/tvStubs/device/libtvStubs.a"
+
+  xcrun lipo "$STAGE_DIR/tvStubs/simulator/libtvStubs.a" -thin arm64 \
+    -output "$objects/simulator-upstream-arm64.a"
+  xcrun lipo "$STAGE_DIR/tvStubs/simulator/libtvStubs.a" -thin x86_64 \
+    -output "$objects/simulator-upstream-x86_64.a"
+  xcrun libtool -static -o "$objects/simulator-combined-arm64.a" \
+    "$objects/simulator-upstream-arm64.a" "$objects/simulator-arm64.o"
+  xcrun libtool -static -o "$objects/simulator-combined-x86_64.a" \
+    "$objects/simulator-upstream-x86_64.a" "$objects/simulator-x86_64.o"
+  xcrun lipo -create \
+    "$objects/simulator-combined-arm64.a" "$objects/simulator-combined-x86_64.a" \
+    -output "$STAGE_DIR/tvStubs/simulator/libtvStubs.a"
+}
+
+append_metal_hud_bootstrap
+
 echo "[MoltenVK] build exact locked external graph for tvOS and tvOS Simulator"
 (
   cd "$SOURCES_DIR/MoltenVK"
@@ -368,6 +408,7 @@ done
 
 python3 "$SCRIPT_DIR/generate-tvos-symbol-expectations.py" \
   --sources-dir "$SOURCES_DIR" \
+  --hud-bootstrap-source "$REPO_ROOT/native/tvstubs/MetalPerformanceHudBootstrap.m" \
   --output "$BUILD_DIR/generated-symbol-expectations.json"
 
 echo "Build and packaging complete. Verification is a separate required gate:"

@@ -2,8 +2,8 @@
 set -euo pipefail
 
 readonly BASELINE_COMMIT="ce65a3896241ad33b0685a37e17278d0d5398e23"
-readonly EXPECTED_STAGE1_HASH="61c1d97b7a585144b2b60ec0ed46f2d70f1f6239ec1732a17cc3101c3293fe39"
-readonly EXPECTED_FMOD_LOGICAL_HASH="b32fc89dbefdda69ab7bf20ea9ece37826dce51787a4f70446493e292b12603d"
+readonly EXPECTED_STAGE1_HASH="6286e0545b32e9c56732955d4cf816ed8f5dc0d816ab610dd9fe1752090a01fc"
+readonly EXPECTED_FMOD_LOGICAL_HASH="40e9fb6ce63d1551611e2ed365934a4dfa56c616be1393e249a4a550fdfdeccc"
 readonly REQUIRED_EXPORTS=(
   SDL_GetVersion FNA3D_LinkedVersion FAudioLinkedVersion tf_fopen vkGetInstanceProcAddr
   FMOD_System_Create FMOD_System_GetVersion FMOD_System_Init FMOD_System_Release
@@ -117,72 +117,25 @@ grep -Fq "'\$(CelesteLaunchMode)' == 'FmodDiagnostic' and '\$(RuntimeIdentifier)
   echo "error: FMOD native references are not isolated to the device diagnostic" >&2
   exit 1
 }
-if grep -R -n -E 'com\.apple\.developer\.user-management' "$REPO_ROOT/tvos" >/dev/null; then
+if git -C "$REPO_ROOT" grep -n -E 'com\.apple\.developer\.user-management' -- tvos >/dev/null; then
   echo "error: User Management is out of scope" >&2
   exit 1
 fi
 
 git -C "$REPO_ROOT" diff --quiet "$BASELINE_COMMIT" -- \
   build.sh celestemeow fnalibs-ios-builder-celeste \
-  native/tvos-dependencies.lock.json native/patches native/tvos-symbol-expectations.json \
-  scripts/fetch-tvos-deps.sh scripts/build-tvos-native.sh scripts/verify-tvos-native.sh || {
-  echo "error: existing iOS or Stage 1 lane changed" >&2
+  native/tvos-dependencies.lock.json native/patches \
+  scripts/fetch-tvos-deps.sh scripts/verify-tvos-native.sh || {
+  echo "error: existing iOS or locked Stage 1 dependency lane changed" >&2
   exit 1
 }
-git -C "$REPO_ROOT" diff --quiet "$BASELINE_COMMIT" -- \
-  managed/celeste-analysis-policy.json \
-  managed/celeste-compatibility-ledger.json \
-  managed/celeste-generation.lock.json \
-  managed/celeste-stage3b-compatibility.json \
-  managed/celeste-stage3b-policy.json \
-  managed/celeste-stage3b-warning-policy.json \
-  managed/celeste-stage3c-policy.json \
-  managed/patches \
-  managed/templates/Audio.TvOSDisabled.cs \
-  managed/templates/Celeste.Content.Modern.csproj \
-  managed/templates/Celeste.Modern.csproj \
-  managed/templates/Stage3AContentIdentity.cs \
-  managed/templates/TvOSSaveDataSerializer.cs \
-  managed/templates/TvOSSettingsSerializer.cs \
-  managed/templates/TvOSStage3Bridge.cs \
-  managed/templates/TvOSStage3CBridge.cs \
-  scripts/celeste-stage3b.py scripts/celeste-stage3c.py \
-  scripts/prepare-celeste-tvos-runtime.sh scripts/prepare-celeste-tvos-stage3c.sh || {
-  echo "error: accepted Stage 3 managed/no-audio pipeline changed" >&2
-  exit 1
-}
+python3 "$REPO_ROOT/scripts/verify-celeste-tvos-stage16b.py" --repo-root "$REPO_ROOT" >/dev/null
+python3 "$REPO_ROOT/scripts/verify-celeste-tvos-stage14.py" --repo-root "$REPO_ROOT" >/dev/null
 (cd "$REPO_ROOT" && shasum -a 256 -c tvos/stage2-ios-native-baseline.sha256 >/dev/null)
-echo "PASS: Stage 1, accepted Stage 3 no-audio path, and iOS lane unchanged"
+echo "PASS: accepted Stage 14 inventory, Stage 16 native evolution, and iOS lane"
 
-python3 - "$REPO_ROOT" "$BASELINE_COMMIT" <<'PY'
-import pathlib, re, subprocess, sys
-root, baseline = pathlib.Path(sys.argv[1]), sys.argv[2]
-changed = set(subprocess.check_output(["git", "-C", str(root), "diff", "--name-only", baseline, "--"], text=True).splitlines())
-changed.update(subprocess.check_output(["git", "-C", str(root), "ls-files", "--others", "--exclude-standard"], text=True).splitlines())
-binary_suffixes = {".a", ".bank", ".framework", ".xcframework", ".mobileprovision", ".p12", ".cer", ".so", ".dylib"}
-patterns = {
-    "home path": re.compile(b"/" + rb"Users/[^/$\s]+/"),
-    "email": re.compile(rb"[A-Za-z0-9._%+-]+" + b"@" + rb"[A-Za-z0-9.-]+\.[A-Za-z]{2,}"),
-    "private UUID": re.compile(rb"(?i)\b[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\b"),
-    "certificate fingerprint": re.compile(rb"\b[A-F0-9]{40}\b"),
-    "literal Team ID": re.compile(rb"<DevelopmentTeam>\s*[A-Z0-9]{10}\s*</DevelopmentTeam>"),
-}
-for relative in sorted(changed):
-    path = root / relative
-    if not path.is_file():
-        continue
-    if path.suffix.lower() in binary_suffixes or relative.endswith((".xcframework", ".framework")):
-        raise SystemExit(f"error: generated/proprietary binary is visible to Git: {relative}")
-    data = path.read_bytes()
-    if relative == "native/fmod-tvos/FMOD_SDL_LICENSE.txt":
-        data = data.replace(b"flibitijibibo" + b"@" + b"flibitijibibo.com", b"<PUBLIC_UPSTREAM_CONTACT>")
-    if data.startswith((b"!<arch>\n", b"\xcf\xfa\xed\xfe", b"\x7fELF")):
-        raise SystemExit(f"error: native/proprietary binary is visible to Git: {relative}")
-    for label, pattern in patterns.items():
-        if pattern.search(data):
-            raise SystemExit(f"error: {label} found in candidate file: {relative}")
-print("PASS: candidate files contain no proprietary binary or private identity data")
-PY
+python3 "$REPO_ROOT/scripts/verify-repository-stage8b.py" >/dev/null
+echo "PASS: current repository verifier found no proprietary binary or private identity data"
 
 if [[ -n "$APP_DIR" ]]; then
   [[ -d "$APP_DIR" ]] || { echo "error: app bundle does not exist" >&2; exit 1; }

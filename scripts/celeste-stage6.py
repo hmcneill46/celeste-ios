@@ -49,11 +49,11 @@ def transform(root: pathlib.Path, templates: pathlib.Path, policy: dict[str, Any
     project = root / "Celeste.Modern.csproj"
     if mode == "realAudio":
         old_constants = "<DefineConstants>$(DefineConstants);TVOS;TVOS_STAGE3B;TVOS_STAGE3C;TVOS_STAGE5B;TVOS_REAL_AUDIO</DefineConstants>"
-        new_constants = "<DefineConstants>$(DefineConstants);TVOS;TVOS_STAGE3B;TVOS_STAGE3C;TVOS_STAGE5B;TVOS_STAGE6;TVOS_STAGE10A;TVOS_STAGE11;TVOS_STAGE12B;TVOS_STAGE13B;TVOS_STAGE15;TVOS_REAL_AUDIO</DefineConstants>"
+        new_constants = "<DefineConstants>$(DefineConstants);TVOS;TVOS_STAGE3B;TVOS_STAGE3C;TVOS_STAGE5B;TVOS_STAGE6;TVOS_STAGE10A;TVOS_STAGE11;TVOS_STAGE12B;TVOS_STAGE13B;TVOS_STAGE15;TVOS_STAGE16B;TVOS_REAL_AUDIO</DefineConstants>"
     else:
         old_constants = "<DefineConstants>$(DefineConstants);TVOS;TVOS_AUDIO_DISABLED;TVOS_STAGE3B;TVOS_STAGE3C</DefineConstants>"
-        new_constants = "<DefineConstants>$(DefineConstants);TVOS;TVOS_AUDIO_DISABLED;TVOS_STAGE3B;TVOS_STAGE3C;TVOS_STAGE6;TVOS_STAGE10A;TVOS_STAGE11;TVOS_STAGE12B;TVOS_STAGE13B;TVOS_STAGE15</DefineConstants>"
-    replace_once(project, old_constants, new_constants, "exclusive Stage 6/10A/11/12B/13B/15 compile symbols")
+        new_constants = "<DefineConstants>$(DefineConstants);TVOS;TVOS_AUDIO_DISABLED;TVOS_STAGE3B;TVOS_STAGE3C;TVOS_STAGE6;TVOS_STAGE10A;TVOS_STAGE11;TVOS_STAGE12B;TVOS_STAGE13B;TVOS_STAGE15;TVOS_STAGE16B</DefineConstants>"
+    replace_once(project, old_constants, new_constants, "exclusive Stage 6/10A/11/12B/13B/15/16B compile symbols")
 
     hook = templates / "TvOSStage6PersistenceHooks.cs"
     if not hook.is_file():
@@ -80,7 +80,30 @@ def transform(root: pathlib.Path, templates: pathlib.Path, policy: dict[str, Any
         raise SystemExit("error: Stage 13B soft-reload bridge template is missing")
     shutil.copyfile(soft_reload, root / "Celeste" / soft_reload.name)
 
+    performance_hud = templates / "TvOSPerformanceHudBridge.cs"
+    if not performance_hud.is_file():
+        raise SystemExit("error: Stage 16B Performance HUD bridge template is missing")
+    shutil.copyfile(performance_hud, root / "Celeste" / performance_hud.name)
+
     celeste_game = root / "Celeste" / "Celeste.cs"
+    replace_once(
+        celeste_game,
+        "\t\t\tceleste = new Celeste();\n",
+        "\t\t\tceleste = new Celeste();\n"
+        "\t\t\t#if TVOS_STAGE16B\n"
+        "\t\t\tTvOSPerformanceHudHooks.ApplyStartup(celeste.Window.Handle);\n"
+        "\t\t\t#endif\n",
+        "Stage 16B post-window pre-first-draw Performance HUD startup hook",
+    )
+    replace_once(
+        celeste_game,
+        "\t\tbase.RenderCore();\n\t\tTvOSStage3Bridge.RecordDraw(Engine.Scene, base.GraphicsDevice);",
+        "\t\t#if TVOS_STAGE16B\n"
+        "\t\tTvOSPerformanceHudHooks.ApplyBeforeFirstRender();\n"
+        "\t\t#endif\n"
+        "\t\tbase.RenderCore();\n\t\tTvOSStage3Bridge.RecordDraw(Engine.Scene, base.GraphicsDevice);",
+        "Stage 16B one-shot pre-render Performance HUD visibility hook",
+    )
     replace_once(
         celeste_game,
         "\t\tInput.UpdateGrab();\n\t}",
@@ -135,10 +158,13 @@ def transform(root: pathlib.Path, templates: pathlib.Path, policy: dict[str, Any
         "\t\t\tTvOSControllerPromptHooks.SetMode((TvOSControllerPromptMode)value);\n"
         "\t\t}));\n"
         "\t\t#endif\n"
+        "\t\t#if TVOS_STAGE16B\n"
+        "\t\tmenu.Add(new TextMenu.OnOff(\"Performance HUD\", TvOSPerformanceHudHooks.Enabled).Change(TvOSPerformanceHudHooks.SetEnabled));\n"
+        "\t\t#endif\n"
         "\t\tmenu.Add(new TextMenu.Button(\"Save Manager\").Pressed(OpenSaveManager));\n"
         "\t\t#endif\n"
         "\t\tviewport.Visible = Settings.Instance.Fullscreen;",
-        "tvOS-only controller-prompt and Save Manager Options entries",
+        "tvOS-only controller-prompt, Performance HUD, and Save Manager Options entries",
     )
     replace_once(
         menu_options,
@@ -386,7 +412,7 @@ def transform(root: pathlib.Path, templates: pathlib.Path, policy: dict[str, Any
     output = logical_manifest(root)
     expected_output = policy["generatedOutputs"][mode]
     if output["fileCount"] != expected_output["fileCount"] or output["logicalSha256"] != expected_output["logicalSha256"]:
-        raise SystemExit(f"error: {mode} output is not the locked Stage 6/10/11/12/13/15 generated source")
+        raise SystemExit(f"error: {mode} output is not the locked Stage 6/10/11/12/13/15/16 generated source")
     return {
         "schemaVersion": 1,
         "mode": mode,
@@ -397,6 +423,7 @@ def transform(root: pathlib.Path, templates: pathlib.Path, policy: dict[str, Any
         "controllerPromptBridge": "Celeste/TvOSControllerPromptBridge.cs",
         "quitBridge": "Celeste/TvOSQuitBridge.cs",
         "softReloadBridge": "Celeste/TvOSSoftReloadBridge.cs",
+        "performanceHudBridge": "Celeste/TvOSPerformanceHudBridge.cs",
         "allowListedLogicalNames": [item["logicalName"] for item in policy["writableFiles"]],
         "generatedSourceTracked": False,
     }

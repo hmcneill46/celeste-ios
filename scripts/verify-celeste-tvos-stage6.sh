@@ -22,7 +22,7 @@ USAGE
 }
 
 readonly BASELINE_COMMIT=2e17b013e7af46c993858ee6ef3ff1a13e4d6784
-readonly STAGE1_SHA=61c1d97b7a585144b2b60ec0ed46f2d70f1f6239ec1732a17cc3101c3293fe39
+readonly STAGE1_SHA=6286e0545b32e9c56732955d4cf816ed8f5dc0d816ab610dd9fe1752090a01fc
 SCRIPT_DIR="$(CDPATH= cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd -P)"
 REPO_ROOT="$(CDPATH= cd -- "$SCRIPT_DIR/.." && pwd -P)"
 RUNTIME_ROOT="$REPO_ROOT/.build/celeste-runtime/stage6-current"
@@ -113,9 +113,10 @@ PY
 if git -C "$REPO_ROOT" grep -n -E 'com\.apple\.developer\.user-management|com\.apple\.developer\.ubiquity|iCloud' -- tvos/CelesteTvOSRuntimeHost >/dev/null; then
   echo "error: Stage 6 introduced User Management or iCloud" >&2; exit 1
 fi
-git -C "$REPO_ROOT" diff --quiet "$BASELINE_COMMIT" -- build.sh celestemeow fnalibs-ios-builder-celeste FNA native tvos/CelesteTvOSHost tvos/FNA.TvOS tvos/stage2-ios-native-baseline.sha256 || {
-  echo "error: iOS or prior native/host foundation changed" >&2; exit 1;
+git -C "$REPO_ROOT" diff --quiet "$BASELINE_COMMIT" -- build.sh celestemeow fnalibs-ios-builder-celeste FNA native/tvos-dependencies.lock.json native/patches tvos/CelesteTvOSHost tvos/FNA.TvOS tvos/stage2-ios-native-baseline.sha256 || {
+  echo "error: iOS or locked prior native/host dependency foundation changed" >&2; exit 1;
 }
+python3 "$REPO_ROOT/scripts/verify-celeste-tvos-stage16b.py" --repo-root "$REPO_ROOT" >/dev/null
 (cd "$REPO_ROOT" && shasum -a 256 -c tvos/stage2-ios-native-baseline.sha256 >/dev/null)
 echo "PASS: privacy reason, entitlement isolation, and iOS archive hashes"
 

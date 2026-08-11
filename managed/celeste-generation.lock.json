@@ -95,7 +95,7 @@
     "project": "tvos/FNA.TvOS/FNA.TvOS.csproj",
     "revision": "d52b4ce61e4086b785c51a96d331dbf106975a58"
   },
-  "stage1NativeLogicalSha256": "61c1d97b7a585144b2b60ec0ed46f2d70f1f6239ec1732a17cc3101c3293fe39",
+  "stage1NativeLogicalSha256": "6286e0545b32e9c56732955d4cf816ed8f5dc0d816ab610dd9fe1752090a01fc",
   "patchOrder": [
     {
       "path": "patches/crash-fixes.patch",
