@@ -36,6 +36,7 @@ support matrix, and limitations are in [project status](../STATUS.md).
 18. [Stage 13B — verified high-level soft reload](stages/TVOS_SOFT_RELOAD_STAGE13B_REPORT.md)
 19. [Stage 13C — repository documentation cleanup](stages/TVOS_REPOSITORY_CLEANUP_STAGE13C_REPORT.md)
 20. [Stage 14 — integrated release-candidate validation](stages/TVOS_RELEASE_CANDIDATE_STAGE14_REPORT.md)
+21. [Stage 15 — one-time Save Manager QR pairing](stages/TVOS_SAVE_MANAGER_QR_STAGE15_REPORT.md)
 
 Diagnostic-only stages whose evidence was intentionally kept in ignored local
 build directories are not reconstructed here. The index covers every tracked

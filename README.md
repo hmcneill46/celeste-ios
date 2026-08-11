@@ -37,6 +37,7 @@ limitations.
 - Transparent compressed storage that fixes the later-game 32 KiB save limit
 - Recovery from a corrupt newest save generation
 - Explicitly activated local-network Save Manager backup and validated restore
+- One-time scan-to-connect QR pairing with the existing URL/code fallback
 - Local generation of the layered strawberry icon and static Top Shelf artwork
 - Direct Personal Team installation or a signing-ready unsigned IPA
 
@@ -260,9 +261,11 @@ app-private defaults domain.
 To back up or restore the ordinary Celeste Settings and save slots:
 
 1. In Celeste, open **Options** and choose **Save Manager**.
-2. On a phone or computer connected to the same local network, open the numeric
-   address displayed on the Apple TV.
-3. Enter the temporary six-digit access code shown on the TV.
+2. Make sure your phone or computer is on the same local network, then scan the
+   QR code shown on the Apple TV. The authenticated manager opens directly; no
+   code needs to be typed.
+3. If scanning is unavailable, open the displayed numeric address manually and
+   enter the temporary six-digit access code shown on the TV.
 4. Choose **Download backup (.zip)** for one archive containing every present
    ordinary `.celeste` file, or download an individual file.
 5. To restore one file, choose its fixed target, select the matching `.celeste`
@@ -282,7 +285,9 @@ target. The listener and Bonjour advertisement remain completely dormant during
 normal gameplay, start only after this menu choice, and stop when the screen is
 closed, the app backgrounds, or its short inactivity limit expires. It is a
 temporary same-LAN personal tool, not cloud or internet sync. No fixed IP or
-manual port setup is required.
+manual port setup is required. Each QR pairing is temporary, belongs only to
+the current Save Manager activation, and can authenticate one browser once;
+the manual URL and access code remain available for another device.
 
 The soft reload retains the original SDL/FNA/FMOD runtime. It discards the old
 Celeste scene, Settings, input bindings, SaveData and file-select inventory only
@@ -358,6 +363,8 @@ have not been physically tested here.
 - Saves are shared between Apple TV users and do not sync to the cloud.
 - Save Manager supports fixed validated replace/reset/delete operations, but no
   unattended sync, cloud service, or in-browser XML editor.
+- QR pairing is local-LAN only, expires quickly, and is one-time; the numeric
+  URL plus access code remains the compatibility fallback.
 - Save Manager changes reload in the existing runtime; the Apple TV app
   switcher remains the conservative fallback if reload verification fails.
 - Steam and non-itch.io-Linux game inputs are untested.

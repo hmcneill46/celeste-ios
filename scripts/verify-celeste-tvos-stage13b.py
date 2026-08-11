@@ -82,7 +82,9 @@ def main() -> int:
         "TVOS_STAGE13B", "TvOSSoftReloadBridge.cs", "TvOSSoftReloadHooks.Update()",
         "Stage 13B main-thread soft-reload update hook",
     ), "locked generated transformation")
-    require(project, ("13.0.0+stage13b", "UseInterpreter>false"), "host project")
+    require(project, ("UseInterpreter>false",), "host project")
+    if "13.0.0+stage13b" not in project and "15.0.0+stage15" not in project:
+        fail("host project no longer identifies the accepted Stage 13B boundary or its Stage 15 successor")
 
     forbidden_calls = (
         "Process.Start(", "Environment.Exit(", "Engine.Instance.Exit(", ".Game.Exit(",

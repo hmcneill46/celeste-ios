@@ -417,6 +417,21 @@ hook, ticketed persistence preparation/completion, blocked failure fallback,
 and the 20 deterministic reload-state tests. If the soft reload fails on a
 device, fully close Celeste from the Apple TV app switcher and reopen it.
 
+Verify Stage 15 one-time QR pairing, the complete accepted Stage 9B–14 chain,
+the generated bridge, and an optional product with:
+
+```bash
+scripts/verify-celeste-tvos-stage15.sh \
+  --generated-root .build/celeste-runtime/stage6-current/audio/managed
+```
+
+Pass `--app ... --platform device --signed` or `--ipa ...` for product checks.
+The Stage 15 layer adds 31 deterministic tests for 256-bit token generation,
+expiry, atomic one-time consumption, session/CSRF integration, parser limits,
+shutdown invalidation, and the unchanged manual six-digit fallback. The QR is
+generated locally with Core Image and requires no extra build dependency,
+entitlement, camera permission, or external service.
+
 For isolated automation, build only an explicitly local acceptance app with
 `Stage10AAutomation=true` and `Stage6StorageNamespace=acceptance`, then use:
 

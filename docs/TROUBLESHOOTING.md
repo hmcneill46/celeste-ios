@@ -627,6 +627,28 @@ server has completed them. Individual file links remain available. Current tvOS
 does not present the iOS Local Network permission prompt, so there is no
 permission switch to enable.
 
+## Save Manager QR code is not recognized or says it is no longer valid
+
+**Symptom**
+
+The phone camera does not recognize the QR code, or the browser says the QR is
+no longer valid.
+
+**Cause**
+
+QR pairing is intentionally temporary and one-time. Its credential expires
+after three minutes, is consumed by the first successful browser, and is erased
+whenever Save Manager stops or Celeste backgrounds. Camera recognition can also
+be affected by distance, glare, or a phone that does not open local HTTP links.
+
+**Fix**
+
+Keep Save Manager visible in the foreground and scan the current code squarely
+from a comfortable distance. If it expired or was already used, close and
+reopen **Options > Save Manager** for a fresh QR. You can always use the numeric
+address and six-digit access code displayed beside it; manual authentication is
+independent of the one-time QR credential.
+
 ## Save Manager rejects a replacement
 
 **Symptom**

@@ -59,12 +59,21 @@ internal sealed record Stage10AHttpResponse(int StatusCode, string Reason, IRead
 
 internal readonly record struct Stage10ARequestProgress(bool Complete, int ExpectedBytes, Stage10AHttpResponse? Rejection);
 
+internal enum Stage15PairingState
+{
+    Available,
+    Consumed,
+    Expired,
+    Stopped
+}
+
 internal sealed class Stage10AHttpProtocol
 {
     internal const int MaximumRequestLineBytes = 2048;
     internal const int MaximumHeaderBytes = 16 * 1024;
     internal const int MaximumHeaderCount = 48;
     internal const int MaximumAuthBodyBytes = 64;
+    internal const int MaximumPairingBodyBytes = 80;
     internal const int MaximumSettingsUploadBytes = 64 * 1024;
     internal const int MaximumSaveUploadBytes = 256 * 1024;
     internal const int MaximumRequestBodyBytes = MaximumSaveUploadBytes;
@@ -74,6 +83,7 @@ internal sealed class Stage10AHttpProtocol
     internal const string RevisionHeaderName = "x-celeste-revision";
     internal static readonly TimeSpan RequestLifetime = TimeSpan.FromSeconds(10);
     internal static readonly TimeSpan SessionLifetime = TimeSpan.FromMinutes(10);
+    internal static readonly TimeSpan PairingLifetime = TimeSpan.FromMinutes(3);
 
     private static readonly string[] LogicalNames = { "settings", "0", "1", "2" };
     private readonly object gate = new();
@@ -81,11 +91,15 @@ internal sealed class Stage10AHttpProtocol
     private readonly Func<Stage10BMutationCommand, Stage10BMutationResult>? mutator;
     private readonly Dictionary<string, SessionState> sessions = new(StringComparer.Ordinal);
     private readonly byte[] revisionSecret = RandomNumberGenerator.GetBytes(32);
+    private byte[] pairingCredential = RandomNumberGenerator.GetBytes(32);
+    private readonly DateTimeOffset pairingExpiry;
     private Stage10AExportSnapshot snapshot;
     private string revision;
     private string accessCode;
     private bool active = true;
     private bool restartRequired;
+    private bool pairingConsumed;
+    private bool pairingExpired;
 
     internal Stage10AHttpProtocol(
         Stage10AExportSnapshot stableSnapshot,
@@ -97,12 +111,24 @@ internal sealed class Stage10AHttpProtocol
         mutator = mutationHandler;
         accessCode = GenerateAccessCode();
         revision = ComputeRevision(snapshot);
+        pairingExpiry = now().Add(PairingLifetime);
     }
 
     internal string AccessCode { get { lock (gate) return accessCode; } }
     internal int ActiveSessionCount { get { lock (gate) { PurgeExpired(); return sessions.Count; } } }
     internal bool RestartRequired { get { lock (gate) return restartRequired; } }
     internal string RevisionForDiagnostics { get { lock (gate) return revision; } }
+    internal Stage15PairingState PairingState { get { lock (gate) return PairingStateUnsafe(); } }
+    internal string PairingCredentialForQr
+    {
+        get
+        {
+            lock (gate)
+                return PairingStateUnsafe() == Stage15PairingState.Available
+                    ? Convert.ToHexString(pairingCredential).ToLowerInvariant()
+                    : "";
+        }
+    }
 
     internal void ReplaceSnapshot(Stage10AExportSnapshot stableSnapshot)
     {
@@ -121,6 +147,9 @@ internal sealed class Stage10AHttpProtocol
             accessCode = "";
             revision = "";
             sessions.Clear();
+            pairingConsumed = true;
+            CryptographicOperations.ZeroMemory(pairingCredential);
+            pairingCredential = Array.Empty<byte>();
             CryptographicOperations.ZeroMemory(revisionSecret);
         }
     }
@@ -186,8 +215,23 @@ internal sealed class Stage10AHttpProtocol
     internal static string GenerateAccessCode() =>
         RandomNumberGenerator.GetInt32(0, 1_000_000).ToString("D6", CultureInfo.InvariantCulture);
 
+    internal string BuildPairingUrl(string baseUrl)
+    {
+        lock (gate)
+        {
+            string credential = PairingStateUnsafe() == Stage15PairingState.Available
+                ? Convert.ToHexString(pairingCredential).ToLowerInvariant()
+                : "";
+            if (credential.Length != 64 || !Uri.TryCreate(baseUrl, UriKind.Absolute, out Uri? uri) ||
+                uri.Scheme != Uri.UriSchemeHttp || !string.IsNullOrEmpty(uri.Query) || !string.IsNullOrEmpty(uri.Fragment))
+                throw new InvalidOperationException("A ready numeric HTTP listener URL is required for QR pairing.");
+            return baseUrl.TrimEnd('/') + "/pair#" + credential;
+        }
+    }
+
     private Stage10AHttpResponse Route(ParsedRequest request)
     {
+        if (request.Method == "POST" && request.Path == "/pair") return Pair(request);
         if (request.Method == "POST" && request.Path == "/auth") return Authenticate(request);
 
         SessionState? session = TryAuthenticate(request.Headers);
@@ -195,6 +239,7 @@ internal sealed class Stage10AHttpProtocol
 
         bool isHead = request.Method == "HEAD";
         if (request.Method is not ("GET" or "HEAD")) return MethodNotAllowed("GET, HEAD, POST");
+        if (request.Path == "/pair") return PairingBootstrap(isHead);
         if (request.Path == "/")
             return session == null ? Html(200, "OK", AccessCodePage(invalid: false), isHead) :
                 AuthenticatedResponse(200, "OK", session, session.Notice, isHead);
@@ -238,19 +283,96 @@ internal sealed class Stage10AHttpProtocol
         bool valid = supplied.Length == 6 && accessCode.Length == 6 && FixedEquals(supplied, accessCode);
         if (!valid) return Html(401, "Unauthorized", AccessCodePage(invalid: true), headOnly: false);
 
+        return StartSession("Connected successfully.", includeManagerPage: true, paired: false);
+    }
+
+    private Stage10AHttpResponse PairingBootstrap(bool headOnly)
+    {
+        string nonce = Convert.ToBase64String(RandomNumberGenerator.GetBytes(18));
+        return Html(200, "OK", PairingPage(nonce), headOnly, nonce);
+    }
+
+    private Stage10AHttpResponse Pair(ParsedRequest request)
+    {
+        if (!request.ContentLengthPresent)
+            return PairingRejected();
+        if (!request.Headers.TryGetValue("content-type", out string? contentType) ||
+            !contentType.Equals("application/x-www-form-urlencoded", StringComparison.OrdinalIgnoreCase))
+            return PairingRejected();
+        string body = Encoding.ASCII.GetString(request.Body);
+        if (!body.StartsWith("token=", StringComparison.Ordinal) || body.IndexOf('&') >= 0)
+            return PairingRejected();
+        string supplied;
+        try { supplied = DecodeFormValue(body[6..]); }
+        catch (HttpFailure) { return PairingRejected(); }
+        if (!TryConsumePairingCredential(supplied)) return PairingRejected();
+        return StartSession("Connected by QR.", includeManagerPage: false, paired: true);
+    }
+
+    private Stage10AHttpResponse StartSession(string notice, bool includeManagerPage, bool paired)
+    {
         string token = RandomHex(32);
-        SessionState session = new(now().Add(SessionLifetime), RandomHex(32))
-        {
-            Notice = "Connected successfully."
-        };
+        SessionState session = new(now().Add(SessionLifetime), RandomHex(32)) { Notice = notice };
         sessions[token] = session;
-        Stage10AHttpResponse response = AuthenticatedResponse(200, "OK", session, session.Notice, headOnly: false);
+        Stage10AHttpResponse response;
+        if (includeManagerPage)
+        {
+            response = AuthenticatedResponse(200, "OK", session, notice, headOnly: false);
+        }
+        else
+        {
+            byte[] body = "paired"u8.ToArray();
+            response = new Stage10AHttpResponse(200, "OK", BaseHeaders("text/plain; charset=utf-8", body.Length, null), body);
+        }
         Dictionary<string, string> headers = new(response.Headers, StringComparer.Ordinal)
         {
             ["X-Celeste-Authentication"] = "accepted",
             ["Set-Cookie"] = $"{SessionCookieName}={token}; Path=/; Max-Age=600; HttpOnly; SameSite=Strict"
         };
+        if (paired) headers["X-Celeste-Pairing"] = "accepted";
         return response with { Headers = headers };
+    }
+
+    private bool TryConsumePairingCredential(string supplied)
+    {
+        byte[] candidate = new byte[32];
+        bool shapeValid = supplied.Length == 64;
+        if (shapeValid)
+        {
+            try
+            {
+                byte[] parsed = Convert.FromHexString(supplied);
+                shapeValid = parsed.Length == candidate.Length;
+                if (shapeValid) parsed.CopyTo(candidate, 0);
+                CryptographicOperations.ZeroMemory(parsed);
+            }
+            catch (FormatException) { shapeValid = false; }
+        }
+        byte[] expected = pairingCredential.Length == 32 ? pairingCredential : new byte[32];
+        bool matches = CryptographicOperations.FixedTimeEquals(candidate, expected);
+        CryptographicOperations.ZeroMemory(candidate);
+        bool valid = shapeValid && matches && PairingStateUnsafe() == Stage15PairingState.Available;
+        if (!valid) return false;
+        pairingConsumed = true;
+        CryptographicOperations.ZeroMemory(pairingCredential);
+        pairingCredential = Array.Empty<byte>();
+        return true;
+    }
+
+    private Stage15PairingState PairingStateUnsafe()
+    {
+        if (!active) return Stage15PairingState.Stopped;
+        if (pairingExpired) return Stage15PairingState.Expired;
+        if (!pairingConsumed && now() >= pairingExpiry)
+        {
+            pairingExpired = true;
+            CryptographicOperations.ZeroMemory(pairingCredential);
+            pairingCredential = Array.Empty<byte>();
+            return Stage15PairingState.Expired;
+        }
+        return pairingConsumed || pairingCredential.Length == 0
+            ? Stage15PairingState.Consumed
+            : Stage15PairingState.Available;
     }
 
     private Stage10AHttpResponse Mutate(ParsedRequest request, SessionState? session)
@@ -448,6 +570,7 @@ internal sealed class Stage10AHttpProtocol
     {
         if (method != "POST") return 0;
         if (path == "/auth") return MaximumAuthBodyBytes;
+        if (path == "/pair") return MaximumPairingBodyBytes;
         MutationRoute? mutation = MutationTarget(path);
         if (mutation == null || !mutation.Replace) return 0;
         return mutation.LogicalName == "settings" ? MaximumSettingsUploadBytes : MaximumSaveUploadBytes;
@@ -548,6 +671,20 @@ internal sealed class Stage10AHttpProtocol
         "<p>Enter the six-digit access code shown on your Apple TV.</p>" +
         (invalid ? "<p class=error>That code was not accepted.</p>" : "") +
         "<form method=post action=/auth><label>Access code <input name=code inputmode=numeric autocomplete=one-time-code maxlength=7 required></label><button type=submit>Connect</button></form>");
+
+    private static string PairingPage(string nonce) => Page("Celeste Save Manager",
+        "<p id=status>Connecting to your Apple TV...</p>" +
+        "<p><a href=/>Use the six-digit access code instead</a></p>" +
+        "<script nonce=\"" + nonce + "\">'use strict';" +
+        "const status=document.getElementById('status'),token=location.hash.slice(1);" +
+        "history.replaceState(null,'','/pair');" +
+        "const fail=()=>status.textContent='This QR code is no longer valid. Scan the current code on your Apple TV or use the access code instead.';" +
+        "if(!/^[0-9a-f]{64}$/.test(token)){fail();}else{fetch('/pair',{method:'POST',credentials:'same-origin',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:'token='+encodeURIComponent(token)}).then(r=>{if(r.ok){location.replace('/');}else{fail();}}).catch(fail);}" +
+        "</script>");
+
+    private static Stage10AHttpResponse PairingRejected() =>
+        Html(401, "Unauthorized", Page("QR code unavailable",
+            "<p>This QR code is no longer valid. Scan the current code on your Apple TV or use the access code instead.</p><p><a href=/>Use access code</a></p>"), headOnly: false);
 
     private static string AuthenticatedPage(
         Stage10AExportSnapshot value,

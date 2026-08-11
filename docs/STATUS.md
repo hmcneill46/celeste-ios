@@ -13,6 +13,9 @@ physical installation, all-chapter loading, Save Manager/soft reload, real
 Apple TV restart, replacement-install, controller, audio, lifecycle, branding,
 privacy, and repository gates. See the
 [release-candidate record](history/stages/TVOS_RELEASE_CANDIDATE_STAGE14_REPORT.md).
+Stage 15 is the first post-RC feature and adds one-time scan-to-connect QR
+pairing on the separate `feature/save-manager-qr` branch without changing the
+immutable `v1.0.0-rc.1` recovery point.
 
 ## Proven support matrix
 
@@ -49,6 +52,7 @@ flowchart LR
     P --> I["Signing-ready unsigned IPA"]
     P --> S["Dual-generation standard UserDefaults storage"]
     S --> W["Explicit authenticated LAN Save Manager"]
+    W --> P["One-time QR or manual code pairing"]
     W --> R["Verified high-level soft reload"]
     H --> B["Host-only controller prompt preference"]
     H --> Q["Foreground/background-aware Leave Celeste flow"]
@@ -114,7 +118,15 @@ The tvOS-only Options entry opens a Celeste-rendered host modal; it does not add
 another `Oui` subtype or reflection root. Only that explicit action flushes and
 read-back verifies the current Stage 9B generation, then starts a bounded
 Network-framework `NWListener` on a system-selected port. The screen presents
-the current numeric LAN URL and a new cryptographically random access code.
+the current numeric LAN URL, a new cryptographically random access code, and a
+crisp Core Image QR code for the highest-ranked usable numeric LAN address.
+
+The QR carries a separate 256-bit one-time pairing credential in a URL fragment.
+A fixed local bootstrap page removes the fragment from the address bar, submits
+it to the fixed pairing endpoint, and creates the same normal authenticated
+session used by manual six-digit authentication. The credential expires after
+three minutes or immediately after one successful use. It is never persisted
+or logged. Manual URL/code authentication remains fully supported.
 
 The listener advertises `_celeste-save._tcp` over Bonjour only while open. Its
 fixed-purpose HTTP boundary authenticates into an in-memory ten-minute session
@@ -196,6 +208,8 @@ or an unsigned conventional tvOS IPA containing `Payload/Celeste.app`.
 - Free Personal Team signed installation and verified unsigned IPA structure
 - Explicit Save Manager with temporary same-LAN authentication, ordinary-file
   backup, exact validated replacement, slot deletion, and Settings reset
+- One-time QR pairing from a phone camera, with manual numeric URL and access
+  code retained as a complete fallback
 - Confirm-driven Save Manager soft reload with exact generation/hash tickets;
   no second SDL/FNA/FMOD runtime
 - Main-menu Quit verifies durable state and provides a safe Home/background
@@ -218,6 +232,8 @@ or an unsigned conventional tvOS IPA containing `Payload/Celeste.app`.
 - Save Manager operations are deliberate and local only; there is no unattended
   sync, cloud service, or in-browser XML editor. If soft reload validation fails,
   fully close Celeste from the app switcher and reopen it.
+- QR pairing requires a phone/browser that can open ordinary local HTTP URLs;
+  an expired or consumed QR falls back to the displayed URL and access code.
 - Apple Game Mode is not declared: the current public Apple keys do not document
   tvOS availability, and this project makes no Apple TV Game Mode claim.
 - No App Store, distribution-profile, paid entitlement, or universal hardware

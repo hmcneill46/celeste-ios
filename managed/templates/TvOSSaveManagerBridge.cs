@@ -1,6 +1,7 @@
 #if TVOS_STAGE10A
 using System;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Monocle;
 
 namespace Celeste;
@@ -12,6 +13,17 @@ public sealed class TvOSSaveManagerDisplayState
     public string AccessCode { get; init; } = "";
     public string Detail { get; init; } = "";
     public bool RestartRequired { get; init; }
+    public string PairingStatus { get; init; } = "unavailable";
+    public TvOSSaveManagerQrImage PairingQr { get; init; }
+}
+
+public sealed class TvOSSaveManagerQrImage
+{
+    public int Width { get; init; }
+    public int Height { get; init; }
+    public int ModuleCount { get; init; }
+    public int IntegerScale { get; init; }
+    public byte[] Rgba { get; init; } = Array.Empty<byte>();
 }
 
 public static class TvOSSaveManagerHooks
@@ -50,6 +62,8 @@ public sealed class TvOSSaveManagerUI : Entity
     private TvOSSoftReloadDisplayState reload = new();
     #endif
     private bool closing;
+    private TvOSSaveManagerQrImage qrSource;
+    private Texture2D qrTexture;
 
     public Action OnClose { get; set; }
 
@@ -72,6 +86,7 @@ public sealed class TvOSSaveManagerUI : Entity
         #if TVOS_STAGE13B
         reload = TvOSSoftReloadHooks.Status();
         #endif
+        UpdateQrTexture();
         if (!closing && (Input.MenuCancel.Pressed || Input.MenuConfirm.Pressed))
         {
             if (state.RestartRequired)
@@ -97,12 +112,14 @@ public sealed class TvOSSaveManagerUI : Entity
 
     public override void Removed(Scene scene)
     {
+        DisposeQrTexture();
         TvOSSaveManagerHooks.Stop("ui-removed");
         base.Removed(scene);
     }
 
     public override void SceneEnd(Scene scene)
     {
+        DisposeQrTexture();
         TvOSSaveManagerHooks.Stop("scene-ended");
         base.SceneEnd(scene);
     }
@@ -110,10 +127,10 @@ public sealed class TvOSSaveManagerUI : Entity
     public override void Render()
     {
         Draw.Rect(-10f, -10f, 1940f, 1100f, Color.Black * 0.96f);
-        DrawLine("SAVE MANAGER", 160f, 1.45f, Color.White);
-        DrawLine("Manage your Celeste saves from another device.", 285f, 0.72f, Color.LightGray);
-        DrawLine("Make sure this Apple TV and your phone or computer", 350f, 0.62f, Color.LightGray);
-        DrawLine("are connected to the same network.", 400f, 0.62f, Color.LightGray);
+        DrawLine("SAVE MANAGER", 90f, 1.45f, Color.White);
+        DrawLine("Manage your Celeste saves from another device.", 180f, 0.72f, Color.LightGray);
+        DrawLine("Make sure this Apple TV and your phone or computer", 235f, 0.62f, Color.LightGray);
+        DrawLine("are connected to the same network.", 280f, 0.62f, Color.LightGray);
 
         if (state.RestartRequired || state.Phase == "restart-required")
         {
@@ -152,11 +169,25 @@ public sealed class TvOSSaveManagerUI : Entity
         }
         else if (state.Phase == "ready")
         {
-            DrawLine("Open:", 495f, 0.65f, Color.LightGray);
-            int shown = Math.Min(2, state.Urls.Length);
-            for (int i = 0; i < shown; i++) DrawLine(state.Urls[i], 555f + i * 55f, 0.72f, Color.White);
-            DrawLine("Access code:", 690f, 0.65f, Color.LightGray);
-            DrawLine(GroupCode(state.AccessCode), 755f, 1.15f, Color.White);
+            if (qrTexture != null && state.PairingStatus == "available")
+            {
+                float qrX = (float)Math.Floor(285f + (420f - qrTexture.Width) * 0.5f);
+                float qrY = (float)Math.Floor(320f + (420f - qrTexture.Height) * 0.5f);
+                Draw.SpriteBatch.Draw(qrTexture, new Vector2(qrX, qrY), Color.White);
+                DrawLineAt("Scan with your phone camera to connect.", 1300f, 380f, 0.62f, Color.White);
+                DrawLineAt("Or open manually:", 1300f, 495f, 0.55f, Color.LightGray);
+                DrawManualConnection(1300f, 555f);
+            }
+            else
+            {
+                string pairingMessage = state.PairingStatus == "connected"
+                    ? "Device connected"
+                    : state.PairingStatus == "expired"
+                        ? "QR code expired. Use the address and access code below."
+                        : "QR pairing is unavailable. Use the address and access code below.";
+                DrawLine(pairingMessage, 485f, state.PairingStatus == "connected" ? 0.85f : 0.58f, Color.White);
+                DrawManualConnection(960f, 585f);
+            }
             DrawLine("The server stops automatically when you leave this screen.", 865f, 0.5f, Color.Gray);
         }
         else if (state.Phase == "unavailable")
@@ -179,8 +210,38 @@ public sealed class TvOSSaveManagerUI : Entity
 
     private static string GroupCode(string value) => value?.Length == 6 ? value[..3] + " " + value[3..] : "";
 
+    private void DrawManualConnection(float x, float firstY)
+    {
+        int shown = Math.Min(2, state.Urls.Length);
+        for (int i = 0; i < shown; i++) DrawLineAt(state.Urls[i], x, firstY + i * 48f, shown == 1 ? 0.56f : 0.46f, Color.White);
+        float codeLabelY = firstY + shown * 48f + 35f;
+        DrawLineAt("Access code:", x, codeLabelY, 0.52f, Color.LightGray);
+        DrawLineAt(GroupCode(state.AccessCode), x, codeLabelY + 65f, 1.0f, Color.White);
+    }
+
+    private void UpdateQrTexture()
+    {
+        if (ReferenceEquals(qrSource, state.PairingQr)) return;
+        DisposeQrTexture();
+        qrSource = state.PairingQr;
+        if (qrSource == null || qrSource.Width <= 0 || qrSource.Height <= 0 ||
+            qrSource.Rgba == null || qrSource.Rgba.Length != qrSource.Width * qrSource.Height * 4) return;
+        qrTexture = new Texture2D(Engine.Graphics.GraphicsDevice, qrSource.Width, qrSource.Height, false, SurfaceFormat.Color);
+        qrTexture.SetData(qrSource.Rgba);
+    }
+
+    private void DisposeQrTexture()
+    {
+        qrTexture?.Dispose();
+        qrTexture = null;
+        qrSource = null;
+    }
+
     private static void DrawLine(string text, float y, float scale, Color color) =>
-        ActiveFont.DrawOutline(text ?? "", new Vector2(960f, y), new Vector2(0.5f, 0.5f),
+        DrawLineAt(text, 960f, y, scale, color);
+
+    private static void DrawLineAt(string text, float x, float y, float scale, Color color) =>
+        ActiveFont.DrawOutline(text ?? "", new Vector2(x, y), new Vector2(0.5f, 0.5f),
             Vector2.One * scale, color, 2f, Color.Black);
 }
 #endif

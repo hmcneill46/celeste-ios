@@ -49,11 +49,11 @@ def transform(root: pathlib.Path, templates: pathlib.Path, policy: dict[str, Any
     project = root / "Celeste.Modern.csproj"
     if mode == "realAudio":
         old_constants = "<DefineConstants>$(DefineConstants);TVOS;TVOS_STAGE3B;TVOS_STAGE3C;TVOS_STAGE5B;TVOS_REAL_AUDIO</DefineConstants>"
-        new_constants = "<DefineConstants>$(DefineConstants);TVOS;TVOS_STAGE3B;TVOS_STAGE3C;TVOS_STAGE5B;TVOS_STAGE6;TVOS_STAGE10A;TVOS_STAGE11;TVOS_STAGE12B;TVOS_STAGE13B;TVOS_REAL_AUDIO</DefineConstants>"
+        new_constants = "<DefineConstants>$(DefineConstants);TVOS;TVOS_STAGE3B;TVOS_STAGE3C;TVOS_STAGE5B;TVOS_STAGE6;TVOS_STAGE10A;TVOS_STAGE11;TVOS_STAGE12B;TVOS_STAGE13B;TVOS_STAGE15;TVOS_REAL_AUDIO</DefineConstants>"
     else:
         old_constants = "<DefineConstants>$(DefineConstants);TVOS;TVOS_AUDIO_DISABLED;TVOS_STAGE3B;TVOS_STAGE3C</DefineConstants>"
-        new_constants = "<DefineConstants>$(DefineConstants);TVOS;TVOS_AUDIO_DISABLED;TVOS_STAGE3B;TVOS_STAGE3C;TVOS_STAGE6;TVOS_STAGE10A;TVOS_STAGE11;TVOS_STAGE12B;TVOS_STAGE13B</DefineConstants>"
-    replace_once(project, old_constants, new_constants, "exclusive Stage 6/10A/11/12B compile symbols")
+        new_constants = "<DefineConstants>$(DefineConstants);TVOS;TVOS_AUDIO_DISABLED;TVOS_STAGE3B;TVOS_STAGE3C;TVOS_STAGE6;TVOS_STAGE10A;TVOS_STAGE11;TVOS_STAGE12B;TVOS_STAGE13B;TVOS_STAGE15</DefineConstants>"
+    replace_once(project, old_constants, new_constants, "exclusive Stage 6/10A/11/12B/13B/15 compile symbols")
 
     hook = templates / "TvOSStage6PersistenceHooks.cs"
     if not hook.is_file():
@@ -386,7 +386,7 @@ def transform(root: pathlib.Path, templates: pathlib.Path, policy: dict[str, Any
     output = logical_manifest(root)
     expected_output = policy["generatedOutputs"][mode]
     if output["fileCount"] != expected_output["fileCount"] or output["logicalSha256"] != expected_output["logicalSha256"]:
-        raise SystemExit(f"error: {mode} output is not the locked Stage 6/10/11 generated source")
+        raise SystemExit(f"error: {mode} output is not the locked Stage 6/10/11/12/13/15 generated source")
     return {
         "schemaVersion": 1,
         "mode": mode,

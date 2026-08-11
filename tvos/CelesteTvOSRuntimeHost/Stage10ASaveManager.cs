@@ -196,11 +196,28 @@ internal sealed class Stage10ASaveManager : IDisposable
                 case NWListenerState.Ready:
                     ushort port = source.Port;
                     string[] urls = addresses.Select(address => Stage10ALanAddressPolicy.FormatUrl(address, port)).ToArray();
+                    TvOSSaveManagerQrImage? pairingQr = null;
+                    string pairingStatus = "unavailable";
+                    try
+                    {
+                        Stage10AHttpProtocol currentProtocol = protocol
+                            ?? throw new InvalidOperationException("Save Manager protocol was unavailable at listener readiness.");
+                        string pairingUrl = currentProtocol.BuildPairingUrl(urls[0]);
+                        pairingQr = Stage15QrCodeGenerator.Create(pairingUrl);
+                        pairingStatus = "available";
+                        Stage3BLog.Info($"STAGE15_QR result=ready; pixels={pairingQr.Width}; modules={pairingQr.ModuleCount}; integer-scale={pairingQr.IntegerScale}; correction={Stage15QrCodeGenerator.CorrectionLevel}; quiet-zone={Stage15QrCodeGenerator.QuietZoneModules}; credential=not-logged");
+                    }
+                    catch (Exception exception)
+                    {
+                        Stage3BLog.Warning($"STAGE15_QR result=unavailable; type={exception.GetType().Name}; credential=not-logged; manual-fallback=true");
+                    }
                     status = new TvOSSaveManagerDisplayState
                     {
                         Phase = "ready",
                         Urls = urls,
-                        AccessCode = protocol?.AccessCode ?? ""
+                        AccessCode = protocol?.AccessCode ?? "",
+                        PairingStatus = pairingStatus,
+                        PairingQr = pairingQr
                     };
                     inactivityTimer.Change(ManagerInactivityLifetime, Timeout.InfiniteTimeSpan);
                     Stage3BLog.Info($"STAGE10A_READY port={port}; address-count={urls.Length}; bonjour=advertising; access-code=not-logged");
@@ -364,7 +381,25 @@ internal sealed class Stage10ASaveManager : IDisposable
 
     private TvOSSaveManagerDisplayState Status()
     {
-        lock (gate) return CopyStatus(status, restartRequired);
+        lock (gate)
+        {
+            if (status.Phase == "ready" && protocol != null)
+            {
+                Stage15PairingState pairing = protocol.PairingState;
+                string next = pairing switch
+                {
+                    Stage15PairingState.Available => "available",
+                    Stage15PairingState.Consumed => "connected",
+                    Stage15PairingState.Expired => "expired",
+                    _ => "unavailable"
+                };
+                if (next != status.PairingStatus)
+                    status = CopyStatus(status, pairingStatus: next,
+                        pairingQr: pairing == Stage15PairingState.Available ? status.PairingQr : null,
+                        preservePairingQr: pairing == Stage15PairingState.Available);
+            }
+            return CopyStatus(status, restartRequired);
+        }
     }
 
     private void Stop(string reason)
@@ -395,6 +430,7 @@ internal sealed class Stage10ASaveManager : IDisposable
                 listener.Dispose();
                 listener = null;
             }
+            status = CopyStatus(status, pairingStatus: "unavailable", pairingQr: null, preservePairingQr: false);
             if (clearStatus)
             {
                 status = restartRequired
@@ -472,13 +508,20 @@ internal sealed class Stage10ASaveManager : IDisposable
 
     [DllImport("__Internal", EntryPoint = "freeifaddrs")]
     private static extern void FreeIfAddrs(IntPtr addresses);
-    private static TvOSSaveManagerDisplayState CopyStatus(TvOSSaveManagerDisplayState value, bool? restartRequired = null) => new()
+    private static TvOSSaveManagerDisplayState CopyStatus(
+        TvOSSaveManagerDisplayState value,
+        bool? restartRequired = null,
+        string? pairingStatus = null,
+        TvOSSaveManagerQrImage? pairingQr = null,
+        bool preservePairingQr = true) => new()
     {
         Phase = value.Phase,
         Urls = value.Urls.ToArray(),
         AccessCode = value.AccessCode,
         Detail = value.Detail,
-        RestartRequired = restartRequired ?? value.RestartRequired
+        RestartRequired = restartRequired ?? value.RestartRequired,
+        PairingStatus = pairingStatus ?? value.PairingStatus,
+        PairingQr = preservePairingQr ? pairingQr ?? value.PairingQr : pairingQr
     };
 
     private void ThrowIfDisposed() { if (disposed) throw new ObjectDisposedException(nameof(Stage10ASaveManager)); }
