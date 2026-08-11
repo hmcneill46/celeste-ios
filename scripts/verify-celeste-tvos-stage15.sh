@@ -43,7 +43,11 @@ stage14_args=()
 [[ -z "$APP" ]] || stage14_args+=(--app "$APP" --platform "$PLATFORM")
 [[ "$SIGNED" -eq 0 ]] || stage14_args+=(--signed)
 [[ -z "$IPA" ]] || stage14_args+=(--ipa "$IPA")
-"$REPO_ROOT/scripts/verify-celeste-tvos-stage14.sh" "${stage14_args[@]}"
+if ((${#stage14_args[@]})); then
+  "$REPO_ROOT/scripts/verify-celeste-tvos-stage14.sh" "${stage14_args[@]}"
+else
+  "$REPO_ROOT/scripts/verify-celeste-tvos-stage14.sh"
+fi
 
 dotnet run --project "$REPO_ROOT/tvos/Stage15QrPairingTests/Stage15QrPairingTests.csproj" -c Release
 

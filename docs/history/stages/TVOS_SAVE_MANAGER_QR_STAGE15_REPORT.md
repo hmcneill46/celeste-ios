@@ -88,6 +88,13 @@ credential and clears rendered QR state.
 - A new clone of the actual pushed feature branch supplies the final
   remote-branch presentation and cleanliness check.
 
+The first source-only verifier invocation in that clone exposed a macOS Bash
+3.2 `set -u` edge case: expanding an empty optional Stage 14 argument array was
+treated as an unbound variable. The Stage 15 wrapper now calls Stage 14 with no
+array expansion when there are no product-evidence arguments. The source-only
+and product-evidence forms both passed afterward; this correction changes only
+the verifier wrapper, not the app or package.
+
 ## Known limitations
 
 The QR opens an ordinary HTTP service available only on the same LAN while the
