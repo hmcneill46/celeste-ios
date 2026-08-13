@@ -11,6 +11,7 @@ namespace CelesteTvOSHost;
 internal sealed class Stage13BSoftReloadCoordinator : IDisposable
 {
     private static readonly TimeSpan SaveWaitTimeout = TimeSpan.FromSeconds(8);
+    private static readonly TimeSpan SceneDetachTimeout = TimeSpan.FromSeconds(5);
     private static readonly TimeSpan MainMenuTimeout = TimeSpan.FromSeconds(20);
 
     private readonly object gate = new();
@@ -24,6 +25,8 @@ internal sealed class Stage13BSoftReloadCoordinator : IDisposable
     private readonly Stage13BSoftReloadStateMachine stateMachine = new();
     private Stage6PersistenceStore.ExternalMutationReloadTicket? ticket;
     private DateTimeOffset saveDeadline;
+    private Scene? detachmentScene;
+    private Stopwatch? sceneDetachDeadline;
     private Stopwatch? mainMenuDeadline;
     private string failureCategory = "none";
     private bool disposed;
@@ -112,7 +115,19 @@ internal sealed class Stage13BSoftReloadCoordinator : IDisposable
                         if (DateTimeOffset.UtcNow >= saveDeadline) Fail("userio-timeout", null);
                         return;
                     }
-                    PrepareAndScheduleMainMenu();
+                    PrepareAndDetachStaleScene();
+                    return;
+                }
+
+                if (phase == TvOSSoftReloadPhase.ReloadingSettings)
+                {
+                    if (!ReferenceEquals(Engine.Scene, detachmentScene))
+                    {
+                        if (sceneDetachDeadline?.Elapsed >= SceneDetachTimeout)
+                            Fail("scene-detach-timeout", null);
+                        return;
+                    }
+                    ReloadAndScheduleMainMenu();
                     return;
                 }
 
@@ -136,14 +151,39 @@ internal sealed class Stage13BSoftReloadCoordinator : IDisposable
         }
     }
 
-    private void PrepareAndScheduleMainMenu()
+    private void PrepareAndDetachStaleScene()
     {
         if (UserIO.Saving) throw new InvalidOperationException("UserIO became busy during reload preparation.");
         if (saveManager.IsListening) throw new InvalidOperationException("Save Manager listener remained active during reload.");
 
         ticket = persistence.PrepareExternalMutationReload();
+        RequireRuntimeIdentity();
+
+        // TvOSSoftReloadHooks.Update runs after Engine.Update has already
+        // processed scene transitions.  If this hook clears SaveData while a
+        // Level is still current, that stale Level is rendered once more and
+        // dereferences the cleared state with an active Metal encoder.  Keep
+        // every old high-level object intact for that final draw, schedule an
+        // inert scene, and continue only on the following update after Engine
+        // has ended/detached the old scene.
+        detachmentScene = new Scene();
+        Engine.Scene = detachmentScene;
+        sceneDetachDeadline = Stopwatch.StartNew();
 
         stateMachine.EnterSettings();
+        Stage3BLog.Info(
+            $"STAGE13B_RELOAD scheduled=stale-scene-detach; generation={ticket.Generation}; " +
+            "old-save-instance=retained-through-final-draw; stale-guard=true"
+        );
+    }
+
+    private void ReloadAndScheduleMainMenu()
+    {
+        if (!ReferenceEquals(Engine.Scene, detachmentScene))
+            throw new InvalidOperationException("The stale scene was not detached before high-level state reload.");
+        RequireRuntimeIdentity();
+        sceneDetachDeadline = null;
+
         Settings.Reload();
         Input.Initialize();
         Input.ResetGrab();
@@ -165,6 +205,7 @@ internal sealed class Stage13BSoftReloadCoordinator : IDisposable
 
         RequireRuntimeIdentity();
         Engine.Scene = new OverworldLoader(Overworld.StartMode.MainMenu);
+        detachmentScene = null;
         mainMenuDeadline = Stopwatch.StartNew();
         stateMachine.WaitForMainMenu();
         Stage3BLog.Info(

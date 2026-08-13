@@ -1,0 +1,109 @@
+--- a/Celeste/Achievements.cs
++++ b/Celeste/Achievements.cs
+@@ -1,2 +1,0 @@
+-using Steamworks;
+-
+@@ -14,2 +12 @@
+-		bool pbAchieved;
+-		return SteamUserStats.GetAchievement(ID(achievement), out pbAchieved) && pbAchieved;
++		return false;
+@@ -20,5 +17 @@
+-		if (!Has(achievement))
+-		{
+-			SteamUserStats.SetAchievement(ID(achievement));
+-			Stats.Store();
+-		}
++		Has(achievement);
+--- a/Celeste/Celeste.cs
++++ b/Celeste/Celeste.cs
+@@ -9 +8,0 @@
+-using Steamworks;
+@@ -57,2 +55,0 @@
+-	public static readonly AppId_t SteamID = new AppId_t(504230u);
+-
+@@ -68 +65 @@
+-		Version = new System.Version(1, 4, 0, 0);
++		Version = new Version(1, 4, 0, 0);
+@@ -121 +117,0 @@
+-		SteamAPI.RunCallbacks();
+@@ -188,14 +183,0 @@
+-			if (SteamAPI.RestartAppIfNecessary(SteamID))
+-			{
+-				return;
+-			}
+-			if (!SteamAPI.Init())
+-			{
+-				ErrorLog.Write("Steam not found!");
+-				ErrorLog.Open();
+-				return;
+-			}
+-			if (!Settings.Existed)
+-			{
+-				Settings.Instance.Language = SteamApps.GetCurrentGameLanguage();
+-			}
+--- a/Celeste/Commands.cs
++++ b/Celeste/Commands.cs
+@@ -15,9 +14,0 @@
+-	[Command("global_stats", "logs global steam stats")]
+-	private static void CmdGlobalStats()
+-	{
+-		foreach (Stat value in Enum.GetValues(typeof(Stat)))
+-		{
+-			Engine.Commands.Log(value.ToString() + ": " + Stats.Global(value));
+-		}
+-	}
+-
+--- a/Celeste/Stats.cs
++++ b/Celeste/Stats.cs
+@@ -2 +1,0 @@
+-using Steamworks;
+@@ -14,2 +12,0 @@
+-		ready = SteamUserStats.RequestCurrentStats();
+-		SteamUserStats.RequestGlobalStats(0);
+@@ -20 +17 @@
+-		return ready;
++		return false;
+@@ -25,12 +21,0 @@
+-		if (ready)
+-		{
+-			string value = null;
+-			if (!statToString.TryGetValue(stat, out value))
+-			{
+-				statToString.Add(stat, value = stat.ToString());
+-			}
+-			if (SteamUserStats.GetStat(value, out int pData))
+-			{
+-				SteamUserStats.SetStat(value, pData + increment);
+-			}
+-		}
+@@ -41,11 +26 @@
+-		int pData = 0;
+-		if (ready)
+-		{
+-			string value = null;
+-			if (!statToString.TryGetValue(stat, out value))
+-			{
+-				statToString.Add(stat, value = stat.ToString());
+-			}
+-			SteamUserStats.GetStat(value, out pData);
+-		}
+-		return pData;
++		return 0;
+@@ -56,11 +31 @@
+-		long pData = 0L;
+-		if (ready)
+-		{
+-			string value = null;
+-			if (!statToString.TryGetValue(stat, out value))
+-			{
+-				statToString.Add(stat, value = stat.ToString());
+-			}
+-			SteamUserStats.GetGlobalStat(value, out pData);
+-		}
+-		return pData;
++		return 0L;
+@@ -71,4 +35,0 @@
+-		if (ready)
+-		{
+-			SteamUserStats.StoreStats();
+-		}

@@ -274,7 +274,7 @@ def cmd_stage_content(args: argparse.Namespace) -> None:
     destination = pathlib.Path(args.destination).resolve()
     policy = load_json(pathlib.Path(args.policy))["content"]
     input_manifest = load_json(pathlib.Path(args.input_manifest))
-    if input_manifest.get("validation") != "supported-unmodified-fna-release":
+    if input_manifest.get("validation") != "supported-explicit-fna-input-profile":
         raise SystemExit("error: content staging requires the validated locked input manifest")
     if destination.exists() and any(destination.iterdir()):
         raise SystemExit("error: content staging destination must be empty")

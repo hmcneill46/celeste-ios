@@ -1,0 +1,239 @@
+{
+  "schemaVersion": 1,
+  "adapters": {
+    "none": {
+      "changedFiles": [],
+      "kind": "no-op"
+    },
+    "steam-1.4.0.0-to-canonical-a": {
+      "changedFiles": [
+        "Celeste/Achievements.cs",
+        "Celeste/Celeste.cs",
+        "Celeste/Commands.cs",
+        "Celeste/Stats.cs",
+        "Celeste.csproj"
+      ],
+      "kind": "exact-patch",
+      "path": "managed/patches/input/steam-1.4.0.0-to-canonical-a.patch",
+      "sha256": "a9f49e2f97069f8838272a21e155463c8eda8c705fd53e710cef811a48a7b7a0"
+    }
+  },
+  "canonicalClasses": {
+    "celeste-1.4.0.0-a": {
+      "contentClass": "celeste-content-1.4.0.0-a",
+      "decompiledSource": {
+        "fileCount": 920,
+        "logicalSha256": "db7b722159fbdef8625c81608165aea162957dce956fcd5b16eeceaa1089a273"
+      },
+      "gameVersion": "1.4.0.0",
+      "patchedSource": {
+        "fileCount": 922,
+        "logicalSha256": "0c6515adadf58251ab2da66c6c61a1f61bd19b85f5dcdd4f1280552af650a4b5"
+      },
+      "stage6RealAudio": {
+        "fileCount": 934,
+        "logicalSha256": "1a981bc5994261775c1fea497cd042780fdbbcb24b7390a2f4db6aab1be747d9"
+      }
+    }
+  },
+  "contentClasses": {
+    "celeste-content-1.4.0.0-a": {
+      "aggregateSha256": "30a1c147d1a3ab0aa45762094e393ed7fd69951dd66e5af063447641e0699c46",
+      "fileCount": 1216,
+      "totalBytes": 1158665183
+    }
+  },
+  "managedPayloads": {
+    "itchlike-fna-1.4.0.0": {
+      "celesteAssemblyReferences": [
+        { "name": "FNA", "version": "21.3.5.0" },
+        { "name": "mscorlib", "version": "4.0.0.0" },
+        { "name": "System", "version": "4.0.0.0" },
+        { "name": "System.Core", "version": "4.0.0.0" },
+        { "name": "System.Xml", "version": "4.0.0.0" }
+      ],
+      "decompilerReferences": [],
+      "files": {
+        "Celeste.exe": {
+          "assemblyIdentity": { "name": "Celeste", "version": "1.0.0.0" },
+          "sha256": "fd73f8a2311fa5737ded550cbad4b75c85b7686b36432f59185e940fcb65fcfe"
+        },
+        "FNA.dll": {
+          "assemblyIdentity": { "name": "FNA", "version": "21.3.5.0" },
+          "sha256": "00349b572636c0ed4c97d4e4f74344b3450160c42d4a6b52bcf5e0f2d5193a31"
+        }
+      },
+      "normalizationAdapter": "none"
+    },
+    "steam-fna-1.4.0.0": {
+      "celesteAssemblyReferences": [
+        { "name": "FNA", "version": "21.3.5.0" },
+        { "name": "mscorlib", "version": "4.0.0.0" },
+        { "name": "Steamworks.NET", "version": "10.0.0.0" },
+        { "name": "System", "version": "4.0.0.0" },
+        { "name": "System.Core", "version": "4.0.0.0" },
+        { "name": "System.Xml", "version": "4.0.0.0" }
+      ],
+      "decompilerReferences": ["Steamworks.NET.dll"],
+      "files": {
+        "Celeste.exe": {
+          "assemblyIdentity": { "name": "Celeste", "version": "1.0.0.0" },
+          "sha256": "3ee734ec8c767f638e9a7c2cbc07109f0a0bf1eb1973dbe447e99144ca9e7dd9"
+        },
+        "FNA.dll": {
+          "assemblyIdentity": { "name": "FNA", "version": "21.3.5.0" },
+          "sha256": "b6c7f5196fb06529329ba23f09ee7573653350f6d8210818af965d6b822cdcec"
+        },
+        "Steamworks.NET.dll": {
+          "assemblyIdentity": { "name": "Steamworks.NET", "version": "10.0.0.0" },
+          "sha256": "92c4679014e1cecd71ef90d910245f309a6297bea4f8799c814f98985487e001"
+        }
+      },
+      "normalizationAdapter": "steam-1.4.0.0-to-canonical-a"
+    }
+  },
+  "sharedFiles": {
+    "Celeste.Content.dll": {
+      "assemblyIdentity": { "name": "Celeste.Content", "version": "0.0.0.0" },
+      "sha256": "0b8d6195992c8970e8602bf48a7bf89104b83a98e34a07dc0c18d01581711d15"
+    }
+  },
+  "profiles": [
+    {
+      "absentFiles": ["Steamworks.NET.dll"],
+      "canonicalClass": "celeste-1.4.0.0-a",
+      "celesteContentDll": "required",
+      "gameVersion": "1.4.0.0",
+      "id": "itch-linux-fna-1.4.0.0",
+      "managedPayload": "itchlike-fna-1.4.0.0",
+      "packageLayout": "linux-game-root",
+      "requiredMarkers": {
+        "Celeste.bin.x86_64": "111185a7aaf34d971f3112342aa4cefcdcc6a9627d140782ee4d61e2a7957398",
+        "lib64/libFNA3D.so.0": "547990f643e09bf4ab68c755f89dad7548b8d07803a843c2e18c08ef2e9d3300"
+      },
+      "runtimeFamily": "FNA",
+      "sourcePlatform": "Linux",
+      "store": "itch.io",
+      "testedArchiveSha256": ["a613430411dbef3c0c45a0474f90f4845122964c7d177d69e88965bcb84741bf"]
+    },
+    {
+      "absentFiles": ["Steamworks.NET.dll"],
+      "canonicalClass": "celeste-1.4.0.0-a",
+      "celesteContentDll": "required",
+      "gameVersion": "1.4.0.0",
+      "id": "itch-macos-fna-1.4.0.0",
+      "managedPayload": "itchlike-fna-1.4.0.0",
+      "packageLayout": "macos-app-resources",
+      "requiredMarkers": {
+        "Backups/settings.celeste": "f7495ebf6694558c5c231efbeec2dee3269ab547577d83d1e9dc509c333b0534",
+        "Celeste.icns": "944fb4caea065acafca279a52cba4ef4631916c9d61b057ab8811c997a8b8dc2"
+      },
+      "runtimeFamily": "FNA",
+      "sourcePlatform": "macOS",
+      "store": "itch.io",
+      "testedArchiveSha256": ["924e91d2e9367ef8c2c458ff4042e6b67e8bbd17fd27f13a314fd1c48c804181"]
+    },
+    {
+      "absentFiles": ["Steamworks.NET.dll"],
+      "canonicalClass": "celeste-1.4.0.0-a",
+      "celesteContentDll": "required",
+      "gameVersion": "1.4.0.0",
+      "id": "itch-windows-fna-1.4.0.0",
+      "managedPayload": "itchlike-fna-1.4.0.0",
+      "packageLayout": "windows-game-root",
+      "requiredMarkers": {
+        "Backups/settings.celeste": "f7495ebf6694558c5c231efbeec2dee3269ab547577d83d1e9dc509c333b0534",
+        "SDL2.dll": "f70051e79801f33793090ee0e99d8d57cb392121064dbe0a6b66b375e3f9b6ea"
+      },
+      "runtimeFamily": "FNA",
+      "sourcePlatform": "Windows",
+      "store": "itch.io",
+      "testedArchiveSha256": ["d1072fe39c086ed1cde0b0887f68ee8032b101822ddf55e6ee806b5e736896c3"]
+    },
+    {
+      "absentFiles": ["Backups/settings.celeste", "Celeste.Content.dll", "Steamworks.NET.dll"],
+      "canonicalClass": "celeste-1.4.0.0-a",
+      "celesteContentDll": "absent",
+      "gameVersion": "1.4.0.0",
+      "id": "epic-windows-fna-1.4.0.0",
+      "managedPayload": "itchlike-fna-1.4.0.0",
+      "packageLayout": "windows-game-root",
+      "requiredMarkers": {
+        "SDL2.dll": "f70051e79801f33793090ee0e99d8d57cb392121064dbe0a6b66b375e3f9b6ea"
+      },
+      "runtimeFamily": "FNA",
+      "sourcePlatform": "Windows",
+      "store": "Epic Games Store",
+      "testedArchiveSha256": ["c31b3c833c1a6993f73cb82355d9b088ccafb7a9f6919b42e6922a70f85aaab5"]
+    },
+    {
+      "absentFiles": ["Backups/settings.celeste", "Steamworks.NET.dll"],
+      "canonicalClass": "celeste-1.4.0.0-a",
+      "celesteContentDll": "required",
+      "gameVersion": "1.4.0.0",
+      "id": "epic-macos-fna-1.4.0.0",
+      "managedPayload": "itchlike-fna-1.4.0.0",
+      "packageLayout": "macos-app-resources",
+      "requiredMarkers": {
+        "Celeste.icns": "944fb4caea065acafca279a52cba4ef4631916c9d61b057ab8811c997a8b8dc2"
+      },
+      "runtimeFamily": "FNA",
+      "sourcePlatform": "macOS",
+      "store": "Epic Games Store",
+      "testedArchiveSha256": ["94bc7f260ed45feb09398df3bfbdc34f2e6029fbe47cb8bcddc271dc342f2262"]
+    },
+    {
+      "absentFiles": [],
+      "canonicalClass": "celeste-1.4.0.0-a",
+      "celesteContentDll": "required",
+      "gameVersion": "1.4.0.0",
+      "id": "steam-linux-fna-1.4.0.0-manifest-1505052356460012099",
+      "managedPayload": "steam-fna-1.4.0.0",
+      "packageLayout": "linux-game-root",
+      "requiredMarkers": {
+        "lib64/libfmod.so.10": "47c317ec78373515edbc303d9047085e7f2ead25857d0a6437c9d74956979698",
+        "lib64/libsteam_api.so": "cbd8a4eb08c42df2bd2323c297ff392294abd85ae06086cebb40f38a3959b4bc"
+      },
+      "runtimeFamily": "FNA",
+      "sourcePlatform": "Linux",
+      "store": "Steam",
+      "testedArchiveSha256": [
+        "3cef1062b98768f29234be88c271845a066a473be3d2876c8c4f223753ba4bc7",
+        "4406ffe632bab487fc55bce14b138af5c046655f6ffd779611367f501bf443d0"
+      ]
+    },
+    {
+      "absentFiles": [],
+      "canonicalClass": "celeste-1.4.0.0-a",
+      "celesteContentDll": "required",
+      "gameVersion": "1.4.0.0",
+      "id": "steam-linux-public-2025-fna-1.4.0.0",
+      "managedPayload": "steam-fna-1.4.0.0",
+      "packageLayout": "linux-game-root",
+      "requiredMarkers": {
+        "lib64/libfmod.so.10": "affd4c117ab4064d861fcdea291c13cd1edab953556c03c2a0c54e9c9ebfdca7",
+        "lib64/libsteam_api.so": "cbd8a4eb08c42df2bd2323c297ff392294abd85ae06086cebb40f38a3959b4bc"
+      },
+      "runtimeFamily": "FNA",
+      "sourcePlatform": "Linux",
+      "store": "Steam",
+      "testedArchiveSha256": ["3088a42d6dce73e6e057013baf27a4a8e013a10bad569580b26b6200628f0087"]
+    },
+    {
+      "absentFiles": [],
+      "canonicalClass": "celeste-1.4.0.0-a",
+      "celesteContentDll": "required",
+      "gameVersion": "1.4.0.0",
+      "id": "steam-macos-fna-1.4.0.0",
+      "managedPayload": "steam-fna-1.4.0.0",
+      "packageLayout": "macos-app-resources",
+      "requiredMarkers": {
+        "Celeste.icns": "944fb4caea065acafca279a52cba4ef4631916c9d61b057ab8811c997a8b8dc2"
+      },
+      "runtimeFamily": "FNA",
+      "sourcePlatform": "macOS",
+      "store": "Steam",
+      "testedArchiveSha256": ["27467f9a2ca847d361d76a51bd8a13ccb60f9780d3b0ade3b4105b2d28c2ff9a"]
+    }
+  ]
+}

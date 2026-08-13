@@ -21,18 +21,27 @@ struct Canvas {
 
 func loadImage(_ path: String, requireTransparency: Bool) throws -> CGImage {
     let url = URL(fileURLWithPath: path)
-    guard let source = CGImageSourceCreateWithURL(url as CFURL, nil),
-          CGImageSourceGetType(source) == "public.png" as CFString,
-          let image = CGImageSourceCreateImageAtIndex(source, 0, nil) else {
-        throw ArtworkError.message("not a readable PNG: \(path)")
+    guard let source = CGImageSourceCreateWithURL(url as CFURL, nil) else {
+        throw ArtworkError.message("not a readable image: \(path)")
+    }
+    var bestIndex = 0
+    var bestArea = 0
+    for index in 0..<CGImageSourceGetCount(source) {
+        guard let properties = CGImageSourceCopyPropertiesAtIndex(source, index, nil) as? [CFString: Any],
+              let width = properties[kCGImagePropertyPixelWidth] as? Int,
+              let height = properties[kCGImagePropertyPixelHeight] as? Int else { continue }
+        if width * height > bestArea { bestArea = width * height; bestIndex = index }
+    }
+    guard let image = CGImageSourceCreateImageAtIndex(source, bestIndex, nil) else {
+        throw ArtworkError.message("image has no readable frame: \(path)")
     }
     guard image.width > 0, image.height > 0 else {
-        throw ArtworkError.message("PNG has no pixels: \(path)")
+        throw ArtworkError.message("image has no pixels: \(path)")
     }
     if requireTransparency {
         let alphaInfo = image.alphaInfo
         guard alphaInfo != .none && alphaInfo != .noneSkipFirst && alphaInfo != .noneSkipLast else {
-            throw ArtworkError.message("Celeste.png must contain a meaningful alpha channel")
+            throw ArtworkError.message("Celeste launcher icon must contain a meaningful alpha channel")
         }
         let width = image.width
         let height = image.height
@@ -46,7 +55,7 @@ func loadImage(_ path: String, requireTransparency: Bool) throws -> CGImage {
             space: CGColorSpaceCreateDeviceRGB(),
             bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue
         ) else {
-            throw ArtworkError.message("could not inspect Celeste.png alpha")
+            throw ArtworkError.message("could not inspect Celeste launcher icon alpha")
         }
         context.draw(image, in: CGRect(x: 0, y: 0, width: width, height: height))
         var transparent = false
@@ -58,7 +67,7 @@ func loadImage(_ path: String, requireTransparency: Bool) throws -> CGImage {
             if transparent && visible { break }
         }
         guard transparent && visible else {
-            throw ArtworkError.message("Celeste.png alpha must contain both transparent and visible pixels")
+            throw ArtworkError.message("Celeste launcher icon alpha must contain transparent and visible pixels")
         }
     }
     return image
@@ -121,7 +130,7 @@ func render(canvas: Canvas, source: CGImage?, mode: String, blackBackground: Boo
 }
 
 func usage() {
-    print("Usage: celeste-tvos-artwork.swift --icon PNG --splash PNG --output DIR")
+    print("Usage: celeste-tvos-artwork.swift --icon IMAGE --splash PNG --output DIR")
 }
 
 var iconPath: String?

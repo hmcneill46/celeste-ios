@@ -21,10 +21,11 @@ The personal-use tvOS build is playable on physical Apple TV hardware. It uses
 .NET 10, FNA, Metal, full AOT, full trimming, real FMOD audio, and a
 compressed, corruption-recoverable UserDefaults save bridge.
 
-The tested game input is **Celeste 1.4.0.0 from the itch.io Linux download**.
-Steam and other platform/store builds have not been tested. See
-[`docs/STATUS.md`](docs/STATUS.md) for the precise support matrix and known
-limitations.
+The builder supports eight exact **Celeste 1.4.0.0 FNA** input profiles from
+itch.io, Epic Games Store, and Steam on Linux, macOS, or Windows where listed.
+It detects the actual payload automatically and rejects unknown or modified
+builds. See [`docs/CELESTE_INPUTS.md`](docs/CELESTE_INPUTS.md) for the precise
+matrix and validation status.
 
 ## What works
 
@@ -49,7 +50,7 @@ limitations.
 - A paired, developer-ready arm64 Apple TV running tvOS 16 or later. The tested
   device is an Apple TV 4K (3rd generation).
 - An extended Bluetooth game controller. DualSense is tested.
-- Your lawful, unmodified **itch.io Linux Celeste 1.4.0.0** installation.
+- One lawful, unmodified supported **Celeste 1.4.0.0 FNA** installation.
 - The official **FMOD Engine for iOS/tvOS 1.10.09, build 97915** SDK.
 - Roughly 8 GiB of free disk space for a clean build.
 
@@ -121,24 +122,20 @@ noninteractive examples are in [`docs/BUILDING.md`](docs/BUILDING.md).
 
 ## Celeste game files
 
-You must legally own Celeste. The only tested and supported source is the
-[itch.io Linux release](https://maddymakesgamesinc.itch.io/celeste), version
-1.4.0.0:
+You must legally own Celeste. The builder accepts exact tested Celeste 1.4.0.0
+FNA profiles from itch.io, Epic Games Store, and Steam, as listed in the
+[supported-input matrix](docs/CELESTE_INPUTS.md):
 
-1. Download the Linux build using your itch.io purchase or existing
-   entitlement.
+1. Obtain one listed build through your own purchase or existing entitlement.
 2. Extract it somewhere outside this repository.
 3. Give the extracted folder to the builder by pasting or dragging it into
    Terminal, or set `CELESTE_GAME_ROOT`.
 
-The folder must include `Celeste.exe`, `Celeste.Content.dll`, `FNA.dll`,
-`Content/`, `Celeste.png`, and `Content/Graphics/SplashScreen.png`. The builder's
-hash and assembly validator is authoritative and rejects modified, Everest, or
-unsupported inputs.
-
-Steam builds have not currently been tested by this project. Another Celeste
-distribution may work if it contains the exact files accepted by the
-validator, but it is not currently a supported/tested configuration.
+The builder resolves the supported Linux, Windows, macOS app-bundle, and
+single-wrapper layouts, then prints the detected store/platform/runtime
+profile. Its hash, assembly, reference, content, and package-marker validation
+is authoritative. Modified, Everest, mixed, XNA, unknown, and other-version
+inputs are rejected; there is no accept-any-game fallback.
 
 Never copy game files, generated source, or generated artwork into Git.
 
@@ -366,7 +363,7 @@ failure.
 | Deployment target | tvOS 16.0 |
 | Apple TV | Apple TV 4K (3rd generation), `AppleTV14,1` |
 | Controller | Sony DualSense |
-| Celeste | 1.4.0.0, itch.io Linux download |
+| Celeste | 1.4.0.0 FNA; eight exact itch.io/Epic/Steam profiles |
 | FMOD | Engine iOS/tvOS 1.10.09, build 97915 |
 
 Other arm64 Apple TV models and newer compatible tvOS versions may work, but
@@ -383,7 +380,8 @@ have not been physically tested here.
   URL plus access code remains the compatibility fallback.
 - Save Manager changes reload in the existing runtime; the Apple TV app
   switcher remains the conservative fallback if reload verification fails.
-- Steam and non-itch.io-Linux game inputs are untested.
+- Only the exact FNA profiles in the supported-input matrix are accepted;
+  other stores, platforms, versions, XNA builds, and modified installs are not.
 - DualSense is the only physically accepted controller; the Siri Remote is not
   a gameplay controller.
 - The arm64 simulator remains deliberately no-audio because the required FMOD

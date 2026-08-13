@@ -6,7 +6,6 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
-import os
 import pathlib
 import plistlib
 import re
@@ -92,21 +91,106 @@ def content_manifest(content_root: pathlib.Path) -> dict[str, Any]:
     }
 
 
-def cmd_validate(args: argparse.Namespace) -> None:
-    root = pathlib.Path(args.game_root).expanduser().resolve()
-    lock = load_json(pathlib.Path(args.lock))
-    supported = lock["supportedInput"]
-    if not root.is_dir():
-        raise SystemExit("error: --game-root is not an existing directory")
+def safe_registry_relative(value: str) -> pathlib.PurePosixPath:
+    path = pathlib.PurePosixPath(value)
+    if path.is_absolute() or not path.parts or any(part in ("", ".", "..") for part in path.parts):
+        raise SystemExit(f"error: unsafe relative path in Celeste input profile registry: {value!r}")
+    return path
 
-    required = ("Celeste.exe", "Celeste.Content.dll", "FNA.dll")
-    for name in required:
-        path = root / name
-        if not path.is_file() or not os.access(path, os.R_OK):
-            raise SystemExit(f"error: required readable file is missing: $CELESTE_GAME_ROOT/{name}")
-    content_root = root / "Content"
-    if not content_root.is_dir() or not os.access(content_root, os.R_OK):
-        raise SystemExit("error: required readable directory is missing: $CELESTE_GAME_ROOT/Content")
+
+def game_root_candidates(supplied: pathlib.Path) -> list[pathlib.Path]:
+    """Return only documented direct, app-bundle, and one-wrapper layouts."""
+    values: list[pathlib.Path] = []
+    supplied = supplied.resolve()
+
+    def add(candidate: pathlib.Path) -> None:
+        candidate = candidate.resolve()
+        if not candidate.is_relative_to(supplied):
+            return
+        if candidate in values:
+            return
+        if ((candidate / "Celeste.exe").is_file() and
+                (candidate / "FNA.dll").is_file() and
+                (candidate / "Content").is_dir()):
+            values.append(candidate)
+
+    add(supplied)
+    add(supplied / "Contents/Resources")
+    add(supplied / "Celeste.app/Contents/Resources")
+    for child in sorted((path for path in supplied.iterdir() if path.is_dir()), key=lambda path: path.name):
+        add(child)
+        add(child / "Contents/Resources")
+        add(child / "Celeste.app/Contents/Resources")
+    return values
+
+
+def exact_file_evidence(path: pathlib.Path) -> dict[str, Any]:
+    identity = monodis_identity(path)
+    file_output = run_text(["file", "-b", str(path)]).strip()
+    if "PE32" not in file_output or "Mono/.Net assembly" not in file_output:
+        raise SystemExit(f"error: detected {path.name} is not a managed PE32 assembly")
+    return {
+        "assemblyIdentity": identity,
+        "managedArchitectureEvidence": "PE32 Mono/.Net assembly (legacy AnyCPU-compatible input)",
+        "sha256": sha256_file(path),
+        "size": path.stat().st_size,
+    }
+
+
+def profile_matches(profile: dict[str, Any], registry: dict[str, Any], root: pathlib.Path,
+                    evidence: dict[str, Any]) -> bool:
+    payload = registry["managedPayloads"][profile["managedPayload"]]
+    for name, expected in payload["files"].items():
+        actual = evidence["files"].get(name)
+        if actual is None or actual["sha256"] != expected["sha256"] or actual["assemblyIdentity"] != expected["assemblyIdentity"]:
+            return False
+    content_policy = profile["celesteContentDll"]
+    actual_content_dll = evidence["files"].get("Celeste.Content.dll")
+    if content_policy == "required":
+        expected_content_dll = registry["sharedFiles"]["Celeste.Content.dll"]
+        if (actual_content_dll is None or actual_content_dll["sha256"] != expected_content_dll["sha256"] or
+                actual_content_dll["assemblyIdentity"] != expected_content_dll["assemblyIdentity"]):
+            return False
+    elif content_policy == "absent":
+        if actual_content_dll is not None:
+            return False
+    else:
+        raise SystemExit(f"error: invalid Celeste.Content.dll policy in profile {profile['id']}")
+    if evidence["celesteAssemblyReferences"] != payload["celesteAssemblyReferences"]:
+        return False
+    content_class = registry["contentClasses"][registry["canonicalClasses"][profile["canonicalClass"]]["contentClass"]]
+    if any(evidence["content"][key] != content_class[key]
+           for key in ("fileCount", "totalBytes", "aggregateSha256")):
+        return False
+    for relative, expected_hash in profile["requiredMarkers"].items():
+        path = root.joinpath(*safe_registry_relative(relative).parts)
+        if not path.is_file() or sha256_file(path) != expected_hash:
+            return False
+    for relative in profile["absentFiles"]:
+        if root.joinpath(*safe_registry_relative(relative).parts).exists():
+            return False
+    return True
+
+
+def cmd_validate(args: argparse.Namespace) -> None:
+    supplied = pathlib.Path(args.game_root).expanduser().resolve()
+    registry = load_json(pathlib.Path(args.profiles))
+    if not supplied.is_dir():
+        raise SystemExit("error: --game-root is not an existing directory")
+    candidates = game_root_candidates(supplied)
+    if not candidates:
+        celeste_executable = supplied / "Celeste.exe"
+        if celeste_executable.is_file():
+            references = monodis_references(celeste_executable)
+            if not any(item["name"] == "FNA" for item in references):
+                raise SystemExit("error: unsupported Celeste input: this package is not an FNA build")
+        raise SystemExit(
+            "error: no supported Celeste/FNA game root was found in the selected folder; "
+            "select the extracted game folder or Celeste.app"
+        )
+    if len(candidates) != 1:
+        raise SystemExit("error: the selected folder contains multiple possible Celeste/FNA game roots")
+    root = candidates[0]
 
     everest_patterns = (
         "everest-lib", "everest-settings", "everest-update", "miniinstaller",
@@ -120,56 +204,63 @@ def cmd_validate(args: argparse.Namespace) -> None:
         raise SystemExit("error: Everest/MonoMod marker files were found: " + ", ".join(markers))
 
     files: dict[str, Any] = {}
-    for name in required:
+    for name in ("Celeste.exe", "FNA.dll", "Celeste.Content.dll", "Steamworks.NET.dll"):
         path = root / name
-        digest = sha256_file(path)
-        expected = supported["files"][name]
-        if digest != expected["sha256"]:
-            raise SystemExit(f"error: unsupported or modified $CELESTE_GAME_ROOT/{name} SHA-256 {digest}")
-        identity = monodis_identity(path)
-        if identity != expected["assemblyIdentity"]:
-            raise SystemExit(f"error: unexpected managed identity for $CELESTE_GAME_ROOT/{name}: {identity}")
-        file_output = run_text(["file", "-b", str(path)]).strip()
-        if "PE32" not in file_output or "Mono/.Net assembly" not in file_output:
-            raise SystemExit(f"error: $CELESTE_GAME_ROOT/{name} is not the expected managed PE32 assembly")
-        files[name] = {
-            "assemblyIdentity": identity,
-            "managedArchitectureEvidence": "PE32 Mono/.Net assembly (legacy AnyCPU-compatible input)",
-            "sha256": digest,
-            "size": path.stat().st_size,
-        }
-
+        if path.is_file():
+            files[name] = exact_file_evidence(path)
     references = monodis_references(root / "Celeste.exe")
-    expected_refs = supported["celesteAssemblyReferences"]
-    if references != expected_refs:
-        raise SystemExit("error: Celeste.exe assembly references do not match the locked FNA release")
-    if not any(item == {"name": "FNA", "version": "21.3.5.0"} for item in references):
-        raise SystemExit("error: input is not the locked FNA-based Celeste release")
+    fna_references = [item for item in references if item["name"] == "FNA"]
+    if len(fna_references) != 1:
+        raise SystemExit("error: unsupported Celeste input: the managed executable is not an unambiguous FNA build")
+    content = content_manifest(root / "Content")
+    evidence = {"files": files, "celesteAssemblyReferences": references, "content": content}
+    matches = [profile for profile in registry["profiles"] if profile_matches(profile, registry, root, evidence)]
+    if not matches:
+        raise SystemExit(
+            "error: Celeste was found, but this exact build is not currently supported.\n"
+            f"  Managed assembly: {files['Celeste.exe']['assemblyIdentity']['version']}\n"
+            f"  Runtime: FNA {files['FNA.dll']['assemblyIdentity']['version']}\n"
+            f"  Executable fingerprint: {files['Celeste.exe']['sha256']}\n"
+            "  See docs/CELESTE_INPUTS.md for tested builds."
+        )
+    if len(matches) != 1:
+        raise SystemExit("error: Celeste input profile detection is ambiguous; refusing the mixed installation")
+    profile = matches[0]
+    payload = registry["managedPayloads"][profile["managedPayload"]]
 
-    content_types = run_text(["monodis", "--typedef", str(root / "Celeste.Content.dll")])
-    content_resources = run_text(["monodis", "--manifest", str(root / "Celeste.Content.dll")])
-    type_rows = re.findall(r"^\d+:.*$", content_types, re.MULTILINE)
-    if len(type_rows) != 1 or "(null)" not in type_rows[0] or "Manifestresource Table (1..0)" not in content_resources:
-        raise SystemExit("error: Celeste.Content.dll is not the locked empty identity assembly")
+    content_dll = root / "Celeste.Content.dll"
+    if content_dll.is_file():
+        content_types = run_text(["monodis", "--typedef", str(content_dll)])
+        content_resources = run_text(["monodis", "--manifest", str(content_dll)])
+        type_rows = re.findall(r"^\d+:.*$", content_types, re.MULTILINE)
+        if len(type_rows) != 1 or "(null)" not in type_rows[0] or "Manifestresource Table (1..0)" not in content_resources:
+            raise SystemExit("error: Celeste.Content.dll is not the locked empty identity assembly")
 
-    content = content_manifest(content_root)
-    for key in ("fileCount", "totalBytes", "aggregateSha256"):
-        if content[key] != supported["content"][key]:
-            raise SystemExit(f"error: unsupported or modified Content tree ({key} mismatch)")
-
+    relative = root.relative_to(supplied).as_posix()
+    source_root = "$CELESTE_GAME_ROOT" if relative == "." else f"$CELESTE_GAME_ROOT/{relative}"
     result = {
-        "schemaVersion": 1,
-        "sourceRoot": "$CELESTE_GAME_ROOT",
-        "validation": "supported-unmodified-fna-release",
-        "gameVersion": supported["gameVersion"],
+        "schemaVersion": 2,
+        "sourceRoot": source_root,
+        "resolvedRootRelative": relative,
+        "validation": "supported-explicit-fna-input-profile",
+        "profileId": profile["id"],
+        "store": profile["store"],
+        "sourcePlatform": profile["sourcePlatform"],
+        "packageLayout": profile["packageLayout"],
+        "runtimeFamily": profile["runtimeFamily"],
+        "canonicalClass": profile["canonicalClass"],
+        "normalizationAdapter": payload["normalizationAdapter"],
+        "decompilerReferences": payload["decompilerReferences"],
+        "gameVersion": profile["gameVersion"],
         "gameVersionEvidence": {
-            "kind": "approved-executable-sha256-and-decompiled-constructor",
-            "note": "The locked executable constructs System.Version(1, 4, 0, 0); generation verifies that source evidence.",
+            "kind": "explicit-profile-fingerprints-and-decompiled-constructor",
+            "note": "Generation independently verifies that the canonical source constructs Version(1, 4, 0, 0).",
         },
         "everestMarkerCount": 0,
         "files": files,
         "celesteAssemblyReferences": references,
         "celesteContentAssembly": {
+            "sourcePresent": content_dll.is_file(),
             "definedTypeCount": 0,
             "embeddedResourceCount": 0,
             "handling": "reconstruct identity-only modern library; no proprietary content is embedded",
@@ -177,8 +268,68 @@ def cmd_validate(args: argparse.Namespace) -> None:
         "content": content,
     }
     write_json(pathlib.Path(args.output), result)
-    print(f"validated supported Celeste {supported['gameVersion']} FNA input")
-    print("wrote privacy-safe input manifest to the selected ignored output")
+    print("Celeste input detected:")
+    print(f"  Game: Celeste {profile['gameVersion']}")
+    print(f"  Store: {profile['store']}")
+    print(f"  Source platform: {profile['sourcePlatform']}")
+    print(f"  Runtime: {profile['runtimeFamily']}")
+    print(f"  Profile: {profile['id']}")
+    print(f"  Canonical game: {profile['canonicalClass']}")
+    print("Input validation: PASS")
+
+
+def cmd_normalize(args: argparse.Namespace) -> None:
+    root = pathlib.Path(args.root).resolve()
+    manifest = load_json(pathlib.Path(args.input_manifest))
+    registry = load_json(pathlib.Path(args.profiles))
+    adapter_id = manifest["normalizationAdapter"]
+    adapter = registry["adapters"].get(adapter_id)
+    if adapter is None:
+        raise SystemExit(f"error: unknown input normalization adapter: {adapter_id}")
+    changed_files = adapter["changedFiles"]
+    if adapter["kind"] == "exact-patch":
+        repository = pathlib.Path(args.repo_root).resolve()
+        patch_path = repository.joinpath(*safe_registry_relative(adapter["path"]).parts)
+        if sha256_file(patch_path) != adapter["sha256"]:
+            raise SystemExit(f"error: locked input adapter changed: {adapter_id}")
+        process = subprocess.run(
+            ["patch", "--batch", "--forward", "-F", "0", "-p1", "-d", str(root)],
+            stdin=patch_path.open("rb"), stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
+        )
+        if process.returncode != 0:
+            raise SystemExit(f"error: exact input normalization failed for {adapter_id}")
+        if adapter_id == "steam-1.4.0.0-to-canonical-a":
+            project = root / "Celeste.csproj"
+            text = project.read_text(encoding="utf-8")
+            replacements = (
+                ("    <Prefer32Bit>True</Prefer32Bit>\n", "    <PlatformTarget>x86</PlatformTarget>\n"),
+                ("    <Reference Include=\"Steamworks.NET\">\n"
+                 "      <HintPath>../input/Steamworks.NET.dll</HintPath>\n"
+                 "    </Reference>\n", ""),
+            )
+            for old, new in replacements:
+                if text.count(old) != 1:
+                    raise SystemExit("error: exact Steam project normalization site changed")
+                text = text.replace(old, new, 1)
+            project.write_text(text, encoding="utf-8")
+    elif adapter["kind"] != "no-op":
+        raise SystemExit(f"error: unsupported input adapter kind: {adapter['kind']}")
+    remaining = []
+    for path in root.rglob("*"):
+        if path.is_file() and path.suffix in (".cs", ".csproj"):
+            text = path.read_text(encoding="utf-8")
+            if re.search(r"Steamworks|SteamAPI|SteamApps|SteamUserStats|global steam stats", text):
+                remaining.append(path.relative_to(root).as_posix())
+    if remaining:
+        raise SystemExit("error: storefront integration remains after normalization: " + ", ".join(remaining))
+    write_json(pathlib.Path(args.output), {
+        "schemaVersion": 1,
+        "adapter": adapter_id,
+        "canonicalClass": manifest["canonicalClass"],
+        "changedFiles": changed_files,
+        "fuzzyPatchAllowed": False,
+    })
+    print(f"applied exact input adapter: {adapter_id}")
 
 
 def iter_logical_files(root: pathlib.Path) -> Iterable[pathlib.Path]:
@@ -673,9 +824,17 @@ def parser() -> argparse.ArgumentParser:
 
     validate = sub.add_parser("validate")
     validate.add_argument("--game-root", required=True)
-    validate.add_argument("--lock", required=True)
+    validate.add_argument("--profiles", required=True)
     validate.add_argument("--output", required=True)
     validate.set_defaults(func=cmd_validate)
+
+    normalize = sub.add_parser("normalize-input")
+    normalize.add_argument("--root", required=True)
+    normalize.add_argument("--input-manifest", required=True)
+    normalize.add_argument("--profiles", required=True)
+    normalize.add_argument("--repo-root", required=True)
+    normalize.add_argument("--output", required=True)
+    normalize.set_defaults(func=cmd_normalize)
 
     tree = sub.add_parser("tree-manifest")
     tree.add_argument("--root", required=True)

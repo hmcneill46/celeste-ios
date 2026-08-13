@@ -13,10 +13,11 @@ physical installation, all-chapter loading, Save Manager/soft reload, real
 Apple TV restart, replacement-install, controller, audio, lifecycle, branding,
 privacy, and repository gates. See the
 [release-candidate record](history/stages/TVOS_RELEASE_CANDIDATE_STAGE14_REPORT.md).
-Stage 15 added integrated one-time scan-to-connect QR pairing. Stage 16B adds a
-live Apple Metal Performance HUD control on the separate
-`feature/metal-performance-hud` branch without changing the immutable
-`v1.0.0-rc.1` recovery point.
+Stage 15 added integrated one-time scan-to-connect QR pairing. Stage 16B added
+a live Apple Metal Performance HUD control. Stage 17B adds strict automatic
+recognition and canonicalization for eight exact itch.io, Epic Games Store,
+and Steam Celeste 1.4.0.0 FNA inputs without changing the shared downstream
+tvOS product.
 
 ## Proven support matrix
 
@@ -28,20 +29,23 @@ live Apple Metal Performance HUD control on the separate
 | Target | tvOS arm64, minimum tvOS 16.0 |
 | Device | Apple TV 4K (3rd generation), `AppleTV14,1` |
 | Controller | Sony DualSense |
-| Game input | Unmodified Celeste 1.4.0.0, itch.io Linux download |
+| Game input | Celeste 1.4.0.0 FNA; eight exact itch.io/Epic/Steam profiles |
 | FMOD input | FMOD Engine iOS/tvOS 1.10.09, build 97915 |
 | Device build | Release, full AOT, full trimming, no interpreter |
 
-Steam and other Celeste distributions are untested. Another distribution may
-work only if the exact validator accepts byte-identical required files. Other
-arm64 Apple TV models, newer compatible system versions, and extended SDL/FNA
-controllers may work but have not received this project's physical acceptance.
+The [input matrix](CELESTE_INPUTS.md) separates physical Apple TV acceptance
+from exact canonical-equivalence validation. It does not claim that every
+release from a named storefront is supported. Other arm64 Apple TV models,
+newer compatible system versions, and extended SDL/FNA controllers may work
+but have not received this project's physical acceptance.
 
 ## Architecture
 
 ```mermaid
 flowchart LR
-    U["User-owned itch.io Linux Celeste 1.4.0.0"] --> G["Locked validation and managed regeneration"]
+    U["User-owned supported Celeste 1.4.0.0 FNA input"] --> V["Exact store/platform profile detection"]
+    V --> K["Canonical Celeste 1.4.0.0 source/content"]
+    K --> G["Locked managed regeneration"]
     G --> C["Modern generated Celeste assembly"]
     F["Pinned FNA source"] --> H[".NET 10 tvOS host"]
     C --> H
@@ -256,7 +260,9 @@ or an unsigned conventional tvOS IPA containing `Payload/Celeste.app`.
   unsupported.
 - Automatic Nintendo Switch/Stadia classification is limited to Celeste's
   locked known controller identities; use the manual prompt choice otherwise.
-- Steam and other Celeste distributions are untested.
+- Only the exact FNA distributions in the supported-input matrix are accepted;
+  arbitrary Steam depots, other stores/versions, XNA, and modified inputs are
+  not supported.
 - The app is roughly 1.1 GiB before IPA compression.
 - Actual atvloadly physical installation has not been project-tested; only the
   conventional unsigned IPA structure is statically verified.

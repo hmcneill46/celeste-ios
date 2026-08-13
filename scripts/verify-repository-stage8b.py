@@ -15,6 +15,7 @@ REQUIRED_DOCS = (
     "README.md",
     "docs/README.md",
     "docs/BUILDING.md",
+    "docs/CELESTE_INPUTS.md",
     "docs/TROUBLESHOOTING.md",
     "docs/STATUS.md",
     "docs/history/README.md",
@@ -66,8 +67,8 @@ def main() -> None:
     required_readme = (
         "# Celeste for Apple TV",
         "./build-tvos.sh",
-        "itch.io Linux",
-        "Steam builds have not currently been tested",
+        "eight exact **Celeste 1.4.0.0 FNA** input profiles",
+        "docs/CELESTE_INPUTS.md",
         "1.10.09, build 97915",
         "Personal Team",
         "seven days",

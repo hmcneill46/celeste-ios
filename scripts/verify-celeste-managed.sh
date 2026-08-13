@@ -104,7 +104,7 @@ python3 - "$ARTIFACT_DIR" "$BUILD_DIR/patched/Celeste.Modern.csproj" <<'PY'
 import json, pathlib, re, sys
 artifacts, project = pathlib.Path(sys.argv[1]), pathlib.Path(sys.argv[2])
 input_manifest = json.loads((artifacts / "input-manifest.json").read_text())
-if input_manifest["validation"] != "supported-unmodified-fna-release" or input_manifest["gameVersion"] != "1.4.0.0":
+if input_manifest["validation"] != "supported-explicit-fna-input-profile" or input_manifest["gameVersion"] != "1.4.0.0":
     raise SystemExit("error: input validation manifest is not the locked Celeste 1.4.0.0 release")
 boundary = json.loads((artifacts / "fmod-compile-boundary.json").read_text())
 if boundary["transformedImportCount"] != 490:

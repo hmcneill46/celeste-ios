@@ -5,8 +5,9 @@ usage() {
   cat <<'USAGE'
 Usage: scripts/prepare-celeste-managed.sh --game-root DIR [options]
 
-Validate, locally decompile and deterministically patch the supported user-owned
-Celeste input for Stage 3A. Generated/game material stays below ignored paths.
+Detect, validate, locally decompile, storefront-normalize, and deterministically
+patch a supported user-owned Celeste FNA input for Stage 3A. Generated/game
+material stays below ignored paths.
 The exact ilspycmd package is restored repository-locally; no global tool or
 host software is installed.
 
@@ -142,10 +143,34 @@ mkdir -p "$BUILD_DIR/input" "$BUILD_DIR/decompiled" "$BUILD_DIR/patched" \
   --output "$BUILD_DIR/input-manifest.json"
 cp "$BUILD_DIR/input-manifest.json" "$ARTIFACT_DIR/input-manifest.json"
 
+RESOLVED_RELATIVE="$(python3 - "$BUILD_DIR/input-manifest.json" <<'PY'
+import json,pathlib,sys
+value=json.loads(pathlib.Path(sys.argv[1]).read_text())["resolvedRootRelative"]
+path=pathlib.PurePosixPath(value)
+if value == ".": print("")
+elif path.is_absolute() or any(part in ("", ".", "..") for part in path.parts):
+    raise SystemExit("error: validator returned an unsafe resolved game root")
+else: print(value)
+PY
+)"
+[[ -z "$RESOLVED_RELATIVE" ]] || GAME_ROOT="$GAME_ROOT/$RESOLVED_RELATIVE"
+
 # Stage only managed assemblies. Content is deliberately never copied.
-for name in Celeste.exe Celeste.Content.dll FNA.dll; do
+for name in Celeste.exe FNA.dll; do
   cp "$GAME_ROOT/$name" "$BUILD_DIR/input/$name"
 done
+[[ ! -f "$GAME_ROOT/Celeste.Content.dll" ]] || cp "$GAME_ROOT/Celeste.Content.dll" "$BUILD_DIR/input/Celeste.Content.dll"
+while IFS= read -r name; do
+  [[ -n "$name" ]] || continue
+  cp "$GAME_ROOT/$name" "$BUILD_DIR/input/$name"
+done < <(python3 - "$BUILD_DIR/input-manifest.json" <<'PY'
+import json,pathlib,sys
+for name in json.loads(pathlib.Path(sys.argv[1]).read_text())["decompilerReferences"]:
+    path=pathlib.PurePosixPath(name)
+    if len(path.parts) != 1 or path.name != name: raise SystemExit("error: unsafe decompiler reference name")
+    print(name)
+PY
+)
 
 python3 - "$REPO_ROOT" "$LOCK" <<'PY'
 import hashlib, json, pathlib, sys
@@ -164,6 +189,11 @@ for entry in lock["templates"]:
     actual = hashlib.sha256(path.read_bytes()).hexdigest()
     if actual != entry["sha256"]:
         raise SystemExit(f"error: locked template changed: {path.relative_to(root)}")
+for entry in [lock["inputProfileRegistry"], *lock["inputAdapters"]]:
+    path = root / entry["path"]
+    actual = hashlib.sha256(path.read_bytes()).hexdigest()
+    if actual != entry["sha256"]:
+        raise SystemExit(f"error: locked input profile/adapter changed: {path.relative_to(root)}")
 PY
 
 export DOTNET_CLI_HOME="$BUILD_DIR/tool-home"
@@ -200,6 +230,13 @@ if ! (cd "$REPO_ROOT" && dotnet tool run ilspycmd -- \
   echo "       inspect <BUILD_DIR>/logs/decompile.log" >&2
   exit 1
 fi
+
+python3 "$REPO_ROOT/scripts/celeste-managed.py" normalize-input \
+  --root "$BUILD_DIR/decompiled" \
+  --input-manifest "$BUILD_DIR/input-manifest.json" \
+  --profiles "$REPO_ROOT/managed/celeste-input-profiles.json" \
+  --repo-root "$REPO_ROOT" \
+  --output "$ARTIFACT_DIR/input-normalization.json"
 
 grep -Fq 'Version = new Version(1, 4, 0, 0);' "$BUILD_DIR/decompiled/Celeste/Celeste.cs" || {
   echo "error: decompiled constructor does not prove Celeste game version 1.4.0.0" >&2
@@ -262,14 +299,18 @@ python3 "$REPO_ROOT/scripts/celeste-managed.py" tree-manifest \
   --output "$ARTIFACT_DIR/patched-source-manifest.json"
 verify_locked_tree "$ARTIFACT_DIR/patched-source-manifest.json" patchedSource
 
-python3 - "$ARTIFACT_DIR/generation-manifest.json" "$TOOL_VERSION" <<'PY'
+python3 - "$ARTIFACT_DIR/generation-manifest.json" "$TOOL_VERSION" "$BUILD_DIR/input-manifest.json" <<'PY'
 import json, pathlib, sys
 version_lines = [line.strip() for line in sys.argv[2].splitlines() if line.strip()]
+input_manifest = json.loads(pathlib.Path(sys.argv[3]).read_text())
 pathlib.Path(sys.argv[1]).write_text(json.dumps({
     "schemaVersion": 1,
     "gameRoot": "$CELESTE_GAME_ROOT",
     "gameContentCopied": False,
     "generatedSourceTracked": False,
+    "inputProfile": input_manifest["profileId"],
+    "canonicalClass": input_manifest["canonicalClass"],
+    "inputNormalizationAdapter": input_manifest["normalizationAdapter"],
     "tool": {
         "packageVersion": "8.0.0.7246-preview3",
         "reportedVersion": version_lines,

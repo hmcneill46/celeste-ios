@@ -191,9 +191,13 @@ def main() -> int:
             fail("native manifest is not the accepted post-Stage16 reproducible set")
         components = manifest.get("components", {})
         for name, expected in UNCHANGED_NATIVE_COMPONENTS.items():
-            if components.get(name) != expected:
+            component = components.get(name)
+            actual = component.get("logicalSha256") if isinstance(component, dict) else component
+            if actual != expected:
                 fail(f"unrelated native component changed: {name}")
-        if components.get("tvStubs") == "ef066108d5427a511cd5b42f9ca9ace8d78a0c244d9efc9b8fe1b4614cdeefac":
+        tvstubs = components.get("tvStubs")
+        tvstubs_hash = tvstubs.get("logicalSha256") if isinstance(tvstubs, dict) else tvstubs
+        if tvstubs_hash == "ef066108d5427a511cd5b42f9ca9ace8d78a0c244d9efc9b8fe1b4614cdeefac":
             fail("tvStubs did not incorporate the Stage 16B bootstrap")
         native_summary = {"logicalSetSha256": EXPECTED_STAGE16_NATIVE, "changedComponent": "tvStubs"}
 

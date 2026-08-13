@@ -125,6 +125,17 @@ touch "$RUNTIME_ROOT/$MARKER" "$ARTIFACT_DIR/$MARKER"
 "$REPO_ROOT/scripts/validate-celeste-input.sh" \
   --game-root "$GAME_ROOT" \
   --output "$ARTIFACT_DIR/input-manifest.json"
+RESOLVED_RELATIVE="$(python3 - "$ARTIFACT_DIR/input-manifest.json" <<'PY'
+import json,pathlib,sys
+value=json.loads(pathlib.Path(sys.argv[1]).read_text())["resolvedRootRelative"]
+path=pathlib.PurePosixPath(value)
+if value == ".": print("")
+elif path.is_absolute() or any(part in ("", ".", "..") for part in path.parts):
+    raise SystemExit("error: validator returned an unsafe resolved game root")
+else: print(value)
+PY
+)"
+[[ -z "$RESOLVED_RELATIVE" ]] || GAME_ROOT="$GAME_ROOT/$RESOLVED_RELATIVE"
 
 "$REPO_ROOT/scripts/prepare-celeste-managed.sh" \
   --game-root "$GAME_ROOT" \

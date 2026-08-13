@@ -89,8 +89,14 @@ Test("background during reload becomes failure", () =>
 });
 Test("network stop precedes materialisation policy", () =>
 {
-    string[] order = { "stop-network", "prepare-ticket", "settings", "game-state", "main-menu", "verify", "complete" };
+    string[] order = { "stop-network", "prepare-ticket", "schedule-detach", "detach-old-scene", "settings", "clear-save", "main-menu", "verify", "complete" };
     Require(Array.IndexOf(order, "stop-network") < Array.IndexOf(order, "prepare-ticket"), "ordering changed");
+});
+Test("active Level keeps SaveData through its final draw", () =>
+{
+    string[] order = { "schedule-detach", "final-old-scene-draw", "detach-old-scene", "clear-save", "schedule-main-menu" };
+    Require(Array.IndexOf(order, "final-old-scene-draw") < Array.IndexOf(order, "clear-save"), "SaveData cleared before stale Level stopped rendering");
+    Require(Array.IndexOf(order, "detach-old-scene") < Array.IndexOf(order, "clear-save"), "high-level state cleared before stale scene detached");
 });
 Test("FNA lifecycle calls forbidden for reload", () =>
 {

@@ -87,7 +87,8 @@ scripts/diagnose-tvos-host.sh --redact
 
 Two user-owned inputs are mandatory:
 
-- `CELESTE_GAME_ROOT`: extracted, unmodified itch.io Linux Celeste 1.4.0.0.
+- `CELESTE_GAME_ROOT`: an extracted, unmodified supported Celeste 1.4.0.0 FNA
+  distribution from the [exact input matrix](CELESTE_INPUTS.md).
 - `FMOD_SDK_ROOT`: mounted FMOD Engine iOS/tvOS 1.10.09 build 97915 SDK.
 
 The exact validators are:
@@ -98,10 +99,19 @@ scripts/validate-fmod-tvos-sdk.sh --sdk-root "$FMOD_SDK_ROOT"
 ```
 
 Their manifests are privacy-safe and written only below ignored `.build/`
-roots. The Celeste validator checks exact assembly/content hashes and rejects
-Everest/MonoMod markers. The FMOD validator checks the revision, build, headers,
+roots. The Celeste validator detects one explicit store/platform profile and
+checks exact managed identities, references, hashes, content, layout markers,
+required/forbidden files, and Everest/MonoMod markers. Supported Steam source
+is normalized with an exact zero-fuzz adapter before the one shared tvOS
+transformation pipeline. The FMOD validator checks the revision, build, headers,
 archive members, tvOS platform, arm64 architecture, deployment minimum, and
 symbols. Neither input is modified.
+
+The builder accepts the game root, a supported macOS `.app`, or the one wrapper
+directory from a supported archive. It does not require a store flag. A
+successful detection prints the version, distribution, source platform,
+runtime family, profile, and canonical class. Unknown and mixed payloads fail
+closed rather than being tried optimistically.
 
 Command-line options override environment variables, which override saved
 local configuration:

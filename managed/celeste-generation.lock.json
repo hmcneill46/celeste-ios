@@ -1,59 +1,15 @@
 {
   "schemaVersion": 1,
-  "supportedInput": {
-    "distribution": "unmodified FNA-based Celeste release (non-Everest)",
-    "gameVersion": "1.4.0.0",
-    "files": {
-      "Celeste.exe": {
-        "assemblyIdentity": {
-          "name": "Celeste",
-          "version": "1.0.0.0"
-        },
-        "sha256": "fd73f8a2311fa5737ded550cbad4b75c85b7686b36432f59185e940fcb65fcfe"
-      },
-      "Celeste.Content.dll": {
-        "assemblyIdentity": {
-          "name": "Celeste.Content",
-          "version": "0.0.0.0"
-        },
-        "sha256": "0b8d6195992c8970e8602bf48a7bf89104b83a98e34a07dc0c18d01581711d15"
-      },
-      "FNA.dll": {
-        "assemblyIdentity": {
-          "name": "FNA",
-          "version": "21.3.5.0"
-        },
-        "sha256": "00349b572636c0ed4c97d4e4f74344b3450160c42d4a6b52bcf5e0f2d5193a31"
-      }
-    },
-    "content": {
-      "aggregateSha256": "30a1c147d1a3ab0aa45762094e393ed7fd69951dd66e5af063447641e0699c46",
-      "fileCount": 1216,
-      "totalBytes": 1158665183
-    },
-    "celesteAssemblyReferences": [
-      {
-        "name": "FNA",
-        "version": "21.3.5.0"
-      },
-      {
-        "name": "mscorlib",
-        "version": "4.0.0.0"
-      },
-      {
-        "name": "System",
-        "version": "4.0.0.0"
-      },
-      {
-        "name": "System.Core",
-        "version": "4.0.0.0"
-      },
-      {
-        "name": "System.Xml",
-        "version": "4.0.0.0"
-      }
-    ]
+  "inputProfileRegistry": {
+    "path": "managed/celeste-input-profiles.json",
+    "sha256": "d9316487698e00d0953e39362f9f257e1178588245873c19801dc74a6073a8cf"
   },
+  "inputAdapters": [
+    {
+      "path": "managed/patches/input/steam-1.4.0.0-to-canonical-a.patch",
+      "sha256": "a9f49e2f97069f8838272a21e155463c8eda8c705fd53e710cef811a48a7b7a0"
+    }
+  ],
   "generationTool": {
     "command": "dotnet tool run ilspycmd -- -p --nested-directories -lv CSharp10_0 -o $DECOMPILED_ROOT -r $INPUT_ROOT $INPUT_ROOT/Celeste.exe",
     "manifest": ".config/dotnet-tools.json",
@@ -113,7 +69,7 @@
       "expectedNativeImportCount": 490,
       "path": "scripts/celeste-managed.py#patch-fmod",
       "policy": "replace only generated fmod/fmodstudio/fmod_SDL DllImport declarations with explicit PlatformNotSupportedException bodies; generated source stays ignored",
-      "sha256": "26f4c39b06a59bd5ad3f76290ebe66cfe9910a8733c4041c9f6ff8cea8d89377"
+      "sha256": "7990b91d6db4697b9d2a59f14a90774bbb872555139ad9c548c500cb2d39d085"
     }
   ],
   "templates": [

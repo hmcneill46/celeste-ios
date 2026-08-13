@@ -137,7 +137,7 @@ managed = json.loads((artifacts / "managed-runtime-manifest.json").read_text())
 content = json.loads((artifacts / "content-staging-manifest.json").read_text())
 result = json.loads((artifacts / "preparation-result.json").read_text())
 
-if input_manifest.get("validation") != "supported-unmodified-fna-release" or input_manifest.get("gameVersion") != "1.4.0.0":
+if input_manifest.get("validation") != "supported-explicit-fna-input-profile" or input_manifest.get("gameVersion") != "1.4.0.0":
     raise SystemExit("error: runtime input is not the supported unmodified Celeste 1.4.0.0 release")
 expected_managed = policy["stage3BOutput"]
 for key in ("fileCount", "logicalSha256"):

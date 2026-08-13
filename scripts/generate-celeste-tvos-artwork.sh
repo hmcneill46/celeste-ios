@@ -9,14 +9,17 @@ Generate a local tvOS layered strawberry icon and static Top Shelf artwork
 from a lawful Celeste installation. All output stays in an ignored directory.
 
 Options:
-  --game-root DIR  Celeste 1.4.0.0 root (default: CELESTE_GAME_ROOT)
+  --game-root DIR  Resolved Celeste 1.4.0.0 root (default: CELESTE_GAME_ROOT)
+  --icon-source FILE
+                   Validated package/canonical launcher icon override
   --output DIR     Ignored asset catalog root
                    (default: .build/tvos-self-build/artwork/Assets.xcassets)
   --clean          Replace a previously generated marked output
   -h, --help       Show this help
 
-The source files are Celeste.png and Content/Graphics/SplashScreen.png. The
-script installs nothing, never changes either source, and commits no artwork.
+The icon source is Celeste.png, Celeste.icns, or the canonical extracted
+app.ico; Top Shelf uses Content/Graphics/SplashScreen.png. The script installs
+nothing, never changes either source, and commits no artwork.
 USAGE
 }
 
@@ -24,6 +27,7 @@ SCRIPT_DIR="$(CDPATH= cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd -P)"
 REPO_ROOT="$(CDPATH= cd -- "$SCRIPT_DIR/.." && pwd -P)"
 GAME_ROOT="${CELESTE_GAME_ROOT:-}"
 OUTPUT="$REPO_ROOT/.build/tvos-self-build/artwork/Assets.xcassets"
+ICON_SOURCE=""
 CLEAN=0
 MARKER=.celeste-tvos-artwork
 
@@ -31,6 +35,7 @@ repo_path() { case "$1" in /*) printf '%s\n' "$1" ;; *) printf '%s/%s\n' "$REPO_
 while (($#)); do
   case "$1" in
     --game-root) [[ $# -ge 2 ]] || exit 2; GAME_ROOT="$2"; shift 2 ;;
+    --icon-source) [[ $# -ge 2 ]] || exit 2; ICON_SOURCE="$2"; shift 2 ;;
     --output) [[ $# -ge 2 ]] || exit 2; OUTPUT="$(repo_path "$2")"; shift 2 ;;
     --clean) CLEAN=1; shift ;;
     -h|--help) usage; exit 0 ;;
@@ -46,9 +51,9 @@ esac
 relative_output="${OUTPUT#$REPO_ROOT/}"
 git -C "$REPO_ROOT" check-ignore --no-index -q -- "$relative_output/$MARKER" || { echo "error: artwork output is not ignored" >&2; exit 1; }
 
-ICON_SOURCE="$GAME_ROOT/Celeste.png"
+[[ -n "$ICON_SOURCE" ]] || ICON_SOURCE="$GAME_ROOT/Celeste.png"
 SPLASH_SOURCE="$GAME_ROOT/Content/Graphics/SplashScreen.png"
-[[ -f "$ICON_SOURCE" && -r "$ICON_SOURCE" ]] || { echo "error: missing readable \$CELESTE_GAME_ROOT/Celeste.png" >&2; exit 1; }
+[[ -f "$ICON_SOURCE" && -r "$ICON_SOURCE" ]] || { echo "error: missing readable validated Celeste launcher icon" >&2; exit 1; }
 [[ -f "$SPLASH_SOURCE" && -r "$SPLASH_SOURCE" ]] || { echo "error: missing readable \$CELESTE_GAME_ROOT/Content/Graphics/SplashScreen.png" >&2; exit 1; }
 
 if [[ -e "$OUTPUT" ]]; then

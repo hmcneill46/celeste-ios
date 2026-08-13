@@ -5,12 +5,13 @@ usage() {
   cat <<'USAGE'
 Usage: scripts/validate-celeste-input.sh --game-root DIR [options]
 
-Validate the exact supported, unmodified FNA-based Celeste 1.4.0.0 input and
-write a privacy-safe manifest. The script reads game files but never modifies
-them, never reads saves, and prints no absolute game-library path.
+Detect and validate an explicitly supported, unmodified FNA-based Celeste
+1.4.0.0 input profile and write a privacy-safe manifest. The script accepts
+supported Linux/Windows game roots and macOS app/package roots. It reads game
+files but never modifies them, never reads saves, and prints no absolute path.
 
 Options:
-  --game-root DIR   User-owned Celeste installation (required).
+  --game-root DIR   Extracted user-owned Celeste installation (required).
   --output FILE     Manifest destination
                     (default: .build/celeste-managed/input-manifest.json).
   -h, --help        Show this help.
@@ -73,5 +74,5 @@ git -C "$REPO_ROOT" check-ignore --no-index -q -- "$OUTPUT_RELATIVE" || {
 
 python3 "$REPO_ROOT/scripts/celeste-managed.py" validate \
   --game-root "$GAME_ROOT" \
-  --lock "$REPO_ROOT/managed/celeste-generation.lock.json" \
+  --profiles "$REPO_ROOT/managed/celeste-input-profiles.json" \
   --output "$OUTPUT"

@@ -70,6 +70,8 @@ def main() -> int:
     require(coordinator, (
         "Settings.Reload()", "Input.Initialize()", "Input.ResetGrab()", "SaveData.Instance = null",
         "OuiFileSelect.Loaded = false", "OverworldLoader(Overworld.StartMode.MainMenu)",
+        "PrepareAndDetachStaleScene", "ReferenceEquals(Engine.Scene, detachmentScene)",
+        "old-save-instance=retained-through-final-draw", "SceneDetachTimeout",
         "TvOSStage5BAudioBridge.Initialized", "TvOSStage5BAudioBridge.BanksReady",
         "ReferenceEquals(Input.Jump.Binding, Settings.Instance.Jump)", "RequireRuntimeIdentity",
         "GC.GetTotalMemory", "fallback=app-switcher-termination",
@@ -102,6 +104,7 @@ def main() -> int:
         "Settings reload failure", "input reload failure", "main-menu timeout",
         "completion ticket mismatch", "failure cannot blindly retry",
         "background before Confirm", "background during reload", "network stop precedes materialisation",
+        "active Level keeps SaveData through its final draw",
         "FNA lifecycle calls forbidden", "Game and graphics identity required unchanged",
     )
     require(tests, required_tests, "Stage 13B tests")

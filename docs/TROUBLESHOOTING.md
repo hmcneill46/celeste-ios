@@ -223,8 +223,9 @@ moved.
 
 **Fix**
 
-Extract your own itch.io Linux Celeste 1.4.0.0 download and either paste/drag
-the folder into the interactive prompt or run:
+Extract your own supported Celeste 1.4.0.0 FNA distribution and either
+paste/drag its game root, macOS `.app`, or single archive wrapper into the
+interactive prompt, or run:
 
 ```bash
 export CELESTE_GAME_ROOT=/path/to/extracted/celeste
@@ -242,15 +243,17 @@ content-tree mismatch.
 
 **Cause**
 
-The project accepts the exact unmodified Celeste 1.4.0.0 itch.io Linux input.
-Steam, Windows, macOS, Epic, console, older/newer, and modified files are
-untested even when they look similar.
+The project accepts only the exact unmodified Celeste 1.4.0.0 FNA profiles in
+the [supported-input matrix](CELESTE_INPUTS.md). A different Steam depot,
+storefront build, version, XNA runtime, mixed directory, or modified file can
+look similar while still being unsupported.
 
 **Fix**
 
-Use a clean extraction of the tested itch.io Linux download. Do not patch files
-to imitate expected hashes. Another distribution is usable only if the
-unchanged validator genuinely accepts its exact files.
+Use a clean extraction of one listed profile. Do not patch files, borrow a
+missing file from another distribution, or combine directories to imitate
+expected hashes. The validator prints the detected profile on success; an
+unknown build must be added as a separately investigated profile before use.
 
 ## Everest or modded installation is rejected
 
@@ -264,8 +267,8 @@ The selected directory is a modded installation.
 
 **Fix**
 
-Keep your modded installation separate and extract a fresh, unmodified itch.io
-Linux Celeste 1.4.0.0 copy for this build.
+Keep your modded installation separate and extract a fresh, unmodified copy of
+one supported Celeste 1.4.0.0 FNA profile for this build.
 
 ## `Celeste.png` is missing
 

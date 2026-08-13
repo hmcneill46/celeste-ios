@@ -15,7 +15,7 @@ Without --non-interactive it prompts for missing paths and build choices.
 Options:
   --non-interactive       Never prompt; require all needed choices
   --mode MODE             install, ipa, both, or validate
-  --game-root DIR         Tested itch.io Linux Celeste 1.4.0.0 root
+  --game-root DIR         Supported extracted Celeste 1.4.0.0 FNA folder/app
   --fmod-root DIR         Mounted FMOD Engine iOS/tvOS 1.10.09 SDK root
   --bundle-id ID          Unique local bundle identifier
   --team-id ID            Personal Team identifier for direct installation
@@ -347,12 +347,29 @@ if [[ -z "$GAME_ROOT" && "$NON_INTERACTIVE" -eq 0 ]]; then
   read -r -p "  Drag the Celeste folder here, or paste its path: " answer
   GAME_ROOT="$(normalize_pasted_path "$answer")"
 fi
-[[ -n "$GAME_ROOT" ]] || stop_build "The Celeste installation was not provided" "no path" "your lawful unmodified itch.io Linux Celeste 1.4.0.0 folder" "Set CELESTE_GAME_ROOT or rerun and paste the extracted Linux folder path."
-[[ -d "$GAME_ROOT" ]] || stop_build "The Celeste directory was not found" "the selected path does not exist" "a folder containing Celeste.exe, Celeste.Content.dll, FNA.dll, and Content" "Mount or locate your own game installation and rerun."
-for item in Celeste.exe Celeste.Content.dll FNA.dll Content Celeste.png Content/Graphics/SplashScreen.png; do
-  [[ -e "$GAME_ROOT/$item" ]] || stop_build "The Celeste installation is incomplete" "missing $item" "the tested itch.io Linux Celeste 1.4.0.0 files plus local artwork" "Select the extracted, unmodified itch.io Linux game installation, not Everest or a partial copy. Steam and other distributions are untested."
-done
+[[ -n "$GAME_ROOT" ]] || stop_build "The Celeste installation was not provided" "no path" "a lawful extracted supported Celeste 1.4.0.0 FNA folder or macOS app" "Set CELESTE_GAME_ROOT or rerun and select the extracted game package."
+[[ -d "$GAME_ROOT" ]] || stop_build "The Celeste directory was not found" "the selected path does not exist" "an extracted supported Celeste game folder or Celeste.app" "Mount or locate your own game installation and rerun."
+GAME_ROOT_SELECTED="$GAME_ROOT"
 run_logged validate-celeste "$REPO_ROOT/scripts/validate-celeste-input.sh" --game-root "$GAME_ROOT" --output "$VALIDATION_ROOT/celeste-input.json"
+RESOLVED_RELATIVE="$(python3 - "$VALIDATION_ROOT/celeste-input.json" <<'PY'
+import json,pathlib,sys
+value=json.loads(pathlib.Path(sys.argv[1]).read_text())["resolvedRootRelative"]
+path=pathlib.PurePosixPath(value)
+if value == ".": print("")
+elif path.is_absolute() or any(part in ("", ".", "..") for part in path.parts):
+    raise SystemExit("error: validator returned an unsafe resolved game root")
+else: print(value)
+PY
+)"
+[[ -z "$RESOLVED_RELATIVE" ]] || GAME_ROOT="$GAME_ROOT/$RESOLVED_RELATIVE"
+python3 - "$VALIDATION_ROOT/celeste-input.json" <<'PY'
+import json,pathlib,sys
+value=json.loads(pathlib.Path(sys.argv[1]).read_text())
+print(f"  Celeste {value['gameVersion']} — {value['store']} / {value['sourcePlatform']} / {value['runtimeFamily']}")
+print(f"  Profile: {value['profileId']}")
+print(f"  Canonical game: {value['canonicalClass']}")
+print("  Input validation: PASS")
+PY
 
 CURRENT_PHASE="Finding FMOD"
 printf '[3/8] Finding FMOD\n'
@@ -408,7 +425,7 @@ fi
 [[ "$BUNDLE_ID" =~ ^[A-Za-z][A-Za-z0-9-]*(\.[A-Za-z0-9-]+)+$ ]] || stop_build "The bundle identifier is invalid" "$BUNDLE_ID" "reverse-DNS form such as com.local-name.celeste-tvos" "Choose a unique identifier containing letters, digits, hyphens, and dots."
 echo "  Warning: changing this identifier later creates another app identity and makes prior saves appear unavailable."
 
-python3 - "$CONFIG_FILE" "$GAME_ROOT" "$FMOD_ROOT" "$BUNDLE_ID" "$MODE" <<'PY'
+python3 - "$CONFIG_FILE" "$GAME_ROOT_SELECTED" "$FMOD_ROOT" "$BUNDLE_ID" "$MODE" <<'PY'
 import json,pathlib,sys
 path=pathlib.Path(sys.argv[1]); path.parent.mkdir(parents=True,exist_ok=True)
 current={}
@@ -481,7 +498,7 @@ fi
 
 CURRENT_PHASE="Generating artwork"
 printf '[5/8] Generating artwork\n'
-run_logged generate-artwork "$REPO_ROOT/scripts/generate-celeste-tvos-artwork.sh" --game-root "$GAME_ROOT" --output "$ARTWORK_ROOT" --clean
+echo '  deferred until the canonical game tree is prepared'
 
 if [[ "$MODE" == validate ]]; then
   echo '[6/8] Preparing the game'
@@ -551,6 +568,11 @@ if ! "$REPO_ROOT/scripts/verify-celeste-tvos-stage6.sh" > "$LOG_ROOT/verify-stag
 else
   echo "  reusing verified Stage 6 generated managed/content inputs"
 fi
+ICON_SOURCE="$GAME_ROOT/Celeste.png"
+[[ -f "$ICON_SOURCE" ]] || ICON_SOURCE="$GAME_ROOT/Celeste.icns"
+[[ -f "$ICON_SOURCE" ]] || ICON_SOURCE="$REPO_ROOT/.build/celeste-runtime/stage6-current/audio/managed/app.ico"
+[[ -f "$ICON_SOURCE" ]] || stop_build "Celeste artwork could not be located" "no supported launcher icon" "Celeste.png, Celeste.icns, or the canonical app.ico resource" "Use a complete supported input package and rebuild the canonical game tree."
+run_logged generate-artwork "$REPO_ROOT/scripts/generate-celeste-tvos-artwork.sh" --game-root "$GAME_ROOT" --icon-source "$ICON_SOURCE" --output "$ARTWORK_ROOT" --clean
 run_logged verify-controller-prompt-assets "$REPO_ROOT/scripts/inventory-celeste-controller-prompts.py" --game-root "$GAME_ROOT"
 run_logged verify-controller-prompt-source "$REPO_ROOT/scripts/verify-celeste-tvos-stage11.py" \
   --repo-root "$REPO_ROOT" \
