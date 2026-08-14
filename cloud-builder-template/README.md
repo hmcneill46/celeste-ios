@@ -17,7 +17,7 @@ installable until it is signed**.
 
 - A GitHub account.
 - One ZIP containing an [exact supported Celeste 1.4.0.0 FNA
-  input](https://github.com/hmcneill46/celeste-ios/blob/b5f2ec2fdd5c65c533d86aae750ee60dcaf5009e/docs/CELESTE_INPUTS.md).
+  input](https://github.com/hmcneill46/celeste-ios/blob/98b3d14459e124301919bec3b054c5348d4ddfb2/docs/CELESTE_INPUTS.md).
 - The original official **FMOD Engine iOS/tvOS 1.10.09 build 97915 DMG**.
 
 You must own Celeste and obtain FMOD through your own FMOD account. This
@@ -49,9 +49,9 @@ You need exactly:
 - one `.dmg`: FMOD Engine iOS/tvOS 1.10.09 build 97915.
 
 The main project explains how to obtain clean files you already own through
-[itch.io, Steam, or Epic Games Store](https://github.com/hmcneill46/celeste-ios/blob/b5f2ec2fdd5c65c533d86aae750ee60dcaf5009e/README.md#getting-a-clean-supported-celeste-copy)
+[itch.io, Steam, or Epic Games Store](https://github.com/hmcneill46/celeste-ios/blob/98b3d14459e124301919bec3b054c5348d4ddfb2/README.md#step-1--get-your-celeste-files)
 and where to obtain the [official FMOD
-SDK](https://github.com/hmcneill46/celeste-ios/blob/b5f2ec2fdd5c65c533d86aae750ee60dcaf5009e/README.md#fmod-sdk).
+SDK](https://github.com/hmcneill46/celeste-ios/blob/98b3d14459e124301919bec3b054c5348d4ddfb2/README.md#step-2--get-fmod).
 
 If your Celeste download is already a supported ZIP, upload it directly. If
 you have an extracted game folder or app, compress that one folder/app into one
@@ -116,7 +116,7 @@ The Release also contains a tiny text file with the source commit, detected
 Celeste profile, size, and SHA-256.
 
 The IPA is unsigned. Follow the main project's [unsigned IPA and signing
-guidance](https://github.com/hmcneill46/celeste-ios/blob/b5f2ec2fdd5c65c533d86aae750ee60dcaf5009e/README.md#create-a-signing-ready-ipa)
+guidance](https://github.com/hmcneill46/celeste-ios/blob/98b3d14459e124301919bec3b054c5348d4ddfb2/README.md#step-4--sign-and-install)
 for the separate signing/install step. Keep the final signed bundle identifier
 stable between replacement installs if you want tvOS to keep using the same
 app-data domain.
@@ -145,7 +145,7 @@ cleanup workflow removes the two private Releases from GitHub.
 
 Private does not mean the files stay on your own computer. If you do not want
 to upload them to GitHub, use the [local Mac
-builder](https://github.com/hmcneill46/celeste-ios/blob/b5f2ec2fdd5c65c533d86aae750ee60dcaf5009e/docs/BUILDING.md)
+builder](https://github.com/hmcneill46/celeste-ios/blob/98b3d14459e124301919bec3b054c5348d4ddfb2/docs/BUILDING.md)
 instead.
 
 The built IPA contains user-supplied Celeste content and should remain private
@@ -196,8 +196,8 @@ receives Apple credentials and produces an unsigned signing-ready IPA only.
 
 ### I need more help
 
-See the main project's [cloud-building guide](https://github.com/hmcneill46/celeste-ios/blob/b5f2ec2fdd5c65c533d86aae750ee60dcaf5009e/docs/CLOUD_BUILDING.md)
-and [troubleshooting guide](https://github.com/hmcneill46/celeste-ios/blob/b5f2ec2fdd5c65c533d86aae750ee60dcaf5009e/docs/TROUBLESHOOTING.md).
+See the main project's [cloud-building guide](https://github.com/hmcneill46/celeste-ios/blob/98b3d14459e124301919bec3b054c5348d4ddfb2/docs/CLOUD_BUILDING.md)
+and [troubleshooting guide](https://github.com/hmcneill46/celeste-ios/blob/98b3d14459e124301919bec3b054c5348d4ddfb2/docs/TROUBLESHOOTING.md).
 
 ## Technical and security design
 
@@ -212,7 +212,7 @@ and [troubleshooting guide](https://github.com/hmcneill46/celeste-ios/blob/b5f2e
   SHAs. The token grants only repository contents access for private Releases;
   cleanup additionally gets narrowly scoped cache deletion permission.
 - The workflow checks out public Celeste-port commit
-  `b5f2ec2fdd5c65c533d86aae750ee60dcaf5009e` with reachable history and exact
+  `98b3d14459e124301919bec3b054c5348d4ddfb2` with reachable history and exact
   recursive submodules. It never follows a floating branch.
 - ZIP paths, links, special files, duplicates, expanded size, and extraction
   root are bounded before extraction. Existing Stage 17 and FMOD validators

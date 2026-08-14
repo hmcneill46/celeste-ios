@@ -23,7 +23,7 @@ jobs:
     env:
       GH_TOKEN: ${{ github.token }}
       CLOUD_PUBLIC_REPOSITORY: hmcneill46/celeste-ios
-      CLOUD_PUBLIC_SOURCE_SHA: b5f2ec2fdd5c65c533d86aae750ee60dcaf5009e
+      CLOUD_PUBLIC_SOURCE_SHA: 98b3d14459e124301919bec3b054c5348d4ddfb2
       CLOUD_NATIVE_LOGICAL_SHA256: 6286e0545b32e9c56732955d4cf816ed8f5dc0d816ab610dd9fe1752090a01fc
       CLOUD_INPUT_TAG: celeste-tvos-inputs
       CLOUD_OUTPUT_TAG: celeste-tvos-output

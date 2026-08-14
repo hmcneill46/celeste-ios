@@ -260,8 +260,9 @@ but the current modern builder is tvOS-only.
 
 ## Project history and release candidates
 
+- [v1.0.0-rc.3 release notes](docs/releases/v1.0.0-rc.3.md)
+- [Current release-candidate manifest](tvos/release-candidates/v1.0.0-rc.3.json)
 - [v1.0.0-rc.2 release notes](docs/releases/v1.0.0-rc.2.md)
-- [Current release-candidate manifest](tvos/release-candidates/v1.0.0-rc.2.json)
 - [Chronological engineering history](docs/history/README.md)
 
 Historical stage reports record how the port was proven. They are useful for

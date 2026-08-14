@@ -1,0 +1,117 @@
+{
+  "schemaVersion": 1,
+  "stage": 23,
+  "intendedTag": "v1.0.0-rc.3",
+  "releaseStatus": "accepted-release-candidate",
+  "rc1": {
+    "tag": "v1.0.0-rc.1",
+    "commit": "ee52b0868df091746f134d95d4f020f94f23d4fb"
+  },
+  "rc2": {
+    "tag": "v1.0.0-rc.2",
+    "commit": "641e86e4ed164cdf93f602ce2f11436449654d6e"
+  },
+  "productSourceCommit": "98b3d14459e124301919bec3b054c5348d4ddfb2",
+  "build": {
+    "configuration": "Release",
+    "runtimeIdentifier": "tvos-arm64",
+    "minimumTvOS": "16.0",
+    "renderer": "Metal",
+    "trimMode": "full",
+    "fullAot": true,
+    "useInterpreter": false
+  },
+  "native": {
+    "logicalSha256": "6286e0545b32e9c56732955d4cf816ed8f5dc0d816ab610dd9fe1752090a01fc",
+    "components": [
+      "SDL2",
+      "FNA3D",
+      "FAudio",
+      "Theorafile",
+      "tvStubs",
+      "MoltenVK"
+    ]
+  },
+  "celesteInput": {
+    "gameVersion": "1.4.0.0",
+    "runtimeFamily": "FNA",
+    "canonicalClass": "celeste-1.4.0.0-a",
+    "canonicalLocks": {
+      "content": {
+        "files": 1216,
+        "sha256": "30a1c147d1a3ab0aa45762094e393ed7fd69951dd66e5af063447641e0699c46"
+      },
+      "rawSource": {
+        "files": 920,
+        "sha256": "db7b722159fbdef8625c81608165aea162957dce956fcd5b16eeceaa1089a273"
+      },
+      "patchedSource": {
+        "files": 922,
+        "sha256": "0c6515adadf58251ab2da66c6c61a1f61bd19b85f5dcdd4f1280552af650a4b5"
+      },
+      "stage6RealAudio": {
+        "files": 934,
+        "sha256": "1a981bc5994261775c1fea497cd042780fdbbcb24b7390a2f4db6aab1be747d9"
+      }
+    },
+    "supportedProfiles": [
+      "itch-linux-fna-1.4.0.0",
+      "itch-macos-fna-1.4.0.0",
+      "itch-windows-fna-1.4.0.0",
+      "epic-windows-fna-1.4.0.0",
+      "epic-macos-fna-1.4.0.0",
+      "steam-linux-fna-1.4.0.0-manifest-1505052356460012099",
+      "steam-linux-public-2025-fna-1.4.0.0",
+      "steam-macos-fna-1.4.0.0",
+      "steam-windows-fna-1.4.0.0-manifest-1981411158533599226"
+    ]
+  },
+  "audio": {
+    "engine": "FMOD 1.10.09 build 97915",
+    "bankCount": 7
+  },
+  "persistence": {
+    "currentWriteFormat": 2,
+    "readableFormats": [0, 1, 2],
+    "dualGeneration": true,
+    "compression": "deterministic-zlib-level-9",
+    "logicalFiles": ["settings", "0", "1", "2"]
+  },
+  "saveManager": {
+    "writable": true,
+    "oneTimeQrPairing": true,
+    "confirmDrivenSoftReload": true,
+    "preferredPort": 49728,
+    "temporaryPortFallback": "exact-posix-48-once",
+    "continuityService": "celeste-save-manager",
+    "continuityProtocolVersion": 1,
+    "freshAuthenticationEveryActivation": true
+  },
+  "features": {
+    "gracefulMainMenuQuit": true,
+    "performanceHud": true,
+    "controllerPromptModes": [
+      "Automatic",
+      "Xbox",
+      "PlayStation",
+      "Nintendo Switch",
+      "Stadia"
+    ]
+  },
+  "builders": {
+    "localMac": true,
+    "privateGitHubActions": true,
+    "cloudOutputUnsigned": true,
+    "cloudSigning": false,
+    "personalTeamInstall": true,
+    "cloudProductSourceCommit": "98b3d14459e124301919bec3b054c5348d4ddfb2"
+  },
+  "unsupported": [
+    "Apple User Management with Personal Teams",
+    "Everest or mod support",
+    "XNA input packages",
+    "Cloud save synchronization",
+    "App Store distribution",
+    "Apple Game Mode support claim"
+  ]
+}

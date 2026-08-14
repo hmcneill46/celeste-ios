@@ -40,6 +40,8 @@ Use this page to jump directly to the task or level of detail you need.
 
 ## Release and history
 
+- [v1.0.0-rc.3 release notes](releases/v1.0.0-rc.3.md)
+- [v1.0.0-rc.3 manifest](../tvos/release-candidates/v1.0.0-rc.3.json)
 - [v1.0.0-rc.2 release notes](releases/v1.0.0-rc.2.md)
 - [v1.0.0-rc.2 manifest](../tvos/release-candidates/v1.0.0-rc.2.json)
 - [Development and acceptance history](history/README.md) — the original port
