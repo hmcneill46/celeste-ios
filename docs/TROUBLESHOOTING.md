@@ -250,7 +250,10 @@ look similar while still being unsupported.
 
 **Fix**
 
-Use a clean extraction of one listed profile. Do not patch files, borrow a
+Use a clean extraction of one listed profile. The root README's [store-specific
+acquisition guide](../README.md#getting-a-clean-supported-celeste-copy) explains
+how to obtain clean itch.io, Steam, or Epic files through your own entitlement.
+Do not patch files, borrow a
 missing file from another distribution, or combine directories to imitate
 expected hashes. The validator prints the detected profile on success; an
 unknown build must be added as a separately investigated profile before use.

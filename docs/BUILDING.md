@@ -91,6 +91,11 @@ Two user-owned inputs are mandatory:
   distribution from the [exact input matrix](CELESTE_INPUTS.md).
 - `FMOD_SDK_ROOT`: mounted FMOD Engine iOS/tvOS 1.10.09 build 97915 SDK.
 
+The root README's [clean game-file acquisition
+guide](../README.md#getting-a-clean-supported-celeste-copy) gives optional
+itch.io, Steam-console, and Epic/Legendary workflows. Steam and Legendary are
+acquisition tools only; neither is a host prerequisite or builder dependency.
+
 The exact validators are:
 
 ```bash

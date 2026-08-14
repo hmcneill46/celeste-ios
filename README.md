@@ -21,7 +21,7 @@ The personal-use tvOS build is playable on physical Apple TV hardware. It uses
 .NET 10, FNA, Metal, full AOT, full trimming, real FMOD audio, and a
 compressed, corruption-recoverable UserDefaults save bridge.
 
-The builder supports eight exact **Celeste 1.4.0.0 FNA** input profiles from
+The builder supports nine exact **Celeste 1.4.0.0 FNA** input profiles from
 itch.io, Epic Games Store, and Steam on Linux, macOS, or Windows where listed.
 It detects the actual payload automatically and rejects unknown or modified
 builds. See [`docs/CELESTE_INPUTS.md`](docs/CELESTE_INPUTS.md) for the precise
@@ -138,6 +138,128 @@ is authoritative. Modified, Everest, mixed, XNA, unknown, and other-version
 inputs are rejected; there is no accept-any-game fallback.
 
 Never copy game files, generated source, or generated artwork into Git.
+
+### Getting a clean supported Celeste copy
+
+These are ways to obtain your own unmodified game files. Steam and Legendary
+are optional acquisition tools, not builder dependencies; once a clean folder
+exists, `build-tvos.sh` only reads it. The [exact support
+matrix](docs/CELESTE_INPUTS.md) remains authoritative.
+
+<details>
+<summary><strong>itch.io</strong></summary>
+
+1. Sign in to the itch.io account that owns Celeste and open your library.
+2. Download an unmodified Celeste 1.4.0.0 FNA package listed in the supported
+   matrix.
+3. Extract it somewhere outside this repository.
+4. Paste or drag the extracted folder/app into the builder when prompted, or
+   pass it with `--game-root`.
+
+The validator identifies the payload itself; an arbitrary or modified itch.io
+download is not accepted merely because of its filename.
+
+</details>
+
+<details>
+<summary><strong>Steam (recommended: tested Linux depot)</strong></summary>
+
+This route uses Steam's own built-in console. The Linux files are only lawful
+Celeste/FNA/content input for the builder; you do not need to run the Linux game
+on your Mac.
+
+1. Install Steam and sign in to an account that owns Celeste. Quit and reopen
+   Steam if its console tab is not already available.
+2. Enter `steam://open/console` in a web-browser address bar and allow the
+   browser to open Steam.
+3. Select Steam's new **Console** tab and enter the recommended tested command:
+
+   ```text
+   download_depot 504230 504233 5880027853585448535
+   ```
+
+4. Steam normally gives no useful progress bar for a console depot download.
+   Wait for its completion message, for example:
+
+   ```text
+   Depot download complete: ".../steamapps/content/app_504230/depot_504233"
+   ```
+
+5. Use the exact path Steam prints. Copy or move the completed
+   `depot_504233` directory somewhere convenient outside Steam's content-depot
+   area, for example `~/Downloads/Celeste-Linux`.
+6. Give that directory to `./build-tvos.sh`.
+
+A complete tested Linux depot contains at least `Celeste.exe`,
+`Celeste.Content.dll`, `FNA.dll`, `Steamworks.NET.dll`, `Content/`, `lib/`, and
+`lib64/`. The authoritative check is:
+
+```bash
+scripts/validate-celeste-input.sh --game-root "/path/to/Celeste-Linux"
+```
+
+Other exact Steam inputs tested by this project are:
+
+```text
+# Linux 1.4.0.0 pinned 2021
+download_depot 504230 504233 1505052356460012099
+
+# Linux public 2025 (recommended)
+download_depot 504230 504233 5880027853585448535
+
+# macOS FNA 1.4.0.0
+download_depot 504230 504232 3271492884622616896
+```
+
+The exact Steam Windows FNA fixture in the support matrix is accepted if you
+already have it, but obtaining that unusual branch offers no advantage over
+the recommended Linux depot.
+
+</details>
+
+<details>
+<summary><strong>Epic Games Store (optional Legendary route)</strong></summary>
+
+The project does not download Epic files. One optional way to obtain your own
+entitled files on macOS is the open-source
+[Legendary CLI](https://github.com/derrod/legendary). Its current official
+requirements specify 64-bit Python 3.10 or newer; check with
+`python3 --version`, then install and authenticate if needed:
+
+```bash
+python3 -m pip install --user legendary-gl
+legendary auth
+legendary list
+```
+
+`legendary auth` signs in to your Epic account. Find Celeste in
+`legendary list` and note its **App Name**. The project test account reported
+`Salt`, but confirm your own result instead of assuming that value. Set the
+verified name, then download either one of the supported payloads:
+
+```bash
+EPIC_APP="<App Name shown by legendary list>"
+mkdir -p "$HOME/Celeste-Clean-Builds/Epic"
+
+# Natural choice on a Mac
+legendary install "$EPIC_APP" \
+  --platform Mac \
+  --base-path "$HOME/Celeste-Clean-Builds/Epic" \
+  --game-folder "Celeste-macOS-FNA-1.4.0.0" \
+  --download-only
+
+# Supported alternative
+legendary install "$EPIC_APP" \
+  --platform Windows \
+  --base-path "$HOME/Celeste-Clean-Builds/Epic" \
+  --game-folder "Celeste-Windows-FNA-1.4.0.0" \
+  --download-only
+```
+
+You only need one platform payload. Legendary is not needed after the folder
+has been downloaded and is never installed or invoked by this project.
+
+</details>
 
 ## FMOD SDK
 
@@ -363,7 +485,7 @@ failure.
 | Deployment target | tvOS 16.0 |
 | Apple TV | Apple TV 4K (3rd generation), `AppleTV14,1` |
 | Controller | Sony DualSense |
-| Celeste | 1.4.0.0 FNA; eight exact itch.io/Epic/Steam profiles |
+| Celeste | 1.4.0.0 FNA; nine exact itch.io/Epic/Steam profiles |
 | FMOD | Engine iOS/tvOS 1.10.09, build 97915 |
 
 Other arm64 Apple TV models and newer compatible tvOS versions may work, but

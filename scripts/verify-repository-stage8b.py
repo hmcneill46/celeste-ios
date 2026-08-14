@@ -67,7 +67,7 @@ def main() -> None:
     required_readme = (
         "# Celeste for Apple TV",
         "./build-tvos.sh",
-        "eight exact **Celeste 1.4.0.0 FNA** input profiles",
+        "nine exact **Celeste 1.4.0.0 FNA** input profiles",
         "docs/CELESTE_INPUTS.md",
         "1.10.09, build 97915",
         "Personal Team",

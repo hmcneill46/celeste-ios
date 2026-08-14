@@ -123,7 +123,7 @@ def main() -> None:
 
     tests.check(registry["schemaVersion"] == 1, "registry schema")
     profiles = registry["profiles"]
-    tests.check(len(profiles) == 8, "eight supplied profiles registered")
+    tests.check(len(profiles) == 9, "nine supplied profiles registered")
     ids = [profile["id"] for profile in profiles]
     tests.check(len(ids) == len(set(ids)), "profile IDs are unique")
     tests.check({p["store"] for p in profiles} == {"itch.io", "Steam", "Epic Games Store"}, "store metadata")
@@ -174,6 +174,52 @@ def main() -> None:
                                                evidence_for(profiles[0], registry))]
         tests.check(ambiguous == [profiles[0]["id"], "synthetic-duplicate"],
                     "ambiguous duplicate profile is rejected by the one-match policy")
+
+        steam_windows_id = "steam-windows-fna-1.4.0.0-manifest-1981411158533599226"
+        steam_windows = next(profile for profile in profiles if profile["id"] == steam_windows_id)
+        steam_windows_root = profile_roots[steam_windows_id]
+        steam_windows_evidence = evidence_for(steam_windows, registry)
+        tests.check(
+            steam_windows["store"] == "Steam" and
+            steam_windows["sourcePlatform"] == "Windows" and
+            steam_windows["runtimeFamily"] == "FNA" and
+            steam_windows["gameVersion"] == "1.4.0.0",
+            "Steam Windows profile metadata",
+        )
+        tests.check(
+            steam_windows["managedPayload"] == "steam-windows-fna-1.4.0.0" and
+            registry["managedPayloads"][steam_windows["managedPayload"]]["normalizationAdapter"] ==
+            "steam-1.4.0.0-to-canonical-a" and
+            steam_windows["canonicalClass"] == "celeste-1.4.0.0-a",
+            "Steam Windows reuses the exact Steam adapter and canonical class A",
+        )
+        tests.check(
+            set(steam_windows["requiredMarkers"]) == {"CSteamworks.dll", "SDL2.dll", "steam_api.dll"},
+            "Steam Windows exact package markers",
+        )
+        for file_name, label in (
+            ("Celeste.exe", "modified Steam Windows executable rejected"),
+            ("FNA.dll", "modified Steam Windows FNA rejected"),
+            ("Steamworks.NET.dll", "modified Steam Windows Steamworks rejected"),
+        ):
+            changed = json.loads(json.dumps(steam_windows_evidence))
+            changed["files"][file_name]["sha256"] = "0" * 64
+            tests.check(
+                not any(module.profile_matches(p, registry, steam_windows_root, changed) for p in profiles),
+                label,
+            )
+        changed_content = json.loads(json.dumps(steam_windows_evidence))
+        changed_content["content"]["aggregateSha256"] = "0" * 64
+        tests.check(
+            not any(module.profile_matches(p, registry, steam_windows_root, changed_content) for p in profiles),
+            "modified Steam Windows Content rejected",
+        )
+        mixed_itch = evidence_for(profiles[0], registry)
+        mixed_itch["files"]["Steamworks.NET.dll"] = steam_windows_evidence["files"]["Steamworks.NET.dll"]
+        tests.check(
+            not any(module.profile_matches(p, registry, steam_windows_root, mixed_itch) for p in profiles),
+            "mixed Steam/itch Windows payload rejected",
+        )
     module.sha256_file = original_sha
 
     with tempfile.TemporaryDirectory(prefix="stage17b-layout-") as temporary:
@@ -198,6 +244,11 @@ def main() -> None:
         (linked / "game").symlink_to(outside, target_is_directory=True)
         tests.check(module.game_root_candidates(linked) == [],
                     "wrapper symlink escaping selected root is rejected")
+        ambiguous_root = layout / "ambiguous"
+        shutil.copytree(direct, ambiguous_root / "one")
+        shutil.copytree(direct, ambiguous_root / "two")
+        tests.check(len(module.game_root_candidates(ambiguous_root)) == 2,
+                    "ambiguous Windows wrapper layout is detected for rejection")
 
     adapters = registry["adapters"]
     tests.check(adapters["none"] == {"kind": "no-op", "changedFiles": []}, "itch/Epic no-op adapter")

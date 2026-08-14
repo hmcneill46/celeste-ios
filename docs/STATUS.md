@@ -14,10 +14,10 @@ Apple TV restart, replacement-install, controller, audio, lifecycle, branding,
 privacy, and repository gates. See the
 [release-candidate record](history/stages/TVOS_RELEASE_CANDIDATE_STAGE14_REPORT.md).
 Stage 15 added integrated one-time scan-to-connect QR pairing. Stage 16B added
-a live Apple Metal Performance HUD control. Stage 17B adds strict automatic
-recognition and canonicalization for eight exact itch.io, Epic Games Store,
-and Steam Celeste 1.4.0.0 FNA inputs without changing the shared downstream
-tvOS product.
+a live Apple Metal Performance HUD control. Stages 17B and 17C add strict
+automatic recognition and canonicalization for nine exact itch.io, Epic Games
+Store, and Steam Celeste 1.4.0.0 FNA inputs without changing the shared
+downstream tvOS product.
 
 ## Proven support matrix
 
@@ -29,7 +29,7 @@ tvOS product.
 | Target | tvOS arm64, minimum tvOS 16.0 |
 | Device | Apple TV 4K (3rd generation), `AppleTV14,1` |
 | Controller | Sony DualSense |
-| Game input | Celeste 1.4.0.0 FNA; eight exact itch.io/Epic/Steam profiles |
+| Game input | Celeste 1.4.0.0 FNA; nine exact itch.io/Epic/Steam profiles |
 | FMOD input | FMOD Engine iOS/tvOS 1.10.09, build 97915 |
 | Device build | Release, full AOT, full trimming, no interpreter |
 

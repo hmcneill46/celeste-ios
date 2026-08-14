@@ -22,13 +22,14 @@ builds fail closed.
 | Steam | Linux, pinned manifest `1505052356460012099` | 1.4.0.0 | FNA 21.3.5 | `steam-linux-fna-1.4.0.0-manifest-1505052356460012099` | `celeste-1.4.0.0-a` | Supported — physically validated | Stage 17A representative |
 | Steam | Linux, tested public 2025 payload | 1.4.0.0 | FNA 21.3.5 | `steam-linux-public-2025-fna-1.4.0.0` | `celeste-1.4.0.0-a` | Supported — canonical-equivalent | Redundant device run omitted |
 | Steam | macOS | 1.4.0.0 | FNA 21.3.5 | `steam-macos-fna-1.4.0.0` | `celeste-1.4.0.0-a` | Supported — canonical-equivalent | Redundant device run omitted |
+| Steam | Windows, depot `504231`, manifest `1981411158533599226` | 1.4.0.0 | FNA 21.3.5 | `steam-windows-fna-1.4.0.0-manifest-1981411158533599226` | `celeste-1.4.0.0-a` | Supported — canonical-equivalent | Windows ingestion physically covered by Epic; Steam normalization physically covered by Linux; exact canonical output matched |
 
 “Exact canonical equivalence” means the accepted input independently produced
 the same normalized Celeste source and complete Stage 6 generated tree as the
 physically tested representatives. It does not mean every release ever
 published by that store is supported.
 
-All eight profiles contain the same locked 1.4.0.0 game content and normalize
+All nine profiles contain the same locked 1.4.0.0 game content and normalize
 to one downstream tvOS product class. Storefront-specific desktop libraries are
 never copied into the Apple TV app. Steam inputs use one exact, zero-fuzz source
 adapter that removes Steam startup, callbacks, stats, achievements, and the
@@ -55,6 +56,15 @@ Validate without building:
 scripts/validate-celeste-input.sh --game-root "$CELESTE_GAME_ROOT"
 ```
 
+The root README has [concise, store-specific
+instructions](../README.md#getting-a-clean-supported-celeste-copy) for
+obtaining a clean copy through an account that owns Celeste. Steam users should
+normally use the tested Linux depot through Steam's built-in console; there is
+no product benefit
+to obtaining the unusual Windows `opengl` branch. Epic owners may optionally
+use Legendary to download one supported Mac or Windows payload, but Legendary
+is not a builder dependency.
+
 The selected game files are read-only inputs. Extraction, decompilation,
 normalization, and generated content remain in ignored local build directories.
 
@@ -66,7 +76,7 @@ normalization, and generated content remain in ignored local build directories.
 
 ## Not tested
 
-- Steam Windows and Steam payloads other than the exact profiles above
+- Steam payloads other than the exact profiles above
 - Microsoft Store/Xbox App
 - Humble and other storefront packages
 - console packages

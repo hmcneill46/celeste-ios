@@ -90,6 +90,32 @@
         }
       },
       "normalizationAdapter": "steam-1.4.0.0-to-canonical-a"
+    },
+    "steam-windows-fna-1.4.0.0": {
+      "celesteAssemblyReferences": [
+        { "name": "FNA", "version": "21.3.5.0" },
+        { "name": "mscorlib", "version": "4.0.0.0" },
+        { "name": "Steamworks.NET", "version": "10.0.0.0" },
+        { "name": "System", "version": "4.0.0.0" },
+        { "name": "System.Core", "version": "4.0.0.0" },
+        { "name": "System.Xml", "version": "4.0.0.0" }
+      ],
+      "decompilerReferences": ["Steamworks.NET.dll"],
+      "files": {
+        "Celeste.exe": {
+          "assemblyIdentity": { "name": "Celeste", "version": "1.0.0.0" },
+          "sha256": "3ee734ec8c767f638e9a7c2cbc07109f0a0bf1eb1973dbe447e99144ca9e7dd9"
+        },
+        "FNA.dll": {
+          "assemblyIdentity": { "name": "FNA", "version": "21.3.5.0" },
+          "sha256": "b6c7f5196fb06529329ba23f09ee7573653350f6d8210818af965d6b822cdcec"
+        },
+        "Steamworks.NET.dll": {
+          "assemblyIdentity": { "name": "Steamworks.NET", "version": "10.0.0.0" },
+          "sha256": "6c6b307e907294003014da3ed4610e362a9b6ee4093a20e514b0e23454da3085"
+        }
+      },
+      "normalizationAdapter": "steam-1.4.0.0-to-canonical-a"
     }
   },
   "sharedFiles": {
@@ -234,6 +260,24 @@
       "sourcePlatform": "macOS",
       "store": "Steam",
       "testedArchiveSha256": ["27467f9a2ca847d361d76a51bd8a13ccb60f9780d3b0ade3b4105b2d28c2ff9a"]
+    },
+    {
+      "absentFiles": ["Backups/settings.celeste"],
+      "canonicalClass": "celeste-1.4.0.0-a",
+      "celesteContentDll": "required",
+      "gameVersion": "1.4.0.0",
+      "id": "steam-windows-fna-1.4.0.0-manifest-1981411158533599226",
+      "managedPayload": "steam-windows-fna-1.4.0.0",
+      "packageLayout": "windows-game-root",
+      "requiredMarkers": {
+        "CSteamworks.dll": "7f08cfc5b685c8f44b34a6fd4500fb136b9c5ab3faba975565dbf8ca308a4551",
+        "SDL2.dll": "f70051e79801f33793090ee0e99d8d57cb392121064dbe0a6b66b375e3f9b6ea",
+        "steam_api.dll": "af17df745250d1814eaa274fff7b0faeb43381e6762e026267e5859778477abd"
+      },
+      "runtimeFamily": "FNA",
+      "sourcePlatform": "Windows",
+      "store": "Steam",
+      "testedArchiveSha256": ["c83b01cc6ba64af1681ed05e0b8ae8144980eae4195d1691acefbac606ee2068"]
     }
   ]
 }

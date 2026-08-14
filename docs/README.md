@@ -8,7 +8,8 @@ quick-start workflow.
 - [Building](BUILDING.md) — prerequisites, builder modes, generated outputs,
   and verification commands.
 - [Supported Celeste inputs](CELESTE_INPUTS.md) — exact accepted itch.io,
-  Epic Games Store, and Steam FNA profiles and automatic detection.
+  Epic Games Store, and Steam FNA profiles, automatic detection, and links to
+  clean game-file acquisition guidance.
 - [Status](STATUS.md) — current support matrix, architecture, accepted
   behaviour, and limitations.
 - [Troubleshooting](TROUBLESHOOTING.md) — focused remedies for host, input,

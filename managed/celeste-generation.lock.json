@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "inputProfileRegistry": {
     "path": "managed/celeste-input-profiles.json",
-    "sha256": "d9316487698e00d0953e39362f9f257e1178588245873c19801dc74a6073a8cf"
+    "sha256": "ccc3408b1bd5b8146bb77d5aa748f82bcd15675b924106000b0af4fd4eade7bd"
   },
   "inputAdapters": [
     {

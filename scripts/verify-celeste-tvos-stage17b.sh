@@ -21,6 +21,10 @@ done
 
 python3 "$REPO_ROOT/scripts/verify-celeste-input-profiles.py" \
   --repo-root "$REPO_ROOT" --output "$OUTPUT"
-"$REPO_ROOT/scripts/verify-celeste-tvos-stage16b.sh" "${STAGE16_ARGS[@]}"
+if ((${#STAGE16_ARGS[@]})); then
+  "$REPO_ROOT/scripts/verify-celeste-tvos-stage16b.sh" "${STAGE16_ARGS[@]}"
+else
+  "$REPO_ROOT/scripts/verify-celeste-tvos-stage16b.sh"
+fi
 python3 "$REPO_ROOT/scripts/verify-repository-stage8b.py"
 echo "PASS: Stage 17B explicit multi-distribution FNA profiles and accepted regression chain"
