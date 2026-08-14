@@ -216,7 +216,7 @@ For more focused remedies, see [Troubleshooting](TROUBLESHOOTING.md).
 - Official `actions/checkout` and `actions/cache` revisions are pinned to full
   immutable commit SHAs.
 - The workflow builds exact public source commit
-  `90ebb023f3043222bc67e72922ae4d68223f009c`, verifies that checkout and its
+  `b5f2ec2fdd5c65c533d86aae750ee60dcaf5009e`, verifies that checkout and its
   recursive submodules, and never follows a floating branch.
 - The runner is the standard ARM64 `macos-26` image and must match Xcode 26.6,
   tvOS SDK 26.5, .NET SDK 10.0.302, and workload set 10.0.302.0.

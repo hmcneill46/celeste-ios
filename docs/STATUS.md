@@ -22,7 +22,8 @@ Store, and Steam Celeste 1.4.0.0 FNA inputs without changing the shared
 downstream tvOS product.
 
 Stage 18C adds a separate public template for private GitHub Actions builds.
-Its manual-only workflow pins the accepted Stage 18B source, validates the same
+For the v1.0.0-rc.2 candidate its manual-only workflow pins the frozen Stage 19
+product source, validates the same
 Celeste and FMOD inputs, runs the existing eight-phase full-AOT builder, and
 publishes an unsigned IPA only to the user's private output Release. It does
 not add cloud services or networking to the Celeste app itself.

@@ -17,6 +17,9 @@ quick-start workflow.
   behaviour, and limitations.
 - [Troubleshooting](TROUBLESHOOTING.md) — focused remedies for host, input,
   signing, runtime, Save Manager, and packaging problems.
+- [v1.0.0-rc.2 candidate release notes](releases/v1.0.0-rc.2.md) — proposed
+  changes, upgrade compatibility, and current limitations for the second
+  release candidate; no RC2 tag is published by this document.
 
 ## Historical engineering records
 
