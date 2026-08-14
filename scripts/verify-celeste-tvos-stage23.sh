@@ -9,10 +9,10 @@ args=(--repo-root "$REPO_ROOT")
 while (($#)); do
   case "$1" in
     --output) OUTPUT="$2"; shift 2 ;;
-    --template-root|--ipa) args+=("$1" "$2"); shift 2 ;;
+    --template-root|--generated-root|--native-manifest|--app|--ipa) args+=("$1" "$2"); shift 2 ;;
     --final) args+=("$1"); shift ;;
     -h|--help)
-      echo "Usage: scripts/verify-celeste-tvos-stage23.sh [--final] [--template-root DIR] [--ipa FILE] [--output FILE]"
+      echo "Usage: scripts/verify-celeste-tvos-stage23.sh [--final] [--template-root DIR] [--generated-root DIR] [--native-manifest FILE] [--app DIR] [--ipa FILE] [--output FILE]"
       exit 0 ;;
     *) echo "error: unknown option: $1" >&2; exit 2 ;;
   esac

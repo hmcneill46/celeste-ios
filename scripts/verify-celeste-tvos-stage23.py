@@ -80,6 +80,27 @@ def require_tokens(checks: Checks, text: str, tokens: tuple[str, ...], label: st
         checks.require(token in text, f"{label}: {token}")
 
 
+def scan_product(checks: Checks, info: dict[str, Any], blobs: list[bytes], label: str) -> None:
+    for token in (
+        "celeste-save-manager", "/status", "Save Manager is available again.",
+        "Your Save Manager session has expired.", "Temporary network address in use:",
+    ):
+        encodings = (token.encode(), token.encode("utf-16le"))
+        checks.require(any(any(value in blob for value in encodings) for blob in blobs),
+                       f"{label} contains continuity token: {token}")
+    checks.require("LSSupportsGameMode" not in info and "GCSupportsGameMode" not in info,
+                   f"{label} makes no Game Mode claim")
+
+
+def app_product(checks: Checks, app: pathlib.Path) -> dict[str, Any]:
+    info = plistlib.loads((app / "Info.plist").read_bytes())
+    names = {str(info.get("CFBundleExecutable", "")), "CelesteTvOSRuntimeHost.dll", "Celeste.dll"}
+    blobs = [path.read_bytes() for path in app.rglob("*") if path.is_file() and path.name in names]
+    scan_product(checks, info, blobs, "built app")
+    checks.equal(len(list(app.rglob("*.bank"))), 7, "app contains seven FMOD banks")
+    return {"bytes": sum(path.stat().st_size for path in app.rglob("*") if path.is_file())}
+
+
 def read_json(path: pathlib.Path) -> Any:
     return json.loads(path.read_text(encoding="utf-8"))
 
@@ -99,6 +120,11 @@ def verify_ipa(checks: Checks, path: pathlib.Path) -> dict[str, Any]:
                      "IPA contains seven FMOD banks")
         checks.require(not any(name.endswith("embedded.mobileprovision") for name in names),
                        "unsigned IPA has no provisioning profile")
+        prefix = plists[0].removesuffix("Info.plist")
+        binary_names = {str(info.get("CFBundleExecutable", "")), "CelesteTvOSRuntimeHost.dll", "Celeste.dll"}
+        blobs = [archive.read(name) for name in names
+                 if name.startswith(prefix) and name.rsplit("/", 1)[-1] in binary_names]
+        scan_product(checks, info, blobs, "unsigned IPA")
     return {"bytes": path.stat().st_size}
 
 
@@ -107,6 +133,9 @@ def main() -> int:
     parser.add_argument("--repo-root", type=pathlib.Path,
                         default=pathlib.Path(__file__).resolve().parents[1])
     parser.add_argument("--template-root", type=pathlib.Path)
+    parser.add_argument("--generated-root", type=pathlib.Path)
+    parser.add_argument("--native-manifest", type=pathlib.Path)
+    parser.add_argument("--app", type=pathlib.Path)
     parser.add_argument("--ipa", type=pathlib.Path)
     parser.add_argument("--final", action="store_true")
     parser.add_argument("--output", type=pathlib.Path)
@@ -318,8 +347,20 @@ def main() -> int:
     checks.require("LSSupportsGameMode" not in (runtime / "Info.plist").read_text(encoding="utf-8"),
                    "no Game Mode plist claim")
 
+    if args.generated_root:
+        generated = args.generated_root.resolve()
+        bridge = (generated / "Celeste/TvOSSaveManagerBridge.cs").read_text(encoding="utf-8")
+        checks.require("TemporaryAddress" not in bridge,
+                       "canonical generated Save Manager bridge remains continuity-neutral")
+    if args.native_manifest:
+        native_manifest = read_json(args.native_manifest.resolve())
+        checks.equal(native_manifest.get("logicalSetSha256"), NATIVE_HASH, "generated native manifest lock")
+
     product = "not-requested"
     ipa_result: dict[str, Any] = {}
+    if args.app:
+        ipa_result = app_product(checks, args.app.resolve())
+        product = "app"
     if args.ipa:
         ipa_result = verify_ipa(checks, args.ipa.resolve())
         product = "ipa"

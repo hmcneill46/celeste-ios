@@ -635,11 +635,11 @@ run_logged verify-performance-hud-source "$REPO_ROOT/scripts/verify-celeste-tvos
   --generated-root "$REPO_ROOT/.build/celeste-runtime/stage6-current/audio/managed" \
   --native-manifest "$REPO_ROOT/.build/tvos-host/normalized-manifest.json" \
   --output "$REPO_ROOT/artifacts/celeste-runtime/stage6-current/stage16b-verification.json"
-run_logged verify-save-manager-continuity-source "$REPO_ROOT/scripts/verify-celeste-tvos-stage22b.py" \
+run_logged verify-save-manager-continuity-source "$REPO_ROOT/scripts/verify-celeste-tvos-stage23.py" \
   --repo-root "$REPO_ROOT" \
   --generated-root "$REPO_ROOT/.build/celeste-runtime/stage6-current/audio/managed" \
   --native-manifest "$REPO_ROOT/.build/tvos-host/normalized-manifest.json" \
-  --output "$REPO_ROOT/artifacts/celeste-runtime/stage6-current/stage22b-verification.json"
+  --output "$REPO_ROOT/artifacts/celeste-runtime/stage6-current/stage23-verification.json"
 ui_phase_success
 
 COMMON_PUBLISH=(dotnet publish "$PROJECT" -c Release -r tvos-arm64 -m:1 -p:BuildInParallel=false
@@ -724,7 +724,7 @@ if [[ -n "$UNSIGNED_APP" ]]; then
   run_logged verify-stage13b-unsigned "$REPO_ROOT/scripts/verify-celeste-tvos-stage13b.py" --repo-root "$REPO_ROOT" --generated-root "$REPO_ROOT/.build/celeste-runtime/stage6-current/audio/managed" --ipa "$IPA"
   run_logged verify-stage15-unsigned "$REPO_ROOT/scripts/verify-celeste-tvos-stage15.py" --repo-root "$REPO_ROOT" --generated-root "$REPO_ROOT/.build/celeste-runtime/stage6-current/audio/managed" --ipa "$IPA"
   run_logged verify-stage16b-unsigned "$REPO_ROOT/scripts/verify-celeste-tvos-stage16b.py" --repo-root "$REPO_ROOT" --generated-root "$REPO_ROOT/.build/celeste-runtime/stage6-current/audio/managed" --native-manifest "$REPO_ROOT/.build/tvos-host/normalized-manifest.json" --ipa "$IPA"
-  run_logged verify-stage22b-unsigned "$REPO_ROOT/scripts/verify-celeste-tvos-stage22b.py" --repo-root "$REPO_ROOT" --generated-root "$REPO_ROOT/.build/celeste-runtime/stage6-current/audio/managed" --native-manifest "$REPO_ROOT/.build/tvos-host/normalized-manifest.json" --ipa "$IPA"
+  run_logged verify-stage23-unsigned "$REPO_ROOT/scripts/verify-celeste-tvos-stage23.py" --repo-root "$REPO_ROOT" --generated-root "$REPO_ROOT/.build/celeste-runtime/stage6-current/audio/managed" --native-manifest "$REPO_ROOT/.build/tvos-host/normalized-manifest.json" --ipa "$IPA"
   IPA_HASH="$(shasum -a 256 "$IPA" | awk '{print $1}')"
   IPA_BYTES="$(stat -f %z "$IPA")"
   printf '%s  %s\n' "$IPA_HASH" "Celeste-tvOS-unsigned.ipa" >> "$DIST_ROOT/SHA256SUMS"
@@ -747,7 +747,7 @@ if [[ -n "$SIGNED_APP" ]]; then
   run_logged verify-stage13b-signed "$REPO_ROOT/scripts/verify-celeste-tvos-stage13b.py" --repo-root "$REPO_ROOT" --generated-root "$REPO_ROOT/.build/celeste-runtime/stage6-current/audio/managed" --app "$DIST_ROOT/Celeste.app"
   run_logged verify-stage15-signed "$REPO_ROOT/scripts/verify-celeste-tvos-stage15.py" --repo-root "$REPO_ROOT" --generated-root "$REPO_ROOT/.build/celeste-runtime/stage6-current/audio/managed" --app "$DIST_ROOT/Celeste.app"
   run_logged verify-stage16b-signed "$REPO_ROOT/scripts/verify-celeste-tvos-stage16b.py" --repo-root "$REPO_ROOT" --generated-root "$REPO_ROOT/.build/celeste-runtime/stage6-current/audio/managed" --native-manifest "$REPO_ROOT/.build/tvos-host/normalized-manifest.json" --app "$DIST_ROOT/Celeste.app"
-  run_logged verify-stage22b-signed "$REPO_ROOT/scripts/verify-celeste-tvos-stage22b.py" --repo-root "$REPO_ROOT" --generated-root "$REPO_ROOT/.build/celeste-runtime/stage6-current/audio/managed" --native-manifest "$REPO_ROOT/.build/tvos-host/normalized-manifest.json" --app "$DIST_ROOT/Celeste.app"
+  run_logged verify-stage23-signed "$REPO_ROOT/scripts/verify-celeste-tvos-stage23.py" --repo-root "$REPO_ROOT" --generated-root "$REPO_ROOT/.build/celeste-runtime/stage6-current/audio/managed" --native-manifest "$REPO_ROOT/.build/tvos-host/normalized-manifest.json" --app "$DIST_ROOT/Celeste.app"
   run_logged install-apple-tv xcrun devicectl device install app --quiet --device "$DEVICE_ID" "$DIST_ROOT/Celeste.app" --json-output "$CONFIG_ROOT/install-private.json" --log-output "$CONFIG_ROOT/install-private.log"
   CONSOLE="$CONFIG_ROOT/launch-console-private.log"
   xcrun devicectl device process launch --console --terminate-existing --timeout 120 --device "$DEVICE_ID" "$BUNDLE_ID" --json-output "$CONFIG_ROOT/launch-private.json" --log-output "$CONFIG_ROOT/launch-tool-private.log" > "$CONSOLE" 2>&1 &
