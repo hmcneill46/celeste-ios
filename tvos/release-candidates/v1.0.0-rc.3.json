@@ -11,7 +11,7 @@
     "tag": "v1.0.0-rc.2",
     "commit": "641e86e4ed164cdf93f602ce2f11436449654d6e"
   },
-  "productSourceCommit": "98b3d14459e124301919bec3b054c5348d4ddfb2",
+  "productSourceCommit": "390744065f4c984c75b2bfa1a6e643a137095cb7",
   "build": {
     "configuration": "Release",
     "runtimeIdentifier": "tvos-arm64",
@@ -104,7 +104,7 @@
     "cloudOutputUnsigned": true,
     "cloudSigning": false,
     "personalTeamInstall": true,
-    "cloudProductSourceCommit": "98b3d14459e124301919bec3b054c5348d4ddfb2"
+    "cloudProductSourceCommit": "390744065f4c984c75b2bfa1a6e643a137095cb7"
   },
   "unsupported": [
     "Apple User Management with Personal Teams",
