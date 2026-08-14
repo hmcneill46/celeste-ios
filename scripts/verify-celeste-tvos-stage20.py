@@ -84,8 +84,13 @@ def main() -> int:
                    "product source commit exists")
     checks.require(git(repo, "merge-base", "--is-ancestor", PRODUCT_SOURCE, "HEAD", check=False).returncode == 0,
                    "product source is an ancestor of the candidate")
-    checks.require(git(repo, "show-ref", "--verify", "--quiet", f"refs/tags/{RC2_TAG}", check=False).returncode != 0,
-                   "v1.0.0-rc.2 tag remains absent")
+    stage20_report_path = repo / "docs/history/stages/TVOS_RC2_INTEGRATED_ACCEPTANCE_STAGE20_REPORT.md"
+    checks.require(
+        stage20_report_path.is_file()
+        and "No `v1.0.0-rc.2` tag or GitHub Release existed during acceptance."
+        in stage20_report_path.read_text(encoding="utf-8"),
+        "historical report records that Stage 20 did not create the RC2 tag",
+    )
 
     manifest_path = repo / "tvos/release-candidates/v1.0.0-rc.2.json"
     notes_path = repo / "docs/releases/v1.0.0-rc.2.md"
@@ -95,7 +100,7 @@ def main() -> int:
     checks.equal(manifest["schemaVersion"], 1, "manifest schema")
     checks.equal(manifest["stage"], 20, "manifest stage")
     checks.equal(manifest["intendedTag"], RC2_TAG, "intended tag")
-    checks.equal(manifest["releaseStatus"], "candidate-not-tagged", "candidate status")
+    checks.equal(manifest["releaseStatus"], "accepted-release-candidate", "candidate status")
     checks.equal(manifest["rc1"], {"tag": "v1.0.0-rc.1", "commit": RC1_COMMIT}, "RC1 manifest identity")
     checks.equal(manifest["productSourceCommit"], PRODUCT_SOURCE, "product source pin")
     checks.require("finalCandidateCommit" not in json.dumps(manifest), "manifest avoids self-referential final commit")
@@ -253,7 +258,11 @@ def main() -> int:
                     "Controller and UI", "Performance HUD", "Cloud compilation", "Fixes since RC1",
                     "Upgrade and persistence compatibility", "Known limitations"):
         checks.require(f"## {heading}" in notes, f"release-note section: {heading}")
-    checks.require("has not been created or published" in notes, "release notes do not claim a tag")
+    checks.require(
+        "accepted second release candidate" in notes
+        and "has not been created or published" not in notes,
+        "release notes use timeless accepted-candidate wording",
+    )
     checks.require("Game Mode" not in json.dumps(manifest["features"]), "no Game Mode feature claim")
     checks.require("LSSupportsGameMode" not in (repo / "tvos/CelesteTvOSRuntimeHost/Info.plist").read_text(encoding="utf-8"),
                    "no Game Mode plist key")
@@ -265,7 +274,7 @@ def main() -> int:
         "tests": checks.count,
         "productSourceCommit": PRODUCT_SOURCE,
         "intendedTag": RC2_TAG,
-        "tagPresent": False,
+        "tagCreationByStage20": False,
     }
     if args.output:
         output = args.output.resolve()

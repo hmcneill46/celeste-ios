@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "stage": 20,
   "intendedTag": "v1.0.0-rc.2",
-  "releaseStatus": "candidate-not-tagged",
+  "releaseStatus": "accepted-release-candidate",
   "rc1": {
     "tag": "v1.0.0-rc.1",
     "commit": "ee52b0868df091746f134d95d4f020f94f23d4fb"
