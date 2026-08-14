@@ -2,10 +2,12 @@
 
 ## Current result
 
-The `tvos-port` branch is a working personal-use Apple TV port built locally
-from user-owned inputs. The accepted device build runs Celeste 1.4.0.0 with
-Metal graphics, real FMOD audio, extended-controller gameplay, and durable
-Settings/save slots. It is not an App Store distribution.
+The `tvos-port` branch is a working personal-use Apple TV port built from
+user-owned inputs. It can be compiled locally on a supported Apple silicon Mac
+or as a verified unsigned IPA in a private GitHub Actions repository. The
+accepted device build runs Celeste 1.4.0.0 with Metal graphics, real FMOD
+audio, extended-controller gameplay, and durable Settings/save slots. It is
+not an App Store distribution.
 
 The integrated Stage 14 release-candidate audit passed a fresh public-clone
 native/managed/full-AOT build, unsigned-package verification, same-identity
@@ -18,6 +20,12 @@ a live Apple Metal Performance HUD control. Stages 17B and 17C add strict
 automatic recognition and canonicalization for nine exact itch.io, Epic Games
 Store, and Steam Celeste 1.4.0.0 FNA inputs without changing the shared
 downstream tvOS product.
+
+Stage 18C adds a separate public template for private GitHub Actions builds.
+Its manual-only workflow pins the accepted Stage 18B source, validates the same
+Celeste and FMOD inputs, runs the existing eight-phase full-AOT builder, and
+publishes an unsigned IPA only to the user's private output Release. It does
+not add cloud services or networking to the Celeste app itself.
 
 ## Proven support matrix
 

@@ -28,6 +28,70 @@ an app/IPA containing game content, Apple credentials or two-factor codes,
 certificates, provisioning profiles, Team IDs, device identifiers, or
 `tvos/Local.Build.props` to an issue.
 
+## Cloud builder problems
+
+The complete beginner workflow is in [Build Celeste for Apple TV in the
+cloud](CLOUD_BUILDING.md). These remedies apply to the separate private GitHub
+Actions builder; the local Mac sections below still apply to `build-tvos.sh`.
+
+### My repository is public
+
+Create a new repository from the public template and choose **Private** before
+uploading anything. The workflow verifies repository privacy first and refuses
+to check out or download inputs in a public repository.
+
+### The input Release is not found or has the wrong assets
+
+Publish a Release/tag named exactly `celeste-tvos-inputs`. It must have exactly
+two assets: one supported Celeste `.zip` and one official FMOD `.dmg`. Remove
+draft state, extra files, duplicate ZIPs, or duplicate DMGs before retrying.
+
+### Celeste is unsupported or the FMOD version is wrong
+
+Use an exact profile from [Supported Celeste inputs](CELESTE_INPUTS.md) and the
+original FMOD Engine iOS/tvOS 1.10.09 build 97915 DMG. The cloud route invokes
+the same exact validators as the local builder; renamed, mixed, modified, XNA,
+and other-version files remain rejected.
+
+### The runner has too little disk
+
+The cloud workflow requires at least 25 GiB free before expensive work. Retry
+later or use the local Mac builder. It deliberately does not remove system
+Xcodes or weaken the safety margin.
+
+### Output Release already exists
+
+Download it if wanted, run **Actions → Clean private build files**, then run
+Build again. The workflow refuses to overwrite an IPA that may not yet have
+been downloaded.
+
+### GitHub Actions minutes or billing prevents a run
+
+Private-repository builds consume the repository owner's GitHub Actions
+allowance under their current account/billing settings. Review GitHub's Actions
+billing page; the project cannot inspect or bypass an account's quota.
+
+### The build is slow or native/full AOT failed
+
+Open the current GitHub log group. The existing eight build phases print a
+heartbeat every 60 seconds during long operations, including elapsed time and
+free disk; a new heartbeat means work is still alive. A failure summary points
+to the failed phase and includes a bounded redacted diagnostic tail where one
+is available.
+
+### The cloud IPA will not install
+
+The cloud output is intentionally unsigned. GitHub receives no Apple account,
+certificate, or provisioning profile. Download the IPA, then follow the
+[separate signing guidance](../README.md#create-a-signing-ready-ipa).
+
+### Remove uploaded Celeste and FMOD files
+
+Run **Actions → Clean private build files**. Its default mode deletes only the
+`celeste-tvos-inputs` and `celeste-tvos-output` Releases/tags. It uses no normal
+Actions artifacts; optionally ask it to remove the small open-source native
+cache too.
+
 ## The script is not executable
 
 **Symptom**

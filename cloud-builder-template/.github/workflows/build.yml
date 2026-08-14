@@ -1,0 +1,420 @@
+name: Build Celeste for Apple TV
+
+on:
+  workflow_dispatch:
+    inputs:
+      bundle_id:
+        description: Optional app identity used inside the unsigned IPA
+        required: false
+        default: io.github.celeste-tvos.cloud
+        type: string
+
+permissions:
+  contents: write
+
+concurrency:
+  group: celeste-tvos-cloud-operations-${{ github.repository_id }}
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: macos-26
+    timeout-minutes: 120
+    env:
+      GH_TOKEN: ${{ github.token }}
+      CLOUD_PUBLIC_REPOSITORY: hmcneill46/celeste-ios
+      CLOUD_PUBLIC_SOURCE_SHA: 90ebb023f3043222bc67e72922ae4d68223f009c
+      CLOUD_NATIVE_LOGICAL_SHA256: 6286e0545b32e9c56732955d4cf816ed8f5dc0d816ab610dd9fe1752090a01fc
+      CLOUD_INPUT_TAG: celeste-tvos-inputs
+      CLOUD_OUTPUT_TAG: celeste-tvos-output
+      CLOUD_BUNDLE_ID: ${{ inputs.bundle_id }}
+      HOMEBREW_NO_AUTO_UPDATE: "1"
+      HOMEBREW_NO_INSTALL_CLEANUP: "1"
+      DOTNET_CLI_TELEMETRY_OPTOUT: "1"
+      GIT_TERMINAL_PROMPT: "0"
+      NO_COLOR: "1"
+
+    steps:
+      - name: Checking private repository
+        shell: bash
+        run: |
+          set -euo pipefail
+          metadata="$(gh api "repos/$GITHUB_REPOSITORY")"
+          if ! REPOSITORY_METADATA="$metadata" python3 - <<'PY'
+          import json, os
+          value = json.loads(os.environ["REPOSITORY_METADATA"])
+          raise SystemExit(0 if value.get("private") is True and value.get("visibility") == "private" else 1)
+          PY
+          then
+            {
+              echo '# Celeste for Apple TV — Build refused'
+              echo
+              echo '**This workflow only runs in a private repository.**'
+              echo
+              echo 'Create a private repository from the template before uploading Celeste or FMOD.'
+              echo 'No private input was downloaded.'
+            } >> "$GITHUB_STEP_SUMMARY"
+            echo 'error: This workflow only runs in a private repository.' >&2
+            echo 'Create a private repository from the template before uploading Celeste or FMOD.' >&2
+            exit 1
+          fi
+          echo 'Repository privacy: PASS (private)'
+
+      # actions/checkout v7.0.1
+      - name: Check out cloud-builder instructions
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+
+      - name: Preparing runner
+        shell: bash
+        run: |
+          set -euo pipefail
+          source scripts/cloud-common.sh
+          cloud_set_stage \
+            'The exact GitHub macOS build environment is unavailable.' \
+            'Retry later or use the local Mac builder; do not bypass the pinned toolchain checks.'
+
+          test "$(uname -m)" = arm64
+          sudo xcode-select -s /Applications/Xcode_26.6.app/Contents/Developer
+          xcodebuild -checkFirstLaunchStatus
+          xcode_version_output="$(xcodebuild -version)"
+          test "${xcode_version_output%%$'\n'*}" = 'Xcode 26.6'
+          test "$(xcrun --sdk appletvos --show-sdk-version)" = '26.5'
+
+          command -v gmake >/dev/null 2>&1 || brew install make
+          command -v monodis >/dev/null 2>&1 || brew install mono
+
+          if ! dotnet --list-runtimes | grep -Eq '^Microsoft\.NETCore\.App 6\.0\.36 '; then
+            installer="$RUNNER_TEMP/celeste-tvos-dotnet-install.sh"
+            curl -fsSL \
+              'https://raw.githubusercontent.com/dotnet/install-scripts/03c981b3ae8261cb0a48b07ac884ce0031af384c/src/dotnet-install.sh' \
+              -o "$installer"
+            printf '%s  %s\n' \
+              '082f7685e156738a1b2e2ed8381a621870d4ce8e8c59278034556f05c186eb2e' \
+              "$installer" | shasum -a 256 -c -
+            install_root="$(python3 -c 'import os, shutil; print(os.path.dirname(os.path.realpath(shutil.which("dotnet"))))')"
+            bash "$installer" --runtime dotnet --version 6.0.36 \
+              --install-dir "$install_root" --skip-non-versioned-files
+          fi
+
+          if ! dotnet workload list 2>/dev/null | grep -Eq '^[[:space:]]*tvos[[:space:]]'; then
+            dotnet workload install tvos --version 10.0.302.0
+          fi
+          test "$(dotnet --version)" = '10.0.302'
+          test "$(dotnet workload list | awk '/Workload version:/ {print $3; exit}')" = '10.0.302.0'
+          dotnet workload list | grep -Eq '^[[:space:]]*tvos[[:space:]]'
+          dotnet --list-runtimes | grep -Eq '^Microsoft\.NETCore\.App 6\.0\.36 '
+          python3 scripts/prepare-inputs.py check-disk --path "$RUNNER_TEMP" --minimum-gib 25
+
+          printf 'Runner: %s / %s / image %s\n' "$RUNNER_OS" "$RUNNER_ARCH" "${ImageVersion:-unknown}"
+          printf 'Toolchain: Xcode 26.6 / tvOS 26.5 / .NET 10.0.302 / workload 10.0.302.0\n'
+
+      - name: Check out exact public Celeste source
+        shell: bash
+        run: |
+          set -euo pipefail
+          source scripts/cloud-common.sh
+          cloud_set_stage \
+            'The pinned public Celeste source could not be checked out exactly.' \
+            'Retry after GitHub is reachable. The workflow never substitutes another branch or commit.'
+          source_root="$RUNNER_TEMP/celeste-tvos-cloud-source"
+          mkdir -p "$source_root"
+          git -C "$source_root" init
+          git -C "$source_root" remote add origin "https://github.com/$CLOUD_PUBLIC_REPOSITORY.git"
+          git -C "$source_root" fetch --no-tags origin "$CLOUD_PUBLIC_SOURCE_SHA"
+          git -C "$source_root" checkout --detach "$CLOUD_PUBLIC_SOURCE_SHA"
+          git -C "$source_root" -c url.https://github.com/.insteadOf=git://github.com/ \
+            submodule update --init --recursive
+          python3 scripts/prepare-inputs.py verify-source \
+            --root "$source_root" --sha "$CLOUD_PUBLIC_SOURCE_SHA"
+          test -z "$(git -C "$source_root" submodule status --recursive | awk '/^[+U]/')"
+          echo "CELESTE_SOURCE_ROOT=$source_root" >> "$GITHUB_ENV"
+          echo "Pinned public source: ${CLOUD_PUBLIC_SOURCE_SHA:0:12}"
+          "$source_root/build-tvos.sh" --check-host
+
+      - name: Inspect private input Release
+        shell: bash
+        run: |
+          set -euo pipefail
+          source scripts/cloud-common.sh
+          cloud_set_stage \
+            'The private input Release is missing or has the wrong assets.' \
+            'Publish celeste-tvos-inputs with exactly one supported Celeste ZIP and one official FMOD DMG.'
+          cloud_ensure_output_absent
+          input_root="$RUNNER_TEMP/celeste-tvos-cloud-inputs"
+          mkdir -p "$input_root"
+          gh release view "$CLOUD_INPUT_TAG" --repo "$GITHUB_REPOSITORY" \
+            --json tagName,isDraft,isPrerelease,assets > "$input_root/release.json"
+          python3 scripts/prepare-inputs.py classify-assets \
+            --release-json "$input_root/release.json" \
+            --output "$input_root/asset-manifest.json"
+          echo "CLOUD_INPUT_ROOT=$input_root" >> "$GITHUB_ENV"
+          echo 'Private input Release: exactly one ZIP and one DMG'
+
+      - name: Downloading private inputs
+        shell: bash
+        run: |
+          set -euo pipefail
+          source scripts/cloud-common.sh
+          cloud_set_stage \
+            'The private input assets could not be downloaded or verified.' \
+            'Check the celeste-tvos-inputs Release, then retry. GitHub credentials are not required.'
+          download_root="$CLOUD_INPUT_ROOT/downloads"
+          mkdir -p "$download_root"
+          gh release download "$CLOUD_INPUT_TAG" --repo "$GITHUB_REPOSITORY" --dir "$download_root"
+          python3 scripts/prepare-inputs.py verify-downloads \
+            --manifest "$CLOUD_INPUT_ROOT/asset-manifest.json" \
+            --directory "$download_root" \
+            --output "$CLOUD_INPUT_ROOT/verified-assets.json"
+          echo 'Private input download and GitHub digest check: PASS'
+
+      - name: Safely extract and mount inputs
+        shell: bash
+        run: |
+          set -euo pipefail
+          source scripts/cloud-common.sh
+          cloud_set_stage \
+            'The Celeste ZIP or FMOD DMG could not be prepared safely.' \
+            'Upload an unmodified supported ZIP and the original FMOD iOS/tvOS 1.10.09 build 97915 DMG.'
+          game_asset="$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1]))["game"]["path"])' "$CLOUD_INPUT_ROOT/verified-assets.json")"
+          fmod_asset="$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1]))["fmod"]["path"])' "$CLOUD_INPUT_ROOT/verified-assets.json")"
+          game_root="$RUNNER_TEMP/celeste-tvos-cloud-game"
+          fmod_mount="$RUNNER_TEMP/celeste-tvos-cloud-fmod"
+          python3 scripts/prepare-inputs.py extract-zip \
+            --archive "$game_asset" --destination "$game_root" \
+            --output "$CLOUD_INPUT_ROOT/extraction.json"
+          mkdir -p "$fmod_mount"
+          hdiutil attach "$fmod_asset" -readonly -nobrowse -mountpoint "$fmod_mount" >/dev/null
+          fmod_root="$(python3 scripts/prepare-inputs.py find-fmod-root --mount "$fmod_mount")"
+          {
+            echo "CELESTE_GAME_ROOT=$game_root"
+            echo "FMOD_SDK_ROOT=$fmod_root"
+            echo "CLOUD_FMOD_MOUNT=$fmod_mount"
+          } >> "$GITHUB_ENV"
+          echo 'Archive traversal/link checks and read-only FMOD mount: PASS'
+
+      - name: Validating inputs
+        shell: bash
+        run: |
+          set -euo pipefail
+          source scripts/cloud-common.sh
+          cloud_set_stage \
+            'Celeste or FMOD did not match an exact supported input.' \
+            'Use a clean listed Celeste 1.4.0.0 FNA profile and FMOD iOS/tvOS 1.10.09 build 97915.'
+          validation_root="$RUNNER_TEMP/celeste-tvos-cloud-state/validation"
+          mkdir -p "$validation_root"
+          "$CELESTE_SOURCE_ROOT/scripts/validate-celeste-input.sh" \
+            --game-root "$CELESTE_GAME_ROOT" --output "$validation_root/celeste-input.json"
+          "$CELESTE_SOURCE_ROOT/scripts/validate-fmod-tvos-sdk.sh" \
+            --sdk-root "$FMOD_SDK_ROOT" --output "$validation_root/fmod-sdk.json"
+          python3 - "$validation_root/celeste-input.json" <<'PY'
+          import json, pathlib, sys
+          value = json.loads(pathlib.Path(sys.argv[1]).read_text())
+          print(f"Celeste {value['gameVersion']}: {value['store']} / {value['sourcePlatform']} / {value['runtimeFamily']}")
+          print(f"Profile: {value['profileId']}")
+          print(f"Canonical game: {value['canonicalClass']}")
+          PY
+          game_asset="$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1]))["game"]["path"])' "$CLOUD_INPUT_ROOT/verified-assets.json")"
+          rm -f -- "$game_asset"
+          python3 scripts/prepare-inputs.py check-disk --path "$RUNNER_TEMP" --minimum-gib 25
+          echo 'Exact Celeste and FMOD validation: PASS; transferred ZIP removed from runner'
+
+      - name: Compute safe cache identity
+        shell: bash
+        run: |
+          set -euo pipefail
+          source scripts/cloud-common.sh
+          cloud_set_stage \
+            'The safe native cache identity could not be computed.' \
+            'Retry the workflow; proprietary files are never included in this cache.'
+          cache_key="$(cloud_compute_cache_key "$CELESTE_SOURCE_ROOT")"
+          echo "CLOUD_CACHE_KEY=$cache_key" >> "$GITHUB_ENV"
+          echo "Safe cache key: ${cache_key:0:96}…"
+
+      # actions/cache v6.1.0. Only redistributable/open-source native outputs.
+      - name: Restoring safe cache
+        id: native-cache
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
+        with:
+          path: |
+            ${{ runner.temp }}/celeste-tvos-cloud-source/artifacts/tvos-native/self-build
+            ${{ runner.temp }}/celeste-tvos-cloud-source/.build/tvos-host
+          key: ${{ env.CLOUD_CACHE_KEY }}
+
+      - name: Verify restored safe cache
+        if: steps.native-cache.outputs.cache-hit == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          source scripts/cloud-common.sh
+          cloud_set_stage \
+            'The restored open-source native cache failed exact verification.' \
+            'Run Clean private build files with cache deletion, then build again.'
+          cloud_verify_safe_cache_paths "$CELESTE_SOURCE_ROOT"
+          echo 'Safe native cache hit and independent verification: PASS'
+
+      - name: Building Celeste for Apple TV
+        shell: bash
+        run: |
+          set -euo pipefail
+          source scripts/cloud-common.sh
+          cloud_set_stage \
+            'The existing eight-phase Celeste builder failed.' \
+            'Open the failed phase, use its bounded diagnostic tail, and correct the first reported problem.'
+          cd "$CELESTE_SOURCE_ROOT"
+          ./build-tvos.sh \
+            --non-interactive \
+            --mode ipa \
+            --game-root "$CELESTE_GAME_ROOT" \
+            --fmod-root "$FMOD_SDK_ROOT" \
+            --bundle-id "$CLOUD_BUNDLE_ID" \
+            --no-color
+
+      - name: Verifying IPA
+        shell: bash
+        run: |
+          set -euo pipefail
+          source scripts/cloud-common.sh
+          cloud_set_stage \
+            'The unsigned IPA did not pass the complete product verification chain.' \
+            'Keep the private input Release and inspect the verifier error before retrying.'
+          cd "$CELESTE_SOURCE_ROOT"
+          ipa='dist/Celeste-tvOS-unsigned.ipa'
+          scripts/verify-celeste-tvos-stage14.sh --ipa "$ipa" \
+            --output artifacts/tvos-self-build/stage18c-stage14-verification.json
+          scripts/verify-celeste-tvos-stage15.sh \
+            --generated-root .build/celeste-runtime/stage6-current/audio/managed --ipa "$ipa"
+          scripts/verify-celeste-tvos-stage16b.sh \
+            --generated-root .build/celeste-runtime/stage6-current/audio/managed \
+            --native-manifest .build/tvos-host/normalized-manifest.json --ipa "$ipa"
+          ipa_bytes="$(stat -f %z "$ipa")"
+          if [[ "$ipa_bytes" -ge 2147483648 ]]; then
+            cloud_fail \
+              "The unsigned IPA exceeds GitHub Releases' 2 GiB per-file limit." \
+              'Use the local Mac builder and report the unexpected product-size regression.'
+          fi
+          ipa_sha="$(shasum -a 256 "$ipa" | awk '{print $1}')"
+          profile="$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1]))["profileId"])' "$RUNNER_TEMP/celeste-tvos-cloud-state/validation/celeste-input.json")"
+          output_root="$RUNNER_TEMP/celeste-tvos-cloud-output"
+          mkdir -p "$output_root"
+          cat > "$output_root/$CLOUD_METADATA_NAME" <<EOF
+          Celeste for Apple TV private cloud build
+          Public source commit: $CLOUD_PUBLIC_SOURCE_SHA
+          Celeste profile: $profile
+          IPA bytes: $ipa_bytes
+          IPA SHA-256: $ipa_sha
+          Configuration: Release tvos-arm64
+          Full AOT: true
+          Full trimming: true
+          UseInterpreter: false
+          Signed: false
+          EOF
+          cp "$ipa" "$output_root/$CLOUD_IPA_NAME"
+          {
+            echo "CLOUD_OUTPUT_ROOT=$output_root"
+            echo "CLOUD_IPA_BYTES=$ipa_bytes"
+            echo "CLOUD_IPA_SHA256=$ipa_sha"
+            echo "CLOUD_CELESTE_PROFILE=$profile"
+          } >> "$GITHUB_ENV"
+          printf 'Verified IPA: %s bytes; SHA-256 %s\n' "$ipa_bytes" "$ipa_sha"
+
+      # actions/cache v6.1.0. No proprietary/generated game path is listed.
+      - name: Save safe cache after a cache miss
+        if: success() && steps.native-cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
+        with:
+          path: |
+            ${{ runner.temp }}/celeste-tvos-cloud-source/artifacts/tvos-native/self-build
+            ${{ runner.temp }}/celeste-tvos-cloud-source/.build/tvos-host
+          key: ${{ env.CLOUD_CACHE_KEY }}
+
+      - name: Publishing private IPA
+        shell: bash
+        run: |
+          set -euo pipefail
+          source scripts/cloud-common.sh
+          cloud_set_stage \
+            'The verified IPA could not be published to the private output Release.' \
+            'The input Release remains available. Retry after checking repository Release permissions.'
+          cloud_ensure_output_absent
+          notes="$CLOUD_OUTPUT_ROOT/release-notes.md"
+          cat > "$notes" <<EOF
+          # Celeste for Apple TV — unsigned build
+
+          This is an **UNSIGNED** signing-ready IPA generated privately from user-supplied files.
+          It cannot be installed until it is signed for an Apple TV.
+
+          - Source: \`$CLOUD_PUBLIC_SOURCE_SHA\`
+          - Celeste input: \`$CLOUD_CELESTE_PROFILE\`
+          - Size: \`$CLOUD_IPA_BYTES bytes\`
+          - SHA-256: \`$CLOUD_IPA_SHA256\`
+
+          Keep this output private. After downloading it, run **Clean private build files**.
+          Signing and installation are separate: https://github.com/$CLOUD_PUBLIC_REPOSITORY/blob/$CLOUD_PUBLIC_SOURCE_SHA/README.md#create-a-signing-ready-ipa
+          EOF
+          gh release create "$CLOUD_OUTPUT_TAG" \
+            --repo "$GITHUB_REPOSITORY" \
+            --target "$GITHUB_SHA" \
+            --title 'Celeste for Apple TV — unsigned IPA' \
+            --notes-file "$notes" \
+            "$CLOUD_OUTPUT_ROOT/$CLOUD_IPA_NAME#$CLOUD_IPA_NAME" \
+            "$CLOUD_OUTPUT_ROOT/$CLOUD_METADATA_NAME#$CLOUD_METADATA_NAME"
+          gh release view "$CLOUD_OUTPUT_TAG" --repo "$GITHUB_REPOSITORY" \
+            --json isDraft,isPrerelease,assets > "$CLOUD_OUTPUT_ROOT/release.json"
+          python3 - "$CLOUD_OUTPUT_ROOT/release.json" \
+            "$CLOUD_OUTPUT_ROOT/$CLOUD_IPA_NAME" \
+            "$CLOUD_OUTPUT_ROOT/$CLOUD_METADATA_NAME" <<'PY'
+          import hashlib
+          import json, pathlib, sys
+          release = json.loads(pathlib.Path(sys.argv[1]).read_text())
+          assets = {item["name"]: item for item in release["assets"]}
+          expected = {
+              "Celeste-tvOS-unsigned.ipa": pathlib.Path(sys.argv[2]),
+              "Celeste-tvOS-build.txt": pathlib.Path(sys.argv[3]),
+          }
+          def sha256(path):
+              value = hashlib.sha256()
+              with path.open("rb") as stream:
+                  for block in iter(lambda: stream.read(1024 * 1024), b""):
+                      value.update(block)
+              return value.hexdigest()
+          if release.get("isDraft") or set(assets) != set(expected):
+              raise SystemExit("error: private output Release metadata is incomplete")
+          for name, path in expected.items():
+              asset = assets[name]
+              if asset.get("size") != path.stat().st_size:
+                  raise SystemExit(f"error: GitHub output size differs for {name}")
+              digest = sha256(path)
+              server_digest = asset.get("digest") or ""
+              if server_digest and server_digest != "sha256:" + digest:
+                  raise SystemExit(f"error: GitHub output digest differs for {name}")
+          PY
+          cloud_write_success_summary "$CLOUD_OUTPUT_ROOT/$CLOUD_METADATA_NAME"
+          echo "Private output Release: https://github.com/$GITHUB_REPOSITORY/releases/tag/$CLOUD_OUTPUT_TAG"
+
+      - name: Cleaning runner
+        if: always()
+        shell: bash
+        run: |
+          set +e
+          if [[ -f scripts/cloud-common.sh ]]; then
+            source scripts/cloud-common.sh
+            cloud_runner_cleanup
+          else
+            hdiutil detach "$RUNNER_TEMP/celeste-tvos-cloud-fmod" -force >/dev/null 2>&1 || true
+            rm -rf -- "$RUNNER_TEMP/celeste-tvos-cloud-inputs" \
+              "$RUNNER_TEMP/celeste-tvos-cloud-game" \
+              "$RUNNER_TEMP/celeste-tvos-cloud-fmod" \
+              "$RUNNER_TEMP/celeste-tvos-cloud-source" \
+              "$RUNNER_TEMP/celeste-tvos-cloud-output"
+          fi
+          df -h "$RUNNER_TEMP"
+
+      - name: Write failure summary
+        if: failure()
+        shell: bash
+        run: |
+          if [[ -f scripts/cloud-common.sh ]]; then
+            scripts/cloud-common.sh failure-summary
+          fi

@@ -4,6 +4,11 @@ The supported entry point is [`../build-tvos.sh`](../build-tvos.sh). This guide
 explains its automation surface and generated files; normal users should begin
 with the root [README](../README.md).
 
+This is the advanced **local Mac** guide. Users who do not have a Mac can use
+the separate [private GitHub cloud builder](CLOUD_BUILDING.md) for compilation.
+That route invokes this same self-builder and produces an unsigned IPA; signing
+and Apple TV installation remain separate.
+
 ## Clone and submodules
 
 The public fork's default branch is `tvos-port`:

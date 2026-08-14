@@ -7,6 +7,9 @@ quick-start workflow.
 
 - [Building](BUILDING.md) — prerequisites, builder modes, generated outputs,
   and verification commands.
+- [Cloud building](CLOUD_BUILDING.md) — create a private template repository,
+  upload your inputs, run the hosted build, download the unsigned IPA, and
+  remove the private build files.
 - [Supported Celeste inputs](CELESTE_INPUTS.md) — exact accepted itch.io,
   Epic Games Store, and Steam FNA profiles, automatic detection, and links to
   clean game-file acquisition guidance.

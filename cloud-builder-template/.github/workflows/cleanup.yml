@@ -1,0 +1,88 @@
+name: Clean private build files
+
+on:
+  workflow_dispatch:
+    inputs:
+      also_delete_build_cache:
+        description: Also remove this builder's safe open-source native cache
+        required: true
+        default: false
+        type: boolean
+
+permissions:
+  contents: write
+  actions: write
+
+concurrency:
+  group: celeste-tvos-cloud-operations-${{ github.repository_id }}
+  cancel-in-progress: false
+
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      GH_TOKEN: ${{ github.token }}
+      CLOUD_DELETE_BUILD_CACHE: ${{ inputs.also_delete_build_cache }}
+
+    steps:
+      - name: Checking private repository
+        shell: bash
+        run: |
+          set -euo pipefail
+          metadata="$(gh api "repos/$GITHUB_REPOSITORY")"
+          if ! REPOSITORY_METADATA="$metadata" python3 - <<'PY'
+          import json, os
+          value = json.loads(os.environ["REPOSITORY_METADATA"])
+          raise SystemExit(0 if value.get("private") is True and value.get("visibility") == "private" else 1)
+          PY
+          then
+            echo 'error: This cleanup workflow only runs in a private repository.' >&2
+            exit 1
+          fi
+
+      # actions/checkout v7.0.1
+      - name: Check out cleanup instructions
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+
+      - name: Remove only the private builder Releases
+        id: releases
+        shell: bash
+        run: |
+          set -euo pipefail
+          source scripts/cloud-common.sh
+          input_result="$(cloud_delete_release_and_tag "$CLOUD_INPUT_TAG")"
+          output_result="$(cloud_delete_release_and_tag "$CLOUD_OUTPUT_TAG")"
+          {
+            echo "input_result=$input_result"
+            echo "output_result=$output_result"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Optionally remove only this builder's safe cache
+        id: cache
+        shell: bash
+        run: |
+          set -euo pipefail
+          source scripts/cloud-common.sh
+          if [[ "$CLOUD_DELETE_BUILD_CACHE" == true ]]; then
+            count="$(cloud_delete_safe_caches)"
+            if [[ "$count" == 1 ]]; then
+              echo 'result=removed 1 cache entry' >> "$GITHUB_OUTPUT"
+            else
+              echo "result=removed $count cache entries" >> "$GITHUB_OUTPUT"
+            fi
+          else
+            echo 'result=kept for faster repeat builds' >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Cleanup summary
+        shell: bash
+        run: |
+          set -euo pipefail
+          source scripts/cloud-common.sh
+          cloud_write_cleanup_summary \
+            '${{ steps.releases.outputs.input_result }}' \
+            '${{ steps.releases.outputs.output_result }}' \
+            '${{ steps.cache.outputs.result }}'

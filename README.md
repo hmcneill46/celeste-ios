@@ -27,6 +27,24 @@ It detects the actual payload automatically and rejects unknown or modified
 builds. See [`docs/CELESTE_INPUTS.md`](docs/CELESTE_INPUTS.md) for the precise
 matrix and validation status.
 
+## Choose how to build
+
+### Build locally on a Mac
+
+Use [`./build-tvos.sh`](build-tvos.sh) for compilation, signing, and direct
+Apple TV installation on a supported Apple silicon Mac. Continue with the
+[local quick start](#local-mac-quick-start) below.
+
+### Build in the cloud
+
+No Mac is required for compilation. Create your own **private** repository from
+the [public cloud-builder template](https://github.com/hmcneill46/celeste-tvos-cloud-builder),
+upload one Celeste ZIP and the official FMOD DMG privately, then click **Run
+workflow**. It produces a verified unsigned IPA; signing and installation are
+separate.
+
+→ **[Cloud builder guide](docs/CLOUD_BUILDING.md)**
+
 ## What works
 
 - Native arm64 tvOS gameplay and Metal rendering
@@ -45,14 +63,29 @@ matrix and validation status.
 
 ## What you need
 
+For either route:
+
+- A lawful, unmodified supported **Celeste 1.4.0.0 FNA** installation.
+- The official **FMOD Engine for iOS/tvOS 1.10.09, build 97915** SDK.
+
+For a local build:
+
 - An Apple silicon Mac. The proven host used macOS 26.3.
 - Full Xcode 26.6 with the tvOS 26.5 SDK and command-line tools selected.
 - A paired, developer-ready arm64 Apple TV running tvOS 16 or later. The tested
   device is an Apple TV 4K (3rd generation).
 - An extended Bluetooth game controller. DualSense is tested.
-- One lawful, unmodified supported **Celeste 1.4.0.0 FNA** installation.
-- The official **FMOD Engine for iOS/tvOS 1.10.09, build 97915** SDK.
 - Roughly 8 GiB of free disk space for a clean build.
+
+For cloud compilation instead:
+
+- A GitHub account and a private repository made from the cloud template.
+- One ZIP containing the supported Celeste installation and the original FMOD
+  DMG. The files are temporarily stored as private GitHub Release assets.
+
+The cloud route needs no Mac, Git, terminal, or store/FMOD/Apple credentials
+for compilation. The resulting IPA is unsigned; provisioning, signing, and
+installation still happen separately.
 
 Exact tested and potentially compatible configurations are separated in
 [`docs/STATUS.md`](docs/STATUS.md).
@@ -89,7 +122,7 @@ It reports every missing command in one run, explains why it is needed, and
 writes a privacy-safe failure summary to `dist/logs/last-error.txt`. It installs
 nothing.
 
-## Quick start
+## Local Mac quick start
 
 ```bash
 git clone https://github.com/hmcneill46/celeste-ios.git
