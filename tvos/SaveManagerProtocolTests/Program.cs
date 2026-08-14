@@ -15,14 +15,15 @@ Test("access-code-csprng-shape", () =>
 });
 Test("get-root-code-page", () => protocol.Handle(Request("GET", "/")).StatusCode == 200);
 Test("head-root", () => protocol.Handle(Request("HEAD", "/")).Body.Length == 0);
-Test("invalid-code-rejected", () => protocol.Handle(AuthRequest(protocol.AccessCode == "000000" ? "000001" : "000000")).StatusCode == 401);
+Test("invalid-code-rejected", () => protocol.Handle(AuthRequest(protocol,
+    protocol.AccessCode == "000000" ? "000001" : "000000")).StatusCode == 401);
 
 string session = Authenticate(protocol);
 Test("correct-code-accepted", () => session.Length == 64);
 Test("auth-page-returned-without-redirect", () =>
 {
     SaveManagerHttpProtocol local = NewProtocol();
-    SaveManagerHttpResponse response = local.Handle(AuthRequest(local.AccessCode));
+    SaveManagerHttpResponse response = local.Handle(AuthRequest(local, local.AccessCode));
     return response.StatusCode == 200 && response.Headers["X-Celeste-Authentication"] == "accepted" &&
         !response.Headers.ContainsKey("Location") && Encoding.UTF8.GetString(response.Body).Contains("Save Slot 1", StringComparison.Ordinal);
 });
@@ -373,15 +374,15 @@ static byte[] Request(string method, string path, string? session = null)
     return Raw($"{method} {path} HTTP/1.1\r\nHost: apple-tv\r\n{cookie}\r\n");
 }
 
-static byte[] AuthRequest(string code)
+static byte[] AuthRequest(SaveManagerHttpProtocol target, string code)
 {
-    string body = "code=" + code;
+    string body = "code=" + code + "&instance=" + target.InstanceId;
     return Raw($"POST /auth HTTP/1.1\r\nContent-Type: application/x-www-form-urlencoded\r\nContent-Length: {body.Length}\r\n\r\n{body}");
 }
 
 static string Authenticate(SaveManagerHttpProtocol target)
 {
-    SaveManagerHttpResponse response = target.Handle(AuthRequest(target.AccessCode));
+    SaveManagerHttpResponse response = target.Handle(AuthRequest(target, target.AccessCode));
     if (response.StatusCode != 200) throw new InvalidOperationException("Authentication setup failed.");
     string cookie = response.Headers["Set-Cookie"];
     return cookie.Split(';')[0].Split('=')[1];
@@ -389,7 +390,7 @@ static string Authenticate(SaveManagerHttpProtocol target)
 
 static AuthInfo AuthenticateWithTokens(SaveManagerHttpProtocol target)
 {
-    SaveManagerHttpResponse response = target.Handle(AuthRequest(target.AccessCode));
+    SaveManagerHttpResponse response = target.Handle(AuthRequest(target, target.AccessCode));
     if (response.StatusCode != 200) throw new InvalidOperationException("Authentication setup failed.");
     string session = response.Headers["Set-Cookie"].Split(';')[0].Split('=')[1];
     return new AuthInfo(session, TokenFromHtml(response, "const csrf='"), TokenFromHtml(response, "revision='"));

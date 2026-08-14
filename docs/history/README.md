@@ -45,6 +45,7 @@ support matrix, and limitations are in [project status](../STATUS.md).
 27. [Stage 19 — semantic production naming cleanup](stages/TVOS_SEMANTIC_PRODUCTION_NAMES_STAGE19_REPORT.md)
 28. [Stage 20 — v1.0.0-rc.2 integrated release-candidate acceptance](stages/TVOS_RC2_INTEGRATED_ACCEPTANCE_STAGE20_REPORT.md)
 29. [Stage 21 — beginner-friendly project presentation and documentation](stages/TVOS_BEGINNER_PROJECT_EXPERIENCE_STAGE21_REPORT.md)
+30. [Stage 22B — stable-address Save Manager browser continuity](stages/TVOS_SAVE_MANAGER_CONTINUITY_STAGE22B_REPORT.md)
 
 Diagnostic-only stages whose evidence was intentionally kept in ignored local
 build directories are not reconstructed here. The index covers every tracked

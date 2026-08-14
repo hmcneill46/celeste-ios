@@ -1,6 +1,7 @@
 #if CELESTE_RUNTIME && TVOS_CELESTE_RUNTIME_HOST
 using System.Net;
 using System.Net.Sockets;
+using System.Globalization;
 using System.Runtime.InteropServices;
 using Celeste;
 using CoreFoundation;
@@ -28,6 +29,8 @@ internal sealed class SaveManagerService : IDisposable
     private bool disposed;
     private bool idleTimerSuppressed;
     private bool restartRequired;
+    private bool fallbackAttempted;
+    private bool usingTemporaryPort;
     private int bonjourAdds;
     private int bonjourRemoves;
 
@@ -125,33 +128,7 @@ internal sealed class SaveManagerService : IDisposable
                 stableSnapshot,
                 mutationHandler: persistence.MutateFromSaveManager
             );
-            using NWParameters parameters = NWParameters.CreateTcp(_ => { });
-            parameters.ReuseLocalAddress = true;
-            NWListener nextListener = NWListener.Create(parameters)
-                ?? throw new InvalidOperationException("Network framework did not create a TCP listener.");
-            // Do not set NWListener.ConnectionLimit here. Physical tvOS treats
-            // that property as a lifetime accept budget: after the code page,
-            // authentication, and two requests, a value of four permanently
-            // stopped the listener from accepting another connection. The
-            // reusable SaveManagerConnectionGate below enforces the intended
-            // four-simultaneous-connection bound and releases each slot when
-            // its native NWConnection closes.
-            using NWAdvertiseDescriptor descriptor = NWAdvertiseDescriptor.CreateBonjourService(
-                "Celeste Save Manager", BonjourServiceType, null
-            ) ?? throw new InvalidOperationException("Network framework did not create a Bonjour descriptor.");
-            descriptor.NoAutoRename = false;
-            nextListener.SetAdvertiseDescriptor(descriptor);
-            nextListener.SetAdvertisedEndpointChangedHandler((_, added) =>
-            {
-                lock (gate)
-                {
-                    if (added) bonjourAdds++; else bonjourRemoves++;
-                }
-                RuntimeLog.Info($"STAGE10A_BONJOUR change={(added ? "add" : "remove")}; endpoint-details=redacted");
-            });
-            nextListener.SetNewConnectionHandler(AcceptConnection);
-            nextListener.SetStateChangedHandler((state, error) => ListenerStateChanged(nextListener, addresses, state, error));
-            nextListener.SetQueue(queue);
+            NWListener nextListener = CreateConfiguredListener(addresses, preferredAttempt: true);
 
             lock (gate)
             {
@@ -165,11 +142,13 @@ internal sealed class SaveManagerService : IDisposable
                 protocol = nextProtocol;
                 listener = nextListener;
                 connectionGate.Start();
+                fallbackAttempted = false;
+                usingTemporaryPort = false;
                 bonjourAdds = 0;
                 bonjourRemoves = 0;
             }
             nextListener.Start();
-            RuntimeLog.Info($"STAGE10A_START result=listener-starting; generation={stableSnapshot.Generation}; logical={stableSnapshot.LogicalHash}; access-code=not-logged");
+            RuntimeLog.Info($"STAGE10A_START result=listener-starting; preferred-port={SaveManagerContinuityPolicy.PreferredPort}; fallback=false; generation={stableSnapshot.Generation}; logical={stableSnapshot.LogicalHash}; access-code=not-logged");
         }
         catch (Exception exception)
         {
@@ -186,7 +165,48 @@ internal sealed class SaveManagerService : IDisposable
         }
     }
 
-    private void ListenerStateChanged(NWListener source, IReadOnlyList<string> addresses, NWListenerState listenerState, NWError? error)
+    private NWListener CreateConfiguredListener(IReadOnlyList<string> addresses, bool preferredAttempt)
+    {
+        using NWParameters parameters = NWParameters.CreateTcp(_ => { });
+        parameters.ReuseLocalAddress = true;
+        NWListener created = preferredAttempt
+            ? NWListener.Create(SaveManagerContinuityPolicy.PreferredPort.ToString(CultureInfo.InvariantCulture), parameters)
+                ?? throw new InvalidOperationException("Network framework did not create the preferred TCP listener.")
+            : NWListener.Create(parameters)
+                ?? throw new InvalidOperationException("Network framework did not create the fallback TCP listener.");
+
+        // Do not set NWListener.ConnectionLimit here. Physical tvOS treats
+        // that property as a lifetime accept budget. The reusable managed gate
+        // below enforces four simultaneous connections and releases every slot.
+        using NWAdvertiseDescriptor descriptor = NWAdvertiseDescriptor.CreateBonjourService(
+            "Celeste Save Manager", BonjourServiceType, null
+        ) ?? throw new InvalidOperationException("Network framework did not create a Bonjour descriptor.");
+        descriptor.NoAutoRename = false;
+        created.SetAdvertiseDescriptor(descriptor);
+        created.SetAdvertisedEndpointChangedHandler((_, added) => ListenerAdvertisementChanged(created, added));
+        created.SetNewConnectionHandler(connection => AcceptConnection(created, connection));
+        created.SetStateChangedHandler((state, error) =>
+            ListenerStateChanged(created, addresses, preferredAttempt, state, error));
+        created.SetQueue(queue);
+        return created;
+    }
+
+    private void ListenerAdvertisementChanged(NWListener source, bool added)
+    {
+        lock (gate)
+        {
+            if (source != listener) return;
+            if (added) bonjourAdds++; else bonjourRemoves++;
+        }
+        RuntimeLog.Info($"STAGE10A_BONJOUR change={(added ? "add" : "remove")}; endpoint-details=redacted");
+    }
+
+    private void ListenerStateChanged(
+        NWListener source,
+        IReadOnlyList<string> addresses,
+        bool preferredAttempt,
+        NWListenerState listenerState,
+        NWError? error)
     {
         lock (gate)
         {
@@ -214,13 +234,13 @@ internal sealed class SaveManagerService : IDisposable
                     status = new TvOSSaveManagerDisplayState
                     {
                         Phase = "ready",
-                        Urls = urls,
+                        Urls = DisplayUrls(urls, usingTemporaryPort),
                         AccessCode = protocol?.AccessCode ?? "",
                         PairingStatus = pairingStatus,
                         PairingQr = pairingQr
                     };
                     inactivityTimer.Change(ManagerInactivityLifetime, Timeout.InfiniteTimeSpan);
-                    RuntimeLog.Info($"STAGE10A_READY port={port}; address-count={urls.Length}; bonjour=advertising; access-code=not-logged");
+                    RuntimeLog.Info($"STAGE10A_READY port={port}; preferred={(port == SaveManagerContinuityPolicy.PreferredPort).ToString().ToLowerInvariant()}; fallback={usingTemporaryPort.ToString().ToLowerInvariant()}; address-count={urls.Length}; bonjour=advertising; access-code=not-logged");
 #if TVOS_SAVE_MANAGER_AUTOMATION
                     // This compile-time-only acceptance lane writes secrets to
                     // ignored device evidence so a Mac can stress the physical
@@ -233,6 +253,18 @@ internal sealed class SaveManagerService : IDisposable
                     RuntimeLog.Warning($"STAGE10A_LISTENER state=waiting; error={SafeError(error)}; url=cleared");
                     break;
                 case NWListenerState.Failed:
+                    if (SaveManagerContinuityPolicy.ShouldUseEphemeralFallback(
+                        preferredAttempt,
+                        fallbackAttempted,
+                        error?.ErrorDomain == NWErrorDomain.Posix,
+                        error?.ErrorCode ?? 0))
+                    {
+                        fallbackAttempted = true;
+                        usingTemporaryPort = true;
+                        RuntimeLog.Warning("STAGE22B_LISTENER preferred=false; fallback=true; reason=address-in-use; attempts=one");
+                        ReplaceFailedPreferredListenerWithFallback(source, addresses);
+                        break;
+                    }
                     status = new TvOSSaveManagerDisplayState { Phase = "failed", Detail = "The network listener stopped. Please try again." };
                     RuntimeLog.Error($"STAGE10A_LISTENER state=failed; error={SafeError(error)}; url=cleared");
                     _ = Task.Run(() => StopNetworkObjects(clearStatus: false));
@@ -244,17 +276,55 @@ internal sealed class SaveManagerService : IDisposable
         }
     }
 
-    private void AcceptConnection(NWConnection connection)
+    private void ReplaceFailedPreferredListenerWithFallback(NWListener failed, IReadOnlyList<string> addresses)
+    {
+        if (listener != failed) return;
+        foreach (NWConnection connection in connections.Keys.ToArray()) CloseConnection(connection, "preferred-listener-failed");
+        connectionGate.Stop();
+        listener = null;
+        try { failed.Cancel(); } catch { }
+        failed.Dispose();
+
+        try
+        {
+            NWListener fallback = CreateConfiguredListener(addresses, preferredAttempt: false);
+            if (disposed || protocol == null || status.Phase != "starting")
+            {
+                fallback.Cancel();
+                fallback.Dispose();
+                return;
+            }
+            listener = fallback;
+            connectionGate.Start();
+            status = new TvOSSaveManagerDisplayState
+            {
+                Phase = "starting",
+                Detail = "The preferred address was unavailable. Starting a temporary address..."
+            };
+            fallback.Start();
+        }
+        catch (Exception exception)
+        {
+            status = new TvOSSaveManagerDisplayState
+            {
+                Phase = "failed",
+                Detail = "The network listener stopped. Please try again."
+            };
+            RuntimeLog.Error($"STAGE22B_LISTENER fallback=failed; type={exception.GetType().Name}; message={exception.Message}");
+            _ = Task.Run(() => StopNetworkObjects(clearStatus: false));
+        }
+    }
+
+    private void AcceptConnection(NWListener source, NWConnection connection)
     {
         lock (gate)
         {
-            if (listener == null || protocol == null || status.Phase != "ready" || !connectionGate.TryEnter())
+            if (source != listener || protocol == null || status.Phase != "ready" || !connectionGate.TryEnter())
             {
                 connection.Cancel();
                 connection.Dispose();
                 return;
             }
-            TouchInactivityTimer();
             ConnectionState state = new(connection, SaveManagerHttpProtocol.RequestLifetime, ConnectionTimedOut);
             connections.Add(connection, state);
             connection.SetQueue(queue);
@@ -315,7 +385,9 @@ internal sealed class SaveManagerService : IDisposable
                         SaveManagerHttpProtocol? current = protocol;
                         if (current == null) { CloseConnection(connection, "server-stopped"); return; }
                         bool headOnly = buffered.AsSpan().StartsWith("HEAD "u8);
-                        SaveManagerHttpResponse response = current.Handle(buffered);
+                        SaveManagerProtocolResult result = current.HandleWithActivity(buffered);
+                        SaveManagerHttpResponse response = result.Response;
+                        if (result.CountsAsManagerActivity) TouchInactivityTimer();
                         if (current.RestartRequired)
                         {
                             restartRequired = true;
@@ -430,7 +502,10 @@ internal sealed class SaveManagerService : IDisposable
                 listener.Dispose();
                 listener = null;
             }
-            status = CopyStatus(status, pairingStatus: "unavailable", pairingQr: null, preservePairingQr: false);
+            fallbackAttempted = false;
+            usingTemporaryPort = false;
+            status = CopyStatus(status, pairingStatus: "unavailable", pairingQr: null,
+                preservePairingQr: false);
             if (clearStatus)
             {
                 status = restartRequired
@@ -523,6 +598,15 @@ internal sealed class SaveManagerService : IDisposable
         PairingStatus = pairingStatus ?? value.PairingStatus,
         PairingQr = preservePairingQr ? pairingQr ?? value.PairingQr : pairingQr
     };
+
+    private static string[] DisplayUrls(IReadOnlyList<string> urls, bool temporary)
+    {
+        if (!temporary) return urls.ToArray();
+        string[] displayed = new string[urls.Count + 1];
+        displayed[0] = "Temporary network address in use:";
+        for (int index = 0; index < urls.Count; index++) displayed[index + 1] = urls[index];
+        return displayed;
+    }
 
     private void ThrowIfDisposed() { if (disposed) throw new ObjectDisposedException(nameof(SaveManagerService)); }
 

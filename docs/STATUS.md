@@ -15,7 +15,7 @@ not an App Store distribution.
 | Graphics/audio | Native Metal presentation and seven-bank FMOD audio |
 | Input | Extended controllers; DualSense physically accepted with rumble and PlayStation prompts |
 | Saves | Settings plus slots 0–2, compressed recovery generations, replacement-install and reboot restore |
-| Save Manager | Explicit local-network server, QR/manual authentication, validated backup/restore, and verified soft reload |
+| Save Manager | Explicit local-network server, stable-address browser continuity, QR/manual authentication, validated backup/restore, and verified soft reload |
 | Apple TV behaviour | Home/background resume, graceful main-menu Quit, app artwork, Top Shelf, and optional Metal Performance HUD |
 | Inputs | Nine exact Celeste 1.4.0.0 FNA profiles from itch.io, Epic Games Store, and Steam |
 | Build routes | Local Apple silicon Mac or private GitHub compilation to an unsigned IPA |
@@ -139,9 +139,13 @@ sync, or uninstall-survival guarantee.
 The tvOS-only Options entry opens a Celeste-rendered host modal; it does not add
 another `Oui` subtype or reflection root. Only that explicit action flushes and
 read-back verifies the current Stage 9B generation, then starts a bounded
-Network-framework `NWListener` on a system-selected port. The screen presents
+Network-framework `NWListener` on one preferred local port. The screen presents
 the current numeric LAN URL, a new cryptographically random access code, and a
-crisp Core Image QR code for the highest-ranked usable numeric LAN address.
+crisp Core Image QR code for the highest-ranked usable numeric LAN address. An
+immediate normal reopen therefore presents the same browser address. If that
+port is already occupied by another service, one bounded attempt uses a
+temporary system-selected port and the television says that the address is
+temporary.
 
 The QR carries a separate 256-bit one-time pairing credential in a URL fragment.
 A fixed local bootstrap page removes the fragment from the address bar, submits
@@ -159,7 +163,12 @@ payload validated by the persistence authority; the server cannot see internal
 A/B keys or compressed v2 envelopes. A successful mutation blocks stale
 gameplay until the Confirm-driven high-level reload verifies the new state.
 Background, screen exit, listener failure, shutdown, or twelve minutes of
-inactivity stop the listener and erase all credentials. Current Apple platform
+actual manager inactivity stop the listener and erase all credentials. Browser
+pages poll a fixed non-secret status document and visibly distinguish a brief
+connection check, a closed manager, a reopened activation, and an expired
+browser session. Polling neither renews the ten-minute sliding session nor keeps
+the twelve-minute manager lifetime alive; stale pages disable download and
+mutation controls and require fresh authentication. Current Apple platform
 documentation does not apply the Local Network privacy authorization prompt to
 tvOS; the app still declares its focused Bonjour service and usage description.
 

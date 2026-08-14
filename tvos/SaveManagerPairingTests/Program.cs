@@ -111,7 +111,7 @@ Test("manual-code-survives-pairing-expiry", () =>
 {
     SaveManagerHttpProtocol protocol = NewProtocol(() => now);
     now = now.Add(SaveManagerHttpProtocol.PairingLifetime).AddSeconds(1);
-    bool result = protocol.Handle(AuthRequest(protocol.AccessCode)).StatusCode == 200;
+    bool result = protocol.Handle(AuthRequest(protocol, protocol.AccessCode)).StatusCode == 200;
     now = new DateTimeOffset(2026, 8, 11, 12, 0, 0, TimeSpan.Zero);
     return result;
 });
@@ -176,7 +176,7 @@ Test("pairing-route-rejects-query-and-token-path", () =>
 Test("manual-six-digit-fallback-still-works", () =>
 {
     SaveManagerHttpProtocol protocol = NewProtocol();
-    SaveManagerHttpResponse response = protocol.Handle(AuthRequest(protocol.AccessCode));
+    SaveManagerHttpResponse response = protocol.Handle(AuthRequest(protocol, protocol.AccessCode));
     return response.StatusCode == 200 && response.Headers["X-Celeste-Authentication"] == "accepted" &&
         !response.Headers.ContainsKey("X-Celeste-Pairing");
 });
@@ -184,7 +184,7 @@ Test("manual-auth-can-add-session-after-qr-use", () =>
 {
     SaveManagerHttpProtocol protocol = NewProtocol();
     _ = Pair(protocol);
-    SaveManagerHttpResponse manual = protocol.Handle(AuthRequest(protocol.AccessCode));
+    SaveManagerHttpResponse manual = protocol.Handle(AuthRequest(protocol, protocol.AccessCode));
     return manual.StatusCode == 200 && protocol.ActiveSessionCount == 2;
 });
 Test("paired-session-can-use-stage10-mutation", () =>
@@ -253,9 +253,9 @@ static byte[] PairRequest(string token)
     return Raw($"POST /pair HTTP/1.1\r\nContent-Type: application/x-www-form-urlencoded\r\nContent-Length: {body.Length}\r\n\r\n{body}");
 }
 
-static byte[] AuthRequest(string code)
+static byte[] AuthRequest(SaveManagerHttpProtocol target, string code)
 {
-    string body = "code=" + code;
+    string body = "code=" + code + "&instance=" + target.InstanceId;
     return Raw($"POST /auth HTTP/1.1\r\nContent-Type: application/x-www-form-urlencoded\r\nContent-Length: {body.Length}\r\n\r\n{body}");
 }
 

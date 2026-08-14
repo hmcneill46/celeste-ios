@@ -50,14 +50,18 @@ def main() -> int:
         finally:
             connection.close()
 
-    status, _, _ = request("GET", "/")
+    status, _, access_page = request("GET", "/")
     if status != 200:
         fail(f"unauthenticated root returned HTTP {status}")
+    instance_match = re.search(rb'name=instance value="([0-9a-f]{32})"', access_page)
+    if instance_match is None:
+        fail("access page did not contain the activation instance")
+    instance = instance_match.group(1).decode("ascii")
     wrong = "000000" if args.code != "000000" else "000001"
-    status, _, _ = request("POST", "/auth", body=f"code={wrong}".encode("ascii"))
+    status, _, _ = request("POST", "/auth", body=urllib.parse.urlencode({"code": wrong, "instance": instance}).encode("ascii"))
     if status != 401:
         fail(f"wrong access code returned HTTP {status}")
-    status, headers, page = request("POST", "/auth", body=f"code={args.code}".encode("ascii"))
+    status, headers, page = request("POST", "/auth", body=urllib.parse.urlencode({"code": args.code, "instance": instance}).encode("ascii"))
     if status != 200 or headers.get("x-celeste-authentication") != "accepted" or b"Download all files" not in page:
         fail("correct access code did not return the authenticated page directly")
     cookie = headers.get("set-cookie", "").split(";", 1)[0]

@@ -57,6 +57,11 @@ internal sealed record SaveManagerHttpResponse(int StatusCode, string Reason, IR
     }
 }
 
+internal readonly record struct SaveManagerProtocolResult(
+    SaveManagerHttpResponse Response,
+    bool CountsAsManagerActivity
+);
+
 internal readonly record struct SaveManagerRequestProgress(bool Complete, int ExpectedBytes, SaveManagerHttpResponse? Rejection);
 
 internal enum SaveManagerPairingState
@@ -96,6 +101,7 @@ internal sealed class SaveManagerHttpProtocol
     private SaveExportSnapshot snapshot;
     private string revision;
     private string accessCode;
+    private string instanceId;
     private bool active = true;
     private bool restartRequired;
     private bool pairingConsumed;
@@ -104,17 +110,22 @@ internal sealed class SaveManagerHttpProtocol
     internal SaveManagerHttpProtocol(
         SaveExportSnapshot stableSnapshot,
         Func<DateTimeOffset>? clock = null,
-        Func<SaveMutationCommand, SaveMutationResult>? mutationHandler = null)
+        Func<SaveMutationCommand, SaveMutationResult>? mutationHandler = null,
+        Func<string>? accessCodeFactory = null)
     {
         snapshot = ValidateSnapshot(stableSnapshot);
         now = clock ?? (() => DateTimeOffset.UtcNow);
         mutator = mutationHandler;
-        accessCode = GenerateAccessCode();
+        accessCode = (accessCodeFactory ?? GenerateAccessCode)();
+        if (accessCode.Length != 6 || accessCode.Any(character => !char.IsAsciiDigit(character)))
+            throw new InvalidOperationException("Save Manager access codes must contain exactly six digits.");
+        instanceId = RandomHex(SaveManagerContinuityPolicy.InstanceBytes);
         revision = ComputeRevision(snapshot);
         pairingExpiry = now().Add(PairingLifetime);
     }
 
     internal string AccessCode { get { lock (gate) return accessCode; } }
+    internal string InstanceId { get { lock (gate) return instanceId; } }
     internal int ActiveSessionCount { get { lock (gate) { PurgeExpired(); return sessions.Count; } } }
     internal bool RestartRequired { get { lock (gate) return restartRequired; } }
     internal string RevisionForDiagnostics { get { lock (gate) return revision; } }
@@ -145,6 +156,7 @@ internal sealed class SaveManagerHttpProtocol
         {
             active = false;
             accessCode = "";
+            instanceId = "";
             revision = "";
             sessions.Clear();
             pairingConsumed = true;
@@ -154,25 +166,35 @@ internal sealed class SaveManagerHttpProtocol
         }
     }
 
-    internal SaveManagerHttpResponse Handle(byte[] requestBytes)
+    internal SaveManagerHttpResponse Handle(byte[] requestBytes) => HandleWithActivity(requestBytes).Response;
+
+    internal SaveManagerProtocolResult HandleWithActivity(byte[] requestBytes)
     {
         try
         {
             ParsedRequest request = Parse(requestBytes);
+            bool countsAsActivity = request.Path != "/status";
             lock (gate)
             {
-                if (!active) return Error(503, "Service Unavailable", "Save Manager has stopped.");
+                if (!active)
+                    return new SaveManagerProtocolResult(
+                        Error(503, "Service Unavailable", "Save Manager has stopped."),
+                        countsAsActivity);
                 PurgeExpired();
-                return Route(request);
+                return new SaveManagerProtocolResult(Route(request), countsAsActivity);
             }
         }
         catch (HttpFailure failure)
         {
-            return Error(failure.StatusCode, failure.Reason, failure.PublicMessage);
+            return new SaveManagerProtocolResult(
+                Error(failure.StatusCode, failure.Reason, failure.PublicMessage),
+                CountsAsActivityForRejectedRequest(requestBytes));
         }
         catch
         {
-            return Error(500, "Internal Server Error", "The Save Manager could not complete this request. Your previous save was kept.");
+            return new SaveManagerProtocolResult(
+                Error(500, "Internal Server Error", "The Save Manager could not complete this request. Your previous save was kept."),
+                CountsAsActivityForRejectedRequest(requestBytes));
         }
     }
 
@@ -234,16 +256,18 @@ internal sealed class SaveManagerHttpProtocol
         if (request.Method == "POST" && request.Path == "/pair") return Pair(request);
         if (request.Method == "POST" && request.Path == "/auth") return Authenticate(request);
 
-        SessionState? session = TryAuthenticate(request.Headers);
+        if (request.Path == "/status") return Status(request);
+
+        SessionState? session = TryAuthenticate(request.Headers, slide: true);
         if (request.Method == "POST") return Mutate(request, session);
 
         bool isHead = request.Method == "HEAD";
         if (request.Method is not ("GET" or "HEAD")) return MethodNotAllowed("GET, HEAD, POST");
         if (request.Path == "/pair") return PairingBootstrap(isHead);
         if (request.Path == "/")
-            return session == null ? Html(200, "OK", AccessCodePage(invalid: false), isHead) :
+            return session == null ? AccessCodeResponse(200, "OK", invalid: false, isHead) :
                 AuthenticatedResponse(200, "OK", session, session.Notice, isHead);
-        if (session == null) return Html(401, "Unauthorized", AccessCodePage(invalid: false), isHead);
+        if (session == null) return AccessCodeResponse(401, "Unauthorized", invalid: false, isHead);
 
         if (request.Path == "/download/all")
         {
@@ -276,14 +300,31 @@ internal sealed class SaveManagerHttpProtocol
         {
             throw new HttpFailure(415, "Unsupported Media Type", "The access-code form format is unsupported.");
         }
-        string body = Encoding.ASCII.GetString(request.Body);
-        if (!body.StartsWith("code=", StringComparison.Ordinal) || body.IndexOf('&') >= 0)
-            throw new HttpFailure(400, "Bad Request", "The access-code form is malformed.");
-        string supplied = DecodeFormValue(body[5..]).Replace(" ", "", StringComparison.Ordinal);
-        bool valid = supplied.Length == 6 && accessCode.Length == 6 && FixedEquals(supplied, accessCode);
-        if (!valid) return Html(401, "Unauthorized", AccessCodePage(invalid: true), headOnly: false);
+        (string suppliedCode, string suppliedInstance) = ParseAuthForm(Encoding.ASCII.GetString(request.Body));
+        suppliedCode = suppliedCode.Replace(" ", "", StringComparison.Ordinal);
+        bool codeValid = suppliedCode.Length == 6 && accessCode.Length == 6 && FixedEquals(suppliedCode, accessCode);
+        bool instanceValid = SaveManagerContinuityPolicy.IsValidInstanceId(suppliedInstance) &&
+            SaveManagerContinuityPolicy.IsValidInstanceId(instanceId) && FixedEquals(suppliedInstance, instanceId);
+        if (!codeValid || !instanceValid)
+            return AccessCodeResponse(401, "Unauthorized", invalid: true, headOnly: false);
 
         return StartSession("Connected successfully.", includeManagerPage: true, paired: false);
+    }
+
+    private SaveManagerHttpResponse Status(ParsedRequest request)
+    {
+        if (request.Method is not ("GET" or "HEAD")) return MethodNotAllowed("GET, HEAD");
+        bool authenticated = TryAuthenticate(request.Headers, slide: false) != null;
+        string json = "{\"service\":\"" + SaveManagerContinuityPolicy.ServiceIdentifier +
+            "\",\"protocol\":" + SaveManagerContinuityPolicy.ProtocolVersion.ToString(CultureInfo.InvariantCulture) +
+            ",\"instance\":\"" + instanceId + "\",\"active\":true,\"authenticated\":" +
+            (authenticated ? "true" : "false") + "}";
+        byte[] representation = Encoding.UTF8.GetBytes(json);
+        return new SaveManagerHttpResponse(
+            200,
+            "OK",
+            BaseHeaders("application/json; charset=utf-8", representation.Length, null),
+            request.Method == "HEAD" ? Array.Empty<byte>() : representation);
     }
 
     private SaveManagerHttpResponse PairingBootstrap(bool headOnly)
@@ -457,7 +498,7 @@ internal sealed class SaveManagerHttpProtocol
         return Error(422, "Unprocessable Content", message);
     }
 
-    private SessionState? TryAuthenticate(IReadOnlyDictionary<string, string> headers)
+    private SessionState? TryAuthenticate(IReadOnlyDictionary<string, string> headers, bool slide)
     {
         if (!headers.TryGetValue("cookie", out string? cookie)) return null;
         foreach (string part in cookie.Split(';'))
@@ -468,7 +509,7 @@ internal sealed class SaveManagerHttpProtocol
             string token = candidate[prefix.Length..];
             if (token.Length != 64 || token.Any(value => !Uri.IsHexDigit(value))) return null;
             if (!sessions.TryGetValue(token, out SessionState? session) || session.Expiry <= now()) return null;
-            session.Expiry = now().Add(SessionLifetime);
+            if (slide) session.Expiry = now().Add(SessionLifetime);
             return session;
         }
         return null;
@@ -601,6 +642,34 @@ internal sealed class SaveManagerHttpProtocol
         return result.ToString();
     }
 
+    private static (string Code, string Instance) ParseAuthForm(string body)
+    {
+        string? code = null;
+        string? instance = null;
+        string[] fields = body.Split('&', StringSplitOptions.None);
+        if (fields.Length != 2)
+            throw new HttpFailure(400, "Bad Request", "The access-code form is malformed.");
+        foreach (string field in fields)
+        {
+            int equals = field.IndexOf('=');
+            if (equals <= 0 || field.IndexOf('=', equals + 1) >= 0)
+                throw new HttpFailure(400, "Bad Request", "The access-code form is malformed.");
+            string name = field[..equals];
+            string value = DecodeFormValue(field[(equals + 1)..]);
+            if (name == "code" && code == null) code = value;
+            else if (name == "instance" && instance == null) instance = value;
+            else throw new HttpFailure(400, "Bad Request", "The access-code form is malformed.");
+        }
+        if (code == null || instance == null)
+            throw new HttpFailure(400, "Bad Request", "The access-code form is malformed.");
+        return (code, instance);
+    }
+
+    private static bool CountsAsActivityForRejectedRequest(byte[] requestBytes) =>
+        !(requestBytes.AsSpan().StartsWith("GET /status "u8) ||
+          requestBytes.AsSpan().StartsWith("HEAD /status "u8) ||
+          requestBytes.AsSpan().StartsWith("POST /status "u8));
+
     private static SaveExportSnapshot ValidateSnapshot(SaveExportSnapshot value)
     {
         if (value.Files.Count != LogicalNames.Length || LogicalNames.Any(name => !value.Files.ContainsKey(name)) ||
@@ -631,8 +700,14 @@ internal sealed class SaveManagerHttpProtocol
     private SaveManagerHttpResponse AuthenticatedResponse(int status, string reason, SessionState session, string? notice, bool headOnly)
     {
         string nonce = Convert.ToBase64String(RandomNumberGenerator.GetBytes(18));
-        string html = AuthenticatedPage(snapshot, session.Csrf, revision, restartRequired, notice, nonce);
+        string html = AuthenticatedPage(snapshot, session.Csrf, revision, restartRequired, notice, nonce, instanceId);
         return Html(status, reason, html, headOnly, nonce);
+    }
+
+    private SaveManagerHttpResponse AccessCodeResponse(int status, string reason, bool invalid, bool headOnly)
+    {
+        string nonce = Convert.ToBase64String(RandomNumberGenerator.GetBytes(18));
+        return Html(status, reason, AccessCodePage(invalid, instanceId, nonce), headOnly, nonce);
     }
 
     private static SaveManagerHttpResponse Html(int status, string reason, string html, bool headOnly, string? nonce = null)
@@ -667,10 +742,14 @@ internal sealed class SaveManagerHttpProtocol
         };
     }
 
-    private static string AccessCodePage(bool invalid) => Page("Celeste Save Manager",
-        "<p>Enter the six-digit access code shown on your Apple TV.</p>" +
+    private static string AccessCodePage(bool invalid, string instance, string nonce) => Page("Celeste Save Manager",
+        "<p id=continuity-status class=continuity>Connected to your Apple TV.</p>" +
+        "<p id=continuity-detail>Enter the six-digit access code shown on your Apple TV.</p>" +
         (invalid ? "<p class=error>That code was not accepted.</p>" : "") +
-        "<form method=post action=/auth><label>Access code <input name=code inputmode=numeric autocomplete=one-time-code maxlength=7 required></label><button type=submit>Connect</button></form>");
+        "<form method=post action=/auth><label>Access code <input data-continuity-control name=code inputmode=numeric autocomplete=one-time-code maxlength=7 required></label>" +
+        "<input type=hidden name=instance value=\"" + Escape(instance) + "\"><button data-continuity-control type=submit>Connect</button></form>" +
+        "<button id=continuity-reconnect type=button disabled>Reconnect</button>" +
+        "<script nonce=\"" + nonce + "\">'use strict';" + ContinuityScript(instance, authenticationRequired: false) + "</script>");
 
     private static string PairingPage(string nonce) => Page("Celeste Save Manager",
         "<p id=status>Connecting to your Apple TV...</p>" +
@@ -692,13 +771,16 @@ internal sealed class SaveManagerHttpProtocol
         string revision,
         bool restartRequired,
         string? notice,
-        string nonce)
+        string nonce,
+        string instance)
     {
-        StringBuilder body = new("<p>Connected to your Apple TV.</p>");
+        StringBuilder body = new("<p id=continuity-status class=continuity>Connected to your Apple TV.</p>" +
+            "<p id=continuity-detail>This is the current authenticated Save Manager.</p>" +
+            "<button id=continuity-reconnect type=button disabled>Reconnect</button>");
         if (!string.IsNullOrEmpty(notice)) body.Append("<p class=success>").Append(notice).Append("</p>");
         if (restartRequired)
             body.Append("<p class=warning><strong>Return to your Apple TV and press Confirm to reload Celeste.</strong><br>Celeste will validate and load the new state without quitting the app. If reload fails, fully close Celeste from the Apple TV app switcher and reopen it.</p>");
-        body.Append("<p><a href=/download/all download=Celeste-saves.zip>Download backup (.zip)</a></p><ul>");
+        body.Append("<p><a data-continuity-control href=/download/all download=Celeste-saves.zip>Download backup (.zip)</a></p><ul>");
         foreach (string logicalName in LogicalNames)
         {
             string label = Label(logicalName);
@@ -708,25 +790,51 @@ internal sealed class SaveManagerHttpProtocol
             else
             {
                 body.Append(payload.Length.ToString("N0", CultureInfo.InvariantCulture)).Append(" bytes ")
-                    .Append("<a href=/download/").Append(logicalName).Append(" download=").Append(Filename(logicalName)).Append(">Download</a><br>");
+                    .Append("<a data-continuity-control href=/download/").Append(logicalName).Append(" download=").Append(Filename(logicalName)).Append(">Download</a><br>");
             }
-            body.Append("<label class=replace>Choose replacement <input type=file accept=.celeste data-file=").Append(logicalName).Append("></label>")
-                .Append("<button type=button data-replace=").Append(logicalName).Append(">Replace</button>");
+            body.Append("<label class=replace>Choose replacement <input data-continuity-control type=file accept=.celeste data-file=").Append(logicalName).Append("></label>")
+                .Append("<button data-continuity-control type=button data-replace=").Append(logicalName).Append(">Replace</button>");
             if (logicalName == "settings")
-                body.Append("<button type=button data-reset=settings>Reset Settings</button>");
+                body.Append("<button data-continuity-control type=button data-reset=settings>Reset Settings</button>");
             else if (payload != null)
-                body.Append("<button class=danger type=button data-delete=").Append(logicalName).Append(">Delete</button>");
+                body.Append("<button data-continuity-control class=danger type=button data-delete=").Append(logicalName).Append(">Delete</button>");
             body.Append("<div class=result id=result-").Append(logicalName).Append("></div></li>");
         }
         body.Append("</ul><p>Files are validated before they replace anything. Invalid or interrupted uploads keep the previous durable save.</p>")
             .Append("<script nonce=\"").Append(nonce).Append("\">'use strict';")
             .Append("const csrf='").Append(csrf).Append("',revision='").Append(revision).Append("';")
-            .Append("async function act(path,body,type,target){const r=await fetch(path,{method:'POST',credentials:'same-origin',headers:{'X-Celeste-CSRF':csrf,'X-Celeste-Revision':revision,...(type?{'Content-Type':type}:{})},body});const t=await r.text();if(r.ok){location.replace('/');}else{const e=document.getElementById('result-'+target);e.textContent='Request failed ('+r.status+'). '+new DOMParser().parseFromString(t,'text/html').body.innerText;}}")
+            .Append("async function act(path,body,type,target){if(!continuityConnected)return;const r=await fetch(path,{method:'POST',credentials:'same-origin',headers:{'X-Celeste-CSRF':csrf,'X-Celeste-Revision':revision,...(type?{'Content-Type':type}:{})},body});const t=await r.text();if(r.ok){location.replace('/');}else{const e=document.getElementById('result-'+target);e.textContent='Request failed ('+r.status+'). '+new DOMParser().parseFromString(t,'text/html').body.innerText;}}")
             .Append("document.querySelectorAll('[data-replace]').forEach(b=>b.onclick=()=>{const n=b.dataset.replace,f=document.querySelector('[data-file=\"'+n+'\"]').files[0];if(!f){document.getElementById('result-'+n).textContent='Choose a .celeste file first.';return;}const label=n==='settings'?'Settings':'Save Slot '+(Number(n)+1);if(confirm('Replace '+label+' with '+f.name+' ('+f.size+' bytes)?'))act('/replace/'+n,f,'application/octet-stream',n);});")
             .Append("document.querySelectorAll('[data-delete]').forEach(b=>b.onclick=()=>{const n=b.dataset.delete;if(confirm('Delete Save Slot '+(Number(n)+1)+'? This intentionally changes the current save state.'))act('/delete/'+n,null,null,n);});")
             .Append("document.querySelectorAll('[data-reset]').forEach(b=>b.onclick=()=>{if(confirm('Reset Settings to Celeste defaults? Save slots are not changed. Return to the Apple TV and press Confirm to reload.'))act('/reset/settings',null,null,'settings');});")
+            .Append(ContinuityScript(instance, authenticationRequired: true))
             .Append("</script>");
         return Page("Celeste Save Manager", body.ToString());
+    }
+
+    private static string ContinuityScript(string instance, bool authenticationRequired)
+    {
+        string required = authenticationRequired ? "true" : "false";
+        return "const continuityExpected='" + instance + "',continuityRequiresAuth=" + required +
+            ";let continuityFailures=0,continuityPolling=false,continuityConnected=true;" +
+            "const continuityStatus=document.getElementById('continuity-status'),continuityDetail=document.getElementById('continuity-detail'),continuityReconnect=document.getElementById('continuity-reconnect'),continuityControls=[...document.querySelectorAll('[data-continuity-control]')];" +
+            "function continuityEnable(enabled){continuityConnected=enabled;continuityControls.forEach(c=>{if(c.tagName==='A'){if(enabled){if(c.dataset.continuityHref)c.setAttribute('href',c.dataset.continuityHref);c.removeAttribute('aria-disabled');}else{if(c.hasAttribute('href'))c.dataset.continuityHref=c.getAttribute('href');c.removeAttribute('href');c.setAttribute('aria-disabled','true');}}else{c.disabled=!enabled;}});}" +
+            "function continuityShow(kind){const connected=kind==='connected';continuityEnable(connected);continuityReconnect.disabled=kind==='connected'||kind==='checking';" +
+            "if(kind==='connected'){continuityStatus.textContent='Connected to your Apple TV.';continuityDetail.textContent=continuityRequiresAuth?'This is the current authenticated Save Manager.':'Enter the six-digit access code shown on your Apple TV.';}" +
+            "else if(kind==='checking'){continuityStatus.textContent='Checking connection…';continuityDetail.textContent='Waiting briefly for your Apple TV.';}" +
+            "else if(kind==='disconnected'){continuityStatus.textContent='Save Manager was closed or cannot be reached.';continuityDetail.textContent='Reopen Save Manager in Celeste to continue.';}" +
+            "else if(kind==='reopened'){continuityStatus.textContent='Save Manager is available again.';continuityDetail.textContent='Reconnect using the new access code or QR.';}" +
+            "else{continuityStatus.textContent='Your Save Manager session has expired.';continuityDetail.textContent='Reconnect to continue.';}}" +
+            "function continuityValid(j){if(!j||typeof j!=='object'||Array.isArray(j))return false;const k=Object.keys(j).sort().join(',');return k==='active,authenticated,instance,protocol,service'&&j.service==='" + SaveManagerContinuityPolicy.ServiceIdentifier +
+            "'&&j.protocol===" + SaveManagerContinuityPolicy.ProtocolVersion.ToString(CultureInfo.InvariantCulture) +
+            "&&j.active===true&&typeof j.authenticated==='boolean'&&typeof j.instance==='string'&&/^[0-9a-f]{32}$/.test(j.instance);}" +
+            "async function continuityPoll(){if(continuityPolling)return;continuityPolling=true;const controller=new AbortController(),timeout=setTimeout(()=>controller.abort()," + SaveManagerContinuityPolicy.PollTimeoutMilliseconds.ToString(CultureInfo.InvariantCulture) +
+            ");try{const response=await fetch('/status',{cache:'no-store',credentials:'same-origin',signal:controller.signal});if(!response.ok)throw Error();const value=await response.json();if(!continuityValid(value))throw Error();continuityFailures=0;if(value.instance!==continuityExpected)continuityShow('reopened');else if(continuityRequiresAuth&&!value.authenticated)continuityShow('expired');else continuityShow('connected');}" +
+            "catch(_error){continuityFailures=Math.min(" + SaveManagerContinuityPolicy.DisconnectFailureThreshold.ToString(CultureInfo.InvariantCulture) +
+            ",continuityFailures+1);continuityShow(continuityFailures<" + SaveManagerContinuityPolicy.DisconnectFailureThreshold.ToString(CultureInfo.InvariantCulture) +
+            "?'checking':'disconnected');}finally{clearTimeout(timeout);continuityPolling=false;}}" +
+            "continuityReconnect.addEventListener('click',()=>location.assign('/'));setInterval(continuityPoll," + SaveManagerContinuityPolicy.PollIntervalMilliseconds.ToString(CultureInfo.InvariantCulture) +
+            ");continuityPoll();";
     }
 
     private static string Page(string title, string content) => "<!doctype html><html lang=en><meta charset=utf-8>" +
@@ -735,6 +843,7 @@ internal sealed class SaveManagerHttpProtocol
         "h1{font-size:2rem}li{background:#1f2937;margin:.8rem 0;padding:1rem;border-radius:.7rem;list-style:none}ul{padding:0}" +
         "a,button{color:#111827;background:#84ff54;border:0;border-radius:.45rem;padding:.55rem .8rem;font-weight:700;text-decoration:none;display:inline-block;margin:.4rem}" +
         "button.danger{background:#fca5a5}.replace{display:block;margin:.6rem 0}input{font:inherit;padding:.55rem}.error{color:#fca5a5}" +
+        ".continuity{font-weight:700}button:disabled,input:disabled,a[aria-disabled=true]{opacity:.45;pointer-events:none}" +
         ".success{background:#14532d;padding:1rem;border-radius:.6rem}.warning{background:#713f12;padding:1rem;border-radius:.6rem}.result{margin:.4rem;color:#fca5a5}</style>" +
         "<h1>" + Escape(title) + "</h1>" + content + "</html>";
 

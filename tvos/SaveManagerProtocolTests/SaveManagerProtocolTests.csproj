@@ -8,6 +8,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="..\CelesteTvOSRuntimeHost\SaveManagerHttpProtocol.cs" Link="SaveManagerHttpProtocol.cs" />
+    <Compile Include="..\CelesteTvOSRuntimeHost\SaveManagerContinuityPolicy.cs" Link="SaveManagerContinuityPolicy.cs" />
     <Compile Include="..\CelesteTvOSRuntimeHost\SaveManagerLanAddressPolicy.cs" Link="SaveManagerLanAddressPolicy.cs" />
   </ItemGroup>
 </Project>

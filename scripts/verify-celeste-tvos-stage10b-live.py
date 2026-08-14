@@ -76,7 +76,16 @@ def main() -> int:
     if not save or len(save) > 262144:
         fail("SaveData fixture is empty or exceeds the locked raw limit")
 
-    auth_body = urllib.parse.urlencode({"code": args.code}).encode("ascii")
+    root_status, _, access_page = request(args.url)
+    if root_status != 200:
+        fail(f"unauthenticated root returned HTTP {root_status}")
+    instance_match = re.search(rb'name=instance value="([0-9a-f]{32})"', access_page)
+    if instance_match is None:
+        fail("access page did not contain the activation instance")
+    auth_body = urllib.parse.urlencode({
+        "code": args.code,
+        "instance": instance_match.group(1).decode("ascii"),
+    }).encode("ascii")
     status, auth_headers, page = request(
         urllib.parse.urljoin(args.url, "/auth"),
         data=auth_body,

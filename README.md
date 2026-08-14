@@ -197,6 +197,12 @@ verifies the imported state and returns to a functional main menu. If that
 verification fails, fully close the app from the Apple TV app switcher and
 reopen it.
 
+The displayed local address normally stays the same when Save Manager is
+closed and reopened. An already open browser page notices when the manager is
+closed or reopened and disables its controls until you reconnect. Every new
+activation still uses fresh authentication, so reconnect with the new QR code
+or access code rather than relying on an old page.
+
 Save Manager is a temporary local-network tool, not cloud sync. Saves are
 shared between Apple TV users in the same app installation, do not survive an
 uninstall, and are not backed up to iCloud.

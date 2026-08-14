@@ -539,6 +539,22 @@ spellings, the exact SDL/UIWindow/CAMetalLayer acquisition path, default Off,
 logging disabled, no HUD plist/environment dependency, and full-AOT product
 tokens. Apple's device-global Developer Graphics HUD setting is not required.
 
+Verify Stage 22B Save Manager stable-address continuity, the inherited product
+chain, and an optional package with:
+
+```bash
+scripts/verify-celeste-tvos-stage22b.sh \
+  --generated-root .build/celeste-runtime/stage6-current/audio/managed \
+  --native-manifest .build/tvos-host/normalized-manifest.json
+```
+
+Pass `--app ... --platform device --signed` or `--ipa ...` for product checks.
+The Stage 22B layer adds 57 deterministic tests for the preferred listener,
+single address-in-use fallback, activation identity, non-sliding/non-activity
+status route, instance-bound manual authentication, browser continuity states,
+strict CSP, and disabled stale-page controls. The preferred port is an
+implementation detail; always use the exact address shown on the television.
+
 For isolated automation, build only an explicitly local acceptance app with
 `SaveManagerAutomation=true` and
 `PersistenceStorageNamespace=acceptance`, then use:

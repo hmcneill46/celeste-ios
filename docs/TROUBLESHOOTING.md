@@ -742,8 +742,11 @@ loopback, tunnel, or link-local path is available.
 **Fix**
 
 Connect the Apple TV and the browser device to the same normal local network,
-then leave and reopen **Options > Save Manager** so it recalculates the address
-and system-selected port. Do not configure port forwarding or a public route.
+then leave and reopen **Options > Save Manager** so it recalculates the address.
+It normally reuses its preferred local port. If that port is occupied, the
+television explicitly shows that a temporary address is in use; always use the
+complete address currently shown on the television. Do not configure port
+forwarding or a public route.
 
 ## Save Manager page does not open or the code stops working
 
@@ -755,14 +758,21 @@ page stops downloading.
 **Cause**
 
 Save Manager deliberately stops when its screen closes, Celeste backgrounds,
-the listener fails, or the inactivity timeout expires. Codes and browser
-sessions exist only in memory and are erased on every stop.
+the listener fails, or the twelve-minute actual-activity timeout expires. Codes
+and browser sessions exist only in memory and are erased on every stop. An open
+page checks the current activation without extending either the ten-minute
+sliding browser session or the manager timeout. It disables downloads and
+changes after repeated connection failures and reports whether the manager was
+reopened or only the browser session expired.
 
 **Fix**
 
-Keep Celeste in the foreground, reopen **Options > Save Manager**, use the new
-numeric URL and new six-digit code, and confirm both devices are on the same
-LAN. For a complete backup, prefer **Download backup (.zip)**: some mobile
+Keep Celeste in the foreground and reopen **Options > Save Manager**. The old
+page can detect that a fresh activation is available, but reconnect using the
+new QR or access code; old cookies, pages, codes, and QR links cannot authorize
+the new activation. If a temporary address is shown, open that exact address
+rather than a previous one. Confirm both devices are on the same LAN. For a
+complete backup, prefer **Download backup (.zip)**: some mobile
 browsers throttle several separate downloads from one page even though the
 server has completed them. Individual file links remain available. Current tvOS
 does not present the iOS Local Network permission prompt, so there is no
