@@ -28,6 +28,37 @@ an app/IPA containing game content, Apple credentials or two-factor codes,
 certificates, provisioning profiles, Team IDs, device identifiers, or
 `tvos/Local.Build.props` to an issue.
 
+## Common questions
+
+Use this index before working through the detailed diagnostics below:
+
+- **I do not know which Celeste files to use:** read [Supported Celeste
+  files](CELESTE_INPUTS.md#which-download-should-i-use).
+- **I am confused about the FMOD download or version:** use [FMOD Engine's
+  iOS/tvOS 1.10.09 download](https://www.fmod.com/download?version=1.10.09#fmodengine),
+  then see [Wrong FMOD version](#wrong-fmod-version).
+- **The builder cannot find Celeste:** see [Celeste path is missing or not
+  found](#celeste-path-is-missing-or-not-found).
+- **The builder cannot find FMOD:** see [FMOD SDK is not
+  mounted](#fmod-sdk-is-not-mounted).
+- **My Celeste version is rejected:** see [Celeste version/distribution is
+  rejected](#celeste-versiondistribution-is-rejected).
+- **GitHub says my repository must be private:** see [My repository is
+  public](#my-repository-is-public).
+- **The cloud build takes a long time:** see [The build is slow or native/full
+  AOT failed](#the-build-is-slow-or-nativefull-aot-failed).
+- **The IPA will not install because it is unsigned:** see [Unsigned IPA will
+  not install directly](#unsigned-ipa-will-not-install-directly).
+- **My Personal Team signing expired:** see [Provisioning expired after about
+  seven days](#provisioning-expired-after-about-seven-days).
+- **Save Manager cannot be reached:** see [Save Manager page does not open or
+  the code stops working](#save-manager-page-does-not-open-or-the-code-stops-working).
+- **Where are my saves?:** see [Saves appear missing after changing the bundle
+  ID](#saves-appear-missing-after-changing-the-bundle-id) and the [current save
+  limitations](STATUS.md#known-limitations).
+- **How do I remove my private cloud files?:** see [Remove uploaded Celeste and
+  FMOD files](#remove-uploaded-celeste-and-fmod-files).
+
 ## Cloud builder problems
 
 The complete beginner workflow is in [Build Celeste for Apple TV in the
@@ -83,7 +114,7 @@ is available.
 
 The cloud output is intentionally unsigned. GitHub receives no Apple account,
 certificate, or provisioning profile. Download the IPA, then follow the
-[separate signing guidance](../README.md#create-a-signing-ready-ipa).
+[separate signing guidance](../README.md#step-4--sign-and-install).
 
 ### Remove uploaded Celeste and FMOD files
 
@@ -326,10 +357,10 @@ look similar while still being unsupported.
 
 **Fix**
 
-Use a clean extraction of one listed profile. The root README's [store-specific
-acquisition guide](../README.md#getting-a-clean-supported-celeste-copy) explains
-how to obtain clean itch.io, Steam, or Epic files through your own entitlement.
-Do not patch files, borrow a
+Use a clean extraction of one listed profile. The [supported Celeste files
+guide](CELESTE_INPUTS.md#which-download-should-i-use) explains how to obtain
+clean itch.io, Steam, or Epic files through your own entitlement. Do not patch
+files, borrow a
 missing file from another distribution, or combine directories to imitate
 expected hashes. The validator prints the detected profile on success; an
 unknown build must be added as a separately investigated profile before use.
@@ -400,8 +431,10 @@ No valid mounted SDK was found and no path was provided.
 
 **Fix**
 
-Using your own FMOD account, obtain official FMOD Engine for iOS/tvOS 1.10.09,
-mount the DMG, then rerun. If discovery is ambiguous:
+Using your own FMOD account, obtain
+[FMOD Engine for iOS/tvOS 1.10.09](https://www.fmod.com/download?version=1.10.09#fmodengine),
+choose the iOS package rather than FMOD Studio, mount the DMG, then rerun. If
+discovery is ambiguous:
 
 ```bash
 export FMOD_SDK_ROOT=/Volumes/the-mounted-fmod-sdk
@@ -424,9 +457,10 @@ FMOD 2.x and other 1.x releases are not interchangeable.
 
 **Fix**
 
-Use FMOD's official archived/previous releases available through your account,
-mount the correct iOS SDK DMG, and rerun. Do not rename another SDK to bypass
-validation.
+Use [FMOD's official 1.10.09 Engine
+download](https://www.fmod.com/download?version=1.10.09#fmodengine), sign in if
+needed to see the older version, choose its iOS package, mount the DMG, and
+rerun. Do not rename another SDK to bypass validation.
 
 ## Not enough disk space
 

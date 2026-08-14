@@ -18,13 +18,20 @@ signing path.
 - A GitHub account.
 - One ZIP containing an [exact supported Celeste 1.4.0.0 FNA
   input](CELESTE_INPUTS.md).
-- The original official **FMOD Engine iOS/tvOS 1.10.09 build 97915 DMG**.
+- The original official
+  [**FMOD Engine iOS/tvOS 1.10.09 build 97915**](https://www.fmod.com/download?version=1.10.09#fmodengine)
+  DMG. Choose FMOD Engine's iOS package, not FMOD Studio; FMOD may ask you to
+  sign in before showing the older version.
 
 You must own Celeste and obtain FMOD through your own account. The template
 does not provide either input and never asks for Steam, Epic, FMOD, or Apple
 credentials.
 
 ## Quick start
+
+There are six steps: create a private repository, prepare the two inputs,
+upload them to the fixed private input Release, run Build, download the unsigned
+IPA, then run Cleanup. The headings below walk through them in order.
 
 ### 1. Create your private builder repository
 
@@ -62,9 +69,8 @@ an extracted folder or macOS app, compress that one folder/app to ZIP first:
   `zip -r Celeste.zip Celeste-folder`.
 
 Do not put an existing ZIP inside another ZIP. Upload the FMOD DMG unchanged;
-Windows and Linux users do not need to open it. The [game-file acquisition
-guide](../README.md#getting-a-clean-supported-celeste-copy) covers itch.io,
-Steam, and Epic inputs.
+Windows and Linux users do not need to open it. The [supported Celeste files
+guide](CELESTE_INPUTS.md) covers itch.io, Steam, and Epic inputs.
 
 ### 3. Upload the inputs privately
 
@@ -111,7 +117,7 @@ Release `tvos-arm64`, fully trimmed, full AOT, and has
 `UseInterpreter=false`.
 
 The IPA is **unsigned and cannot be installed as-is**. Continue with the
-[unsigned IPA/signing guidance](../README.md#create-a-signing-ready-ipa).
+[signing and installation guidance](../README.md#step-4--sign-and-install).
 
 ### 6. Remove the private build files
 
@@ -200,7 +206,7 @@ Release for a corrected retry.
 
 That is expected until it is signed. The workflow intentionally has no Apple
 credentials, certificate, or provisioning profile. Follow the separate
-[signing guidance](../README.md#create-a-signing-ready-ipa).
+[signing guidance](../README.md#step-4--sign-and-install).
 
 For more focused remedies, see [Troubleshooting](TROUBLESHOOTING.md).
 

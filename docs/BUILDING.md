@@ -1,13 +1,48 @@
-# Advanced build guide
+# Build locally on a Mac
 
 The supported entry point is [`../build-tvos.sh`](../build-tvos.sh). This guide
-explains its automation surface and generated files; normal users should begin
-with the root [README](../README.md).
+starts with local prerequisites, then documents the builder's advanced
+automation, reproducibility, and generated files. If you are still choosing a
+build route, begin with the root [README](../README.md).
 
-This is the advanced **local Mac** guide. Users who do not have a Mac can use
+This is the **local Apple silicon Mac** guide. Users who do not have a Mac can use
 the separate [private GitHub cloud builder](CLOUD_BUILDING.md) for compilation.
 That route invokes this same self-builder and produces an unsigned IPA; signing
 and Apple TV installation remain separate.
+
+## Before you start
+
+Have these ready before beginning a full build:
+
+- an Apple silicon Mac with full Xcode installed, first launch completed, and
+  the tvOS SDK available;
+- .NET SDK 10.0.302 and tvOS workload set 10.0.302.0;
+- GNU Make (`gmake`) and Mono (`monodis`);
+- one clean supported Celeste 1.4.0.0 FNA folder from [Supported Celeste
+  files](CELESTE_INPUTS.md);
+- [FMOD Engine iOS/tvOS 1.10.09 build 97915](https://www.fmod.com/download?version=1.10.09#fmodengine)
+  — choose FMOD Engine's iOS package, not FMOD Studio;
+- about 8 GiB free for a clean build;
+- for direct installation, an Apple Account in Xcode and a paired,
+  developer-ready Apple TV.
+
+Run the host doctor first. It needs neither Celeste nor FMOD and installs
+nothing:
+
+```bash
+./build-tvos.sh --check-host
+```
+
+### What the builder finds and what you provide
+
+| Kind | Values |
+| --- | --- |
+| Detected automatically | pinned SDK/workload, Xcode/tvOS SDK, build tools, a mounted FMOD SDK when unambiguous, known Celeste locations where available, paired Apple TVs, and eligible Personal Teams |
+| You provide when prompted | the Celeste game folder, FMOD SDK location if it is not mounted or is ambiguous, desired build mode, and local signing/device choices for direct install |
+| Optional advanced overrides | `CELESTE_GAME_ROOT`, `FMOD_SDK_ROOT`, `--game-root`, `--fmod-root`, `--bundle-id`, `--device-id`, `--team-id`, and the noninteractive flags documented below |
+
+Automatic detection never means accepting arbitrary inputs: both Celeste and
+FMOD still pass their exact validators before the build continues.
 
 ## Clone and submodules
 
@@ -96,10 +131,10 @@ Two user-owned inputs are mandatory:
   distribution from the [exact input matrix](CELESTE_INPUTS.md).
 - `FMOD_SDK_ROOT`: mounted FMOD Engine iOS/tvOS 1.10.09 build 97915 SDK.
 
-The root README's [clean game-file acquisition
-guide](../README.md#getting-a-clean-supported-celeste-copy) gives optional
-itch.io, Steam-console, and Epic/Legendary workflows. Steam and Legendary are
-acquisition tools only; neither is a host prerequisite or builder dependency.
+The [supported Celeste files guide](CELESTE_INPUTS.md) gives optional itch.io,
+Steam-console, and Epic/Legendary workflows plus the authoritative profile
+matrix. Steam and Legendary are acquisition tools only; neither is a host
+prerequisite or builder dependency.
 
 The exact validators are:
 
@@ -131,7 +166,7 @@ local configuration:
 --fmod-root DIR
 ```
 
-## Interactive modes
+## Build and install modes
 
 Run:
 

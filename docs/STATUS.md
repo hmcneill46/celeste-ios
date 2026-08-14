@@ -9,22 +9,29 @@ accepted device build runs Celeste 1.4.0.0 with Metal graphics, real FMOD
 audio, extended-controller gameplay, and durable Settings/save slots. It is
 not an App Store distribution.
 
-The integrated Stage 14 release-candidate audit passed a fresh public-clone
-native/managed/full-AOT build, unsigned-package verification, same-identity
-physical installation, all-chapter loading, Save Manager/soft reload, real
-Apple TV restart, replacement-install, controller, audio, lifecycle, branding,
-privacy, and repository gates. See the
-[release-candidate record](history/stages/TVOS_RELEASE_CANDIDATE_STAGE14_REPORT.md).
-Stage 15 added integrated one-time scan-to-connect QR pairing. Stage 16B added
-a live Apple Metal Performance HUD control. Stages 17B and 17C add strict
-automatic recognition and canonicalization for nine exact itch.io, Epic Games
-Store, and Steam Celeste 1.4.0.0 FNA inputs without changing the shared
-downstream tvOS product.
+| Capability | Current status |
+| --- | --- |
+| Gameplay | Full game and representative side content physically exercised on Apple TV 4K (3rd generation) |
+| Graphics/audio | Native Metal presentation and seven-bank FMOD audio |
+| Input | Extended controllers; DualSense physically accepted with rumble and PlayStation prompts |
+| Saves | Settings plus slots 0–2, compressed recovery generations, replacement-install and reboot restore |
+| Save Manager | Explicit local-network server, QR/manual authentication, validated backup/restore, and verified soft reload |
+| Apple TV behaviour | Home/background resume, graceful main-menu Quit, app artwork, Top Shelf, and optional Metal Performance HUD |
+| Inputs | Nine exact Celeste 1.4.0.0 FNA profiles from itch.io, Epic Games Store, and Steam |
+| Build routes | Local Apple silicon Mac or private GitHub compilation to an unsigned IPA |
 
-Stage 18C adds a separate public template for private GitHub Actions builds.
-For the v1.0.0-rc.2 candidate its manual-only workflow pins the frozen Stage 19
-product source, validates the same
-Celeste and FMOD inputs, runs the existing eight-phase full-AOT builder, and
+The release-candidate audit covered a clean public clone, native and managed
+reproducibility, full AOT/trimming, unsigned packaging, same-identity physical
+installation, all-chapter loading, Save Manager, soft reload, Apple TV reboot,
+replacement installation, controller, audio, lifecycle, branding, privacy, and
+repository checks. Later accepted work added QR pairing, the Metal Performance
+HUD, strict multi-store input recognition, improved builder diagnostics, the
+private cloud compilation template, and a more robust active-game Save Manager
+reload. The [chronological engineering history](history/README.md) contains the
+detailed evidence without requiring users to understand stage numbers.
+
+The private cloud workflow pins the accepted product source, validates the same
+Celeste and FMOD inputs, runs the normal eight-phase full-AOT builder, and
 publishes an unsigned IPA only to the user's private output Release. It does
 not add cloud services or networking to the Celeste app itself.
 
@@ -284,6 +291,8 @@ or an unsigned conventional tvOS IPA containing `Payload/Celeste.app`.
   tvOS availability, and this project makes no Apple TV Game Mode claim.
 - Apple's Metal HUD presentation and metric set are system-controlled and may
   change between tvOS releases; visible diagnostics can carry small overhead.
+- The current modern self-builder targets tvOS only. Legacy iOS source is
+  retained, but a modern iOS product is not currently supported.
 - No App Store, distribution-profile, paid entitlement, or universal hardware
   claim is made.
 

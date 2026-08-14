@@ -10,6 +10,127 @@ content manifest, package-layout markers, required/forbidden files, and expected
 assembly references. Unknown, modified, mixed, modded, XNA, and newer/older
 builds fail closed.
 
+## Which download should I use?
+
+Choose the store where you already own Celeste. You need only **one** supported
+game folder; the builder does not need a store client after that folder has been
+obtained.
+
+| Store | Simplest supported choice |
+| --- | --- |
+| itch.io | Download an unmodified Celeste 1.4.0.0 FNA package from your itch.io library. |
+| Steam | Use Steam's built-in console to download the tested public-2025 Linux depot. This is the recommended Steam route on a Mac. |
+| Epic Games Store | Use one clean Mac or Windows FNA package from your account. The optional Legendary commands below can obtain either. |
+
+The filenames and folder names are not proof of compatibility. After extracting
+the download outside this repository, let the validator identify it:
+
+```bash
+scripts/validate-celeste-input.sh --game-root "/path/to/Celeste"
+```
+
+### itch.io
+
+1. Sign in to the itch.io account that owns Celeste and open your library.
+2. Download an unmodified Celeste 1.4.0.0 FNA package represented in the matrix
+   below.
+3. Extract it outside this repository.
+4. Give the resulting folder or macOS app to `build-tvos.sh`.
+
+An arbitrary itch.io download is not accepted based on its filename alone; the
+validator checks the actual game, runtime, and content.
+
+### Steam — recommended Linux depot
+
+This route uses Steam's built-in console. The Linux files are lawful
+Celeste/FNA/content input for the builder; you do not run the Linux game on your
+Mac.
+
+1. Install Steam and sign in to an account that owns Celeste.
+2. Enter `steam://open/console` in a browser address bar and allow it to open
+   Steam.
+3. Open Steam's **Console** tab and enter:
+
+   ```text
+   download_depot 504230 504233 5880027853585448535
+   ```
+
+4. Steam normally shows no useful progress bar for this operation. Wait for the
+   completion message, for example:
+
+   ```text
+   Depot download complete: ".../steamapps/content/app_504230/depot_504233"
+   ```
+
+5. Use the exact path Steam prints. Copy or move the completed `depot_504233`
+   folder somewhere convenient outside Steam's content-depot area, such as
+   `~/Downloads/Celeste-Linux`.
+6. Give that folder to `./build-tvos.sh`.
+
+A complete supported Linux depot contains at least `Celeste.exe`,
+`Celeste.Content.dll`, `FNA.dll`, `Steamworks.NET.dll`, `Content/`, `lib/`, and
+`lib64/`.
+
+Other exact Steam inputs tested by this project are:
+
+```text
+# Linux 1.4.0.0 pinned 2021
+download_depot 504230 504233 1505052356460012099
+
+# Linux public 2025 (recommended)
+download_depot 504230 504233 5880027853585448535
+
+# macOS FNA 1.4.0.0
+download_depot 504230 504232 3271492884622616896
+```
+
+The Steam Windows FNA profile in the matrix is accepted if you already have
+that exact payload, but obtaining its unusual `opengl` branch offers no product
+benefit over the recommended Linux depot. The project does not recommend
+DepotDownloader to ordinary users.
+
+### Epic Games Store — optional Legendary route
+
+The project does not download Epic files. One optional way to obtain files you
+own on macOS is the open-source [Legendary CLI](https://github.com/derrod/legendary).
+Its current supported setup requires 64-bit Python 3.10 or newer. Check first:
+
+```bash
+python3 --version
+python3 -m pip install --user legendary-gl
+legendary auth
+legendary list
+```
+
+`legendary auth` signs in to your Epic account. Find Celeste in `legendary
+list` and note its **App Name**. A project test account reported `Salt`, but do
+not assume it is universal: use the App Name shown for your own account.
+
+Set that value and download **one** supported platform package:
+
+```bash
+EPIC_APP="<App Name shown by legendary list>"
+mkdir -p "$HOME/Celeste-Clean-Builds/Epic"
+
+# Natural choice on a Mac
+legendary install "$EPIC_APP" \
+  --platform Mac \
+  --base-path "$HOME/Celeste-Clean-Builds/Epic" \
+  --game-folder "Celeste-macOS-FNA-1.4.0.0" \
+  --download-only
+
+# Supported alternative
+legendary install "$EPIC_APP" \
+  --platform Windows \
+  --base-path "$HOME/Celeste-Clean-Builds/Epic" \
+  --game-folder "Celeste-Windows-FNA-1.4.0.0" \
+  --download-only
+```
+
+Legendary is an optional acquisition tool, not a dependency of this project.
+It is not needed after the game folder has been downloaded, and the builder
+never receives your Epic credentials.
+
 ## Accepted profiles
 
 | Store | Source OS | Game | Runtime | Profile | Canonical class | Status | Physical evidence |
@@ -56,14 +177,9 @@ Validate without building:
 scripts/validate-celeste-input.sh --game-root "$CELESTE_GAME_ROOT"
 ```
 
-The root README has [concise, store-specific
-instructions](../README.md#getting-a-clean-supported-celeste-copy) for
-obtaining a clean copy through an account that owns Celeste. Steam users should
-normally use the tested Linux depot through Steam's built-in console; there is
-no product benefit
-to obtaining the unusual Windows `opengl` branch. Epic owners may optionally
-use Legendary to download one supported Mac or Windows payload, but Legendary
-is not a builder dependency.
+The store-specific instructions above describe clean acquisition through an
+account that owns Celeste. They are conveniences, not builder dependencies:
+once the folder exists, the builder only reads it.
 
 The selected game files are read-only inputs. Extraction, decompilation,
 normalization, and generated content remain in ignored local build directories.
@@ -85,6 +201,8 @@ An unsupported but recognizable installation reports that the exact build is
 not yet supported. Do not rename, patch, or combine files from different
 distributions to imitate a supported profile.
 
-The separate required native FMOD input remains the official FMOD Engine
-iOS/tvOS 1.10.09 build 97915 SDK. The `.bank` files bundled with Celeste are
-game content and are not a substitute for that SDK.
+The separate required native FMOD input remains the official
+[FMOD Engine iOS/tvOS 1.10.09 build 97915](https://www.fmod.com/download?version=1.10.09#fmodengine)
+SDK. Choose FMOD Engine's iOS package, not FMOD Studio; the iOS package contains
+the required tvOS libraries. The `.bank` files bundled with Celeste are game
+content and are not a substitute for that SDK.

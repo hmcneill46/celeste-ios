@@ -1,602 +1,283 @@
 # Celeste for Apple TV
 
-An unofficial community tvOS port that runs Celeste natively on Apple TV from
-your own game files. Gameplay, extended-controller input, FMOD audio, durable
-saves, a layered home-screen icon, and Top Shelf artwork are working on the
-tested hardware.
+An unofficial community port that builds a native Apple TV version of Celeste
+from game files you already own. It provides full controller gameplay, Metal
+graphics, FMOD audio, durable saves, and Apple TV-specific menus and lifecycle
+behaviour.
 
-The original repository is an iOS/FNA port. The `tvos-port` branch preserves
-that legacy lane while adding the modern .NET tvOS host, reproducible
-self-builder, Apple TV lifecycle support, and the accepted tvOS features
-described below.
+The port is mature and playable. It has been extensively tested on an Apple TV
+4K (3rd generation, 128 GB) and supports tvOS 16.0 or later. Other arm64 Apple
+TV models may work, but have not received the same physical acceptance.
 
-This repository contains no Celeste game content and no proprietary FMOD SDK
-material. You must own Celeste and obtain FMOD from FMOD's official website.
-The recommended entry point is [`./build-tvos.sh`](build-tvos.sh), and a free
-Apple Account is sufficient for direct installation.
+This repository does **not** contain Celeste or the proprietary FMOD SDK. You
+supply both from your own accounts; the builder validates them and produces the
+Apple TV app locally or in your own private GitHub repository.
 
-## Status
+## Start here
 
-The personal-use tvOS build is playable on physical Apple TV hardware. It uses
-.NET 10, FNA, Metal, full AOT, full trimming, real FMOD audio, and a
-compressed, corruption-recoverable UserDefaults save bridge.
+You need:
 
-The builder supports nine exact **Celeste 1.4.0.0 FNA** input profiles from
-itch.io, Epic Games Store, and Steam on Linux, macOS, or Windows where listed.
-It detects the actual payload automatically and rejects unknown or modified
-builds. See [`docs/CELESTE_INPUTS.md`](docs/CELESTE_INPUTS.md) for the precise
-matrix and validation status.
+1. An unmodified supported **Celeste 1.4.0.0 FNA** download from itch.io,
+   Steam, or Epic Games Store.
+2. **FMOD Engine iOS/tvOS 1.10.09 build 97915** from FMOD.
+3. A way to compile:
+   - an Apple silicon Mac for the local builder, or
+   - your own private GitHub repository for cloud compilation.
+4. A way to sign and install the app on your Apple TV. A cloud-built IPA is
+   unsigned and cannot be installed until it is signed.
 
-## Choose how to build
+The guides below explain each part. You do not need to understand FNA, AOT, or
+the native dependency pipeline to follow them.
+
+## Choose how you want to build
+
+```mermaid
+flowchart TD
+    A["I want Celeste on Apple TV"] --> B{"Apple silicon Mac available?"}
+    B -->|Yes| C["Build locally with build-tvos.sh"]
+    B -->|No| D["Compile in your own private GitHub repository"]
+    C --> E["Sign and install on Apple TV"]
+    D --> F["Download the unsigned IPA"]
+    F --> E
+```
+
+### Easiest if you do not have a Mac
+
+Use the [private GitHub cloud builder](docs/CLOUD_BUILDING.md). GitHub supplies
+the macOS build machine, so Windows and Linux users can compile a
+**signing-ready unsigned IPA** without owning a Mac.
+
+You create your own repository from the public template and make it private,
+then upload one Celeste ZIP and the original FMOD DMG. The workflow refuses to
+read inputs in a public repository, keeps the output private, and includes a
+cleanup workflow for the input and output Releases. It never asks for Steam,
+Epic, FMOD-account, or Apple-signing credentials.
+
+Cloud compilation does **not** sign or install the app. You still need a
+tvOS-capable signing and installation method afterward.
+
+→ **[Build in the cloud](docs/CLOUD_BUILDING.md)**
 
 ### Build locally on a Mac
 
-Use [`./build-tvos.sh`](build-tvos.sh) for compilation, signing, and direct
-Apple TV installation on a supported Apple silicon Mac. Continue with the
-[local quick start](#local-mac-quick-start) below.
+On a supported Apple silicon Mac, [`./build-tvos.sh`](build-tvos.sh) validates
+the inputs, builds the native and managed code, and can either:
 
-### Build in the cloud
+- sign and install directly using an Apple Account and a paired Apple TV;
+- create an unsigned IPA; or
+- do both.
 
-No Mac is required for compilation. Create your own **private** repository from
-the [public cloud-builder template](https://github.com/hmcneill46/celeste-tvos-cloud-builder),
-upload one Celeste ZIP and the official FMOD DMG privately, then click **Run
-workflow**. It produces a verified unsigned IPA; signing and installation are
-separate.
+The accepted setup uses full Xcode, .NET SDK 10.0.302 with tvOS workload set
+10.0.302.0, GNU Make, and Mono. The host doctor reports missing tools without
+requiring Celeste or FMOD:
 
-→ **[Cloud builder guide](docs/CLOUD_BUILDING.md)**
+```bash
+./build-tvos.sh --check-host
+```
 
-## What works
+CMake, Ninja, and ripgrep are **not** required. See the prerequisite checklist
+and copyable clone commands in the [local build guide](docs/BUILDING.md).
 
-- Native arm64 tvOS gameplay and Metal rendering
-- Music, ambience, UI audio, gameplay effects, and cutscene audio
-- Extended game controllers; Sony DualSense was physically tested
-- Movement, Jump, Dash, Grab, Confirm, Cancel, Pause, cutscene skip, and rumble
-- Selectable Automatic, Xbox, PlayStation, Nintendo Switch, and Stadia prompts
-- Live tvOS-only toggle for Apple's native Metal Performance HUD
+## Step 1 — Get your Celeste files
+
+The builder supports nine exact **Celeste 1.4.0.0 FNA** input profiles from
+itch.io, Steam, and Epic Games Store across the tested Linux, macOS, and Windows
+packages. It detects the actual contents automatically rather than trusting a
+folder name.
+
+The simplest choice depends on the store you own it on:
+
+- **itch.io:** download one of the listed unmodified 1.4.0.0 FNA packages.
+- **Steam:** the recommended route uses Steam's built-in console to download
+  the tested Linux depot; it is only input for the builder and is not run on
+  your Mac.
+- **Epic Games Store:** obtain one tested Mac or Windows package from your own
+  account; an optional Legendary-based route is documented.
+
+Everest/modded, XNA, mixed, unknown, and other-version installations are not
+currently supported. The validator rejects them instead of risking a broken
+build.
+
+→ **[Choose and obtain supported Celeste files](docs/CELESTE_INPUTS.md)**
+
+## Step 2 — Get FMOD
+
+Download exactly **FMOD Engine iOS/tvOS 1.10.09 build 97915** from the
+[official version-specific FMOD Engine page](https://www.fmod.com/download?version=1.10.09#fmodengine).
+
+- Choose **FMOD Engine**, not FMOD Studio.
+- Choose the **iOS** package; it contains the tvOS libraries this project uses.
+- Use version **1.10.09** (also written **1.10.09, build 97915**), not FMOD 2.x
+  or another release.
+- FMOD may ask you to sign in before it shows the older download.
+
+Download it through your own FMOD account and keep the DMG outside the
+repository. The project validates it but does not redistribute it.
+
+## Step 3 — Build
+
+- **Apple silicon Mac:** follow [Build locally](docs/BUILDING.md), then run
+  `./build-tvos.sh`.
+- **Windows, Linux, or no suitable Mac:** follow [Build in the
+  cloud](docs/CLOUD_BUILDING.md) to create the unsigned IPA privately.
+
+The local builder has eight numbered phases, privacy-safe progress heartbeats,
+and full logs under ignored `dist/logs/`. If it stops, start with
+`dist/logs/last-error.txt`.
+
+## Step 4 — Sign and install
+
+### Local direct install
+
+With an Apple Account configured in Xcode, a paired developer-ready Apple TV,
+and a stable bundle identifier, the local builder can provision, sign, install,
+launch, and verify Celeste. A free Personal Team is sufficient, although its
+development provisioning normally expires after about seven days and then
+needs re-signing.
+
+### Unsigned IPA
+
+Local IPA mode and the cloud builder both produce
+`Celeste-tvOS-unsigned.ipa`. Its conventional `Payload/Celeste.app` layout is
+ready for a tvOS-capable signer, but it has no usable signature or provisioning
+profile and cannot be installed directly. Signing tools and services are
+outside this project's control; keep the same final bundle identifier if you
+want replacement installs to retain the same save domain.
+
+See [Building](docs/BUILDING.md#build-and-install-modes) for the accepted local
+install flow and [Troubleshooting](docs/TROUBLESHOOTING.md#unsigned-ipa-will-not-install-directly)
+for unsigned-package help.
+
+## What works?
+
+### Gameplay
+
+- Native arm64 tvOS gameplay with Metal rendering
+- Real FMOD music, ambience, UI sounds, effects, and cutscene audio
+- Extended-controller movement, Jump, Dash, Grab, menus, cutscene skip, and
+  rumble; DualSense was physically tested
 - Durable Settings and all three normal save slots
-- Transparent compressed storage that fixes the later-game 32 KiB save limit
-- Recovery from a corrupt newest save generation
-- Explicitly activated local-network Save Manager backup and validated restore
-- One-time scan-to-connect QR pairing with the existing URL/code fallback
-- Local generation of the layered strawberry icon and static Top Shelf artwork
-- Direct Personal Team installation or a signing-ready unsigned IPA
+- Transparent compressed storage with recovery generations; Existing v1 installs require no manual migration
 
-## What you need
+### Apple TV integration
 
-For either route:
+- **Options → Controller Prompts** for Automatic, Xbox, PlayStation, Nintendo
+  Switch, and Stadia on-screen button artwork; this changes artwork only, not
+  mappings
+- **Options → Performance HUD** for Apple's native Metal diagnostics
+- A safe **Leave Celeste** flow instead of the old desktop-style blank screen
+- Locally generated layered app icon and Top Shelf artwork
 
-- A lawful, unmodified supported **Celeste 1.4.0.0 FNA** installation.
-- The official **FMOD Engine for iOS/tvOS 1.10.09, build 97915** SDK.
+### Save management
 
-For a local build:
+- Explicitly activated same-network Save Manager
+- One-time QR pairing, plus the manual address and six-digit-code fallback
+- Download/backup, validated replacement, slot deletion, and Settings reset
+- Confirm-driven verified soft reload without restarting the FNA runtime
 
-- An Apple silicon Mac. The proven host used macOS 26.3.
-- Full Xcode 26.6 with the tvOS 26.5 SDK and command-line tools selected.
-- A paired, developer-ready arm64 Apple TV running tvOS 16 or later. The tested
-  device is an Apple TV 4K (3rd generation).
-- An extended Bluetooth game controller. DualSense is tested.
-- Roughly 8 GiB of free disk space for a clean build.
+### Building
 
-For cloud compilation instead:
+- Local Mac build, signing, and direct install
+- Private GitHub compilation for an unsigned IPA
+- Exact multi-store input recognition and reproducible downstream generation
 
-- A GitHub account and a private repository made from the cloud template.
-- One ZIP containing the supported Celeste installation and the original FMOD
-  DMG. The files are temporarily stored as private GitHub Release assets.
-
-The cloud route needs no Mac, Git, terminal, or store/FMOD/Apple credentials
-for compilation. The resulting IPA is unsigned; provisioning, signing, and
-installation still happen separately.
-
-Exact tested and potentially compatible configurations are separated in
-[`docs/STATUS.md`](docs/STATUS.md).
-
-### Comes with macOS and full Xcode
-
-The supported full-Xcode setup supplies Git, Python 3, Swift, the tvOS SDK and
-Apple command-line utilities used for compilation, archives, assets, signing,
-inspection, and packaging. Command Line Tools by themselves are not a
-substitute for full Xcode.
-
-### Install separately
-
-- [**.NET SDK 10.0.302**](https://dotnet.microsoft.com/download/dotnet/10.0),
-  followed by tvOS workload set **10.0.302.0**.
-- [**GNU Make**](https://www.gnu.org/software/make/), which provides the
-  `gmake` command used by pinned MoltenVK.
-- [**Mono**](https://www.mono-project.com/download/stable/), which provides
-  `monodis` for validating Celeste's managed assembly identity.
-
-If you already use Homebrew, the last two can be installed together with
-`brew install make mono`. Homebrew is optional, and the builder never invokes
-it. CMake, Ninja, and ripgrep are **not** required by the public self-builder.
-
-### Builder validates automatically
-
-Before locating Celeste or FMOD, check only the Mac and tools:
-
-```bash
-./build-tvos.sh --check-host
-```
-
-It reports every missing command in one run, explains why it is needed, and
-writes a privacy-safe failure summary to `dist/logs/last-error.txt`. It installs
-nothing.
-
-## Local Mac quick start
-
-```bash
-git clone https://github.com/hmcneill46/celeste-ios.git
-cd celeste-ios
-git -c url.https://github.com/.insteadOf=git://github.com/ \
-  submodule update --init --recursive
-./build-tvos.sh --check-host
-./build-tvos.sh
-```
-
-The one-command URL rewrite is local to that Git invocation. It is needed
-because the pinned historical FNA revision names its nested repositories with
-GitHub's retired `git://` transport; the repositories are still fetched from
-their official HTTPS URLs.
-
-The builder checks the Mac, finds and validates Celeste and FMOD, checks Apple
-tooling, generates local artwork, prepares the locked dependencies, builds the
-game, and then installs it or creates an IPA. It installs no development tools,
-accepts no licence for you, and downloads neither Celeste nor FMOD.
-
-Its eight numbered phases show start and completion times. Long native or AOT
-commands print a privacy-safe heartbeat every 60 seconds, so a healthy build
-does not appear stuck. Use `--verbose` to stream the underlying tool output
-while retaining full logs, or `--no-color` to disable interactive colour.
-
-Choose one of these when prompted:
-
-1. Build, sign, and install on an Apple TV.
-2. Create a signing-ready unsigned IPA.
-3. Build both.
-4. Validate prerequisites only.
-
-Run `./build-tvos.sh --help` for automation options. Advanced and
-noninteractive examples are in [`docs/BUILDING.md`](docs/BUILDING.md).
-
-## Celeste game files
-
-You must legally own Celeste. The builder accepts exact tested Celeste 1.4.0.0
-FNA profiles from itch.io, Epic Games Store, and Steam, as listed in the
-[supported-input matrix](docs/CELESTE_INPUTS.md):
-
-1. Obtain one listed build through your own purchase or existing entitlement.
-2. Extract it somewhere outside this repository.
-3. Give the extracted folder to the builder by pasting or dragging it into
-   Terminal, or set `CELESTE_GAME_ROOT`.
-
-The builder resolves the supported Linux, Windows, macOS app-bundle, and
-single-wrapper layouts, then prints the detected store/platform/runtime
-profile. Its hash, assembly, reference, content, and package-marker validation
-is authoritative. Modified, Everest, mixed, XNA, unknown, and other-version
-inputs are rejected; there is no accept-any-game fallback.
-
-Never copy game files, generated source, or generated artwork into Git.
-
-### Getting a clean supported Celeste copy
-
-These are ways to obtain your own unmodified game files. Steam and Legendary
-are optional acquisition tools, not builder dependencies; once a clean folder
-exists, `build-tvos.sh` only reads it. The [exact support
-matrix](docs/CELESTE_INPUTS.md) remains authoritative.
-
-<details>
-<summary><strong>itch.io</strong></summary>
-
-1. Sign in to the itch.io account that owns Celeste and open your library.
-2. Download an unmodified Celeste 1.4.0.0 FNA package listed in the supported
-   matrix.
-3. Extract it somewhere outside this repository.
-4. Paste or drag the extracted folder/app into the builder when prompted, or
-   pass it with `--game-root`.
-
-The validator identifies the payload itself; an arbitrary or modified itch.io
-download is not accepted merely because of its filename.
-
-</details>
-
-<details>
-<summary><strong>Steam (recommended: tested Linux depot)</strong></summary>
-
-This route uses Steam's own built-in console. The Linux files are only lawful
-Celeste/FNA/content input for the builder; you do not need to run the Linux game
-on your Mac.
-
-1. Install Steam and sign in to an account that owns Celeste. Quit and reopen
-   Steam if its console tab is not already available.
-2. Enter `steam://open/console` in a web-browser address bar and allow the
-   browser to open Steam.
-3. Select Steam's new **Console** tab and enter the recommended tested command:
-
-   ```text
-   download_depot 504230 504233 5880027853585448535
-   ```
-
-4. Steam normally gives no useful progress bar for a console depot download.
-   Wait for its completion message, for example:
-
-   ```text
-   Depot download complete: ".../steamapps/content/app_504230/depot_504233"
-   ```
-
-5. Use the exact path Steam prints. Copy or move the completed
-   `depot_504233` directory somewhere convenient outside Steam's content-depot
-   area, for example `~/Downloads/Celeste-Linux`.
-6. Give that directory to `./build-tvos.sh`.
-
-A complete tested Linux depot contains at least `Celeste.exe`,
-`Celeste.Content.dll`, `FNA.dll`, `Steamworks.NET.dll`, `Content/`, `lib/`, and
-`lib64/`. The authoritative check is:
-
-```bash
-scripts/validate-celeste-input.sh --game-root "/path/to/Celeste-Linux"
-```
-
-Other exact Steam inputs tested by this project are:
-
-```text
-# Linux 1.4.0.0 pinned 2021
-download_depot 504230 504233 1505052356460012099
-
-# Linux public 2025 (recommended)
-download_depot 504230 504233 5880027853585448535
-
-# macOS FNA 1.4.0.0
-download_depot 504230 504232 3271492884622616896
-```
-
-The exact Steam Windows FNA fixture in the support matrix is accepted if you
-already have it, but obtaining that unusual branch offers no advantage over
-the recommended Linux depot.
-
-</details>
-
-<details>
-<summary><strong>Epic Games Store (optional Legendary route)</strong></summary>
-
-The project does not download Epic files. One optional way to obtain your own
-entitled files on macOS is the open-source
-[Legendary CLI](https://github.com/derrod/legendary). Its current official
-requirements specify 64-bit Python 3.10 or newer; check with
-`python3 --version`, then install and authenticate if needed:
-
-```bash
-python3 -m pip install --user legendary-gl
-legendary auth
-legendary list
-```
-
-`legendary auth` signs in to your Epic account. Find Celeste in
-`legendary list` and note its **App Name**. The project test account reported
-`Salt`, but confirm your own result instead of assuming that value. Set the
-verified name, then download either one of the supported payloads:
-
-```bash
-EPIC_APP="<App Name shown by legendary list>"
-mkdir -p "$HOME/Celeste-Clean-Builds/Epic"
-
-# Natural choice on a Mac
-legendary install "$EPIC_APP" \
-  --platform Mac \
-  --base-path "$HOME/Celeste-Clean-Builds/Epic" \
-  --game-folder "Celeste-macOS-FNA-1.4.0.0" \
-  --download-only
-
-# Supported alternative
-legendary install "$EPIC_APP" \
-  --platform Windows \
-  --base-path "$HOME/Celeste-Clean-Builds/Epic" \
-  --game-folder "Celeste-Windows-FNA-1.4.0.0" \
-  --download-only
-```
-
-You only need one platform payload. Legendary is not needed after the folder
-has been downloaded and is never installed or invoked by this project.
-
-</details>
-
-## FMOD SDK
-
-The exact accepted SDK is **FMOD Engine for iOS/tvOS 1.10.09, build 97915**.
-Obtain it using your own account from [FMOD's official download
-site](https://www.fmod.com/download); the older release may be listed in the
-archived/previous versions available to your account. Download the iOS SDK,
-mount its DMG, and rerun the builder. The builder detects one unambiguous
-mounted SDK or asks for its root; `FMOD_SDK_ROOT` is also supported.
-
-FMOD 2.x and other releases are rejected. This project does not redistribute
-FMOD, automate an FMOD login, or use unofficial mirrors.
-
-## Apple and Xcode setup
-
-Install full [Xcode](https://apps.apple.com/app/xcode/id497799835), launch it
-once, accept its licence, and let first-run components finish. If more than one
-Xcode is installed, select the intended copy, for example:
-
-```bash
-sudo xcode-select -s /Applications/Xcode.app/Contents/Developer
-```
-
-Install [.NET 10 SDK 10.0.302](https://dotnet.microsoft.com/download/dotnet/10.0),
-then, from this clone, install the exact workload set if it is not already
-present:
-
-```bash
-dotnet workload install tvos --version 10.0.302.0
-```
-
-The builder itself never runs these installation commands.
-
-### Pairing an Apple TV
-
-1. Put the Mac and Apple TV on the same network and wake the Apple TV.
-2. On Apple TV, open **Settings > Remotes and Devices > Remote App and
-   Devices**.
-3. In Xcode, open **Window > Devices and Simulators**, select the discovered
-   Apple TV, and enter the on-screen pairing code if requested.
-4. Enable **Developer Mode** on the Apple TV under **Settings > Privacy &
-   Security** when tvOS exposes that option, restart if requested, and confirm
-   it in Xcode.
-5. Keep the Apple TV awake while running the builder.
-
-See Apple's [current Xcode device-pairing
-help](https://help.apple.com/xcode/mac/current/#/dev23aab79b4) if the device does
-not appear.
-
-## Build options
-
-### Install directly on Apple TV
-
-In **Xcode > Settings > Accounts**, add your Apple Account. Xcode creates a
-free Personal Team; paid Apple Developer Program membership is not required.
-The builder selects a Personal Team and paired Apple TV, configures automatic
-development provisioning, publishes Release `tvos-arm64` with full AOT and
-trimming, signs, installs, launches, and waits for the seven FMOD banks and the
-first real Celeste draw.
-
-The locally chosen bundle identifier is the app's identity. Keep it unchanged
-when re-signing. Changing it creates a separate app/defaults domain, so existing
-saves can appear missing because tvOS sees a different app.
-
-Personal Team provisioning expires after about seven days. Run
-`./build-tvos.sh` again to re-sign and reinstall, retaining the same bundle
-identifier.
-
-### Create a signing-ready IPA
-
-The IPA mode writes:
-
-```text
-dist/Celeste-tvOS-unsigned.ipa
-└── Payload/
-    └── Celeste.app/
-```
-
-This is a **signing-ready unsigned IPA**, not an installable app. It contains
-no usable development signature or provisioning profile. A tvOS-capable
-external signer must supply those before installation.
-
-The conventional payload structure has been statically verified for tools
-such as atvloadly and Sideloadly, but an atvloadly physical installation has
-not been part of project acceptance. This repository does not depend on a
-third-party signing service and never handles credentials for one. If an
-external signer changes the bundle identifier, tvOS gives the app a different
-save domain.
-
-## Updating and re-signing
-
-Pull the same `tvos-port` branch, retain the ignored local configuration and
-bundle identifier, then run the builder again. `./build-tvos.sh --clean` clears
-only Stage 8 build/output caches. `./build-tvos.sh --reset-config` forgets saved
-local paths and choices without touching installed Apple TV saves.
-
-## Saves
-
-Settings and save slots 0, 1, and 2 are durable. The storage bridge maintains
-two complete checksummed generations, compresses each logical file separately,
-and falls back to the older valid one if the newest is corrupt. Celeste still
-reads and writes ordinary uncompressed save files while it runs. This fixes the
-old 32 KiB per-slot limit that could reject normal progress in Chapter 5.
-
-Existing v1 installs require no manual migration. They load unchanged and move
-to v2 on the next successful changed save while retaining the older recovery
-generation. Accepted testing covered the original Chapter 5 failure,
-termination, Apple TV restart, and replacement installation with the same app
-identity.
-
-There is no iCloud, cloud backup, cross-device sync, or uninstall-survival
-guarantee. Saves are currently **shared between Apple TV users**. Personal
-Teams cannot provision the Apple User Management entitlement used for
-automatic per-user app storage, so this project intentionally uses one normal
-app-private defaults domain.
+The technical acceptance matrix is in [Project status](docs/STATUS.md).
 
 ## Save Manager
 
-To back up or restore the ordinary Celeste Settings and save slots:
+Open **Options → Save Manager**, make sure your phone or computer is on the
+same local network, and scan the QR code on the TV. The browser opens the
+authenticated manager without typing the six-digit code. A numeric address and
+code remain available as a fallback.
 
-1. In Celeste, open **Options** and choose **Save Manager**.
-2. Make sure your phone or computer is on the same local network, then scan the
-   QR code shown on the Apple TV. The authenticated manager opens directly; no
-   code needs to be typed.
-3. If scanning is unavailable, open the displayed numeric address manually and
-   enter the temporary six-digit access code shown on the TV.
-4. Choose **Download backup (.zip)** for one archive containing every present
-   ordinary `.celeste` file, or download an individual file.
-5. To restore one file, choose its fixed target, select the matching `.celeste`
-   file, and confirm **Replace**. Settings and SaveData are validated by the
-   same exact AOT-safe serializers used by the game before anything is stored.
-6. A save slot can be deliberately deleted; **Reset Settings** makes Celeste
-   recreate safe defaults during the following reload. Invalid, oversized,
-   stale, or interrupted requests keep the previous durable generation.
-7. After a successful change, return to the Apple TV and press **Confirm**.
-   Celeste performs a verified high-level soft reload and returns to its main
-   menu with the new save/settings state.
+The server is dormant during normal gameplay and starts only while its menu is
+open. It can back up or replace the four normal Celeste files (Settings and
+slots 0–2). After a successful change, press Confirm on the Apple TV; Celeste
+verifies the imported state and returns to a functional main menu. If that
+verification fails, fully close the app from the Apple TV app switcher and
+reopen it.
 
-Exported and imported files are normal uncompressed Celeste `.celeste` files;
-the internal compressed A/B format is never exposed. Editing remains an offline
-workflow: download a file, edit it locally, then replace the matching fixed
-target. The listener and Bonjour advertisement remain completely dormant during
-normal gameplay, start only after this menu choice, and stop when the screen is
-closed, the app backgrounds, or its short inactivity limit expires. It is a
-temporary same-LAN personal tool, not cloud or internet sync. No fixed IP or
-manual port setup is required. Each QR pairing is temporary, belongs only to
-the current Save Manager activation, and can authenticate one browser once;
-the manual URL and access code remain available for another device.
+Save Manager is a temporary local-network tool, not cloud sync. Saves are
+shared between Apple TV users in the same app installation, do not survive an
+uninstall, and are not backed up to iCloud.
 
-The soft reload retains the original SDL/FNA/FMOD runtime. It discards the old
-Celeste scene, Settings, input bindings, SaveData and file-select inventory only
-after the imported durable generation has been re-materialized and verified.
-Gameplay stays blocked until the new main menu passes verification. If reload
-fails, the already stored change remains safe; fully close Celeste from the
-Apple TV app switcher and reopen it as the recovery fallback.
+## Supported game versions
 
-## Controllers
+Only the nine listed unmodified Celeste 1.4.0.0 FNA profiles are supported.
+They normalize to one locked downstream game, but that does not mean every
+release from those storefronts is accepted. Review the [exact profile
+matrix](docs/CELESTE_INPUTS.md) if validation rejects your files.
 
-An extended physical controller is the intended gameplay input. DualSense was
-physically tested for movement, Jump, Dash, Grab, Confirm, Cancel, Pause,
-cutscene skip, and rumble/haptic cleanup. Other Xbox, DualShock, and MFi-style
-extended controllers may work through normal SDL/FNA mappings but have not been
-certified by this project. The Siri Remote is not an intended Celeste gameplay
-controller.
+Everest/mod support and XNA inputs are not currently supported. The modern
+self-builder targets tvOS; the legacy iOS source remains in the repository but
+is not a current modern-iOS build path.
 
-### Controller button prompts
+## Current limitations
 
-Open **Options → Controller Prompts** and choose **Automatic**, **Xbox**,
-**PlayStation**, **Nintendo Switch**, or **Stadia**. The choice updates the
-on-screen button artwork; it never remaps controls or changes which physical
-button performs Jump, Dash, Grab, Confirm, or Cancel.
+- Personal-use self-build only; no App Store distribution is provided.
+- The cloud result is unsigned and requires separate signing and installation.
+- Free Personal Team installs generally need re-signing after about seven days.
+- Apple User Management is unavailable with Personal Team provisioning, so
+  saves are shared between Apple TV users.
+- There is no iCloud/cloud-save sync or uninstall-survival guarantee.
+- DualSense is the physically accepted controller; the Siri Remote is not an
+  intended gameplay controller.
 
-Automatic uses Celeste/FNA's known controller identities first, then Apple's
-current-controller product category for DualSense, DualShock 4, and Xbox
-controllers. DualSense-to-PlayStation selection is physically verified.
-Nintendo Switch and Stadia retain Celeste's exact known-controller detection,
-with manual selection available when tvOS cannot identify the family reliably.
-Unknown extended controllers keep Celeste's safe existing/default artwork.
-
-This is a small host preference stored separately from `settings.celeste`.
-Importing or resetting Settings through Save Manager therefore does not change
-the selected prompt family.
-
-### Metal Performance HUD
-
-Open **Options → Performance HUD** to show or hide Apple's native Metal
-Performance HUD immediately. It reports Apple-controlled diagnostics such as
-FPS, frame interval, GPU time, presentation information, memory, and a frame
-graph; the exact layout can vary by tvOS release.
-
-The default is **Off**. The selection is a tiny host-only preference and
-survives relaunch; it is not part of `settings.celeste`, SaveData, Stage 9B
-storage, or Save Manager import/export. No Celeste restart, Xcode connection,
-or Apple TV **Developer → Graphics HUD** setting is required. HUD logging stays
-disabled. Accepted testing found no measurable practical difference while the
-overlay was Off, though any enabled diagnostic overlay can theoretically add
-small measurement overhead.
-
-## Leaving Celeste
-
-Choosing **Quit** from Celeste's main menu safely verifies durable progress and
-opens a **Leave Celeste** screen. Use the Apple TV TV/Home control to return to
-the Home Screen. tvOS normally backgrounds rather than terminates applications,
-so reopening Celeste may resume the same process; the port removes the guidance
-screen and returns that still-valid runtime to the main menu instead of leaving
-the old blank/frosted surface.
-
-While the guidance is still in the foreground, **Back** returns directly to the
-main menu. Pause-menu **Save and Quit** remains the separate Celeste command
-that saves and returns to the main menu.
-
-The Save Manager normally uses its own Confirm-driven soft reload. Closing from
-the Apple TV app switcher is needed only if that reload reports a verification
-failure.
-
-## Tested hardware and software
-
-| Item | Proven configuration |
-| --- | --- |
-| Mac | Apple M1 MacBook Air, macOS 26.3, arm64 |
-| Xcode / tvOS SDK | Xcode 26.6 / tvOS SDK 26.5 |
-| .NET | SDK 10.0.302 / workload set 10.0.302.0 |
-| Deployment target | tvOS 16.0 |
-| Apple TV | Apple TV 4K (3rd generation), `AppleTV14,1` |
-| Controller | Sony DualSense |
-| Celeste | 1.4.0.0 FNA; nine exact itch.io/Epic/Steam profiles |
-| FMOD | Engine iOS/tvOS 1.10.09, build 97915 |
-
-Other arm64 Apple TV models and newer compatible tvOS versions may work, but
-have not been physically tested here.
-
-## Limitations
-
-- Personal-use self-build only; no App Store package or support.
-- Personal Team installs need re-signing about every seven days.
-- Saves are shared between Apple TV users and do not sync to the cloud.
-- Save Manager supports fixed validated replace/reset/delete operations, but no
-  unattended sync, cloud service, or in-browser XML editor.
-- QR pairing is local-LAN only, expires quickly, and is one-time; the numeric
-  URL plus access code remains the compatibility fallback.
-- Save Manager changes reload in the existing runtime; the Apple TV app
-  switcher remains the conservative fallback if reload verification fails.
-- Only the exact FNA profiles in the supported-input matrix are accepted;
-  other stores, platforms, versions, XNA builds, and modified installs are not.
-- DualSense is the only physically accepted controller; the Siri Remote is not
-  a gameplay controller.
-- The arm64 simulator remains deliberately no-audio because the required FMOD
-  1.10.09 simulator archives are x86_64-only.
-- Apple's native Performance HUD layout and available metrics may change with
-  tvOS; it is a diagnostics aid rather than a stable gameplay interface.
-- The app is large (roughly 1.1 GiB before IPA compression) because it packages
-  the user's full content and seven FMOD banks.
-- External IPA re-signing/install tools remain outside this project's control.
+More precise tested-versus-compatible boundaries are in
+[Project status](docs/STATUS.md).
 
 ## Troubleshooting
 
-Start with [`docs/TROUBLESHOOTING.md`](docs/TROUBLESHOOTING.md). Complete logs
-are written below ignored `dist/logs/`. Every stopped builder invocation names
-`dist/logs/last-error.txt`; a failed logged command immediately prints a bounded
-privacy-redacted diagnostic tail and names its complete command log.
-`dist/build-summary.txt` contains a privacy-safe success summary. Do not
-post game files, FMOD files, signed apps/IPAs, provisioning profiles,
-certificates, account details, Team IDs, or device IDs in an issue.
+Start with the [beginner issue index](docs/TROUBLESHOOTING.md#common-questions)
+for game-file, FMOD, cloud, signing, save, and Save Manager problems. Build
+failures name a complete log and write a privacy-safe summary to
+`dist/logs/last-error.txt`.
 
-## Advanced/manual build
+Never post Celeste files, FMOD files, signed apps/IPAs, Apple credentials,
+provisioning profiles, certificates, Team IDs, or device identifiers in an
+issue.
 
-[`docs/BUILDING.md`](docs/BUILDING.md) documents noninteractive builder flags,
-ignored outputs, and internal verification. [`docs/STATUS.md`](docs/STATUS.md)
-summarizes the architecture. The [documentation index](docs/README.md) links
-current guides and the preserved [engineering history](docs/history/README.md).
-The original legacy Xamarin.iOS project remains in the repository but is not
-the recommended tvOS workflow.
+## For developers
 
-## Credits
+The beginner path is intentionally short; the engineering detail is still
+available:
 
-This work builds on [RoootTheFox/celeste-ios](https://github.com/RoootTheFox/celeste-ios)
-and its contributors, including the original FNA/iOS port work and native build
-foundation. Celeste is by Extremely OK Games / Maddy Makes Games. Runtime and
-native work uses [FNA](https://github.com/FNA-XNA/FNA),
+- [Documentation hub](docs/README.md)
+- [Project status and architecture](docs/STATUS.md)
+- [Advanced local build and reproducibility](docs/BUILDING.md)
+- [Native dependency pipeline](native/README.md)
+- [Contributing](CONTRIBUTING.md)
+- [Development and acceptance history](docs/history/README.md)
+
+The original Xamarin.iOS project is retained for provenance and legacy work,
+but the current modern builder is tvOS-only.
+
+## Project history and release candidates
+
+- [v1.0.0-rc.2 release notes](docs/releases/v1.0.0-rc.2.md)
+- [Current release-candidate manifest](tvos/release-candidates/v1.0.0-rc.2.json)
+- [Chronological engineering history](docs/history/README.md)
+
+Historical stage reports record how the port was proven. They are useful for
+debugging and reproducibility, but are not required reading to build the app.
+
+## Credits and legal boundary
+
+This work builds on
+[RoootTheFox/celeste-ios](https://github.com/RoootTheFox/celeste-ios) and its
+contributors, including the original FNA/iOS port and native build foundation.
+Celeste is by Extremely OK Games / Maddy Makes Games. Runtime and native work
+uses [FNA](https://github.com/FNA-XNA/FNA),
 [SDL](https://github.com/libsdl-org/SDL),
 [FNA3D](https://github.com/FNA-XNA/FNA3D),
 [FAudio](https://github.com/FNA-XNA/FAudio),
 [Theorafile](https://github.com/FNA-XNA/Theorafile),
 [MoltenVK](https://github.com/KhronosGroup/MoltenVK),
 [FMOD](https://www.fmod.com/), and the
-[FMOD-SDL bridge](https://github.com/flibitijibibo/FMOD_SDL). Exact revisions
-and notices are recorded by the native locks and generated licence bundles.
+[FMOD-SDL bridge](https://github.com/flibitijibibo/FMOD_SDL).
 
-See the repository history for all contributors. In particular, the original
-README credited TheSpydog for demonstrating the approach and developing the
-native-library builder, r58Playz for touch/controller and newer-Xcode work, and
-the original project author's collaborators.
-
-## Legal
-
-This is an unofficial community project and is not endorsed by or affiliated
-with Extremely OK Games, Maddy Makes Games, FMOD, or Apple. Celeste names,
-software, and artwork remain the property of their respective rights holders.
-FMOD is governed by its own licence. The repository's [`LICENSE`](LICENSE)
-applies to the covered repository source only; it does not grant rights to
-Celeste game content, generated/decompiled Celeste source, FMOD SDK material,
-or user-generated branded packages.
+This is an unofficial community project and is not endorsed by Extremely OK
+Games, Maddy Makes Games, FMOD, or Apple. Celeste game files, generated Celeste
+source, and FMOD SDK material are not distributed here. The repository
+[`LICENSE`](LICENSE) applies only to the covered repository source; third-party
+software and content retain their own terms.
