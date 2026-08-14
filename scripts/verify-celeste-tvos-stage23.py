@@ -308,6 +308,12 @@ def main() -> int:
                    "privacy gate precedes input access")
     checks.require("workflow_dispatch:" in workflow and not any(x in workflow for x in
                    ("pull_request:", "schedule:", "push:")), "cloud build remains manual-only")
+    checks.equal(workflow.count("refs/tags/v1.0.0-rc.1:refs/tags/v1.0.0-rc.1"), 1,
+                 "cloud checkout fetches immutable RC1 tag exactly once")
+    checks.equal(workflow.count("refs/tags/v1.0.0-rc.2:refs/tags/v1.0.0-rc.2"), 1,
+                 "cloud checkout fetches immutable RC2 tag exactly once")
+    checks.require("git -C \"$source_root\" fetch --no-tags origin" in workflow,
+                   "cloud checkout does not fetch arbitrary tags")
     checks.require("upload-artifact" not in cloud_all and "download-artifact" not in cloud_all,
                    "no Actions artifact transport")
     checks.equal(set(re.findall(r"actions/[A-Za-z0-9_./-]+@[0-9a-f]{40}", cloud_all)), ACTION_PINS,

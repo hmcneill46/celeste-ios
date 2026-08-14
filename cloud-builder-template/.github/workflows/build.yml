@@ -123,6 +123,11 @@ jobs:
           git -C "$source_root" init
           git -C "$source_root" remote add origin "https://github.com/$CLOUD_PUBLIC_REPOSITORY.git"
           git -C "$source_root" fetch --no-tags origin "$CLOUD_PUBLIC_SOURCE_SHA"
+          # Stage 23 verifies the two immutable recovery tags. This custom
+          # checkout intentionally fetches no other tags or moving branches.
+          git -C "$source_root" fetch --no-tags origin \
+            'refs/tags/v1.0.0-rc.1:refs/tags/v1.0.0-rc.1' \
+            'refs/tags/v1.0.0-rc.2:refs/tags/v1.0.0-rc.2'
           git -C "$source_root" checkout --detach "$CLOUD_PUBLIC_SOURCE_SHA"
           git -C "$source_root" -c url.https://github.com/.insteadOf=git://github.com/ \
             submodule update --init --recursive
