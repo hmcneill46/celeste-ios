@@ -145,6 +145,32 @@ The eight numbered phases are:
 7. Publish the application.
 8. Package or install it.
 
+Each phase prints a clear active marker and a completion line with elapsed
+time. Logged child commands that remain active for 60 seconds print a
+newline-delimited heartbeat with the operation, elapsed time, and available
+disk space. This is honest activity reporting rather than a synthetic
+percentage: duration varies with host speed and cache state.
+
+Normal output stays concise while complete child logs remain under
+`dist/logs/`. For live compiler, native-tool, validator, and packaging output
+as well as those logs, run:
+
+```bash
+./build-tvos.sh --verbose
+```
+
+Interactive terminals receive restrained status colour. Redirected/non-TTY
+output and CI logs receive plain text automatically. Disable colour explicitly
+with `--no-color`, or for this and other compatible tools with:
+
+```bash
+NO_COLOR=1 ./build-tvos.sh
+```
+
+When `GITHUB_ACTIONS=true`, the same eight phases are emitted as balanced
+GitHub Actions log groups. The builder remains a normal local command and does
+not perform cloud upload/download work.
+
 The menu modes map to these command values:
 
 | Menu choice | `--mode` | Result |
@@ -301,10 +327,17 @@ summary omits private signing/device values and source paths. Detailed logs are
 local and may contain private local values; redact them before sharing.
 
 The builder announces `Logs: dist/logs/` before preflight. Every public failure
-writes `dist/logs/last-error.txt` with its phase, problem, detected/required
-state, remedy, and the relevant command-log name when one exists. A failed
-`run_logged` phase also identifies `dist/logs/<phase>.log` in the terminal.
-Successful runs remove stale `last-error.txt` and write `build-summary.txt`.
+writes a short `dist/logs/last-error.txt` with its phase, active operation,
+elapsed time, problem, detected/required state, remedy, and the relevant
+command-log name when one exists. A failed logged command immediately prints a
+bounded privacy-redacted tail, then identifies `dist/logs/<operation>.log` for
+the complete output. Successful runs remove stale `last-error.txt` and write
+`build-summary.txt`.
+
+`--verbose` streams detailed child output while still writing the same logs.
+Verbose logs can naturally contain local input paths or signing-tool output;
+review and redact them before sharing. Normal status and failure summaries do
+not dump the environment, credentials, or proprietary file lists.
 
 Other generated roots include:
 

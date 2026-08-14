@@ -40,6 +40,7 @@ support matrix, and limitations are in [project status](../STATUS.md).
 22. [Stage 16B — native Metal Performance HUD toggle](stages/TVOS_METAL_PERFORMANCE_HUD_STAGE16B_REPORT.md)
 23. [Stage 17B — production multi-distribution FNA input support](stages/TVOS_CELESTE_INPUT_COMPAT_STAGE17B_REPORT.md)
 24. [Stage 17C — Steam Windows FNA input and acquisition guides](stages/TVOS_CELESTE_STEAM_WINDOWS_STAGE17C_REPORT.md)
+25. [Stage 18B — timed builder progress, heartbeat, and CI-friendly output](stages/TVOS_BUILDER_UX_STAGE18B_REPORT.md)
 
 Diagnostic-only stages whose evidence was intentionally kept in ignored local
 build directories are not reconstructed here. The index covers every tracked

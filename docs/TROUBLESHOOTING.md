@@ -11,6 +11,18 @@ block and `dist/logs/last-error.txt`. A failed build phase also names its full
 `dist/logs/<phase>.log`. Redact local paths and signing/device details before
 sharing excerpts.
 
+During a healthy long native or full-AOT operation the normal concise output
+prints a heartbeat every 60 seconds. There is no percentage because phase time
+depends on the host and cache. Use `./build-tvos.sh --verbose` to stream child
+tool output while retaining the same logs. Use `--no-color` or set `NO_COLOR`
+if terminal colour is undesirable; redirected and CI output is plain text by
+default.
+
+If a logged command fails, the terminal immediately shows a bounded
+privacy-redacted diagnostic tail. `dist/logs/last-error.txt` records the phase,
+operation, elapsed time, remedy, and full-log name without copying the entire
+potentially large log.
+
 Do not attach Celeste files, generated Celeste source, FMOD SDK files or banks,
 an app/IPA containing game content, Apple credentials or two-factor codes,
 certificates, provisioning profiles, Team IDs, device identifiers, or

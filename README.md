@@ -110,6 +110,11 @@ tooling, generates local artwork, prepares the locked dependencies, builds the
 game, and then installs it or creates an IPA. It installs no development tools,
 accepts no licence for you, and downloads neither Celeste nor FMOD.
 
+Its eight numbered phases show start and completion times. Long native or AOT
+commands print a privacy-safe heartbeat every 60 seconds, so a healthy build
+does not appear stuck. Use `--verbose` to stream the underlying tool output
+while retaining full logs, or `--no-color` to disable interactive colour.
+
 Choose one of these when prompted:
 
 1. Build, sign, and install on an Apple TV.
@@ -518,8 +523,9 @@ have not been physically tested here.
 
 Start with [`docs/TROUBLESHOOTING.md`](docs/TROUBLESHOOTING.md). Complete logs
 are written below ignored `dist/logs/`. Every stopped builder invocation names
-`dist/logs/last-error.txt`; a failed build phase also names its complete command
-log. `dist/build-summary.txt` contains a privacy-safe success summary. Do not
+`dist/logs/last-error.txt`; a failed logged command immediately prints a bounded
+privacy-redacted diagnostic tail and names its complete command log.
+`dist/build-summary.txt` contains a privacy-safe success summary. Do not
 post game files, FMOD files, signed apps/IPAs, provisioning profiles,
 certificates, account details, Team IDs, or device IDs in an issue.
 
