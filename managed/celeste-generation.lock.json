@@ -69,7 +69,7 @@
       "expectedNativeImportCount": 490,
       "path": "scripts/celeste-managed.py#patch-fmod",
       "policy": "replace only generated fmod/fmodstudio/fmod_SDL DllImport declarations with explicit PlatformNotSupportedException bodies; generated source stays ignored",
-      "sha256": "7990b91d6db4697b9d2a59f14a90774bbb872555139ad9c548c500cb2d39d085"
+      "sha256": "1780e2ec0b36fd4435bebb487edd714d4a341b4b724e7074ee43a4af80bf8f07"
     }
   ],
   "templates": [
