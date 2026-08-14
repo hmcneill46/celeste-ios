@@ -61,6 +61,8 @@ def main() -> int:
         "--mode ipa",
         "--no-color",
         '--bundle-id "$CLOUD_BUNDLE_ID"',
+        '$CELESTE_SOURCE_ROOT/.build/celeste-runtime/stage18c-cloud/celeste-input.json',
+        '$CELESTE_SOURCE_ROOT/.build/fmod-tvos/stage18c-cloud/sdk-manifest.json',
         "celeste-tvos-inputs",
         "celeste-tvos-output",
         "Celeste-tvOS-unsigned.ipa",

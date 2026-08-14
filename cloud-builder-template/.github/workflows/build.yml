@@ -202,13 +202,14 @@ jobs:
           cloud_set_stage \
             'Celeste or FMOD did not match an exact supported input.' \
             'Use a clean listed Celeste 1.4.0.0 FNA profile and FMOD iOS/tvOS 1.10.09 build 97915.'
-          validation_root="$RUNNER_TEMP/celeste-tvos-cloud-state/validation"
-          mkdir -p "$validation_root"
+          celeste_manifest="$CELESTE_SOURCE_ROOT/.build/celeste-runtime/stage18c-cloud/celeste-input.json"
+          fmod_manifest="$CELESTE_SOURCE_ROOT/.build/fmod-tvos/stage18c-cloud/sdk-manifest.json"
+          mkdir -p "$(dirname "$celeste_manifest")" "$(dirname "$fmod_manifest")"
           "$CELESTE_SOURCE_ROOT/scripts/validate-celeste-input.sh" \
-            --game-root "$CELESTE_GAME_ROOT" --output "$validation_root/celeste-input.json"
+            --game-root "$CELESTE_GAME_ROOT" --output "$celeste_manifest"
           "$CELESTE_SOURCE_ROOT/scripts/validate-fmod-tvos-sdk.sh" \
-            --sdk-root "$FMOD_SDK_ROOT" --output "$validation_root/fmod-sdk.json"
-          python3 - "$validation_root/celeste-input.json" <<'PY'
+            --sdk-root "$FMOD_SDK_ROOT" --output "$fmod_manifest"
+          python3 - "$celeste_manifest" <<'PY'
           import json, pathlib, sys
           value = json.loads(pathlib.Path(sys.argv[1]).read_text())
           print(f"Celeste {value['gameVersion']}: {value['store']} / {value['sourcePlatform']} / {value['runtimeFamily']}")
@@ -295,7 +296,7 @@ jobs:
               'Use the local Mac builder and report the unexpected product-size regression.'
           fi
           ipa_sha="$(shasum -a 256 "$ipa" | awk '{print $1}')"
-          profile="$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1]))["profileId"])' "$RUNNER_TEMP/celeste-tvos-cloud-state/validation/celeste-input.json")"
+          profile="$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1]))["profileId"])' "$CELESTE_SOURCE_ROOT/.build/celeste-runtime/stage18c-cloud/celeste-input.json")"
           output_root="$RUNNER_TEMP/celeste-tvos-cloud-output"
           mkdir -p "$output_root"
           cat > "$output_root/$CLOUD_METADATA_NAME" <<EOF

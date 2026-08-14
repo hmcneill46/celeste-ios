@@ -240,6 +240,12 @@ def main() -> int:
     tests.check('--bundle-id "$CLOUD_BUNDLE_ID"' in build_workflow and
                 '"${{ inputs.bundle_id }}"' not in build_workflow,
                 "bundle identifier is passed as data rather than shell source")
+    tests.check(
+        '$CELESTE_SOURCE_ROOT/.build/celeste-runtime/stage18c-cloud/celeste-input.json' in build_workflow
+        and '$CELESTE_SOURCE_ROOT/.build/fmod-tvos/stage18c-cloud/sdk-manifest.json' in build_workflow
+        and 'celeste-tvos-cloud-state/validation' not in build_workflow,
+        "validator manifests stay in their approved ignored repository roots",
+    )
 
     print(f"PASS: {tests.count} Stage 18C deterministic cloud-builder tests")
     return 0
