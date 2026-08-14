@@ -19,6 +19,7 @@ while (($#)); do
   esac
 done
 
+mkdir -p "$(dirname "$OUTPUT")"
 python3 "$REPO_ROOT/scripts/verify-celeste-input-profiles.py" \
   --repo-root "$REPO_ROOT" --output "$OUTPUT"
 if ((${#STAGE16_ARGS[@]})); then

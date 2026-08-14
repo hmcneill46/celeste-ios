@@ -4,9 +4,11 @@ Status: **PASS — RC2 READY**
 
 Stage 20 treated the accepted product source as feature-frozen. No runtime,
 persistence, networking, generated-Celeste, controller, audio, native, or
-gameplay source was changed. The only pre-acceptance changes were the RC2
-manifest/release documentation, an RC2 verifier, and the public cloud-template
-source-pin update required to build the frozen product source.
+gameplay source was changed. The changes were the RC2 manifest/release
+documentation, an RC2 verifier, the public cloud-template source-pin update
+required to build the frozen product source, and one post-push test-only fix so
+the Stage 17 profile verifier creates its ignored output directory in a truly
+fresh clone.
 
 ## Git and release identity
 
@@ -15,9 +17,9 @@ source-pin update required to build the frozen product source.
 - Release branch: `release/v1.0.0-rc.2`.
 - Preparation commit:
   `3a8d4bf39a0243eb0e7671e7e655a8561f52d67e`.
-- Final RC2 candidate commit: the commit containing this report; its exact SHA
-  is recorded by the release-branch history and Stage 20 completion response
-  without creating a self-referential manifest.
+- Final RC2 candidate commit: the report plus its focused fresh-clone verifier
+  correction; its exact SHA is recorded by the release-branch history and
+  Stage 20 completion response without creating a self-referential manifest.
 - Immutable `v1.0.0-rc.1^{}` remained
   `ee52b0868df091746f134d95d4f020f94f23d4fb`.
 - Intended later tag: `v1.0.0-rc.2`.
@@ -297,6 +299,9 @@ the same zero counts. The acceptance repository remained private.
 - Stage 20 RC2 contract: 150 PASS.
 - Stage 14 product/features, repository/privacy, shell syntax, documentation
   links, builder help, host doctor, and package chains: PASS.
+- The first post-push clone caught a missing ignored-output-directory setup in
+  the Stage 17 profile verifier after its 56 checks passed. The verifier now
+  creates that directory itself; the complete clean-clone chain then passed.
 - Historical Stage 14 manifest and all 27 pre-Stage-20 tracked reports:
   byte-identical to the product-source commit.
 
