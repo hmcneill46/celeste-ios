@@ -232,6 +232,18 @@ def main() -> int:
         if line.strip().startswith("${{ runner.temp }}/celeste-tvos-cloud-source/")
     }
     tests.check(listed == cache_paths, "cache path allow-list contains only two open-source paths")
+    cache_key = run_bash(
+        shell,
+        f"cloud_compute_cache_key {repo}",
+        {"ImageVersion": "stage18c-test-image", "RUNNER_OS": "macOS", "RUNNER_ARCH": "ARM64"},
+    )
+    empty_sha256 = hashlib.sha256(b"").hexdigest()
+    tests.check(
+        cache_key.returncode == 0
+        and "stage18c-test-image" in cache_key.stdout
+        and not cache_key.stdout.rstrip().endswith(empty_sha256),
+        "cache key hashes tracked native inputs from the pinned source root",
+    )
     tests.check("actions/upload-artifact" not in build_workflow + cleanup_workflow,
                 "Actions artifacts are not used")
     tests.check("on:\n  workflow_dispatch:" in build_workflow and

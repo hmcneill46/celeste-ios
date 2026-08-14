@@ -122,6 +122,7 @@ def main() -> int:
         SOURCE_SHA,
         NATIVE_SHA,
         "cloud_validate_cleanup_tag",
+        "cd \"$source_root\"",
         "cloud_require_private_repository",
         "cloud_runner_cleanup",
         "cloud_write_failure_summary",

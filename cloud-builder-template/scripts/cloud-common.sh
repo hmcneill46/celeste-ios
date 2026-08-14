@@ -121,8 +121,10 @@ cloud_compute_cache_key() {
       native/patches scripts/fetch-tvos-deps.sh scripts/build-tvos-native.sh \
       scripts/verify-tvos-native.sh scripts/verify-tvos-artifacts.py \
       scripts/prepare-tvos-host-native.sh tvos/fna-managed-sources.lock.json \
-      tvos/patches/FNA | LC_ALL=C sort -z | \
-      xargs -0 shasum -a 256
+      tvos/patches/FNA | (
+        cd "$source_root"
+        LC_ALL=C sort -z | xargs -0 shasum -a 256
+      )
   } | shasum -a 256 | awk '{print $1}')"
   printf '%s%s-%s-%s-%s-xcode26.6-tvos26.5-dotnet10.0.302-%s-%s\n' \
     "$CLOUD_CACHE_PREFIX" "$CLOUD_PUBLIC_SOURCE_SHA" "${RUNNER_OS:-macOS}" \
