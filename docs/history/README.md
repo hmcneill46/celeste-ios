@@ -43,6 +43,7 @@ support matrix, and limitations are in [project status](../STATUS.md).
 25. [Stage 18B — timed builder progress, heartbeat, and CI-friendly output](stages/TVOS_BUILDER_UX_STAGE18B_REPORT.md)
 26. [Stage 18C — production private GitHub Actions cloud builder](stages/TVOS_GITHUB_ACTIONS_CLOUD_BUILDER_STAGE18C_REPORT.md)
 27. [Stage 19 — semantic production naming cleanup](stages/TVOS_SEMANTIC_PRODUCTION_NAMES_STAGE19_REPORT.md)
+28. [Stage 20 — v1.0.0-rc.2 integrated release-candidate acceptance](stages/TVOS_RC2_INTEGRATED_ACCEPTANCE_STAGE20_REPORT.md)
 
 Diagnostic-only stages whose evidence was intentionally kept in ignored local
 build directories are not reconstructed here. The index covers every tracked
