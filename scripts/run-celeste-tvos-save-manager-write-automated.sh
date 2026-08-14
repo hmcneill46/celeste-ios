@@ -50,7 +50,7 @@ import pathlib,sys
 app=pathlib.Path(sys.argv[1]); files=[p for p in (app/sys.argv[2],app/'CelesteTvOSRuntimeHost.dll') if p.is_file()]
 def present(value):
     return any(value.encode() in p.read_bytes() or value.encode('utf-16le') in p.read_bytes() for p in files)
-if not present('STAGE10A_AUTOMATION_READY'): raise SystemExit('error: app lacks Stage10AAutomation=true')
+if not present('STAGE10A_AUTOMATION_READY'): raise SystemExit('error: app lacks SaveManagerAutomation=true')
 if not present('Acceptance.v1'): raise SystemExit('error: app is not locked to the isolated acceptance namespace')
 PY
 

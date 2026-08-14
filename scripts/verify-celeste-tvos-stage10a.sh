@@ -39,7 +39,7 @@ python_args=(--repo-root "$REPO_ROOT")
 [[ -z "$APP" ]] || python_args+=(--app "$APP")
 [[ -z "$OUTPUT" ]] || python_args+=(--output "$OUTPUT")
 
-dotnet run --project "$REPO_ROOT/tvos/Stage10AProtocolTests/Stage10AProtocolTests.csproj" -c Release
+dotnet run --project "$REPO_ROOT/tvos/SaveManagerProtocolTests/SaveManagerProtocolTests.csproj" -c Release
 "$REPO_ROOT/scripts/verify-celeste-tvos-stage9b.sh"
 "$REPO_ROOT/scripts/verify-celeste-tvos-stage10a.py" "${python_args[@]}"
 

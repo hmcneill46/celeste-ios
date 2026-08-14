@@ -115,23 +115,23 @@ def main() -> int:
 
     project = (repo / "tvos/CelesteTvOSRuntimeHost/CelesteTvOSRuntimeHost.csproj").read_text()
     host = (repo / "tvos/CelesteTvOSRuntimeHost/Main.cs").read_text()
-    store = (repo / "tvos/CelesteTvOSRuntimeHost/Stage6PersistenceStore.cs").read_text()
-    protocol = (repo / "tvos/CelesteTvOSRuntimeHost/Stage10AHttpProtocol.cs").read_text()
+    store = (repo / "tvos/CelesteTvOSRuntimeHost/PersistenceStore.cs").read_text()
+    protocol = (repo / "tvos/CelesteTvOSRuntimeHost/SaveManagerHttpProtocol.cs").read_text()
     prompts = "\n".join((repo / path).read_text() for path in (
-        "tvos/CelesteTvOSRuntimeHost/Stage11ControllerPromptPreferences.cs",
-        "tvos/CelesteTvOSRuntimeHost/Stage11ControllerPromptPolicy.cs",
+        "tvos/CelesteTvOSRuntimeHost/ControllerPromptPreferences.cs",
+        "tvos/CelesteTvOSRuntimeHost/ControllerPromptPolicy.cs",
     ))
     quitter = "\n".join((repo / path).read_text() for path in (
-        "tvos/CelesteTvOSRuntimeHost/Stage12BQuitCoordinator.cs",
-        "tvos/CelesteTvOSRuntimeHost/Stage12BQuitStateMachine.cs",
+        "tvos/CelesteTvOSRuntimeHost/QuitCoordinator.cs",
+        "tvos/CelesteTvOSRuntimeHost/QuitStateMachine.cs",
     ))
-    reload = (repo / "tvos/CelesteTvOSRuntimeHost/Stage13BSoftReloadCoordinator.cs").read_text()
+    reload = (repo / "tvos/CelesteTvOSRuntimeHost/SoftReloadCoordinator.cs").read_text()
     plist = plistlib.loads((repo / "tvos/CelesteTvOSRuntimeHost/Info.plist").read_bytes())
     privacy = plistlib.loads((repo / "tvos/CelesteTvOSRuntimeHost/PrivacyInfo.xcprivacy").read_bytes())
     builder = (repo / "build-tvos.sh").read_text()
 
     require(project, ("net10.0-tvos", "TargetPlatformMinVersion>16.0", "TrimMode", "UseInterpreter>false", "CelesteAudio"), "tvOS host project")
-    require(host, ("FNA3D_FORCE_DRIVER", "Metal", "Celeste.Celeste.Run", "Stage13BSoftReloadCoordinator"), "runtime host")
+    require(host, ("FNA3D_FORCE_DRIVER", "Metal", "Celeste.Celeste.Run", "SoftReloadCoordinator"), "runtime host")
     require(store, ("FormatVersion = 2", "CompressionLevel.SmallestSize", "ReadCandidate(\"A\")", "ReadCandidate(\"B\")"), "persistence store")
     require(protocol, ("X-Celeste-CSRF", "X-Celeste-Revision", "press Confirm to reload Celeste"), "Save Manager protocol")
     require(prompts, ("CelesteTvOS.ControllerPrompts.v1", "DualSense", "PlayStation"), "Controller Prompt preferences")

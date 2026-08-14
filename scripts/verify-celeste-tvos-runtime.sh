@@ -252,7 +252,7 @@ if project.findtext(".//UseInterpreter") != "false" or project.findtext(".//Supp
 for mode in ("Stage2Diagnostic", "CelestePreflight", "Celeste"):
     if mode not in project_text:
         raise SystemExit(f"error: Stage 3B host lacks launch mode {mode}")
-if "Stage3BLinker.xml" not in project_text or "Celeste.Modern.csproj" not in project_text:
+if "CelesteLinker.xml" not in project_text or "Celeste.Modern.csproj" not in project_text:
     raise SystemExit("error: Stage 3B host lacks focused roots or generated Celeste reference")
 if re.search(r"TrimmerRootAssembly|PublishTrimmed>false|UseInterpreter>true", project_text):
     raise SystemExit("error: Stage 3B host contains a blanket trim/AOT workaround")

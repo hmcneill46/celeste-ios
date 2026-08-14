@@ -639,7 +639,7 @@ ui_phase_success
 
 COMMON_PUBLISH=(dotnet publish "$PROJECT" -c Release -r tvos-arm64 -m:1 -p:BuildInParallel=false
   -p:CelesteLaunchMode=CelesteAudio -p:Stage5BAudioScenario=normal
-  -p:Stage6PersistenceEnabled=true -p:Stage6StorageNamespace=production
+  -p:PersistenceEnabled=true -p:PersistenceStorageNamespace=production
   -p:CelesteBrandingEnabled=true -p:CelesteBrandAssetsRoot="$ARTWORK_ROOT"
   -p:ApplicationId="$BUNDLE_ID" -p:UseInterpreter=false -p:RunAOTCompilation=true
   -p:PublishTrimmed=true -p:TrimMode=full -p:MtouchLink=Full)

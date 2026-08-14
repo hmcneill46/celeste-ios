@@ -28,7 +28,7 @@ internal sealed class CelestePreflightGame : Game
         IsFixedTimeStep = true;
         TargetElapsedTime = TimeSpan.FromSeconds(1.0 / 60.0);
         InactiveSleepTime = TimeSpan.FromMilliseconds(20);
-        graphics.DeviceCreated += (_, _) => Stage3BLog.Info("CelestePreflight graphics device-created event");
+        graphics.DeviceCreated += (_, _) => RuntimeLog.Info("CelestePreflight graphics device-created event");
     }
 
     protected override void LoadContent()
@@ -37,13 +37,13 @@ internal sealed class CelestePreflightGame : Game
         string sessionRoot = Environment.GetEnvironmentVariable("CELESTE_TVOS_SESSION_ROOT")
             ?? throw new InvalidOperationException("Preflight session root is unavailable.");
         string settings = TvOSStage3Bridge.RunSettingsPreflight(sessionRoot);
-        Stage3BLog.Info($"settings preflight PASS: {settings}");
+        RuntimeLog.Info($"settings preflight PASS: {settings}");
         string saveData = TvOSStage3CBridge.RunSaveDataPreflight(sessionRoot);
-        Stage3BLog.Info($"SaveData preflight PASS: {saveData}");
+        RuntimeLog.Info($"SaveData preflight PASS: {saveData}");
 
         foreach (string manifest in TvOSStage3Bridge.DiscoveryManifestLines())
         {
-            Stage3BLog.Info($"reflection discovery PASS: {manifest}");
+            RuntimeLog.Info($"reflection discovery PASS: {manifest}");
         }
 
         Effect effect = Content.Load<Effect>("Effects/Border");
@@ -57,19 +57,19 @@ internal sealed class CelestePreflightGame : Game
             throw new InvalidOperationException("SpriteFont reader graph returned an invalid font.");
         }
 
-        Stage3BLog.Info("XNB reader PASS: EffectReader asset=Effects/Border type=Effect");
+        RuntimeLog.Info("XNB reader PASS: EffectReader asset=Effects/Border type=Effect");
         foreach (string reader in new[]
                  {
                      "CharReader", "ListReader<T>", "RectangleReader", "SpriteFontReader", "Texture2DReader", "Vector3Reader"
                  })
         {
-            Stage3BLog.Info($"XNB reader PASS: {reader} asset=Monocle/MonocleDefault type=SpriteFont");
+            RuntimeLog.Info($"XNB reader PASS: {reader} asset=Monocle/MonocleDefault type=SpriteFont");
         }
 
         spriteBatch = new SpriteBatch(GraphicsDevice);
         pixel = new Texture2D(GraphicsDevice, 1, 1, false, SurfaceFormat.Color);
         pixel.SetData(new[] { Color.White });
-        Stage3BLog.Info(
+        RuntimeLog.Info(
             $"preflight graphics PASS: adapter={GraphicsDevice.Adapter.Description}; " +
             $"backbuffer={GraphicsDevice.PresentationParameters.BackBufferWidth}x" +
             GraphicsDevice.PresentationParameters.BackBufferHeight
@@ -86,7 +86,7 @@ internal sealed class CelestePreflightGame : Game
     {
         if (passed && gameTime.TotalGameTime >= TimeSpan.FromSeconds(5))
         {
-            Stage3BLog.Info($"CelestePreflight clean exit after {frames} rendered frames");
+            RuntimeLog.Info($"CelestePreflight clean exit after {frames} rendered frames");
             Exit();
         }
         base.Update(gameTime);
@@ -114,7 +114,7 @@ internal sealed class CelestePreflightGame : Game
         pixel = null;
         spriteBatch = null;
         font = null;
-        Stage3BLog.Info("CelestePreflight resources disposed");
+        RuntimeLog.Info("CelestePreflight resources disposed");
         base.UnloadContent();
     }
 }

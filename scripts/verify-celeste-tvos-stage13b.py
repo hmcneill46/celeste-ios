@@ -39,15 +39,15 @@ def main() -> int:
     args = parser.parse_args()
     repo = (args.repo_root or pathlib.Path(__file__).resolve().parents[1]).resolve()
 
-    store = (repo / "tvos/CelesteTvOSRuntimeHost/Stage6PersistenceStore.cs").read_text()
-    manager = (repo / "tvos/CelesteTvOSRuntimeHost/Stage10ASaveManager.cs").read_text()
-    protocol = (repo / "tvos/CelesteTvOSRuntimeHost/Stage10AHttpProtocol.cs").read_text()
-    coordinator = (repo / "tvos/CelesteTvOSRuntimeHost/Stage13BSoftReloadCoordinator.cs").read_text()
-    machine = (repo / "tvos/CelesteTvOSRuntimeHost/Stage13BSoftReloadStateMachine.cs").read_text()
+    store = (repo / "tvos/CelesteTvOSRuntimeHost/PersistenceStore.cs").read_text()
+    manager = (repo / "tvos/CelesteTvOSRuntimeHost/SaveManagerService.cs").read_text()
+    protocol = (repo / "tvos/CelesteTvOSRuntimeHost/SaveManagerHttpProtocol.cs").read_text()
+    coordinator = (repo / "tvos/CelesteTvOSRuntimeHost/SoftReloadCoordinator.cs").read_text()
+    machine = (repo / "tvos/CelesteTvOSRuntimeHost/SoftReloadStateMachine.cs").read_text()
     bridge = (repo / "managed/templates/TvOSSoftReloadBridge.cs").read_text()
     ui = (repo / "managed/templates/TvOSSaveManagerBridge.cs").read_text()
     transform = (repo / "scripts/celeste-stage6.py").read_text()
-    tests = (repo / "tvos/Stage13BSoftReloadTests/Program.cs").read_text()
+    tests = (repo / "tvos/SoftReloadTests/Program.cs").read_text()
     project = (repo / "tvos/CelesteTvOSRuntimeHost/CelesteTvOSRuntimeHost.csproj").read_text()
 
     require(store, (
@@ -77,7 +77,7 @@ def main() -> int:
         "GC.GetTotalMemory", "fallback=app-switcher-termination",
         "CaptureRuntimeIdentityOnFirstUpdate();", "runtime-identity=pending-first-update",
     ), "host reload coordinator")
-    constructor = coordinator.split("internal Stage13BSoftReloadCoordinator", 1)[1].split("internal TvOSSoftReloadPhase Phase", 1)[0]
+    constructor = coordinator.split("internal SoftReloadCoordinator", 1)[1].split("internal TvOSSoftReloadPhase Phase", 1)[0]
     if "Engine.Instance" in constructor or "Engine.Graphics" in constructor:
         fail("Stage 13B coordinator captures FNA identity before Celeste constructs the game")
     require(transform, (

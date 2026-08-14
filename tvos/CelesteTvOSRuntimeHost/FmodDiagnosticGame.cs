@@ -70,7 +70,7 @@ internal sealed class FmodDiagnosticGame : Game
         spriteBatch = new SpriteBatch(GraphicsDevice);
         pixel = new Texture2D(GraphicsDevice, 1, 1, false, SurfaceFormat.Color);
         pixel.SetData(new[] { Color.White });
-        Stage3BLog.Info(
+        RuntimeLog.Info(
             $"FMOD_DIAGNOSTIC_CHECKPOINT name=graphics-ready adapter={GraphicsDevice.Adapter.Description}; " +
             $"backbuffer={GraphicsDevice.PresentationParameters.BackBufferWidth}x{GraphicsDevice.PresentationParameters.BackBufferHeight}"
         );
@@ -87,7 +87,7 @@ internal sealed class FmodDiagnosticGame : Game
         }
         catch (Exception exception)
         {
-            Stage3BLog.Error($"FMOD_DIAGNOSTIC_CHECKPOINT name=fatal phase={phase}; exception={exception}");
+            RuntimeLog.Error($"FMOD_DIAGNOSTIC_CHECKPOINT name=fatal phase={phase}; exception={exception}");
             SafeShutdown("exception");
             throw;
         }
@@ -114,7 +114,7 @@ internal sealed class FmodDiagnosticGame : Game
         frameCount += 1;
         if (gameTime.TotalGameTime >= nextHeartbeat)
         {
-            Stage3BLog.Info(
+            RuntimeLog.Info(
                 $"FMOD_DIAGNOSTIC_HEARTBEAT frame={frameCount}; elapsed={seconds:F1}; phase={phase}; " +
                 $"music-playing={musicPlayingObserved}; sfx-playing={sfxPlayingObserved}; active={IsActive}"
             );
@@ -136,7 +136,7 @@ internal sealed class FmodDiagnosticGame : Game
             observer.Dispose();
         }
         observers.Clear();
-        Stage3BLog.Info("FMOD_DIAGNOSTIC_CHECKPOINT name=graphics-disposed");
+        RuntimeLog.Info("FMOD_DIAGNOSTIC_CHECKPOINT name=graphics-disposed");
     }
 
     private void TickDiagnostic(double now)
@@ -224,7 +224,7 @@ internal sealed class FmodDiagnosticGame : Game
                 Advance(11, now, "post-foreground-sfx-started");
                 break;
             case 10 when elapsed >= 8:
-                Stage3BLog.Warning("FMOD_DIAGNOSTIC_CHECKPOINT name=lifecycle-not-observed-in-this-launch");
+                RuntimeLog.Warning("FMOD_DIAGNOSTIC_CHECKPOINT name=lifecycle-not-observed-in-this-launch");
                 StopCurrent("lifecycle-wait-expired");
                 StartEvent(sfxEvent!, "sfx-second-launch");
                 Advance(11, now, "second-launch-sfx-started");
@@ -237,7 +237,7 @@ internal sealed class FmodDiagnosticGame : Game
                 break;
             case 12 when elapsed >= 3:
                 SafeShutdown("normal-completion");
-                Stage3BLog.Info("FMOD_DIAGNOSTIC_CHECKPOINT name=clean-process-exit");
+                RuntimeLog.Info("FMOD_DIAGNOSTIC_CHECKPOINT name=clean-process-exit");
                 Exit();
                 Advance(13, now, "exit-requested");
                 break;
@@ -246,7 +246,7 @@ internal sealed class FmodDiagnosticGame : Game
 
     private void SetupFmod()
     {
-        Stage3BLog.Info("FMOD_DIAGNOSTIC_CHECKPOINT name=setup-start managed-header=0x00011014");
+        RuntimeLog.Info("FMOD_DIAGNOSTIC_CHECKPOINT name=setup-start managed-header=0x00011014");
         IntPtr standalone = IntPtr.Zero;
         try
         {
@@ -254,10 +254,10 @@ internal sealed class FmodDiagnosticGame : Game
             FmodDiagnosticNative.Check(FmodDiagnosticNative.FMOD_System_GetVersion(standalone, out uint version), "Native version query");
             LogVersion(version, "standalone-low-level");
             FmodDiagnosticNative.FMOD_SDL_Register(standalone);
-            Stage3BLog.Info("FMOD_DIAGNOSTIC_CHECKPOINT name=fmod-sdl-registered target=standalone-low-level");
+            RuntimeLog.Info("FMOD_DIAGNOSTIC_CHECKPOINT name=fmod-sdl-registered target=standalone-low-level");
             FmodDiagnosticNative.Check(FmodDiagnosticNative.FMOD_System_Init(standalone, 64, 0, IntPtr.Zero), "Low-level initialization");
             FmodDiagnosticNative.Check(FmodDiagnosticNative.FMOD_System_Update(standalone), "Low-level update");
-            Stage3BLog.Info("FMOD_DIAGNOSTIC_CHECKPOINT name=low-level-initialized result=OK");
+            RuntimeLog.Info("FMOD_DIAGNOSTIC_CHECKPOINT name=low-level-initialized result=OK");
             FmodDiagnosticNative.Check(FmodDiagnosticNative.FMOD_System_Close(standalone), "Low-level close");
             FmodDiagnosticNative.Check(FmodDiagnosticNative.FMOD_System_Release(standalone), "Low-level release");
             standalone = IntPtr.Zero;
@@ -283,17 +283,17 @@ internal sealed class FmodDiagnosticGame : Game
         FmodDiagnosticNative.Check(FmodDiagnosticNative.FMOD_System_GetVersion(studioLowLevel, out uint studioVersion), "Studio native version query");
         LogVersion(studioVersion, "studio-low-level");
         FmodDiagnosticNative.FMOD_SDL_Register(studioLowLevel);
-        Stage3BLog.Info("FMOD_DIAGNOSTIC_CHECKPOINT name=fmod-sdl-registered target=studio-low-level");
+        RuntimeLog.Info("FMOD_DIAGNOSTIC_CHECKPOINT name=fmod-sdl-registered target=studio-low-level");
         FmodDiagnosticNative.Check(
             FmodDiagnosticNative.FMOD_Studio_System_Initialize(studioSystem, 1024, 0, 0, IntPtr.Zero),
             "Studio initialization"
         );
-        Stage3BLog.Info("FMOD_DIAGNOSTIC_CHECKPOINT name=studio-initialized result=OK");
+        RuntimeLog.Info("FMOD_DIAGNOSTIC_CHECKPOINT name=studio-initialized result=OK");
 
         LoadAndEnumerateBanks();
         ResolveBuses();
         setupComplete = true;
-        Stage3BLog.Info(
+        RuntimeLog.Info(
             $"FMOD_DIAGNOSTIC_CHECKPOINT name=setup-complete music-event={musicEvent!.Path}; " +
             $"sfx-event={sfxEvent!.Path}"
         );
@@ -301,7 +301,7 @@ internal sealed class FmodDiagnosticGame : Game
 
     private void LogVersion(uint version, string source)
     {
-        Stage3BLog.Info(
+        RuntimeLog.Info(
             $"FMOD_DIAGNOSTIC_CHECKPOINT name=native-version source={source}; native=0x{version:X8}; " +
             $"managed=0x{FmodDiagnosticNative.ManagedHeaderVersion:X8}"
         );
@@ -331,7 +331,7 @@ internal sealed class FmodDiagnosticGame : Game
                 FmodDiagnosticNative.FMOD_Studio_System_LoadBankFile(studioSystem, file, 0, out _),
                 $"Bank load ({Path.GetFileName(file)})"
             );
-            Stage3BLog.Info($"FMOD_DIAGNOSTIC_CHECKPOINT name=bank-loaded file={Path.GetFileName(file)}");
+            RuntimeLog.Info($"FMOD_DIAGNOSTIC_CHECKPOINT name=bank-loaded file={Path.GetFileName(file)}");
         }
 
         FmodDiagnosticNative.Check(FmodDiagnosticNative.FMOD_Studio_System_GetBankCount(studioSystem, out int bankCount), "Bank count");
@@ -365,9 +365,9 @@ internal sealed class FmodDiagnosticGame : Game
                 );
                 candidates[eventPath] = new EventCandidate(eventPath, length, description);
             }
-            Stage3BLog.Info($"FMOD_DIAGNOSTIC_CHECKPOINT name=bank-enumerated path={bankPath}; events={descriptions.Length}");
+            RuntimeLog.Info($"FMOD_DIAGNOSTIC_CHECKPOINT name=bank-enumerated path={bankPath}; events={descriptions.Length}");
         }
-        Stage3BLog.Info($"FMOD_DIAGNOSTIC_CHECKPOINT name=events-enumerated count={candidates.Count}");
+        RuntimeLog.Info($"FMOD_DIAGNOSTIC_CHECKPOINT name=events-enumerated count={candidates.Count}");
 
         musicEvent = candidates.Values
             .Where(item => item.Path.StartsWith("event:/music/", StringComparison.OrdinalIgnoreCase) && item.LengthMilliseconds >= 3000)
@@ -389,7 +389,7 @@ internal sealed class FmodDiagnosticGame : Game
         {
             throw new InvalidOperationException("Runtime bank enumeration did not discover suitable music and SFX/UI events.");
         }
-        Stage3BLog.Info(
+        RuntimeLog.Info(
             $"FMOD_DIAGNOSTIC_CHECKPOINT name=events-selected music={musicEvent.Path}; music-ms={musicEvent.LengthMilliseconds}; " +
             $"sfx={sfxEvent.Path}; sfx-ms={sfxEvent.LengthMilliseconds}"
         );
@@ -400,7 +400,7 @@ internal sealed class FmodDiagnosticGame : Game
         masterBus = GetBus("bus:/", required: true);
         musicBus = GetFirstBus("bus:/music", "bus:/Music");
         sfxBus = GetFirstBus("bus:/gameplay_sfx", "bus:/sfx", "bus:/ui");
-        Stage3BLog.Info(
+        RuntimeLog.Info(
             $"FMOD_DIAGNOSTIC_CHECKPOINT name=buses-resolved master=true; music={musicBus != IntPtr.Zero}; " +
             $"sfx={sfxBus != IntPtr.Zero}"
         );
@@ -448,7 +448,7 @@ internal sealed class FmodDiagnosticGame : Game
         FmodDiagnosticNative.Check(FmodDiagnosticNative.FMOD_Studio_EventInstance_Start(currentInstance), $"Event start ({category})");
         currentCategory = category;
         lastPlaybackState = -1;
-        Stage3BLog.Info($"FMOD_DIAGNOSTIC_CHECKPOINT name=event-start category={category}; path={candidate.Path}");
+        RuntimeLog.Info($"FMOD_DIAGNOSTIC_CHECKPOINT name=event-start category={category}; path={candidate.Path}");
     }
 
     private void PollPlaybackState()
@@ -463,7 +463,7 @@ internal sealed class FmodDiagnosticGame : Game
         );
         if (state != lastPlaybackState)
         {
-            Stage3BLog.Info(
+            RuntimeLog.Info(
                 $"FMOD_DIAGNOSTIC_CHECKPOINT name=playback-state category={currentCategory}; state={PlaybackStateName(state)}"
             );
             lastPlaybackState = state;
@@ -495,13 +495,13 @@ internal sealed class FmodDiagnosticGame : Game
                     FmodDiagnosticNative.FMOD_Studio_EventInstance_SetParameterValue(instance, name, value),
                     "Event parameter change"
                 );
-                Stage3BLog.Info(
+                RuntimeLog.Info(
                     $"FMOD_DIAGNOSTIC_CHECKPOINT name=parameter-changed parameter={name}; value={value:F3}"
                 );
                 return;
             }
         }
-        Stage3BLog.Info("FMOD_DIAGNOSTIC_CHECKPOINT name=parameter-not-applicable selected-event-has-no-writable-parameter");
+        RuntimeLog.Info("FMOD_DIAGNOSTIC_CHECKPOINT name=parameter-not-applicable selected-event-has-no-writable-parameter");
     }
 
     private void SetVolume(IntPtr bus, float value, string category)
@@ -516,7 +516,7 @@ internal sealed class FmodDiagnosticGame : Game
         {
             throw new InvalidOperationException($"{category} volume readback {volume:F3} did not match {value:F3}.");
         }
-        Stage3BLog.Info(
+        RuntimeLog.Info(
             $"FMOD_DIAGNOSTIC_CHECKPOINT name=volume category={category}; requested={value:F2}; " +
             $"readback={volume:F2}; final={finalVolume:F2}"
         );
@@ -528,7 +528,7 @@ internal sealed class FmodDiagnosticGame : Game
         FlushControlCommands($"{category} mute");
         FmodDiagnosticNative.Check(FmodDiagnosticNative.FMOD_Studio_Bus_GetMute(bus, out int mute), $"{category} mute get");
         if ((mute != 0) != value) throw new InvalidOperationException($"{category} mute readback mismatch.");
-        Stage3BLog.Info($"FMOD_DIAGNOSTIC_CHECKPOINT name=mute category={category}; value={value.ToString().ToLowerInvariant()}");
+        RuntimeLog.Info($"FMOD_DIAGNOSTIC_CHECKPOINT name=mute category={category}; value={value.ToString().ToLowerInvariant()}");
     }
 
     private void SetPaused(IntPtr bus, bool value, string category)
@@ -537,7 +537,7 @@ internal sealed class FmodDiagnosticGame : Game
         FlushControlCommands($"{category} pause");
         FmodDiagnosticNative.Check(FmodDiagnosticNative.FMOD_Studio_Bus_GetPaused(bus, out int paused), $"{category} pause get");
         if ((paused != 0) != value) throw new InvalidOperationException($"{category} pause readback mismatch.");
-        Stage3BLog.Info($"FMOD_DIAGNOSTIC_CHECKPOINT name=pause category={category}; value={value.ToString().ToLowerInvariant()}");
+        RuntimeLog.Info($"FMOD_DIAGNOSTIC_CHECKPOINT name=pause category={category}; value={value.ToString().ToLowerInvariant()}");
     }
 
     private void FlushControlCommands(string operation)
@@ -557,7 +557,7 @@ internal sealed class FmodDiagnosticGame : Game
         }
         int stop = FmodDiagnosticNative.FMOD_Studio_EventInstance_Stop(currentInstance, 1);
         int release = FmodDiagnosticNative.FMOD_Studio_EventInstance_Release(currentInstance);
-        Stage3BLog.Info(
+        RuntimeLog.Info(
             $"FMOD_DIAGNOSTIC_CHECKPOINT name=event-stop category={currentCategory}; reason={reason}; " +
             $"stop={FmodDiagnosticNative.ResultName(stop)}; release={FmodDiagnosticNative.ResultName(release)}"
         );
@@ -578,7 +578,7 @@ internal sealed class FmodDiagnosticGame : Game
                 $"pause={pauseTestPassed}."
             );
         }
-        Stage3BLog.Info(
+        RuntimeLog.Info(
             $"FMOD_DIAGNOSTIC_SUMMARY low-level=PASS studio=PASS banks=PASS music-playing=PASS " +
             $"sfx-playing=PASS volume=PASS sfx-volume=PASS mute=PASS pause=PASS background={backgroundObserved}; " +
             $"foreground={foregroundObserved}"
@@ -589,7 +589,7 @@ internal sealed class FmodDiagnosticGame : Game
     {
         phase = nextPhase;
         phaseStarted = now;
-        Stage3BLog.Info($"FMOD_DIAGNOSTIC_CHECKPOINT name={checkpoint}; phase={phase}");
+        RuntimeLog.Info($"FMOD_DIAGNOSTIC_CHECKPOINT name={checkpoint}; phase={phase}");
     }
 
     private void Observe(NSString notification, Action<NSNotification> callback)
@@ -603,7 +603,7 @@ internal sealed class FmodDiagnosticGame : Game
         {
             SafeStop("resign-active");
             if (masterBus != IntPtr.Zero) _ = FmodDiagnosticNative.FMOD_Studio_Bus_SetPaused(masterBus, 1);
-            Stage3BLog.Info("FMOD_DIAGNOSTIC_CHECKPOINT name=lifecycle-resign-active playback-stopped=true");
+            RuntimeLog.Info("FMOD_DIAGNOSTIC_CHECKPOINT name=lifecycle-resign-active playback-stopped=true");
         }
     }
 
@@ -613,13 +613,13 @@ internal sealed class FmodDiagnosticGame : Game
         {
             backgroundObserved = true;
             SafeStop("background");
-            Stage3BLog.Info("FMOD_DIAGNOSTIC_CHECKPOINT name=lifecycle-background playback-stopped=true");
+            RuntimeLog.Info("FMOD_DIAGNOSTIC_CHECKPOINT name=lifecycle-background playback-stopped=true");
         }
     }
 
     private void OnWillEnterForeground(NSNotification notification)
     {
-        Stage3BLog.Info("FMOD_DIAGNOSTIC_CHECKPOINT name=lifecycle-foreground-entering");
+        RuntimeLog.Info("FMOD_DIAGNOSTIC_CHECKPOINT name=lifecycle-foreground-entering");
     }
 
     private void OnDidBecomeActive(NSNotification notification)
@@ -636,7 +636,7 @@ internal sealed class FmodDiagnosticGame : Game
             {
                 StartEvent(musicEvent, "music-post-foreground");
             }
-            Stage3BLog.Info("FMOD_DIAGNOSTIC_CHECKPOINT name=lifecycle-active playback-restarted=true");
+            RuntimeLog.Info("FMOD_DIAGNOSTIC_CHECKPOINT name=lifecycle-active playback-restarted=true");
         }
     }
 
@@ -649,7 +649,7 @@ internal sealed class FmodDiagnosticGame : Game
                 _ = FmodDiagnosticNative.FMOD_Studio_EventInstance_Stop(currentInstance, 1);
                 _ = FmodDiagnosticNative.FMOD_Studio_EventInstance_Release(currentInstance);
                 currentInstance = IntPtr.Zero;
-                Stage3BLog.Info($"FMOD_DIAGNOSTIC_CHECKPOINT name=event-stop category={currentCategory}; reason={reason}; safe=true");
+                RuntimeLog.Info($"FMOD_DIAGNOSTIC_CHECKPOINT name=event-stop category={currentCategory}; reason={reason}; safe=true");
                 currentCategory = "none";
             }
         }
@@ -669,7 +669,7 @@ internal sealed class FmodDiagnosticGame : Game
             {
                 int unload = FmodDiagnosticNative.FMOD_Studio_System_UnloadAll(studioSystem);
                 int release = FmodDiagnosticNative.FMOD_Studio_System_Release(studioSystem);
-                Stage3BLog.Info(
+                RuntimeLog.Info(
                     $"FMOD_DIAGNOSTIC_CHECKPOINT name=studio-shutdown reason={reason}; " +
                     $"unload={FmodDiagnosticNative.ResultName(unload)}; release={FmodDiagnosticNative.ResultName(release)}"
                 );

@@ -307,7 +307,7 @@ UseInterpreter=false
 PublishTrimmed=true
 TrimMode=full
 MtouchLink=Full
-Stage6PersistenceEnabled=true
+PersistenceEnabled=true
 ```
 
 Direct mode adds automatic development signing. IPA mode publishes without
@@ -505,7 +505,8 @@ logging disabled, no HUD plist/environment dependency, and full-AOT product
 tokens. Apple's device-global Developer Graphics HUD setting is not required.
 
 For isolated automation, build only an explicitly local acceptance app with
-`Stage10AAutomation=true` and `Stage6StorageNamespace=acceptance`, then use:
+`SaveManagerAutomation=true` and
+`PersistenceStorageNamespace=acceptance`, then use:
 
 ```bash
 scripts/run-celeste-tvos-save-manager-write-automated.sh \

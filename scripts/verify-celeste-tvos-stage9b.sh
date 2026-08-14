@@ -65,7 +65,7 @@ if [x["logicalName"] for x in files] != ["settings","0","1","2"]:
     raise SystemExit("error: durable allow-list changed")
 if [x["maximumPayloadBytes"] for x in files] != [65536,262144,262144,262144]:
     raise SystemExit("error: v2 uncompressed safety limits changed")
-store=(repo/"tvos/CelesteTvOSRuntimeHost/Stage6PersistenceStore.cs").read_text()
+store=(repo/"tvos/CelesteTvOSRuntimeHost/PersistenceStore.cs").read_text()
 for token in (
     "FormatVersion = 2", "PreviousFormatVersion = 1", "LegacyFormatVersion = 0",
     "ZLibStream", "CompressionLevel.SmallestSize", "DecompressBounded",

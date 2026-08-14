@@ -1,18 +1,26 @@
 <Project>
-  <!-- Imported only into Stage 3B's FNA project graph. The Stage 2 adapter and
-       its normal diagnostic build remain unchanged. -->
+  <!-- Imported only into the Celeste FNA project graph. The legacy Stage 2
+       diagnostic adapter remains unchanged. The filename is a locked
+       generated-project compatibility contract. -->
+  <PropertyGroup>
+    <!-- The canonical generated project retains this historical property name
+         so its Stage 17 logical hash remains byte-identical. Translate it only
+         at this external build boundary. -->
+    <PersistenceEnabled Condition="'$(PersistenceEnabled)' == '' and '$(Stage6PersistenceEnabled)' != ''">$(Stage6PersistenceEnabled)</PersistenceEnabled>
+  </PropertyGroup>
+
   <ItemGroup Condition="'$(AssemblyName)' == 'FNA'">
-    <Compile Include="$(MSBuildThisFileDirectory)Stage3BLegacyXnbReaders.cs"
-             Link="Stage3B\Stage3BLegacyXnbReaders.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)LegacyXnbReaders.cs"
+             Link="FnaExtension\LegacyXnbReaders.cs" />
   </ItemGroup>
 
   <!-- .NET 10's Unix FileStream marshaller attempts to emit a SafeFileHandle
-       constructor wrapper at runtime on full-AOT tvOS. Only the Stage 6 graph
-       substitutes FNA's bundle reader with an NSData-backed equivalent; the
-       pinned FNA submodule and all prior-stage project graphs remain intact. -->
-  <ItemGroup Condition="'$(AssemblyName)' == 'FNA' and '$(Stage6PersistenceEnabled)' == 'true'">
+       constructor wrapper at runtime on full-AOT tvOS. The persistent product
+       graph substitutes FNA's bundle reader with an NSData-backed equivalent;
+       the pinned FNA submodule and diagnostic project graphs remain intact. -->
+  <ItemGroup Condition="'$(AssemblyName)' == 'FNA' and '$(PersistenceEnabled)' == 'true'">
     <Compile Remove="$(CelesteTvOSRepoRoot)\FNA\src\TitleContainer.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Stage6TitleContainer.cs"
-             Link="Stage6\TitleContainer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)TvOSTitleContainer.cs"
+             Link="TvOS\TitleContainer.cs" />
   </ItemGroup>
 </Project>

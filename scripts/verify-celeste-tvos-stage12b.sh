@@ -36,7 +36,7 @@ while (($#)); do
   esac
 done
 
-dotnet run --project "$REPO_ROOT/tvos/Stage12BQuitTests/Stage12BQuitTests.csproj" -c Release
+dotnet run --project "$REPO_ROOT/tvos/QuitTests/QuitTests.csproj" -c Release
 
 stage11_args=()
 [[ -z "$GENERATED_ROOT" ]] || stage11_args+=(--generated-root "$GENERATED_ROOT")

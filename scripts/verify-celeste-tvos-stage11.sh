@@ -48,7 +48,7 @@ if [[ -n "$GAME_ROOT" ]]; then
   "$REPO_ROOT/scripts/inventory-celeste-controller-prompts.py" --game-root "$GAME_ROOT"
 fi
 
-dotnet run --project "$REPO_ROOT/tvos/Stage11ControllerPromptTests/Stage11ControllerPromptTests.csproj" -c Release
+dotnet run --project "$REPO_ROOT/tvos/ControllerPromptTests/ControllerPromptTests.csproj" -c Release
 
 stage10_args=()
 [[ -z "$APP" ]] || stage10_args+=(--app "$APP" --platform "$PLATFORM")

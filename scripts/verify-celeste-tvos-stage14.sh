@@ -49,10 +49,10 @@ prior_args=()
 if ((${#prior_args[@]})); then
   "$REPO_ROOT/scripts/verify-celeste-tvos-stage13b.sh" "${prior_args[@]}"
 else
-  dotnet run --project "$REPO_ROOT/tvos/Stage13BSoftReloadTests/Stage13BSoftReloadTests.csproj" -c Release
-  dotnet run --project "$REPO_ROOT/tvos/Stage12BQuitTests/Stage12BQuitTests.csproj" -c Release
-  dotnet run --project "$REPO_ROOT/tvos/Stage11ControllerPromptTests/Stage11ControllerPromptTests.csproj" -c Release
-  dotnet run --project "$REPO_ROOT/tvos/Stage10AProtocolTests/Stage10AProtocolTests.csproj" -c Release
+  dotnet run --project "$REPO_ROOT/tvos/SoftReloadTests/SoftReloadTests.csproj" -c Release
+  dotnet run --project "$REPO_ROOT/tvos/QuitTests/QuitTests.csproj" -c Release
+  dotnet run --project "$REPO_ROOT/tvos/ControllerPromptTests/ControllerPromptTests.csproj" -c Release
+  dotnet run --project "$REPO_ROOT/tvos/SaveManagerProtocolTests/SaveManagerProtocolTests.csproj" -c Release
   "$REPO_ROOT/scripts/verify-celeste-tvos-stage9b.sh" --skip-stage6-foundation
   "$REPO_ROOT/scripts/verify-celeste-tvos-stage10a.py" --repo-root "$REPO_ROOT"
   "$REPO_ROOT/scripts/verify-celeste-tvos-stage10b.py" --repo-root "$REPO_ROOT"

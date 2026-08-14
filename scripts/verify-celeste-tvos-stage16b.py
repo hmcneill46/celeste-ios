@@ -78,15 +78,15 @@ def main() -> int:
         "header": repo / "native/tvstubs/tvStubs.h",
         "native_build": repo / "scripts/build-tvos-native.sh",
         "expectations": repo / "native/tvos-symbol-expectations.json",
-        "policy": repo / "tvos/CelesteTvOSRuntimeHost/Stage16PerformanceHudPolicy.cs",
-        "coordinator": repo / "tvos/CelesteTvOSRuntimeHost/Stage16PerformanceHudCoordinator.cs",
+        "policy": repo / "tvos/CelesteTvOSRuntimeHost/PerformanceHudPolicy.cs",
+        "coordinator": repo / "tvos/CelesteTvOSRuntimeHost/PerformanceHudCoordinator.cs",
         "bridge": repo / "managed/templates/TvOSPerformanceHudBridge.cs",
         "generator": repo / "scripts/celeste-stage6.py",
         "host": repo / "tvos/CelesteTvOSRuntimeHost/Main.cs",
         "project": repo / "tvos/CelesteTvOSRuntimeHost/CelesteTvOSRuntimeHost.csproj",
         "plist": repo / "tvos/CelesteTvOSRuntimeHost/Info.plist",
         "privacy": repo / "tvos/CelesteTvOSRuntimeHost/PrivacyInfo.xcprivacy",
-        "tests": repo / "tvos/Stage16PerformanceHudTests/Program.cs",
+        "tests": repo / "tvos/PerformanceHudTests/Program.cs",
         "builder": repo / "build-tvos.sh",
         "generation_lock": repo / "managed/celeste-generation.lock.json",
         "prepare_host": repo / "scripts/prepare-tvos-host-native.sh",
@@ -109,7 +109,7 @@ def main() -> int:
     ), "Stage 1 bootstrap integration")
     require(text["policy"], (
         'CelesteTvOS.PerformanceHUD.v1', '"Off"', '"On"',
-        'new(mode == Stage16PerformanceHudMode.On ? "default" : "disabled", "disabled")',
+        'new(mode == PerformanceHudMode.On ? "default" : "disabled", "disabled")',
         "SelectPresentationLayer", "ModeWhileInactive", "ModeAfterForeground",
     ), "Performance HUD policy")
     require(text["coordinator"], (
@@ -130,7 +130,7 @@ def main() -> int:
         "TvOSPerformanceHudHooks.ApplyStartup(celeste.Window.Handle)",
         "TvOSPerformanceHudHooks.ApplyBeforeFirstRender()",
     ), "locked generated transformation")
-    require(text["host"], ("Stage16PerformanceHudCoordinator",), "host lifetime")
+    require(text["host"], ("PerformanceHudCoordinator",), "host lifetime")
     require(text["privacy"], ("NSPrivacyAccessedAPICategoryUserDefaults", "CA92.1"), "privacy manifest")
     require(text["builder"], (
         "verify-performance-hud-source", "verify-stage16b-unsigned", "verify-stage16b-signed",

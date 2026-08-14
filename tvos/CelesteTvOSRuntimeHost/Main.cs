@@ -18,26 +18,26 @@ internal static class Program
     public static int Main(string[] args)
     {
         LogHostIdentity();
-        Stage3BLog.Info($"lifecycle launch: mode={LaunchMode}; entering SDL_UIKitRunApp");
+        RuntimeLog.Info($"lifecycle launch: mode={LaunchMode}; entering SDL_UIKitRunApp");
         return SDL.SDL_UIKitRunApp(0, IntPtr.Zero, SdlMainCallback);
     }
 
     [MonoPInvokeCallback(typeof(SDL.SDL_main_func))]
     private static int SdlMain(int argc, IntPtr argv)
     {
-        Stage3BLog.Info($"managed startup: SDL main callback entered; mode={LaunchMode}; argc={argc}");
+        RuntimeLog.Info($"managed startup: SDL main callback entered; mode={LaunchMode}; argc={argc}");
         using var lifecycle = new LifecycleMonitor();
 #if CELESTE_RUNTIME
-        using var hapticLifecycle = new Stage3CHapticLifecycle();
+        using var hapticLifecycle = new HapticLifecycle();
 #endif
 #if CELESTE_AUDIO
-        using var audioLifecycle = new Stage5BAudioLifecycle();
+        using var audioLifecycle = new AudioLifecycle();
 #endif
 
         try
         {
             string interop = NativeInteropSelfTest.Run();
-            Stage3BLog.Info($"native interoperability self-test PASS: {interop}");
+            RuntimeLog.Info($"native interoperability self-test PASS: {interop}");
 
             SDL.SDL_SetHint(SDL.SDL_HINT_TV_REMOTE_AS_JOYSTICK, "0");
             SDL.SDL_SetHint("FNA3D_FORCE_DRIVER", "Metal");
@@ -45,16 +45,16 @@ internal static class Program
 
 #if STAGE2_DIAGNOSTIC
             using var diagnostic = new Stage2Game();
-            Stage3BLog.Info("Stage2Diagnostic: proven geometric FNA scene constructed; entering run loop");
+            RuntimeLog.Info("Stage2Diagnostic: proven geometric FNA scene constructed; entering run loop");
             diagnostic.Run();
-            Stage3BLog.Info("Stage2Diagnostic: run loop returned cleanly");
+            RuntimeLog.Info("Stage2Diagnostic: run loop returned cleanly");
 #elif FMOD_DIAGNOSTIC_DEVICE
             using var fmodDiagnostic = new FmodDiagnosticGame();
-            Stage3BLog.Info("FmodDiagnostic: real FMOD 1.10.09 device lane constructed; entering run loop");
+            RuntimeLog.Info("FmodDiagnostic: real FMOD 1.10.09 device lane constructed; entering run loop");
             fmodDiagnostic.Run();
-            Stage3BLog.Info("FmodDiagnostic: run loop returned cleanly");
+            RuntimeLog.Info("FmodDiagnostic: run loop returned cleanly");
 #elif FMOD_DIAGNOSTIC_UNAVAILABLE
-            Stage3BLog.Warning(
+            RuntimeLog.Warning(
                 "FmodDiagnostic: native FMOD is device-only for arm64; supplied tvOS simulator archives are x86_64-only"
             );
             using var unavailableDiagnostic = new Stage2Game();
@@ -62,28 +62,28 @@ internal static class Program
 #elif CELESTE_PREFLIGHT
             _ = PrepareCelesteRuntimeContext(enablePersistence: false);
             using var preflight = new CelestePreflightGame();
-            Stage3BLog.Info("CelestePreflight: FNA preflight game constructed; entering run loop");
+            RuntimeLog.Info("CelestePreflight: FNA preflight game constructed; entering run loop");
             preflight.Run();
-            Stage3BLog.Info("CelestePreflight: run loop returned cleanly");
+            RuntimeLog.Info("CelestePreflight: run loop returned cleanly");
             TvOSStage3Bridge.ThrowIfFatal();
             if (TvOSStage3Bridge.LowLevelFmodCallCount != 0)
             {
                 throw new InvalidOperationException("CelestePreflight reached an FMOD low-level guard.");
             }
 #elif CELESTE_GAME
-#if TVOS_STAGE6_HOST
-            using Stage6PersistenceStore? persistence = PrepareCelesteRuntimeContext(enablePersistence: true);
-            using Stage6PersistenceLifecycle? persistenceLifecycle = persistence == null ? null : new Stage6PersistenceLifecycle(persistence);
-            using Stage10ASaveManager? saveManager = persistence == null ? null : new Stage10ASaveManager(persistence);
-            using Stage11ControllerPromptPreferences? controllerPrompts = persistence == null ? null : new Stage11ControllerPromptPreferences();
-            using Stage16PerformanceHudCoordinator performanceHud = new();
-            using Stage13BSoftReloadCoordinator? softReloadCoordinator = saveManager == null || persistence == null
-                ? null : new Stage13BSoftReloadCoordinator(persistence, saveManager);
-            using Stage12BQuitCoordinator? quitCoordinator = saveManager == null ? null : new Stage12BQuitCoordinator(saveManager);
+#if TVOS_CELESTE_RUNTIME_HOST
+            using PersistenceStore? persistence = PrepareCelesteRuntimeContext(enablePersistence: true);
+            using PersistenceLifecycle? persistenceLifecycle = persistence == null ? null : new PersistenceLifecycle(persistence);
+            using SaveManagerService? saveManager = persistence == null ? null : new SaveManagerService(persistence);
+            using ControllerPromptPreferences? controllerPrompts = persistence == null ? null : new ControllerPromptPreferences();
+            using PerformanceHudCoordinator performanceHud = new();
+            using SoftReloadCoordinator? softReloadCoordinator = saveManager == null || persistence == null
+                ? null : new SoftReloadCoordinator(persistence, saveManager);
+            using QuitCoordinator? quitCoordinator = saveManager == null ? null : new QuitCoordinator(saveManager);
 #else
             PrepareCelesteRuntimeContext(enablePersistence: false);
 #endif
-            Stage3BLog.Info(
+            RuntimeLog.Info(
                 $"managed identity: Celeste={typeof(global::Celeste.Celeste).Assembly.GetName().Version}; " +
                 $"Celeste.Content={typeof(global::Celeste.Content.Stage3AContentIdentity).Assembly.GetName().Version}"
             );
@@ -96,7 +96,7 @@ internal static class Program
                 throw new InvalidOperationException("Celeste reached an FMOD low-level guard.");
             }
 #endif
-            Stage3BLog.Info(
+            RuntimeLog.Info(
                 $"Celeste run loop returned; updates={TvOSStage3Bridge.UpdateCount}; " +
 #if CELESTE_AUDIO
                 $"draws={TvOSStage3Bridge.DrawCount}; audio=real-fmod"
@@ -105,17 +105,17 @@ internal static class Program
 #endif
             );
 #elif CELESTE_PERSISTENCE_DIAGNOSTIC
-            using (Stage6PersistenceStore persistence = PrepareCelesteRuntimeContext(enablePersistence: true)
-                ?? throw new InvalidOperationException("Stage 6 persistence was not enabled."))
-            using (Stage6PersistenceLifecycle persistenceLifecycle = new(persistence))
+            using (PersistenceStore persistence = PrepareCelesteRuntimeContext(enablePersistence: true)
+                ?? throw new InvalidOperationException("tvOS persistence was not enabled."))
+            using (PersistenceLifecycle persistenceLifecycle = new(persistence))
             {
-                Stage6PersistenceDiagnostic.Run(persistence, Environment.GetEnvironmentVariable("CELESTE_TVOS_SESSION_ROOT")!);
+                PersistenceDiagnostic.Run(persistence, Environment.GetEnvironmentVariable("CELESTE_TVOS_SESSION_ROOT")!);
             }
 #elif CELESTE_PERSISTENCE_INSPECT
-            using (Stage6PersistenceStore persistence = PrepareCelesteRuntimeContext(enablePersistence: true)
+            using (PersistenceStore persistence = PrepareCelesteRuntimeContext(enablePersistence: true)
                 ?? throw new InvalidOperationException("Stage 9B production persistence inspection was not enabled."))
             {
-                Stage3BLog.Info(
+                RuntimeLog.Info(
                     $"STAGE9B_PRODUCTION_INSPECT result=PASS; generation={persistence.Generation}; " +
                     $"format=v{persistence.SelectedFormatVersion}; logical={persistence.LogicalHash}; " +
                     $"bridge-bytes={persistence.BridgeBytes()}; mutation=none"
@@ -133,21 +133,21 @@ internal static class Program
             TvOSStage5BAudioBridge.Fatal(exception, "tvOS host");
             TvOSStage5BAudioBridge.ShutdownSafely("host-exception");
 #endif
-            Stage3BLog.Error($"unhandled managed exception: {exception}");
+            RuntimeLog.Error($"unhandled managed exception: {exception}");
             return 1;
         }
     }
 
     private static void ConfigureFnaLogging()
     {
-        FNALoggerEXT.LogInfo = message => Stage3BLog.Info($"FNA: {message.TrimEnd()}");
-        FNALoggerEXT.LogWarn = message => Stage3BLog.Warning($"FNA: {message.TrimEnd()}");
-        FNALoggerEXT.LogError = message => Stage3BLog.Error($"FNA: {message.TrimEnd()}");
+        FNALoggerEXT.LogInfo = message => RuntimeLog.Info($"FNA: {message.TrimEnd()}");
+        FNALoggerEXT.LogWarn = message => RuntimeLog.Warning($"FNA: {message.TrimEnd()}");
+        FNALoggerEXT.LogError = message => RuntimeLog.Error($"FNA: {message.TrimEnd()}");
     }
 
 #if CELESTE_RUNTIME
-#if TVOS_STAGE6_HOST
-    private static Stage6PersistenceStore? PrepareCelesteRuntimeContext(bool enablePersistence)
+#if TVOS_CELESTE_RUNTIME_HOST
+    private static PersistenceStore? PrepareCelesteRuntimeContext(bool enablePersistence)
 #else
     private static object? PrepareCelesteRuntimeContext(bool enablePersistence)
 #endif
@@ -158,7 +158,7 @@ internal static class Program
         if (!File.Exists(Path.Combine(content, "Effects", "Border.xnb")) ||
             !File.Exists(Path.Combine(content, "Monocle", "MonocleDefault.xnb")))
         {
-            throw new InvalidOperationException("Validated Stage 3B representative Content is not packaged.");
+            throw new InvalidOperationException("Validated representative Celeste Content is not packaged.");
         }
 #if CELESTE_AUDIO
         string bankRoot = Path.Combine(resources, "Content", "FMOD", "Desktop");
@@ -168,7 +168,7 @@ internal static class Program
             "dlc_music.bank", "dlc_sfx.bank"
         };
         if (requiredBanks.Any(name => !File.Exists(Path.Combine(bankRoot, name))))
-            throw new InvalidOperationException("The accepted seven Stage 5A FMOD banks are not packaged.");
+            throw new InvalidOperationException("The accepted seven FMOD banks are not packaged.");
 #else
         if (Directory.Exists(Path.Combine(content, "FMOD")))
         {
@@ -197,26 +197,26 @@ internal static class Program
         Environment.SetEnvironmentVariable("FNA_AUDIO_DISABLE_SOUND", "1");
         Environment.SetEnvironmentVariable("FNA3D_FORCE_DRIVER", "Metal");
         Directory.SetCurrentDirectory(resources);
-#if TVOS_STAGE6_HOST
-        Stage6PersistenceStore? persistence = null;
+#if TVOS_CELESTE_RUNTIME_HOST
+        PersistenceStore? persistence = null;
         if (enablePersistence)
         {
-            persistence = new Stage6PersistenceStore(sessionRoot, Stage6Namespace);
-            Stage6PersistenceStore.RestoreResult restored = persistence.Restore();
+            persistence = new PersistenceStore(sessionRoot, PersistenceNamespace);
+            PersistenceStore.RestoreResult restored = persistence.Restore();
             TvOSStage6PersistenceHooks.CommitRequested = persistence.Commit;
-            Stage3BLog.Info($"STAGE6_READY namespace={persistence.NamespaceCategory}; generation={restored.Generation}; materialized={restored.Materialized.ToString().ToLowerInvariant()}; bridge-bytes={persistence.BridgeBytes()}");
+            RuntimeLog.Info($"STAGE6_READY namespace={persistence.NamespaceCategory}; generation={restored.Generation}; materialized={restored.Materialized.ToString().ToLowerInvariant()}; bridge-bytes={persistence.BridgeBytes()}");
         }
 #endif
 #if CELESTE_AUDIO
-        Stage3BLog.Info(enablePersistence
+        RuntimeLog.Info(enablePersistence
             ? "runtime context: durable UserDefaults bridge restored into a private materialized session; seven accepted device-only FMOD banks; real Celeste audio enabled"
             : "runtime context: validated non-audio Content plus seven accepted device-only FMOD banks; real Celeste audio enabled");
 #else
-        Stage3BLog.Info(enablePersistence
+        RuntimeLog.Info(enablePersistence
             ? "runtime context: durable UserDefaults bridge restored into a private materialized session; validated bundled non-audio Content"
             : "runtime context: validated bundled non-audio Content; ephemeral settings root configured");
 #endif
-#if TVOS_STAGE6_HOST
+#if TVOS_CELESTE_RUNTIME_HOST
         return persistence;
 #else
         return null;
@@ -231,15 +231,15 @@ internal static class Program
             ?? assembly.GetName().Version?.ToString()
             ?? "unknown";
         bool simulator = !string.IsNullOrEmpty(Environment.GetEnvironmentVariable("SIMULATOR_DEVICE_NAME"));
-        Stage3BLog.Info(
+        RuntimeLog.Info(
             $"host version={version}; repository baseline=6118e5e2f6fd13657e55ebeeab52dee313d5306d; mode={LaunchMode}"
         );
-        Stage3BLog.Info($"runtime={RuntimeInformation.FrameworkDescription}; architecture={RuntimeInformation.ProcessArchitecture}");
-        Stage3BLog.Info(
+        RuntimeLog.Info($"runtime={RuntimeInformation.FrameworkDescription}; architecture={RuntimeInformation.ProcessArchitecture}");
+        RuntimeLog.Info(
             $"OS={NSProcessInfo.ProcessInfo.OperatingSystemVersionString}; UIKit={UIDevice.CurrentDevice.SystemName} " +
             $"{UIDevice.CurrentDevice.SystemVersion}; target={(simulator ? "simulator" : "physical-device")}"
         );
-        Stage3BLog.Info($"FNA assembly version={typeof(Game).Assembly.GetName().Version}; SDL platform={SafeSdlPlatform()}");
+        RuntimeLog.Info($"FNA assembly version={typeof(Game).Assembly.GetName().Version}; SDL platform={SafeSdlPlatform()}");
     }
 
     private static string SafeSdlPlatform()
@@ -272,8 +272,8 @@ internal static class Program
         }
     }
 
-#if TVOS_STAGE6_HOST
-    private static string Stage6Namespace =>
+#if TVOS_CELESTE_RUNTIME_HOST
+    private static string PersistenceNamespace =>
 #if STAGE6_NAMESPACE_TESTS
         "tests";
 #elif STAGE6_NAMESPACE_ACCEPTANCE

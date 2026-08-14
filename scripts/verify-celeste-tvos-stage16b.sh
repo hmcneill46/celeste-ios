@@ -51,7 +51,7 @@ else
   "$REPO_ROOT/scripts/verify-celeste-tvos-stage15.sh"
 fi
 
-dotnet run --project "$REPO_ROOT/tvos/Stage16PerformanceHudTests/Stage16PerformanceHudTests.csproj" -c Release
+dotnet run --project "$REPO_ROOT/tvos/PerformanceHudTests/PerformanceHudTests.csproj" -c Release
 
 args=(--repo-root "$REPO_ROOT")
 [[ -z "$GENERATED_ROOT" ]] || args+=(--generated-root "$GENERATED_ROOT")

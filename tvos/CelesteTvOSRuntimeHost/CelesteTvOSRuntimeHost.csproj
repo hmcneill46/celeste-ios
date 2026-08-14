@@ -14,15 +14,15 @@
     <AssemblyInformationalVersion>16.0.0+stage16b</AssemblyInformationalVersion>
     <CelesteLaunchMode Condition="'$(CelesteLaunchMode)' == ''">Stage2Diagnostic</CelesteLaunchMode>
     <CelesteRuntimeEnabled Condition="'$(CelesteLaunchMode)' == 'CelestePreflight' or '$(CelesteLaunchMode)' == 'Celeste' or '$(CelesteLaunchMode)' == 'CelestePrologueDiagnostic' or '$(CelesteLaunchMode)' == 'CelesteAudio' or '$(CelesteLaunchMode)' == 'CelestePersistenceDiagnostic' or '$(CelesteLaunchMode)' == 'CelestePersistenceInspect'">true</CelesteRuntimeEnabled>
-    <Stage6PersistenceEnabled Condition="'$(Stage6PersistenceEnabled)' == '' and '$(CelesteRuntimeEnabled)' == 'true'">true</Stage6PersistenceEnabled>
-    <Stage6StorageNamespace Condition="'$(Stage6StorageNamespace)' == ''">production</Stage6StorageNamespace>
+    <PersistenceEnabled Condition="'$(PersistenceEnabled)' == '' and '$(CelesteRuntimeEnabled)' == 'true'">true</PersistenceEnabled>
+    <PersistenceStorageNamespace Condition="'$(PersistenceStorageNamespace)' == ''">production</PersistenceStorageNamespace>
     <FmodDiagnosticEnabled Condition="'$(CelesteLaunchMode)' == 'FmodDiagnostic'">true</FmodDiagnosticEnabled>
     <CelesteAudioEnabled Condition="'$(CelesteLaunchMode)' == 'CelesteAudio'">true</CelesteAudioEnabled>
     <CelesteTvOSRepoRoot>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\..'))</CelesteTvOSRepoRoot>
     <TvOSHostStageRoot>$(CelesteTvOSRepoRoot)\.build\tvos-host</TvOSHostStageRoot>
     <TvOSHostNativeRoot>$(TvOSHostStageRoot)\native</TvOSHostNativeRoot>
-    <CelesteRuntimeRoot Condition="'$(CelesteRuntimeRoot)' == '' and '$(Stage6PersistenceEnabled)' == 'true' and '$(CelesteAudioEnabled)' == 'true'">$(CelesteTvOSRepoRoot)\.build\celeste-runtime\stage6-current\audio</CelesteRuntimeRoot>
-    <CelesteRuntimeRoot Condition="'$(CelesteRuntimeRoot)' == '' and '$(Stage6PersistenceEnabled)' == 'true'">$(CelesteTvOSRepoRoot)\.build\celeste-runtime\stage6-current\noaudio</CelesteRuntimeRoot>
+    <CelesteRuntimeRoot Condition="'$(CelesteRuntimeRoot)' == '' and '$(PersistenceEnabled)' == 'true' and '$(CelesteAudioEnabled)' == 'true'">$(CelesteTvOSRepoRoot)\.build\celeste-runtime\stage6-current\audio</CelesteRuntimeRoot>
+    <CelesteRuntimeRoot Condition="'$(CelesteRuntimeRoot)' == '' and '$(PersistenceEnabled)' == 'true'">$(CelesteTvOSRepoRoot)\.build\celeste-runtime\stage6-current\noaudio</CelesteRuntimeRoot>
     <CelesteRuntimeRoot Condition="'$(CelesteRuntimeRoot)' == '' and '$(CelesteAudioEnabled)' == 'true'">$(CelesteTvOSRepoRoot)\.build\celeste-runtime\stage5b-current</CelesteRuntimeRoot>
     <CelesteRuntimeRoot Condition="'$(CelesteRuntimeRoot)' == ''">$(CelesteTvOSRepoRoot)\.build\celeste-runtime\stage3c-current</CelesteRuntimeRoot>
     <CelesteRuntimeManagedRoot>$(CelesteRuntimeRoot)\managed</CelesteRuntimeManagedRoot>
@@ -32,7 +32,7 @@
     <CelesteBrandingEnabled Condition="'$(CelesteBrandingEnabled)' == ''">false</CelesteBrandingEnabled>
     <CelesteBrandAssetsRoot Condition="'$(CelesteBrandAssetsRoot)' == ''">$(CelesteTvOSRepoRoot)\.build\tvos-self-build\artwork\Assets.xcassets</CelesteBrandAssetsRoot>
     <AppIcon Condition="'$(CelesteBrandingEnabled)' == 'true'">App Icon</AppIcon>
-    <Stage3BFnaExtensionTargets>$(MSBuildThisFileDirectory)Stage3BFnaExtension.targets</Stage3BFnaExtensionTargets>
+    <FnaExtensionTargets>$(MSBuildThisFileDirectory)Stage3BFnaExtension.targets</FnaExtensionTargets>
     <CodesignEntitlements>Entitlements.plist</CodesignEntitlements>
     <TrimMode Condition="'$(Configuration)' == 'Release'">full</TrimMode>
     <DebugSymbols Condition="'$(Configuration)' == 'Release'">false</DebugSymbols>
@@ -45,11 +45,11 @@
     <DefineConstants Condition="'$(CelesteLaunchMode)' == 'FmodDiagnostic' and '$(RuntimeIdentifier)' != 'tvos-arm64'">$(DefineConstants);FMOD_DIAGNOSTIC_UNAVAILABLE</DefineConstants>
     <DefineConstants Condition="'$(CelesteLaunchMode)' == 'CelestePreflight'">$(DefineConstants);CELESTE_RUNTIME;CELESTE_PREFLIGHT</DefineConstants>
     <DefineConstants Condition="'$(CelesteLaunchMode)' == 'Celeste'">$(DefineConstants);CELESTE_RUNTIME;CELESTE_GAME</DefineConstants>
-    <DefineConstants Condition="'$(Stage6PersistenceEnabled)' == 'true'">$(DefineConstants);TVOS_STAGE6_HOST</DefineConstants>
-    <DefineConstants Condition="'$(Stage10AAutomation)' == 'true'">$(DefineConstants);TVOS_STAGE10A_AUTOMATION</DefineConstants>
-    <DefineConstants Condition="'$(Stage6PersistenceEnabled)' == 'true' and '$(Stage6StorageNamespace)' == 'acceptance'">$(DefineConstants);STAGE6_NAMESPACE_ACCEPTANCE</DefineConstants>
-    <DefineConstants Condition="'$(Stage6PersistenceEnabled)' == 'true' and '$(Stage6StorageNamespace)' == 'restart'">$(DefineConstants);STAGE6_NAMESPACE_RESTART</DefineConstants>
-    <DefineConstants Condition="'$(Stage6PersistenceEnabled)' == 'true' and '$(Stage6StorageNamespace)' == 'tests'">$(DefineConstants);STAGE6_NAMESPACE_TESTS</DefineConstants>
+    <DefineConstants Condition="'$(PersistenceEnabled)' == 'true'">$(DefineConstants);TVOS_CELESTE_RUNTIME_HOST</DefineConstants>
+    <DefineConstants Condition="'$(SaveManagerAutomation)' == 'true'">$(DefineConstants);TVOS_SAVE_MANAGER_AUTOMATION</DefineConstants>
+    <DefineConstants Condition="'$(PersistenceEnabled)' == 'true' and '$(PersistenceStorageNamespace)' == 'acceptance'">$(DefineConstants);STAGE6_NAMESPACE_ACCEPTANCE</DefineConstants>
+    <DefineConstants Condition="'$(PersistenceEnabled)' == 'true' and '$(PersistenceStorageNamespace)' == 'restart'">$(DefineConstants);STAGE6_NAMESPACE_RESTART</DefineConstants>
+    <DefineConstants Condition="'$(PersistenceEnabled)' == 'true' and '$(PersistenceStorageNamespace)' == 'tests'">$(DefineConstants);STAGE6_NAMESPACE_TESTS</DefineConstants>
     <DefineConstants Condition="'$(CelesteLaunchMode)' == 'CelestePersistenceDiagnostic'">$(DefineConstants);CELESTE_RUNTIME;CELESTE_PERSISTENCE_DIAGNOSTIC</DefineConstants>
     <DefineConstants Condition="'$(CelesteLaunchMode)' == 'CelestePersistenceInspect'">$(DefineConstants);CELESTE_RUNTIME;CELESTE_PERSISTENCE_INSPECT</DefineConstants>
     <DefineConstants Condition="'$(CelesteLaunchMode)' == 'CelestePersistenceDiagnostic' and '$(Stage9BRetainedFixtureRoot)' != ''">$(DefineConstants);STAGE9B_RETAINED_FIXTURES</DefineConstants>
@@ -66,10 +66,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Stage3BLegacyXnbReaders.cs" />
-    <Compile Remove="Stage6TitleContainer.cs" />
+    <Compile Remove="LegacyXnbReaders.cs" />
+    <Compile Remove="TvOSTitleContainer.cs" />
     <ProjectReference Include="..\FNA.TvOS\FNA.TvOS.csproj"
-                      AdditionalProperties="CustomAfterMicrosoftCommonTargets=$(Stage3BFnaExtensionTargets);Stage6PersistenceEnabled=$(Stage6PersistenceEnabled);CelesteTvOSRepoRoot=$(CelesteTvOSRepoRoot)" />
+                      AdditionalProperties="CustomAfterMicrosoftCommonTargets=$(FnaExtensionTargets);PersistenceEnabled=$(PersistenceEnabled);CelesteTvOSRepoRoot=$(CelesteTvOSRepoRoot)" />
     <Compile Include="..\CelesteTvOSHost\Stage2Game.cs" Link="Stage2Diagnostic\Stage2Game.cs" />
     <Compile Include="..\CelesteTvOSHost\Stage2Log.cs" Link="Stage2Diagnostic\Stage2Log.cs" />
     <Compile Include="..\CelesteTvOSHost\NativeInteropSelfTest.cs" Link="Stage2Diagnostic\NativeInteropSelfTest.cs" />
@@ -86,12 +86,12 @@
 
   <ItemGroup Condition="'$(CelesteRuntimeEnabled)' == 'true'">
     <ProjectReference Include="$(CelesteRuntimeManagedRoot)\Celeste.Modern.csproj"
-                      AdditionalProperties="CelesteTvOSRepoRoot=$(CelesteTvOSRepoRoot);CelesteManagedGeneratedRoot=$(CelesteRuntimeManagedRoot);CustomAfterMicrosoftCommonTargets=$(Stage3BFnaExtensionTargets);Stage6PersistenceEnabled=$(Stage6PersistenceEnabled)" />
+                      AdditionalProperties="CelesteTvOSRepoRoot=$(CelesteTvOSRepoRoot);CelesteManagedGeneratedRoot=$(CelesteRuntimeManagedRoot);CustomAfterMicrosoftCommonTargets=$(FnaExtensionTargets);Stage6PersistenceEnabled=$(PersistenceEnabled)" />
     <ProjectReference Include="$(CelesteRuntimeManagedRoot)\Celeste.Content.Modern.csproj"
                       AdditionalProperties="CelesteManagedGeneratedRoot=$(CelesteRuntimeManagedRoot)" />
     <BundleResource Include="$(CelesteRuntimeContentRoot)\**\*"
                     LogicalName="Content\%(RecursiveDir)%(Filename)%(Extension)" />
-    <TrimmerRootDescriptor Include="Stage3BLinker.xml" />
+    <TrimmerRootDescriptor Include="CelesteLinker.xml" />
   </ItemGroup>
 
   <!-- Optional, ignored, lawful local Stage 9A payloads. This lane exists only
@@ -142,11 +142,11 @@
   <Target Name="ValidateCelesteLaunchMode" BeforeTargets="PrepareForBuild">
     <Error Condition="'$(CelesteLaunchMode)' != 'Stage2Diagnostic' and '$(CelesteLaunchMode)' != 'CelestePreflight' and '$(CelesteLaunchMode)' != 'Celeste' and '$(CelesteLaunchMode)' != 'CelestePrologueDiagnostic' and '$(CelesteLaunchMode)' != 'FmodDiagnostic' and '$(CelesteLaunchMode)' != 'CelesteAudio' and '$(CelesteLaunchMode)' != 'CelestePersistenceDiagnostic' and '$(CelesteLaunchMode)' != 'CelestePersistenceInspect'"
            Text="CelesteLaunchMode must be Stage2Diagnostic, CelestePreflight, Celeste, CelestePrologueDiagnostic, FmodDiagnostic, CelesteAudio, CelestePersistenceDiagnostic, or CelestePersistenceInspect." />
-    <Error Condition="'$(Stage6PersistenceEnabled)' == 'true' and '$(Stage6StorageNamespace)' != 'production' and '$(Stage6StorageNamespace)' != 'acceptance' and '$(Stage6StorageNamespace)' != 'restart' and '$(Stage6StorageNamespace)' != 'tests'"
-           Text="Stage6StorageNamespace must be one of the committed fixed categories: production, acceptance, restart, or tests." />
-    <Error Condition="'$(CelesteLaunchMode)' == 'CelestePersistenceDiagnostic' and '$(Stage6StorageNamespace)' != 'tests'"
-           Text="CelestePersistenceDiagnostic must use Stage6StorageNamespace=tests." />
-    <Error Condition="'$(CelesteLaunchMode)' == 'CelestePersistenceInspect' and '$(Stage6StorageNamespace)' != 'production'"
+    <Error Condition="'$(PersistenceEnabled)' == 'true' and '$(PersistenceStorageNamespace)' != 'production' and '$(PersistenceStorageNamespace)' != 'acceptance' and '$(PersistenceStorageNamespace)' != 'restart' and '$(PersistenceStorageNamespace)' != 'tests'"
+           Text="PersistenceStorageNamespace must be one of the committed fixed categories: production, acceptance, restart, or tests." />
+    <Error Condition="'$(CelesteLaunchMode)' == 'CelestePersistenceDiagnostic' and '$(PersistenceStorageNamespace)' != 'tests'"
+           Text="CelestePersistenceDiagnostic must use PersistenceStorageNamespace=tests." />
+    <Error Condition="'$(CelesteLaunchMode)' == 'CelestePersistenceInspect' and '$(PersistenceStorageNamespace)' != 'production'"
            Text="CelestePersistenceInspect is read-only and must use the production namespace." />
     <Error Condition="'$(CelesteAudioEnabled)' == 'true' and '$(RuntimeIdentifier)' != 'tvos-arm64'"
            Text="CelesteAudio is device-only. Use Celeste for the arm64 simulator no-audio lane." />
@@ -157,29 +157,29 @@
     <Error Condition="'$(CelesteBrandingEnabled)' == 'true' and !Exists('$(CelesteBrandAssetsRoot)\App Icon.brandassets\Contents.json')"
            Text="Local Celeste tvOS artwork is missing. Run scripts/generate-celeste-tvos-artwork.sh." />
     <Error Condition="!Exists('$(TvOSHostStageRoot)\normalized-manifest.json')"
-           Text="Prepared Stage 1 native inputs are missing. Run scripts/prepare-tvos-host-native.sh." />
+           Text="Prepared native inputs are missing. Run scripts/prepare-tvos-host-native.sh." />
     <Error Condition="'$(CelesteRuntimeEnabled)' == 'true' and !Exists('$(CelesteRuntimeManagedRoot)\Celeste.Modern.csproj')"
-           Text="Stage 3B managed input is missing. Run scripts/prepare-celeste-tvos-runtime.sh." />
+           Text="Generated Celeste managed input is missing. Run scripts/prepare-celeste-tvos-runtime.sh." />
     <Error Condition="'$(CelesteRuntimeEnabled)' == 'true' and !Exists('$(CelesteRuntimeContentRoot)\Effects\Border.xnb')"
-           Text="Stage 3B Content input is missing. Run scripts/prepare-celeste-tvos-runtime.sh without --managed-only." />
+           Text="Generated Celeste Content input is missing. Run scripts/prepare-celeste-tvos-runtime.sh without --managed-only." />
     <Error Condition="'$(CelesteRuntimeEnabled)' == 'true' and Exists('$(CelesteRuntimeContentRoot)\FMOD')"
-           Text="Generated Celeste Content must not contain FMOD; device audio banks come only from accepted Stage 5A staging." />
+           Text="Generated Celeste Content must not contain FMOD; device audio banks come only from accepted FMOD staging." />
     <Error Condition="'$(FmodNativeEnabled)' == 'true' and '$(RuntimeIdentifier)' == 'tvos-arm64' and !Exists('$(FmodDiagnosticStageRoot)\logical-manifest.json')"
-           Text="Prepared Stage 5A FMOD inputs are missing. Run scripts/prepare-fmod-tvos.sh." />
+           Text="Prepared FMOD inputs are missing. Run scripts/prepare-fmod-tvos.sh." />
     <Error Condition="'$(FmodNativeEnabled)' == 'true' and '$(RuntimeIdentifier)' == 'tvos-arm64' and !Exists('$(FmodDiagnosticStageRoot)\banks\Content\FMOD\Desktop\Master Bank.bank')"
-           Text="Prepared Stage 5A FMOD banks are missing." />
+           Text="Prepared FMOD banks are missing." />
     <Error Condition="'$(CelesteAudioEnabled)' == 'true' and !Exists('$(CelesteRuntimeManagedRoot)\Celeste\TvOSStage5BAudioBridge.cs')"
-           Text="CelesteAudio requires the separately generated Stage 5B real-audio managed tree." />
-    <Error Condition="'$(Stage6PersistenceEnabled)' == 'true' and !Exists('$(CelesteRuntimeManagedRoot)\Celeste\TvOSStage6PersistenceHooks.cs')"
-           Text="Stage 6 persistence requires scripts/prepare-celeste-tvos-stage6.sh output." />
-    <Error Condition="'$(Stage6PersistenceEnabled)' == 'true' and !Exists('$(CelesteRuntimeManagedRoot)\Celeste\TvOSSaveManagerBridge.cs')"
-           Text="Stage 10A Save Manager requires scripts/prepare-celeste-tvos-stage6.sh output." />
-    <Error Condition="'$(Stage6PersistenceEnabled)' == 'true' and !Exists('$(CelesteRuntimeManagedRoot)\Celeste\TvOSControllerPromptBridge.cs')"
-           Text="Stage 11 controller prompts require scripts/prepare-celeste-tvos-stage6.sh output." />
-    <Error Condition="'$(Stage6PersistenceEnabled)' == 'true' and !Exists('$(CelesteRuntimeManagedRoot)\Celeste\TvOSQuitBridge.cs')"
-           Text="Stage 12B graceful Quit requires scripts/prepare-celeste-tvos-stage6.sh output." />
-    <Error Condition="'$(Stage6PersistenceEnabled)' == 'true' and !Exists('$(CelesteRuntimeManagedRoot)\Celeste\TvOSPerformanceHudBridge.cs')"
-           Text="Stage 16B Performance HUD requires scripts/prepare-celeste-tvos-stage6.sh output." />
+           Text="CelesteAudio requires the separately generated real-audio managed tree." />
+    <Error Condition="'$(PersistenceEnabled)' == 'true' and !Exists('$(CelesteRuntimeManagedRoot)\Celeste\TvOSStage6PersistenceHooks.cs')"
+           Text="tvOS persistence requires scripts/prepare-celeste-tvos-stage6.sh output." />
+    <Error Condition="'$(PersistenceEnabled)' == 'true' and !Exists('$(CelesteRuntimeManagedRoot)\Celeste\TvOSSaveManagerBridge.cs')"
+           Text="Save Manager requires scripts/prepare-celeste-tvos-stage6.sh output." />
+    <Error Condition="'$(PersistenceEnabled)' == 'true' and !Exists('$(CelesteRuntimeManagedRoot)\Celeste\TvOSControllerPromptBridge.cs')"
+           Text="Controller Prompts requires scripts/prepare-celeste-tvos-stage6.sh output." />
+    <Error Condition="'$(PersistenceEnabled)' == 'true' and !Exists('$(CelesteRuntimeManagedRoot)\Celeste\TvOSQuitBridge.cs')"
+           Text="Graceful Quit requires scripts/prepare-celeste-tvos-stage6.sh output." />
+    <Error Condition="'$(PersistenceEnabled)' == 'true' and !Exists('$(CelesteRuntimeManagedRoot)\Celeste\TvOSPerformanceHudBridge.cs')"
+           Text="Performance HUD requires scripts/prepare-celeste-tvos-stage6.sh output." />
   </Target>
 
   <!-- Apple workload incremental builds share one app-bundle directory across

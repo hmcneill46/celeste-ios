@@ -69,12 +69,12 @@ def main() -> int:
 
     transform = (repo / "scripts/celeste-stage6.py").read_text()
     bridge = (repo / "managed/templates/TvOSQuitBridge.cs").read_text()
-    coordinator = (repo / "tvos/CelesteTvOSRuntimeHost/Stage12BQuitCoordinator.cs").read_text()
-    machine = (repo / "tvos/CelesteTvOSRuntimeHost/Stage12BQuitStateMachine.cs").read_text()
-    manager = (repo / "tvos/CelesteTvOSRuntimeHost/Stage10ASaveManager.cs").read_text()
+    coordinator = (repo / "tvos/CelesteTvOSRuntimeHost/QuitCoordinator.cs").read_text()
+    machine = (repo / "tvos/CelesteTvOSRuntimeHost/QuitStateMachine.cs").read_text()
+    manager = (repo / "tvos/CelesteTvOSRuntimeHost/SaveManagerService.cs").read_text()
     save_ui = (repo / "managed/templates/TvOSSaveManagerBridge.cs").read_text()
-    http = (repo / "tvos/CelesteTvOSRuntimeHost/Stage10AHttpProtocol.cs").read_text()
-    tests = (repo / "tvos/Stage12BQuitTests/Program.cs").read_text()
+    http = (repo / "tvos/CelesteTvOSRuntimeHost/SaveManagerHttpProtocol.cs").read_text()
+    tests = (repo / "tvos/QuitTests/Program.cs").read_text()
     info_text = (repo / "tvos/CelesteTvOSRuntimeHost/Info.plist").read_text()
 
     require(transform, (

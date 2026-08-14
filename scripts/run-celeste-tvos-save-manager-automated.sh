@@ -46,7 +46,7 @@ files=[p for p in (app/sys.argv[2], app/'CelesteTvOSRuntimeHost.dll') if p.is_fi
 token=b'STAGE10A_AUTOMATION_READY'
 utf16='STAGE10A_AUTOMATION_READY'.encode('utf-16le')
 if not any(token in p.read_bytes() or utf16 in p.read_bytes() for p in files):
-    raise SystemExit('error: app was not built with Stage10AAutomation=true')
+    raise SystemExit('error: app was not built with SaveManagerAutomation=true')
 PY
 
 xcrun devicectl list devices --json-output "$EVIDENCE_DIR/devices-private.json" >"$EVIDENCE_DIR/devices-private.log" 2>&1

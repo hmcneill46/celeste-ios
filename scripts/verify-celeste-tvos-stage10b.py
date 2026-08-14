@@ -29,12 +29,12 @@ def main() -> int:
     args = parser.parse_args()
     repo = (args.repo_root or pathlib.Path(__file__).resolve().parents[1]).resolve()
 
-    protocol = (repo / "tvos/CelesteTvOSRuntimeHost/Stage10AHttpProtocol.cs").read_text()
-    manager = (repo / "tvos/CelesteTvOSRuntimeHost/Stage10ASaveManager.cs").read_text()
-    store = (repo / "tvos/CelesteTvOSRuntimeHost/Stage6PersistenceStore.cs").read_text()
-    diagnostic = (repo / "tvos/CelesteTvOSRuntimeHost/Stage6PersistenceDiagnostic.cs").read_text()
+    protocol = (repo / "tvos/CelesteTvOSRuntimeHost/SaveManagerHttpProtocol.cs").read_text()
+    manager = (repo / "tvos/CelesteTvOSRuntimeHost/SaveManagerService.cs").read_text()
+    store = (repo / "tvos/CelesteTvOSRuntimeHost/PersistenceStore.cs").read_text()
+    diagnostic = (repo / "tvos/CelesteTvOSRuntimeHost/PersistenceDiagnostic.cs").read_text()
     bridge = (repo / "managed/templates/TvOSSaveManagerBridge.cs").read_text()
-    tests = (repo / "tvos/Stage10AProtocolTests/Program.cs").read_text()
+    tests = (repo / "tvos/SaveManagerProtocolTests/Program.cs").read_text()
     policy = json.loads((repo / "managed/celeste-stage6-policy.json").read_text())
     info = plistlib.loads((repo / "tvos/CelesteTvOSRuntimeHost/Info.plist").read_bytes())
     entitlements = plistlib.loads((repo / "tvos/CelesteTvOSRuntimeHost/Entitlements.plist").read_bytes())
@@ -50,7 +50,7 @@ def main() -> int:
         "CsrfHeaderName", "RevisionHeaderName", "HMACSHA256.HashData",
         "CryptographicOperations.FixedTimeEquals", "application/octet-stream",
         "Content-Length", "transfer-encoding", "connect-src 'self'", "location.replace('/')",
-        "press Confirm to reload Celeste", "mutator(new Stage10BMutationCommand",
+        "press Confirm to reload Celeste", "mutator(new SaveMutationCommand",
         "The save changed since this page was opened", "The durable write could not be verified",
     ), "writable HTTP protocol")
     require(store, (

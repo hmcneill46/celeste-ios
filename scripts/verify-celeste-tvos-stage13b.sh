@@ -36,7 +36,7 @@ while (($#)); do
   esac
 done
 
-dotnet run --project "$REPO_ROOT/tvos/Stage13BSoftReloadTests/Stage13BSoftReloadTests.csproj" -c Release
+dotnet run --project "$REPO_ROOT/tvos/SoftReloadTests/SoftReloadTests.csproj" -c Release
 
 prior_args=()
 [[ -z "$GENERATED_ROOT" ]] || prior_args+=(--generated-root "$GENERATED_ROOT")

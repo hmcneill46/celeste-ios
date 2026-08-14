@@ -61,15 +61,15 @@ def main() -> int:
     repo = (args.repo_root or pathlib.Path(__file__).resolve().parents[1]).resolve()
 
     lock = json.loads((repo / "managed/celeste-controller-prompts.lock.json").read_text())
-    policy = (repo / "tvos/CelesteTvOSRuntimeHost/Stage11ControllerPromptPolicy.cs").read_text()
-    preferences = (repo / "tvos/CelesteTvOSRuntimeHost/Stage11ControllerPromptPreferences.cs").read_text()
+    policy = (repo / "tvos/CelesteTvOSRuntimeHost/ControllerPromptPolicy.cs").read_text()
+    preferences = (repo / "tvos/CelesteTvOSRuntimeHost/ControllerPromptPreferences.cs").read_text()
     bridge = (repo / "managed/templates/TvOSControllerPromptBridge.cs").read_text()
     transform = (repo / "scripts/celeste-stage6.py").read_text()
-    tests = (repo / "tvos/Stage11ControllerPromptTests/Program.cs").read_text()
+    tests = (repo / "tvos/ControllerPromptTests/Program.cs").read_text()
     settings_serializer = (repo / "managed/templates/TvOSSettingsSerializer.cs").read_text()
     save_serializer = (repo / "managed/templates/TvOSSaveDataSerializer.cs").read_text()
-    persistence = (repo / "tvos/CelesteTvOSRuntimeHost/Stage6PersistenceStore.cs").read_text()
-    save_manager_protocol = (repo / "tvos/CelesteTvOSRuntimeHost/Stage10AHttpProtocol.cs").read_text()
+    persistence = (repo / "tvos/CelesteTvOSRuntimeHost/PersistenceStore.cs").read_text()
+    save_manager_protocol = (repo / "tvos/CelesteTvOSRuntimeHost/SaveManagerHttpProtocol.cs").read_text()
 
     if lock.get("schemaVersion") != 1 or lock.get("gameVersion") != "1.4.0.0":
         fail("controller-prompt inventory lock identity changed")

@@ -136,7 +136,7 @@ def verify_repo(repo):
     entitlements=(repo/"tvos/CelesteTvOSRuntimeHost/Entitlements.plist").read_text()
     project=(repo/"tvos/CelesteTvOSRuntimeHost/CelesteTvOSRuntimeHost.csproj").read_text()
     info=plistlib.loads((repo/"tvos/CelesteTvOSRuntimeHost/Info.plist").read_bytes())
-    store=(repo/"tvos/CelesteTvOSRuntimeHost/Stage6PersistenceStore.cs").read_text()
+    store=(repo/"tvos/CelesteTvOSRuntimeHost/PersistenceStore.cs").read_text()
     ignore=(repo/".gitignore").read_text()
     if info.get("CFBundleDisplayName")!="Celeste" or info.get("CFBundleName")!="Celeste": fail("tracked product name is not Celeste")
     for paid in ("com.apple.developer.user-management","com.apple.developer.icloud","com.apple.security.application-groups"):

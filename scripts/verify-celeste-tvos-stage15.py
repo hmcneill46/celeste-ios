@@ -61,12 +61,12 @@ def main() -> int:
     args = parser.parse_args()
     repo = (args.repo_root or pathlib.Path(__file__).resolve().parents[1]).resolve()
 
-    protocol_path = repo / "tvos/CelesteTvOSRuntimeHost/Stage10AHttpProtocol.cs"
-    manager_path = repo / "tvos/CelesteTvOSRuntimeHost/Stage10ASaveManager.cs"
-    qr_path = repo / "tvos/CelesteTvOSRuntimeHost/Stage15QrCodeGenerator.cs"
+    protocol_path = repo / "tvos/CelesteTvOSRuntimeHost/SaveManagerHttpProtocol.cs"
+    manager_path = repo / "tvos/CelesteTvOSRuntimeHost/SaveManagerService.cs"
+    qr_path = repo / "tvos/CelesteTvOSRuntimeHost/SaveManagerQrCodeGenerator.cs"
     bridge_path = repo / "managed/templates/TvOSSaveManagerBridge.cs"
     project_path = repo / "tvos/CelesteTvOSRuntimeHost/CelesteTvOSRuntimeHost.csproj"
-    tests_path = repo / "tvos/Stage15QrPairingTests/Program.cs"
+    tests_path = repo / "tvos/SaveManagerPairingTests/Program.cs"
     builder_path = repo / "build-tvos.sh"
     for path in (protocol_path, manager_path, qr_path, bridge_path, project_path, tests_path, builder_path):
         if not path.is_file():
@@ -88,8 +88,8 @@ def main() -> int:
         "HttpOnly; SameSite=Strict", "X-Celeste-Pairing", "pairingConsumed = true",
     ), "pairing protocol")
     require(manager, (
-        "Stage15QrCodeGenerator.Create", "urls[0]", "STAGE10A_READY",
-        "protocol?.Stop()", "Stage15PairingState.Consumed", "Stage15PairingState.Expired",
+        "SaveManagerQrCodeGenerator.Create", "urls[0]", "STAGE10A_READY",
+        "protocol?.Stop()", "SaveManagerPairingState.Consumed", "SaveManagerPairingState.Expired",
     ), "Save Manager lifecycle")
     require(qr, (
         "CIQRCodeGenerator", 'CorrectionLevel = "M"', "QuietZoneModules = 4",
@@ -114,7 +114,7 @@ def main() -> int:
     )
     require(tests, required_tests, "Stage 15 deterministic tests")
 
-    if re.search(r"Stage3BLog\.[A-Za-z]+\([^\n]*(pairingUrl|PairingCredentialForQr)", manager + protocol):
+    if re.search(r"RuntimeLog\.[A-Za-z]+\([^\n]*(pairingUrl|PairingCredentialForQr)", manager + protocol):
         fail("routine Stage 15 source appears to log a pairing credential")
     if "NSCameraUsageDescription" in project or "NSPhotoLibraryUsageDescription" in project:
         fail("QR display incorrectly adds camera/photo permissions")

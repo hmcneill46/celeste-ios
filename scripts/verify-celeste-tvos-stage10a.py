@@ -30,10 +30,10 @@ def main() -> int:
     args = parser.parse_args()
     repo = (args.repo_root or pathlib.Path(__file__).resolve().parents[1]).resolve()
 
-    protocol = (repo / "tvos/CelesteTvOSRuntimeHost/Stage10AHttpProtocol.cs").read_text()
-    manager = (repo / "tvos/CelesteTvOSRuntimeHost/Stage10ASaveManager.cs").read_text()
-    lan_policy = (repo / "tvos/CelesteTvOSRuntimeHost/Stage10ALanAddressPolicy.cs").read_text()
-    store = (repo / "tvos/CelesteTvOSRuntimeHost/Stage6PersistenceStore.cs").read_text()
+    protocol = (repo / "tvos/CelesteTvOSRuntimeHost/SaveManagerHttpProtocol.cs").read_text()
+    manager = (repo / "tvos/CelesteTvOSRuntimeHost/SaveManagerService.cs").read_text()
+    lan_policy = (repo / "tvos/CelesteTvOSRuntimeHost/SaveManagerLanAddressPolicy.cs").read_text()
+    store = (repo / "tvos/CelesteTvOSRuntimeHost/PersistenceStore.cs").read_text()
     bridge = (repo / "managed/templates/TvOSSaveManagerBridge.cs").read_text()
     transform = (repo / "scripts/celeste-stage6.py").read_text()
     project = (repo / "tvos/CelesteTvOSRuntimeHost/CelesteTvOSRuntimeHost.csproj").read_text()
@@ -52,9 +52,9 @@ def main() -> int:
         '"X-Celeste-Authentication"] = "accepted"', "Download backup (.zip)",
     ), "HTTP protocol")
     require(manager, (
-        'BonjourServiceType = "_celeste-save._tcp"', "Stage10AHttpProtocol.MaximumConcurrentConnections",
-        "Stage10AHttpProtocol.RequestLifetime", "ManagerInactivityLifetime = TimeSpan.FromMinutes(12)",
-        "Stage10AConnectionPolicy.ResponseCloseLifetime", "response-close-fallback",
+        'BonjourServiceType = "_celeste-save._tcp"', "SaveManagerHttpProtocol.MaximumConcurrentConnections",
+        "SaveManagerHttpProtocol.RequestLifetime", "ManagerInactivityLifetime = TimeSpan.FromMinutes(12)",
+        "SaveManagerConnectionPolicy.ResponseCloseLifetime", "response-close-fallback",
         "NWListener.Create(parameters)", "case NWListenerState.Ready:", "ushort port = source.Port",
         "DiscoverLanAddresses", "GetIfAddrs(out head)", 'DllImport("__Internal", EntryPoint = "getifaddrs"',
         'Observe(UIApplication.WillResignActiveNotification, "resign-active")',
