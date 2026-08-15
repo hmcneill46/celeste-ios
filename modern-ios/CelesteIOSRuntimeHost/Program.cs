@@ -1,6 +1,9 @@
 using Microsoft.Xna.Framework;
 using ObjCRuntime;
 using SDL2;
+#if IOS_CELESTE_PRODUCT
+using Celeste;
+#endif
 
 namespace CelesteIOSRuntimeHost;
 
@@ -33,10 +36,19 @@ internal static class Program
             FNALoggerEXT.LogInfo = message => RuntimeLog.Info($"FNA {message.TrimEnd()}");
             FNALoggerEXT.LogWarn = message => RuntimeLog.Warning($"FNA {message.TrimEnd()}");
             FNALoggerEXT.LogError = message => RuntimeLog.Error($"FNA {message.TrimEnd()}");
+#if IOS_CELESTE_PRODUCT
+            IOSCelesteRuntimeContext.Prepare();
+            using IOSCelesteLifecycle lifecycle = new();
+            RuntimeLog.Info("celeste-run-loop-enter; fna-game-count=1; celeste-runtime-count=1; fmod-owner=Celeste");
+            global::Celeste.Celeste.Run(Array.Empty<string>());
+            AppleRuntimeBridge.ThrowIfFatal();
+            RuntimeLog.Info("celeste-run-loop-return; unexpected-product-exit=true");
+#else
             using FoundationGame game = new();
             RuntimeLog.Info("run-loop-enter");
             game.Run();
             RuntimeLog.Info("run-loop-return");
+#endif
             return 0;
         }
         catch (Exception exception)

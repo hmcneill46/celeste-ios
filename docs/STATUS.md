@@ -19,6 +19,7 @@ not an App Store distribution.
 | Apple TV behaviour | Home/background resume, graceful main-menu Quit, app artwork, Top Shelf, and optional Metal Performance HUD |
 | Inputs | Nine exact Celeste 1.4.0.0 FNA profiles from itch.io, Epic Games Store, and Steam |
 | Build routes | Local Apple silicon Mac or private GitHub compilation to an unsigned IPA |
+| Experimental iOS | Shared canonical Celeste pipeline now reaches a controller-driven title/main menu with direct Metal and seven-bank FMOD on physical iPhone; not yet a normal-user-ready port |
 
 The release-candidate audit covered a clean public clone, native and managed
 reproducibility, full AOT/trimming, unsigned packaging, same-identity physical
@@ -300,11 +301,11 @@ or an unsigned conventional tvOS IPA containing `Payload/Celeste.app`.
   tvOS availability, and this project makes no Apple TV Game Mode claim.
 - Apple's Metal HUD presentation and metric set are system-controlled and may
   change between tvOS releases; visible diagnostics can carry small overhead.
-- The current modern self-builder targets tvOS only. Legacy iOS source is
-  retained. A tracked [experimental modern iOS foundation](IOS_FOUNDATION.md)
-  now proves .NET 10, direct FNA3D Metal, iPhone/iPad UIScene hosting, and the
-  physical FMOD boundary, but it does not yet run Celeste or constitute a
-  supported playable iOS product.
+- The public beginner self-builder targets tvOS only. Legacy iOS source is
+  retained. A tracked [experimental modern iOS lane](IOS_FOUNDATION.md) now
+  runs the same canonical Celeste game through .NET 10/direct FNA3D Metal and
+  real seven-bank FMOD on physical iPhone, but currently requires a controller
+  and has not completed gameplay/save/touch acceptance.
 - No App Store, distribution-profile, paid entitlement, or universal hardware
   claim is made.
 

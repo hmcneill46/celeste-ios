@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import pathlib
 import plistlib
@@ -24,6 +25,7 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--app", type=pathlib.Path, required=True)
     parser.add_argument("--lane", choices=("device", "simulator"), required=True)
+    parser.add_argument("--product", choices=("foundation", "celeste"), default="foundation")
     parser.add_argument("--output", type=pathlib.Path)
     args = parser.parse_args()
     app = args.app.resolve()
@@ -54,13 +56,20 @@ def main() -> int:
             "modern UIScene delegate is absent")
     require((app / "PrivacyInfo.xcprivacy").is_file(), "privacy manifest is absent")
     require(not any(app.rglob("*MoltenVK*")), "MoltenVK must not ship")
-    require(not any(app.rglob("*Celeste.exe*")), "Celeste proprietary input must not ship in the foundation")
+    require(not any(app.rglob("*Celeste.exe*")), "the original Celeste executable must never ship")
     require(not any(app.rglob("*Xamarin*")), "legacy Xamarin surface must not ship")
     require(not any(app.rglob("*TopShelf*")), "tvOS Top Shelf material leaked into iOS")
     managed = sorted(app.glob("*.dll"))
     require(managed and all((app / f"{assembly.stem}.aotdata.arm64").is_file() for assembly in managed),
             "not every bundled managed assembly has arm64 AOT data")
     require(not (app / "libmono-component-interpreter.dylib").exists(), "interpreter component is forbidden")
+    binary_surfaces = [executable, *managed]
+
+    def bundle_contains(token: str) -> bool:
+        ascii_token = token.encode()
+        utf16_token = token.encode("utf-16le")
+        return any(ascii_token in path.read_bytes() or utf16_token in path.read_bytes()
+                   for path in binary_surfaces)
 
     entitlement_output = subprocess.check_output(
         ["codesign", "-d", "--entitlements", ":-", str(app)],
@@ -82,23 +91,66 @@ def main() -> int:
     symbol_text = "\n".join(symbols)
     require("_SDL_UIKitRunApp" in symbols, "SDL UIKit entry point is not linked")
     require("_FNA3D_CreateDevice" in symbols and "_FNA3D_SwapBuffers" in symbols, "FNA3D is not linked")
-    require("_OBJC_CLASS_$_CAMetalLayer" in all_symbols and "_SDL_Metal_GetDrawableSize" in symbols,
+    drawable_symbol = "_FNA3D_GetDrawableSize" if args.product == "celeste" else "_SDL_Metal_GetDrawableSize"
+    require("_OBJC_CLASS_$_CAMetalLayer" in all_symbols and drawable_symbol in symbols,
             "real CAMetalLayer presentation closure is absent")
     require("_mono_jit_init" not in symbol_text and "_mono_jit_exec" not in symbol_text,
             "JIT symbols are forbidden")
     strings = run("strings", str(executable))
     require("FNA3D Driver: Metal" in strings, "direct FNA3D Metal driver evidence is absent")
     require("_vkCreateInstance" not in all_symbols, "a Vulkan driver is linked")
-    require("Save Manager" not in strings and "_celeste-save._tcp" not in strings,
-            "tvOS Save Manager leaked into the iOS foundation")
-    require("CelesteTvOS.PerformanceHUD.v1" not in strings and "MetalForceHudEnabled" not in strings,
+    require(not bundle_contains("Save Manager") and not bundle_contains("_celeste-save._tcp"),
+            "tvOS Save Manager leaked into modern iOS")
+    require(not bundle_contains("CelesteTvOS.PerformanceHUD.v1") and
+            not bundle_contains("MetalForceHudEnabled"),
             "tvOS Performance HUD bootstrap leaked into the iOS foundation")
     if args.lane == "device":
-        require("_FMOD_System_Create" in symbols and "_FMOD_Studio_System_Create" in symbols,
-                "physical-device FMOD low-level/Studio systems are not linked")
+        if args.product == "celeste":
+            require("_FMOD_Studio_System_Create" in symbols and
+                    "_FMOD_Studio_System_GetLowLevelSystem" in symbols and
+                    "_FMOD_System_GetVersion" in symbols,
+                    "Celeste FMOD Studio/low-level runtime closure is not linked")
+        else:
+            require("_FMOD_System_Create" in symbols and "_FMOD_Studio_System_Create" in symbols,
+                    "foundation-probe FMOD low-level/Studio systems are not linked")
     else:
         require("_FMOD_System_Create" not in symbols and "_FMOD_Studio_System_Create" not in symbols,
                 "simulator must not contain FMOD")
+
+    if args.product == "celeste":
+        require(args.lane == "device", "Stage 24C1 Celeste product is physical-device-only")
+        require((app / "Celeste.dll").is_file() and (app / "Celeste.Content.dll").is_file(),
+                "canonical Celeste managed assemblies are absent")
+        content = app / "Content"
+        require(content.is_dir(), "canonical Content directory is absent")
+        records = []
+        logical = hashlib.sha256()
+        total = 0
+        for path in sorted((item for item in content.rglob("*") if item.is_file()),
+                           key=lambda item: item.relative_to(content).as_posix()):
+            relative = path.relative_to(content).as_posix()
+            data = path.read_bytes()
+            sha = hashlib.sha256(data).hexdigest()
+            total += len(data)
+            logical.update(relative.encode() + b"\0" + str(len(data)).encode() + b"\0" + sha.encode() + b"\n")
+            records.append(relative)
+        require(len(records) == 1216 and total == 1158665183 and
+                logical.hexdigest() == "30a1c147d1a3ab0aa45762094e393ed7fd69951dd66e5af063447641e0699c46",
+                "packaged Celeste Content does not match canonical class A")
+        bank_root = content / "FMOD" / "Desktop"
+        expected_banks = {"Master Bank.bank", "Master Bank.strings.bank", "music.bank", "sfx.bank",
+                          "ui.bank", "dlc_music.bank", "dlc_sfx.bank"}
+        require({path.name for path in bank_root.glob("*.bank")} == expected_banks,
+                "the exact seven-bank inventory is absent")
+        require(bundle_contains("celeste-product-context") and bundle_contains("celeste-run-loop-enter"),
+                "modern iOS Celeste host markers are absent")
+        require(not bundle_contains("CelesteTvOS.Persistence") and
+                not bundle_contains("CelesteTvOS.ControllerPrompts"),
+                "tvOS host persistence/preferences leaked into iOS")
+        require(not bundle_contains("menu_exit"), "desktop application Quit route remains in iOS")
+    else:
+        require(not (app / "Celeste.dll").exists() and not (app / "Content").exists(),
+                "Celeste product material leaked into the foundation probe")
 
     report = {
         "schemaVersion": 1,
@@ -116,13 +168,16 @@ def main() -> int:
         "fullTrim": True,
         "useInterpreter": False,
         "fmod": args.lane == "device",
-        "celesteIncluded": False,
+        "product": args.product,
+        "celesteIncluded": args.product == "celeste",
+        "canonicalContentSha256": "30a1c147d1a3ab0aa45762094e393ed7fd69951dd66e5af063447641e0699c46" if args.product == "celeste" else None,
+        "fmodBankCount": 7 if args.product == "celeste" else 0,
         "touchUiIncluded": False,
     }
     if args.output:
         args.output.parent.mkdir(parents=True, exist_ok=True)
         args.output.write_text(json.dumps(report, indent=2, sort_keys=True) + "\n")
-    print(f"PASS: modern iOS {args.lane} package foundation")
+    print(f"PASS: modern iOS {args.lane} {args.product} package")
     return 0
 
 

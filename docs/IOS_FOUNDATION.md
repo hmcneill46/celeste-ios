@@ -1,9 +1,12 @@
 # Modern iOS foundation (experimental)
 
-This repository contains a tracked modern iOS/iPadOS engineering foundation.
-It is **not a playable Celeste iOS port**: it does not include the game,
-generated Celeste code, touch controls, save integration, or game audio banks.
-Its purpose is to prove the production-native boundary needed by later work.
+This repository contains a tracked modern iOS/iPadOS engineering foundation
+and an experimental controller-first Celeste product lane. The product now
+uses a user-owned supported Celeste 1.4.0.0 FNA installation to generate the
+same canonical game as tvOS, packages the real Content and seven FMOD banks,
+and reaches Celeste's title/main menu on a physical iPhone. It is **not yet a
+normal-user-ready iOS port**: touch controls and comprehensive gameplay,
+save-slot recovery, and active-game lifecycle acceptance remain later work.
 
 The foundation uses one `net10.0-ios26.5` iPhone/iPad target with a minimum of
 iOS 15.0. It enters SDL through the public iOS host, runs one FNA `Game`, and
@@ -12,6 +15,22 @@ landscape-only presentation, a 1280×720 logical surface with aspect-fit
 letterboxing, native Retina drawable scaling, safe-area metrics for future
 platform UI, and FNA's SDL controller path. It does not use MoltenVK, JIT, or
 the legacy Xamarin application host.
+
+## Current experimental Celeste lane
+
+Stage 24C1 keeps one canonical input/decompilation/transformation pipeline for
+iOS, iPadOS, and tvOS. It reuses the locked nine-profile validator, canonical
+source and Content, shared Apple-safe transforms, serializers, AOT inventory,
+legacy XNB registration, and bundle reader. A small final iOS transform removes
+tvOS-only Save Manager, Performance HUD, Controller Prompts, soft-reload and
+Leave bridges; adapts the platform storage and FMOD-output boundaries; and
+hides Celeste's desktop application-Quit row.
+
+The physical product has one SDL handoff, one FNA `Game`, one Celeste runtime,
+and one Celeste-owned FMOD Studio/low-level runtime. It renders through direct
+FNA3D Metal and currently requires a physical controller. It intentionally
+contains no Save Manager/LAN listener, tvOS Performance HUD, touch controls,
+JIT, interpreter, or Xamarin host.
 
 ## Accepted toolchain
 
@@ -30,6 +49,10 @@ The accepted normalized logical SHA-256 is:
 ```text
 9fb302d221180e39f270ea5ebf48e18433b67bd0a40943c042a227fe0f8ad6a2
 ```
+
+The Apple TV native lock remains independently unchanged. Platform-neutral
+Celeste generation is shared; native packaging, lifecycle, storage and
+presentation adapters stay platform-specific where Apple requires it.
 
 ## Build the native foundation
 
@@ -100,25 +123,50 @@ The physical lane is Release, arm64, fully trimmed, full AOT, and
 `UseInterpreter=false`. It validates the accepted FMOD 1.10.09 low-level and
 Studio runtimes without requiring Celeste banks.
 
+### Build real Celeste (experimental)
+
+First prepare the native foundation, FMOD device libraries, and ignored
+Personal Team configuration as above. Then provide one of the exact supported
+user-owned Celeste FNA installations listed in
+[Celeste inputs](CELESTE_INPUTS.md):
+
+```bash
+scripts/prepare-celeste-ios-runtime.sh \
+  --game-root "/path/to/supported/Celeste" \
+  --clean
+scripts/build-ios-celeste.sh --clean
+scripts/run-ios-celeste-device.sh
+```
+
+The preparation command regenerates Celeste below ignored `.build/`, checks
+the shared canonical hashes, stages the exact Content/seven banks, and applies
+only the narrow iOS product transform. The builder emits the signed local app
+and ignored IPA below `artifacts/ios-celeste/device/`; it reports timed phases,
+free space, and a heartbeat during full AOT. This lane is developer-facing and
+requires a physical iPhone and controller. It does not use GitHub Actions.
+
 ## Storage boundary
 
-The future save root is obtained through public Foundation APIs and resolves
-inside the app sandbox at `Library/Application Support/Celeste/`. Stage 24B
-creates only the directory. It does not create or migrate save files.
+The Celeste save root is obtained through public Foundation APIs and resolves
+inside the app sandbox at `Library/Application Support/Celeste/`. The product
+does not migrate legacy Xamarin data or use tvOS compressed UserDefaults.
 
-`CelesteIOSFoundation.AtomicFileStore` restricts writes to `settings.celeste`
-and slots `0.celeste`–`2.celeste`, writes a sibling temporary file, flushes it,
-and atomically replaces the destination. Deterministic fault tests prove that
-a failure before commit preserves the previous file and removes temporary
-files. Full Celeste persistence integration remains later work.
+The iOS storage adapter restricts writes to `settings.celeste` and slots
+`0.celeste`–`2.celeste`, then uses Foundation's native atomic replacement API.
+This is a real platform boundary: the common Settings/SaveData serializers are
+shared with tvOS, while iOS uses ordinary Application Support files and tvOS
+retains its compressed UserDefaults persistence authority. The native iOS
+write avoids the JIT-only `SafeFileHandle` constructor path that is unavailable
+under full AOT. Stage 24C1 accepts Celeste's natural Settings round trip but
+deliberately defers save-slot recovery stress to Stage 24C2.
 
 ## Deliberately deferred
 
-- running Celeste or loading proprietary content
 - touch controls and touch UI
-- save migration or Stage 9B persistence integration
+- comprehensive controller gameplay, save-slot recovery, and active-game lifecycle acceptance
+- save migration and document import
 - Save Manager, QR pairing, or graceful Quit on iOS
-- Celeste FMOD banks/game audio
+- real-Celeste Simulator execution (FMOD 1.10.09 has no arm64 Simulator slice)
 - Everest/mod support
 - App Store distribution and polished iPad support
 

@@ -23,18 +23,38 @@
     <IOSHostNativeRoot>$(IOSHostStageRoot)\native</IOSHostNativeRoot>
     <FmodIOSStageRoot Condition="'$(FmodIOSStageRoot)' == ''">$(IOSHostStageRoot)\fmod</FmodIOSStageRoot>
     <EnableFmodDeviceFoundation Condition="'$(EnableFmodDeviceFoundation)' == ''">false</EnableFmodDeviceFoundation>
+    <IOSProductMode Condition="'$(IOSProductMode)' == ''">Foundation</IOSProductMode>
+    <CelesteIOSRuntimeRoot Condition="'$(CelesteIOSRuntimeRoot)' == ''">$(RepoRoot)\.build\celeste-ios\current</CelesteIOSRuntimeRoot>
+    <CelesteIOSManagedRoot>$(CelesteIOSRuntimeRoot)\managed</CelesteIOSManagedRoot>
+    <CelesteIOSContentRoot>$(CelesteIOSRuntimeRoot)\content\Content</CelesteIOSContentRoot>
+    <CelesteIOSBankRoot>$(CelesteIOSRuntimeRoot)\banks\Content\FMOD</CelesteIOSBankRoot>
+    <DefineConstants Condition="'$(IOSProductMode)' == 'Celeste'">$(DefineConstants);CELESTE_RUNTIME;IOS_CELESTE_RUNTIME_HOST;IOS_CELESTE_PRODUCT</DefineConstants>
     <DefineConstants Condition="'$(RuntimeIdentifier)' == 'iossimulator-arm64'">$(DefineConstants);IOS_SIMULATOR_NO_FMOD</DefineConstants>
     <DefineConstants Condition="'$(RuntimeIdentifier)' == 'ios-arm64' and '$(EnableFmodDeviceFoundation)' == 'true'">$(DefineConstants);IOS_DEVICE_FMOD</DefineConstants>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\FNA.iOS\FNA.iOS.csproj" />
+    <ProjectReference Include="..\FNA.iOS\FNA.iOS.csproj" Condition="'$(IOSProductMode)' != 'Celeste'" />
+    <ProjectReference Include="..\FNA.iOS\FNA.iOS.csproj" Condition="'$(IOSProductMode)' == 'Celeste'"
+                      AdditionalProperties="CustomAfterMicrosoftCommonTargets=$(MSBuildThisFileDirectory)IOSFnaExtension.targets;IOSCelesteRuntimeEnabled=true;CelesteAppleRepoRoot=$(RepoRoot)" />
     <ProjectReference Include="..\CelesteIOSFoundation\CelesteIOSFoundation.csproj" />
     <BundleResource Include="PrivacyInfo.xcprivacy" LogicalName="PrivacyInfo.xcprivacy" />
     <ImageAsset Include="Assets.xcassets\**\*" />
     <ImageAsset Include="$(RepoRoot)\celestemeow\Assets.xcassets\AppIcon.appiconset\Icon1024.png">
       <Link>Assets.xcassets\AppIcon.appiconset\AppIcon1024.png</Link>
     </ImageAsset>
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(IOSProductMode)' == 'Celeste'">
+    <ProjectReference Include="$(CelesteIOSManagedRoot)\Celeste.Modern.csproj"
+                      AdditionalProperties="CelesteAppleRepoRoot=$(RepoRoot);CelesteManagedGeneratedRoot=$(CelesteIOSManagedRoot);CustomAfterMicrosoftCommonTargets=$(MSBuildThisFileDirectory)IOSFnaExtension.targets" />
+    <ProjectReference Include="$(CelesteIOSManagedRoot)\Celeste.Content.Modern.csproj"
+                      AdditionalProperties="CelesteManagedGeneratedRoot=$(CelesteIOSManagedRoot)" />
+    <BundleResource Include="$(CelesteIOSContentRoot)\**\*"
+                    LogicalName="Content\%(RecursiveDir)%(Filename)%(Extension)" />
+    <BundleResource Include="$(CelesteIOSBankRoot)\**\*.bank"
+                    LogicalName="Content\FMOD\%(RecursiveDir)%(Filename)%(Extension)" />
+    <TrimmerRootDescriptor Include="$(RepoRoot)\tvos\CelesteTvOSRuntimeHost\CelesteLinker.xml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -74,6 +94,18 @@
            Text="Physical foundation builds require EnableFmodDeviceFoundation=true and prepared FMOD 1.10.09 inputs." />
     <Error Condition="'$(EnableFmodDeviceFoundation)' == 'true' and !Exists('$(FmodIOSStageRoot)\FMOD.xcframework\Info.plist')"
            Text="Prepared FMOD iPhone inputs are missing. Run scripts/prepare-fmod-ios.sh." />
+    <Error Condition="'$(IOSProductMode)' != 'Foundation' and '$(IOSProductMode)' != 'Celeste'"
+           Text="IOSProductMode must be Foundation or Celeste." />
+    <Error Condition="'$(IOSProductMode)' == 'Celeste' and '$(RuntimeIdentifier)' != 'ios-arm64'"
+           Text="Stage 24C1 real Celeste is physical-device-only because FMOD 1.10.09 has no arm64 simulator slice." />
+    <Error Condition="'$(IOSProductMode)' == 'Celeste' and '$(EnableFmodDeviceFoundation)' != 'true'"
+           Text="The Celeste product requires the physical FMOD iOS device path." />
+    <Error Condition="'$(IOSProductMode)' == 'Celeste' and !Exists('$(CelesteIOSManagedRoot)\Celeste.Modern.csproj')"
+           Text="Prepared canonical Celeste input is missing. Run scripts/prepare-celeste-ios-runtime.sh." />
+    <Error Condition="'$(IOSProductMode)' == 'Celeste' and !Exists('$(CelesteIOSContentRoot)\Effects\Border.xnb')"
+           Text="Prepared canonical Celeste Content is missing." />
+    <Error Condition="'$(IOSProductMode)' == 'Celeste' and !Exists('$(CelesteIOSBankRoot)\Desktop\Master Bank.bank')"
+           Text="Prepared seven-bank Celeste audio input is missing." />
   </Target>
 
   <Import Project="..\Local.Build.props" Condition="Exists('..\Local.Build.props')" />

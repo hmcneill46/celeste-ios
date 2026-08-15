@@ -255,8 +255,10 @@ available:
 - [Contributing](CONTRIBUTING.md)
 - [Development and acceptance history](docs/history/README.md)
 
-The original Xamarin.iOS project is retained for provenance and legacy work,
-but the current modern builder is tvOS-only.
+The original Xamarin.iOS project is retained for provenance and legacy work.
+The beginner/public builder remains tvOS-only; developers can also inspect the
+[experimental modern iOS lane](docs/IOS_FOUNDATION.md), which now reaches real
+Celeste's title/menu with a controller but is not yet a finished iOS port.
 
 ## Project history and release candidates
 

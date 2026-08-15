@@ -1,0 +1,12 @@
+<Project>
+  <ItemGroup Condition="'$(AssemblyName)' == 'FNA' and '$(IOSCelesteRuntimeEnabled)' == 'true'">
+    <!-- These two sources are Apple-shared production behavior. They remain
+         in their historical tvOS location during C1 to avoid a risky product
+         move, but iOS consumes the same source rather than maintaining a copy. -->
+    <Compile Include="$(CelesteAppleRepoRoot)\tvos\CelesteTvOSRuntimeHost\LegacyXnbReaders.cs"
+             Link="AppleShared/LegacyXnbReaders.cs" />
+    <Compile Remove="$(CelesteAppleRepoRoot)\FNA\src\TitleContainer.cs" />
+    <Compile Include="$(CelesteAppleRepoRoot)\tvos\CelesteTvOSRuntimeHost\TvOSTitleContainer.cs"
+             Link="AppleShared/TitleContainer.cs" />
+  </ItemGroup>
+</Project>

@@ -577,6 +577,19 @@ manifests, artwork hashes, bundle metadata, RID, launch/audio mode, AOT,
 trimming, and signing mode. A mismatch forces the applicable lane to rebuild.
 `--clean` is the first remedy for a suspected stale Stage 8 product.
 
+## Experimental modern iOS lane
+
+The public beginner builder above remains tvOS-only. Developers working on the
+modern iPhone/iPad target should use the focused instructions in
+[Modern iOS foundation](IOS_FOUNDATION.md). Stage 24C1 accepts a physical-device
+controller-first title/menu build using the same exact Celeste input profiles
+and canonical generated game as tvOS, plus FMOD Engine iOS/tvOS 1.10.09 build
+97915. Touch controls, sustained gameplay and save-slot acceptance remain
+deliberately out of scope; do not present this lane as finished user support.
+
+The iOS scripts keep proprietary/generated material under ignored `.build/`
+and `artifacts/` roots and do not use the private GitHub Actions cloud builder.
+
 ## Manual historical lanes
 
 The [historical engineering records](history/README.md) document individual

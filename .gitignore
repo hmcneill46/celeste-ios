@@ -20,6 +20,8 @@ tvos/**/obj/
 artifacts/ios-native*/
 .build/ios-host/
 artifacts/ios-host/
+.build/celeste-ios/
+artifacts/ios-celeste/
 modern-ios/Local.Build.props
 modern-ios/**/bin/
 modern-ios/**/obj/
