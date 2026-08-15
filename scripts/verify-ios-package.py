@@ -121,6 +121,9 @@ def main() -> int:
         require(args.lane == "device", "Stage 24C1 Celeste product is physical-device-only")
         require((app / "Celeste.dll").is_file() and (app / "Celeste.Content.dll").is_file(),
                 "canonical Celeste managed assemblies are absent")
+        require((app / "CelesteIOSFoundation.dll").is_file() and
+                (app / "CelesteIOSFoundation.aotdata.arm64").is_file(),
+                "shared iOS durability policy or its AOT image is absent")
         content = app / "Content"
         require(content.is_dir(), "canonical Content directory is absent")
         records = []
@@ -144,6 +147,8 @@ def main() -> int:
                 "the exact seven-bank inventory is absent")
         require(bundle_contains("celeste-product-context") and bundle_contains("celeste-run-loop-enter"),
                 "modern iOS Celeste host markers are absent")
+        require(bundle_contains("IOS_STORAGE recovery=") and bundle_contains("source=previous-good"),
+                "bounded previous-good recovery path is absent")
         require(not bundle_contains("CelesteTvOS.Persistence") and
                 not bundle_contains("CelesteTvOS.ControllerPrompts"),
                 "tvOS host persistence/preferences leaked into iOS")
