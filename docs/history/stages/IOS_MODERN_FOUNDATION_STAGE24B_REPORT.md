@@ -41,6 +41,12 @@ the same logical set SHA-256:
 
 `9fb302d221180e39f270ea5ebf48e18433b67bd0a40943c042a227fe0f8ad6a2`
 
+The post-push clean-room build also reproduced this lock from a disposable
+macOS `/private/tmp` clone. That pass exposed Xcode's canonical `/tmp` spelling
+inside one SDL `__FILE__` value; the builder now maps both names to the same
+stable logical source root. No compiled instruction, export, or runtime source
+changed, and the accepted native hash remains the value above.
+
 | Component | Pin/source | Device | Simulator | Role |
 |---|---|---:|---:|---|
 | SDL2 | `257cacab183b312bbe60bd7967eee44a3ad7be85` | arm64 IOS | arm64 IOSSIMULATOR | UIKit, public `SDL_UIKitRunApp`, controller/touch/CoreMotion support |
@@ -161,7 +167,7 @@ Save Manager, cloud service, analytics, or unrelated entitlement.
 
 ## Verification and regressions
 
-- Stage 24B source/policy verifier: 53 checks
+- Stage 24B source/policy verifier: 54 checks
 - Foundation deterministic tests: 31 tests
 - Native verification: all five components, both Apple platforms, both arm64
   slices, exact export/platform/minimum-SDK contracts, and link probes

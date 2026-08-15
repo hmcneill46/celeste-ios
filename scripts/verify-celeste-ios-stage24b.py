@@ -48,6 +48,7 @@ def main() -> int:
     fmod = read(root, "modern-ios/CelesteIOSRuntimeHost/FmodFoundation.cs")
     package_verifier = read(root, "scripts/verify-ios-package.py")
     host_doctor = read(root, "scripts/check-ios-host.sh")
+    native_builder = read(root, "scripts/build-ios-native.sh")
     all_modern = "\n".join(path.read_text(errors="replace") for path in
                            (root / "modern-ios").rglob("*") if path.is_file()
                            and "bin" not in path.parts and "obj" not in path.parts)
@@ -74,6 +75,8 @@ def main() -> int:
     t.check(fmod_lock["simulatorPolicy"] == "explicit-no-fmod-because-sdk-has-no-arm64-simulator-slice",
             "FMOD simulator limitation explicit")
     t.check(TVOS_NATIVE in read(root, "build-tvos.sh"), "accepted tvOS native hash unchanged")
+    t.check("${PATCHED_SOURCES#/private}/SDL2=/IOS_NATIVE_SOURCES/SDL2" in native_builder,
+            "macOS /private/tmp source alias normalized for native reproducibility")
     t.check(all(token in host_doctor for token in
                 ('expected_macos="26.3"', 'expected_dotnet="10.0.302"',
                  'expected_workload_set="10.0.302.0"', 'expected_xcode="26.6"',

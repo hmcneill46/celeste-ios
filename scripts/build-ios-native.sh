@@ -108,6 +108,12 @@ build_xcode() {
   if [[ "$component" == SDL2 ]]; then
     definitions='$(inherited) SDL_MAIN_HANDLED=1'
     source_map="\$(inherited) -ffile-prefix-map=$PATCHED_SOURCES/SDL2=/IOS_NATIVE_SOURCES/SDL2"
+    # Xcode canonicalizes /private/tmp to its public /tmp alias before Clang
+    # expands __FILE__. Map that alias too so a disposable macOS temp clone
+    # produces the same SDL archive as a checkout elsewhere.
+    if [[ "$PATCHED_SOURCES" == /private/* ]]; then
+      source_map+=" -ffile-prefix-map=${PATCHED_SOURCES#/private}/SDL2=/IOS_NATIVE_SOURCES/SDL2"
+    fi
   fi
   mkdir -p "$derived" "$products"
   echo "[$component/$variant] $target ($sdk, arm64, iOS $DEPLOYMENT_TARGET)"
