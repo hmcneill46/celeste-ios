@@ -47,6 +47,7 @@ support matrix, and limitations are in [project status](../STATUS.md).
 29. [Stage 21 — beginner-friendly project presentation and documentation](stages/TVOS_BEGINNER_PROJECT_EXPERIENCE_STAGE21_REPORT.md)
 30. [Stage 22B — stable-address Save Manager browser continuity](stages/TVOS_SAVE_MANAGER_CONTINUITY_STAGE22B_REPORT.md)
 31. [Stage 24B — modern iOS native/FNA foundation](stages/IOS_MODERN_FOUNDATION_STAGE24B_REPORT.md)
+32. [Stage 24C1 — canonical Celeste first frame and real FMOD on modern iOS](stages/IOS_CELESTE_FIRST_FRAME_STAGE24C1_REPORT.md)
 
 Diagnostic-only stages whose evidence was intentionally kept in ignored local
 build directories are not reconstructed here. The index covers every tracked
