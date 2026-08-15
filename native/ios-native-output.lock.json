@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "baseline": "modern-ios-foundation-v1",
+  "platform": "iOS",
+  "deploymentTarget": "15.0",
+  "compileSdk": "26.5",
+  "renderer": "direct FNA3D Metal",
+  "architectures": {
+    "device": ["arm64"],
+    "simulator": ["arm64"]
+  },
+  "logicalSetSha256": "9fb302d221180e39f270ea5ebf48e18433b67bd0a40943c042a227fe0f8ad6a2",
+  "componentLogicalSha256": {
+    "ApplePlatformStubs": "3c35aef7e46abe94d512e1cfa2eb721da6787a174f591724758b0b2196cab7fe",
+    "FAudio": "766ce65eea40bc77d7a7b34a3c5da6f27e3139616dc7fac8c714b815c09441cb",
+    "FNA3D": "7b482308a0730d7a384ad666b44a30c25a7bfe4dc3613ac46a0dc6109b0587c8",
+    "SDL2": "918b3b04a2d4901c7b1362685ad1ff6073d352ee1af14dd3a9867a7060574a92",
+    "Theorafile": "f24cdd931a5ae337d681075d6f093afc7ca303c56652d79bc1510276772d8d21"
+  }
+}

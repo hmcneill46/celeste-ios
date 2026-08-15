@@ -1,0 +1,150 @@
+diff --git a/Xcode/SDL/SDL.xcodeproj/project.pbxproj b/Xcode/SDL/SDL.xcodeproj/project.pbxproj
+index b79c929205..04e41a8674 100644
+--- a/Xcode/SDL/SDL.xcodeproj/project.pbxproj
++++ b/Xcode/SDL/SDL.xcodeproj/project.pbxproj
+@@ -3242,7 +3242,6 @@
+ 		A7D8BC0423E2574800DCD162 /* SDL_uikitvulkan.m in Sources */ = {isa = PBXBuildFile; fileRef = A7D8A62523E2513D00DCD162 /* SDL_uikitvulkan.m */; };
+ 		A7D8BC0523E2574800DCD162 /* SDL_uikitwindow.h in Headers */ = {isa = PBXBuildFile; fileRef = A7D8A62723E2513D00DCD162 /* SDL_uikitwindow.h */; };
+ 		A7D8BC0623E2574800DCD162 /* SDL_uikitwindow.m in Sources */ = {isa = PBXBuildFile; fileRef = A7D8A61A23E2513D00DCD162 /* SDL_uikitwindow.m */; };
+-		A7D8BC0723E2590800DCD162 /* SDL_uikit_main.c in Sources */ = {isa = PBXBuildFile; fileRef = A7D8A5B023E2513D00DCD162 /* SDL_uikit_main.c */; };
+ 		AA7557FA1595D4D800BBD41B /* begin_code.h in Headers */ = {isa = PBXBuildFile; fileRef = AA7557C71595D4D800BBD41B /* begin_code.h */; settings = {ATTRIBUTES = (Public, ); }; };
+ 		AA7557FC1595D4D800BBD41B /* close_code.h in Headers */ = {isa = PBXBuildFile; fileRef = AA7557C81595D4D800BBD41B /* close_code.h */; settings = {ATTRIBUTES = (Public, ); }; };
+ 		AA7557FE1595D4D800BBD41B /* SDL_assert.h in Headers */ = {isa = PBXBuildFile; fileRef = AA7557C91595D4D800BBD41B /* SDL_assert.h */; settings = {ATTRIBUTES = (Public, ); }; };
+@@ -8817,7 +8816,6 @@
+ 				A7D8BBB523E2514500DCD162 /* SDL_assert.c in Sources */,
+ 				A7D8B3DE23E2514300DCD162 /* SDL_bmp.c in Sources */,
+ 				75E0915E241EA924004729E1 /* SDL_virtualjoystick.c in Sources */,
+-				A7D8BC0723E2590800DCD162 /* SDL_uikit_main.c in Sources */,
+ 				F3F07D5E269640160074468B /* SDL_hidapi_luna.c in Sources */,
+ 				A7D8B97223E2514400DCD162 /* SDL_stdlib.c in Sources */,
+ 				A7D8B79E23E2514400DCD162 /* SDL_dummyaudio.c in Sources */,
+diff --git a/src/video/uikit/SDL_uikitappdelegate.h b/src/video/uikit/SDL_uikitappdelegate.h
+index ee2b5b6a8c..3c4ffffee9 100644
+--- a/src/video/uikit/SDL_uikitappdelegate.h
++++ b/src/video/uikit/SDL_uikitappdelegate.h
+@@ -44,4 +44,10 @@
+ 
+ @end
+ 
++#if !TARGET_OS_TV
++/* One modern UIWindowScene owns the iOS presentation lifecycle. */
++@interface SDLUIKitSceneDelegate : UIResponder<UIWindowSceneDelegate>
++@end
++#endif
++
+ /* vi: set ts=4 sw=4 expandtab: */
+diff --git a/src/video/uikit/SDL_uikitappdelegate.m b/src/video/uikit/SDL_uikitappdelegate.m
+index 4c21d7336f..09fc2253fc 100644
+--- a/src/video/uikit/SDL_uikitappdelegate.m
++++ b/src/video/uikit/SDL_uikitappdelegate.m
+@@ -303,6 +303,19 @@ @implementation SDLUIKitDelegate {
+     UIWindow *launchWindow;
+ }
+ 
++#if !TARGET_OS_TV
++- (UISceneConfiguration *)application:(UIApplication *)application
++ configurationForConnectingSceneSession:(UISceneSession *)connectingSceneSession
++                              options:(UISceneConnectionOptions *)options API_AVAILABLE(ios(13.0))
++{
++    UISceneConfiguration *configuration = [[UISceneConfiguration alloc]
++        initWithName:@"Celeste iOS Gameplay"
++        sessionRole:connectingSceneSession.role];
++    configuration.delegateClass = [SDLUIKitSceneDelegate class];
++    return configuration;
++}
++#endif
++
+ /* convenience method */
+ + (id)sharedAppDelegate
+ {
+@@ -513,6 +526,37 @@ - (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceAppl
+ 
+ @end
+ 
++#if !TARGET_OS_TV
++@implementation SDLUIKitSceneDelegate
++
++- (void)sceneWillResignActive:(UIScene *)scene
++{
++    SDL_OnApplicationWillResignActive();
++}
++
++- (void)sceneDidEnterBackground:(UIScene *)scene
++{
++    SDL_OnApplicationDidEnterBackground();
++}
++
++- (void)sceneWillEnterForeground:(UIScene *)scene
++{
++    SDL_OnApplicationWillEnterForeground();
++}
++
++- (void)sceneDidBecomeActive:(UIScene *)scene
++{
++    SDL_OnApplicationDidBecomeActive();
++}
++
++- (void)sceneDidDisconnect:(UIScene *)scene
++{
++    /* Scene disconnection is not process termination. */
++}
++
++@end
++#endif
++
+ #endif /* SDL_VIDEO_DRIVER_UIKIT */
+ 
+ /* vi: set ts=4 sw=4 expandtab: */
+diff --git a/src/video/uikit/SDL_uikitwindow.m b/src/video/uikit/SDL_uikitwindow.m
+index b095c5d4c7..5cef4d2069 100644
+--- a/src/video/uikit/SDL_uikitwindow.m
++++ b/src/video/uikit/SDL_uikitwindow.m
+@@ -83,6 +83,29 @@ - (void)layoutSubviews
+ 
+ @end
+ 
++static UIWindowScene *
++UIKit_GetApplicationWindowScene(void)
++{
++#if !TARGET_OS_TV
++    if (@available(iOS 13.0, *)) {
++        UIWindowScene *candidate = nil;
++        for (UIScene *scene in [UIApplication sharedApplication].connectedScenes) {
++            if (![scene isKindOfClass:[UIWindowScene class]] ||
++                ![scene.session.role isEqualToString:UIWindowSceneSessionRoleApplication]) {
++                continue;
++            }
++            if (scene.activationState == UISceneActivationStateForegroundActive ||
++                scene.activationState == UISceneActivationStateForegroundInactive) {
++                return (UIWindowScene *)scene;
++            }
++            if (candidate == nil) candidate = (UIWindowScene *)scene;
++        }
++        return candidate;
++    }
++#endif
++    return nil;
++}
++
+ 
+ static int
+ SetupWindowData(_THIS, SDL_Window *window, UIWindow *uiwindow, SDL_bool created)
+@@ -212,7 +235,17 @@ - (void)layoutSubviews
+ 
+         /* ignore the size user requested, and make a fullscreen window */
+         /* !!! FIXME: can we have a smaller view? */
+-        UIWindow *uiwindow = [[SDL_uikitwindow alloc] initWithFrame:data.uiscreen.bounds];
++        UIWindow *uiwindow;
++#if !TARGET_OS_TV
++        UIWindowScene *windowScene = UIKit_GetApplicationWindowScene();
++        if (windowScene != nil) {
++            uiwindow = [[SDL_uikitwindow alloc] initWithWindowScene:windowScene];
++            uiwindow.frame = windowScene.coordinateSpace.bounds;
++        } else
++#endif
++        {
++            uiwindow = [[SDL_uikitwindow alloc] initWithFrame:data.uiscreen.bounds];
++        }
+ 
+         /* put the window on an external display if appropriate. */
+         if (data.uiscreen != [UIScreen mainScreen]) {

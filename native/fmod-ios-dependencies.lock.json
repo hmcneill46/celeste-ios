@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "deploymentTarget": "15.0",
+  "distribution": "FMOD Engine iOS/tvOS SDK (user supplied; never fetched by this repository)",
+  "version": "1.10.09",
+  "build": 97915,
+  "headerVersion": "0x00011009",
+  "deviceArchives": {
+    "lowLevel": {
+      "path": "api/lowlevel/lib/libfmod_iphoneos.a",
+      "sha256": "2b374ed776a782fcf5ded58868360c98a6aa0b7301043ba30647885c4f0a4c81"
+    },
+    "studio": {
+      "path": "api/studio/lib/libfmodstudio_iphoneos.a",
+      "sha256": "e8e0d0d9f33c986785ad096c73e57541d1ecd1aab4f0dfd34b75ca947d025573"
+    }
+  },
+  "simulatorPolicy": "explicit-no-fmod-because-sdk-has-no-arm64-simulator-slice",
+  "linkCompatibility": {
+    "reason": "FMOD 1.10.09 and Theorafile embed the same six private Ogg/Vorbis helpers.",
+    "method": "Localize only FMOD's copy in an ignored derived arm64 archive using Apple's nmedit.",
+    "symbolList": "native/fmod-tvos/localized-symbols.txt"
+  }
+}

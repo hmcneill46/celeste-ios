@@ -1,0 +1,105 @@
+diff --git a/Xcode/SDL/SDL.xcodeproj/project.pbxproj b/Xcode/SDL/SDL.xcodeproj/project.pbxproj
+index b79c929205..6310f4826a 100644
+--- a/Xcode/SDL/SDL.xcodeproj/project.pbxproj
++++ b/Xcode/SDL/SDL.xcodeproj/project.pbxproj
+@@ -431,7 +431,6 @@
+ 		A75FCE4323E25AB700529352 /* SDL_syspower.c in Sources */ = {isa = PBXBuildFile; fileRef = A7D8A7EB23E2513F00DCD162 /* SDL_syspower.c */; };
+ 		A75FCE4523E25AB700529352 /* SDL_iconv.c in Sources */ = {isa = PBXBuildFile; fileRef = A7D8A8D323E2514000DCD162 /* SDL_iconv.c */; };
+ 		A75FCE4623E25AB700529352 /* s_fabs.c in Sources */ = {isa = PBXBuildFile; fileRef = A7D8A91523E2514000DCD162 /* s_fabs.c */; };
+-		A75FCE4923E25AB700529352 /* SDL_shaders_metal.metal in Sources */ = {isa = PBXBuildFile; fileRef = A7D8A8E023E2514000DCD162 /* SDL_shaders_metal.metal */; };
+ 		A75FCE4A23E25AB700529352 /* SDL_uikitwindow.m in Sources */ = {isa = PBXBuildFile; fileRef = A7D8A61A23E2513D00DCD162 /* SDL_uikitwindow.m */; };
+ 		A75FCE4B23E25AB700529352 /* SDL_render.c in Sources */ = {isa = PBXBuildFile; fileRef = A7D8A8DB23E2514000DCD162 /* SDL_render.c */; };
+ 		A75FCE4C23E25AB700529352 /* SDL_stretch.c in Sources */ = {isa = PBXBuildFile; fileRef = A7D8A60323E2513D00DCD162 /* SDL_stretch.c */; };
+@@ -807,7 +806,6 @@
+ 		A75FCFFC23E25AC700529352 /* SDL_syspower.c in Sources */ = {isa = PBXBuildFile; fileRef = A7D8A7EB23E2513F00DCD162 /* SDL_syspower.c */; };
+ 		A75FCFFE23E25AC700529352 /* SDL_iconv.c in Sources */ = {isa = PBXBuildFile; fileRef = A7D8A8D323E2514000DCD162 /* SDL_iconv.c */; };
+ 		A75FCFFF23E25AC700529352 /* s_fabs.c in Sources */ = {isa = PBXBuildFile; fileRef = A7D8A91523E2514000DCD162 /* s_fabs.c */; };
+-		A75FD00223E25AC700529352 /* SDL_shaders_metal.metal in Sources */ = {isa = PBXBuildFile; fileRef = A7D8A8E023E2514000DCD162 /* SDL_shaders_metal.metal */; };
+ 		A75FD00323E25AC700529352 /* SDL_uikitwindow.m in Sources */ = {isa = PBXBuildFile; fileRef = A7D8A61A23E2513D00DCD162 /* SDL_uikitwindow.m */; };
+ 		A75FD00423E25AC700529352 /* SDL_render.c in Sources */ = {isa = PBXBuildFile; fileRef = A7D8A8DB23E2514000DCD162 /* SDL_render.c */; };
+ 		A75FD00523E25AC700529352 /* SDL_stretch.c in Sources */ = {isa = PBXBuildFile; fileRef = A7D8A60323E2513D00DCD162 /* SDL_stretch.c */; };
+@@ -1168,7 +1166,6 @@
+ 		A769B1CD23E259AE00872273 /* SDL_syspower.c in Sources */ = {isa = PBXBuildFile; fileRef = A7D8A7EB23E2513F00DCD162 /* SDL_syspower.c */; };
+ 		A769B1CF23E259AE00872273 /* SDL_iconv.c in Sources */ = {isa = PBXBuildFile; fileRef = A7D8A8D323E2514000DCD162 /* SDL_iconv.c */; };
+ 		A769B1D023E259AE00872273 /* s_fabs.c in Sources */ = {isa = PBXBuildFile; fileRef = A7D8A91523E2514000DCD162 /* s_fabs.c */; };
+-		A769B1D323E259AE00872273 /* SDL_shaders_metal.metal in Sources */ = {isa = PBXBuildFile; fileRef = A7D8A8E023E2514000DCD162 /* SDL_shaders_metal.metal */; };
+ 		A769B1D423E259AE00872273 /* SDL_uikitwindow.m in Sources */ = {isa = PBXBuildFile; fileRef = A7D8A61A23E2513D00DCD162 /* SDL_uikitwindow.m */; };
+ 		A769B1D523E259AE00872273 /* SDL_render.c in Sources */ = {isa = PBXBuildFile; fileRef = A7D8A8DB23E2514000DCD162 /* SDL_render.c */; };
+ 		A769B1D623E259AE00872273 /* SDL_stretch.c in Sources */ = {isa = PBXBuildFile; fileRef = A7D8A60323E2513D00DCD162 /* SDL_stretch.c */; };
+@@ -2696,12 +2693,6 @@
+ 		A7D8B98F23E2514400DCD162 /* SDL_shaders_metal_ios.h in Headers */ = {isa = PBXBuildFile; fileRef = A7D8A8DF23E2514000DCD162 /* SDL_shaders_metal_ios.h */; };
+ 		A7D8B99023E2514400DCD162 /* SDL_shaders_metal_ios.h in Headers */ = {isa = PBXBuildFile; fileRef = A7D8A8DF23E2514000DCD162 /* SDL_shaders_metal_ios.h */; };
+ 		A7D8B99123E2514400DCD162 /* SDL_shaders_metal_ios.h in Headers */ = {isa = PBXBuildFile; fileRef = A7D8A8DF23E2514000DCD162 /* SDL_shaders_metal_ios.h */; };
+-		A7D8B99223E2514400DCD162 /* SDL_shaders_metal.metal in Sources */ = {isa = PBXBuildFile; fileRef = A7D8A8E023E2514000DCD162 /* SDL_shaders_metal.metal */; };
+-		A7D8B99323E2514400DCD162 /* SDL_shaders_metal.metal in Sources */ = {isa = PBXBuildFile; fileRef = A7D8A8E023E2514000DCD162 /* SDL_shaders_metal.metal */; };
+-		A7D8B99423E2514400DCD162 /* SDL_shaders_metal.metal in Sources */ = {isa = PBXBuildFile; fileRef = A7D8A8E023E2514000DCD162 /* SDL_shaders_metal.metal */; };
+-		A7D8B99523E2514400DCD162 /* SDL_shaders_metal.metal in Sources */ = {isa = PBXBuildFile; fileRef = A7D8A8E023E2514000DCD162 /* SDL_shaders_metal.metal */; };
+-		A7D8B99623E2514400DCD162 /* SDL_shaders_metal.metal in Sources */ = {isa = PBXBuildFile; fileRef = A7D8A8E023E2514000DCD162 /* SDL_shaders_metal.metal */; };
+-		A7D8B99723E2514400DCD162 /* SDL_shaders_metal.metal in Sources */ = {isa = PBXBuildFile; fileRef = A7D8A8E023E2514000DCD162 /* SDL_shaders_metal.metal */; };
+ 		A7D8B99B23E2514400DCD162 /* SDL_shaders_metal_osx.h in Headers */ = {isa = PBXBuildFile; fileRef = A7D8A8E223E2514000DCD162 /* SDL_shaders_metal_osx.h */; };
+ 		A7D8B99C23E2514400DCD162 /* SDL_shaders_metal_osx.h in Headers */ = {isa = PBXBuildFile; fileRef = A7D8A8E223E2514000DCD162 /* SDL_shaders_metal_osx.h */; };
+ 		A7D8B99D23E2514400DCD162 /* SDL_shaders_metal_osx.h in Headers */ = {isa = PBXBuildFile; fileRef = A7D8A8E223E2514000DCD162 /* SDL_shaders_metal_osx.h */; };
+@@ -7825,7 +7816,6 @@
+ 				A75FCE4323E25AB700529352 /* SDL_syspower.c in Sources */,
+ 				A75FCE4523E25AB700529352 /* SDL_iconv.c in Sources */,
+ 				A75FCE4623E25AB700529352 /* s_fabs.c in Sources */,
+-				A75FCE4923E25AB700529352 /* SDL_shaders_metal.metal in Sources */,
+ 				F395C1B82569C6A000942BFF /* SDL_mfijoystick.m in Sources */,
+ 				A75FCE4A23E25AB700529352 /* SDL_uikitwindow.m in Sources */,
+ 				A75FCE4B23E25AB700529352 /* SDL_render.c in Sources */,
+@@ -8021,7 +8011,6 @@
+ 				A75FCFFC23E25AC700529352 /* SDL_syspower.c in Sources */,
+ 				A75FCFFE23E25AC700529352 /* SDL_iconv.c in Sources */,
+ 				A75FCFFF23E25AC700529352 /* s_fabs.c in Sources */,
+-				A75FD00223E25AC700529352 /* SDL_shaders_metal.metal in Sources */,
+ 				F395C1B92569C6A000942BFF /* SDL_mfijoystick.m in Sources */,
+ 				A75FD00323E25AC700529352 /* SDL_uikitwindow.m in Sources */,
+ 				A75FD00423E25AC700529352 /* SDL_render.c in Sources */,
+@@ -8411,7 +8400,6 @@
+ 				A7D8B95123E2514400DCD162 /* SDL_iconv.c in Sources */,
+ 				F31A92D328D4CB39003BFD6A /* SDL_offscreenopengles.c in Sources */,
+ 				A7D8BA9E23E2514400DCD162 /* s_fabs.c in Sources */,
+-				A7D8B99323E2514400DCD162 /* SDL_shaders_metal.metal in Sources */,
+ 				A7D8AC4C23E2514100DCD162 /* SDL_uikitwindow.m in Sources */,
+ 				A7D8B97B23E2514400DCD162 /* SDL_render.c in Sources */,
+ 				F395C1B22569C6A000942BFF /* SDL_mfijoystick.m in Sources */,
+@@ -8607,7 +8595,6 @@
+ 				A7D8B95223E2514400DCD162 /* SDL_iconv.c in Sources */,
+ 				F31A92D428D4CB39003BFD6A /* SDL_offscreenopengles.c in Sources */,
+ 				A7D8BA9F23E2514400DCD162 /* s_fabs.c in Sources */,
+-				A7D8B99423E2514400DCD162 /* SDL_shaders_metal.metal in Sources */,
+ 				A7D8AC4D23E2514100DCD162 /* SDL_uikitwindow.m in Sources */,
+ 				A7D8B97C23E2514400DCD162 /* SDL_render.c in Sources */,
+ 				F395C1B32569C6A000942BFF /* SDL_mfijoystick.m in Sources */,
+@@ -8796,7 +8783,6 @@
+ 				A7D8B5F723E2514300DCD162 /* SDL_syspower.c in Sources */,
+ 				A7D8B95423E2514400DCD162 /* SDL_iconv.c in Sources */,
+ 				A7D8BAA123E2514400DCD162 /* s_fabs.c in Sources */,
+-				A7D8B99623E2514400DCD162 /* SDL_shaders_metal.metal in Sources */,
+ 				5616CA5B252BB35D005D5928 /* SDL_url.c in Sources */,
+ 				A7D8AC4F23E2514100DCD162 /* SDL_uikitwindow.m in Sources */,
+ 				A7D8B97E23E2514400DCD162 /* SDL_render.c in Sources */,
+@@ -9001,7 +8987,6 @@
+ 				A7D8B95023E2514400DCD162 /* SDL_iconv.c in Sources */,
+ 				A7D8BA9D23E2514400DCD162 /* s_fabs.c in Sources */,
+ 				F395C1B12569C6A000942BFF /* SDL_mfijoystick.m in Sources */,
+-				A7D8B99223E2514400DCD162 /* SDL_shaders_metal.metal in Sources */,
+ 				A7D8B97A23E2514400DCD162 /* SDL_render.c in Sources */,
+ 				A7D8ABD323E2514100DCD162 /* SDL_stretch.c in Sources */,
+ 				A7D8BAFD23E2514500DCD162 /* s_floor.c in Sources */,
+@@ -9191,7 +9176,6 @@
+ 				560572112473688100B46B66 /* SDL_locale.c in Sources */,
+ 				A7D8BAA023E2514400DCD162 /* s_fabs.c in Sources */,
+ 				A7D8BC0423E2574800DCD162 /* SDL_uikitvulkan.m in Sources */,
+-				A7D8B99523E2514400DCD162 /* SDL_shaders_metal.metal in Sources */,
+ 				A7D8B97D23E2514400DCD162 /* SDL_render.c in Sources */,
+ 				F395C1B42569C6A000942BFF /* SDL_mfijoystick.m in Sources */,
+ 				A7D8ABD623E2514100DCD162 /* SDL_stretch.c in Sources */,
+@@ -9386,7 +9370,6 @@
+ 				560572142473688300B46B66 /* SDL_locale.c in Sources */,
+ 				A7D8B95523E2514400DCD162 /* SDL_iconv.c in Sources */,
+ 				A7D8BAA223E2514400DCD162 /* s_fabs.c in Sources */,
+-				A7D8B99723E2514400DCD162 /* SDL_shaders_metal.metal in Sources */,
+ 				F395C1B72569C6A000942BFF /* SDL_mfijoystick.m in Sources */,
+ 				A7D8AC5023E2514100DCD162 /* SDL_uikitwindow.m in Sources */,
+ 				A7D8B97F23E2514400DCD162 /* SDL_render.c in Sources */,

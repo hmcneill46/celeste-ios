@@ -1,0 +1,20 @@
+--- a/SDL2.cs
++++ b/SDL2.cs
+@@ -40,1 +40,1 @@
+-		private const string nativeLibName = "SDL2";
++		private const string nativeLibName = "__Internal"; // Apple: statically linked into the app executable.
+--- a/FNA3D.cs
++++ b/FNA3D.cs
+@@ -22,1 +22,1 @@
+-		private const string nativeLibName = "FNA3D";
++		private const string nativeLibName = "__Internal"; // Apple: statically linked into the app executable.
+--- a/FAudio.cs
++++ b/FAudio.cs
+@@ -37,1 +37,1 @@
+-	const string nativeLibName = "FAudio";
++	const string nativeLibName = "__Internal"; // Apple: statically linked into the app executable.
+--- a/Theorafile.cs
++++ b/Theorafile.cs
+@@ -37,1 +37,1 @@
+-	const string nativeLibName = "libtheorafile";
++	const string nativeLibName = "__Internal"; // Apple: statically linked into the app executable.

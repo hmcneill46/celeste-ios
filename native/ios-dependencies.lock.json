@@ -1,0 +1,90 @@
+{
+  "schemaVersion": 1,
+  "deploymentTarget": "15.0",
+  "compileSdk": "26.5",
+  "dependencies": [
+    {
+      "name": "SDL2",
+      "component": "SDL2",
+      "url": "https://github.com/libsdl-org/SDL.git",
+      "revision": "257cacab183b312bbe60bd7967eee44a3ad7be85",
+      "path": "SDL2",
+      "licensePaths": ["LICENSE.txt", "src/hidapi/LICENSE.txt", "src/video/yuv2rgb/LICENSE"],
+      "target": "Static Library-iOS",
+      "xcodeProject": "Xcode/SDL/SDL.xcodeproj",
+      "patches": [
+        "native/patches/SDL2/0001-tvos-use-pregenerated-metal-shaders.patch",
+        "native/patches/SDL2/0003-ios-use-pregenerated-metal-shaders.patch",
+        "native/patches/SDL2/0002-ios-modern-scene-host.patch"
+      ]
+    },
+    {
+      "name": "FNA3D",
+      "component": "FNA3D",
+      "url": "https://github.com/FNA-XNA/FNA3D.git",
+      "revision": "dba98a71514cc30f3c19dc19fc0a479be7c90d52",
+      "path": "FNA3D",
+      "licensePaths": ["LICENSE"],
+      "target": "FNA3D",
+      "xcodeProject": "Xcode-iOS/FNA3D.xcodeproj",
+      "patches": ["native/patches/FNA3D/0001-add-sysrenderer-header-to-xcode-project.patch"]
+    },
+    {
+      "name": "FNA3D-MojoShader",
+      "component": "FNA3D",
+      "url": "https://github.com/FNA-XNA/MojoShader.git",
+      "revision": "c9037d90fa2f59b6be65d1391ca11d345356bad1",
+      "path": "FNA3D/MojoShader",
+      "licensePaths": ["LICENSE.txt"],
+      "parent": "FNA3D"
+    },
+    {
+      "name": "FNA3D-Vulkan-Headers",
+      "component": "FNA3D",
+      "url": "https://github.com/KhronosGroup/Vulkan-Headers.git",
+      "revision": "85470b32ad5d0d7d67fdf411b6e7b502c09c9c52",
+      "path": "FNA3D/Vulkan-Headers",
+      "licensePaths": ["LICENSE.txt"],
+      "parent": "FNA3D"
+    },
+    {
+      "name": "FAudio",
+      "component": "FAudio",
+      "url": "https://github.com/FNA-XNA/FAudio.git",
+      "revision": "0e39055a3fb3c27de8dc02d650fe6a3da6c4de2c",
+      "path": "FAudio",
+      "licensePaths": ["LICENSE"],
+      "target": "FAudio",
+      "xcodeProject": "Xcode-iOS/FAudio.xcodeproj",
+      "patches": ["native/patches/FAudio/0001-align-static-distance-curves-for-ld64.patch"]
+    },
+    {
+      "name": "Theorafile",
+      "component": "Theorafile",
+      "url": "https://github.com/FNA-XNA/Theorafile.git",
+      "revision": "0c5504658a3108919e53b625287786a87529de42",
+      "path": "Theorafile",
+      "licensePaths": ["licenses/LICENSE"],
+      "target": "theorafile",
+      "xcodeProject": "Xcode-iOS/theorafile.xcodeproj",
+      "patches": []
+    },
+    {
+      "name": "SDL2-CS-bindings",
+      "component": "managed-bindings",
+      "url": "https://github.com/flibitijibibo/SDL2-CS.git",
+      "revision": "2b8d237fd4585d14ea837764ac247d4cd200158f",
+      "path": "SDL2-CS-bindings",
+      "licensePaths": ["LICENSE"],
+      "patches": []
+    }
+  ],
+  "localComponents": {
+    "ApplePlatformStubs": {
+      "source": "native/apple-platform-stubs/ApplePlatformStubs.c",
+      "header": "native/apple-platform-stubs/ApplePlatformStubs.h",
+      "symbolCount": 25
+    }
+  },
+  "excludedComponents": ["MoltenVK", "tvOS Performance HUD bootstrap"]
+}

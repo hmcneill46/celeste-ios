@@ -14,6 +14,16 @@ tvos/Local.Build.props
 tvos/**/bin/
 tvos/**/obj/
 
+# Generated modern iOS native/host sources, intermediates, packages, signing,
+# simulator evidence, and user-supplied FMOD staging.
+.build/ios-native*/
+artifacts/ios-native*/
+.build/ios-host/
+artifacts/ios-host/
+modern-ios/Local.Build.props
+modern-ios/**/bin/
+modern-ios/**/obj/
+
 # User-owned Celeste input, generated/decompiled managed source, build output,
 # diagnostics, and local repository-scoped tool/package state for Stage 3A.
 .build/celeste-managed/
