@@ -7,6 +7,7 @@ namespace CelesteIOSRuntimeHost;
 
 internal sealed class IOSCelesteLifecycle : IDisposable
 {
+    private readonly IOSAudioSessionCoordinator audioSession = new();
     private readonly NSObject inactive;
     private readonly NSObject active;
     private readonly NSObject background;
@@ -20,16 +21,16 @@ internal sealed class IOSCelesteLifecycle : IDisposable
         active = center.AddObserver(UIApplication.DidBecomeActiveNotification, _ => Resume("did-become-active"));
     }
 
-    private static void Pause(string reason)
+    private void Pause(string reason)
     {
         AppleRuntimeDiagnostics.StopAllRumble(reason);
-        AppleAudioDiagnostics.LifecyclePause(reason);
+        audioSession.Pause(reason);
         RuntimeLog.Info($"celeste-lifecycle={reason}; runtime-disposed=false");
     }
 
-    private static void Resume(string reason)
+    private void Resume(string reason)
     {
-        AppleAudioDiagnostics.LifecycleResume(reason);
+        audioSession.Resume(reason);
         RuntimeLog.Info($"celeste-lifecycle={reason}; existing-runtime-resumed=true");
     }
 
@@ -41,6 +42,7 @@ internal sealed class IOSCelesteLifecycle : IDisposable
         center.RemoveObserver(inactive);
         center.RemoveObserver(active);
         center.RemoveObserver(background);
+        audioSession.Dispose();
     }
 }
 #endif

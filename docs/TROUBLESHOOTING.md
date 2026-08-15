@@ -601,16 +601,20 @@ The device game runs but music/effects are absent.
 
 **Cause**
 
-The arm64 simulator is intentionally no-audio. On physical hardware, the wrong
-mode/input, muted in-game volume, muted output, or a bank/native failure may be
-responsible.
+The arm64 iOS simulator is intentionally no-audio. On physical hardware, the
+wrong mode/input, muted in-game volume, muted output, or a bank/native failure
+may be responsible. The experimental iPhone/iPad product uses Apple's playback
+audio-session category, so the Ring/Silent switch by itself should not mute it.
 
 **Fix**
 
 Confirm this is the physical `CelesteAudio` build, all seven bank checks passed,
 Apple TV output is audible, and Celeste Music/SFX values are above zero. Rerun
 the builder if the app was produced before FMOD mounted successfully. Do not add
-loose FMOD libraries manually.
+loose FMOD libraries manually. For the experimental iPhone/iPad lane, background and
+reopen the app once; the current host reactivates the playback session before
+resuming FMOD. If silence persists, record whether the iPhone media-volume
+overlay is above zero and whether the problem followed an audio-route change.
 
 ## No controller input
 
@@ -727,6 +731,22 @@ Pull a build containing persistence format v2 and install it as a replacement
 with the same bundle identifier. Do not uninstall the existing app. Existing
 v1 saves load unchanged and migrate automatically on the next successful
 changed save. No manual save conversion is required.
+
+## Experimental iOS build reports Save Failed
+
+The modern iOS lane stores only `settings.celeste` and slots `0`–`2` under the
+app's private Application Support container. A normal replacement keeps one
+validated previous-good backup. On launch, a missing or malformed primary is
+repaired automatically when that backup remains valid. If both copies are
+invalid or storage is unavailable, Celeste deliberately uses its normal Save
+Failed/missing-file behavior; it does not silently accept malformed XML or
+reset other slots.
+
+Do not uninstall the app while diagnosing, because iOS may remove its entire
+container. Developers should first copy the container through trusted device
+tooling, then inspect the ignored local evidence. Do not replace this path with
+tvOS UserDefaults data or enable the interpreter: the accepted device writer is
+Foundation-backed and fully AOT-safe.
 
 ## Save Manager says no local network is available
 

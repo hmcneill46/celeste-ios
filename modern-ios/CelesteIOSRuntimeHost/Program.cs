@@ -29,6 +29,12 @@ internal static class Program
             SDL.SDL_SetHint(SDL.SDL_HINT_IOS_HIDE_HOME_INDICATOR, "2");
             SDL.SDL_SetHint(SDL.SDL_HINT_MOUSE_TOUCH_EVENTS, "0");
             SDL.SDL_SetHint(SDL.SDL_HINT_TOUCH_MOUSE_EVENTS, "0");
+#if IOS_CELESTE_PRODUCT
+            // SDL defaults to Playback on iOS, but lock the product contract so
+            // Celeste remains audible with the Ring/Silent switch enabled.
+            SDL.SDL_SetHint("SDL_AUDIO_CATEGORY", "playback");
+            IOSAudioSessionCoordinator.PrepareBeforeRuntime();
+#endif
 #if IOS_SIMULATOR_NO_FMOD
             Environment.SetEnvironmentVariable("FNA_AUDIO_DISABLE_SOUND", "1");
             RuntimeLog.Info("audio-lane=simulator-no-fmod; reason=FMOD-1.10.09-has-no-arm64-simulator-slice");

@@ -258,7 +258,9 @@ available:
 The original Xamarin.iOS project is retained for provenance and legacy work.
 The beginner/public builder remains tvOS-only; developers can also inspect the
 [experimental modern iOS lane](docs/IOS_FOUNDATION.md), which now reaches real
-Celeste's title/menu with a controller but is not yet a finished iOS port.
+Celeste gameplay with durable ordinary file-backed saves, resilient physical
+iPhone/iPad audio, and a controller, but is not yet a finished iOS port and has
+no touch controls.
 
 ## Project history and release candidates
 

@@ -581,11 +581,15 @@ trimming, and signing mode. A mismatch forces the applicable lane to rebuild.
 
 The public beginner builder above remains tvOS-only. Developers working on the
 modern iPhone/iPad target should use the focused instructions in
-[Modern iOS foundation](IOS_FOUNDATION.md). Stage 24C1 accepts a physical-device
-controller-first title/menu build using the same exact Celeste input profiles
+[Modern iOS foundation](IOS_FOUNDATION.md). Stage 24C2 accepts a physical-device
+controller-first gameplay build using the same exact Celeste input profiles
 and canonical generated game as tvOS, plus FMOD Engine iOS/tvOS 1.10.09 build
-97915. Touch controls, sustained gameplay and save-slot acceptance remain
-deliberately out of scope; do not present this lane as finished user support.
+97915. Settings and all three ordinary save slots use Foundation-backed atomic
+Application Support files with one bounded previous-good backup. Touch controls
+remain deliberately out of scope; do not present this lane as finished user
+support. Physical iPhone/iPad audio uses the playback category (and therefore does
+not follow the Ring/Silent switch) and explicitly restores the same audio
+session before FMOD resumes after foregrounding.
 
 The iOS scripts keep proprietary/generated material under ignored `.build/`
 and `artifacts/` roots and do not use the private GitHub Actions cloud builder.

@@ -4,9 +4,9 @@ This repository contains a tracked modern iOS/iPadOS engineering foundation
 and an experimental controller-first Celeste product lane. The product now
 uses a user-owned supported Celeste 1.4.0.0 FNA installation to generate the
 same canonical game as tvOS, packages the real Content and seven FMOD banks,
-and reaches Celeste's title/main menu on a physical iPhone. It is **not yet a
-normal-user-ready iOS port**: touch controls and comprehensive gameplay,
-save-slot recovery, and active-game lifecycle acceptance remain later work.
+and runs controller-first Celeste gameplay on physical iPhone and iPad hardware.
+It is **not yet a normal-user-ready iOS port**: touch controls and their
+user-facing configuration remain Stage 24D work.
 
 The foundation uses one `net10.0-ios26.5` iPhone/iPad target with a minimum of
 iOS 15.0. It enters SDL through the public iOS host, runs one FNA `Game`, and
@@ -18,19 +18,30 @@ the legacy Xamarin application host.
 
 ## Current experimental Celeste lane
 
-Stage 24C1 keeps one canonical input/decompilation/transformation pipeline for
+Stages 24C1–24C2 keep one canonical input/decompilation/transformation pipeline for
 iOS, iPadOS, and tvOS. It reuses the locked nine-profile validator, canonical
 source and Content, shared Apple-safe transforms, serializers, AOT inventory,
 legacy XNB registration, and bundle reader. A small final iOS transform removes
-tvOS-only Save Manager, Performance HUD, Controller Prompts, soft-reload and
-Leave bridges; adapts the platform storage and FMOD-output boundaries; and
-hides Celeste's desktop application-Quit row.
+tvOS-only Save Manager, Performance HUD, Controller Prompts options,
+soft-reload and Leave bridges; adapts the platform storage and FMOD-output
+boundaries; and hides Celeste's desktop application-Quit row. The current iOS
+lane keeps Celeste/FNA's ordinary controller identity path without adding a
+second GameController input stack. A physical DualSense is fully functional,
+but currently resolves to Xbox glyphs on iOS; shared prompt-family policy and a
+manual selector are deliberately deferred to Stage 24D's controller/touch UX.
 
 The physical product has one SDL handoff, one FNA `Game`, one Celeste runtime,
 and one Celeste-owned FMOD Studio/low-level runtime. It renders through direct
-FNA3D Metal and currently requires a physical controller. It intentionally
+FNA3D Metal, supports normal gameplay/death/respawn/lifecycle/save flows, and
+currently requires a physical controller. It intentionally
 contains no Save Manager/LAN listener, tvOS Performance HUD, touch controls,
 JIT, interpreter, or Xamarin host.
+
+Physical iPhone/iPad audio uses Apple's public playback audio-session category, so
+the Ring/Silent switch does not mute Celeste. On foreground and after audio
+route/interruption changes, the iOS host reactivates that same OS audio session
+before resuming Celeste's existing FMOD root bus. It does not create or
+reinitialize a second FMOD system.
 
 ## Accepted toolchain
 
@@ -86,7 +97,7 @@ The runners verify a real direct-Metal first draw, sustained frames, the
 `UIWindowScene`/`CAMetalLayer` relationship, and same-runtime
 background/foreground. The iPad run also exercises the 4:3 letterbox policy.
 
-## Physical iPhone lane
+## Physical iPhone/iPad lane
 
 Mount the user-supplied FMOD Engine iOS/tvOS 1.10.09 build 97915 installer and
 prepare its arm64 device libraries. The SDK path must contain `doc/` and `api/`:
@@ -98,14 +109,14 @@ scripts/prepare-fmod-ios.sh \
 ```
 
 Sign into an Apple account in Xcode, connect and trust one Developer Mode
-iPhone, then create local Personal Team provisioning. Team, bundle, and device
-identifiers are private local values and must not be committed:
+iPhone or iPad, then create local Personal Team provisioning. Team, bundle, and
+device identifiers are private local values and must not be committed:
 
 ```bash
 scripts/configure-ios-personal-team.sh \
   --team-id YOUR_TEAM_ID \
   --bundle-id your.unique.celeste.ios.foundation \
-  --device-id YOUR_PAIRED_IPHONE_ID
+  --device-id YOUR_PAIRED_DEVICE_ID
 ```
 
 That helper writes ignored `modern-ios/Local.Build.props`. Then build, verify,
@@ -143,7 +154,8 @@ the shared canonical hashes, stages the exact Content/seven banks, and applies
 only the narrow iOS product transform. The builder emits the signed local app
 and ignored IPA below `artifacts/ios-celeste/device/`; it reports timed phases,
 free space, and a heartbeat during full AOT. This lane is developer-facing and
-requires a physical iPhone and controller. It does not use GitHub Actions.
+requires a physical iPhone or iPad and controller. It does not use GitHub
+Actions.
 
 ## Storage boundary
 
@@ -152,18 +164,25 @@ inside the app sandbox at `Library/Application Support/Celeste/`. The product
 does not migrate legacy Xamarin data or use tvOS compressed UserDefaults.
 
 The iOS storage adapter restricts writes to `settings.celeste` and slots
-`0.celeste`–`2.celeste`, then uses Foundation's native atomic replacement API.
+`0.celeste`–`2.celeste`. It validates a complete serialized candidate, rotates
+the valid primary to one bounded previous-good copy under `Backups/`, then uses
+Foundation's native atomic replacement API for the primary. A missing or
+invalid primary is repaired from its validated backup; if both copies are
+invalid, Celeste receives its normal missing/new-file semantics rather than
+accepting malformed state. No unbounded generations or project-visible temp
+files are created.
 This is a real platform boundary: the common Settings/SaveData serializers are
 shared with tvOS, while iOS uses ordinary Application Support files and tvOS
 retains its compressed UserDefaults persistence authority. The native iOS
 write avoids the JIT-only `SafeFileHandle` constructor path that is unavailable
-under full AOT. Stage 24C1 accepts Celeste's natural Settings round trip but
-deliberately defers save-slot recovery stress to Stage 24C2.
+under full AOT. The app does not mark this Application Support state as
+excluded from normal device backups; this is container backup behavior, not an
+iCloud synchronization feature.
 
 ## Deliberately deferred
 
 - touch controls and touch UI
-- comprehensive controller gameplay, save-slot recovery, and active-game lifecycle acceptance
+- normal-user touch/controller transition UX
 - save migration and document import
 - Save Manager, QR pairing, or graceful Quit on iOS
 - real-Celeste Simulator execution (FMOD 1.10.09 has no arm64 Simulator slice)
