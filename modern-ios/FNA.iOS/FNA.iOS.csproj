@@ -1,0 +1,38 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0-ios26.5</TargetFramework>
+    <AssemblyName>FNA</AssemblyName>
+    <RootNamespace>Microsoft.Xna.Framework</RootNamespace>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <Nullable>disable</Nullable>
+    <ImplicitUsings>false</ImplicitUsings>
+    <DefineConstants>$(DefineConstants);NETSTANDARD2_0</DefineConstants>
+    <SupportedOSPlatformVersion>15.0</SupportedOSPlatformVersion>
+    <RepoRoot>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\..'))</RepoRoot>
+    <IOSHostStageRoot>$(RepoRoot)\.build\ios-host</IOSHostStageRoot>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="$(RepoRoot)\FNA\src\**\*.cs"
+             Exclude="$(RepoRoot)\FNA\src\Graphics\FNA3D.cs;$(RepoRoot)\FNA\src\FrameworkDispatcher.cs;$(RepoRoot)\FNA\src\Utilities\XamarinHelper.cs" />
+    <Compile Include="$(IOSHostStageRoot)\managed\SDL2.cs" />
+    <Compile Include="$(IOSHostStageRoot)\managed\FNA3D.cs" />
+    <Compile Include="$(IOSHostStageRoot)\managed\FAudio.cs" />
+    <Compile Include="$(IOSHostStageRoot)\managed\Theorafile.cs" />
+    <Compile Include="$(IOSHostStageRoot)\managed\FrameworkDispatcher.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="$(RepoRoot)\FNA\src\Graphics\Effect\StockEffects\FXB\*.fxb"
+                      LogicalName="Microsoft.Xna.Framework.Graphics.Effect.Resources.%(Filename)%(Extension)" />
+    <EmbeddedResource Include="$(RepoRoot)\FNA\src\Graphics\Effect\YUVToRGBA\YUVToRGBAEffect.fxb"
+                      LogicalName="Microsoft.Xna.Framework.Graphics.Effect.Resources.YUVToRGBAEffect.fxb" />
+  </ItemGroup>
+
+  <Target Name="ValidateIOSFoundationManagedInputs" BeforeTargets="PrepareForBuild">
+    <Error Condition="!Exists('$(IOSHostStageRoot)\managed\SDL2.cs')"
+           Text="Prepared iOS managed inputs are missing. Run scripts/prepare-ios-foundation.sh." />
+  </Target>
+</Project>

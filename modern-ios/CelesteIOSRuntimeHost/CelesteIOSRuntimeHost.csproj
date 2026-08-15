@@ -1,0 +1,80 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0-ios26.5</TargetFramework>
+    <OutputType>Exe</OutputType>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <SupportedOSPlatformVersion>15.0</SupportedOSPlatformVersion>
+    <TargetPlatformMinVersion>15.0</TargetPlatformMinVersion>
+    <ApplicationId Condition="'$(ApplicationId)' == ''">io.github.roootthefox.celeste.ios.foundation</ApplicationId>
+    <ApplicationTitle>Celeste iOS Foundation</ApplicationTitle>
+    <ApplicationDisplayVersion>0.1</ApplicationDisplayVersion>
+    <ApplicationVersion>1</ApplicationVersion>
+    <AppIcon>AppIcon</AppIcon>
+    <TrimMode Condition="'$(Configuration)' == 'Release'">full</TrimMode>
+    <MtouchLink Condition="'$(Configuration)' == 'Release'">Full</MtouchLink>
+    <MtouchUseLlvm Condition="'$(Configuration)' == 'Release'">true</MtouchUseLlvm>
+    <DebugSymbols Condition="'$(Configuration)' == 'Release'">false</DebugSymbols>
+    <DebugType Condition="'$(Configuration)' == 'Release'">none</DebugType>
+    <UseInterpreter>false</UseInterpreter>
+    <RepoRoot>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\..'))</RepoRoot>
+    <IOSHostStageRoot>$(RepoRoot)\.build\ios-host</IOSHostStageRoot>
+    <IOSHostNativeRoot>$(IOSHostStageRoot)\native</IOSHostNativeRoot>
+    <FmodIOSStageRoot Condition="'$(FmodIOSStageRoot)' == ''">$(IOSHostStageRoot)\fmod</FmodIOSStageRoot>
+    <EnableFmodDeviceFoundation Condition="'$(EnableFmodDeviceFoundation)' == ''">false</EnableFmodDeviceFoundation>
+    <DefineConstants Condition="'$(RuntimeIdentifier)' == 'iossimulator-arm64'">$(DefineConstants);IOS_SIMULATOR_NO_FMOD</DefineConstants>
+    <DefineConstants Condition="'$(RuntimeIdentifier)' == 'ios-arm64' and '$(EnableFmodDeviceFoundation)' == 'true'">$(DefineConstants);IOS_DEVICE_FMOD</DefineConstants>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\FNA.iOS\FNA.iOS.csproj" />
+    <ProjectReference Include="..\CelesteIOSFoundation\CelesteIOSFoundation.csproj" />
+    <BundleResource Include="PrivacyInfo.xcprivacy" LogicalName="PrivacyInfo.xcprivacy" />
+    <ImageAsset Include="Assets.xcassets\**\*" />
+    <ImageAsset Include="$(RepoRoot)\celestemeow\Assets.xcassets\AppIcon.appiconset\Icon1024.png">
+      <Link>Assets.xcassets\AppIcon.appiconset\AppIcon1024.png</Link>
+    </ImageAsset>
+  </ItemGroup>
+
+  <ItemGroup>
+    <NativeReference Include="$(IOSHostNativeRoot)\SDL2.xcframework">
+      <Kind>Static</Kind><SmartLink>false</SmartLink><ForceLoad>true</ForceLoad>
+      <Frameworks>Foundation UIKit AVFoundation AudioToolbox CoreBluetooth CoreGraphics CoreHaptics CoreMotion CoreVideo GameController Metal OpenGLES QuartzCore</Frameworks>
+    </NativeReference>
+    <NativeReference Include="$(IOSHostNativeRoot)\FNA3D.xcframework">
+      <Kind>Static</Kind><SmartLink>false</SmartLink><ForceLoad>true</ForceLoad>
+    </NativeReference>
+    <NativeReference Include="$(IOSHostNativeRoot)\FAudio.xcframework">
+      <Kind>Static</Kind><SmartLink>false</SmartLink><ForceLoad>true</ForceLoad><IsCxx>true</IsCxx>
+    </NativeReference>
+    <NativeReference Include="$(IOSHostNativeRoot)\Theorafile.xcframework">
+      <Kind>Static</Kind><SmartLink>false</SmartLink><ForceLoad>true</ForceLoad>
+    </NativeReference>
+    <NativeReference Include="$(IOSHostNativeRoot)\ApplePlatformStubs.xcframework">
+      <Kind>Static</Kind><SmartLink>false</SmartLink><ForceLoad>true</ForceLoad>
+    </NativeReference>
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(RuntimeIdentifier)' == 'ios-arm64' and '$(EnableFmodDeviceFoundation)' == 'true'">
+    <NativeReference Include="$(FmodIOSStageRoot)\FMOD.xcframework">
+      <Kind>Static</Kind><SmartLink>false</SmartLink><ForceLoad>true</ForceLoad>
+    </NativeReference>
+    <NativeReference Include="$(FmodIOSStageRoot)\FMODStudio.xcframework">
+      <Kind>Static</Kind><SmartLink>false</SmartLink><ForceLoad>true</ForceLoad><IsCxx>true</IsCxx>
+    </NativeReference>
+  </ItemGroup>
+
+  <Target Name="ValidateIOSFoundationInputs" BeforeTargets="PrepareForBuild">
+    <Error Condition="!Exists('$(IOSHostStageRoot)\native-manifest.json')"
+           Text="Prepared iOS foundation inputs are missing. Run scripts/prepare-ios-foundation.sh." />
+    <Error Condition="'$(RuntimeIdentifier)' != 'ios-arm64' and '$(RuntimeIdentifier)' != 'iossimulator-arm64'"
+           Text="The modern iOS foundation supports only ios-arm64 and iossimulator-arm64." />
+    <Error Condition="'$(RuntimeIdentifier)' == 'ios-arm64' and '$(EnableFmodDeviceFoundation)' != 'true'"
+           Text="Physical foundation builds require EnableFmodDeviceFoundation=true and prepared FMOD 1.10.09 inputs." />
+    <Error Condition="'$(EnableFmodDeviceFoundation)' == 'true' and !Exists('$(FmodIOSStageRoot)\FMOD.xcframework\Info.plist')"
+           Text="Prepared FMOD iPhone inputs are missing. Run scripts/prepare-fmod-ios.sh." />
+  </Target>
+
+  <Import Project="..\Local.Build.props" Condition="Exists('..\Local.Build.props')" />
+</Project>

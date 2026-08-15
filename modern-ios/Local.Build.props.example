@@ -1,0 +1,11 @@
+<Project>
+  <!-- Copy to Local.Build.props (ignored) for local device signing/FMOD. -->
+  <PropertyGroup>
+    <!-- <ApplicationId>your.unique.celeste.ios.foundation</ApplicationId> -->
+    <!-- <CodesignKey>Apple Development</CodesignKey> -->
+    <!-- <DevelopmentTeam>YOUR_TEAM_ID</DevelopmentTeam> -->
+    <!-- <CodesignProvision>Automatic</CodesignProvision> -->
+    <!-- <ProvisioningType>automatic</ProvisioningType> -->
+    <!-- <FmodIOSStageRoot>/absolute/path/to/prepared/fmod</FmodIOSStageRoot> -->
+  </PropertyGroup>
+</Project>

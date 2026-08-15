@@ -27,6 +27,8 @@ Use this page to jump directly to the task or level of detail you need.
 
 ## Developer documentation
 
+- [Experimental modern iOS foundation](IOS_FOUNDATION.md) — the non-playable
+  .NET 10/FNA/Metal iPhone and iPad infrastructure lane for future development.
 - [Project architecture](STATUS.md#architecture) — host, native, generated
   managed code, audio, persistence, Save Manager, and lifecycle design.
 - [Advanced build and reproducibility](BUILDING.md) — pinned toolchain,

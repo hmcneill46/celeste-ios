@@ -301,7 +301,10 @@ or an unsigned conventional tvOS IPA containing `Payload/Celeste.app`.
 - Apple's Metal HUD presentation and metric set are system-controlled and may
   change between tvOS releases; visible diagnostics can carry small overhead.
 - The current modern self-builder targets tvOS only. Legacy iOS source is
-  retained, but a modern iOS product is not currently supported.
+  retained. A tracked [experimental modern iOS foundation](IOS_FOUNDATION.md)
+  now proves .NET 10, direct FNA3D Metal, iPhone/iPad UIScene hosting, and the
+  physical FMOD boundary, but it does not yet run Celeste or constitute a
+  supported playable iOS product.
 - No App Store, distribution-profile, paid entitlement, or universal hardware
   claim is made.
 
