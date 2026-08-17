@@ -18,7 +18,7 @@ the legacy Xamarin application host.
 
 ## Current experimental Celeste lane
 
-Stages 24C1–24D2 keep one canonical input/decompilation/transformation pipeline for
+Stages 24C1–24D3 keep one canonical input/decompilation/transformation pipeline for
 iOS, iPadOS, and tvOS. It reuses the locked nine-profile validator, canonical
 source and Content, shared Apple-safe transforms, serializers, AOT inventory,
 legacy XNB registration, and bundle reader. A small final iOS transform removes
@@ -37,24 +37,59 @@ Manager/LAN listener, tvOS Performance HUD, JIT, interpreter, or Xamarin host.
 ## Touch controls
 
 The production touch overlay is available from **Options > Touch Controls**.
-Defaults are Automatic visibility, Fixed eight-way movement, Toggle Grab, 70%
-opacity, 100% size, Jump/Dash sliding Off, and touch haptics On. Automatic hides
-and clears touch when a physical controller connects, then restores it when the
-controller disconnects; Always permits deliberate coexistence. Off retains a
-recovery control when no controller is present.
+Defaults are Automatic visibility, Fixed eight-way movement, separate Jump and
+Dash buttons, Toggle Grab for touch, 70% opacity, Jump/Dash sliding Off, touch
+haptics On, and directional haptics Off. Automatic hides and clears touch when
+a physical controller connects, then restores it when the controller
+disconnects; Always permits deliberate coexistence. Off retains a recovery
+control when no controller is present.
 
 Fixed movement provides a repeatable centre, while Floating places the movement
 origin beneath the first thumb inside a bounded left-side acquisition region.
 Movement keeps a 0.18 radial deadzone and eight-direction sector selection with
-8-degree hysteresis. Jump remains held for variable-height jumps; Dash produces
-one press edge; Grab supports Toggle, Hold Button, and Shoulder Hold. Optional
-Jump/Dash sliding lets one held finger transfer between those two buttons.
+8-degree hysteresis. Optional **Directional Haptics** pulses once when movement
+starts and once when the thumb crosses into a different direction; it does not
+repeat merely because a direction remains held. Jump remains held for
+variable-height jumps and Dash produces one press edge. Optional Jump/Dash
+sliding lets one held finger transfer between those two buttons.
 The small top-left book control supplies Celeste's Journal/Special input, so
 chapter records and contextual alternate menu actions are available without a
 controller. Pause, Confirm, Cancel, Talk, menu navigation, aiming, and every
 ordinary gameplay action also use Celeste's normal logical input paths.
-Opacity (0–100%), size (70–130%), and haptics are independent preferences. Zero
-opacity never disables hit testing, and movement itself never pulses.
+The Options-page opacity is a global master. Every control also has its own
+0–100% opacity in the layout editor, in 10% steps; editor geometry remains
+visible even when its gameplay opacity is zero. Opacity never disables hit
+testing. Haptics remain an independent preference.
+
+**Edit Layout** opens a transactional full-display editor with separate Phone
+and Tablet profiles. The safe area is a faint guide rather than a placement
+boundary, so controls may occupy the physical corners and the letterbox or
+pillarbox regions around Celeste. Fixed movement, the Floating movement
+acquisition region, Jump, Dash, Grab, Pause, and Journal can be moved and
+resized independently. Rectangles resize freely in width and height; circular
+controls remain physical circles. The editor's solid circular preview is the
+exact gameplay visual size, with a faint outer ring showing the larger touch
+target. A visible circular disk may sit flush against any physical display edge;
+only its larger invisible hit margin is clipped there.
+Jump and Dash may remain separate or share one resizable Split Region with
+either diagonal, vertical, or horizontal division; assignments can be swapped
+and Button Sliding still applies. Each held half receives its own Jump/Dash
+pressed colour. Grab may be a circle or an arbitrary
+rectangle, including the compact shoulder-style preset. Up to four optional
+Jump, Dash, Grab, Pause, Journal, Crouch Dash, or Quick Restart controls can be added,
+duplicated, moved, resized, reshaped, given individual opacity, and deleted.
+Journal is present by default but may be deleted; Movement, the selected
+Jump/Dash scheme, one Grab, and Pause remain essential. Duplicate physical
+controls feed one logical action: it remains held until the final owner is
+released, and a second simultaneous Grab does not double-toggle. The editor
+provides Undo, Reset Selected, Reset Layout, Mirror Layout, Done, and Cancel.
+Its tools and guidance use Celeste's normal menu font with bounded auto-fitting.
+Invalid visibly off-screen, undersized, or overlapping layouts cannot be saved.
+
+Celeste's ordinary **Grab Mode** row is source-aware on iOS. Touch, Controller,
+and Keyboard remember independent Hold, Invert, or Toggle choices, and the row
+labels the source currently being configured. Grab geometry does not determine
+its behavior; the same mode applies to any circle or rectangle.
 
 Touch preferences live in validated app-private host defaults. They are not
 part of `settings.celeste`, SaveData, save backups, or the tvOS persistence
@@ -206,8 +241,6 @@ iCloud synchronization feature.
 
 ## Deliberately deferred
 
-- touch controls and touch UI
-- normal-user touch/controller transition UX
 - save migration and document import
 - Save Manager, QR pairing, or graceful Quit on iOS
 - real-Celeste Simulator execution (FMOD 1.10.09 has no arm64 Simulator slice)

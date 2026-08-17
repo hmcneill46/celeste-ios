@@ -259,11 +259,14 @@ available:
 The original Xamarin.iOS project is retained for provenance and legacy work.
 The beginner/public builder remains tvOS-only; developers can also inspect the
 [experimental modern iOS lane](docs/IOS_FOUNDATION.md). That lane now plays the
-same canonical Celeste game on physical iPhone and iPad using either adaptive
-touch controls or a controller, including a dedicated Journal/Special control,
-with durable ordinary file-backed saves and resilient seven-bank audio. It is
-still an experimental developer build rather than a finished public iOS
-release.
+same canonical Celeste game on physical iPhone and iPad using either a
+controller or adaptive touch controls, with customization including separate
+Phone/Tablet layouts, edge-flush full-display placement, per-control opacity,
+split-action and floating-movement regions, optional duplicated/niche controls
+including Quick Restart, a dedicated
+Journal/Special control, and source-aware Grab modes. Saves use durable
+ordinary files and audio uses the real seven FMOD banks. It is still an
+experimental developer build rather than a finished public iOS release.
 
 ## Project history and release candidates
 

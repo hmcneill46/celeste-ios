@@ -41,13 +41,42 @@ for required in \
   "$REPO_ROOT/.build/celeste-ios/current/managed/Celeste.Modern.csproj" \
   "$REPO_ROOT/artifacts/ios-celeste/current/ios-managed.json" \
   "$REPO_ROOT/artifacts/ios-celeste/current/ios-managed-stage24c2.json" \
-  "$REPO_ROOT/artifacts/ios-celeste/current/ios-managed-stage24d2.json"; do
+  "$REPO_ROOT/artifacts/ios-celeste/current/ios-managed-stage24d2.json" \
+  "$REPO_ROOT/artifacts/ios-celeste/current/ios-managed-stage24d3.json"; do
   [[ -f "$required" ]] || { echo "error: prepared iOS Celeste input is incomplete" >&2; exit 1; }
+done
+# Generated Celeste is intentionally ignored and prepared as a separate step.
+# Refuse to AOT-compile a stale D3 bridge after a tracked template changes: a
+# clean native build cannot make old generated C# current.
+for generated_pair in \
+  "managed/templates/IOSSourceGrabModeOption.cs:Celeste/IOSSourceGrabModeOption.cs" \
+  "managed/templates/IOSTouchControlsD3.cs:Celeste/IOSTouchControlsD3.cs" \
+  "managed/templates/IOSTouchControlsUID3.cs:Celeste/IOSTouchControlsUI.cs"; do
+  template="${generated_pair%%:*}"
+  generated="${generated_pair#*:}"
+  if ! cmp -s "$REPO_ROOT/$template" "$REPO_ROOT/.build/celeste-ios/current/managed/$generated"; then
+    echo "error: prepared iOS Celeste source is stale for $template" >&2
+    echo "error: rerun prepare-celeste-ios-runtime.sh before building" >&2
+    exit 1
+  fi
 done
 if [[ -e "$OUTPUT_DIR" ]]; then
   ((CLEAN)) || { echo "error: output exists; use --clean" >&2; exit 1; }
   [[ -f "$OUTPUT_DIR/$MARKER" ]] || { echo "error: refusing unmarked output" >&2; exit 1; }
   find "$OUTPUT_DIR" -depth -delete
+fi
+if ((CLEAN)); then
+  # Celeste's generated project lives outside the host project tree. Clearing
+  # only the packaged output can leave Mono AOT intermediates whose managed
+  # metadata is current but whose native method bodies are stale. A public
+  # clean build therefore removes only these four exact ignored build roots.
+  for build_root in \
+    "$REPO_ROOT/modern-ios/CelesteIOSRuntimeHost/bin" \
+    "$REPO_ROOT/modern-ios/CelesteIOSRuntimeHost/obj" \
+    "$REPO_ROOT/.build/celeste-ios/current/managed/bin" \
+    "$REPO_ROOT/.build/celeste-ios/current/managed/obj"; do
+    [[ ! -e "$build_root" ]] || find "$build_root" -depth -delete
+  done
 fi
 mkdir -p "$OUTPUT_DIR/logs"
 touch "$OUTPUT_DIR/$MARKER"
@@ -87,7 +116,7 @@ python3 "$REPO_ROOT/scripts/verify-ios-package.py" --app "$published" --lane dev
 elapsed="$(( $(date +%s)-start ))"
 python3 - "$OUTPUT_DIR/build-manifest.json" "$OUTPUT_DIR/Celeste-modern-iOS.ipa" "$elapsed" \
   "$REPO_ROOT/artifacts/ios-celeste/current/preparation-result.json" \
-  "$REPO_ROOT/artifacts/ios-celeste/current/ios-managed-stage24d2.json" <<'PY'
+  "$REPO_ROOT/artifacts/ios-celeste/current/ios-managed-stage24d3.json" <<'PY'
 import hashlib,json,pathlib,sys
 out,ipa,elapsed,prep,managed=pathlib.Path(sys.argv[1]),pathlib.Path(sys.argv[2]),int(sys.argv[3]),pathlib.Path(sys.argv[4]),pathlib.Path(sys.argv[5])
 p=json.loads(prep.read_text()); m=json.loads(managed.read_text())

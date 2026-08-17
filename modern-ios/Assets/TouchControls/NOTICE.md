@@ -1,12 +1,15 @@
 # Touch-control icon notice
 
-The `jump.svg`, `dash.svg`, `touch.svg`, and `journal.svg` source files are derived without modification
+The `jump.svg`, `dash.svg`, `touch.svg`, `journal.svg`, `restart.svg`, and
+`crouch-dash.svg` source files are derived without modification
 from Google Material Symbols:
 
 - `keyboard_double_arrow_up` (Jump)
 - `sprint` (Dash)
 - `touch_app` (neutral touch prompt)
 - `book` (Journal/Special)
+- `autorenew` (Quick Restart)
+- `motion_blur` (Crouch Dash)
 
 Material Symbols are provided by Google under the Apache License 2.0. The
 license text is available in this recursive repository checkout at

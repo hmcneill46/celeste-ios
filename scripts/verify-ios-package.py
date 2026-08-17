@@ -154,10 +154,20 @@ def main() -> int:
                 "tvOS host persistence/preferences leaked into iOS")
         require(not bundle_contains("menu_exit"), "desktop application Quit route remains in iOS")
         require(bundle_contains("CelesteIOS.TouchControls.Visibility.v1") and
-                bundle_contains("CelesteIOS.TouchControls.Movement.v1") and
-                bundle_contains("CelesteIOS.TouchControls.Grab.v1"),
+                bundle_contains("CelesteIOS.TouchControls.Layout.Phone.v2") and
+                bundle_contains("CelesteIOS.TouchControls.Layout.Tablet.v2") and
+                bundle_contains("CelesteIOS.TouchControls.Layout.Phone.v1") and
+                bundle_contains("CelesteIOS.TouchControls.Layout.Tablet.v1") and
+                bundle_contains("CelesteIOS.GrabMode.Touch.v1") and
+                bundle_contains("CelesteIOS.GrabMode.Controller.v1") and
+                bundle_contains("CelesteIOS.GrabMode.Keyboard.v1") and
+                bundle_contains("CelesteIOS.TouchControls.DirectionalHaptics.v1"),
                 "production iOS touch-control preferences are absent")
-        require(bundle_contains("ENABLE TOUCH CONTROLS") and bundle_contains("TOUCH CONTROLS"),
+        require(bundle_contains("ENABLE TOUCH CONTROLS") and bundle_contains("TOUCH CONTROLS") and
+                bundle_contains("DRAG CONTROL TO MOVE") and bundle_contains("Split Region") and
+                bundle_contains("ADD CONTROL") and bundle_contains("CROUCH DASH") and
+                bundle_contains("QUICK RESTART") and
+                bundle_contains("OPACITY +") and bundle_contains("OPACITY -"),
                 "production touch overlay or Options recovery surface is absent")
         require(bundle_contains("Celeste.IOSTouchControls.jump.a8") and
                 bundle_contains("Celeste.IOSTouchControls.dash.a8") and
@@ -165,7 +175,9 @@ def main() -> int:
                 bundle_contains("Celeste.IOSTouchControls.grab-grabbed.a8") and
                 bundle_contains("Celeste.IOSTouchControls.touch.a8") and
                 bundle_contains("Celeste.IOSTouchControls.pause.a8") and
-                bundle_contains("Celeste.IOSTouchControls.journal.a8"),
+                bundle_contains("Celeste.IOSTouchControls.journal.a8") and
+                bundle_contains("Celeste.IOSTouchControls.restart.a8") and
+                bundle_contains("Celeste.IOSTouchControls.crouch-dash.a8"),
                 "touch prompt resources are absent")
     else:
         require(not (app / "Celeste.dll").exists() and not (app / "Content").exists(),

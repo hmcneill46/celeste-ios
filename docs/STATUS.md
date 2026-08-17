@@ -19,7 +19,7 @@ not an App Store distribution.
 | Apple TV behaviour | Home/background resume, graceful main-menu Quit, app artwork, Top Shelf, and optional Metal Performance HUD |
 | Inputs | Nine exact Celeste 1.4.0.0 FNA profiles from itch.io, Epic Games Store, and Steam |
 | Build routes | Local Apple silicon Mac or private GitHub compilation to an unsigned IPA |
-| Experimental iOS | Shared canonical Celeste pipeline now supports touch- or controller-driven gameplay, direct Metal, resilient seven-bank FMOD playback, and durable ordinary file-backed saves on physical iPhone and iPad; it remains an experimental developer build rather than a public iOS release |
+| Experimental iOS | Shared canonical Celeste pipeline now supports controller play and customizable touch layouts with separate Phone/Tablet profiles, direct Metal, resilient seven-bank FMOD playback, and durable ordinary file-backed saves on physical iPhone and iPad; it remains an experimental developer build rather than a public iOS release |
 
 The release-candidate audit covered a clean public clone, native and managed
 reproducibility, full AOT/trimming, unsigned packaging, same-identity physical
@@ -306,10 +306,11 @@ or an unsigned conventional tvOS IPA containing `Payload/Celeste.app`.
   runs the same canonical Celeste game through .NET 10/direct FNA3D Metal and
   real seven-bank FMOD on physical iPhone and iPad. Adaptive touch controls
   provide controller-independent title/menu/gameplay input, including
-  Journal/Special, while a DualSense can take over automatically or coexist.
+  Journal/Special, edge-flush full-display custom placement, per-control
+  opacity, and bounded duplicated/niche actions including Quick Restart, while a DualSense can take over
+  automatically or coexist.
   The lane remains
-  experimental pending broader user-facing packaging and optional custom-layout
-  work.
+  experimental pending broader user-facing packaging and release acceptance.
 - No App Store, distribution-profile, paid entitlement, or universal hardware
   claim is made.
 

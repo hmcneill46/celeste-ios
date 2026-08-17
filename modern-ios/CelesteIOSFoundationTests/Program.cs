@@ -267,4 +267,348 @@ Check(AppleControllerPromptPolicy.SelectAppleFamily(new[]
     new ControllerCandidate(true, true, AppleControllerFamily.PlayStation, 1),
 }) == AppleControllerFamily.PlayStation, "current Apple controller family wins");
 
+// Stage 24D3 keeps the D2 factory geometry but stores editable hit regions in
+// normalized full-screen coordinates. Phone and tablet values are independent.
+TouchLayoutProfile d3Phone = TouchLayoutPolicy.Factory(956, 440, touchSafe, false);
+TouchLayoutProfile d3Tablet = TouchLayoutPolicy.Factory(1024, 768, new SafeAreaMetrics(24, 0, 20, 0), true);
+Check(TouchLayoutPolicy.Validate(d3Phone, 956, 440).IsValid, "D3 factory phone validates");
+Check(TouchLayoutPolicy.Validate(d3Tablet, 1024, 768).IsValid, "D3 factory tablet validates");
+Check(TouchLayoutPolicy.Validate(d3Phone with { ActionLayout = TouchActionLayout.SplitRegion }, 956, 440).IsValid,
+    "factory Split Region validates");
+Check(TouchLayoutPolicy.Validate(d3Phone with { MovementMode = TouchMovementMode.Floating }, 956, 440).IsValid,
+    "factory Floating region validates");
+TouchRect fittedFactoryRegion = TouchLayoutPolicy.Denormalize(d3Phone.FloatingRegion,
+    TouchLayoutPolicy.FullCanvas(956, 440));
+Check(fittedFactoryRegion.X >= touchSafe.Left && fittedFactoryRegion.Right <= 956 - touchSafe.Right &&
+      fittedFactoryRegion.Y >= touchSafe.Top && fittedFactoryRegion.Bottom <= 440 - touchSafe.Bottom,
+    "factory inactive Floating region is inside real iPhone safe area");
+TouchRuntimeLayout d3Runtime = TouchLayoutPolicy.Materialize(d3Phone, 956, 440, touchSafe);
+Check(Math.Abs(d3Runtime.Jump.Radius - touchLayout.Jump.Radius) < 0.001, "D3 factory preserves D2 Jump size");
+Check(Math.Abs(d3Runtime.Movement.Center.X - touchLayout.Movement.Center.X) < 0.001, "D3 factory preserves D2 movement position");
+Check(Math.Abs(d3Runtime.Movement.Radius / d3Runtime.Movement.HitRadius -
+      TouchLayoutPolicy.VisualRatio(d3Phone, new TouchLayoutSelection(TouchLayoutControl.Movement))) < 0.000001,
+    "editor and gameplay share the exact phone movement visual ratio");
+TouchRuntimeLayout d3TabletRuntime = TouchLayoutPolicy.Materialize(
+    d3Tablet, 1024, 768, new SafeAreaMetrics(24, 0, 20, 0));
+Check(Math.Abs(d3TabletRuntime.Movement.Radius / d3TabletRuntime.Movement.HitRadius -
+      TouchLayoutPolicy.VisualRatio(d3Tablet, new TouchLayoutSelection(TouchLayoutControl.Movement))) < 0.000001,
+    "editor and gameplay share the exact tablet movement visual ratio");
+Check(TouchLayoutCodec.TryDecode(TouchLayoutCodec.Encode(d3Phone), out TouchLayoutProfile decodedPhone) && decodedPhone == d3Phone,
+    "layout serialization round trip");
+Check(!TouchLayoutCodec.TryDecode(null, out _), "missing layout rejected");
+Check(!TouchLayoutCodec.TryDecode("D3|2|bad", out _), "unknown layout version rejected");
+Check(!TouchLayoutCodec.TryDecode(TouchLayoutCodec.Encode(d3Phone).Replace("0.", "NaN", StringComparison.Ordinal), out _),
+    "non-finite layout rejected");
+Check(TouchLayoutCodec.Encode(d3Phone) != TouchLayoutCodec.Encode(d3Tablet), "phone/tablet profiles remain independent");
+
+string encodedV2 = TouchLayoutCodec.Encode(d3Phone);
+string legacyV1 = "D3|1|" + string.Join("|", encodedV2["D3|2|".Length..].Split('|').Take(14));
+Check(TouchLayoutCodec.TryDecode(legacyV1, out TouchLayoutProfile legacyDecoded, out bool legacyCoordinates) && legacyCoordinates,
+    "schema-v1 safe-area layout remains decodable for migration");
+TouchLayoutProfile rebasedLegacy = TouchLayoutPolicy.RebaseFromSafeArea(legacyDecoded, 956, 440, touchSafe);
+Check(rebasedLegacy.SchemaVersion == TouchLayoutProfile.CurrentSchemaVersion &&
+      TouchLayoutPolicy.IsStructurallyValid(rebasedLegacy),
+    "schema-v1 layout rebases into schema-v2 full-screen coordinates");
+
+TouchLayoutProfile edgeLayout = d3Phone with
+{
+    JournalEnabled = false,
+    Pause = d3Phone.Pause with { X = 0, Y = 0 },
+};
+Check(TouchLayoutPolicy.Validate(edgeLayout, 956, 440).IsValid && edgeLayout.Pause.X < touchSafe.Left / 956.0,
+    "controls may use the physical screen outside the Celeste safe/content bounds");
+TouchRect flushCircleRect = TouchLayoutEditorGeometry.Move(
+    d3Phone.Jump, new TouchPoint(-4000, 0), 956, 440, true, TouchLayoutPolicy.JumpVisualRatio);
+TouchRuntimeLayout flushCircleRuntime = TouchLayoutPolicy.Materialize(
+    d3Phone with { Jump = flushCircleRect }, 956, 440, touchSafe);
+Check(Math.Abs(flushCircleRuntime.Jump.Center.X - flushCircleRuntime.Jump.Radius) < 0.001 &&
+      flushCircleRuntime.Jump.HitRadius > flushCircleRuntime.Jump.Center.X,
+    "visible circular control can sit flush to the display while its larger hit margin is clipped");
+Check(TouchLayoutPolicy.IsStructurallyValid(d3Phone with { Jump = flushCircleRect }),
+    "bounded off-screen hit-circle coordinates remain persistable");
+
+TouchLayoutProfile opacityLayout = d3Phone.WithOpacity(TouchLayoutControl.Movement, 30)
+    .WithOpacity(TouchLayoutControl.Journal, 0);
+Check(TouchLayoutCodec.TryDecode(TouchLayoutCodec.Encode(opacityLayout), out TouchLayoutProfile opacityRoundTrip) &&
+      opacityRoundTrip.OpacityFor(TouchLayoutControl.Movement) == 30 &&
+      opacityRoundTrip.OpacityFor(TouchLayoutControl.Journal) == 0,
+    "individual primary-control opacity round trip includes fully transparent runtime controls");
+TouchLayoutProfile invalidOpacity = d3Phone.WithOpacity(TouchLayoutControl.Dash, 35);
+Check(!TouchLayoutPolicy.Validate(invalidOpacity, 956, 440).IsValid &&
+      !TouchLayoutCodec.TryDecode(TouchLayoutCodec.Encode(invalidOpacity), out _),
+    "individual opacity is bounded to deterministic ten-percent steps");
+
+TouchLayoutEditorSession editor = new(d3Phone, d3Phone);
+TouchRect originalJump = editor.Working.Jump;
+editor.BeginGesture();
+editor.PreviewRect(TouchLayoutControl.Jump, originalJump with { X = originalJump.X - 0.03 });
+editor.EndGesture();
+Check(editor.CanUndo && editor.UndoCount == 1, "editor move creates one Undo unit");
+Check(editor.Undo() && editor.Working == d3Phone, "editor Undo restores prior layout");
+editor.BeginGesture();
+editor.PreviewRect(TouchLayoutControl.Jump, originalJump with { Width = originalJump.Width * 0.9, Height = originalJump.Height * 0.9 });
+editor.EndGesture();
+Check(editor.Working.Jump.Width < originalJump.Width, "editor resize is independent");
+Check(editor.Original == d3Phone, "editor Cancel source remains immutable");
+editor.ResetSelected(TouchLayoutControl.Jump);
+Check(editor.Working.Jump == d3Phone.Jump, "Reset Selected restores factory geometry");
+editor.Change(editor.Working with { GrabShape = TouchGrabShape.Rectangle });
+Check(editor.Working.GrabShape == TouchGrabShape.Rectangle, "Grab rectangle editor state");
+editor.ResetLayout();
+Check(editor.Working == d3Phone, "Reset Layout restores full factory profile");
+TouchLayoutProfile nonFactoryModes = d3Phone with
+{
+    MovementMode = TouchMovementMode.Floating,
+    ActionLayout = TouchActionLayout.SplitRegion,
+    Sliding = TouchSlideMode.JumpDash,
+    SplitOrientation = TouchSplitOrientation.Horizontal,
+};
+TouchLayoutEditorSession preservingReset = new(nonFactoryModes, d3Phone);
+preservingReset.ResetLayout();
+Check(preservingReset.Working.MovementMode == TouchMovementMode.Floating &&
+      preservingReset.Working.ActionLayout == TouchActionLayout.SplitRegion &&
+      preservingReset.Working.Sliding == TouchSlideMode.JumpDash,
+    "Factory geometry preserves Movement, Action Layout, and Sliding Options");
+Check(preservingReset.Working.SplitRegion == d3Phone.SplitRegion,
+    "Factory reset still restores split geometry");
+
+TouchRect resizeStart = new(0.20, 0.20, 0.20, 0.20);
+TouchRect resizedRectangle = TouchLayoutEditorGeometry.Resize(
+    resizeStart, new TouchPoint(100, 20), 832, 420, false);
+Check(resizedRectangle.Width > resizeStart.Width && resizedRectangle.Height > resizeStart.Height &&
+      Math.Abs((resizedRectangle.Width - resizeStart.Width) - (resizedRectangle.Height - resizeStart.Height)) > 0.01,
+    "rectangle corner independently changes width and height");
+TouchRect resizedCircle = TouchLayoutEditorGeometry.Resize(
+    resizeStart, new TouchPoint(100, 20), 832, 420, true);
+Check(Math.Abs(resizedCircle.Width * 832 - resizedCircle.Height * 420) < 0.000001,
+    "circle corner resize preserves a physical circle");
+editor.Mirror();
+TouchLayoutProfile mirrored = editor.Working;
+Check(Math.Abs(mirrored.Movement.X - (1 - d3Phone.Movement.Right)) < 0.000001, "Mirror Layout reflects movement");
+TouchLayoutProfile unmirrored = TouchLayoutPolicy.Mirror(mirrored);
+Check(unmirrored.SplitOrientation == d3Phone.SplitOrientation &&
+      Math.Abs(unmirrored.Movement.X - d3Phone.Movement.X) < 0.000000001 &&
+      Math.Abs(unmirrored.Jump.X - d3Phone.Jump.X) < 0.000000001,
+    "Mirror Layout is reversible");
+Check(editor.TryCommit(956, 440, out TouchLayoutProfile committed) && committed == mirrored, "valid Done commits working profile");
+
+TouchLayoutProfile offscreen = d3Phone with { Jump = d3Phone.Jump with { X = 0.99 } };
+Check(!TouchLayoutPolicy.Validate(offscreen, 956, 440).IsValid, "off-screen control rejected");
+TouchLayoutProfile tooSmall = d3Phone with { Jump = d3Phone.Jump with { Width = 0.001, Height = 0.001 } };
+Check(!TouchLayoutPolicy.Validate(tooSmall, 956, 440).IsValid, "minimum action size enforced");
+TouchLayoutProfile overlap = d3Phone with { Dash = d3Phone.Jump };
+Check(!TouchLayoutPolicy.Validate(overlap, 956, 440).IsValid, "ambiguous action overlap rejected");
+TouchLayoutEditorSession invalidEditor = new(d3Phone, d3Phone);
+invalidEditor.Change(overlap);
+Check(!invalidEditor.TryCommit(956, 440, out TouchLayoutProfile failedCommit) && failedCommit == d3Phone,
+    "invalid Done fails closed to original");
+
+Check(TouchLayoutPolicy.TryAddExtra(
+        d3Phone, TouchExtraControlKind.Grab, TouchGrabShape.Rectangle, d3Phone.Grab,
+        956, 440, out TouchLayoutProfile oneExtraGrab, out int firstGrabIndex),
+    "editor can add one bounded duplicate Grab control");
+Check(TouchLayoutPolicy.TryAddExtra(
+        oneExtraGrab, TouchExtraControlKind.Grab, TouchGrabShape.Rectangle, d3Phone.Grab,
+        956, 440, out TouchLayoutProfile twoExtraGrabs, out int secondGrabIndex),
+    "editor can add a second bounded duplicate Grab control");
+Check(firstGrabIndex != secondGrabIndex && TouchLayoutPolicy.Validate(twoExtraGrabs, 956, 440).IsValid,
+    "duplicate controls remain distinct and non-overlapping");
+TouchLayoutProfile transparentExtra = twoExtraGrabs.WithExtra(firstGrabIndex,
+    twoExtraGrabs.Extra(firstGrabIndex) with { OpacityPercent = 20 });
+Check(TouchLayoutCodec.TryDecode(TouchLayoutCodec.Encode(transparentExtra), out TouchLayoutProfile extraOpacityRoundTrip) &&
+      extraOpacityRoundTrip.Extra(firstGrabIndex).OpacityPercent == 20,
+    "individual duplicate-control opacity round trip");
+
+TouchRuntimeLayout duplicateGrabRuntime = TouchLayoutPolicy.Materialize(twoExtraGrabs, 956, 440, touchSafe);
+TouchRuntimeExtraControl firstGrab = duplicateGrabRuntime.Extra(firstGrabIndex);
+TouchRuntimeExtraControl secondGrab = duplicateGrabRuntime.Extra(secondGrabIndex);
+TouchPoint firstGrabCenter = new(firstGrab.Rect.X + firstGrab.Rect.Width * 0.5,
+    firstGrab.Rect.Y + firstGrab.Rect.Height * 0.5);
+TouchPoint secondGrabCenter = new(secondGrab.Rect.X + secondGrab.Rect.Width * 0.5,
+    secondGrab.Rect.Y + secondGrab.Rect.Height * 0.5);
+CustomTouchInteractionState duplicateGrabState = new(duplicateGrabRuntime) { GrabMode = AppleGrabMode.Toggle };
+duplicateGrabState.BeginFrame();
+duplicateGrabState.Apply(70, TouchPhase.Pressed, firstGrabCenter, true);
+Check(duplicateGrabState.Grab && duplicateGrabState.GrabActionPressed,
+    "first duplicate Grab owner emits one logical toggle edge");
+duplicateGrabState.BeginFrame();
+duplicateGrabState.Apply(71, TouchPhase.Pressed, secondGrabCenter, true);
+Check(duplicateGrabState.Grab && !duplicateGrabState.GrabActionPressed,
+    "second simultaneous Grab owner does not double-toggle");
+duplicateGrabState.BeginFrame();
+duplicateGrabState.Apply(70, TouchPhase.Released, firstGrabCenter, true);
+Check(duplicateGrabState.Grab && !duplicateGrabState.GrabReleased,
+    "releasing one duplicate Grab preserves the remaining owner");
+duplicateGrabState.BeginFrame();
+duplicateGrabState.Apply(71, TouchPhase.Released, secondGrabCenter, true);
+Check(!duplicateGrabState.Grab && duplicateGrabState.GrabReleased,
+    "logical Grab releases only when its final owner releases");
+
+TouchLayoutEditorSession extraEditor = new(twoExtraGrabs, d3Phone);
+extraEditor.SetOpacity(new TouchLayoutSelection(default, firstGrabIndex), 40);
+Check(extraEditor.Working.Extra(firstGrabIndex).OpacityPercent == 40,
+    "editor changes one duplicate opacity without affecting peers");
+Check(extraEditor.Delete(new TouchLayoutSelection(default, firstGrabIndex)) &&
+      !extraEditor.Working.Extra(firstGrabIndex).Enabled && extraEditor.Working.Extra(secondGrabIndex).Enabled,
+    "editor deletes only the selected duplicate control");
+Check(!extraEditor.Delete(new TouchLayoutSelection(TouchLayoutControl.Movement)) &&
+      !extraEditor.Delete(new TouchLayoutSelection(TouchLayoutControl.Pause)),
+    "editor cannot delete essential Movement or Pause controls");
+Check(extraEditor.Delete(new TouchLayoutSelection(TouchLayoutControl.Journal)) &&
+      !extraEditor.Working.JournalEnabled,
+    "default Journal control is optional and deletable");
+
+TouchLayoutProfile fourExtras = d3Phone;
+for (int index = 0; index < TouchLayoutProfile.MaximumExtraControls; index++)
+{
+    Check(TouchLayoutPolicy.TryAddExtra(fourExtras, TouchExtraControlKind.CrouchDash,
+            TouchGrabShape.Rectangle, d3Phone.Dash, 956, 440, out TouchLayoutProfile added, out _),
+        $"bounded optional-control slot {index + 1} can be populated");
+    fourExtras = added;
+}
+Check(!TouchLayoutPolicy.TryAddExtra(fourExtras, TouchExtraControlKind.Jump,
+        TouchGrabShape.Circle, d3Phone.Jump, 956, 440, out _, out _),
+    "fifth optional control is rejected by the bounded schema");
+TouchRuntimeLayout crouchRuntime = TouchLayoutPolicy.Materialize(fourExtras, 956, 440, touchSafe);
+TouchRect crouchRect = crouchRuntime.Extra(0).Rect;
+TouchPoint crouchCenter = new(crouchRect.X + crouchRect.Width * 0.5,
+    crouchRect.Y + crouchRect.Height * 0.5);
+CustomTouchInteractionState crouchState = new(crouchRuntime);
+crouchState.BeginFrame();
+Check(crouchState.Apply(72, TouchPhase.Pressed, crouchCenter, true) == TouchHapticAction.Dash &&
+      crouchState.CrouchDash && crouchState.CrouchDashPressed,
+    "optional Crouch Dash emits its dedicated logical input and Dash haptic");
+crouchState.BeginFrame();
+crouchState.Apply(72, TouchPhase.Released, crouchCenter, true);
+Check(!crouchState.CrouchDash && crouchState.CrouchDashReleased,
+    "optional Crouch Dash releases normally");
+Check(TouchLayoutPolicy.TryAddExtra(
+        d3Phone, TouchExtraControlKind.QuickRestart, TouchGrabShape.Rectangle, d3Phone.Dash,
+        956, 440, out TouchLayoutProfile restartProfile, out int restartIndex),
+    "editor can add the distinct Quick Restart action");
+TouchRuntimeLayout restartRuntime = TouchLayoutPolicy.Materialize(restartProfile, 956, 440, touchSafe);
+TouchRect restartRect = restartRuntime.Extra(restartIndex).Rect;
+TouchPoint restartCenter = new(restartRect.X + restartRect.Width * 0.5,
+    restartRect.Y + restartRect.Height * 0.5);
+CustomTouchInteractionState restartState = new(restartRuntime);
+restartState.BeginFrame();
+restartState.Apply(73, TouchPhase.Pressed, restartCenter, true);
+Check(restartState.QuickRestart && restartState.QuickRestartPressed,
+    "optional Quick Restart emits its dedicated logical input");
+restartState.BeginFrame();
+restartState.Apply(73, TouchPhase.Released, restartCenter, true);
+Check(!restartState.QuickRestart && restartState.QuickRestartReleased,
+    "optional Quick Restart releases normally");
+
+TouchRect splitRect = new(100, 100, 200, 120);
+TouchPoint exactCenter = new(200, 160);
+Check(TouchLayoutPolicy.SplitControl(splitRect, TouchSplitOrientation.TopLeftToBottomRight, true, exactCenter) == TouchOwnedControl.Jump,
+    "TL-BR exact split line belongs to first half");
+Check(TouchLayoutPolicy.SplitControl(splitRect, TouchSplitOrientation.TopRightToBottomLeft, true, exactCenter) == TouchOwnedControl.Jump,
+    "TR-BL exact split line belongs to first half");
+Check(TouchLayoutPolicy.SplitControl(splitRect, TouchSplitOrientation.Vertical, true, exactCenter) == TouchOwnedControl.Jump,
+    "vertical exact split line belongs to first half");
+Check(TouchLayoutPolicy.SplitControl(splitRect, TouchSplitOrientation.Horizontal, true, exactCenter) == TouchOwnedControl.Jump,
+    "horizontal exact split line belongs to first half");
+Check(TouchLayoutPolicy.SplitControl(splitRect, TouchSplitOrientation.Vertical, false, new TouchPoint(120, 160)) == TouchOwnedControl.Dash,
+    "split Jump/Dash assignment swaps");
+Check(TouchLayoutPolicy.SplitControl(splitRect, TouchSplitOrientation.Horizontal, true, new TouchPoint(200, 210)) == TouchOwnedControl.Dash,
+    "horizontal second half resolves Dash");
+Check(TouchLayoutPolicy.SplitControl(splitRect, TouchSplitOrientation.Vertical, true, new TouchPoint(201, 160), TouchOwnedControl.Jump, 4) == TouchOwnedControl.Jump,
+    "split transfer hysteresis preserves ownership near line");
+
+TouchLayoutProfile splitProfile = d3Phone with
+{
+    ActionLayout = TouchActionLayout.SplitRegion,
+    SplitRegion = TouchLayoutPolicy.Normalize(splitRect, new TouchRect(0, 0, 956, 440)),
+};
+TouchRuntimeLayout splitRuntime = TouchLayoutPolicy.Materialize(splitProfile, 956, 440, new SafeAreaMetrics(0, 0, 0, 0));
+CustomTouchInteractionState splitInteraction = new(splitRuntime);
+TouchPoint firstSplit = new(240, 125);
+TouchPoint secondSplit = new(130, 205);
+splitInteraction.Apply(50, TouchPhase.Pressed, firstSplit, true);
+Check(splitInteraction.Jump && splitInteraction.JumpPressed, "Split Region first half presses Jump");
+splitInteraction.BeginFrame();
+splitInteraction.Apply(50, TouchPhase.Moved, secondSplit, true);
+Check(splitInteraction.Jump && !splitInteraction.Dash, "Split sliding Off retains owner");
+splitInteraction.Reset();
+splitProfile = splitProfile with { Sliding = TouchSlideMode.JumpDash };
+splitRuntime = TouchLayoutPolicy.Materialize(splitProfile, 956, 440, new SafeAreaMetrics(0, 0, 0, 0));
+splitInteraction = new CustomTouchInteractionState(splitRuntime);
+splitInteraction.Apply(51, TouchPhase.Pressed, firstSplit, true);
+splitInteraction.BeginFrame();
+splitInteraction.Apply(51, TouchPhase.Moved, secondSplit, true);
+Check(!splitInteraction.Jump && splitInteraction.Dash && splitInteraction.DashPressed, "Split sliding On transfers edge");
+
+TouchLayoutProfile rectangleGrab = d3Phone with { GrabShape = TouchGrabShape.Rectangle };
+TouchRuntimeLayout rectangleRuntime = TouchLayoutPolicy.Materialize(rectangleGrab, 956, 440, touchSafe);
+CustomTouchInteractionState customInteraction = new(rectangleRuntime) { GrabMode = AppleGrabMode.Hold };
+TouchPoint rectangleCenter = new(rectangleRuntime.GrabRect.X + rectangleRuntime.GrabRect.Width * 0.5,
+    rectangleRuntime.GrabRect.Y + rectangleRuntime.GrabRect.Height * 0.5);
+customInteraction.Apply(52, TouchPhase.Pressed, rectangleCenter, true);
+Check(customInteraction.Grab && customInteraction.GrabActionPressed, "rectangular Grab hit and icon state source");
+customInteraction.Apply(52, TouchPhase.Released, rectangleCenter, true);
+Check(!customInteraction.Grab, "rectangular Grab releases");
+
+TouchPreferences migrateToggle = TouchPreferences.Default with { SizePercent = 130, Movement = TouchMovementMode.Floating };
+TouchD2MigrationResult toggleMigration = TouchD2MigrationPolicy.Migrate(956, 440, touchSafe, false, migrateToggle, AppleGrabMode.Invert);
+Check(toggleMigration.GrabModes.Touch == AppleGrabMode.Toggle && toggleMigration.GrabModes.Controller == AppleGrabMode.Invert,
+    "D2 Toggle migration and controller preservation");
+Check(toggleMigration.Layout.MovementMode == TouchMovementMode.Floating &&
+      TouchLayoutPolicy.Materialize(toggleMigration.Layout, 956, 440, touchSafe).Jump.Radius > touchLayout.Jump.Radius,
+    "D2 movement and global size bake into D3 layout");
+TouchPreferences migrateHold = TouchPreferences.Default with { Grab = TouchGrabStyle.HoldButton };
+Check(TouchD2MigrationPolicy.Migrate(956, 440, touchSafe, false, migrateHold, AppleGrabMode.Hold).GrabModes.Touch == AppleGrabMode.Hold,
+    "D2 Hold Button migrates to Touch Hold");
+TouchPreferences migrateShoulder = TouchPreferences.Default with { Grab = TouchGrabStyle.ShoulderHold };
+TouchD2MigrationResult shoulderMigration = TouchD2MigrationPolicy.Migrate(956, 440, touchSafe, false, migrateShoulder, AppleGrabMode.Hold);
+Check(shoulderMigration.GrabModes.Touch == AppleGrabMode.Hold && shoulderMigration.Layout.GrabShape == TouchGrabShape.Rectangle,
+    "D2 Shoulder Hold migrates to Hold plus rectangle");
+
+GrabSourceArbiter grab = new(new GrabModeProfiles(AppleGrabMode.Toggle, AppleGrabMode.Hold, AppleGrabMode.Invert), AppleInputSource.Touch);
+grab.Observe(AppleInputSource.Touch, true, true, true);
+Check(grab.Effective && grab.ActiveMode == AppleGrabMode.Toggle, "Touch Toggle latches");
+grab.Observe(AppleInputSource.Touch, false, false, false);
+Check(grab.Effective, "Touch Toggle survives release");
+grab.Observe(AppleInputSource.Controller, true, true, true);
+Check(grab.ActiveSource == AppleInputSource.Controller && grab.Effective, "meaningful controller switches to Hold");
+grab.Observe(AppleInputSource.Controller, false, false, false);
+Check(!grab.Effective, "Controller Hold follows raw release");
+grab.Observe(AppleInputSource.Keyboard, false, false, true);
+Check(grab.ActiveSource == AppleInputSource.Keyboard && grab.Effective, "Keyboard Invert active while idle");
+grab.Observe(AppleInputSource.Keyboard, true, true, true);
+Check(!grab.Effective, "Keyboard Invert releases while held");
+grab.Observe(AppleInputSource.Touch, false, false, false);
+Check(grab.ActiveSource == AppleInputSource.Keyboard, "idle touch does not steal active source");
+grab.ForceSource(AppleInputSource.Touch);
+Check(grab.ActiveSource == AppleInputSource.Touch && !grab.Effective, "source switch clears stale Toggle latch");
+grab.SetMode(AppleInputSource.Touch, AppleGrabMode.Invert);
+Check(grab.Effective, "Touch Invert visually active by default");
+grab.Observe(AppleInputSource.Touch, true, true, true);
+Check(!grab.Effective, "Touch Invert visually releases while pressed");
+grab.SetMode(AppleInputSource.Touch, AppleGrabMode.Hold);
+Check(grab.Effective && grab.Profiles.Controller == AppleGrabMode.Hold && grab.Profiles.Keyboard == AppleGrabMode.Invert,
+    "per-source Grab profile edit is isolated");
+grab.ResetTransient();
+Check(!grab.Effective, "lifecycle clears Grab transients");
+Check(GrabSourceVisibilityPolicy.GameplayValue(AppleInputSource.Controller, false, true),
+    "controller Grab remains active while Automatic hides the touch overlay");
+Check(GrabSourceVisibilityPolicy.GameplayValue(AppleInputSource.Keyboard, false, true),
+    "keyboard Grab remains active while the touch overlay is hidden");
+Check(!GrabSourceVisibilityPolicy.GameplayValue(AppleInputSource.Touch, false, true),
+    "hidden touch cannot leave Invert Grab permanently active");
+Check(GrabSourceVisibilityPolicy.GameplayValue(AppleInputSource.Touch, true, true),
+    "visible touch still supplies effective Grab");
+
+Check(DirectionalHapticPolicy.ShouldPulse(TouchDirection.Neutral, TouchDirection.West, true),
+    "directional haptic pulses on first direction");
+Check(DirectionalHapticPolicy.ShouldPulse(TouchDirection.West, TouchDirection.NorthWest, true),
+    "directional haptic pulses on sector transition");
+Check(!DirectionalHapticPolicy.ShouldPulse(TouchDirection.West, TouchDirection.West, true),
+    "directional haptic does not repeat while held");
+Check(!DirectionalHapticPolicy.ShouldPulse(TouchDirection.West, TouchDirection.Neutral, true),
+    "directional haptic stays quiet on neutral release");
+Check(!DirectionalHapticPolicy.ShouldPulse(TouchDirection.West, TouchDirection.NorthWest, false),
+    "directional haptic preference Off preserves D2 feel");
+
 Console.WriteLine($"PASS: modern iOS foundation deterministic tests {passed}");

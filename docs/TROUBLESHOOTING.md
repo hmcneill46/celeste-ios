@@ -761,17 +761,38 @@ Open **Options > Touch Controls**. **Automatic** is the default and hides touch
 while a physical controller is connected; use **Always** to keep both input
 methods visible. If **Off** is stored and no controller is connected, the app
 retains a recovery control so the user cannot be permanently locked out. A 0%
-opacity layout remains interactive by design; enter the Touch Controls screen
-to preview it and raise Opacity. **Reset Touch Controls** restores the touch
-defaults without changing Celeste Settings, save slots, or controller state.
+global or individual-control opacity remains interactive by design; enter the
+Touch Controls screen to preview it and raise Opacity. **Edit Layout** lets each
+visible control be moved and resized across the complete physical display,
+including letterbox/pillarbox regions. The faint safe-area rectangle is
+guidance only. A circular control's visible disk can sit flush to the physical
+edge; its larger invisible hit margin is simply clipped there. **Cancel**
+discards its working copy, while **Done** is unavailable when a control is
+visibly off-screen, too small, or overlaps another.
+Phone and Tablet keep separate layouts. **Reset Touch Controls** restores the
+current device class to its factory touch defaults without changing Celeste
+Settings, save slots, controller state, or the other device class.
 The small book control at the top-left is Journal/Special; it opens chapter
 records and supplies the same contextual alternate-menu action as a controller.
+It may be deleted in the editor, while Movement, the selected Jump/Dash scheme,
+one Grab, and Pause remain available. **Add Control** provides up to four
+optional duplicate or niche controls, including Crouch Dash. Duplicate buttons
+and Quick Restart are available; Confirm/Talk, Cancel, directions, and other
+semantic aliases already share their normal essential controls. Duplicate
+buttons aggregate into one logical action and release only after the final
+finger lifts. Split Jump/Dash halves tint independently while held.
 
 If a control appears held after the finger has lifted, capture the exact touch
-sequence and app lifecycle event. The accepted Stage 24D2 build preserves
+sequence and app lifecycle event. The accepted Stage 24D3 build preserves
 stable SDL finger identities across compacted touch arrays and clears every
 transient owner on cancellation, backgrounding, orientation reset, and
 Automatic controller takeover.
+
+Grab shape and Grab behavior are independent. Change **Grab Mode [Touch]**,
+**[Controller]**, or **[Keyboard]** while that source is active to select Hold,
+Invert, or Toggle for only that source. If movement feedback is unwanted, leave
+**Directional Haptics** Off; when enabled it pulses only on initial direction
+acquisition and direction-sector changes, not continuously while held.
 
 ## Save Manager says no local network is available
 

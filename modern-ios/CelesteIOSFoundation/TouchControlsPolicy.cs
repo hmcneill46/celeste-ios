@@ -6,7 +6,7 @@ public enum TouchGrabStyle { Toggle, HoldButton, ShoulderHold }
 public enum TouchSlideMode { Off, JumpDash }
 public enum TouchPhase { Pressed, Moved, Released }
 public enum TouchDirection { Neutral, East, NorthEast, North, NorthWest, West, SouthWest, South, SouthEast }
-public enum TouchOwnedControl { None, Movement, Jump, Dash, Grab, ShoulderGrab, Pause, Journal }
+public enum TouchOwnedControl { None, Movement, Jump, Dash, Grab, ShoulderGrab, Pause, Journal, CrouchDash, QuickRestart }
 public enum TouchHapticAction { None, Jump, Dash, GrabToggle }
 
 public readonly record struct TouchPreferences(
