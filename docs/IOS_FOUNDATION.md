@@ -1,12 +1,12 @@
 # Modern iOS foundation (experimental)
 
 This repository contains a tracked modern iOS/iPadOS engineering foundation
-and an experimental controller-first Celeste product lane. The product now
-uses a user-owned supported Celeste 1.4.0.0 FNA installation to generate the
-same canonical game as tvOS, packages the real Content and seven FMOD banks,
-and runs controller-first Celeste gameplay on physical iPhone and iPad hardware.
-It is **not yet a normal-user-ready iOS port**: touch controls and their
-user-facing configuration remain Stage 24D work.
+and an experimental Celeste product lane. The product uses a user-owned
+supported Celeste 1.4.0.0 FNA installation to generate the same canonical game
+as tvOS, packages the real Content and seven FMOD banks, and runs touch- or
+controller-driven Celeste gameplay on physical iPhone and iPad hardware. It is
+still a developer-facing experimental lane rather than a finished public iOS
+release.
 
 The foundation uses one `net10.0-ios26.5` iPhone/iPad target with a minimum of
 iOS 15.0. It enters SDL through the public iOS host, runs one FNA `Game`, and
@@ -18,24 +18,49 @@ the legacy Xamarin application host.
 
 ## Current experimental Celeste lane
 
-Stages 24C1–24C2 keep one canonical input/decompilation/transformation pipeline for
+Stages 24C1–24D2 keep one canonical input/decompilation/transformation pipeline for
 iOS, iPadOS, and tvOS. It reuses the locked nine-profile validator, canonical
 source and Content, shared Apple-safe transforms, serializers, AOT inventory,
 legacy XNB registration, and bundle reader. A small final iOS transform removes
-tvOS-only Save Manager, Performance HUD, Controller Prompts options,
-soft-reload and Leave bridges; adapts the platform storage and FMOD-output
-boundaries; and hides Celeste's desktop application-Quit row. The current iOS
-lane keeps Celeste/FNA's ordinary controller identity path without adding a
-second GameController input stack. A physical DualSense is fully functional,
-but currently resolves to Xbox glyphs on iOS; shared prompt-family policy and a
-manual selector are deliberately deferred to Stage 24D's controller/touch UX.
+tvOS-only Save Manager, Performance HUD, soft-reload and Leave bridges; adapts
+the platform storage and FMOD-output boundaries; hides Celeste's desktop
+application-Quit row; and binds the narrow iOS touch/prompt bridge. Controller
+family detection is shared with tvOS, so a physical DualSense resolves to
+PlayStation artwork without adding a second GameController input stack.
 
 The physical product has one SDL handoff, one FNA `Game`, one Celeste runtime,
 and one Celeste-owned FMOD Studio/low-level runtime. It renders through direct
-FNA3D Metal, supports normal gameplay/death/respawn/lifecycle/save flows, and
-currently requires a physical controller. It intentionally
-contains no Save Manager/LAN listener, tvOS Performance HUD, touch controls,
-JIT, interpreter, or Xamarin host.
+FNA3D Metal and supports normal gameplay/death/respawn/lifecycle/save flows by
+touch alone or with a physical controller. It intentionally contains no Save
+Manager/LAN listener, tvOS Performance HUD, JIT, interpreter, or Xamarin host.
+
+## Touch controls
+
+The production touch overlay is available from **Options > Touch Controls**.
+Defaults are Automatic visibility, Fixed eight-way movement, Toggle Grab, 70%
+opacity, 100% size, Jump/Dash sliding Off, and touch haptics On. Automatic hides
+and clears touch when a physical controller connects, then restores it when the
+controller disconnects; Always permits deliberate coexistence. Off retains a
+recovery control when no controller is present.
+
+Fixed movement provides a repeatable centre, while Floating places the movement
+origin beneath the first thumb inside a bounded left-side acquisition region.
+Movement keeps a 0.18 radial deadzone and eight-direction sector selection with
+8-degree hysteresis. Jump remains held for variable-height jumps; Dash produces
+one press edge; Grab supports Toggle, Hold Button, and Shoulder Hold. Optional
+Jump/Dash sliding lets one held finger transfer between those two buttons.
+The small top-left book control supplies Celeste's Journal/Special input, so
+chapter records and contextual alternate menu actions are available without a
+controller. Pause, Confirm, Cancel, Talk, menu navigation, aiming, and every
+ordinary gameplay action also use Celeste's normal logical input paths.
+Opacity (0–100%), size (70–130%), and haptics are independent preferences. Zero
+opacity never disables hit testing, and movement itself never pulses.
+
+Touch preferences live in validated app-private host defaults. They are not
+part of `settings.celeste`, SaveData, save backups, or the tvOS persistence
+format. Resetting them cannot alter game progress or controller preferences.
+The tracked glyph masks are generated deterministically from attributed source
+artwork; see the [touch-control artwork notice](../modern-ios/Assets/TouchControls/NOTICE.md).
 
 Physical iPhone/iPad audio uses Apple's public playback audio-session category, so
 the Ring/Silent switch does not mute Celeste. On foreground and after audio

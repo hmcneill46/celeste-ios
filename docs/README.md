@@ -28,8 +28,8 @@ Use this page to jump directly to the task or level of detail you need.
 ## Developer documentation
 
 - [Experimental modern iOS/Celeste lane](IOS_FOUNDATION.md) — the .NET 10,
-  full-AOT, controller-first iPhone/iPad foundation and current gameplay/save
-  developer build; touch controls remain deliberately deferred.
+  full-AOT iPhone/iPad developer build with production touch controls,
+  controller coexistence, seven-bank audio, and durable saves.
 - [Project architecture](STATUS.md#architecture) — host, native, generated
   managed code, audio, persistence, Save Manager, and lifecycle design.
 - [Advanced build and reproducibility](BUILDING.md) — pinned toolchain,

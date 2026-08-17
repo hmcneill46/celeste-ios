@@ -153,6 +153,20 @@ def main() -> int:
                 not bundle_contains("CelesteTvOS.ControllerPrompts"),
                 "tvOS host persistence/preferences leaked into iOS")
         require(not bundle_contains("menu_exit"), "desktop application Quit route remains in iOS")
+        require(bundle_contains("CelesteIOS.TouchControls.Visibility.v1") and
+                bundle_contains("CelesteIOS.TouchControls.Movement.v1") and
+                bundle_contains("CelesteIOS.TouchControls.Grab.v1"),
+                "production iOS touch-control preferences are absent")
+        require(bundle_contains("ENABLE TOUCH CONTROLS") and bundle_contains("TOUCH CONTROLS"),
+                "production touch overlay or Options recovery surface is absent")
+        require(bundle_contains("Celeste.IOSTouchControls.jump.a8") and
+                bundle_contains("Celeste.IOSTouchControls.dash.a8") and
+                bundle_contains("Celeste.IOSTouchControls.grab-ungrabbed.a8") and
+                bundle_contains("Celeste.IOSTouchControls.grab-grabbed.a8") and
+                bundle_contains("Celeste.IOSTouchControls.touch.a8") and
+                bundle_contains("Celeste.IOSTouchControls.pause.a8") and
+                bundle_contains("Celeste.IOSTouchControls.journal.a8"),
+                "touch prompt resources are absent")
     else:
         require(not (app / "Celeste.dll").exists() and not (app / "Content").exists(),
                 "Celeste product material leaked into the foundation probe")
@@ -177,7 +191,7 @@ def main() -> int:
         "celesteIncluded": args.product == "celeste",
         "canonicalContentSha256": "30a1c147d1a3ab0aa45762094e393ed7fd69951dd66e5af063447641e0699c46" if args.product == "celeste" else None,
         "fmodBankCount": 7 if args.product == "celeste" else 0,
-        "touchUiIncluded": False,
+        "touchUiIncluded": args.product == "celeste",
     }
     if args.output:
         args.output.parent.mkdir(parents=True, exist_ok=True)

@@ -748,6 +748,31 @@ tooling, then inspect the ignored local evidence. Do not replace this path with
 tvOS UserDefaults data or enable the interpreter: the accepted device writer is
 Foundation-backed and fully AOT-safe.
 
+## Experimental iOS touch controls are hidden or unusable
+
+**Symptom**
+
+Touch controls disappear after a controller connects, are deliberately set to
+Off, or are too transparent to see.
+
+**Fix**
+
+Open **Options > Touch Controls**. **Automatic** is the default and hides touch
+while a physical controller is connected; use **Always** to keep both input
+methods visible. If **Off** is stored and no controller is connected, the app
+retains a recovery control so the user cannot be permanently locked out. A 0%
+opacity layout remains interactive by design; enter the Touch Controls screen
+to preview it and raise Opacity. **Reset Touch Controls** restores the touch
+defaults without changing Celeste Settings, save slots, or controller state.
+The small book control at the top-left is Journal/Special; it opens chapter
+records and supplies the same contextual alternate-menu action as a controller.
+
+If a control appears held after the finger has lifted, capture the exact touch
+sequence and app lifecycle event. The accepted Stage 24D2 build preserves
+stable SDL finger identities across compacted touch arrays and clears every
+transient owner on cancellation, backgrounding, orientation reset, and
+Automatic controller takeover.
+
 ## Save Manager says no local network is available
 
 **Symptom**

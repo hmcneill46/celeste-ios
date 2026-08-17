@@ -127,6 +127,17 @@ python3 "$REPO_ROOT/scripts/celeste-ios-stage24c2.py" \
   --templates "$REPO_ROOT/managed/templates" \
   --output "$ARTIFACT_DIR/ios-managed-stage24c2.json"
 
+mkdir -p "$RUNTIME_ROOT/touch-assets"
+python3 "$REPO_ROOT/scripts/generate-ios-touch-assets.py" \
+  --source-dir "$REPO_ROOT/modern-ios/Assets/TouchControls/Source" \
+  --output-dir "$RUNTIME_ROOT/touch-assets"
+
+python3 "$REPO_ROOT/scripts/celeste-ios-stage24d2.py" \
+  --root "$RUNTIME_ROOT/managed" \
+  --templates "$REPO_ROOT/managed/templates" \
+  --asset-dir "$RUNTIME_ROOT/touch-assets" \
+  --output "$ARTIFACT_DIR/ios-managed-stage24d2.json"
+
 python3 - "$resolved_game/Content" "$RUNTIME_ROOT/content/Content" "$RUNTIME_ROOT/banks/Content/FMOD/Desktop" "$ARTIFACT_DIR/content.json" <<'PY'
 import hashlib,json,pathlib,sys
 source, staged, banks, output = map(pathlib.Path, sys.argv[1:])

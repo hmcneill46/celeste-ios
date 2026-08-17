@@ -1,4 +1,5 @@
 using CelesteTvOSHost;
+using CelesteAppleInput;
 
 int passed = 0;
 

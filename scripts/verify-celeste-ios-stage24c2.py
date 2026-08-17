@@ -64,8 +64,16 @@ def main() -> int:
     c.require(git(root, "rev-parse", "origin/release/v1.0.0-rc.3^{commit}") == DEFERRED_RC3,
               "deferred RC3 branch preserved")
     c.require(not git(root, "tag", "-l", "v1.0.0-rc.3"), "RC3 tag remains absent")
-    c.require(git(root, "diff", "--name-only", BASE, "--", "tvos", "native", "build-tvos.sh") == "",
-              "accepted tvOS/native product source unchanged")
+    c.require(git(root, "diff", "--name-only", BASE, "--", "native", "build-tvos.sh") == "",
+              "accepted native and tvOS builder source unchanged")
+    tvos_delta = set(filter(None, git(root, "diff", "--name-only", BASE, "--", "tvos").splitlines()))
+    c.require(tvos_delta.issubset({
+        "tvos/CelesteTvOSRuntimeHost/CelesteTvOSRuntimeHost.csproj",
+        "tvos/CelesteTvOSRuntimeHost/ControllerPromptPolicy.cs",
+        "tvos/CelesteTvOSRuntimeHost/ControllerPromptPreferences.cs",
+        "tvos/ControllerPromptTests/ControllerPromptTests.csproj",
+        "tvos/ControllerPromptTests/Program.cs",
+    }), "post-C2 tvOS changes are limited to the behavior-preserving shared prompt-policy extraction")
 
     for value, label in ((CONTENT, "Content"), (RAW, "raw source"),
                          (PATCHED, "patched source"), (STAGE6, "Stage 6")):
@@ -175,8 +183,8 @@ def main() -> int:
               "iOS Save Manager remains absent")
     c.require("PerformanceHUD" not in context + lifecycle and "MetalForceHudEnabled" not in context + lifecycle,
               "iOS Performance HUD remains absent")
-    c.require("TouchController" not in context + lifecycle and "touch" not in transform.lower(),
-              "Stage 24D touch surface remains deferred")
+    c.require("TouchController" not in context and "touch" not in transform.lower(),
+              "accepted C2 transform itself remains touch-free and reproducible")
     c.require("menu_exit" in read(root, "scripts/celeste-ios-stage24c1.py"),
               "desktop Quit row remains deterministically removed")
     c.require("UseInterpreter>false" in project and "TrimMode" in project and "MtouchUseLlvm" in project,

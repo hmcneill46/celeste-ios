@@ -26,6 +26,11 @@ modern-ios/Local.Build.props
 modern-ios/**/bin/
 modern-ios/**/obj/
 
+# Generated outputs from platform-neutral managed projects shared by the
+# modern iOS and tvOS products.
+shared/**/bin/
+shared/**/obj/
+
 # User-owned Celeste input, generated/decompiled managed source, build output,
 # diagnostics, and local repository-scoped tool/package state for Stage 3A.
 .build/celeste-managed/

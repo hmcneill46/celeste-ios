@@ -15,8 +15,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="$(RepoRoot)\FNA\src\**\*.cs"
-             Exclude="$(RepoRoot)\FNA\src\Graphics\FNA3D.cs;$(RepoRoot)\FNA\src\FrameworkDispatcher.cs;$(RepoRoot)\FNA\src\Utilities\XamarinHelper.cs" />
+    <Compile Include="$(IOSHostStageRoot)\fna\src\**\*.cs"
+             Exclude="$(IOSHostStageRoot)\fna\src\Graphics\FNA3D.cs;$(IOSHostStageRoot)\fna\src\FrameworkDispatcher.cs;$(IOSHostStageRoot)\fna\src\Utilities\XamarinHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)StableTouchSlotPolicy.cs" />
     <Compile Include="$(IOSHostStageRoot)\managed\SDL2.cs" />
     <Compile Include="$(IOSHostStageRoot)\managed\FNA3D.cs" />
     <Compile Include="$(IOSHostStageRoot)\managed\FAudio.cs" />
@@ -25,14 +26,16 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="$(RepoRoot)\FNA\src\Graphics\Effect\StockEffects\FXB\*.fxb"
+    <EmbeddedResource Include="$(IOSHostStageRoot)\fna\src\Graphics\Effect\StockEffects\FXB\*.fxb"
                       LogicalName="Microsoft.Xna.Framework.Graphics.Effect.Resources.%(Filename)%(Extension)" />
-    <EmbeddedResource Include="$(RepoRoot)\FNA\src\Graphics\Effect\YUVToRGBA\YUVToRGBAEffect.fxb"
+    <EmbeddedResource Include="$(IOSHostStageRoot)\fna\src\Graphics\Effect\YUVToRGBA\YUVToRGBAEffect.fxb"
                       LogicalName="Microsoft.Xna.Framework.Graphics.Effect.Resources.YUVToRGBAEffect.fxb" />
   </ItemGroup>
 
   <Target Name="ValidateIOSFoundationManagedInputs" BeforeTargets="PrepareForBuild">
     <Error Condition="!Exists('$(IOSHostStageRoot)\managed\SDL2.cs')"
            Text="Prepared iOS managed inputs are missing. Run scripts/prepare-ios-foundation.sh." />
+    <Error Condition="!Exists('$(IOSHostStageRoot)\fna\src\Input\Touch\TouchPanel.cs')"
+           Text="Prepared patched iOS FNA sources are missing. Run scripts/prepare-ios-foundation.sh." />
   </Target>
 </Project>

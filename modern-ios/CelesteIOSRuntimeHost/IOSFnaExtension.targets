@@ -6,6 +6,7 @@
     <Compile Include="$(CelesteAppleRepoRoot)\tvos\CelesteTvOSRuntimeHost\LegacyXnbReaders.cs"
              Link="AppleShared/LegacyXnbReaders.cs" />
     <Compile Remove="$(CelesteAppleRepoRoot)\FNA\src\TitleContainer.cs" />
+    <Compile Remove="$(IOSHostStageRoot)\fna\src\TitleContainer.cs" />
     <Compile Include="$(CelesteAppleRepoRoot)\tvos\CelesteTvOSRuntimeHost\TvOSTitleContainer.cs"
              Link="AppleShared/TitleContainer.cs" />
   </ItemGroup>

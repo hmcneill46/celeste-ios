@@ -11,6 +11,7 @@ internal sealed class IOSCelesteLifecycle : IDisposable
     private readonly NSObject inactive;
     private readonly NSObject active;
     private readonly NSObject background;
+    private readonly NSObject orientation;
     private bool disposed;
 
     internal IOSCelesteLifecycle()
@@ -19,11 +20,16 @@ internal sealed class IOSCelesteLifecycle : IDisposable
         inactive = center.AddObserver(UIApplication.WillResignActiveNotification, _ => Pause("will-resign-active"));
         background = center.AddObserver(UIApplication.DidEnterBackgroundNotification, _ => Pause("did-enter-background"));
         active = center.AddObserver(UIApplication.DidBecomeActiveNotification, _ => Resume("did-become-active"));
+        UIDevice.CurrentDevice.BeginGeneratingDeviceOrientationNotifications();
+        orientation = center.AddObserver(UIDevice.OrientationDidChangeNotification, _ =>
+            IOSPresentationCoordinator.Invalidate("orientation-changed"));
     }
 
     private void Pause(string reason)
     {
         AppleRuntimeDiagnostics.StopAllRumble(reason);
+        IOSTouchControls.Reset(reason);
+        IOSPresentationCoordinator.Invalidate(reason);
         audioSession.Pause(reason);
         RuntimeLog.Info($"celeste-lifecycle={reason}; runtime-disposed=false");
     }
@@ -31,6 +37,7 @@ internal sealed class IOSCelesteLifecycle : IDisposable
     private void Resume(string reason)
     {
         audioSession.Resume(reason);
+        IOSPresentationCoordinator.Invalidate(reason);
         RuntimeLog.Info($"celeste-lifecycle={reason}; existing-runtime-resumed=true");
     }
 
@@ -42,6 +49,9 @@ internal sealed class IOSCelesteLifecycle : IDisposable
         center.RemoveObserver(inactive);
         center.RemoveObserver(active);
         center.RemoveObserver(background);
+        center.RemoveObserver(orientation);
+        UIDevice.CurrentDevice.EndGeneratingDeviceOrientationNotifications();
+        IOSTouchControls.Dispose();
         audioSession.Dispose();
     }
 }

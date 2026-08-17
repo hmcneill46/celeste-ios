@@ -70,6 +70,7 @@
     <Compile Remove="TvOSTitleContainer.cs" />
     <ProjectReference Include="..\FNA.TvOS\FNA.TvOS.csproj"
                       AdditionalProperties="CustomAfterMicrosoftCommonTargets=$(FnaExtensionTargets);PersistenceEnabled=$(PersistenceEnabled);CelesteTvOSRepoRoot=$(CelesteTvOSRepoRoot)" />
+    <ProjectReference Include="..\..\shared\CelesteAppleInput\CelesteAppleInput.csproj" />
     <Compile Include="..\CelesteTvOSHost\Stage2Game.cs" Link="Stage2Diagnostic\Stage2Game.cs" />
     <Compile Include="..\CelesteTvOSHost\Stage2Log.cs" Link="Stage2Diagnostic\Stage2Log.cs" />
     <Compile Include="..\CelesteTvOSHost\NativeInteropSelfTest.cs" Link="Stage2Diagnostic\NativeInteropSelfTest.cs" />

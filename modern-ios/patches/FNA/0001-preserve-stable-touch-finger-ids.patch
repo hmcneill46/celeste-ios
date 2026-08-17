@@ -1,0 +1,106 @@
+# iOS-only managed FNA touch identity correction.
+diff --git a/src/Input/Touch/TouchPanel.cs b/src/Input/Touch/TouchPanel.cs
+--- a/src/Input/Touch/TouchPanel.cs
++++ b/src/Input/Touch/TouchPanel.cs
+@@ -195,7 +195,8 @@ namespace Microsoft.Xna.Framework.Input.Touch
+ 			}
+ 
+ 			// Is this a newly pressed finger?
+-			if (prevTouches[index].State == TouchLocationState.Invalid)
++			if (prevTouches[index].State == TouchLocationState.Invalid ||
++				prevTouches[index].State == TouchLocationState.Released)
+ 			{
+ 				touches[index] = new TouchLocation(
+ 					fingerId,
+@@ -216,6 +217,45 @@ namespace Microsoft.Xna.Framework.Input.Touch
+ 			}
+ 		}
+ 
++		internal static void SetFingerSnapshot(
++			ReadOnlySpan<int> fingerIds,
++			ReadOnlySpan<Vector2> fingerPositions
++		) {
++			if (fingerIds.Length != fingerPositions.Length || fingerIds.Length > MAX_TOUCHES)
++			{
++				throw new ArgumentException("Invalid touch snapshot.");
++			}
++
++			Span<int> previousSlotIds = stackalloc int[MAX_TOUCHES];
++			Span<int> nextSlotIds = stackalloc int[MAX_TOUCHES];
++			for (int slot = 0; slot < MAX_TOUCHES; slot += 1)
++			{
++				previousSlotIds[slot] =
++					prevTouches[slot].State == TouchLocationState.Invalid ||
++					prevTouches[slot].State == TouchLocationState.Released
++						? StableTouchSlotPolicy.Empty
++						: prevTouches[slot].Id;
++			}
++			StableTouchSlotPolicy.Map(previousSlotIds, fingerIds, nextSlotIds);
++
++			for (int slot = 0; slot < MAX_TOUCHES; slot += 1)
++			{
++				int id = nextSlotIds[slot];
++				if (id == StableTouchSlotPolicy.Empty || id == StableTouchSlotPolicy.Vacated)
++				{
++					SetFinger(slot, NO_FINGER, Vector2.Zero);
++					continue;
++				}
++				int finger = 0;
++				while (finger < fingerIds.Length && fingerIds[finger] != id) finger += 1;
++				if (finger == fingerIds.Length)
++				{
++					throw new InvalidOperationException("Stable touch mapping returned an unknown finger.");
++				}
++				SetFinger(slot, id, fingerPositions[finger]);
++			}
++		}
++
+ 		internal static void Update()
+ 		{
+ 			// Update Gesture Detector for time-sensitive gestures
+diff --git a/src/FNAPlatform/SDL2_FNAPlatform.cs b/src/FNAPlatform/SDL2_FNAPlatform.cs
+--- a/src/FNAPlatform/SDL2_FNAPlatform.cs
++++ b/src/FNAPlatform/SDL2_FNAPlatform.cs
+@@ -2225,26 +2225,28 @@ namespace Microsoft.Xna.Framework
+ 		{
+ 			// Poll the touch device for all active fingers
+ 			long touchDevice = SDL.SDL_GetTouchDevice(0);
+-			for (int i = 0; i < TouchPanel.MAX_TOUCHES; i += 1)
++			int fingerCount = Math.Min(
++				SDL.SDL_GetNumTouchFingers(touchDevice),
++				TouchPanel.MAX_TOUCHES
++			);
++			Span<int> fingerIds = stackalloc int[TouchPanel.MAX_TOUCHES];
++			Span<Vector2> fingerPositions = stackalloc Vector2[TouchPanel.MAX_TOUCHES];
++			int validFingerCount = 0;
++			for (int i = 0; i < fingerCount; i += 1)
+ 			{
+ 				SDL.SDL_Finger* finger = (SDL.SDL_Finger*) SDL.SDL_GetTouchFinger(touchDevice, i);
+-				if (finger == null)
+-				{
+-					// No finger found at this index
+-					TouchPanel.SetFinger(i, TouchPanel.NO_FINGER, Vector2.Zero);
+-					continue;
+-				}
+-
+-				// Send the finger data to the TouchPanel
+-				TouchPanel.SetFinger(
+-					i,
+-					(int) finger->id,
+-					new Vector2(
++				if (finger == null) continue;
++				fingerIds[validFingerCount] = (int) finger->id;
++				fingerPositions[validFingerCount] = new Vector2(
+ 						(float) Math.Round(finger->x * TouchPanel.DisplayWidth),
+ 						(float) Math.Round(finger->y * TouchPanel.DisplayHeight)
+-					)
+ 				);
++				validFingerCount += 1;
+ 			}
++			TouchPanel.SetFingerSnapshot(
++				fingerIds[..validFingerCount],
++				fingerPositions[..validFingerCount]
++			);
+ 		}
+ 
+ 		public static int GetNumTouchFingers()

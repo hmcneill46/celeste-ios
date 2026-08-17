@@ -50,7 +50,7 @@ fi
 temp="$(mktemp -d "$(dirname "$STAGE_DIR")/.ios-host.prepare.XXXXXX")"
 cleanup() { [[ ! -e "$temp" ]] || find "$temp" -depth -delete; }
 trap cleanup EXIT
-mkdir -p "$temp/native" "$temp/managed"
+mkdir -p "$temp/native" "$temp/managed" "$temp/fna"
 touch "$temp/.ios-host-stage"
 
 for component in SDL2 FNA3D FAudio Theorafile ApplePlatformStubs; do
@@ -61,6 +61,7 @@ cp "$NATIVE_BUILD_DIR/sources/FAudio/csharp/FAudio.cs" "$temp/managed/FAudio.cs"
 cp "$NATIVE_BUILD_DIR/sources/Theorafile/csharp/Theorafile.cs" "$temp/managed/Theorafile.cs"
 cp "$REPO_ROOT/FNA/src/Graphics/FNA3D.cs" "$temp/managed/FNA3D.cs"
 cp "$REPO_ROOT/FNA/src/FrameworkDispatcher.cs" "$temp/managed/FrameworkDispatcher.cs"
+cp -R "$REPO_ROOT/FNA/src" "$temp/fna/"
 
 python3 - "$REPO_ROOT/tvos/fna-managed-sources.lock.json" "$temp/managed" <<'PY'
 import hashlib, json, pathlib, sys
@@ -71,6 +72,7 @@ for name, entry in lock["sources"].items():
 PY
 patch --batch --forward -p1 -d "$temp/managed" < "$REPO_ROOT/native/patches/FNA/0001-map-apple-static-imports-to-internal.patch"
 patch --batch --forward -p1 -d "$temp/managed" < "$REPO_ROOT/tvos/patches/FNA/0002-disambiguate-mediaplayer-alias.patch"
+patch --batch --forward -p1 -d "$temp/fna" < "$REPO_ROOT/modern-ios/patches/FNA/0001-preserve-stable-touch-finger-ids.patch"
 
 python3 - "$temp/managed" <<'PY'
 import pathlib, sys
@@ -89,6 +91,7 @@ pathlib.Path(sys.argv[1]).write_text(json.dumps({
     "fnaRevision": subprocess.check_output(["git", "-C", root / "FNA", "rev-parse", "HEAD"], text=True).strip(),
     "nativeImportMapping": "__Internal",
     "simulatorAudioPolicy": "explicit-no-fmod",
+    "touchIdentityPolicy": "stable-sdl-finger-id-v1",
     "deviceAudioPolicy": "external-fmod-1.10.09-foundation-smoke",
 }, indent=2, sort_keys=True) + "\n")
 PY

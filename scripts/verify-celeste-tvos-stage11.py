@@ -62,6 +62,7 @@ def main() -> int:
 
     lock = json.loads((repo / "managed/celeste-controller-prompts.lock.json").read_text())
     policy = (repo / "tvos/CelesteTvOSRuntimeHost/ControllerPromptPolicy.cs").read_text()
+    shared_policy = (repo / "shared/CelesteAppleInput/ControllerPromptPolicy.cs").read_text()
     preferences = (repo / "tvos/CelesteTvOSRuntimeHost/ControllerPromptPreferences.cs").read_text()
     bridge = (repo / "managed/templates/TvOSControllerPromptBridge.cs").read_text()
     transform = (repo / "scripts/celeste-stage6.py").read_text()
@@ -83,7 +84,7 @@ def main() -> int:
     if any(family.get("directResolutionCount", 0) + family.get("fallbackResolutionCount", 0) != 24 for family in families):
         fail("an exposed family does not resolve the complete required matrix")
 
-    require(policy, (KEY, *MODES, '"xb1"', '"ps4"', '"ns"', '"stadia"'), "host preference policy")
+    require(policy + shared_policy, (KEY, *MODES, '"xb1"', '"ps4"', '"ns"', '"stadia"'), "shared host preference policy")
     require(preferences, (
         "NSUserDefaults.StandardUserDefaults", "GCController.Current", "GCController.Controllers",
         "GCProductCategory.DualSense", "GCProductCategory.DualShock4", "GCProductCategory.XboxOne",

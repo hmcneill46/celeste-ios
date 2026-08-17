@@ -1,5 +1,6 @@
 #if CELESTE_RUNTIME && TVOS_CELESTE_RUNTIME_HOST
 using Celeste;
+using CelesteAppleInput;
 using Foundation;
 using GameController;
 

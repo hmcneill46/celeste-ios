@@ -8,5 +8,6 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="..\CelesteTvOSRuntimeHost\ControllerPromptPolicy.cs" Link="ControllerPromptPolicy.cs" />
+    <ProjectReference Include="..\..\shared\CelesteAppleInput\CelesteAppleInput.csproj" />
   </ItemGroup>
 </Project>

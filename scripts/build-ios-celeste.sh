@@ -40,7 +40,8 @@ for required in \
   "$REPO_ROOT/.build/ios-host/fmod/fmod-ios-manifest.json" \
   "$REPO_ROOT/.build/celeste-ios/current/managed/Celeste.Modern.csproj" \
   "$REPO_ROOT/artifacts/ios-celeste/current/ios-managed.json" \
-  "$REPO_ROOT/artifacts/ios-celeste/current/ios-managed-stage24c2.json"; do
+  "$REPO_ROOT/artifacts/ios-celeste/current/ios-managed-stage24c2.json" \
+  "$REPO_ROOT/artifacts/ios-celeste/current/ios-managed-stage24d2.json"; do
   [[ -f "$required" ]] || { echo "error: prepared iOS Celeste input is incomplete" >&2; exit 1; }
 done
 if [[ -e "$OUTPUT_DIR" ]]; then
@@ -86,7 +87,7 @@ python3 "$REPO_ROOT/scripts/verify-ios-package.py" --app "$published" --lane dev
 elapsed="$(( $(date +%s)-start ))"
 python3 - "$OUTPUT_DIR/build-manifest.json" "$OUTPUT_DIR/Celeste-modern-iOS.ipa" "$elapsed" \
   "$REPO_ROOT/artifacts/ios-celeste/current/preparation-result.json" \
-  "$REPO_ROOT/artifacts/ios-celeste/current/ios-managed-stage24c2.json" <<'PY'
+  "$REPO_ROOT/artifacts/ios-celeste/current/ios-managed-stage24d2.json" <<'PY'
 import hashlib,json,pathlib,sys
 out,ipa,elapsed,prep,managed=pathlib.Path(sys.argv[1]),pathlib.Path(sys.argv[2]),int(sys.argv[3]),pathlib.Path(sys.argv[4]),pathlib.Path(sys.argv[5])
 p=json.loads(prep.read_text()); m=json.loads(managed.read_text())

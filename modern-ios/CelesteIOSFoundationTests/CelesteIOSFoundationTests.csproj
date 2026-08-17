@@ -7,5 +7,7 @@
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\CelesteIOSFoundation\CelesteIOSFoundation.csproj" />
+    <ProjectReference Include="..\..\shared\CelesteAppleInput\CelesteAppleInput.csproj" />
+    <Compile Include="..\FNA.iOS\StableTouchSlotPolicy.cs" Link="StableTouchSlotPolicy.cs" />
   </ItemGroup>
 </Project>

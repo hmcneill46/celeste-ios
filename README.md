@@ -214,9 +214,10 @@ They normalize to one locked downstream game, but that does not mean every
 release from those storefronts is accepted. Review the [exact profile
 matrix](docs/CELESTE_INPUTS.md) if validation rejects your files.
 
-Everest/mod support and XNA inputs are not currently supported. The modern
-self-builder targets tvOS; the legacy iOS source remains in the repository but
-is not a current modern-iOS build path.
+Everest/mod support and XNA inputs are not currently supported. The public
+self-builder targets tvOS. The legacy iOS source remains for provenance, while
+the separate [experimental modern iOS lane](docs/IOS_FOUNDATION.md) is a
+developer workflow rather than part of that beginner builder.
 
 ## Current limitations
 
@@ -257,10 +258,12 @@ available:
 
 The original Xamarin.iOS project is retained for provenance and legacy work.
 The beginner/public builder remains tvOS-only; developers can also inspect the
-[experimental modern iOS lane](docs/IOS_FOUNDATION.md), which now reaches real
-Celeste gameplay with durable ordinary file-backed saves, resilient physical
-iPhone/iPad audio, and a controller, but is not yet a finished iOS port and has
-no touch controls.
+[experimental modern iOS lane](docs/IOS_FOUNDATION.md). That lane now plays the
+same canonical Celeste game on physical iPhone and iPad using either adaptive
+touch controls or a controller, including a dedicated Journal/Special control,
+with durable ordinary file-backed saves and resilient seven-bank audio. It is
+still an experimental developer build rather than a finished public iOS
+release.
 
 ## Project history and release candidates
 

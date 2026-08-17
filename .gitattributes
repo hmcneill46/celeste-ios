@@ -1,2 +1,3 @@
 # Patch context preserves upstream whitespace; do not treat its encoding as source whitespace.
 native/patches/**/*.patch -whitespace
+modern-ios/patches/**/*.patch -whitespace
