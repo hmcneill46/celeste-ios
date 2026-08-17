@@ -49,6 +49,7 @@ support matrix, and limitations are in [project status](../STATUS.md).
 31. [Stage 24B — modern iOS native/FNA foundation](stages/IOS_MODERN_FOUNDATION_STAGE24B_REPORT.md)
 32. [Stage 24C1 — canonical Celeste first frame and real FMOD on modern iOS](stages/IOS_CELESTE_FIRST_FRAME_STAGE24C1_REPORT.md)
 33. [Stage 24C2 — controller-first iOS gameplay, persistence, and lifecycle](stages/IOS_CONTROLLER_GAMEPLAY_PERSISTENCE_STAGE24C2_REPORT.md)
+34. [Stage 24D2 — production touch controls and iOS input UX](stages/IOS_TOUCH_CONTROLS_STAGE24D2_REPORT.md)
 
 Diagnostic-only stages whose evidence was intentionally kept in ignored local
 build directories are not reconstructed here. The index covers every tracked
