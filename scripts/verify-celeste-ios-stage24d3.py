@@ -266,7 +266,7 @@ def main() -> int:
     foundation_project = root / "modern-ios/CelesteIOSFoundationTests/CelesteIOSFoundationTests.csproj"
     foundation_environment = dict(os.environ, MSBuildEnableWorkloadResolver="false")
     subprocess.check_call(
-        ["dotnet", "build", str(foundation_project), "-c", "Release", "--no-restore", "-maxcpucount:1"],
+        ["dotnet", "build", str(foundation_project), "-c", "Release", "-maxcpucount:1"],
         env=foundation_environment,
     )
     foundation = subprocess.check_output(

@@ -286,7 +286,7 @@ def main() -> int:
     durability_project = root / "modern-ios/CelesteIOSDurabilityTests/CelesteIOSDurabilityTests.csproj"
     for project, expected in ((foundation_project, "PASS: modern iOS foundation deterministic tests 243"),
                               (durability_project, "PASS: modern iOS durability deterministic tests 87")):
-        subprocess.check_call(["dotnet", "build", str(project), "-c", "Release", "--no-restore", "-maxcpucount:1"],
+        subprocess.check_call(["dotnet", "build", str(project), "-c", "Release", "-maxcpucount:1"],
                               env=environment)
         output = subprocess.check_output(["dotnet", "exec", str(project.parent / "bin/Release/net10.0" /
                                                                   f"{project.stem}.dll")],
