@@ -44,6 +44,21 @@ def git(root: pathlib.Path, *arguments: str) -> str:
     return subprocess.check_output(["git", "-C", root, *arguments], text=True).strip()
 
 
+def resolve_origin_branch(root: pathlib.Path, branch: str) -> str:
+    """Resolve a branch in both full and public single-branch clones."""
+    local = subprocess.run(
+        ["git", "-C", root, "rev-parse", "--verify", "--quiet", f"origin/{branch}^{{commit}}"],
+        text=True,
+        capture_output=True,
+        check=False,
+    )
+    if local.returncode == 0:
+        return local.stdout.strip()
+    remote = git(root, "ls-remote", "--heads", "origin", f"refs/heads/{branch}")
+    fields = remote.split()
+    return fields[0] if len(fields) == 2 else ""
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--app", type=pathlib.Path,
@@ -74,7 +89,7 @@ def main() -> int:
     c.require(git(root, "rev-parse", f"{BASE}^{{commit}}") == BASE, "Stage 24E1 baseline exists")
     c.require(git(root, "rev-parse", "v1.0.0-rc.1^{}") == RC1, "RC1 preserved")
     c.require(git(root, "rev-parse", "v1.0.0-rc.2^{}") == RC2, "RC2 preserved")
-    c.require(git(root, "rev-parse", "origin/release/v1.0.0-rc.3^{commit}") == DEFERRED_RC3,
+    c.require(resolve_origin_branch(root, "release/v1.0.0-rc.3") == DEFERRED_RC3,
               "deferred RC3 preserved")
     c.require(not git(root, "tag", "-l", "v1.0.0-rc.3"), "RC3 tag remains absent")
     c.require(git(root, "diff", "--name-only", BASE, "--", "tvos", "native", "build-tvos.sh") == "",
