@@ -75,9 +75,9 @@ unreadable selected item caused a managed `IOException` to escape an
 `NSFileCoordinator` native callback, which Objective-C treated as uncaught.
 The final coordinator catches expected read/validation failures inside that
 callback, returns a bounded semantic failure to managed code, and never lets
-an external-file error cross the native block. Build 4 physically repeated
-valid import, replacement, recovery, cancellation, and invalid-item handling
-without a crash.
+an expected external-file error cross the native block. Build 4 physically
+repeated valid import, replacement, recovery, and cancellation without a
+crash; the source verifier locks the fail-closed callback conversion itself.
 
 The modern Apple port now has a product identity separate from Celeste's game
 version. The accepted build displays `iOS PORT v0.1.1 • BUILD 4` at the bottom
@@ -154,8 +154,8 @@ import, visible imported progression, previous-good restore and undo, Settings
 import/restore, touch-layout export, validated editor preview with Done/Cancel,
 active-Level mutation block, cold persistence, landscape restoration, touch,
 controller, audio, and lifecycle paths all passed. Slot selection, replacement,
-and recovery were immediate after the UIKit-alert removal; repeated use also
-confirmed that an unreadable external selection no longer crashes the process.
+and recovery were immediate after the UIKit-alert removal; repeated final-build
+use remained stable after the provider callback boundary was corrected.
 The final package was delivered as a same-identity replacement without relying
 on an uninstall.
 
