@@ -19,7 +19,7 @@ not an App Store distribution.
 | Apple TV behaviour | Home/background resume, graceful main-menu Quit, app artwork, Top Shelf, and optional Metal Performance HUD |
 | Inputs | Nine exact Celeste 1.4.0.0 FNA profiles from itch.io, Epic Games Store, and Steam |
 | Build routes | Local Apple silicon Mac or private GitHub compilation to an unsigned IPA |
-| Experimental iOS | Shared canonical Celeste pipeline now supports controller play, customizable touch layouts, direct Metal, resilient seven-bank FMOD playback, durable ordinary file-backed saves, and native Files-based `.celeste`/touch-layout transfer on physical iPhone and iPad; it remains an experimental developer build rather than a public iOS release |
+| Modern iOS/iPadOS | Personal self-build release candidate with controller/touch play, customizable layouts, direct Metal, resilient seven-bank FMOD playback, durable ordinary file-backed saves, and native Files-based `.celeste`/touch-layout transfer on physical iPhone and iPad |
 
 The release-candidate audit covered a clean public clone, native and managed
 reproducibility, full AOT/trimming, unsigned packaging, same-identity physical
@@ -55,6 +55,15 @@ from exact canonical-equivalence validation. It does not claim that every
 release from a named storefront is supported. Other arm64 Apple TV models,
 newer compatible system versions, and extended SDL/FNA controllers may work
 but have not received this project's physical acceptance.
+
+### Modern iPhone/iPad acceptance
+
+The same nine canonical inputs feed one universal Release `ios-arm64` product
+for iPhone and iPad, minimum iOS/iPadOS 15.0. The accepted host uses Xcode 26.6,
+iOS SDK 26.5, .NET 10.0.302/workload 26.5.10301, full AOT, full trimming, LLVM,
+and no interpreter/JIT. Physical acceptance covers an iPhone 15 Pro Max and an
+iPad mini 4 on iPadOS 15.8.8. The beginner entry point is
+[`./build-ios.sh`](../build-ios.sh); see [iPhone/iPad building](IOS_BUILDING.md).
 
 ## Architecture
 
@@ -301,8 +310,8 @@ or an unsigned conventional tvOS IPA containing `Payload/Celeste.app`.
   tvOS availability, and this project makes no Apple TV Game Mode claim.
 - Apple's Metal HUD presentation and metric set are system-controlled and may
   change between tvOS releases; visible diagnostics can carry small overhead.
-- The public beginner self-builder targets tvOS only. Legacy iOS source is
-  retained. A tracked [experimental modern iOS lane](IOS_FOUNDATION.md) now
+- The modern iOS beginner self-builder requires a supported Apple-silicon Mac
+  and physical device. Legacy iOS source is retained. The tracked [modern iOS lane](IOS_FOUNDATION.md) now
   runs the same canonical Celeste game through .NET 10/direct FNA3D Metal and
   real seven-bank FMOD on physical iPhone and iPad. Adaptive touch controls
   provide controller-independent title/menu/gameplay input, including
@@ -313,8 +322,7 @@ or an unsigned conventional tvOS IPA containing `Payload/Celeste.app`.
   exposing live Application Support files; Touch Controls similarly shares a
   validated `.celestetouch` document through Files/share UI. This is manual
   user-directed portability, not automatic iCloud or provider sync.
-  The lane remains
-  experimental pending broader user-facing packaging and release acceptance.
+  The vanilla lane has completed focused personal self-build release-candidate acceptance.
 - No App Store, distribution-profile, paid entitlement, or universal hardware
   claim is made.
 

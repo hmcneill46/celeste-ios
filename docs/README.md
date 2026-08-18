@@ -1,12 +1,14 @@
 # Documentation
 
-The root [Celeste for Apple TV README](../README.md) is the best starting point.
+The root [Celeste for Apple platforms README](../README.md) is the best starting point.
 Use this page to jump directly to the task or level of detail you need.
 
 ## Getting started
 
-- [Build locally on a Mac](BUILDING.md) — prerequisites, copyable setup,
-  builder choices, signing, and generated outputs.
+- [Build locally on a Mac](BUILDING.md) — Apple TV prerequisites, builder
+  choices, signing, and generated outputs.
+- [Build and install on iPhone/iPad](IOS_BUILDING.md) — the beginner modern-iOS
+  doctor, unsigned/signed builds, Personal Team setup, and paired-device install.
 - [Build in the cloud](CLOUD_BUILDING.md) — compile an unsigned IPA in your own
   private GitHub repository when no suitable Mac is available.
 - [Choose supported Celeste files](CELESTE_INPUTS.md) — beginner store guidance
@@ -27,7 +29,7 @@ Use this page to jump directly to the task or level of detail you need.
 
 ## Developer documentation
 
-- [Experimental modern iOS/Celeste lane](IOS_FOUNDATION.md) — the .NET 10,
+- [Modern iOS/Celeste architecture](IOS_FOUNDATION.md) — the .NET 10,
   full-AOT iPhone/iPad developer build with editable Phone/Tablet touch
   layouts, full-display placement, per-control opacity, optional duplicate
   controls, controller coexistence, seven-bank audio, durable saves, and
@@ -46,6 +48,7 @@ Use this page to jump directly to the task or level of detail you need.
 ## Release and history
 
 - [v1.0.0-rc.2 release notes](releases/v1.0.0-rc.2.md)
+- [iOS Port v0.1.1 RC1 draft release notes](releases/ios-v0.1.1-rc.1.md)
 - [v1.0.0-rc.2 manifest](../tvos/release-candidates/v1.0.0-rc.2.json)
 - [Development and acceptance history](history/README.md) — the original port
   plan and chronological stage reports retained for reproducibility and

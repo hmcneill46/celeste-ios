@@ -1,19 +1,35 @@
-# Celeste for Apple TV
+# Celeste for Apple TV, iPhone, and iPad
 
-An unofficial community port that builds a native Apple TV version of Celeste
-from game files you already own. It provides full controller gameplay, Metal
-graphics, FMOD audio, durable saves, and Apple TV-specific menus and lifecycle
-behaviour.
+An unofficial community project that builds native Apple versions of Celeste
+from game files you already own. The mature Apple TV product and the modern
+iPhone/iPad product share one locked Celeste/FNA pipeline, Metal graphics,
+real FMOD audio, durable saves, and full-AOT compilation.
 
-The port is mature and playable. It has been extensively tested on an Apple TV
+The Apple TV port is mature and playable. It has been extensively tested on an Apple TV
 4K (3rd generation, 128 GB) and supports tvOS 16.0 or later. Other arm64 Apple
 TV models may work, but have not received the same physical acceptance.
 
-This repository does **not** contain Celeste or the proprietary FMOD SDK. You
-supply both from your own accounts; the builder validates them and produces the
-Apple TV app locally or in your own private GitHub repository.
+The iPhone/iPad port is also playable and has release-candidate acceptance on
+an iPhone 15 Pro Max and an iPad mini 4 running iPadOS 15.8.8. It supports
+touch-only play, controllers, customizable touch layouts, ordinary
+Application Support saves, and native Files import/export.
 
-## Start here
+This repository does **not** contain Celeste or the proprietary FMOD SDK. You
+supply both from your own accounts; the builders validate them locally.
+
+## Choose a platform
+
+| I want to build for… | Start here | Main command |
+| --- | --- | --- |
+| Apple TV | [Apple TV local/cloud guide](docs/BUILDING.md) | `./build-tvos.sh` |
+| iPhone or iPad | [iPhone/iPad self-build and install guide](docs/IOS_BUILDING.md) | `./build-ios.sh` |
+
+Both products accept the same [nine exact Celeste 1.4.0.0 FNA
+profiles](docs/CELESTE_INPUTS.md). The iPhone/iPad full game currently requires
+an Apple-silicon Mac and a physical device; the Apple TV product additionally
+has the private unsigned cloud compilation route.
+
+## Apple TV start here
 
 You need:
 
@@ -215,9 +231,9 @@ release from those storefronts is accepted. Review the [exact profile
 matrix](docs/CELESTE_INPUTS.md) if validation rejects your files.
 
 Everest/mod support and XNA inputs are not currently supported. The public
-self-builder targets tvOS. The legacy iOS source remains for provenance, while
-the separate [experimental modern iOS lane](docs/IOS_FOUNDATION.md) is a
-developer workflow rather than part of that beginner builder.
+self-build workflow supports tvOS and modern iOS/iPadOS. The legacy iOS source
+remains for provenance; use the [modern iPhone/iPad guide](docs/IOS_BUILDING.md)
+for the current full-AOT product.
 
 ## Current limitations
 
@@ -257,8 +273,8 @@ available:
 - [Development and acceptance history](docs/history/README.md)
 
 The original Xamarin.iOS project is retained for provenance and legacy work.
-The beginner/public builder remains tvOS-only; developers can also inspect the
-[experimental modern iOS lane](docs/IOS_FOUNDATION.md). That lane now plays the
+The beginner/public builders now cover Apple TV and iPhone/iPad independently.
+Developers can also inspect the [modern iOS architecture](docs/IOS_FOUNDATION.md), which plays the
 same canonical Celeste game on physical iPhone and iPad using either a
 controller or adaptive touch controls, with customization including separate
 Phone/Tablet layouts, edge-flush full-display placement, per-control opacity,
@@ -270,8 +286,8 @@ Files** can export, share, validate, import, and restore ordinary `.celeste`
 copies through native iOS Files UI, while custom `.celestetouch` layouts can
 be shared from Touch Controls and previewed before import. Live saves stay
 private in Application Support; this is explicit user-directed transfer, not
-automatic cloud sync. It is still an experimental developer build rather than
-a finished public iOS release.
+automatic cloud sync. The vanilla iOS/iPadOS product is a personal self-build
+release candidate, not an App Store release.
 
 ## Project history and release candidates
 

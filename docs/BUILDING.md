@@ -577,11 +577,14 @@ manifests, artwork hashes, bundle metadata, RID, launch/audio mode, AOT,
 trimming, and signing mode. A mismatch forces the applicable lane to rebuild.
 `--clean` is the first remedy for a suspected stale Stage 8 product.
 
-## Experimental modern iOS lane
+## Modern iPhone/iPad self-build
 
-The public beginner builder above remains tvOS-only. Developers working on the
-modern iPhone/iPad target should use the focused instructions in
-[Modern iOS foundation](IOS_FOUNDATION.md). Stage 24D3 accepts a physical-device
+The beginner iPhone/iPad workflow has its own focused guide and root command:
+[Build and install on iPhone/iPad](IOS_BUILDING.md) and `./build-ios.sh`. This
+Apple TV guide does not duplicate those steps.
+
+Developers can use the deeper [Modern iOS foundation](IOS_FOUNDATION.md)
+documentation. The accepted physical-device
 touch- and controller-playable build using the same exact Celeste input profiles
 and canonical generated game as tvOS, plus FMOD Engine iOS/tvOS 1.10.09 build
 97915. Settings and all three ordinary save slots use Foundation-backed atomic
@@ -597,8 +600,8 @@ flush to a display edge while their larger hit margin clips safely. Optional
 controls cover every distinct Celeste action not already represented by an
 existing semantic alias, including Crouch Dash and Quick Restart. Phone and Tablet store
 separate layouts; Grab Mode is stored per active Touch/Controller/Keyboard
-source. This remains an experimental developer lane rather than a finished
-public iOS build journey. **Options > Data & Files** uses native document
+source. The vanilla product is now a personal self-build release candidate.
+**Options > Data & Files** uses native document
 pickers/share sheets for explicit canonical `.celeste` copies, and **Options >
 Touch Controls** can export/import `.celestetouch` layouts through a validated
 D3 editor preview. The authoritative saves still live in private Application

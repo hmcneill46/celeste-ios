@@ -1044,3 +1044,24 @@ scripts/verify-repository-stage8b.py
 Include the detected versions, builder mode, whether each input validator
 passed, and the first meaningful redacted error. Use the repository's build
 problem issue form; follow its private/proprietary attachment warnings.
+
+## iPhone/iPad builder problems
+
+Use [`./build-ios.sh --doctor`](../build-ios.sh) first and follow the focused
+[iPhone/iPad guide](IOS_BUILDING.md). The iOS builder validates Celeste and
+FMOD before a long AOT build, writes a privacy-redacted summary to
+`artifacts/ios/logs/last-error.txt`, and retains the named full local phase log.
+
+- **No paired device:** wake/unlock it, trust the Mac, enable Developer Mode,
+  and pair it in Xcode → Window → Devices and Simulators. An unsigned build does
+  not require a device.
+- **No Personal Team/certificate:** add the Apple Account in Xcode Settings →
+  Accounts and allow Xcode to create an Apple Development certificate.
+- **Provisioning expired:** install a newly signed build with the same bundle
+  identifier over the existing app. Do not uninstall first.
+- **FMOD rejected:** use Engine iOS/tvOS 1.10.09 build 97915 exactly; pointing
+  at either the mounted DMG root or its `FMOD Programmers API` child works.
+- **Stale generated/AOT product:** run `./build-ios.sh --clean`; it preserves
+  user-owned inputs, native caches, installed app data, and saves.
+- **Simulator fails or has no audio:** the full Celeste product is supported on
+  physical arm64 iPhone/iPad. FMOD 1.10.09 lacks an arm64 Simulator slice.
