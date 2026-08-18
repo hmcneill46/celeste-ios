@@ -1057,6 +1057,10 @@ FMOD before a long AOT build, writes a privacy-redacted summary to
   not require a device.
 - **No Personal Team/certificate:** add the Apple Account in Xcode Settings →
   Accounts and allow Xcode to create an Apple Development certificate.
+- **First install is present but launch is denied:** on the device open
+  Settings → General → VPN & Device Management → Developer App, select the
+  Personal Team profile, and tap Trust. Then open Celeste. This is separate
+  from trusting the Mac and enabling Developer Mode.
 - **Provisioning expired:** install a newly signed build with the same bundle
   identifier over the existing app. Do not uninstall first.
 - **FMOD rejected:** use Engine iOS/tvOS 1.10.09 build 97915 exactly; pointing

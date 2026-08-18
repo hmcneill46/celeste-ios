@@ -156,6 +156,13 @@ The app appears as **Celeste**. It supports landscape left and right on iPhone
 and iPad. The first screen can be operated entirely by touch; a controller is
 optional.
 
+On the first Personal Team install to a particular device, iOS may install the
+app but refuse its first launch until that local developer profile is trusted.
+Open **Settings → General → VPN & Device Management → Developer App**, select
+the profile used for this build, and tap **Trust**. Then open Celeste normally.
+This trusts only the development profile you selected; it is not needed again
+for every replacement build from the same valid profile.
+
 When updating, keep the same bundle identifier and install the newer build
 over the existing app. Settings, slots 0–2, previous-good backups, touch
 preferences, Phone/Tablet layouts, Grab profiles, and prompt preference remain
@@ -181,6 +188,8 @@ controller is active; the editor keeps separate Phone and Tablet layouts. Use
   Accounts and let Xcode create an Apple Development certificate.
 - **Device missing:** wake/unlock it, reconnect or pair it in Xcode, trust the
   prompts, and enable Developer Mode. `--unsigned` does not need a device.
+- **Installed but will not open on a new device:** trust the Developer App
+  profile in Settings → General → VPN & Device Management, then open Celeste.
 - **Provisioning expired:** rerun `./build-ios.sh --install` with the same bundle
   identity. Do not uninstall.
 - **Bundle identifier conflict:** choose a unique reverse-DNS identity once and

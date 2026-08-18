@@ -123,6 +123,9 @@ def main() -> int:
     c.require("Xcode has no Personal Team" in builder and "Developer Mode" in builder and
               "Provisioning" in guide and "bundle identifier" in guide,
               "common signing/device failures are actionable")
+    c.require("profile has not been explicitly trusted" in builder and
+              "VPN & Device Management" in builder + guide + troubleshooting,
+              "first-device Personal Team trust failure has an actionable route")
     c.require(builder.index("validate-celeste") < builder.index("Preparing verified native libraries"),
               "Celeste validation precedes expensive work")
     c.require(builder.index("validate-fmod-ios") < builder.index("Preparing verified native libraries"),

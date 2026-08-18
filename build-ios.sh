@@ -182,6 +182,10 @@ run_logged() {
     ui_operation_failure "$operation" "$elapsed"
     printf '  Last diagnostic lines (privacy-redacted):\n' >&2
     ui_diagnostic_tail "$LOG_ROOT/$label.log" 45 >&2
+    if [[ "$label" == launch-ios-device ]] && LC_ALL=C grep -Fq "profile has not been explicitly trusted" "$LOG_ROOT/$label.log"; then
+      stop_build "This iPhone or iPad has not trusted the Personal Team app yet." \
+        "On the device open Settings > General > VPN & Device Management, select the Developer App profile, tap Trust, then open Celeste. This is normally required only on the first install from that Personal Team."
+    fi
     stop_build "$operation failed." "Correct the first diagnostic shown above, then rerun." "artifacts/ios/logs/$label.log"
   fi
   ui_operation_success "$operation" "$elapsed"
