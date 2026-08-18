@@ -1,4 +1,5 @@
 <Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="..\IOSPortVersion.props" />
   <PropertyGroup>
     <TargetFramework>net10.0-ios26.5</TargetFramework>
     <OutputType>Exe</OutputType>
@@ -10,8 +11,8 @@
     <ApplicationId Condition="'$(ApplicationId)' == ''">io.github.roootthefox.celeste.ios.foundation</ApplicationId>
     <ApplicationTitle>Celeste iOS Foundation</ApplicationTitle>
     <!-- Modern-iOS port identity; Celeste's game/content version remains 1.4.0.0. -->
-    <ApplicationDisplayVersion>0.1.1</ApplicationDisplayVersion>
-    <ApplicationVersion>4</ApplicationVersion>
+    <ApplicationDisplayVersion>$(IOSPortSemanticVersion)</ApplicationDisplayVersion>
+    <ApplicationVersion>$(IOSPortBuildNumber)</ApplicationVersion>
     <AppIcon>AppIcon</AppIcon>
     <TrimMode Condition="'$(Configuration)' == 'Release'">full</TrimMode>
     <MtouchLink Condition="'$(Configuration)' == 'Release'">Full</MtouchLink>

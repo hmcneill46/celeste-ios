@@ -292,8 +292,16 @@ def main() -> int:
     c.require("IOS_TOUCH_CONTROLS_STAGE24D2_REPORT.md" in history,
               "history index links the D2 acceptance record")
     readme_flat = " ".join(readme.lower().split())
-    c.require("adaptive touch controls" in readme_flat and "beginner/public builder remains tvos-only" in readme_flat,
-              "root README accurately bounds experimental touch support")
+    if (root / "modern-ios/IOSPortVersion.props").is_file():
+        # E2 deliberately supersedes D2's then-correct public-builder boundary.
+        # Keep the original assertion for historical D2 checkouts while requiring
+        # the production iOS entry point and current maturity on E2 and later.
+        c.require("./build-ios.sh" in readme and "release-candidate acceptance" in readme_flat,
+                  "root README exposes the accepted production iOS workflow")
+    else:
+        c.require("adaptive touch controls" in readme_flat and
+                  "beginner/public builder remains tvos-only" in readme_flat,
+                  "root README accurately bounds experimental touch support")
     c.require("Options > Touch Controls" in ios_docs and "0.18" in ios_docs and "8-degree" in ios_docs,
               "current iOS guide documents the production touch controls")
     c.require("custom-layout editor" in report and "hold-to-release" in report,

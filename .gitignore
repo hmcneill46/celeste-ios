@@ -22,6 +22,8 @@ artifacts/ios-native*/
 artifacts/ios-host/
 .build/celeste-ios/
 artifacts/ios-celeste/
+.build/ios-self-build/
+artifacts/ios/
 modern-ios/Local.Build.props
 modern-ios/**/bin/
 modern-ios/**/obj/

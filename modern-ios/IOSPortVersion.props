@@ -1,0 +1,13 @@
+<Project>
+  <!--
+    Single semantic version source for the modern iPhone/iPad product.
+
+    Celeste's game/content version remains 1.4.0.0.  These values drive the
+    visible Options label, CFBundleShortVersionString, CFBundleVersion,
+    package verification, output names, and release documentation checks.
+  -->
+  <PropertyGroup>
+    <IOSPortSemanticVersion>0.1.1</IOSPortSemanticVersion>
+    <IOSPortBuildNumber>5</IOSPortBuildNumber>
+  </PropertyGroup>
+</Project>

@@ -29,7 +29,7 @@ while (($#)); do
 done
 [[ "$TEAM_ID" =~ ^[A-Z0-9]{10}$ ]] || { echo "error: invalid team identifier" >&2; exit 2; }
 [[ "$BUNDLE_ID" =~ ^[A-Za-z][A-Za-z0-9-]*(\.[A-Za-z0-9-]+)+$ ]] || { echo "error: invalid bundle identifier" >&2; exit 2; }
-[[ "$DEVICE_ID" =~ ^[A-Fa-f0-9-]{32,40}$ ]] || { echo "error: invalid device identifier" >&2; exit 2; }
+[[ "$DEVICE_ID" =~ ^[A-Fa-f0-9-]{24,40}$ ]] || { echo "error: invalid device identifier" >&2; exit 2; }
 if [[ -e "$OUTPUT" ]]; then
   [[ -f "$OUTPUT/.ios-provisioning-helper" ]] || { echo "error: refusing unmarked helper root" >&2; exit 1; }
   find "$OUTPUT" -depth -delete

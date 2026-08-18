@@ -12,6 +12,9 @@ import re
 import subprocess
 
 
+REPO_ROOT = pathlib.Path(__file__).resolve().parents[1]
+
+
 def run(*arguments: str) -> str:
     return subprocess.check_output(arguments, text=True, stderr=subprocess.STDOUT).strip()
 
@@ -26,12 +29,24 @@ def main() -> int:
     parser.add_argument("--app", type=pathlib.Path, required=True)
     parser.add_argument("--lane", choices=("device", "simulator"), required=True)
     parser.add_argument("--product", choices=("foundation", "celeste"), default="foundation")
+    parser.add_argument("--signing", choices=("auto", "unsigned", "development"), default="auto")
     parser.add_argument("--output", type=pathlib.Path)
     args = parser.parse_args()
     app = args.app.resolve()
     require(app.is_dir(), "application bundle is missing")
     with (app / "Info.plist").open("rb") as stream:
         info = plistlib.load(stream)
+    version_source = (REPO_ROOT / "modern-ios/IOSPortVersion.props").read_text()
+    port_version_match = re.search(r"<IOSPortSemanticVersion>([^<]+)</IOSPortSemanticVersion>", version_source)
+    port_build_match = re.search(r"<IOSPortBuildNumber>([^<]+)</IOSPortBuildNumber>", version_source)
+    require(port_version_match is not None and port_build_match is not None,
+            "the single iOS version source is invalid")
+    port_version = port_version_match.group(1).strip()
+    port_build = port_build_match.group(1).strip()
+    require(info.get("CFBundleShortVersionString") == port_version,
+            "bundle short version differs from the iOS port version source")
+    require(str(info.get("CFBundleVersion")) == port_build,
+            "bundle build differs from the iOS port version source")
     executable = app / info["CFBundleExecutable"]
     require(executable.is_file(), "application executable is missing")
     require(run("xcrun", "lipo", "-archs", str(executable)).split() == ["arm64"], "app must be arm64 only")
@@ -88,12 +103,26 @@ def main() -> int:
         return any(ascii_token in path.read_bytes() or utf16_token in path.read_bytes()
                    for path in binary_surfaces)
 
-    entitlement_output = subprocess.check_output(
-        ["codesign", "-d", "--entitlements", ":-", str(app)],
-        text=False, stderr=subprocess.STDOUT)
-    xml_start = entitlement_output.find(b"<?xml")
-    require(xml_start >= 0, "code-signing entitlements could not be inspected")
-    entitlements = plistlib.loads(entitlement_output[xml_start:])
+    has_signature = (app / "_CodeSignature").is_dir()
+    has_profile = (app / "embedded.mobileprovision").is_file()
+    signing = args.signing
+    if signing == "auto":
+        signing = "development" if has_signature and has_profile else "unsigned"
+    if signing == "unsigned":
+        require(not has_signature and not has_profile,
+                "unsigned package contains a code signature or provisioning profile")
+        entitlements = {}
+    else:
+        require(has_signature and has_profile,
+                "development package lacks a signature or provisioning profile")
+        subprocess.check_call(["codesign", "--verify", "--strict", str(app)],
+                              stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT)
+        entitlement_output = subprocess.check_output(
+            ["codesign", "-d", "--entitlements", ":-", str(app)],
+            text=False, stderr=subprocess.STDOUT)
+        xml_start = entitlement_output.find(b"<?xml")
+        require(xml_start >= 0, "code-signing entitlements could not be inspected")
+        entitlements = plistlib.loads(entitlement_output[xml_start:])
     forbidden_entitlements = {
         "com.apple.developer.driverkit",
         "com.apple.developer.kernel.increased-memory-limit",
@@ -169,6 +198,8 @@ def main() -> int:
                 "the exact seven-bank inventory is absent")
         require(bundle_contains("celeste-product-context") and bundle_contains("celeste-run-loop-enter"),
                 "modern iOS Celeste host markers are absent")
+        require(bundle_contains(f"iOS PORT v{port_version}") and bundle_contains(f"BUILD {port_build}"),
+                "visible Options version label differs from the iOS version source")
         require(bundle_contains("IOS_STORAGE recovery=") and bundle_contains("source=previous-good"),
                 "bounded previous-good recovery path is absent")
         require(not bundle_contains("CelesteTvOS.Persistence") and
@@ -237,6 +268,9 @@ def main() -> int:
         "canonicalContentSha256": "30a1c147d1a3ab0aa45762094e393ed7fd69951dd66e5af063447641e0699c46" if args.product == "celeste" else None,
         "fmodBankCount": 7 if args.product == "celeste" else 0,
         "touchUiIncluded": args.product == "celeste",
+        "signing": signing,
+        "portVersion": port_version,
+        "bundleBuild": int(port_build),
     }
     if args.output:
         args.output.parent.mkdir(parents=True, exist_ok=True)

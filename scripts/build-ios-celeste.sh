@@ -7,6 +7,9 @@ PROJECT="$REPO_ROOT/modern-ios/CelesteIOSRuntimeHost/CelesteIOSRuntimeHost.cspro
 OUTPUT_DIR="$REPO_ROOT/artifacts/ios-celeste/device"
 CLEAN=0
 VERBOSE=0
+SIGNING=development
+BUNDLE_ID=""
+TEAM_ID=""
 MARKER=.ios-celeste-product-output
 
 usage() {
@@ -18,6 +21,9 @@ Run prepare-celeste-ios-runtime.sh and prepare-fmod-ios.sh first.
 
 Options:
   --output-dir DIR  ignored output (default: artifacts/ios-celeste/device)
+  --signing MODE    development (default) or unsigned
+  --bundle-id ID    override the local application identifier
+  --team-id ID      development-signing team (kept only in local command state)
   --clean           replace only a marked prior output
   --verbose         stream full dotnet output
   -h, --help        show this help
@@ -27,12 +33,22 @@ EOF
 while (($#)); do
   case "$1" in
     --output-dir) [[ $# -ge 2 ]] || exit 2; OUTPUT_DIR="$2"; shift 2 ;;
+    --signing) [[ $# -ge 2 ]] || exit 2; SIGNING="$2"; shift 2 ;;
+    --bundle-id) [[ $# -ge 2 ]] || exit 2; BUNDLE_ID="$2"; shift 2 ;;
+    --team-id) [[ $# -ge 2 ]] || exit 2; TEAM_ID="$2"; shift 2 ;;
     --clean) CLEAN=1; shift ;;
     --verbose) VERBOSE=1; shift ;;
     -h|--help) usage; exit 0 ;;
     *) echo "error: unknown option: $1" >&2; exit 2 ;;
   esac
 done
+case "$SIGNING" in development|unsigned) ;; *) echo "error: --signing must be development or unsigned" >&2; exit 2 ;; esac
+if [[ -n "$BUNDLE_ID" && ! "$BUNDLE_ID" =~ ^[A-Za-z][A-Za-z0-9-]*(\.[A-Za-z0-9-]+)+$ ]]; then
+  echo "error: invalid bundle identifier" >&2; exit 2
+fi
+if [[ -n "$TEAM_ID" && ! "$TEAM_ID" =~ ^[A-Z0-9]{10}$ ]]; then
+  echo "error: invalid development team identifier" >&2; exit 2
+fi
 [[ "$OUTPUT_DIR" == /* ]] || OUTPUT_DIR="$REPO_ROOT/$OUTPUT_DIR"
 "$REPO_ROOT/scripts/check-ios-host.sh"
 for required in \
@@ -93,6 +109,13 @@ args=(publish "$PROJECT" -c Release -r ios-arm64 --self-contained true
   -p:CelesteAppleRepoRoot="$REPO_ROOT"
   -p:ArchiveOnBuild=false -p:UseInterpreter=false -p:RunAOTCompilation=true
   -p:MtouchLink=Full -p:TrimMode=full -p:MtouchUseLlvm=true -p:PublishTrimmed=true)
+[[ -z "$BUNDLE_ID" ]] || args+=(-p:ApplicationId="$BUNDLE_ID")
+if [[ "$SIGNING" == unsigned ]]; then
+  args+=(-p:EnableCodeSigning=false)
+else
+  args+=(-p:EnableCodeSigning=true -p:CodesignKey="Apple Development" -p:CodesignProvision=Automatic -p:ProvisioningType=automatic)
+  [[ -z "$TEAM_ID" ]] || args+=(-p:DevelopmentTeam="$TEAM_ID")
+fi
 if ((VERBOSE)); then
   dotnet "${args[@]}" 2>&1 | tee "$log"
 else
@@ -114,18 +137,19 @@ cp -R "$published" "$OUTPUT_DIR/ipa/Payload/"
 (cd "$OUTPUT_DIR/ipa" && /usr/bin/zip -qry "$OUTPUT_DIR/Celeste-modern-iOS.ipa" Payload)
 phase "Verifying package"
 python3 "$REPO_ROOT/scripts/verify-ios-package.py" --app "$published" --lane device --product celeste \
+  --signing "$SIGNING" \
   --output "$OUTPUT_DIR/package-verification.json"
 
 elapsed="$(( $(date +%s)-start ))"
-python3 - "$OUTPUT_DIR/build-manifest.json" "$OUTPUT_DIR/Celeste-modern-iOS.ipa" "$elapsed" \
+python3 - "$OUTPUT_DIR/build-manifest.json" "$OUTPUT_DIR/Celeste-modern-iOS.ipa" "$elapsed" "$SIGNING" \
   "$REPO_ROOT/artifacts/ios-celeste/current/preparation-result.json" \
   "$REPO_ROOT/artifacts/ios-celeste/current/ios-managed-stage24e1.json" <<'PY'
 import hashlib,json,pathlib,sys
-out,ipa,elapsed,prep,managed=pathlib.Path(sys.argv[1]),pathlib.Path(sys.argv[2]),int(sys.argv[3]),pathlib.Path(sys.argv[4]),pathlib.Path(sys.argv[5])
+out,ipa,elapsed,signing,prep,managed=pathlib.Path(sys.argv[1]),pathlib.Path(sys.argv[2]),int(sys.argv[3]),sys.argv[4],pathlib.Path(sys.argv[5]),pathlib.Path(sys.argv[6])
 p=json.loads(prep.read_text()); m=json.loads(managed.read_text())
 out.write_text(json.dumps({"schemaVersion":1,"product":"Celeste","rid":"ios-arm64","configuration":"Release",
  "profileId":p["profileId"],"canonicalClass":p["canonicalClass"],"fullAOT":True,"fullTrim":True,
- "useInterpreter":False,"jit":False,"elapsedSeconds":elapsed,"ipaBytes":ipa.stat().st_size,
+ "useInterpreter":False,"jit":False,"signing":signing,"elapsedSeconds":elapsed,"ipaBytes":ipa.stat().st_size,
  "ipaSha256":hashlib.sha256(ipa.read_bytes()).hexdigest(),"generated":m["output"]},indent=2,sort_keys=True)+"\n")
 PY
-phase "PASS: experimental modern-iOS Celeste product"
+phase "PASS: modern-iOS Celeste product ($SIGNING)"

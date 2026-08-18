@@ -10,6 +10,7 @@ import pathlib
 import plistlib
 import subprocess
 import sys
+import re
 
 
 BASE = "7c8580c4064268a3a4dccec6b000af1c46b963ac"
@@ -82,7 +83,8 @@ def main() -> int:
     build = read(root, "scripts/build-ios-celeste.sh")
     package = read(root, "scripts/verify-ios-package.py")
     runtime_project = read(root, "modern-ios/CelesteIOSRuntimeHost/CelesteIOSRuntimeHost.csproj")
-    build_identity = read(root, "modern-ios/CelesteIOSFoundation/IOSPortBuildIdentity.cs")
+    version_source = read(root, "modern-ios/IOSPortVersion.props")
+    identity_generator = read(root, "scripts/generate-ios-port-build-identity.py")
     foundation_tests = read(root, "modern-ios/CelesteIOSFoundationTests/Program.cs")
     durability_tests = read(root, "modern-ios/CelesteIOSDurabilityTests/Program.cs")
 
@@ -242,10 +244,11 @@ def main() -> int:
               'menu.Add(new TextMenu.Button("Data & Files").Pressed(OpenDataFiles))' in transform and
               "IOSPortBuildIdentity.DisplayLabel" in transform,
               "Data & Files and visible build identity are in the Apple-specific Options block")
-    c.require('Version = "0.1.1"' in build_identity and "Build = 4" in build_identity and
-              "iOS PORT v0.1.1" in build_identity and
-              "<ApplicationDisplayVersion>0.1.1</ApplicationDisplayVersion>" in runtime_project and
-              "<ApplicationVersion>4</ApplicationVersion>" in runtime_project,
+    c.require("<IOSPortSemanticVersion>0.1.1</IOSPortSemanticVersion>" in version_source and
+              re.search(r"<IOSPortBuildNumber>[1-9][0-9]*</IOSPortBuildNumber>", version_source) is not None and
+              "IOSPortBuildIdentity" in identity_generator and
+              "$(IOSPortSemanticVersion)" in runtime_project and
+              "$(IOSPortBuildNumber)" in runtime_project,
               "iOS port semantic version/build identity is consistent and separate from Celeste 1.4.0.0")
     c.require("IOSDataFilesUI.cs:Celeste/IOSDataFilesUI.cs" in build and
               "IOSStoragePortabilityE1.cs:Celeste/IOSStoragePortabilityE1.cs" in build,
@@ -300,8 +303,9 @@ def main() -> int:
                                "--app", str(args.app.resolve()), "--lane", "device", "--product", "celeste"])
         c.require(True, "full-AOT product package passes E1 verifier")
         built_info = plistlib.loads((args.app.resolve() / "Info.plist").read_bytes())
+        port_build = re.search(r"<IOSPortBuildNumber>([^<]+)</IOSPortBuildNumber>", version_source).group(1)
         c.require(built_info.get("CFBundleShortVersionString") == "0.1.1" and
-                  str(built_info.get("CFBundleVersion")) == "4",
+                  str(built_info.get("CFBundleVersion")) == port_build,
                   "built app carries the visible iOS port version/build identity")
 
     report_path = root / "docs/history/stages/IOS_FILES_DATA_PORTABILITY_STAGE24E1_REPORT.md"
