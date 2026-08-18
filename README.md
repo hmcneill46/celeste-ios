@@ -114,6 +114,11 @@ Everest/modded, XNA, mixed, unknown, and other-version installations are not
 currently supported. The validator rejects them instead of risking a broken
 build.
 
+Contributor note: an [experimental shared Apple static-Everest
+foundation](docs/APPLE_EVEREST_STATIC_AOT.md) exists for tightly bounded,
+pre-analysed full-AOT canaries. It is not general mod support; ordinary users
+should continue to use the vanilla iPhone/iPad and Apple TV builders above.
+
 → **[Choose and obtain supported Celeste files](docs/CELESTE_INPUTS.md)**
 
 ## Step 2 — Get FMOD

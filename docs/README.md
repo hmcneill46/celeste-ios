@@ -34,6 +34,11 @@ Use this page to jump directly to the task or level of detail you need.
   layouts, full-display placement, per-control opacity, optional duplicate
   controls, controller coexistence, seven-bank audio, durable saves, and
   native Files-based save/layout transfer.
+- [Experimental Apple Everest static-AOT architecture](APPLE_EVEREST_STATIC_AOT.md)
+  — contributor documentation for the shared build-time canary foundation;
+  general mod compatibility is not yet supported.
+- [Apple Everest host-tool third-party notices](APPLE_EVEREST_THIRD_PARTY.md)
+  — exact upstream provenance and licensing scope.
 - [Project architecture](STATUS.md#architecture) — host, native, generated
   managed code, audio, persistence, Save Manager, and lifecycle design.
 - [Advanced build and reproducibility](BUILDING.md) — pinned toolchain,

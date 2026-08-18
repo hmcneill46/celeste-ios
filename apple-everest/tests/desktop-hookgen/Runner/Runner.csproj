@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="../Target/Target.csproj" />
+    <Reference Include="MMHOOK_AppleEverestDesktopHookGenTarget">
+      <HintPath>$(AppleEverestDesktopReferenceRoot)/MMHOOK_AppleEverestDesktopHookGenTarget.dll</HintPath>
+      <Private>true</Private>
+    </Reference>
+    <Reference Include="MonoMod.RuntimeDetour">
+      <HintPath>$(AppleEverestHookGenToolRoot)/MonoMod.RuntimeDetour.dll</HintPath>
+      <Private>true</Private>
+    </Reference>
+    <Reference Include="MonoMod.Utils">
+      <HintPath>$(AppleEverestHookGenToolRoot)/MonoMod.Utils.dll</HintPath>
+      <Private>true</Private>
+    </Reference>
+    <Content Include="$(AppleEverestHookGenToolRoot)/*.dll" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+</Project>
