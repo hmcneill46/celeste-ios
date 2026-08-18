@@ -32,6 +32,10 @@ modern-ios/**/obj/
 # modern iOS and tvOS products.
 shared/**/bin/
 shared/**/obj/
+tools/AppleEverestBuilder/**/bin/
+tools/AppleEverestBuilder/**/obj/
+apple-everest/tests/**/bin/
+apple-everest/tests/**/obj/
 
 # User-owned Celeste input, generated/decompiled managed source, build output,
 # diagnostics, and local repository-scoped tool/package state for Stage 3A.
@@ -42,6 +46,11 @@ artifacts/celeste-managed/
 # runtime logs, screenshots, manifests, and device evidence.
 .build/celeste-runtime/
 artifacts/celeste-runtime/
+
+# User-owned Everest inputs, generated static-AOT closures, host SDK/package
+# state, experimental platform products, and physical diagnostic evidence.
+.build/apple-everest/
+artifacts/apple-everest/
 
 # Privacy-safe Stage 11 controller-prompt inventory derived from the user's
 # locked Gui atlas metadata. The report contains no artwork but remains a local

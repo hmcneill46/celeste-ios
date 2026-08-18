@@ -1,0 +1,44 @@
+{
+  "schemaVersion": 1,
+  "profile": "apple-everest-stable-1.6458.0-v1",
+  "everest": {
+    "tag": "stable-1.6458.0",
+    "repository": "https://github.com/EverestAPI/Everest.git",
+    "sha256Commit": "4bbde91b8dbaaddef2ceec75ca0cd6d59b3b8d00"
+  },
+  "dependencies": {
+    "monoModCommit": "dfc30a1506d37fb88a2c2be004f525205f46a24c",
+    "nLuaProvenanceOnlyCommit": "b3524288712743fb2394dcf615d14d0dac3276e2",
+    "yamlDotNetVersion": "16.1.3"
+  },
+  "host": {
+    "dotnetSdk": "8.0.424",
+    "monoModBuildSdk": "9.0.317"
+  },
+  "appleTransformationVersion": 1,
+  "celesteCanonicalClass": "celeste-1.4.0.0-a",
+  "supportedMechanismClasses": [
+    "CONTENT_ONLY",
+    "STATIC_MODULE",
+    "NORMAL_EVENT",
+    "ON_HOOK_SUPPORTED"
+  ],
+  "unsupportedMechanismClasses": [
+    "ON_HOOK_DEFERRED",
+    "IL_HOOK_DEFERRED",
+    "DIRECT_HOOK_DEFERRED",
+    "DYNAMIC_CODE_UNSUPPORTED",
+    "NATIVE_UNSUPPORTED",
+    "LUA_UNSUPPORTED",
+    "PLATFORM_UNSUPPORTED"
+  ],
+  "deviceRuntimeExcludes": [
+    "MonoMod.RuntimeDetour",
+    "MonoMod.Utils.HookGen",
+    "NLua",
+    "KeraLua",
+    "DiscordGameSDK",
+    "Everest.MiniInstaller",
+    "Everest.NETCoreifier"
+  ]
+}

@@ -1,0 +1,6 @@
+- Name: AppleEverestCanaryHookA
+  Version: 1.0.0
+  DLL: Code/CanaryModuleB.cs
+  Dependencies:
+    - Name: AppleEverestCanaryCore
+      Version: 1.0.0

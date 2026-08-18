@@ -7,22 +7,31 @@ TEAM_ID=""
 BUNDLE_ID=""
 DEVICE_ID=""
 OUTPUT="$REPO_ROOT/.build/ios-host/provisioning"
+PROPS_OUTPUT="$REPO_ROOT/modern-ios/Local.Build.props"
 
 usage() {
   cat <<'EOF'
-Usage: scripts/configure-ios-personal-team.sh --team-id ID --bundle-id ID --device-id ID
+Usage: scripts/configure-ios-personal-team.sh --team-id ID --bundle-id ID --device-id ID [options]
 
 Ask Xcode to create/refresh a local iOS development profile, then write the
 ignored modern-ios/Local.Build.props used by the physical foundation build.
 An Apple account must already be signed into Xcode. No private values enter Git.
+
+Options:
+  --output DIR         ignored provisioning-helper root
+  --props-output FILE  ignored generated props destination
 EOF
 }
+
+repo_path() { case "$1" in /*) printf '%s\n' "$1" ;; *) printf '%s/%s\n' "$REPO_ROOT" "$1" ;; esac; }
 
 while (($#)); do
   case "$1" in
     --team-id) [[ $# -ge 2 ]] || exit 2; TEAM_ID="$2"; shift 2 ;;
     --bundle-id) [[ $# -ge 2 ]] || exit 2; BUNDLE_ID="$2"; shift 2 ;;
     --device-id) [[ $# -ge 2 ]] || exit 2; DEVICE_ID="$2"; shift 2 ;;
+    --output) [[ $# -ge 2 ]] || exit 2; OUTPUT="$(repo_path "$2")"; shift 2 ;;
+    --props-output) [[ $# -ge 2 ]] || exit 2; PROPS_OUTPUT="$(repo_path "$2")"; shift 2 ;;
     -h|--help) usage; exit 0 ;;
     *) echo "error: unknown option: $1" >&2; exit 2 ;;
   esac
@@ -30,6 +39,8 @@ done
 [[ "$TEAM_ID" =~ ^[A-Z0-9]{10}$ ]] || { echo "error: invalid team identifier" >&2; exit 2; }
 [[ "$BUNDLE_ID" =~ ^[A-Za-z][A-Za-z0-9-]*(\.[A-Za-z0-9-]+)+$ ]] || { echo "error: invalid bundle identifier" >&2; exit 2; }
 [[ "$DEVICE_ID" =~ ^[A-Fa-f0-9-]{24,40}$ ]] || { echo "error: invalid device identifier" >&2; exit 2; }
+case "$OUTPUT" in "$REPO_ROOT/.build/"*) ;; *) echo "error: helper output must remain below ignored .build" >&2; exit 2 ;; esac
+case "$PROPS_OUTPUT" in "$REPO_ROOT/.build/"*|"$REPO_ROOT/modern-ios/Local.Build.props") ;; *) echo "error: props output must be the normal ignored file or remain below .build" >&2; exit 2 ;; esac
 if [[ -e "$OUTPUT" ]]; then
   [[ -f "$OUTPUT/.ios-provisioning-helper" ]] || { echo "error: refusing unmarked helper root" >&2; exit 1; }
   find "$OUTPUT" -depth -delete
@@ -80,7 +91,8 @@ xcodebuild -project "$OUTPUT/Provisioning.xcodeproj" -scheme Provisioning -confi
     exit 1
   }
 
-python3 - "$REPO_ROOT/modern-ios/Local.Build.props" "$BUNDLE_ID" "$TEAM_ID" <<'PY'
+mkdir -p "$(dirname "$PROPS_OUTPUT")"
+python3 - "$PROPS_OUTPUT" "$BUNDLE_ID" "$TEAM_ID" <<'PY'
 import html, pathlib, sys
 path, bundle, team = pathlib.Path(sys.argv[1]), sys.argv[2], sys.argv[3]
 path.write_text(f'''<Project>
