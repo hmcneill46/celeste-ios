@@ -228,10 +228,13 @@ ui_operation_failure() {
 }
 
 ui_redact() {
-  /usr/bin/sed -E \
+  # Operate bytewise so device names containing curly apostrophes and any
+  # non-UTF-8 diagnostic byte cannot prevent the bounded failure summary.
+  LC_ALL=C /usr/bin/sed -E \
     -e 's#/Users/[^/[:space:]]+#$HOME#g' \
     -e 's#/Volumes/[^/[:space:]]+#$FMOD_SDK_ROOT#g' \
     -e 's#[A-Fa-f0-9]{8}-[A-Fa-f0-9-]{27,}#<DEVICE_ID>#g' \
+    -e 's#[A-Fa-f0-9]{8}-[A-Fa-f0-9]{16}#<DEVICE_ID>#g' \
     -e 's#[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}#<APPLE_ID>#g' \
     -e 's#(^|[^A-Z0-9])[A-Z0-9]{10}([^A-Z0-9]|$)#\1<TEAM_ID>\2#g' \
     -e 's#(com|org|net)\.[A-Za-z0-9.-]+#<BUNDLE_ID>#g'
@@ -249,7 +252,7 @@ ui_write_command_line() {
     printf '+ '
     printf '%q ' "$@"
     printf '\n'
-  } >> "$log"
+  } | ui_redact >> "$log"
 }
 
 ui_free_disk_gib() {

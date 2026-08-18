@@ -176,7 +176,7 @@ test_diagnostic_tail_is_bounded() {
 
 test_redaction() {
   local output="$TEST_ROOT/redacted.txt"
-  printf '%s\n' '/Users/alice/private /Volumes/FMODSDK/secret 12345678-1234-1234-1234-123456789ABC person@example.com ABCDE12345 com.alice.celeste' | ui_redact > "$output"
+  printf '%b\n' '/Users/alice/private /Volumes/FMODSDK/secret 12345678-1234-1234-1234-123456789ABC 00008101-000929023691001E person@example.com ABCDE12345 com.alice.celeste nonutf=\200' | LC_ALL=en_US.UTF-8 ui_redact > "$output"
   assert_contains "$output" '$HOME/private' "home path not redacted" &&
   assert_contains "$output" '$FMOD_SDK_ROOT/secret' "FMOD path not redacted" &&
   assert_contains "$output" '<DEVICE_ID>' "device ID not redacted" &&

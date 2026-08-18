@@ -398,10 +398,12 @@ print("\n".join("\t".join(r) for r in rows))' > "$TEAMS" || true
   DEVICE_ID="$(printf '%s\n' "$row" | cut -f1)"; DEVICE_NAME="$(printf '%s\n' "$row" | cut -f2)"; DEVICE_VERSION="$(printf '%s\n' "$row" | cut -f3)"
   run_logged provision-ios "$REPO_ROOT/scripts/configure-ios-personal-team.sh" --team-id "$TEAM_ID" --bundle-id "$BUNDLE_ID" --device-id "$DEVICE_ID"
   echo "  PASS  Personal Team and $DEVICE_NAME ($DEVICE_VERSION) are ready"
-  python3 - "$CONFIG_FILE" "$BUNDLE_ID" "$TEAM_ID" "$DEVICE_NAME" <<'PY'
+  device_name_count="$(awk -F '\t' -v wanted="$DEVICE_NAME" '$2==wanted {n++} END {print n+0}' "$CONFIG_ROOT/devices-private.tsv")"
+  python3 - "$CONFIG_FILE" "$BUNDLE_ID" "$TEAM_ID" "$DEVICE_NAME" "$device_name_count" <<'PY'
 import json,pathlib,sys
 p=pathlib.Path(sys.argv[1]); d=json.loads(p.read_text()); d.update({'bundleIdentifier':sys.argv[2],'developmentTeam':sys.argv[3]})
-if sys.argv[4]: d['preferredDeviceName']=sys.argv[4]
+if sys.argv[4] and sys.argv[5]=='1': d['preferredDeviceName']=sys.argv[4]
+else: d.pop('preferredDeviceName',None)
 p.write_text(json.dumps(d,indent=2,sort_keys=True)+'\n')
 PY
 fi
@@ -470,8 +472,12 @@ begin_phase 8 "Signing or installing"
 if [[ "$MODE" == install ]]; then
   MLAUNCH="$(find /usr/local/share/dotnet/packs/Microsoft.iOS.Sdk.net10.0_26.5/26.5.10301/tools/bin -maxdepth 1 -type f -name mlaunch -print -quit)"
   [[ -x "$MLAUNCH" ]] || stop_build "The iOS device installer is missing from the accepted workload." "Repair the exact .NET iOS workload 26.5.10301, then rerun."
-  run_logged install-ios-device "$MLAUNCH" --installdev="$FINAL_APP" --devname="$DEVICE_NAME" --install-progress --timeout=180
-  run_logged launch-ios-device "$MLAUNCH" --launchdevbundleid="$BUNDLE_ID" --devname="$DEVICE_NAME" --wait-for-exit=false --wait-for-unlock=true --timeout=60
+  # mlaunch accepts the Xcode device identifier through --devname. Use the
+  # private parser result internally so two devices with the same friendly
+  # name remain unambiguous; the user still selects by a concise number and
+  # never has to paste an identifier.
+  run_logged install-ios-device "$MLAUNCH" --installdev="$FINAL_APP" --devname="$DEVICE_ID" --install-progress --timeout=180
+  run_logged launch-ios-device "$MLAUNCH" --launchdevbundleid="$BUNDLE_ID" --devname="$DEVICE_ID" --wait-for-exit=false --wait-for-unlock=true --timeout=60
   echo "  PASS  Installed and launched on $DEVICE_NAME"
 elif [[ "$MODE" == unsigned ]]; then
   echo "  UNSIGNED: package verified, but it must be signed before installation."

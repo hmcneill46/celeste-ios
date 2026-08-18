@@ -110,6 +110,14 @@ def main() -> int:
               "beginner install never asks for a pasted device identifier")
     c.require("list-ios-devices.py" in builder and "Select an iPhone or iPad" in builder,
               "single/multiple device selection is semantic")
+    c.require('--devname="$DEVICE_ID"' in builder and '--devname="$DEVICE_NAME"' not in builder and
+              "device_name_count" in builder,
+              "duplicate friendly names use the private selected identifier without stale preference")
+    ui_helper = read(root, "scripts/tvos-builder-ui.sh")
+    c.require("LC_ALL=C /usr/bin/sed" in ui_helper and
+              "[A-Fa-f0-9]{8}-[A-Fa-f0-9]{16}" in ui_helper and
+              "} | ui_redact >> \"$log\"" in ui_helper,
+              "non-UTF-8 diagnostics stay bounded and device identifiers never enter command logs")
     c.require("configure-ios-personal-team.sh" in builder and "Apple Development" in low_builder,
               "Personal Team development signing path")
     c.require("Xcode has no Personal Team" in builder and "Developer Mode" in builder and
@@ -122,7 +130,7 @@ def main() -> int:
     c.require("1.10.09 build 97915" in builder + fmod_validator and
               "deviceArchives" in fmod_validator and "fingerprint mismatch" in fmod_validator,
               "exact FMOD release and archive hashes fail early")
-    c.require("Still working:" in read(root, "scripts/tvos-builder-ui.sh") and
+    c.require("Still working:" in ui_helper and
               "CELESTE_IOS_HEARTBEAT_SECONDS" in builder,
               "long operations have elapsed/free-disk heartbeat")
     c.require("ui_diagnostic_tail" in builder and "last-error.txt" in builder and "--verbose" in builder,
