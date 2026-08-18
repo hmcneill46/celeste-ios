@@ -51,6 +51,7 @@ support matrix, and limitations are in [project status](../STATUS.md).
 33. [Stage 24C2 — controller-first iOS gameplay, persistence, and lifecycle](stages/IOS_CONTROLLER_GAMEPLAY_PERSISTENCE_STAGE24C2_REPORT.md)
 34. [Stage 24D2 — production touch controls and iOS input UX](stages/IOS_TOUCH_CONTROLS_STAGE24D2_REPORT.md)
 35. [Stage 24D3 — custom touch layouts and per-input Grab behaviour](stages/IOS_CUSTOM_TOUCH_LAYOUT_STAGE24D3_REPORT.md)
+36. [Stage 24E1 — Files-native data portability and touch-layout sharing](stages/IOS_FILES_DATA_PORTABILITY_STAGE24E1_REPORT.md)
 
 Diagnostic-only stages whose evidence was intentionally kept in ignored local
 build directories are not reconstructed here. The index covers every tracked
