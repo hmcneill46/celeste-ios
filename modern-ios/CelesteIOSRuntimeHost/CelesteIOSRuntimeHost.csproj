@@ -42,7 +42,7 @@
     <ProjectReference Include="..\CelesteIOSFoundation\CelesteIOSFoundation.csproj" />
     <BundleResource Include="PrivacyInfo.xcprivacy" LogicalName="PrivacyInfo.xcprivacy" />
     <ImageAsset Include="Assets.xcassets\**\*" />
-    <ImageAsset Include="$(RepoRoot)\celestemeow\Assets.xcassets\AppIcon.appiconset\Icon1024.png">
+    <ImageAsset Include="$(IOSHostStageRoot)\artwork\AppIcon1024.png">
       <Link>Assets.xcassets\AppIcon.appiconset\AppIcon1024.png</Link>
     </ImageAsset>
   </ItemGroup>

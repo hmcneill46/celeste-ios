@@ -50,8 +50,12 @@ fi
 temp="$(mktemp -d "$(dirname "$STAGE_DIR")/.ios-host.prepare.XXXXXX")"
 cleanup() { [[ ! -e "$temp" ]] || find "$temp" -depth -delete; }
 trap cleanup EXIT
-mkdir -p "$temp/native" "$temp/managed" "$temp/fna"
+mkdir -p "$temp/native" "$temp/managed" "$temp/fna" "$temp/artwork"
 touch "$temp/.ios-host-stage"
+
+xcrun swift "$REPO_ROOT/scripts/generate-ios-app-icon.swift" \
+  --input "$REPO_ROOT/celestemeow/Assets.xcassets/AppIcon.appiconset/Icon1024.png" \
+  --output "$temp/artwork/AppIcon1024.png"
 
 for component in SDL2 FNA3D FAudio Theorafile ApplePlatformStubs; do
   cp -R "$ARTIFACT_DIR/$component.xcframework" "$temp/native/"
@@ -93,6 +97,7 @@ pathlib.Path(sys.argv[1]).write_text(json.dumps({
     "simulatorAudioPolicy": "explicit-no-fmod",
     "touchIdentityPolicy": "stable-sdl-finger-id-v1",
     "deviceAudioPolicy": "external-fmod-1.10.09-foundation-smoke",
+    "appIconPolicy": "opaque-black-background-v1",
 }, indent=2, sort_keys=True) + "\n")
 PY
 

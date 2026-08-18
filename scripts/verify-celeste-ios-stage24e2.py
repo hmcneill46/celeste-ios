@@ -76,6 +76,7 @@ def main() -> int:
     runtime_project = read(root, "modern-ios/CelesteIOSRuntimeHost/CelesteIOSRuntimeHost.csproj")
     foundation_project = read(root, "modern-ios/CelesteIOSFoundation/CelesteIOSFoundation.csproj")
     identity_generator = read(root, "scripts/generate-ios-port-build-identity.py")
+    icon_generator = read(root, "scripts/generate-ios-app-icon.swift")
     readme = read(root, "README.md")
     guide = read(root, "docs/IOS_BUILDING.md")
     status = read(root, "docs/STATUS.md")
@@ -102,6 +103,34 @@ def main() -> int:
               "visible label generator includes semantic version and build")
     c.require(not (root / "modern-ios/CelesteIOSFoundation/IOSPortBuildIdentity.cs").exists(),
               "no independently maintained identity source remains")
+    c.require("opaque-black-background-v1" in read(root, "scripts/prepare-ios-foundation.sh") and
+              "IOSHostStageRoot)\\artwork\\AppIcon1024.png" in runtime_project,
+              "one prepared opaque-black icon feeds iPhone and iPad")
+    c.require("blackBackground: true" in icon_generator and
+              "verifyOpaqueBlackCorners" in icon_generator and
+              "app icon contains a non-opaque pixel" in icon_generator,
+              "transparent upstream icon is deterministically composited and verified")
+    c.require("generate-ios-app-icon.swift" in package and "AppIcon60x60@2x.png" in package and
+              "AppIcon76x76@2x~ipad.png" in package,
+              "package verifier checks compiled phone/tablet icon treatment")
+    with tempfile.TemporaryDirectory() as icon_temp_text:
+        generated_icon = pathlib.Path(icon_temp_text) / "AppIcon1024.png"
+        subprocess.check_call([
+            "xcrun", "swift", str(root / "scripts/generate-ios-app-icon.swift"),
+            "--input", str(root / "celestemeow/Assets.xcassets/AppIcon.appiconset/Icon1024.png"),
+            "--output", str(generated_icon),
+        ], stdout=subprocess.DEVNULL)
+        subprocess.check_call([
+            "xcrun", "swift", str(root / "scripts/generate-ios-app-icon.swift"),
+            "--verify", str(generated_icon),
+        ], stdout=subprocess.DEVNULL)
+        icon_properties = subprocess.check_output(
+            ["sips", "-g", "hasAlpha", "-g", "pixelWidth", "-g", "pixelHeight", str(generated_icon)],
+            text=True,
+        )
+        c.require("hasAlpha: no" in icon_properties and
+                  "pixelWidth: 1024" in icon_properties and "pixelHeight: 1024" in icon_properties,
+                  "generated master icon is a verified alpha-free 1024-square PNG")
 
     for token in ("--doctor", "--unsigned", "--signed", "--install", "--game-root", "--fmod-root",
                   "--non-interactive", "--clean", "--verbose", "--reset-config"):

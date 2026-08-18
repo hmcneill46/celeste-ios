@@ -59,6 +59,15 @@ def main() -> int:
 
     require(info.get("MinimumOSVersion") == "15.0", "bundle minimum iOS is not 15.0")
     require(info.get("UIDeviceFamily") == [1, 2], "bundle does not support exactly iPhone and iPad")
+    icon_files = [app / "AppIcon60x60@2x.png", app / "AppIcon76x76@2x~ipad.png"]
+    require(all(path.is_file() for path in icon_files), "compiled iPhone/iPad app icons are absent")
+    for icon in icon_files:
+        icon_check = subprocess.run([
+            "xcrun", "swift", str(REPO_ROOT / "scripts/generate-ios-app-icon.swift"),
+            "--verify", str(icon),
+        ], stdout=subprocess.DEVNULL, stderr=subprocess.PIPE, text=True)
+        require(icon_check.returncode == 0,
+                f"compiled app icon is not opaque with black corners: {icon.name}")
     orientations = set(info.get("UISupportedInterfaceOrientations", []))
     require(orientations == {"UIInterfaceOrientationLandscapeLeft", "UIInterfaceOrientationLandscapeRight"},
             "orientation policy is not landscape-only")
