@@ -35,6 +35,11 @@ public readonly record struct CelesteFileCommitResult(
     bool PreviousGoodUpdated,
     bool CleanupSucceeded);
 
+public readonly record struct CelesteFileRestoreResult(
+    bool Restored,
+    bool Reversible,
+    bool CleanupSucceeded);
+
 /// <summary>
 /// Shared high-level durability policy for ordinary Celeste XML files.
 /// Atomic replacement and path ownership remain responsibilities of the
@@ -152,6 +157,66 @@ public sealed class CelesteFileDurabilityStore
         {
             byte[]? previousGood = TryRead(logicalName, CelesteFileCopy.PreviousGood);
             return IsValid(logicalName, previousGood) ? previousGood : null;
+        }
+    }
+
+    /// <summary>
+    /// Atomically installs the validated previous-good bytes and verifies the
+    /// restored primary before attempting to rotate a valid former primary
+    /// into the undo position. The recovery point is therefore never destroyed
+    /// before the restore itself is known durable. When the final rotation also
+    /// succeeds, repeating Restore Previous naturally performs an undo.
+    /// </summary>
+    public CelesteFileRestoreResult RestorePreviousGood(string logicalName)
+    {
+        ValidateLogicalName(logicalName);
+        lock (gate)
+        {
+            byte[]? previousGood = ReadForMutation(logicalName, CelesteFileCopy.PreviousGood);
+            if (!IsValid(logicalName, previousGood))
+                return new CelesteFileRestoreResult(false, false, TryCleanup(logicalName));
+
+            byte[]? primary = ReadForMutation(logicalName, CelesteFileCopy.Primary);
+            if (IsValid(logicalName, primary) && primary!.AsSpan().SequenceEqual(previousGood))
+                return new CelesteFileRestoreResult(false, false, TryCleanup(logicalName));
+
+            bool cleanupSucceeded = TryCleanup(logicalName);
+            try
+            {
+                backend.WriteAtomic(logicalName, CelesteFileCopy.Primary, previousGood!);
+            }
+            catch (Exception exception) when (IsStorageFailure(exception))
+            {
+                byte[]? uncertain = TryRead(logicalName, CelesteFileCopy.Primary);
+                if (!IsValid(logicalName, uncertain) ||
+                    !uncertain!.AsSpan().SequenceEqual(previousGood))
+                    throw;
+                cleanupSucceeded = false;
+            }
+
+            byte[] restored = RequiredValidRead(logicalName, CelesteFileCopy.Primary);
+            if (!restored.AsSpan().SequenceEqual(previousGood))
+                throw new IOException("Restoring Celeste state did not preserve the exact previous-good bytes.");
+
+            // Rotate the formerly current file only after the restore itself is
+            // proven durable. Failure here cannot invalidate the restored
+            // primary; it merely makes the operation non-reversible.
+            bool reversible = IsValid(logicalName, primary);
+            if (reversible)
+            {
+                try
+                {
+                    WriteAndVerify(logicalName, CelesteFileCopy.PreviousGood, primary!);
+                }
+                catch (Exception exception) when (IsStorageFailure(exception))
+                {
+                    reversible = false;
+                    cleanupSucceeded = false;
+                }
+            }
+
+            cleanupSucceeded &= TryCleanup(logicalName);
+            return new CelesteFileRestoreResult(true, reversible, cleanupSucceeded);
         }
     }
 

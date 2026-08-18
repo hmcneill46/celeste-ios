@@ -1,3 +1,4 @@
+using CelesteIOSFoundation;
 using Microsoft.Xna.Framework;
 using Monocle;
 
@@ -41,11 +42,79 @@ public sealed class IOSTouchControlsUI : TextMenu
         Add(directional);
         Add(new SubHeader("DIRECTIONAL HAPTICS PULSE ONLY WHEN THE MOVEMENT DIRECTION CHANGES", false));
         Add(new SubHeader("LAYOUT"));
+        SubHeader status = new("Imported layouts open in the editor before anything is saved", false);
         Add(new Button("Edit Layout").Pressed(delegate
         {
             Focused = false;
             IOSTouchControls.BeginLayoutEditor(delegate { Focused = true; });
         }));
+        Add(new Button("Export Layout...").Pressed(delegate
+        {
+            Focused = false;
+            byte[] document = IOSTouchControls.ExportLayoutDocument();
+            IOSPortableDocument portable = new(
+                "Celeste-Touch-Layout.celestetouch", IOSPortableDocumentKind.TouchLayout, document);
+            if (!IOSFilePortabilityBridge.RequestExport(new[] { portable }, false, delegate(bool success, string error)
+            {
+                Focused = true;
+                status.Title = error ?? (success ? "Touch layout exported." : "Export cancelled.");
+                RecalculateSize();
+            }))
+            {
+                Focused = true;
+                status.Title = "Files is unavailable.";
+            }
+        }));
+        Add(new Button("Share Layout...").Pressed(delegate
+        {
+            Focused = false;
+            byte[] document = IOSTouchControls.ExportLayoutDocument();
+            IOSPortableDocument portable = new(
+                "Celeste-Touch-Layout.celestetouch", IOSPortableDocumentKind.TouchLayout, document);
+            if (!IOSFilePortabilityBridge.RequestExport(new[] { portable }, true, delegate(bool success, string error)
+            {
+                Focused = true;
+                status.Title = error ?? (success ? "Touch layout shared." : "Share cancelled.");
+                RecalculateSize();
+            }))
+            {
+                Focused = true;
+                status.Title = "Sharing is unavailable.";
+            }
+        }));
+        Add(new Button("Import Layout...").Pressed(delegate
+        {
+            Focused = false;
+            if (!IOSFilePortabilityBridge.RequestImport(
+                IOSPortableDocumentKind.TouchLayout, TouchLayoutShareDocument.MaximumBytes, delegate(IOSExternalReadResult result)
+                {
+                    if (result.Cancelled)
+                    {
+                        Focused = true;
+                        status.Title = "Import cancelled.";
+                    }
+                    else if (result.Data == null)
+                    {
+                        Focused = true;
+                        status.Title = result.ErrorMessage ?? "The selected layout could not be read.";
+                    }
+                    else if (!IOSTouchControls.BeginImportedLayoutPreview(result.Data, delegate
+                    {
+                        Focused = true;
+                        status.Title = "Touch layout preview closed.";
+                    }, out string error))
+                    {
+                        Focused = true;
+                        status.Title = error;
+                    }
+                    RecalculateSize();
+                }))
+            {
+                Focused = true;
+                status.Title = "Files is unavailable.";
+            }
+        }));
+        Add(status);
         Button reset = new("Reset Touch Controls");
         reset.Pressed(delegate
         {

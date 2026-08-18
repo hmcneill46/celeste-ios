@@ -83,11 +83,51 @@ public static partial class IOSTouchControls
     {
         EnsureInitialized();
         if (layoutEditor != null) return;
+        BeginLayoutEditor(layoutProfile, closed);
+    }
+
+    public static byte[] ExportLayoutDocument()
+    {
+        EnsureInitialized();
+        SaveLayout();
+        Defaults.Synchronize();
+        string phone = presentation.IsPad ? Defaults.StringForKey(PhoneLayoutKey) : TouchLayoutCodec.Encode(layoutProfile);
+        string tablet = presentation.IsPad ? TouchLayoutCodec.Encode(layoutProfile) : Defaults.StringForKey(TabletLayoutKey);
+        if (!TouchLayoutCodec.TryDecode(phone, out _)) phone = null;
+        if (!TouchLayoutCodec.TryDecode(tablet, out _)) tablet = null;
+        return new TouchLayoutShareDocument(phone, tablet).Encode();
+    }
+
+    public static bool BeginImportedLayoutPreview(byte[] payload, Action closed, out string error)
+    {
+        EnsureInitialized();
+        error = "This touch layout isn't valid.";
+        if (layoutEditor != null || !TouchLayoutShareDocument.TryDecode(payload, out TouchLayoutShareDocument document))
+            return false;
+        string encoded = presentation.IsPad ? document.TabletProfile : document.PhoneProfile;
+        if (encoded is null)
+        {
+            error = presentation.IsPad
+                ? "This file doesn't contain a Tablet layout."
+                : "This file doesn't contain a Phone layout.";
+            return false;
+        }
+        if (!TouchLayoutCodec.TryDecode(encoded, out TouchLayoutProfile imported) ||
+            !TouchLayoutPolicy.Validate(imported, UsableWidth(), UsableHeight()).IsValid)
+            return false;
+        BeginLayoutEditor(imported, closed);
+        error = null;
+        return true;
+    }
+
+    private static void BeginLayoutEditor(TouchLayoutProfile working, Action closed)
+    {
         state?.Reset();
         grabArbiter?.ResetTransient();
         layoutEditor = new TouchLayoutEditorSession(layoutProfile, factoryProfile);
+        if (working != layoutProfile) layoutEditor.Change(working);
         layoutEditorClosed = closed;
-        selectedControl = layoutProfile.MovementMode == TouchMovementMode.Fixed
+        selectedControl = working.MovementMode == TouchMovementMode.Fixed
             ? TouchLayoutControl.Movement : TouchLayoutControl.FloatingRegion;
         selectedExtraIndex = -1;
         editorFinger = editorCommandOwner = -1;

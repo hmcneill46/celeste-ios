@@ -9,8 +9,9 @@
     <TargetPlatformMinVersion>15.0</TargetPlatformMinVersion>
     <ApplicationId Condition="'$(ApplicationId)' == ''">io.github.roootthefox.celeste.ios.foundation</ApplicationId>
     <ApplicationTitle>Celeste iOS Foundation</ApplicationTitle>
-    <ApplicationDisplayVersion>0.1</ApplicationDisplayVersion>
-    <ApplicationVersion>1</ApplicationVersion>
+    <!-- Modern-iOS port identity; Celeste's game/content version remains 1.4.0.0. -->
+    <ApplicationDisplayVersion>0.1.1</ApplicationDisplayVersion>
+    <ApplicationVersion>4</ApplicationVersion>
     <AppIcon>AppIcon</AppIcon>
     <TrimMode Condition="'$(Configuration)' == 'Release'">full</TrimMode>
     <MtouchLink Condition="'$(Configuration)' == 'Release'">Full</MtouchLink>

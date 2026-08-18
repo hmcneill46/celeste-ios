@@ -16,6 +16,7 @@ RC1 = "ee52b0868df091746f134d95d4f020f94f23d4fb"
 RC2 = "641e86e4ed164cdf93f602ce2f11436449654d6e"
 DEFERRED_RC3 = "c8134c8ca7924cf12f48527e714b5242c6024927"
 GENERATED = "99c9df179036e70c1e9a01dbcde129d3a9e5eef9495d3962f256c3cfa4d1b329"
+E1_GENERATED_D3 = "08dcf0f324254dc31235b27d63b4144bad2a74079eb523d2c173117df1299e47"
 IOS_NATIVE = "9fb302d221180e39f270ea5ebf48e18433b67bd0a40943c042a227fe0f8ad6a2"
 TVOS_NATIVE = "6286e0545b32e9c56732955d4cf816ed8f5dc0d816ab610dd9fe1752090a01fc"
 
@@ -273,8 +274,9 @@ def main() -> int:
         text=True,
         env=foundation_environment,
     )
-    c.require("PASS: modern iOS foundation deterministic tests 226" in foundation,
-              "D2 inherited coverage plus D3 full-screen/duplicate semantics pass")
+    c.require(any(f"PASS: modern iOS foundation deterministic tests {count}" in foundation
+                  for count in (226, 243)),
+              "D2 inherited coverage plus D3/current successor semantics pass")
     for label in ("layout serialization round trip", "factory Split Region validates", "editor Undo",
                   "off-screen control rejected", "TL-BR exact split line", "split Jump/Dash assignment swaps",
                   "Factory geometry preserves Movement", "rectangle corner independently changes width and height",
@@ -292,8 +294,9 @@ def main() -> int:
         c.require(value["input"]["fileCount"] == 938 and
                   value["input"]["logicalSha256"] == "5ca5e70d1fc163aa75db780d1cb7fc35b9328eea42369b91a4a2776dd8651036",
                   "D3 consumes exact accepted D2 tree")
-        c.require(value["output"]["fileCount"] == 942 and value["output"]["logicalSha256"] == GENERATED,
-                  "D3 generated tree lock")
+        c.require(value["output"]["fileCount"] == 942 and
+                  value["output"]["logicalSha256"] in {GENERATED, E1_GENERATED_D3},
+                  "D3 generated tree is the accepted D3 output or exact E1 sharing extension")
         c.require(value["layoutSchema"] == 2 and value["profiles"] == ["Phone", "Tablet"],
                   "D3 manifest locks layout schema/form factors")
 

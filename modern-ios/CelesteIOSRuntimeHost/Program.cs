@@ -45,6 +45,7 @@ internal static class Program
 #if IOS_CELESTE_PRODUCT
             IOSCelesteRuntimeContext.Prepare();
             using IOSCelesteLifecycle lifecycle = new();
+            using IOSFilePortabilityCoordinator filePortability = new();
             RuntimeLog.Info("celeste-run-loop-enter; fna-game-count=1; celeste-runtime-count=1; fmod-owner=Celeste");
             global::Celeste.Celeste.Run(Array.Empty<string>());
             AppleRuntimeBridge.ThrowIfFatal();

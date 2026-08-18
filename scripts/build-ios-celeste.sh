@@ -42,7 +42,8 @@ for required in \
   "$REPO_ROOT/artifacts/ios-celeste/current/ios-managed.json" \
   "$REPO_ROOT/artifacts/ios-celeste/current/ios-managed-stage24c2.json" \
   "$REPO_ROOT/artifacts/ios-celeste/current/ios-managed-stage24d2.json" \
-  "$REPO_ROOT/artifacts/ios-celeste/current/ios-managed-stage24d3.json"; do
+  "$REPO_ROOT/artifacts/ios-celeste/current/ios-managed-stage24d3.json" \
+  "$REPO_ROOT/artifacts/ios-celeste/current/ios-managed-stage24e1.json"; do
   [[ -f "$required" ]] || { echo "error: prepared iOS Celeste input is incomplete" >&2; exit 1; }
 done
 # Generated Celeste is intentionally ignored and prepared as a separate step.
@@ -51,7 +52,9 @@ done
 for generated_pair in \
   "managed/templates/IOSSourceGrabModeOption.cs:Celeste/IOSSourceGrabModeOption.cs" \
   "managed/templates/IOSTouchControlsD3.cs:Celeste/IOSTouchControlsD3.cs" \
-  "managed/templates/IOSTouchControlsUID3.cs:Celeste/IOSTouchControlsUI.cs"; do
+  "managed/templates/IOSTouchControlsUID3.cs:Celeste/IOSTouchControlsUI.cs" \
+  "managed/templates/IOSDataFilesUI.cs:Celeste/IOSDataFilesUI.cs" \
+  "managed/templates/IOSStoragePortabilityE1.cs:Celeste/IOSStoragePortabilityE1.cs"; do
   template="${generated_pair%%:*}"
   generated="${generated_pair#*:}"
   if ! cmp -s "$REPO_ROOT/$template" "$REPO_ROOT/.build/celeste-ios/current/managed/$generated"; then
@@ -116,7 +119,7 @@ python3 "$REPO_ROOT/scripts/verify-ios-package.py" --app "$published" --lane dev
 elapsed="$(( $(date +%s)-start ))"
 python3 - "$OUTPUT_DIR/build-manifest.json" "$OUTPUT_DIR/Celeste-modern-iOS.ipa" "$elapsed" \
   "$REPO_ROOT/artifacts/ios-celeste/current/preparation-result.json" \
-  "$REPO_ROOT/artifacts/ios-celeste/current/ios-managed-stage24d3.json" <<'PY'
+  "$REPO_ROOT/artifacts/ios-celeste/current/ios-managed-stage24e1.json" <<'PY'
 import hashlib,json,pathlib,sys
 out,ipa,elapsed,prep,managed=pathlib.Path(sys.argv[1]),pathlib.Path(sys.argv[2]),int(sys.argv[3]),pathlib.Path(sys.argv[4]),pathlib.Path(sys.argv[5])
 p=json.loads(prep.read_text()); m=json.loads(managed.read_text())

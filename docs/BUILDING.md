@@ -598,7 +598,13 @@ controls cover every distinct Celeste action not already represented by an
 existing semantic alias, including Crouch Dash and Quick Restart. Phone and Tablet store
 separate layouts; Grab Mode is stored per active Touch/Controller/Keyboard
 source. This remains an experimental developer lane rather than a finished
-public iOS build journey.
+public iOS build journey. **Options > Data & Files** uses native document
+pickers/share sheets for explicit canonical `.celeste` copies, and **Options >
+Touch Controls** can export/import `.celestetouch` layouts through a validated
+D3 editor preview. The authoritative saves still live in private Application
+Support; choosing iCloud Drive or another provider in Files does not enable
+automatic game cloud sync. No iOS LAN Save Manager, iCloud entitlement, or
+file-provider dependency is added.
 
 The iOS scripts keep proprietary/generated material under ignored `.build/`
 and `artifacts/` roots and do not use the private GitHub Actions cloud builder.

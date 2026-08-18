@@ -43,6 +43,30 @@ try
     Check(!unchanged.Changed && !unchanged.PreviousGoodUpdated, "identical Settings write no-op");
     Check(backend.AtomicWriteCount == 3, "identical write performs no atomic replacement");
 
+    CelesteFileRestoreResult restored = store.RestorePreviousGood("settings");
+    Check(restored.Restored && restored.Reversible, "previous-good restore is reversible");
+    Check(store.Load("settings").Data!.SequenceEqual(Settings(1)), "restore installs exact previous bytes");
+    Check(store.LoadPreviousGood("settings")!.SequenceEqual(Settings(2)), "restore rotates current into previous-good");
+    CelesteFileRestoreResult undone = store.RestorePreviousGood("settings");
+    Check(undone.Restored && undone.Reversible, "second restore acts as undo");
+    Check(store.Load("settings").Data!.SequenceEqual(Settings(2)), "restore undo recovers original current bytes");
+    store.Delete("settings");
+    Check(!store.RestorePreviousGood("settings").Restored, "missing previous-good restore is a no-op");
+    store.Commit("settings", Settings(2));
+    store.Commit("settings", Settings(3));
+    backend.NextFault = TestFault.PrimaryWriteFailure;
+    try { store.RestorePreviousGood("settings"); } catch (IOException) { passed++; }
+    Check(store.Load("settings").Data!.SequenceEqual(Settings(3)),
+        "restore primary failure preserves current primary");
+    Check(store.LoadPreviousGood("settings")!.SequenceEqual(Settings(2)),
+        "restore primary failure preserves previous-good recovery point");
+    backend.NextFault = TestFault.BackupWriteFailure;
+    CelesteFileRestoreResult nonReversibleRestore = store.RestorePreviousGood("settings");
+    Check(nonReversibleRestore.Restored && !nonReversibleRestore.Reversible,
+        "restore remains successful when only undo rotation fails");
+    Check(store.Load("settings").Data!.SequenceEqual(Settings(2)),
+        "restore verifies primary before attempting undo rotation");
+
     foreach (string slot in new[] { "0", "1", "2" })
     {
         int value = int.Parse(slot) + 10;
@@ -233,7 +257,8 @@ internal sealed class TestBackend : ICelesteFileDurabilityBackend
             NextFault = TestFault.None;
             throw new IOException("Injected post-commit cleanup failure.");
         }
-        if (fault is not TestFault.PrimaryWriteFailure and not TestFault.AfterCommitCleanupFailure)
+        if (fault is not TestFault.PrimaryWriteFailure and not TestFault.AfterCommitCleanupFailure &&
+            !(fault == TestFault.BackupWriteFailure && copy == CelesteFileCopy.Primary))
             NextFault = TestFault.None;
     }
 

@@ -30,5 +30,27 @@
     </dict>
   </dict>
   <key>UILaunchScreen</key><dict/>
+  <!-- Celeste's existing .celeste format is imported, not claimed as a
+       project-owned format. The touch-layout document is project-owned. -->
+  <key>UTImportedTypeDeclarations</key>
+  <array>
+    <dict>
+      <key>UTTypeIdentifier</key><string>io.github.roootthefox.celeste.save-data</string>
+      <key>UTTypeDescription</key><string>Celeste Save or Settings</string>
+      <key>UTTypeConformsTo</key><array><string>public.xml</string><string>public.content</string></array>
+      <key>UTTypeTagSpecification</key>
+      <dict><key>public.filename-extension</key><array><string>celeste</string></array></dict>
+    </dict>
+  </array>
+  <key>UTExportedTypeDeclarations</key>
+  <array>
+    <dict>
+      <key>UTTypeIdentifier</key><string>io.github.roootthefox.celeste.touch-layout</string>
+      <key>UTTypeDescription</key><string>Celeste Touch Layout</string>
+      <key>UTTypeConformsTo</key><array><string>public.json</string><string>public.content</string></array>
+      <key>UTTypeTagSpecification</key>
+      <dict><key>public.filename-extension</key><array><string>celestetouch</string></array></dict>
+    </dict>
+  </array>
 </dict>
 </plist>

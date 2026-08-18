@@ -265,8 +265,13 @@ Phone/Tablet layouts, edge-flush full-display placement, per-control opacity,
 split-action and floating-movement regions, optional duplicated/niche controls
 including Quick Restart, a dedicated
 Journal/Special control, and source-aware Grab modes. Saves use durable
-ordinary files and audio uses the real seven FMOD banks. It is still an
-experimental developer build rather than a finished public iOS release.
+ordinary files and audio uses the real seven FMOD banks. **Options > Data &
+Files** can export, share, validate, import, and restore ordinary `.celeste`
+copies through native iOS Files UI, while custom `.celestetouch` layouts can
+be shared from Touch Controls and previewed before import. Live saves stay
+private in Application Support; this is explicit user-directed transfer, not
+automatic cloud sync. It is still an experimental developer build rather than
+a finished public iOS release.
 
 ## Project history and release candidates
 

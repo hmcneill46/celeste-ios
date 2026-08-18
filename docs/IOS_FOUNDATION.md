@@ -18,7 +18,7 @@ the legacy Xamarin application host.
 
 ## Current experimental Celeste lane
 
-Stages 24C1–24D3 keep one canonical input/decompilation/transformation pipeline for
+Stages 24C1–24E1 keep one canonical input/decompilation/transformation pipeline for
 iOS, iPadOS, and tvOS. It reuses the locked nine-profile validator, canonical
 source and Content, shared Apple-safe transforms, serializers, AOT inventory,
 legacy XNB registration, and bundle reader. A small final iOS transform removes
@@ -32,7 +32,8 @@ The physical product has one SDL handoff, one FNA `Game`, one Celeste runtime,
 and one Celeste-owned FMOD Studio/low-level runtime. It renders through direct
 FNA3D Metal and supports normal gameplay/death/respawn/lifecycle/save flows by
 touch alone or with a physical controller. It intentionally contains no Save
-Manager/LAN listener, tvOS Performance HUD, JIT, interpreter, or Xamarin host.
+Manager/LAN listener, tvOS Performance HUD, JIT, interpreter, or Xamarin host;
+iOS data transfer instead uses explicit native Files/share UI.
 
 ## Touch controls
 
@@ -102,6 +103,55 @@ the Ring/Silent switch does not mute Celeste. On foreground and after audio
 route/interruption changes, the iOS host reactivates that same OS audio session
 before resuming Celeste's existing FMOD root bus. It does not create or
 reinitialize a second FMOD system.
+
+## Data & Files and layout sharing
+
+The iOS-only **Options > Data & Files** menu manages logical state rather than
+showing a sandbox directory. Save slots 1–3 and Settings can be exported to
+Files or shared as exact ordinary `.celeste` bytes. A root import validates the
+selected SaveData and then asks for its destination slot; a per-file import
+already knows its target. Existing destinations require an explicit Replace
+confirmation. Settings and SaveData use their separate canonical Celeste
+serializers, so one cannot be silently installed as the other.
+
+The bottom of Options displays the modern iOS port's own semantic version and
+monotonic bundle build number. This identifies exactly which port revision is
+installed without replacing or changing Celeste's separate 1.4.0.0 game/content
+version.
+
+External documents are read as bounded copies through
+`UIDocumentPickerViewController`, security-scoped access where required, and
+`NSFileCoordinator`. No external URL or persistent bookmark becomes save
+authority. Accepted bytes commit through the same single-writer Foundation
+atomic durability store and exact readback used by gameplay. Imports and
+manual previous-good restores are blocked while a Level is active or `UserIO`
+is saving; export/share remain harmless copy operations. A successful restore
+installs and verifies the prior valid copy before rotating the formerly current
+file into the next undo position.
+
+**Export All Saves** presents all existing Settings/slot documents together in
+the native picker rather than inventing an archive. Temporary local export
+copies live under an app-private unique directory and are removed after
+completion or cancellation. The live `Saves/` and `Backups/` trees remain in
+Application Support and neither `UIFileSharingEnabled` nor an iCloud/App Group
+entitlement is enabled.
+
+Touch Controls separately exports or shares deterministic JSON with the
+`.celestetouch` extension. The document may carry the stored Phone and Tablet
+D3 geometry profiles; the receiving device selects its matching form factor,
+passes it through the exact D3 codec/structural validator, and opens it as the
+transactional editor working copy. **Done** commits and **Cancel** preserves
+the local profile. Grab source modes, touch visibility, global haptics,
+Settings, saves, and device information do not travel with a layout.
+
+The app declares `.celeste` as an imported existing XML/content type and
+`.celestetouch` as its project-owned JSON/content type. It does not register
+document ownership/Open-In in E1 because cold/warm handoff would need a new
+queued safe-state lifecycle; importing from the in-product picker is the
+smaller proven flow. A single backup archive is likewise deferred because the
+four canonical documents already export cleanly without a second format.
+Choosing On My iPhone/iPad, iCloud Drive, AirDrop, or another provider in the
+system UI is an explicit user action—not automatic cloud save sync.
 
 ## Accepted toolchain
 
@@ -241,7 +291,7 @@ iCloud synchronization feature.
 
 ## Deliberately deferred
 
-- save migration and document import
+- Open-In/cold-document handoff and an optional single-file backup archive
 - Save Manager, QR pairing, or graceful Quit on iOS
 - real-Celeste Simulator execution (FMOD 1.10.09 has no arm64 Simulator slice)
 - Everest/mod support

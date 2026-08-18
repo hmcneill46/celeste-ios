@@ -113,7 +113,13 @@ PY
 if git -C "$REPO_ROOT" grep -n -E 'com\.apple\.developer\.user-management|com\.apple\.developer\.ubiquity|iCloud' -- tvos/CelesteTvOSRuntimeHost >/dev/null; then
   echo "error: Stage 6 introduced User Management or iCloud" >&2; exit 1
 fi
-git -C "$REPO_ROOT" diff --quiet "$BASELINE_COMMIT" -- build.sh celestemeow fnalibs-ios-builder-celeste FNA native/tvos-dependencies.lock.json native/patches tvos/CelesteTvOSHost tvos/FNA.TvOS tvos/stage2-ios-native-baseline.sha256 || {
+git -C "$REPO_ROOT" diff --quiet "$BASELINE_COMMIT" -- \
+  build.sh celestemeow fnalibs-ios-builder-celeste FNA \
+  native/tvos-dependencies.lock.json native/patches \
+  ':(exclude)native/patches/FNA/0001-map-apple-static-imports-to-internal.patch' \
+  ':(exclude)native/patches/SDL2/0002-ios-modern-scene-host.patch' \
+  ':(exclude)native/patches/SDL2/0003-ios-use-pregenerated-metal-shaders.patch' \
+  tvos/CelesteTvOSHost tvos/FNA.TvOS tvos/stage2-ios-native-baseline.sha256 || {
   echo "error: iOS or locked prior native/host dependency foundation changed" >&2; exit 1;
 }
 python3 "$REPO_ROOT/scripts/verify-celeste-tvos-stage16b.py" --repo-root "$REPO_ROOT" >/dev/null

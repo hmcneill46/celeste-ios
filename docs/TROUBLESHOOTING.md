@@ -794,6 +794,35 @@ Invert, or Toggle for only that source. If movement feedback is unwanted, leave
 **Directional Haptics** Off; when enabled it pulses only on initial direction
 acquisition and direction-sector changes, not continuously while held.
 
+## Experimental iOS Files import/export fails
+
+**Symptom**
+
+**Options > Data & Files** cannot read or export a document, rejects a save,
+or disables an import/restore while a chapter is active.
+
+**Fix**
+
+Return to the main menu before importing or restoring; E1 deliberately never
+replaces live `SaveData` behind an active Level or while `UserIO` is saving.
+Export and Share remain copy operations. Choose one ordinary `.celeste` file
+for import and let Celeste inspect its contents: a SaveData file cannot be
+installed as Settings, Settings cannot become a slot, malformed/empty/oversized
+documents are rejected, and an existing destination requires confirmation.
+
+Files-provider access is coordinated by the system picker. If a provider is
+offline, first make the document locally available in Files and retry.
+Cancelling the picker/share sheet changes nothing. Temporary export copies are
+removed after the system operation; the authoritative files remain under
+private Application Support and are not exposed through Documents/file sharing.
+
+Touch layouts use the separate `.celestetouch` extension. Import opens the
+current Phone or Tablet profile in the transactional layout editor; **Done**
+commits it and **Cancel** preserves the existing layout. Grab-mode profiles,
+visibility, and haptics remain local preferences. Saving a copy to iCloud Drive
+is explicit file transfer, not built-in sync, background watching, or an iCloud
+game-save service.
+
 ## Save Manager says no local network is available
 
 **Symptom**

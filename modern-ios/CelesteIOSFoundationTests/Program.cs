@@ -611,4 +611,64 @@ Check(!DirectionalHapticPolicy.ShouldPulse(TouchDirection.West, TouchDirection.N
 Check(!DirectionalHapticPolicy.ShouldPulse(TouchDirection.West, TouchDirection.NorthWest, false),
     "directional haptic preference Off preserves D2 feel");
 
+string encodedPhone = TouchLayoutCodec.Encode(d3Phone);
+string encodedTablet = TouchLayoutCodec.Encode(d3Tablet);
+TouchLayoutShareDocument sharedLayouts = new(encodedPhone, encodedTablet);
+byte[] sharedBytes = sharedLayouts.Encode();
+Check(sharedBytes.Length < TouchLayoutShareDocument.MaximumBytes, "touch share document bounded");
+Check(TouchLayoutShareDocument.TryDecode(sharedBytes, out TouchLayoutShareDocument decodedLayouts),
+    "touch share document decodes");
+Check(decodedLayouts.PhoneProfile == encodedPhone && decodedLayouts.TabletProfile == encodedTablet,
+    "touch share document preserves exact D3 profiles");
+Check(TouchLayoutCodec.TryDecode(decodedLayouts.PhoneProfile, out TouchLayoutProfile sharedPhone) &&
+      sharedPhone == d3Phone, "touch share reuses exact D3 codec");
+Check(!TouchLayoutShareDocument.TryDecode(Array.Empty<byte>(), out _), "empty touch share rejected");
+Check(!TouchLayoutShareDocument.TryDecode(new byte[TouchLayoutShareDocument.MaximumBytes + 1], out _),
+    "oversized touch share rejected before JSON parse");
+Check(!TouchLayoutShareDocument.TryDecode("{\"format\":\"Celeste Touch Layout\",\"version\":2,\"phoneProfile\":\"x\"}"u8.ToArray(), out _),
+    "unsupported touch share version rejected");
+Check(!TouchLayoutShareDocument.TryDecode("{\"format\":\"Celeste Touch Layout\",\"version\":1}"u8.ToArray(), out _),
+    "touch share missing profiles rejected");
+Check(!TouchLayoutShareDocument.TryDecode("{\"format\":\"Celeste Touch Layout\",\"version\":1,\"phoneProfile\":\"D3|2|NaN\"}"u8.ToArray(), out _),
+    "invalid D3 profile rejected");
+byte[] unknownPropertyDocument = System.Text.Json.JsonSerializer.SerializeToUtf8Bytes(new
+{
+    format = "Celeste Touch Layout",
+    version = 1,
+    phoneProfile = encodedPhone,
+    extra = 1,
+});
+Check(!TouchLayoutShareDocument.TryDecode(unknownPropertyDocument, out _),
+    "unknown touch share property rejected");
+Check(TouchLayoutShareDocument.Extension == "celestetouch" &&
+      TouchLayoutShareDocument.TypeIdentifier == "io.github.roootthefox.celeste.touch-layout",
+    "touch share extension and UTI fixed");
+
+IOSFilePortabilityBridge.Clear();
+Check(!IOSFilePortabilityBridge.IsAvailable, "Files bridge unavailable until all host delegates register");
+Check(!IOSFilePortabilityBridge.RequestImport(IOSPortableDocumentKind.CelesteLogicalFile, 10, _ => { }),
+    "Files bridge fails closed without a host");
+bool importCalled = false;
+bool exportCalled = false;
+IOSFilePortabilityBridge.ImportRequested = (kind, maximum, completed) =>
+{
+    importCalled = kind == IOSPortableDocumentKind.TouchLayout && maximum == 12;
+    completed(IOSExternalReadResult.Success(new byte[] { 1 }));
+};
+IOSFilePortabilityBridge.ExportRequested = (documents, share, completed) =>
+{
+    exportCalled = documents.Count == 1 && share;
+    completed(true, null);
+};
+Check(IOSFilePortabilityBridge.IsAvailable, "Files bridge available only with complete host surface");
+Check(IOSFilePortabilityBridge.RequestImport(IOSPortableDocumentKind.TouchLayout, 12,
+      result => importCalled &= result.Data is { Length: 1 }) && importCalled,
+    "Files bridge forwards bounded import and copied bytes");
+Check(IOSFilePortabilityBridge.RequestExport(
+      new[] { new IOSPortableDocument("x.celestetouch", IOSPortableDocumentKind.TouchLayout, new byte[] { 1 }) },
+      true, (_, _) => { }) && exportCalled,
+    "Files bridge forwards explicit share request");
+IOSFilePortabilityBridge.Clear();
+Check(!IOSFilePortabilityBridge.IsAvailable, "Files bridge clears every process-owned delegate");
+
 Console.WriteLine($"PASS: modern iOS foundation deterministic tests {passed}");

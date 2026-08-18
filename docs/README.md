@@ -30,7 +30,8 @@ Use this page to jump directly to the task or level of detail you need.
 - [Experimental modern iOS/Celeste lane](IOS_FOUNDATION.md) — the .NET 10,
   full-AOT iPhone/iPad developer build with editable Phone/Tablet touch
   layouts, full-display placement, per-control opacity, optional duplicate
-  controls, controller coexistence, seven-bank audio, and durable saves.
+  controls, controller coexistence, seven-bank audio, durable saves, and
+  native Files-based save/layout transfer.
 - [Project architecture](STATUS.md#architecture) — host, native, generated
   managed code, audio, persistence, Save Manager, and lifecycle design.
 - [Advanced build and reproducibility](BUILDING.md) — pinned toolchain,

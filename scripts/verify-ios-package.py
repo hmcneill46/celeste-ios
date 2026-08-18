@@ -49,6 +49,23 @@ def main() -> int:
             "orientation policy is not landscape-only")
     require(set(info.get("UISupportedInterfaceOrientations~ipad", [])) == orientations,
             "iPad orientation policy differs")
+    require(info.get("UIFileSharingEnabled") is not True and
+            info.get("LSSupportsOpeningDocumentsInPlace") is not True,
+            "live iOS storage must not be exposed through Documents/file sharing")
+    require("CFBundleDocumentTypes" not in info,
+            "Open-In document ownership is intentionally deferred")
+    imported_types = info.get("UTImportedTypeDeclarations", [])
+    exported_types = info.get("UTExportedTypeDeclarations", [])
+    require(any(item.get("UTTypeIdentifier") == "io.github.roootthefox.celeste.save-data" and
+                item.get("UTTypeTagSpecification", {}).get("public.filename-extension") == ["celeste"] and
+                set(item.get("UTTypeConformsTo", [])) == {"public.xml", "public.content"}
+                for item in imported_types),
+            "the existing .celeste import type declaration is absent")
+    require(any(item.get("UTTypeIdentifier") == "io.github.roootthefox.celeste.touch-layout" and
+                item.get("UTTypeTagSpecification", {}).get("public.filename-extension") == ["celestetouch"] and
+                set(item.get("UTTypeConformsTo", [])) == {"public.json", "public.content"}
+                for item in exported_types),
+            "the project-owned .celestetouch export type declaration is absent")
     scene = info.get("UIApplicationSceneManifest", {})
     require(scene.get("UIApplicationSupportsMultipleScenes") is False, "multiple FNA scenes must be disabled")
     configurations = scene.get("UISceneConfigurations", {}).get("UIWindowSceneSessionRoleApplication", [])
@@ -85,6 +102,11 @@ def main() -> int:
         "dynamic-codesigning",
     }
     require(not forbidden_entitlements.intersection(entitlements), "forbidden historical/JIT entitlement is present")
+    require(not any(key.startswith("com.apple.developer.icloud") or
+                    key.startswith("com.apple.developer.ubiquity") or
+                    key == "com.apple.security.application-groups"
+                    for key in entitlements),
+            "Files portability must not add iCloud/App Group entitlements")
 
     symbols = run("xcrun", "nm", "-gjU", str(executable)).splitlines()
     all_symbols = run("xcrun", "nm", "-gj", str(executable)).splitlines()
@@ -169,6 +191,17 @@ def main() -> int:
                 bundle_contains("QUICK RESTART") and
                 bundle_contains("OPACITY +") and bundle_contains("OPACITY -"),
                 "production touch overlay or Options recovery surface is absent")
+        require(bundle_contains("DATA & FILES") and bundle_contains("Export All Saves...") and
+                bundle_contains("Import Save...") and bundle_contains("Restore Previous Save...") and
+                bundle_contains("Celeste-Slot-1.celeste") and
+                bundle_contains("io.github.roootthefox.celeste.save-data"),
+                "production Files-native save portability surface is absent")
+        require(bundle_contains("Export Layout...") and bundle_contains("Import Layout...") and
+                bundle_contains("Celeste-Touch-Layout.celestetouch") and
+                bundle_contains("io.github.roootthefox.celeste.touch-layout"),
+                "production touch-layout sharing surface is absent")
+        require(bundle_contains("NSFileCoordinator") and bundle_contains("CelesteExports"),
+                "coordinated external reads or private temporary-export cleanup are absent")
         require(bundle_contains("Celeste.IOSTouchControls.jump.a8") and
                 bundle_contains("Celeste.IOSTouchControls.dash.a8") and
                 bundle_contains("Celeste.IOSTouchControls.grab-ungrabbed.a8") and
