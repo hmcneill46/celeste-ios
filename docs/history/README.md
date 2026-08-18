@@ -53,6 +53,7 @@ support matrix, and limitations are in [project status](../STATUS.md).
 35. [Stage 24D3 — custom touch layouts and per-input Grab behaviour](stages/IOS_CUSTOM_TOUCH_LAYOUT_STAGE24D3_REPORT.md)
 36. [Stage 24E1 — Files-native data portability and touch-layout sharing](stages/IOS_FILES_DATA_PORTABILITY_STAGE24E1_REPORT.md)
 37. [Stage 24E2 — beginner iOS self-builder and integrated release acceptance](stages/IOS_RELEASE_ACCEPTANCE_STAGE24E2_REPORT.md)
+38. [Stage 25B — production shared Apple Everest static-AOT foundation](stages/APPLE_EVEREST_STATIC_FOUNDATION_STAGE25B_REPORT.md)
 
 Diagnostic-only stages whose evidence was intentionally kept in ignored local
 build directories are not reconstructed here. The index covers every tracked
