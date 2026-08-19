@@ -279,7 +279,7 @@ Accepted canonical vanilla locks remain:
   `2f5d6fffaa151530f48deac7ff402c2c6d475b20eeef5579f1db784d57da2357`.
 
 The normal `build-ios.sh` and `build-tvos.sh` have no mod argument. The optional
-closure is copied only into ignored, marked derived roots. Stage 25C's 135
+closure is copied only into ignored, marked derived roots. Stage 25C's 144
 source/product/package checks, Stage 25B's 173 source/product checks, 85 builder
 tests, 19 HookGen semantics tests, host IL freeze, and desktop HookGen reference
 all passed. Current iOS foundation 243, durability 87, C2 84, D2 153, and input
@@ -318,3 +318,9 @@ fixtures can be acquired by the ignored host scripts.
 
 Stage 25C is ready to integrate after final clean-clone verification. It does
 not itself merge, tag, or publish a general mod feature.
+
+The final clean-room pass also exercised the public fixture downloader from a
+genuinely fresh clone. It exposed and corrected one shell-only `set -u`
+initialisation-order defect before acceptance; a deterministic verifier check
+now locks the safe declaration order. This correction changes no runtime or
+product bytes.

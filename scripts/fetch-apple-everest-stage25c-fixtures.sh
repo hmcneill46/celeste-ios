@@ -7,7 +7,8 @@ OUTPUT="${1:-$REPO_ROOT/.build/apple-everest/real-mods/downloads}"
 mkdir -p "$OUTPUT"
 
 fetch() {
-  local name="$1" sha="$2" url="$3" destination="$OUTPUT/$name" temporary="$OUTPUT/.$name.download"
+  local name="$1" sha="$2" url="$3"
+  local destination="$OUTPUT/$name" temporary="$OUTPUT/.$name.download"
   if [[ -f "$destination" ]] && [[ "$(shasum -a 256 "$destination" | awk '{print $1}')" == "$sha" ]]; then
     printf 'verified: %s\n' "$name"
     return

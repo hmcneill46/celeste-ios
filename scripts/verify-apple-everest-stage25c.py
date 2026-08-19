@@ -116,6 +116,12 @@ def main() -> int:
     for relative in required:
         c.require((root / relative).is_file(), f"required {relative}")
 
+    fixture_fetch = read(root, "scripts/fetch-apple-everest-stage25c-fixtures.sh")
+    c.require(
+        'local name="$1" sha="$2" url="$3"\n  local destination="$OUTPUT/$name"' in fixture_fetch,
+        "fixture downloader initializes derived paths after local names under set -u",
+    )
+
     registry = json.loads(read(root, required[0]))
     c.require(registry["schemaVersion"] == 1 and registry["auditedCandidates"] >= 8, "candidate registry schema/count")
     c.require(registry["everestProfile"] == "apple-everest-stable-1.6458.0-v1", "pinned Everest profile")
