@@ -1,0 +1,155 @@
+{
+  "schemaVersion": 1,
+  "everestProfile": "apple-everest-stable-1.6458.0-v1",
+  "transformerVersion": "apple-everest-static-v3",
+  "auditedCandidates": 14,
+  "selectedClosure": [
+    "IAccidentallyFourCassetteBlocks@1.0.0",
+    "ParticlePaletteHelper@1.0.0",
+    "FeatherMaddy@1.3",
+    "LagPauser@1.3.0"
+  ],
+  "fixtures": [
+    {
+      "name": "FeatherMaddy",
+      "version": "1.3",
+      "releaseUrl": "https://gamebanana.com/mods/467551",
+      "downloadUrl": "https://gamebanana.com/dl/1066794",
+      "zipSha256": "a8f1104710aac5807be3b24cd8c3870d94aa117d1146b30a4de0983a10f3e40e",
+      "dllSha256": "a4ff1c89733cb450af1fc7199ed777fd23f849fe4f6a3e0a42618e1177144509",
+      "frozenDllSha256": "f88aecc4d5cadeb9b46c4a34bf035d89a8c09593cb726c2826a2b2e4eeda5166",
+      "sourceUrl": "https://github.com/Cubical22/Feather-Maddy",
+      "sourceCommit": "d9d339c00ca4a4d109183d66fac09303bc7ffd64",
+      "license": "No explicit redistribution license located; bytes are not redistributed",
+      "mechanisms": ["HookGen On.*", "nine newly catalogued targets", "module settings"],
+      "result": "BINARY_COMPATIBLE_WITH_STATIC_TRANSFORM"
+    },
+    {
+      "name": "LagPauser",
+      "version": "1.3.0",
+      "releaseUrl": "https://gamebanana.com/mods/591485",
+      "downloadUrl": "https://gamebanana.com/dl/1458113",
+      "zipSha256": "32dac84d2c5b60458a701cb61e8601bc89d937e25bc7fdcf52c80d9128e99d10",
+      "dllSha256": "6ed3515105056ff2f4be84ef5542ce0a7b90dca9f5bd305703c506f462ffcdfa",
+      "frozenDllSha256": "bbe3c964e9dd1664ed79cba5f1b48f62b358bbd472615df912377e396e99e452",
+      "sourceUrl": "https://github.com/samgcode/LagPauser",
+      "sourceCommit": "ec217fd959daa91fa1efcb6cd62a9808178805e7",
+      "license": "No explicit redistribution license located; bytes are not redistributed",
+      "mechanisms": ["HookGen On.Monocle.Engine.Update", "direct Hook(Player.orig_Die, static detour)", "Dispose lifetime"],
+      "result": "BINARY_COMPATIBLE_WITH_STATIC_MANAGED_HOOK"
+    },
+    {
+      "name": "ParticlePaletteHelper",
+      "version": "1.0.0",
+      "zipSha256": "f9cf8874acbfaff87af22098caea36429c97941d0b13e1114d8749be61afbe19",
+      "dllSha256": "eac2cb52112dafcb31f86cdad0f3373bb781a7f00e705394fb811c0f7ef08c17",
+      "sourceUrl": "https://github.com/KnowHT1515/ParticlePaletteHelper",
+      "sourceCommit": "9a791bcb38f64a4c49ea3e496003899416f0bb82",
+      "license": "MIT",
+      "mechanisms": ["HookGen particle and trail targets"],
+      "result": "STAGE25C_REGRESSION_SUPPORTED"
+    },
+    {
+      "name": "IAccidentallyFourCassetteBlocks",
+      "version": "1.0.0",
+      "zipSha256": "37eaa16b6b2d458a8ce27e08ea315b4cc3c2938d6b3c2292c61203c641ad7c95",
+      "license": "No explicit redistribution license located; bytes are not redistributed",
+      "mechanisms": ["content map"],
+      "result": "STAGE25C_REGRESSION_SUPPORTED"
+    },
+    {
+      "name": "SnowyAssortedItems",
+      "version": "0.2.0",
+      "zipSha256": "ec1f595a1fe1b9578aa9c1a03bdc7ee42ac95c02ee778222394a80302b011e23",
+      "sourceUrl": "https://github.com/Snowy063/SnowyAssortedItems",
+      "sourceCommit": "2d1a961de1ba43beefbc7e1eb6d8da0d46ad1fbb",
+      "license": "MIT",
+      "mechanisms": ["broader HookGen", "custom entities/helpers"],
+      "result": "DEFERRED_HELPER_GRAPH"
+    },
+    {
+      "name": "DoubleLanguages",
+      "version": "0.3.0",
+      "zipSha256": "280966901439dcf11340add42fb9efc99b397d302ebb312de2ecde0fe62d03f1",
+      "sourceUrl": "https://github.com/Logabe/DoubleLanguages",
+      "sourceCommit": "af97c135af7aca98069fea7af98415af52c52d17",
+      "license": "No explicit redistribution license located; bytes are not redistributed",
+      "mechanisms": ["broader HookGen", "language/content state"],
+      "result": "DEFERRED_TARGET_CATALOG"
+    },
+    {
+      "name": "Trailine",
+      "version": "1.1.0",
+      "zipSha256": "c6cd04644b8cb98c2c2718ce1afaf185023c13cb5dd9650bb86f8a2d4ba5711b",
+      "sourceUrl": "https://github.com/WEGFan/Celeste-Trailine",
+      "sourceCommit": "4f12442b4b2ffd375fbd50c99d8385d4cc0f63fb",
+      "license": "MIT",
+      "mechanisms": ["DetourContext After=* in Everest-before-1.3197 compatibility block"],
+      "result": "PROVABLY_DEAD_AT_PINNED_EVEREST_BUT_NOT_PRODUCTION_ELIMINATED"
+    },
+    {
+      "name": "DashlessDreamBlocks",
+      "version": "2.0.0",
+      "zipSha256": "ef5071ad28ed27ee73749623f4484a511f4793388f53417a4c0ee36c3d6e4a7b",
+      "sourceUrl": "https://github.com/coloursofnoise/DashlessDreamBlocks",
+      "sourceCommit": "7c5aca66c322866acfde47c250bb9e692f8d3be6",
+      "license": "MIT",
+      "mechanisms": ["runtime-selected direct Hook targets", "active IL.*", "custom gameplay state"],
+      "result": "DEFERRED_DYNAMIC_TARGET_AND_IL"
+    },
+    {
+      "name": "EverestExampleMod",
+      "version": "source audit",
+      "sourceUrl": "https://github.com/EverestAPI/ExampleMod",
+      "sourceCommit": "977fa57c77c1811fa3bbb43b20cec7b73121af8a",
+      "license": "MIT",
+      "mechanisms": ["direct property-getter Hook", "ILHook", "HookGen"],
+      "result": "DEFERRED_PROPERTY_TARGET_AND_IL"
+    },
+    {
+      "name": "npcPlayer",
+      "version": "source audit",
+      "sourceUrl": "https://github.com/KnowHT1515/npcPlayer",
+      "sourceCommit": "93250d08fdcf86d8be7a095660d2fc4cb6e7ba99",
+      "license": "MIT",
+      "mechanisms": ["runtime getter/setter direct Hooks", "ILHook", "generated closed delegates"],
+      "result": "DEFERRED_DYNAMIC_TARGET_AND_IL"
+    },
+    {
+      "name": "item-toggle",
+      "version": "source audit",
+      "sourceUrl": "https://github.com/heuristyx/item-toggle",
+      "sourceCommit": "8394147006130536ae731f2060659dcb551d67b1",
+      "license": "MIT",
+      "mechanisms": ["direct Hooks into optional helper types", "instance delegate captures"],
+      "result": "DEFERRED_OPTIONAL_HELPER_AND_CAPTURE"
+    },
+    {
+      "name": "SmoothCeleste",
+      "version": "source audit",
+      "sourceUrl": "https://github.com/bybrooklyn/SmoothCeleste",
+      "sourceCommit": "b41697526e6bbcc9a6393dd00b0d09ec29616f5a",
+      "license": "MIT",
+      "mechanisms": ["direct Hook", "ILHook", "DetourConfig context", "native/runtime smoothing"],
+      "result": "UNSUPPORTED_NATIVE_AND_DEFERRED_IL"
+    },
+    {
+      "name": "ExtendedVariantMode",
+      "version": "source audit",
+      "sourceUrl": "https://github.com/maddie480/ExtendedVariantMode",
+      "sourceCommit": "fa9a25c356120c31196e21387e7b709f0cb30cc3",
+      "license": "MIT",
+      "mechanisms": ["direct Hook", "ILHook", "DetourConfig priority contexts", "Lua dependency"],
+      "result": "UNSUPPORTED_LUA_AND_DEFERRED_IL"
+    },
+    {
+      "name": "CelesteTAS-EverestInterop",
+      "version": "source audit",
+      "sourceUrl": "https://github.com/EverestAPI/CelesteTAS-EverestInterop",
+      "sourceCommit": "ad1aa09ec46ff1011e77fb31154b27b3a8af3dd1",
+      "license": "MIT",
+      "mechanisms": ["direct Hook helper", "ILHook closures", "DetourConfig priority/Before", "desktop TAS integration"],
+      "result": "DEFERRED_DYNAMIC_DETOUR_AND_IL"
+    }
+  ]
+}

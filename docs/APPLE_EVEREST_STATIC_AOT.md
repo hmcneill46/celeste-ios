@@ -57,10 +57,11 @@ dependencies, conflicts, duplicate names, and cycles are resolved into a stable
 topological order.
 
 The compatibility analyser classifies every package before generated code is
-accepted. The first profile supports project-owned content-only packages, static
-module lifecycle/events, and explicitly recognised typed `On.*` hooks. It
-rejects dynamic code, runtime IL hooks, direct runtime detours, native payloads,
-Lua, unsupported platform APIs, ambiguous targets, and unknown mechanisms. A
+accepted. The profile supports project-owned content-only packages, static
+module lifecycle/events, explicitly recognised typed `On.*` hooks, and the
+bounded direct `MonoMod.RuntimeDetour.Hook` class described below. It rejects
+dynamic code, runtime IL hooks, dynamic/ambiguous detour targets or delegates,
+native payloads, Lua, unsupported platform APIs, and unknown mechanisms. A
 rejection is a compatibility result, not an invitation to weaken full AOT.
 
 Stage 25C adds a binary-first lane for explicitly compatible distributed code
@@ -72,6 +73,13 @@ closure. The transformation preserves assembly/type identity, removes the
 to the statically linked `Celeste` assembly. Both the original ZIP/DLL hashes
 and transformed DLL hash are recorded. Source is audit evidence, not a build
 input.
+
+Precompiled mods sometimes call members which Everest deliberately exposes in
+its desktop-patched Celeste assembly. Apple builds reproduce only the exact
+reviewed members needed by the accepted closure through
+`apple-everest/apple-api-surface-v1.json`. The transform is declaration-locked,
+and the post-link scanner rejects any absent **or inaccessible** external API
+before installation. This is intentionally not a broad publicizer.
 
 ## One shared Apple closure
 
@@ -105,18 +113,27 @@ object and its companion Mono object). A missing API or method body therefore
 fails the Mac build instead of falling back to JIT on an AOT-only device.
 
 The bounded compatibility facade includes Everest's nested content fields and
-typed interpolated logger contract using normal AOT-safe managed code. This is
+typed interpolated logger contract using normal AOT-safe managed code. Its
+tag-prefix minimum-level policy matches the relevant Everest behavior, so a
+release mod that selects `Info` does not turn legacy `Logger.Log` (`Verbose`)
+calls into per-frame device I/O. This is
 binary API compatibility for the exact accepted external DLL, not a general
 desktop Everest runtime implementation.
 
-## Typed `On.*` lowering
+## Signature-driven managed detour lowering
 
-Supported `On.*` targets are rewritten at build time into ordinary typed
-dispatchers. Each dispatcher caches its active chain, preserves Everest-style
-subscription order and LIFO invocation, passes a typed `orig` delegate, allows
-argument and return-value changes, honours handlers that intentionally do not
-call `orig`, and tracks the owning module for enable/disable. The no-hook path
-is a cached direct typed call with no per-call allocation.
+Every supported target is declared once in a reviewed signature catalog. From
+that catalog the Mac builder generates the public HookGen-compatible event,
+typed `orig`/hook delegates, cached dispatcher, direct-hook registration entry,
+owner cleanup, and the one-time canonical Celeste target-body rewrite. This
+replaced the three historical hand-written Dialog, ParticleSystem, and
+TrailManager dispatchers with one mechanism.
+
+Each generated dispatcher caches its active chain, preserves pinned MonoMod
+subscription/order semantics, passes a typed `orig` delegate, allows argument
+and return-value changes, honours handlers that intentionally do not call
+`orig`, and tracks the owning module for enable/disable and unload cleanup. The
+no-hook path is a cached direct typed call with no per-call allocation.
 
 The first canary proves two independent handlers around
 `Celeste.Dialog.Clean`: module B enters, module A enters, the original runs,
@@ -124,11 +141,35 @@ then A and B return. It also exercises owner disable/re-enable and duplicate
 subscription semantics. This is a bounded mechanism registry; arbitrary
 MonoMod hook compatibility is not implied.
 
-Stage 25C additionally registers the exact five distributed
+Stage 25C additionally registered the exact five distributed
 `On.Monocle.ParticleSystem.Emit` overloads and exact
 `On.Celeste.TrailManager.Add` overload used by Particle Palette Helper 1.0.0.
 The hot chains are rebuilt only when subscription/module state changes; normal
 particle emission does not allocate a new compatibility chain per call.
+
+Stage 25D-C registers nine additional Celeste targets used by Feather Maddy
+1.3, plus `On.Monocle.Engine.Update` and `Celeste.Player.Die`. Feather Maddy is
+the former deferred HookGen fixture: its ordinary distributed DLL now enters
+the same generated backend without a mod-specific transformer.
+
+For a direct `Hook`, the Mac host recognises a narrow fixed-IL construction
+pattern, resolves the exact target and detour signatures against the catalog,
+validates their typed `orig` contract, records a static plan, and replaces the
+reflection sequence with a plan identifier. The device facade changes only
+typed registration data. `Apply`, `Undo`, `Dispose`, `IsApplied`, and `IsValid`
+share the same chain and owner lifecycle as HookGen events; no executable code
+is patched and no target reflection occurs on-device. Each generated direct
+plan writes one bounded first-invocation diagnostic record so physical evidence
+proves execution rather than merely module loading. Lag Pauser 1.3.0 is the
+first real mixed fixture: HookGen wraps `Engine.Update`, while its direct static
+detour wraps `Player.Die`.
+
+Dynamic target selection, dynamically chosen detour delegates, property
+targets not present in the catalog, unsupported `DetourConfig`/context use,
+finalizer-dependent lifetime, `ILHook`, and `IL.*` remain explicit fail-closed
+classes. The small data-only `DetourConfig` implementation is exercised by the
+project's conformance canaries; third-party configuration surfaces remain
+deferred until an exact distributed input is accepted.
 
 ## Current real-ZIP evidence
 
@@ -152,13 +193,14 @@ transformed generically without a mod-specific source edit. **SOURCE-PORTED**
 means a source change was required for Apple. No Stage 25C success fixture is
 reported as binary-compatible if it needed that.
 
-Stage 25C's selected closure contains the real content-only map *I Accidentally
-Four Cassette Blocks* 1.0.0 and the real precompiled *Particle Palette Helper*
-1.0.0 module. The latter is `BINARY-COMPATIBLE_WITH_STATIC_TRANSFORM`; its
-module lifecycle and six bounded HookGen subscriptions work without its source
-tree. Its optional palette-file content API is not yet implemented, so this
-stage proves module/hook execution and vanilla pass-through rather than custom
-palette deserialization.
+The current selected closure contains four ordinary public ZIPs: the
+content-only map *I Accidentally Four Cassette Blocks* 1.0.0; *Particle Palette
+Helper* 1.0.0; *Feather Maddy* 1.3; and *Lag Pauser* 1.3.0. All three managed
+mods are `BINARY-COMPATIBLE_WITH_STATIC_TRANSFORM`: their ordinary DLLs are
+accepted without source trees or mod-specific source edits. Particle Palette
+Helper's optional palette-file content API is not yet implemented, so its
+evidence covers module/hook execution and vanilla pass-through rather than
+custom palette deserialization.
 
 The exact tested-mod matrix is in
 [Apple Everest compatibility](APPLE_EVEREST_COMPATIBILITY.md).
@@ -189,15 +231,15 @@ test persistence namespace. The accepted vanilla builders remain unchanged.
 
 Both canary products must remain Release, fully trimmed, full AOT, and
 `UseInterpreter=false`. Device/package verification rejects
-`MonoMod.RuntimeDetour`, HookGen backends, NLua/KeraLua, dynamically discovered
-mod DLLs, native mod libraries, desktop
+the desktop `MonoMod.RuntimeDetour` and HookGen backends, NLua/KeraLua,
+dynamically discovered mod DLLs, native mod libraries, desktop
 Everest services, and unexpected executable content.
 
 ## Current limits
 
 This foundation does **not** promise arbitrary Everest mods, runtime mod
 installation, runtime enable/disable of code outside the prebuilt registry,
-IL hooks on-device, direct detours, Lua, native mods, content hot reload,
+IL hooks on-device, arbitrary direct detours, Lua, native mods, content hot reload,
 Everest networking/updating, dependency downloading, general mod
 settings/save persistence, the complete Everest virtual-content API, or
 desktop parity. Only
