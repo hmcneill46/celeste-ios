@@ -1,5 +1,6 @@
 using System.Text;
 using System.Text.Json;
+using System.Security;
 
 namespace AppleEverestBuilder;
 
@@ -15,6 +16,7 @@ internal static class ClosureGenerator
     {
         string managed = Path.Combine(outputRoot, "managed");
         string content = Path.Combine(outputRoot, "content", "Content");
+        string assemblies = Path.Combine(outputRoot, "assemblies");
         Directory.CreateDirectory(managed);
         Directory.CreateDirectory(content);
 
@@ -24,19 +26,27 @@ internal static class ClosureGenerator
 
         List<(ResolvedMod Mod, AppleStaticDeclaration Declaration)> codeModules = [];
         List<ContentMountRecord> stagedContent = [];
+        List<FrozenAssemblyRecord> frozenAssemblies = [];
         int sourceIndex = 0;
         for (int modOrder = 0; modOrder < ordered.Count; modOrder++)
         {
             ResolvedMod mod = ordered[modOrder];
             if (!string.IsNullOrWhiteSpace(mod.Metadata.DLL))
             {
-                string declarationPath = Path.Combine(mod.Input.StagingRoot, "apple-static.json");
-                if (!File.Exists(declarationPath))
-                    throw new InvalidDataException($"{mod.Metadata.Name} requires root apple-static.json for a closed module factory");
-                AppleStaticDeclaration declaration = JsonSerializer.Deserialize<AppleStaticDeclaration>(File.ReadAllBytes(declarationPath), Json)
-                    ?? throw new InvalidDataException("invalid apple-static.json");
-                ValidateDeclaration(declaration, mod.Metadata.Name);
+                AppleStaticDeclaration declaration = mod.Declaration
+                    ?? throw new InvalidDataException($"{mod.Metadata.Name} has no closed module declaration");
                 codeModules.Add((mod, declaration));
+                if (mod.DeclaredAssemblyPath != null)
+                {
+                    string sourceAssembly = Path.Combine(mod.Input.StagingRoot,
+                        mod.DeclaredAssemblyPath.Replace('/', Path.DirectorySeparatorChar));
+                    string fileName = Path.GetFileName(mod.DeclaredAssemblyPath);
+                    string destinationAssembly = Path.Combine(assemblies, fileName);
+                    if (File.Exists(destinationAssembly))
+                        throw new InvalidDataException($"duplicate frozen assembly filename: {fileName}");
+                    (string assemblyName, string original, string frozen) = AssemblyFreezer.Freeze(sourceAssembly, destinationAssembly);
+                    frozenAssemblies.Add(new FrozenAssemblyRecord(mod.Metadata.Name, assemblyName, fileName, original, frozen));
+                }
                 foreach (string relative in mod.ManagedFiles.Where(path => path.EndsWith(".cs", StringComparison.OrdinalIgnoreCase)))
                 {
                     string source = Path.Combine(mod.Input.StagingRoot, relative.Replace('/', Path.DirectorySeparatorChar));
@@ -47,7 +57,8 @@ internal static class ClosureGenerator
             foreach (string relative in mod.ContentFiles)
             {
                 string source = Path.Combine(mod.Input.StagingRoot, relative.Replace('/', Path.DirectorySeparatorChar));
-                string logical = ContentCompiler.Stage(source, relative, content);
+                string stagedPath = NormalizeContentPath(mod.Metadata.Name, relative);
+                string logical = ContentCompiler.Stage(source, stagedPath, content);
                 stagedContent.Add(new ContentMountRecord(mod.Metadata.Name, modOrder, relative, logical,
                     Hashing.FileSha256(Path.Combine(content, logical.Replace('/', Path.DirectorySeparatorChar)))));
             }
@@ -57,6 +68,8 @@ internal static class ClosureGenerator
         File.WriteAllText(Path.Combine(managed, "GeneratedAppleEverestGameplayRegistry.cs"), GameplayRegistrySource(codeModules), new UTF8Encoding(false));
         File.WriteAllText(Path.Combine(managed, "GeneratedAppleEverestContentManifest.cs"), ContentManifestSource(ordered, stagedContent), new UTF8Encoding(false));
         File.WriteAllText(Path.Combine(managed, "GeneratedAppleEverestAotRoots.cs"), RootsSource(codeModules), new UTF8Encoding(false));
+        File.WriteAllText(Path.Combine(managed, "AppleEverestExternalAssemblyRoots.props"),
+            ExternalAssemblyRootsSource(frozenAssemblies), new UTF8Encoding(false));
 
         IReadOnlyList<FileRecord> managedInventory = Hashing.Inventory(managed);
         IReadOnlyList<FileRecord> contentInventory = Hashing.Inventory(content);
@@ -75,6 +88,7 @@ internal static class ClosureGenerator
             everestSha = profile.Everest.Sha256Commit,
             monoModSha = profile.Dependencies.MonoModCommit,
             runtimeDllLoading = false,
+            precompiledAssembliesAotLinked = frozenAssemblies.Count,
             runtimeDetour = false,
             interpreter = false,
             selectedMods = ordered.Select((mod, index) => new
@@ -106,6 +120,14 @@ internal static class ClosureGenerator
                 logicalPath = mount.LogicalPath,
                 sha256 = mount.Sha256
             }).ToArray(),
+            frozenAssemblies = frozenAssemblies.Select(assembly => new
+            {
+                owner = assembly.Owner,
+                assemblyName = assembly.AssemblyName,
+                fileName = assembly.FileName,
+                originalSha256 = assembly.OriginalSha256,
+                frozenSha256 = assembly.FrozenSha256
+            }).ToArray(),
             sharedClosureSha256 = sharedClosureHash
         };
         File.WriteAllText(Path.Combine(outputRoot, "compatibility-manifest.json"),
@@ -126,10 +148,22 @@ internal static class ClosureGenerator
         ValidateOnce(Path.Combine(managedRoot, "Celeste", "GameLoader.cs"), "\t\tAreaData.Load();");
         ValidateOnce(Path.Combine(managedRoot, "Celeste", "MenuOptions.cs"), "\t\tmenu.Add(new TextMenu.SubHeader(Dialog.Clean(\"options_gameplay\")));");
         ValidateOnce(Path.Combine(managedRoot, "Monocle", "Tracker.cs"), "\t\t}\n\t}\n\n\tprivate static List<Type> GetSubclasses(Type type)");
+        ValidateOnce(Path.Combine(managedRoot, "Monocle", "ParticleSystem.cs"), "\tpublic void Emit(ParticleType type, Vector2 position)\n\t{");
+        ValidateOnce(Path.Combine(managedRoot, "Celeste", "TrailManager.cs"), "\tpublic static void Add(Entity entity, Color color, float duration = 1f, bool frozenUpdate = false, bool useRawDeltaTime = false)\n\t{");
         ValidateOnce(Path.Combine(managedRoot, "Celeste.Modern.csproj"), "<DefineConstants>$(DefineConstants);");
         Directory.CreateDirectory(destination);
         foreach (string source in Directory.EnumerateFiles(Path.Combine(closureRoot, "managed"), "*.cs").OrderBy(Path.GetFileName, StringComparer.Ordinal))
             File.Copy(source, Path.Combine(destination, Path.GetFileName(source)), overwrite: false);
+        File.Copy(Path.Combine(closureRoot, "managed", "AppleEverestExternalAssemblyRoots.props"),
+            Path.Combine(managedRoot, "AppleEverestExternalAssemblyRoots.props"), overwrite: false);
+        string closureAssemblies = Path.Combine(closureRoot, "assemblies");
+        if (Directory.Exists(closureAssemblies))
+        {
+            string targetAssemblies = Path.Combine(managedRoot, "AppleEverestAssemblies");
+            Directory.CreateDirectory(targetAssemblies);
+            foreach (string source in Directory.EnumerateFiles(closureAssemblies, "*.dll").OrderBy(Path.GetFileName, StringComparer.Ordinal))
+                File.Copy(source, Path.Combine(targetAssemblies, Path.GetFileName(source)), overwrite: false);
+        }
 
         PatchDialog(Path.Combine(managedRoot, "Celeste", "Dialog.cs"));
         PatchLevel(Path.Combine(managedRoot, "Celeste", "Level.cs"));
@@ -137,7 +171,9 @@ internal static class ClosureGenerator
         PatchContentReady(Path.Combine(managedRoot, "Celeste", "GameLoader.cs"));
         PatchMenu(Path.Combine(managedRoot, "Celeste", "MenuOptions.cs"));
         PatchTracker(Path.Combine(managedRoot, "Monocle", "Tracker.cs"));
-        PatchProject(Path.Combine(managedRoot, "Celeste.Modern.csproj"));
+        PatchParticles(Path.Combine(managedRoot, "Monocle", "ParticleSystem.cs"));
+        PatchTrail(Path.Combine(managedRoot, "Celeste", "TrailManager.cs"));
+        PatchProject(Path.Combine(managedRoot, "Celeste.Modern.csproj"), closureRoot);
     }
 
     public static string TargetPatchContract => string.Join("\n", new[]
@@ -148,8 +184,22 @@ internal static class ClosureGenerator
         "GameLoader:content-ready:v1",
         "MenuOptions:diagnostic-panel:v1",
         "Tracker.Initialize:typed-gameplay-registry:v1",
-        "Celeste.Modern.csproj:EVEREST_APPLE_STATIC_AOT:v1"
+        "ParticleSystem.Emit:typed-static-dispatch:v1",
+        "TrailManager.Add:typed-static-dispatch:v1",
+        "Celeste.Modern.csproj:EVEREST_APPLE_STATIC_AOT:v2",
+        "ExternalAssembly:full-trimmer-root:v1"
     });
+
+    private static string ExternalAssemblyRootsSource(IReadOnlyList<FrozenAssemblyRecord> assemblies)
+    {
+        StringBuilder source = new("<Project>\n  <!-- Third-party Everest DLLs are not trim-annotated. Root each accepted,\n       transformed assembly completely so every executable method receives native AOT code. -->\n  <ItemGroup>\n");
+        foreach (FrozenAssemblyRecord assembly in assemblies.OrderBy(value => value.AssemblyName, StringComparer.Ordinal))
+            source.Append("    <TrimmerRootAssembly Include=\"")
+                .Append(SecurityElement.Escape(assembly.AssemblyName))
+                .AppendLine("\" />");
+        source.Append("  </ItemGroup>\n</Project>\n");
+        return source.ToString();
+    }
 
     private static void PatchDialog(string path)
     {
@@ -178,9 +228,44 @@ internal static class ClosureGenerator
         "\t\t}\n\t}\n\n\tprivate static List<Type> GetSubclasses(Type type)",
         "\t\t}\n\t\tglobal::Celeste.Mod.GeneratedAppleEverestGameplayRegistry.RegisterTrackerTypes();\n\t}\n\n\tprivate static List<Type> GetSubclasses(Type type)");
 
-    private static void PatchProject(string path) => ReplaceOnce(path,
-        "<DefineConstants>$(DefineConstants);",
-        "<DefineConstants>$(DefineConstants);EVEREST_APPLE_STATIC_AOT;");
+    private static void PatchParticles(string path)
+    {
+        ReplaceOnce(path,
+            "\tpublic void Emit(ParticleType type, Vector2 position)\n\t{\n\t\ttype.Create(ref particles[nextSlot], position);\n\t\tnextSlot = (nextSlot + 1) % particles.Length;\n\t}",
+            "\tpublic void Emit(ParticleType type, Vector2 position) => On.Monocle.ParticleSystem.Invoke(type, position, this, AppleEverestOriginalEmit);\n\n\tprivate static void AppleEverestOriginalEmit(ParticleSystem self, ParticleType type, Vector2 position)\n\t{\n\t\ttype.Create(ref self.particles[self.nextSlot], position);\n\t\tself.nextSlot = (self.nextSlot + 1) % self.particles.Length;\n\t}");
+        ReplaceOnce(path,
+            "\tpublic void Emit(ParticleType type, Vector2 position, float direction)\n\t{\n\t\ttype.Create(ref particles[nextSlot], position, direction);\n\t\tnextSlot = (nextSlot + 1) % particles.Length;\n\t}",
+            "\tpublic void Emit(ParticleType type, Vector2 position, float direction) => On.Monocle.ParticleSystem.Invoke(type, position, direction, this, AppleEverestOriginalEmit);\n\n\tprivate static void AppleEverestOriginalEmit(ParticleSystem self, ParticleType type, Vector2 position, float direction)\n\t{\n\t\ttype.Create(ref self.particles[self.nextSlot], position, direction);\n\t\tself.nextSlot = (self.nextSlot + 1) % self.particles.Length;\n\t}");
+        ReplaceOnce(path,
+            "\tpublic void Emit(ParticleType type, Vector2 position, Color color)\n\t{\n\t\ttype.Create(ref particles[nextSlot], position, color);\n\t\tnextSlot = (nextSlot + 1) % particles.Length;\n\t}",
+            "\tpublic void Emit(ParticleType type, Vector2 position, Color color) => On.Monocle.ParticleSystem.Invoke(type, position, color, this, AppleEverestOriginalEmit);\n\n\tprivate static void AppleEverestOriginalEmit(ParticleSystem self, ParticleType type, Vector2 position, Color color)\n\t{\n\t\ttype.Create(ref self.particles[self.nextSlot], position, color);\n\t\tself.nextSlot = (self.nextSlot + 1) % self.particles.Length;\n\t}");
+        ReplaceOnce(path,
+            "\tpublic void Emit(ParticleType type, Vector2 position, Color color, float direction)\n\t{\n\t\ttype.Create(ref particles[nextSlot], position, color, direction);\n\t\tnextSlot = (nextSlot + 1) % particles.Length;\n\t}",
+            "\tpublic void Emit(ParticleType type, Vector2 position, Color color, float direction) => On.Monocle.ParticleSystem.Invoke(type, position, color, direction, this, AppleEverestOriginalEmit);\n\n\tprivate static void AppleEverestOriginalEmit(ParticleSystem self, ParticleType type, Vector2 position, Color color, float direction)\n\t{\n\t\ttype.Create(ref self.particles[self.nextSlot], position, color, direction);\n\t\tself.nextSlot = (self.nextSlot + 1) % self.particles.Length;\n\t}");
+        ReplaceOnce(path,
+            "\tpublic void Emit(ParticleType type, Entity track, int amount, Vector2 position, Vector2 positionRange, float direction)\n\t{\n\t\tfor (int i = 0; i < amount; i++)\n\t\t{\n\t\t\ttype.Create(ref particles[nextSlot], track, Calc.Random.Range(position - positionRange, position + positionRange), direction, type.Color);\n\t\t\tnextSlot = (nextSlot + 1) % particles.Length;\n\t\t}\n\t}",
+            "\tpublic void Emit(ParticleType type, Entity track, int amount, Vector2 position, Vector2 positionRange, float direction) => On.Monocle.ParticleSystem.Invoke(type, track, amount, position, positionRange, direction, this, AppleEverestOriginalEmit);\n\n\tprivate static void AppleEverestOriginalEmit(ParticleSystem self, ParticleType type, Entity track, int amount, Vector2 position, Vector2 positionRange, float direction)\n\t{\n\t\tfor (int i = 0; i < amount; i++)\n\t\t{\n\t\t\ttype.Create(ref self.particles[self.nextSlot], track, Calc.Random.Range(position - positionRange, position + positionRange), direction, type.Color);\n\t\t\tself.nextSlot = (self.nextSlot + 1) % self.particles.Length;\n\t\t}\n\t}");
+    }
+
+    private static void PatchTrail(string path) => ReplaceOnce(path,
+        "\tpublic static void Add(Entity entity, Color color, float duration = 1f, bool frozenUpdate = false, bool useRawDeltaTime = false)\n\t{\n\t\tImage image = entity.Get<PlayerSprite>();",
+        "\tpublic static void Add(Entity entity, Color color, float duration = 1f, bool frozenUpdate = false, bool useRawDeltaTime = false) => On.Celeste.TrailManager.Invoke(entity, color, duration, frozenUpdate, useRawDeltaTime, AppleEverestOriginalAdd);\n\n\tprivate static void AppleEverestOriginalAdd(Entity entity, Color color, float duration, bool frozenUpdate, bool useRawDeltaTime)\n\t{\n\t\tImage image = entity.Get<PlayerSprite>();");
+
+    private static void PatchProject(string path, string closureRoot)
+    {
+        ReplaceOnce(path, "<DefineConstants>$(DefineConstants);", "<DefineConstants>$(DefineConstants);EVEREST_APPLE_STATIC_AOT;");
+        string assemblies = Path.Combine(closureRoot, "assemblies");
+        if (!Directory.Exists(assemblies)) return;
+        StringBuilder references = new("  <ItemGroup>\n");
+        foreach (string assembly in Directory.EnumerateFiles(assemblies, "*.dll").OrderBy(Path.GetFileName, StringComparer.Ordinal))
+        {
+            string name = Path.GetFileNameWithoutExtension(assembly);
+            references.Append("    <Reference Include=\"").Append(name).Append("\"><HintPath>AppleEverestAssemblies/")
+                .Append(Path.GetFileName(assembly)).AppendLine("</HintPath><Private>true</Private></Reference>");
+        }
+        references.AppendLine("  </ItemGroup>");
+        ReplaceOnce(path, "</Project>", references + "</Project>");
+    }
 
     private static void ReplaceOnce(string path, string needle, string replacement)
     {
@@ -213,7 +298,7 @@ internal static class ClosureGenerator
             string dependencies = string.Join(", ", mod.Metadata.Dependencies.Select(dep => $"\"{Escape(dep.Name)}\""));
             result.Append("        new AppleEverestModuleDescriptor(\"").Append(Escape(mod.Metadata.Name)).Append("\", \"")
                 .Append(Escape(mod.Metadata.Version)).Append("\", new[] { ").Append(dependencies).Append(" }, static () => new ")
-                .Append(declaration.ModuleType).Append("(), ")
+                .Append("global::").Append(declaration.ModuleType).Append("(), ")
                 .Append(Factory(declaration.SettingsType)).Append(", ")
                 .Append(Factory(declaration.SaveDataType)).Append(", ")
                 .Append(Factory(declaration.SessionType)).AppendLine("),");
@@ -227,6 +312,11 @@ internal static class ClosureGenerator
         foreach (string item in staged.Select(value => value.LogicalPath).Distinct(StringComparer.Ordinal).OrderBy(value => value, StringComparer.Ordinal))
             result.Append("        \"").Append(Escape(item)).AppendLine("\",");
         result.AppendLine("    };")
+            .Append("    internal const string FirstMapPath = ")
+            .Append(staged.Select(value => value.LogicalPath).FirstOrDefault(value => value.StartsWith("Maps/", StringComparison.Ordinal) && value.EndsWith(".bin", StringComparison.Ordinal)) is string map
+                ? $"\"{Escape(map["Maps/".Length..^4])}\"" : "null")
+            .AppendLine(";")
+            .AppendLine("    internal static bool Has(string path) => System.Array.IndexOf(Entries, path) >= 0;")
             .Append("    internal const string ResolvedOrder = \"").Append(Escape(string.Join(",", mods.Select(mod => mod.Metadata.Name)))).AppendLine("\";")
             .AppendLine("}");
         return result.ToString();
@@ -274,8 +364,15 @@ internal static class ClosureGenerator
         return result.AppendLine("    }").AppendLine("}").ToString();
     }
 
-    private static string Factory(string? type) => type == null ? "null" : $"static () => new {type}()";
+    private static string Factory(string? type) => type == null ? "null" : $"static () => new global::{type}()";
     private static string Escape(string value) => value.Replace("\\", "\\\\").Replace("\"", "\\\"");
+    private static string NormalizeContentPath(string owner, string relative)
+    {
+        if (relative.StartsWith("Content/", StringComparison.Ordinal) || relative.StartsWith("Maps/", StringComparison.Ordinal))
+            return relative;
+        string safeOwner = new(owner.Select(ch => char.IsAsciiLetterOrDigit(ch) || ch is '_' or '-' or '.' ? ch : '_').ToArray());
+        return $"Content/AppleEverest/Mods/{safeOwner}/{relative}";
+    }
     private static void ValidateDeclaration(AppleStaticDeclaration declaration, string mod)
     {
         if (declaration.SchemaVersion != 1 || !TypeName(declaration.ModuleType))

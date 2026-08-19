@@ -35,8 +35,12 @@ Use this page to jump directly to the task or level of detail you need.
   controls, controller coexistence, seven-bank audio, durable saves, and
   native Files-based save/layout transfer.
 - [Experimental Apple Everest static-AOT architecture](APPLE_EVEREST_STATIC_AOT.md)
-  — contributor documentation for the shared build-time canary foundation;
-  general mod compatibility is not yet supported.
+  — contributor documentation for the shared build-time canary and closed
+  real-ZIP/precompiled-DLL foundation; general mod compatibility is not yet
+  supported.
+- [Apple Everest tested-mod compatibility](APPLE_EVEREST_COMPATIBILITY.md)
+  — exact real ZIPs audited by the experimental static-AOT ladder, including
+  supported and deferred mechanism classes.
 - [Apple Everest host-tool third-party notices](APPLE_EVEREST_THIRD_PARTY.md)
   — exact upstream provenance and licensing scope.
 - [Project architecture](STATUS.md#architecture) — host, native, generated

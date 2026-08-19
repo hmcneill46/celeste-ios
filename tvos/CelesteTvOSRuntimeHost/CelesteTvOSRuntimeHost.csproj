@@ -95,6 +95,11 @@
     <TrimmerRootDescriptor Include="CelesteLinker.xml" />
   </ItemGroup>
 
+  <!-- Present only in the closed Apple Everest lane. The generated file roots
+       each accepted external assembly by its actual managed identity. -->
+  <Import Project="$(CelesteRuntimeManagedRoot)\AppleEverestExternalAssemblyRoots.props"
+          Condition="'$(CelesteRuntimeEnabled)' == 'true' and Exists('$(CelesteRuntimeManagedRoot)\AppleEverestExternalAssemblyRoots.props')" />
+
   <!-- Optional, ignored, lawful local Stage 9A payloads. This lane exists only
        for simulator regression and is never part of a public/product app. -->
   <ItemGroup Condition="'$(CelesteLaunchMode)' == 'CelestePersistenceDiagnostic' and '$(Stage9BRetainedFixtureRoot)' != ''">

@@ -50,6 +50,8 @@ public static class AppleEverestStaticRuntime
                 Session = descriptor.SessionFactory?.Invoke()
             };
             LoadedModules.Add(loaded);
+            module.SetStaticState(loaded.Settings as EverestModuleSettings, loaded.SaveData as EverestModuleSaveData,
+                loaded.Session as EverestModuleSession);
             InvokeOwned(loaded, module.Load);
         }
         Log($"startup=PASS profile={GeneratedAppleEverestModuleRegistry.Profile} modules={LoadedModules.Count} runtime-dll-load=false runtime-detour=false");
@@ -59,8 +61,9 @@ public static class AppleEverestStaticRuntime
     {
         if (contentReady) return;
         contentReady = true;
-        LoadCanaryDialog();
-        VerifyContentPrecedence();
+        if (GeneratedAppleEverestContentManifest.Has("AppleEverest/Dialog/Canary.txt")) LoadCanaryDialog();
+        LoadStaticDialogFragments();
+        if (GeneratedAppleEverestContentManifest.Has("AppleEverest/Canary/precedence.txt")) VerifyContentPrecedence();
         foreach (Loaded loaded in LoadedModules)
         {
             InvokeOwned(loaded, loaded.Module.Initialize);
@@ -93,6 +96,7 @@ public static class AppleEverestStaticRuntime
             InvokeOwned(loaded, loaded.Module.Unload);
             loaded.Enabled = false;
         }
+        AppleEverestHookList.Invalidate();
         On.Celeste.Dialog.RebuildActiveChain();
         ShowStatus($"{name}: {(enabled ? "ENABLED" : "DISABLED")}");
         Log($"module={name} enabled={enabled.ToString().ToLowerInvariant()} active-hooks={On.Celeste.Dialog.ActiveHandlerCount}");
@@ -135,6 +139,30 @@ public static class AppleEverestStaticRuntime
         Session session = new(new AreaKey(0));
         Engine.Scene = new LevelLoader(session) { PlayerIntroTypeOverride = Player.IntroTypes.None };
         Log($"content-room=launch path=AppleEverest/Canary debug-save-created={createdDebugSave.ToString().ToLowerInvariant()}");
+    }
+
+    public static void LaunchFirstModMap()
+    {
+        string path = GeneratedAppleEverestContentManifest.FirstMapPath;
+        if (string.IsNullOrWhiteSpace(path)) return;
+        bool createdDebugSave = SaveData.Instance == null;
+        if (createdDebugSave) SaveData.InitializeDebugMode(loadExisting: false);
+        Input.MenuConfirm.ConsumePress();
+        Input.Jump.ConsumePress();
+        originalPrologueMode ??= AreaData.Areas[0].Mode[0];
+        ModeProperties source = originalPrologueMode;
+        ModeProperties mod = new()
+        {
+            Path = path,
+            Checkpoints = null,
+            Inventory = PlayerInventory.Default,
+            AudioState = source.AudioState.Clone()
+        };
+        AreaData.Areas[0].Mode[0] = mod;
+        mod.MapData = new MapData(new AreaKey(0));
+        Session session = new(new AreaKey(0));
+        Engine.Scene = new LevelLoader(session) { PlayerIntroTypeOverride = Player.IntroTypes.None };
+        Log($"content-map=launch path={path} debug-save-created={createdDebugSave.ToString().ToLowerInvariant()}");
     }
 
     public static void AttachCanaryBanner(global::Celeste.Level level, string source)
@@ -182,6 +210,47 @@ public static class AppleEverestStaticRuntime
                 language.Dialog[key] = value;
                 language.Cleaned[key] = value;
             }
+        }
+    }
+
+    private static void LoadStaticDialogFragments()
+    {
+        foreach (string logical in GeneratedAppleEverestContentManifest.Entries)
+        {
+            if (!logical.StartsWith("AppleEverest/Mods/", StringComparison.Ordinal) ||
+                !logical.Contains("/Dialog/", StringComparison.Ordinal) ||
+                !logical.EndsWith(".txt", StringComparison.OrdinalIgnoreCase)) continue;
+            string languageId = Path.GetFileNameWithoutExtension(logical).ToLowerInvariant();
+            if (!global::Celeste.Dialog.Languages.TryGetValue(languageId, out Language language)) continue;
+            string key = null;
+            StringBuilder value = new();
+            void Commit()
+            {
+                if (string.IsNullOrWhiteSpace(key)) return;
+                string raw = value.ToString();
+                language.Dialog[key] = raw;
+                language.Cleaned[key] = raw;
+            }
+            foreach (string rawLine in ReadBundleText(Path.Combine(Engine.ContentDirectory, logical)).Replace("\r", "").Split('\n'))
+            {
+                string line = rawLine.Trim();
+                if (line.Length == 0 || line.StartsWith("#", StringComparison.Ordinal)) continue;
+                int equals = line.IndexOf('=');
+                if (equals > 0)
+                {
+                    Commit();
+                    key = line[..equals].Trim();
+                    value.Clear();
+                    value.Append(line[(equals + 1)..].Trim());
+                }
+                else if (key != null)
+                {
+                    if (value.Length > 0) value.Append("{break}");
+                    value.Append(line);
+                }
+            }
+            Commit();
+            Log($"content-dialog=loaded path={logical}");
         }
     }
 
@@ -304,17 +373,15 @@ internal static class AppleEverestLab
     public static void AddOptions(TextMenu menu)
     {
         menu.Add(new TextMenu.SubHeader("APPLE EVEREST STATIC LAB"));
-        menu.Add(new TextMenu.Button("Play Content Canary").Pressed(AppleEverestStaticRuntime.LaunchCanaryRoom));
-        menu.Add(new TextMenu.OnOff("Canary Core Module", AppleEverestStaticRuntime.ModuleEnabled("AppleEverestCanaryCore"))
-            .Change(value => AppleEverestStaticRuntime.SetModuleEnabled("AppleEverestCanaryCore", value)));
-        menu.Add(new TextMenu.OnOff("Canary Hook A", AppleEverestStaticRuntime.ModuleEnabled("AppleEverestCanaryHookA"))
-            .Change(value => AppleEverestStaticRuntime.SetModuleEnabled("AppleEverestCanaryHookA", value)));
-        menu.Add(new TextMenu.OnOff("Canary Hook B", AppleEverestStaticRuntime.ModuleEnabled("AppleEverestCanaryHookB"))
-            .Change(value => AppleEverestStaticRuntime.SetModuleEnabled("AppleEverestCanaryHookB", value)));
-        global::AppleEverest.Canaries.CanarySettings settings =
-            AppleEverestStaticRuntime.GetSettings<global::AppleEverest.Canaries.CanarySettings>("AppleEverestCanaryCore");
-        menu.Add(new TextMenu.OnOff("Canary Banner", settings.BannerEnabled)
-            .Change(value => settings.BannerEnabled = value));
-        menu.Add(new TextMenu.Button("Run Hook Chain Probe").Pressed(AppleEverestStaticRuntime.RunHookProbe));
+        if (!string.IsNullOrWhiteSpace(GeneratedAppleEverestContentManifest.FirstMapPath))
+            menu.Add(new TextMenu.Button("Play First Static Mod Map").Pressed(AppleEverestStaticRuntime.LaunchFirstModMap));
+        foreach (EverestModule module in AppleEverestStaticRuntime.Modules)
+        {
+            string name = module.Metadata.Name;
+            menu.Add(new TextMenu.OnOff(name, AppleEverestStaticRuntime.ModuleEnabled(name))
+                .Change(value => AppleEverestStaticRuntime.SetModuleEnabled(name, value)));
+        }
+        if (AppleEverestStaticRuntime.ModuleEnabled("AppleEverestCanaryHookA") || AppleEverestStaticRuntime.ModuleEnabled("AppleEverestCanaryHookB"))
+            menu.Add(new TextMenu.Button("Run Hook Chain Probe").Pressed(AppleEverestStaticRuntime.RunHookProbe));
     }
 }

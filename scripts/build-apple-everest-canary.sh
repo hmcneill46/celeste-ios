@@ -19,13 +19,14 @@ TVOS_DEVICE_ID=""
 PREPARE_ONLY=0
 CLEAN=0
 REUSE_BUILD=0
+MODS=()
 
 usage() {
   cat <<'EOF'
 Usage: scripts/build-apple-everest-canary.sh [options]
 
-Internal Stage 25B full-AOT canary builder. It never changes the normal vanilla
-iOS or tvOS build paths and accepts only the tracked project-owned canaries.
+Internal shared Apple Everest full-AOT product builder. It never changes the
+normal vanilla iOS or tvOS build paths. With no --mod it uses the tracked canaries.
 
 Options:
   --platform ios|tvos|all  target platform(s), default all
@@ -35,6 +36,7 @@ Options:
   --tvos-bundle-id ID      separate experimental tvOS identity
   --ios-device-id ID       provision the iOS canary for this local device
   --tvos-device-id ID      provision the tvOS canary for this local device
+  --mod ZIP_OR_DIR         explicit ordinary Everest input; may be repeated
   --prepare-only           generate and compile-check the shared closure only
   --clean                  replace only marked prior canary output
   --reuse-build            package an already-marked completed AOT build
@@ -51,12 +53,17 @@ while (($#)); do
     --tvos-bundle-id) TVOS_BUNDLE_ID="$2"; shift 2 ;;
     --ios-device-id) IOS_DEVICE_ID="$2"; shift 2 ;;
     --tvos-device-id) TVOS_DEVICE_ID="$2"; shift 2 ;;
+    --mod) MODS+=("$2"); shift 2 ;;
     --prepare-only) PREPARE_ONLY=1; shift ;;
     --clean) CLEAN=1; shift ;;
     --reuse-build) REUSE_BUILD=1; shift ;;
     -h|--help) usage; exit 0 ;;
     *) echo "error: unknown option: $1" >&2; exit 2 ;;
   esac
+done
+for index in "${!MODS[@]}"; do
+  [[ -e "${MODS[$index]}" ]] || { echo "error: mod input does not exist: ${MODS[$index]}" >&2; exit 2; }
+  MODS[$index]="$(python3 -c 'import pathlib,sys; print(pathlib.Path(sys.argv[1]).resolve())' "${MODS[$index]}")"
 done
 for device in "$IOS_DEVICE_ID" "$TVOS_DEVICE_ID"; do
   [[ -z "$device" || "$device" =~ ^[A-Fa-f0-9-]{24,40}$ ]] || { echo "error: invalid device identifier" >&2; exit 2; }
@@ -99,12 +106,19 @@ safe_replace() {
 "$SCRIPT_DIR/bootstrap-apple-everest-host.sh"
 (cd "$REPO_ROOT/tools/AppleEverestBuilder" && "$DOTNET8" run --project AppleEverestBuilder.csproj -- acquire --profile "$PROFILE" --output "$UPSTREAM")
 safe_replace "$CLOSURE" .apple-everest-static-closure
+if ((${#MODS[@]} == 0)); then
+  MODS=(
+    "$REPO_ROOT/apple-everest/canaries/content"
+    "$REPO_ROOT/apple-everest/canaries/module-a"
+    "$REPO_ROOT/apple-everest/canaries/module-b"
+    "$REPO_ROOT/apple-everest/canaries/module-c"
+  )
+fi
+mod_args=()
+for mod in "${MODS[@]}"; do mod_args+=(--mod "$mod"); done
 (cd "$REPO_ROOT/tools/AppleEverestBuilder" && "$DOTNET8" run --project AppleEverestBuilder.csproj -- build \
   --profile "$PROFILE" --repo-root "$REPO_ROOT" --upstream "$UPSTREAM" --output "$CLOSURE" \
-  --mod "$REPO_ROOT/apple-everest/canaries/content" \
-  --mod "$REPO_ROOT/apple-everest/canaries/module-a" \
-  --mod "$REPO_ROOT/apple-everest/canaries/module-b" \
-  --mod "$REPO_ROOT/apple-everest/canaries/module-c")
+  "${mod_args[@]}")
 
 prepare_platform() {
   local platform="$1" base destination
@@ -225,6 +239,33 @@ pathlib.Path(sys.argv[3]).write_text(json.dumps({"schemaVersion":1,"platform":sy
 PY
 }
 
+scan_product_runtime() {
+  local app="$1" platform_build="$2" assembly assembly_name aot_object_count llvm_object mono_object
+  (cd "$REPO_ROOT/tools/AppleEverestBuilder" && "$DOTNET8" run --project AppleEverestBuilder.csproj -- \
+    scan-runtime --assembly "$app/Celeste.dll")
+  if [[ -d "$CLOSURE/assemblies" ]]; then
+    while IFS= read -r -d '' assembly; do
+      [[ -f "$app/$(basename "$assembly")" ]] || {
+        echo "error: frozen external assembly missing from product: $(basename "$assembly")" >&2; exit 1; }
+      (cd "$REPO_ROOT/tools/AppleEverestBuilder" && "$DOTNET8" run --project AppleEverestBuilder.csproj -- \
+        scan-runtime --assembly "$app/$(basename "$assembly")")
+      (cd "$REPO_ROOT/tools/AppleEverestBuilder" && "$DOTNET8" run --project AppleEverestBuilder.csproj -- \
+        verify-preserved-assembly --source "$assembly" --linked "$app/$(basename "$assembly")")
+      (cd "$REPO_ROOT/tools/AppleEverestBuilder" && "$DOTNET8" run --project AppleEverestBuilder.csproj -- \
+        verify-referenced-api --source "$app/$(basename "$assembly")" --target "$app/Celeste.dll")
+      assembly_name="$(basename "$assembly" .dll)"
+      aot_object_count="$(find "$platform_build" -type f -name "$assembly_name.dll.llvm.o" -print | wc -l | tr -d ' ')"
+      [[ "$aot_object_count" == 1 ]] || {
+        echo "error: expected one LLVM AOT object for $assembly_name, found $aot_object_count" >&2; exit 1; }
+      llvm_object="$(find "$platform_build" -type f -name "$assembly_name.dll.llvm.o" -print)"
+      mono_object="${llvm_object%.llvm.o}.o"
+      [[ -f "$mono_object" ]] || { echo "error: companion Mono AOT object missing for $assembly_name" >&2; exit 1; }
+      (cd "$REPO_ROOT/tools/AppleEverestBuilder" && "$DOTNET8" run --project AppleEverestBuilder.csproj -- \
+        verify-aot-object --source "$assembly" --object "$llvm_object" --object "$mono_object")
+    done < <(find "$CLOSURE/assemblies" -maxdepth 1 -type f -name '*.dll' -print0)
+  fi
+}
+
 if [[ "$PLATFORM" != tvos ]]; then
   ios_artifacts="$WORK_ROOT/build/ios"
   if ((!REUSE_BUILD)); then
@@ -237,8 +278,7 @@ if [[ "$PLATFORM" != tvos ]]; then
       -p:TrimMode=full -p:MtouchUseLlvm=true -p:PublishTrimmed=true "${signing_args[@]}"
   fi
   ios_app="$(locate_app "$ios_artifacts" "$IOS_BUNDLE_ID")"
-  (cd "$REPO_ROOT/tools/AppleEverestBuilder" && "$DOTNET8" run --project AppleEverestBuilder.csproj -- \
-    scan-runtime --assembly "$ios_app/Celeste.dll")
+  scan_product_runtime "$ios_app" "$ios_artifacts"
   package_app ios "$ios_app" Celeste-Everest-Canary-iOS
 fi
 
@@ -253,8 +293,7 @@ if [[ "$PLATFORM" != ios ]]; then
       -p:UseInterpreter=false -p:RunAOTCompilation=true -p:PublishTrimmed=true -p:TrimMode=full -p:MtouchLink=Full "${signing_args[@]}"
   fi
   tvos_app="$(locate_app "$tvos_artifacts" "$TVOS_BUNDLE_ID")"
-  (cd "$REPO_ROOT/tools/AppleEverestBuilder" && "$DOTNET8" run --project AppleEverestBuilder.csproj -- \
-    scan-runtime --assembly "$tvos_app/Celeste.dll")
+  scan_product_runtime "$tvos_app" "$tvos_artifacts"
   package_app tvos "$tvos_app" Celeste-Everest-Canary-tvOS
 fi
 

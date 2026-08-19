@@ -1,0 +1,166 @@
+{
+  "schemaVersion": 1,
+  "everestProfile": "apple-everest-stable-1.6458.0-v1",
+  "transformerVersion": "apple-everest-static-v2",
+  "auditedCandidates": 14,
+  "selectedClosure": [
+    "IAccidentallyFourCassetteBlocks@1.0.0",
+    "ParticlePaletteHelper@1.0.0"
+  ],
+  "fixtures": [
+    {
+      "name": "IAccidentallyFourCassetteBlocks",
+      "version": "1.0.0",
+      "releaseUrl": "https://gamebanana.com/mods/150469",
+      "zipSha256": "37eaa16b6b2d458a8ce27e08ea315b4cc3c2938d6b3c2292c61203c641ad7c95",
+      "sourceUrl": null,
+      "sourceCommit": null,
+      "license": "No explicit redistribution license located; bytes are not redistributed",
+      "result": "SUPPORTED",
+      "class": "CONTENT_ONLY"
+    },
+    {
+      "name": "ParticlePaletteHelper",
+      "version": "1.0.0",
+      "releaseUrl": "https://github.com/KnowHT1515/ParticlePaletteHelper/releases/tag/v1.0.0",
+      "zipSha256": "f9cf8874acbfaff87af22098caea36429c97941d0b13e1114d8749be61afbe19",
+      "sourceUrl": "https://github.com/KnowHT1515/ParticlePaletteHelper",
+      "sourceCommit": "9a791bcb38f64a4c49ea3e496003899416f0bb82",
+      "license": "MIT",
+      "result": "SUPPORTED_WITH_STATIC_TRANSFORM",
+      "class": "BINARY_COMPATIBLE_ON_HOOK"
+    },
+    {
+      "name": "DashlessDreamBlocks",
+      "version": "2.0.0",
+      "releaseUrl": "https://github.com/coloursofnoise/DashlessDreamBlocks/releases/tag/v2.0.0",
+      "zipSha256": "ef5071ad28ed27ee73749623f4484a511f4793388f53417a4c0ee36c3d6e4a7b",
+      "sourceUrl": "https://github.com/coloursofnoise/DashlessDreamBlocks",
+      "sourceCommit": "7c5aca66c322866acfde47c250bb9e692f8d3be6",
+      "license": "MIT",
+      "result": "DEFERRED_DIRECT_HOOK",
+      "class": "DIRECT_HOOK_DEFERRED"
+    },
+    {
+      "name": "GoldenTrainer",
+      "version": "1.5.4",
+      "releaseUrl": "https://gamebanana.com/mods/364819",
+      "zipSha256": "2a39b5bb9524aeac510ff1e0835022a294081784982aca0bf3970fb8e867fc5b",
+      "sourceUrl": "https://github.com/Paloys/GoldenTrainer",
+      "sourceCommit": "96439220c8d5598ace6bb2f06b75dd78b71a6897",
+      "license": "No explicit redistribution license located; bytes are not redistributed",
+      "result": "DEFERRED_IL",
+      "class": "IL_EVENT_AND_DIRECT_ILHOOK_DEFERRED"
+    },
+    {
+      "name": "BetterSaves",
+      "version": "0.1.0",
+      "releaseUrl": "https://github.com/Microck/bettersaves/releases/tag/v0.1.0",
+      "zipSha256": "9e9013f029c0ce765d10917dccc4b1eebddce130fb6ec48c4fefeace78c7310c",
+      "sourceUrl": "https://github.com/Microck/bettersaves",
+      "sourceCommit": "6bc11db03adbb2226875d4fd8e004a2cb9ef6756",
+      "license": "MIT",
+      "result": "DEFERRED_PLATFORM",
+      "class": "ON_HOOK_DEFERRED"
+    },
+    {
+      "name": "ExtendedIdle",
+      "version": "1.0.0",
+      "releaseUrl": "https://github.com/KnowHT1515/ExtendedIdle/releases/tag/v1.0.0",
+      "zipSha256": "cc128b768dae5df77a413fa031dcd87618050613269f1190984a8f6f89c7e299",
+      "sourceUrl": "https://github.com/KnowHT1515/ExtendedIdle",
+      "sourceCommit": "fb65c482ea31f41ea51c3fef573a76b3c679e4c3",
+      "license": "MIT",
+      "result": "DEFERRED_DEPENDENCY",
+      "class": "ON_HOOK_DEFERRED"
+    },
+    {
+      "name": "Small Spaces",
+      "version": "GameBanana file 590825",
+      "releaseUrl": "https://gamebanana.com/mods/590825",
+      "zipSha256": "78f71b3c2223afb226fb047dfe60c711c4c4d6ca7773a8276e93b7676a910dab",
+      "sourceUrl": null,
+      "sourceCommit": null,
+      "license": "Not established",
+      "result": "REJECTED_PACKAGE",
+      "class": "NO_ROOT_EVEREST_YAML"
+    },
+    {
+      "name": "Spikeless",
+      "version": "1.0.0",
+      "releaseUrl": "https://gamebanana.com/mods/382011",
+      "zipSha256": "4880be5146aae628ea3e1381881b52e877dd589f9137c617f96f21bff3746a13",
+      "sourceUrl": null,
+      "sourceCommit": null,
+      "license": "Not established",
+      "result": "DEFERRED_DEPENDENCY",
+      "class": "CONTENT_ONLY_WITH_UNRESOLVED_HELPERS"
+    },
+    {
+      "name": "No Gondola",
+      "version": "GameBanana file 150520",
+      "releaseUrl": "https://gamebanana.com/mods/150520",
+      "zipSha256": "84debe674a8cd22dc988c867985cf940db26c8c1f098e112a644645fc88ab4cf",
+      "sourceUrl": null,
+      "sourceCommit": null,
+      "license": "Not established",
+      "result": "REJECTED_PACKAGE",
+      "class": "NO_ROOT_EVEREST_YAML"
+    },
+    {
+      "name": "SnowyAssortedItems",
+      "version": "0.2.0 (release archive labelled 1.0.2)",
+      "releaseUrl": null,
+      "zipSha256": "ec1f595a1fe1b9578aa9c1a03bdc7ee42ac95c02ee778222394a80302b011e23",
+      "sourceUrl": "https://github.com/Snowy063/SnowyAssortedItems",
+      "sourceCommit": "2d1a961de1ba43beefbc7e1eb6d8da0d46ad1fbb",
+      "license": "MIT",
+      "result": "DEFERRED_ON_HOOK",
+      "class": "ON_HOOK_DEFERRED"
+    },
+    {
+      "name": "DoubleLanguages",
+      "version": "0.3.0",
+      "releaseUrl": "https://github.com/Logabe/DoubleLanguages/releases/tag/0.3",
+      "zipSha256": "280966901439dcf11340add42fb9efc99b397d302ebb312de2ecde0fe62d03f1",
+      "sourceUrl": "https://github.com/Logabe/DoubleLanguages",
+      "sourceCommit": "af97c135af7aca98069fea7af98415af52c52d17",
+      "license": "No explicit license located; bytes are not redistributed",
+      "result": "DEFERRED_ON_HOOK",
+      "class": "ON_HOOK_DEFERRED"
+    },
+    {
+      "name": "Trailine",
+      "version": "1.1.0",
+      "releaseUrl": "https://gamebanana.com/mods/349341",
+      "zipSha256": "c6cd04644b8cb98c2c2718ce1afaf185023c13cb5dd9650bb86f8a2d4ba5711b",
+      "sourceUrl": "https://github.com/WEGFan/Celeste-Trailine",
+      "sourceCommit": "4f12442b4b2ffd375fbd50c99d8385d4cc0f63fb",
+      "license": "MIT",
+      "result": "DEFERRED_DIRECT_HOOK",
+      "class": "DIRECT_HOOK_DEFERRED"
+    },
+    {
+      "name": "ExtendedVariantMode",
+      "version": "source audit",
+      "releaseUrl": "https://gamebanana.com/mods/53650",
+      "zipSha256": null,
+      "sourceUrl": "https://github.com/maddie480/ExtendedVariantMode",
+      "sourceCommit": "fa9a25c356120c31196e21387e7b709f0cb30cc3",
+      "license": "MIT",
+      "result": "UNSUPPORTED_LUA",
+      "class": "SOURCE_AUDIT_NEGATIVE"
+    },
+    {
+      "name": "SmoothCeleste",
+      "version": "source audit",
+      "releaseUrl": "https://github.com/bybrooklyn/SmoothCeleste/releases",
+      "zipSha256": null,
+      "sourceUrl": "https://github.com/bybrooklyn/SmoothCeleste",
+      "sourceCommit": "b41697526e6bbcc9a6393dd00b0d09ec29616f5a",
+      "license": "MIT",
+      "result": "UNSUPPORTED_NATIVE",
+      "class": "SOURCE_AUDIT_NEGATIVE"
+    }
+  ]
+}

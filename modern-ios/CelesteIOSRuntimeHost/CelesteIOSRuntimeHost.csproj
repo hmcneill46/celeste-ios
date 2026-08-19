@@ -59,6 +59,11 @@
     <TrimmerRootDescriptor Include="$(RepoRoot)\tvos\CelesteTvOSRuntimeHost\CelesteLinker.xml" />
   </ItemGroup>
 
+  <!-- Present only in the closed Apple Everest lane. The generated file roots
+       each accepted external assembly by its actual managed identity. -->
+  <Import Project="$(CelesteIOSManagedRoot)\AppleEverestExternalAssemblyRoots.props"
+          Condition="'$(IOSProductMode)' == 'Celeste' and Exists('$(CelesteIOSManagedRoot)\AppleEverestExternalAssemblyRoots.props')" />
+
   <ItemGroup>
     <NativeReference Include="$(IOSHostNativeRoot)\SDL2.xcframework">
       <Kind>Static</Kind><SmartLink>false</SmartLink><ForceLoad>true</ForceLoad>

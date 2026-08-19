@@ -17,8 +17,15 @@ internal static class Program
             {
                 case "acquire": Acquire(One(options, "--profile"), One(options, "--output")); break;
                 case "build": Build(One(options, "--profile"), One(options, "--repo-root"), One(options, "--upstream"), One(options, "--output"), Many(options, "--mod")); break;
+                case "audit": Audit(Many(options, "--mod"), One(options, "--output")); break;
                 case "apply": ClosureGenerator.Apply(One(options, "--closure"), One(options, "--managed-root")); break;
                 case "scan-runtime": RuntimeClosureScanner.Verify(One(options, "--assembly")); break;
+                case "verify-preserved-assembly": RuntimeClosureScanner.VerifyPreserved(
+                    One(options, "--source"), One(options, "--linked")); break;
+                case "verify-referenced-api": RuntimeClosureScanner.VerifyReferencedApi(
+                    One(options, "--source"), One(options, "--target")); break;
+                case "verify-aot-object": RuntimeClosureScanner.VerifyAotObjects(
+                    One(options, "--source"), Many(options, "--object")); break;
                 case "verify-profile": _ = LoadProfile(One(options, "--profile")); break;
                 default: throw new InvalidDataException($"unknown command: {args[0]}");
             }
@@ -30,6 +37,57 @@ internal static class Program
             Console.Error.WriteLine($"error: {exception.Message}");
             return 1;
         }
+    }
+
+    private static void Audit(IReadOnlyList<string> modPaths, string output)
+    {
+        if (modPaths.Count == 0) throw new InvalidDataException("at least one explicit mod input is required");
+        string staging = Path.Combine(Path.GetTempPath(), "apple-everest-audit-" + Guid.NewGuid().ToString("N"));
+        Directory.CreateDirectory(staging);
+        List<object> results = [];
+        try
+        {
+            for (int index = 0; index < modPaths.Count; index++)
+            {
+                string source = Path.GetFullPath(modPaths[index]);
+                try
+                {
+                    ModInput input = SafeModIngestor.Ingest(source, staging, index);
+                    foreach (EverestYamlEntry metadata in input.Metadata)
+                    {
+                        ResolvedMod mod = CompatibilityAnalyzer.Audit(input, metadata);
+                        results.Add(new
+                        {
+                            input = Path.GetFileName(source),
+                            archiveSha256 = File.Exists(source) ? Hashing.FileSha256(source) : null,
+                            sourceLogicalSha256 = input.SourceSha256,
+                            name = metadata.Name,
+                            version = metadata.Version,
+                            declaredDll = metadata.DLL,
+                            classification = mod.Classification.ToString(),
+                            mechanisms = mod.Mechanisms,
+                            managedFiles = mod.ManagedFiles,
+                            contentFileCount = mod.ContentFiles.Count,
+                            dependencies = metadata.Dependencies.Select(dependency => new { dependency.Name, dependency.Version }).ToArray(),
+                            status = mod.Classification is CompatibilityClass.CONTENT_ONLY or CompatibilityClass.STATIC_MODULE or
+                                CompatibilityClass.NORMAL_EVENT or CompatibilityClass.ON_HOOK_SUPPORTED ? "candidate" : "deferred"
+                        });
+                    }
+                }
+                catch (Exception exception)
+                {
+                    results.Add(new { input = Path.GetFileName(source), status = "rejected", reason = exception.Message });
+                }
+            }
+        }
+        finally
+        {
+            if (Directory.Exists(staging)) Directory.Delete(staging, recursive: true);
+        }
+        object report = new { schemaVersion = 1, transformerVersion = ProductPolicy.TransformerVersion, audited = results.Count, results };
+        output = Path.GetFullPath(output);
+        Directory.CreateDirectory(Path.GetDirectoryName(output)!);
+        File.WriteAllText(output, JsonSerializer.Serialize(report, new JsonSerializerOptions { WriteIndented = true }) + "\n");
     }
 
     private static void Build(string profilePath, string repoRoot, string upstream, string output, IReadOnlyList<string> modPaths)
@@ -119,5 +177,5 @@ internal static class Program
 
     private static void Run(string command, params string[] args) { _ = Capture(command, args); }
 
-    private static void Help() => Console.WriteLine("AppleEverestBuilder acquire|build|apply|scan-runtime|verify-profile (Stage 25B closed static-AOT foundation)");
+    private static void Help() => Console.WriteLine("AppleEverestBuilder acquire|audit|build|apply|scan-runtime|verify-preserved-assembly|verify-referenced-api|verify-aot-object|verify-profile (closed static-AOT Apple product)");
 }

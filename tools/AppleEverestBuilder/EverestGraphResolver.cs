@@ -54,7 +54,15 @@ internal static class EverestGraphResolver
                     throw new InvalidDataException($"conflict: {mod.Metadata.Name} rejects {conflict.Name} {conflict.Version}");
             }
             foreach (EverestDependency dependency in mod.Metadata.Dependencies)
+            {
+                if (dependency.Name == "Everest")
+                {
+                    if (!EverestVersion.Satisfies(EverestVersion.Parse(dependency.Version), EverestVersion.Parse("1.6458.0")))
+                        throw new InvalidDataException($"incompatible platform dependency: {mod.Metadata.Name} requires Everest {dependency.Version}, static host is 1.6458.0");
+                    continue;
+                }
                 RequireCompatible(byName, mod, dependency, optional: false);
+            }
             foreach (EverestDependency dependency in mod.Metadata.OptionalDependencies)
                 RequireCompatible(byName, mod, dependency, optional: true);
         }
@@ -74,6 +82,7 @@ internal static class EverestGraphResolver
             state[name] = 1;
             ResolvedMod mod = byName[name];
             IEnumerable<string> edges = mod.Metadata.Dependencies.Select(item => item.Name)
+                .Where(item => item != "Everest")
                 .Concat(mod.Metadata.OptionalDependencies.Select(item => item.Name).Where(byName.ContainsKey))
                 .Distinct(StringComparer.Ordinal)
                 .OrderBy(value => value, StringComparer.Ordinal);

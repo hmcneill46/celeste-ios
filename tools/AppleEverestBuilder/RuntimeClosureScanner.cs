@@ -1,5 +1,6 @@
 using Mono.Cecil;
 using Mono.Cecil.Cil;
+using System.Diagnostics;
 
 namespace AppleEverestBuilder;
 
@@ -43,6 +44,137 @@ internal static class RuntimeClosureScanner
         if (violations.Count != 0)
             throw new InvalidDataException("linked device runtime contains forbidden dynamic/mod-loader closure: " +
                                            string.Join(", ", violations));
+    }
+
+    internal static void VerifyPreserved(string sourceAssemblyPath, string linkedAssemblyPath)
+    {
+        using AssemblyDefinition source = AssemblyDefinition.ReadAssembly(
+            sourceAssemblyPath, new ReaderParameters { ReadSymbols = false });
+        using AssemblyDefinition linked = AssemblyDefinition.ReadAssembly(
+            linkedAssemblyPath, new ReaderParameters { ReadSymbols = false });
+        if (source.Name.Name != linked.Name.Name)
+            throw new InvalidDataException("linked external assembly identity changed");
+
+        Dictionary<string, MethodDefinition> linkedMethods = linked.MainModule.Types.SelectMany(AllTypes)
+            .SelectMany(type => type.Methods).ToDictionary(method => method.FullName, StringComparer.Ordinal);
+        List<string> missingBodies = [];
+        foreach (MethodDefinition method in source.MainModule.Types.SelectMany(AllTypes).SelectMany(type => type.Methods))
+        {
+            if (!linkedMethods.TryGetValue(method.FullName, out MethodDefinition? linkedMethod))
+            {
+                missingBodies.Add("missing:" + method.FullName);
+                continue;
+            }
+            if (method.HasBody && method.Body.Instructions.Count != 0 &&
+                (!linkedMethod.HasBody || linkedMethod.Body.Instructions.Count == 0))
+                missingBodies.Add("body:" + method.FullName);
+        }
+        if (missingBodies.Count != 0)
+            throw new InvalidDataException("linked external assembly lost executable methods: " +
+                string.Join(", ", missingBodies.Take(8)));
+    }
+
+    internal static void VerifyReferencedApi(string sourceAssemblyPath, string targetAssemblyPath)
+    {
+        string targetDirectory = Path.GetDirectoryName(Path.GetFullPath(targetAssemblyPath))!;
+        string sourceDirectory = Path.GetDirectoryName(Path.GetFullPath(sourceAssemblyPath))!;
+        DefaultAssemblyResolver resolver = new();
+        resolver.AddSearchDirectory(targetDirectory);
+        resolver.AddSearchDirectory(sourceDirectory);
+        using AssemblyDefinition target = AssemblyDefinition.ReadAssembly(targetAssemblyPath,
+            new ReaderParameters { ReadSymbols = false, AssemblyResolver = resolver });
+        using AssemblyDefinition source = AssemblyDefinition.ReadAssembly(sourceAssemblyPath,
+            new ReaderParameters { ReadSymbols = false, AssemblyResolver = resolver });
+
+        string targetName = target.Name.Name;
+        List<string> unresolved = [];
+        foreach (TypeReference type in source.MainModule.GetTypeReferences()
+                     .Where(type => ScopeName(type) == targetName))
+        {
+            try
+            {
+                if (type.Resolve() == null) unresolved.Add("type:" + type.FullName);
+            }
+            catch (AssemblyResolutionException)
+            {
+                unresolved.Add("type:" + type.FullName);
+            }
+        }
+        foreach (MemberReference member in source.MainModule.GetMemberReferences()
+                     .Where(member => ScopeName(member.DeclaringType) == targetName))
+        {
+            try
+            {
+                bool resolved = member switch
+                {
+                    MethodReference method => method.Resolve() != null,
+                    FieldReference field => field.Resolve() != null,
+                    _ => true
+                };
+                if (!resolved) unresolved.Add("member:" + member.FullName);
+            }
+            catch (ResolutionException)
+            {
+                unresolved.Add("member:" + member.FullName);
+            }
+        }
+        if (unresolved.Count != 0)
+            throw new InvalidDataException("external assembly references APIs absent from the linked " + targetName +
+                " contract: " + string.Join(", ", unresolved.Distinct(StringComparer.Ordinal).Take(12)));
+    }
+
+    internal static void VerifyAotObjects(string sourceAssemblyPath, IReadOnlyList<string> objectPaths)
+    {
+        if (objectPaths.Count == 0) throw new InvalidDataException("at least one AOT object is required");
+        List<string> symbols = [];
+        foreach (string objectPath in objectPaths)
+        {
+            ProcessStartInfo info = new("/usr/bin/nm")
+            {
+                RedirectStandardOutput = true,
+                RedirectStandardError = true,
+                UseShellExecute = false
+            };
+            info.ArgumentList.Add("-j");
+            info.ArgumentList.Add(objectPath);
+            using Process process = Process.Start(info) ?? throw new InvalidOperationException("failed to start nm");
+            symbols.AddRange(process.StandardOutput.ReadToEnd().Split('\n', StringSplitOptions.RemoveEmptyEntries));
+            string error = process.StandardError.ReadToEnd();
+            process.WaitForExit();
+            if (process.ExitCode != 0) throw new InvalidDataException("nm failed: " + error.Trim());
+        }
+
+        using AssemblyDefinition source = AssemblyDefinition.ReadAssembly(sourceAssemblyPath,
+            new ReaderParameters { ReadSymbols = false });
+        List<string> missing = [];
+        foreach (TypeDefinition type in source.MainModule.Types.SelectMany(AllTypes)
+                     .Where(type => !type.HasGenericParameters))
+        foreach (MethodDefinition method in type.Methods.Where(method =>
+                     method.HasBody && method.Body.Instructions.Count != 0 && !method.HasGenericParameters &&
+                     !method.IsAbstract && !method.IsPInvokeImpl))
+        {
+            string methodName = AotName(type.FullName) + "_" + AotName(method.Name);
+            string llvmPrefix = "_" + AotName(source.Name.Name) + "_" + methodName;
+            if (!symbols.Any(symbol => symbol.StartsWith(llvmPrefix, StringComparison.Ordinal) ||
+                                       symbol.StartsWith(methodName, StringComparison.Ordinal)))
+                missing.Add(method.FullName);
+        }
+        if (missing.Count != 0)
+            throw new InvalidDataException("full-AOT object omitted executable external methods: " +
+                string.Join(", ", missing.Take(12)));
+    }
+
+    private static string ScopeName(TypeReference type) => type.GetElementType().Scope switch
+    {
+        AssemblyNameReference assembly => assembly.Name,
+        ModuleDefinition module => module.Assembly.Name.Name,
+        _ => string.Empty
+    };
+
+    private static string AotName(string value)
+    {
+        char[] result = value.Select(character => char.IsLetterOrDigit(character) ? character : '_').ToArray();
+        return new string(result);
     }
 
     private static bool Forbidden(string value) =>

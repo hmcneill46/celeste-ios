@@ -20,7 +20,7 @@ not an App Store distribution.
 | Inputs | Nine exact Celeste 1.4.0.0 FNA profiles from itch.io, Epic Games Store, and Steam |
 | Build routes | Local Apple silicon Mac or private GitHub compilation to an unsigned IPA |
 | Modern iOS/iPadOS | Personal self-build release candidate with controller/touch play, customizable layouts, direct Metal, resilient seven-bank FMOD playback, durable ordinary file-backed saves, and native Files-based `.celeste`/touch-layout transfer on physical iPhone and iPad |
-| Experimental Everest foundation | Shared build-host static-AOT foundation physically proven on iPhone, iPad, and Apple TV with deliberately bounded canaries; not general Everest/mod compatibility |
+| Experimental Everest foundation | Shared build-host static-AOT foundation plus a closed real-ZIP/precompiled-DLL lane, physically proven on iPhone, iPad, and Apple TV with explicitly tested mods; not general Everest/mod compatibility |
 
 The release-candidate audit covered a clean public clone, native and managed
 reproducibility, full AOT/trimming, unsigned packaging, same-identity physical
@@ -41,6 +41,8 @@ The separate [Apple Everest static-AOT architecture](APPLE_EVEREST_STATIC_AOT.md
 is contributor-facing experimental work. It preserves the normal vanilla
 products and translates only explicitly supported mod mechanisms before AOT;
 stock desktop Everest is not run on iPhone, iPad, or Apple TV.
+The exact tested real inputs and remaining mechanism boundaries are in the
+[Apple Everest compatibility matrix](APPLE_EVEREST_COMPATIBILITY.md).
 
 ## Proven support matrix
 

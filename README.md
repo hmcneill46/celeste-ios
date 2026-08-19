@@ -116,8 +116,10 @@ build.
 
 Contributor note: an [experimental shared Apple static-Everest
 foundation](docs/APPLE_EVEREST_STATIC_AOT.md) exists for tightly bounded,
-pre-analysed full-AOT canaries. It is not general mod support; ordinary users
-should continue to use the vanilla iPhone/iPad and Apple TV builders above.
+pre-analysed full-AOT canaries, including a small
+[exact real-mod test matrix](docs/APPLE_EVEREST_COMPATIBILITY.md). It is not
+general mod support; ordinary users should continue to use the vanilla
+iPhone/iPad and Apple TV builders above.
 
 → **[Choose and obtain supported Celeste files](docs/CELESTE_INPUTS.md)**
 

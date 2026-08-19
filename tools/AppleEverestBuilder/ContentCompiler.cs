@@ -26,6 +26,12 @@ internal static class ContentCompiler
             CompileMap(source, target, logical["Maps/".Length..^4]);
             return logical;
         }
+        if (logical.StartsWith("Maps/", StringComparison.Ordinal) && logical.EndsWith(".bin", StringComparison.Ordinal))
+        {
+            string target = Target(contentOutput, logical);
+            NormalizeMapPackage(source, target, logical["Maps/".Length..^4]);
+            return logical;
+        }
         string destination = Target(contentOutput, logical);
         File.Copy(source, destination, overwrite: true);
         return logical;
@@ -102,6 +108,46 @@ internal static class ContentCompiler
         writer.Write("CELESTE MAP"); writer.Write(package); writer.Write(checked((short)table.Count));
         foreach (string value in table) writer.Write(value);
         WriteElement(writer, root, lookup);
+    }
+
+    private static void NormalizeMapPackage(string source, string output, string package)
+    {
+        // Everest accepts the generic package label emitted by common map
+        // editors (normally "Contribution"), whereas vanilla Celeste insists
+        // that this header equal the mounted ModeProperties path.  Normalize
+        // only the two length-prefixed header strings at build time.  The
+        // string table and complete element body remain the original pinned
+        // mod bytes, and malformed/non-Celeste binaries fail closed.
+        using FileStream input = File.OpenRead(source);
+        using BinaryReader reader = new(input, Encoding.UTF8, leaveOpen: true);
+        string magic;
+        string sourcePackage;
+        try
+        {
+            magic = reader.ReadString();
+            sourcePackage = reader.ReadString();
+        }
+        catch (EndOfStreamException exception)
+        {
+            throw new InvalidDataException("map binary has an invalid Celeste header", exception);
+        }
+        if (magic != "CELESTE MAP") throw new InvalidDataException("map binary has an invalid Celeste header");
+        if (sourcePackage.Length is < 1 or > 1024) throw new InvalidDataException("map binary package is invalid");
+        long bodyOffset = input.Position;
+        byte[] body = new byte[checked((int)(input.Length - bodyOffset))];
+        input.ReadExactly(body);
+        if (body.Length < sizeof(short)) throw new InvalidDataException("map binary body is truncated");
+
+        if (sourcePackage == package)
+        {
+            File.Copy(source, output, overwrite: true);
+            return;
+        }
+
+        using BinaryWriter writer = new(File.Open(output, FileMode.Create), Encoding.UTF8, leaveOpen: false);
+        writer.Write(magic);
+        writer.Write(package);
+        writer.Write(body);
     }
 
     private static void WriteElement(BinaryWriter writer, XmlElement element, IReadOnlyDictionary<string, short> lookup)

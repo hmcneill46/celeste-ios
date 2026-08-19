@@ -5,6 +5,9 @@ namespace Celeste.Mod;
 
 public abstract class EverestModule
 {
+    protected EverestModuleSettings _Settings;
+    protected EverestModuleSaveData _SaveData;
+    protected EverestModuleSession _Session;
     public EverestModuleMetadata Metadata { get; internal set; }
     public virtual Type SettingsType => null;
     public virtual Type SaveDataType => null;
@@ -13,6 +16,13 @@ public abstract class EverestModule
     public virtual void Initialize() { }
     public virtual void LoadContent(bool firstLoad) { }
     public virtual void Unload() { }
+
+    internal void SetStaticState(EverestModuleSettings settings, EverestModuleSaveData saveData, EverestModuleSession session)
+    {
+        _Settings = settings;
+        _SaveData = saveData;
+        _Session = session;
+    }
 }
 
 public abstract class EverestModuleSettings { }
@@ -29,6 +39,14 @@ public static partial class Everest
 {
     public static IReadOnlyList<EverestModule> Modules => AppleEverestStaticRuntime.Modules;
 
+    // Preserve Everest's public binary contract. Mod DLLs refer to this as the
+    // nested type Everest.Content and access Mods/Map as static fields.
+    public static class Content
+    {
+        public static readonly List<ModContent> Mods = new();
+        public static readonly Dictionary<string, ModAsset> Map = new(StringComparer.Ordinal);
+    }
+
     public static partial class Events
     {
         public static partial class Level
@@ -39,6 +57,31 @@ public static partial class Everest
                 OnLoadLevel?.Invoke(level, intro, fromLoader);
         }
     }
+}
+
+public sealed class ModContent
+{
+    public string Name { get; set; }
+    public EverestModuleMetadata Mod;
+    public readonly Dictionary<string, ModAsset> Map = new(StringComparer.Ordinal);
+
+    internal ModContent(string name) { Name = name; }
+}
+
+public sealed class ModAsset
+{
+    public bool TryDeserialize<T>(out T value)
+    {
+        value = default;
+        return false;
+    }
+}
+
+public static partial class Logger
+{
+    public static void Info(string tag, string value) => AppleEverestStaticRuntime.Log($"mod-info tag={tag} message={value}");
+    public static void Warn(string tag, string value) => AppleEverestStaticRuntime.Log($"mod-warning tag={tag} message={value}");
+    public static void Error(string tag, string value) => AppleEverestStaticRuntime.Log($"mod-error tag={tag} message={value}");
 }
 
 internal sealed class AppleEverestModuleDescriptor

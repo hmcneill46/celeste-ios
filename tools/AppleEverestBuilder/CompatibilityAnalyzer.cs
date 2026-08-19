@@ -6,9 +6,16 @@ namespace AppleEverestBuilder;
 
 internal static class CompatibilityAnalyzer
 {
+    private static readonly HashSet<string> SupportedHookTypes = new(StringComparer.Ordinal)
+    {
+        "On.Celeste.Dialog",
+        "On.Celeste.TrailManager",
+        "On.Monocle.ParticleSystem"
+    };
     private static readonly (string Needle, CompatibilityClass Classification)[] SourceRules =
     [
         ("IL.Celeste.", CompatibilityClass.IL_HOOK_DEFERRED),
+        ("IL.Monocle.", CompatibilityClass.IL_HOOK_DEFERRED),
         ("new ILHook", CompatibilityClass.IL_HOOK_DEFERRED),
         ("new Hook(", CompatibilityClass.DIRECT_HOOK_DEFERRED),
         ("NativeDetour", CompatibilityClass.NATIVE_UNSUPPORTED),
@@ -26,7 +33,10 @@ internal static class CompatibilityAnalyzer
         ("FileSystemWatcher", CompatibilityClass.PLATFORM_UNSUPPORTED)
     ];
 
-    public static ResolvedMod Analyze(ModInput input, EverestYamlEntry metadata)
+    public static ResolvedMod Analyze(ModInput input, EverestYamlEntry metadata) => AnalyzeCore(input, metadata, rejectUnsupported: true);
+    public static ResolvedMod Audit(ModInput input, EverestYamlEntry metadata) => AnalyzeCore(input, metadata, rejectUnsupported: false);
+
+    private static ResolvedMod AnalyzeCore(ModInput input, EverestYamlEntry metadata, bool rejectUnsupported)
     {
         List<string> managed = input.Files.Where(file => IsManaged(file.Path)).Select(file => file.Path).ToList();
         List<string> content = input.Files.Where(file => IsContent(file.Path)).Select(file => file.Path).ToList();
@@ -35,6 +45,8 @@ internal static class CompatibilityAnalyzer
             ? CompatibilityClass.CONTENT_ONLY
             : CompatibilityClass.STATIC_MODULE;
 
+        AppleStaticDeclaration? declaration = null;
+        string? declaredAssembly = null;
         foreach (string relative in managed)
         {
             string path = Path.Combine(input.StagingRoot, relative.Replace('/', Path.DirectorySeparatorChar));
@@ -66,13 +78,24 @@ internal static class CompatibilityAnalyzer
             string normalized = metadata.DLL!.Replace('\\', '/');
             if (!input.Files.Any(file => string.Equals(file.Path, normalized, StringComparison.Ordinal)))
                 throw new InvalidDataException($"declared DLL/source entry is missing for {metadata.Name}: {metadata.DLL}");
-            if (!managed.Any(file => file.EndsWith(".cs", StringComparison.OrdinalIgnoreCase)))
-                throw new InvalidDataException($"{metadata.Name} rejected before AOT: the initial profile requires reviewed source alongside its DLL");
+            if (normalized.EndsWith(".dll", StringComparison.OrdinalIgnoreCase))
+            {
+                declaredAssembly = normalized;
+                declaration = AssemblyFreezer.InspectDeclaration(Path.Combine(input.StagingRoot,
+                    normalized.Replace('/', Path.DirectorySeparatorChar)), metadata.Name);
+            }
+            else
+            {
+                string declarationPath = Path.Combine(input.StagingRoot, "apple-static.json");
+                if (!File.Exists(declarationPath))
+                    throw new InvalidDataException($"{metadata.Name} source module requires root apple-static.json for a closed module factory");
+                declaration = AssemblyFreezer.ReadSourceDeclaration(declarationPath, metadata.Name);
+            }
         }
 
-        if (classification is CompatibilityClass.ON_HOOK_DEFERRED or CompatibilityClass.IL_HOOK_DEFERRED or CompatibilityClass.DIRECT_HOOK_DEFERRED or
+        if (rejectUnsupported && classification is (CompatibilityClass.ON_HOOK_DEFERRED or CompatibilityClass.IL_HOOK_DEFERRED or CompatibilityClass.DIRECT_HOOK_DEFERRED or
             CompatibilityClass.DYNAMIC_CODE_UNSUPPORTED or CompatibilityClass.NATIVE_UNSUPPORTED or
-            CompatibilityClass.LUA_UNSUPPORTED or CompatibilityClass.PLATFORM_UNSUPPORTED)
+            CompatibilityClass.LUA_UNSUPPORTED or CompatibilityClass.PLATFORM_UNSUPPORTED))
             throw new InvalidDataException($"{metadata.Name} rejected before AOT: {classification}; mechanisms={string.Join(',', mechanisms)}");
 
         return new ResolvedMod
@@ -82,7 +105,9 @@ internal static class CompatibilityAnalyzer
             Classification = classification,
             Mechanisms = mechanisms,
             ManagedFiles = managed,
-            ContentFiles = content
+            ContentFiles = content,
+            Declaration = declaration,
+            DeclaredAssemblyPath = declaredAssembly
         };
 
         void Record(string mechanism, CompatibilityClass detected)
@@ -97,6 +122,19 @@ internal static class CompatibilityAnalyzer
         try
         {
             using AssemblyDefinition assembly = AssemblyDefinition.ReadAssembly(path, new ReaderParameters { ReadSymbols = false });
+            foreach (TypeReference type in assembly.MainModule.GetTypeReferences()
+                         .Where(type => type.Namespace.StartsWith("On.", StringComparison.Ordinal)))
+            {
+                string hookType = type.Namespace + "." + type.Name;
+                if (SupportedHookTypes.Contains(hookType)) record($"typed-hook:{hookType}", CompatibilityClass.ON_HOOK_SUPPORTED);
+                else record($"unsupported typed hook:{hookType}", CompatibilityClass.ON_HOOK_DEFERRED);
+            }
+            foreach (TypeReference type in assembly.MainModule.GetTypeReferences()
+                         .Where(type => type.Namespace.StartsWith("IL.", StringComparison.Ordinal)))
+            {
+                string hookType = type.Namespace + "." + type.Name;
+                record($"il-hook:{hookType}", CompatibilityClass.IL_HOOK_DEFERRED);
+            }
             foreach (AssemblyNameReference reference in assembly.MainModule.AssemblyReferences)
             {
                 string name = reference.Name;
@@ -154,5 +192,9 @@ internal static class CompatibilityAnalyzer
     }
 
     private static bool IsManaged(string path) => path.EndsWith(".cs", StringComparison.OrdinalIgnoreCase) || path.EndsWith(".dll", StringComparison.OrdinalIgnoreCase);
-    private static bool IsContent(string path) => path.StartsWith("Content/", StringComparison.Ordinal);
+    private static bool IsContent(string path)
+    {
+        string[] roots = ["Content/", "Maps/", "Dialog/", "Graphics/", "Tutorials/", "Audio/", "Effects/", "Atlases/", "Decals/", "Characters/", "Config/"];
+        return roots.Any(root => path.StartsWith(root, StringComparison.Ordinal));
+    }
 }

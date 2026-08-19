@@ -9,7 +9,7 @@ internal static class ProductPolicy
     public const long MaxSingleFileBytes = 64L * 1024 * 1024;
     public const int MaxPathDepth = 24;
     public const int MaxYamlBytes = 1024 * 1024;
-    public const string TransformerVersion = "apple-everest-static-v1";
+    public const string TransformerVersion = "apple-everest-static-v2";
     public const string CanonicalClass = "celeste-1.4.0.0-a";
 }
 
@@ -91,6 +91,7 @@ internal enum CompatibilityClass
 
 internal sealed record FileRecord(string Path, long Bytes, string Sha256);
 internal sealed record ContentMountRecord(string Owner, int Order, string SourcePath, string LogicalPath, string Sha256);
+internal sealed record FrozenAssemblyRecord(string Owner, string AssemblyName, string FileName, string OriginalSha256, string FrozenSha256);
 
 internal sealed class ModInput
 {
@@ -109,4 +110,6 @@ internal sealed class ResolvedMod
     public required SortedSet<string> Mechanisms { get; init; }
     public required IReadOnlyList<string> ManagedFiles { get; init; }
     public required IReadOnlyList<string> ContentFiles { get; init; }
+    public AppleStaticDeclaration? Declaration { get; init; }
+    public string? DeclaredAssemblyPath { get; init; }
 }

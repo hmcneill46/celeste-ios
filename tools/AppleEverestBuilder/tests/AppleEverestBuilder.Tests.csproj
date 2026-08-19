@@ -10,6 +10,7 @@
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="../AppleEverestBuilder.csproj" />
+    <PackageReference Include="Mono.Cecil" Version="0.11.6" />
     <Compile Remove="HookSemantics/**/*.cs" />
   </ItemGroup>
 </Project>
