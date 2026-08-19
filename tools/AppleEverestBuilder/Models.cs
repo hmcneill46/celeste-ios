@@ -9,7 +9,7 @@ internal static class ProductPolicy
     public const long MaxSingleFileBytes = 64L * 1024 * 1024;
     public const int MaxPathDepth = 24;
     public const int MaxYamlBytes = 1024 * 1024;
-    public const string TransformerVersion = "apple-everest-static-v2";
+    public const string TransformerVersion = "apple-everest-static-v3";
     public const string CanonicalClass = "celeste-1.4.0.0-a";
 }
 
@@ -71,6 +71,7 @@ internal sealed class AppleStaticDeclaration
     public string? SettingsType { get; set; }
     public string? SaveDataType { get; set; }
     public string? SessionType { get; set; }
+    public string[] ButtonBindingProperties { get; set; } = [];
     public string[] TrackedEntityTypes { get; set; } = [];
 }
 
@@ -80,9 +81,14 @@ internal enum CompatibilityClass
     STATIC_MODULE,
     NORMAL_EVENT,
     ON_HOOK_SUPPORTED,
+    DIRECT_HOOK_SUPPORTED,
+    MIXED_MANAGED_DETOURS_SUPPORTED,
     ON_HOOK_DEFERRED,
     IL_HOOK_DEFERRED,
     DIRECT_HOOK_DEFERRED,
+    DYNAMIC_TARGET_DEFERRED,
+    DYNAMIC_DETOUR_DEFERRED,
+    DETOUR_CONFIG_DEFERRED,
     DYNAMIC_CODE_UNSUPPORTED,
     NATIVE_UNSUPPORTED,
     LUA_UNSUPPORTED,
@@ -92,6 +98,55 @@ internal enum CompatibilityClass
 internal sealed record FileRecord(string Path, long Bytes, string Sha256);
 internal sealed record ContentMountRecord(string Owner, int Order, string SourcePath, string LogicalPath, string Sha256);
 internal sealed record FrozenAssemblyRecord(string Owner, string AssemblyName, string FileName, string OriginalSha256, string FrozenSha256);
+
+internal sealed class ManagedDetourTargetCatalog
+{
+    public int SchemaVersion { get; set; }
+    public ManagedDetourTarget[] Targets { get; set; } = [];
+}
+
+internal sealed class ManagedDetourTarget
+{
+    public string Id { get; set; } = "";
+    public string TargetAssembly { get; set; } = "Celeste";
+    public string SourceFile { get; set; } = "";
+    public string SourceDeclaration { get; set; } = "";
+    public string OriginalDeclaration { get; set; } = "";
+    public string OriginalAlias { get; set; } = "";
+    public string HookNamespace { get; set; } = "";
+    public string HookType { get; set; } = "";
+    public string EventName { get; set; } = "";
+    public string OrigDelegate { get; set; } = "";
+    public string HookDelegate { get; set; } = "";
+    public bool IsStatic { get; set; }
+    public string? ReceiverType { get; set; }
+    public string ReturnType { get; set; } = "void";
+    public ManagedDetourParameter[] Parameters { get; set; } = [];
+    public string[] DirectAliases { get; set; } = [];
+}
+
+internal sealed class ManagedDetourParameter
+{
+    public string Type { get; set; } = "";
+    public string Name { get; set; } = "";
+    public string? Default { get; set; }
+}
+
+internal sealed record DirectManagedHookPlan(
+    string PlanId,
+    string Owner,
+    string AssemblyName,
+    string ContainingMethod,
+    int ConstructorOffset,
+    string TargetId,
+    string TargetLookupName,
+    string DetourType,
+    string DetourMethod,
+    bool DetourIsStatic,
+    string DetourReturnType,
+    string[] DetourParameterTypes,
+    string Capture,
+    string ConstructorSignature);
 
 internal sealed class ModInput
 {
@@ -112,4 +167,6 @@ internal sealed class ResolvedMod
     public required IReadOnlyList<string> ContentFiles { get; init; }
     public AppleStaticDeclaration? Declaration { get; init; }
     public string? DeclaredAssemblyPath { get; init; }
+    public required SortedSet<string> ManagedDetourTargets { get; init; }
+    public required IReadOnlyList<DirectManagedHookPlan> DirectManagedHooks { get; init; }
 }

@@ -9,6 +9,7 @@ WORK_ROOT="$REPO_ROOT/.build/apple-everest/production-canary"
 CLOSURE="$WORK_ROOT/shared-closure"
 OUTPUT="$REPO_ROOT/artifacts/apple-everest/canary"
 DOTNET8="$REPO_ROOT/.build/apple-everest/toolchain/dotnet8/dotnet"
+BUILDER_PROJECT="$REPO_ROOT/tools/AppleEverestBuilder/AppleEverestBuilder.csproj"
 PLATFORM="all"
 SIGNING="unsigned"
 TEAM_ID=""
@@ -37,7 +38,7 @@ Options:
   --ios-device-id ID       provision the iOS canary for this local device
   --tvos-device-id ID      provision the tvOS canary for this local device
   --mod ZIP_OR_DIR         explicit ordinary Everest input; may be repeated
-  --prepare-only           generate and compile-check the shared closure only
+  --prepare-only           generate and apply the shared closure without publishing
   --clean                  replace only marked prior canary output
   --reuse-build            package an already-marked completed AOT build
   -h, --help               show this help
@@ -104,7 +105,7 @@ safe_replace() {
 }
 
 "$SCRIPT_DIR/bootstrap-apple-everest-host.sh"
-(cd "$REPO_ROOT/tools/AppleEverestBuilder" && "$DOTNET8" run --project AppleEverestBuilder.csproj -- acquire --profile "$PROFILE" --output "$UPSTREAM")
+(cd /private/tmp && "$DOTNET8" run --project "$BUILDER_PROJECT" -- acquire --profile "$PROFILE" --output "$UPSTREAM")
 safe_replace "$CLOSURE" .apple-everest-static-closure
 if ((${#MODS[@]} == 0)); then
   MODS=(
@@ -116,7 +117,7 @@ if ((${#MODS[@]} == 0)); then
 fi
 mod_args=()
 for mod in "${MODS[@]}"; do mod_args+=(--mod "$mod"); done
-(cd "$REPO_ROOT/tools/AppleEverestBuilder" && "$DOTNET8" run --project AppleEverestBuilder.csproj -- build \
+(cd /private/tmp && "$DOTNET8" run --project "$BUILDER_PROJECT" -- build \
   --profile "$PROFILE" --repo-root "$REPO_ROOT" --upstream "$UPSTREAM" --output "$CLOSURE" \
   "${mod_args[@]}")
 
@@ -137,7 +138,7 @@ prepare_platform() {
     cp -cR "$base/managed" "$base/content" "$destination/"
   fi
   cp -cR "$CLOSURE/content/." "$destination/content/"
-  (cd "$REPO_ROOT/tools/AppleEverestBuilder" && "$DOTNET8" run --project AppleEverestBuilder.csproj -- apply \
+  (cd /private/tmp && "$DOTNET8" run --project "$BUILDER_PROJECT" -- apply \
     --closure "$CLOSURE" --managed-root "$destination/managed")
   touch "$destination/.apple-everest-derived-runtime"
 }
@@ -241,17 +242,17 @@ PY
 
 scan_product_runtime() {
   local app="$1" platform_build="$2" assembly assembly_name aot_object_count llvm_object mono_object
-  (cd "$REPO_ROOT/tools/AppleEverestBuilder" && "$DOTNET8" run --project AppleEverestBuilder.csproj -- \
+  (cd /private/tmp && "$DOTNET8" run --project "$BUILDER_PROJECT" -- \
     scan-runtime --assembly "$app/Celeste.dll")
   if [[ -d "$CLOSURE/assemblies" ]]; then
     while IFS= read -r -d '' assembly; do
       [[ -f "$app/$(basename "$assembly")" ]] || {
         echo "error: frozen external assembly missing from product: $(basename "$assembly")" >&2; exit 1; }
-      (cd "$REPO_ROOT/tools/AppleEverestBuilder" && "$DOTNET8" run --project AppleEverestBuilder.csproj -- \
+      (cd /private/tmp && "$DOTNET8" run --project "$BUILDER_PROJECT" -- \
         scan-runtime --assembly "$app/$(basename "$assembly")")
-      (cd "$REPO_ROOT/tools/AppleEverestBuilder" && "$DOTNET8" run --project AppleEverestBuilder.csproj -- \
+      (cd /private/tmp && "$DOTNET8" run --project "$BUILDER_PROJECT" -- \
         verify-preserved-assembly --source "$assembly" --linked "$app/$(basename "$assembly")")
-      (cd "$REPO_ROOT/tools/AppleEverestBuilder" && "$DOTNET8" run --project AppleEverestBuilder.csproj -- \
+      (cd /private/tmp && "$DOTNET8" run --project "$BUILDER_PROJECT" -- \
         verify-referenced-api --source "$app/$(basename "$assembly")" --target "$app/Celeste.dll")
       assembly_name="$(basename "$assembly" .dll)"
       aot_object_count="$(find "$platform_build" -type f -name "$assembly_name.dll.llvm.o" -print | wc -l | tr -d ' ')"
@@ -260,7 +261,7 @@ scan_product_runtime() {
       llvm_object="$(find "$platform_build" -type f -name "$assembly_name.dll.llvm.o" -print)"
       mono_object="${llvm_object%.llvm.o}.o"
       [[ -f "$mono_object" ]] || { echo "error: companion Mono AOT object missing for $assembly_name" >&2; exit 1; }
-      (cd "$REPO_ROOT/tools/AppleEverestBuilder" && "$DOTNET8" run --project AppleEverestBuilder.csproj -- \
+      (cd /private/tmp && "$DOTNET8" run --project "$BUILDER_PROJECT" -- \
         verify-aot-object --source "$assembly" --object "$llvm_object" --object "$mono_object")
     done < <(find "$CLOSURE/assemblies" -maxdepth 1 -type f -name '*.dll' -print0)
   fi

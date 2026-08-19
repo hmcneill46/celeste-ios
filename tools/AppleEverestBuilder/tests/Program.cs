@@ -54,7 +54,9 @@ ResolvedMod Mod(string name, string version = "1.0.0", IEnumerable<(string Name,
         Input = new ModInput { SourcePath = name, StagingRoot = temporary, SourceSha256 = name, Files = [], Metadata = [metadata] },
         Classification = CompatibilityClass.CONTENT_ONLY,
         Mechanisms = new SortedSet<string>(StringComparer.Ordinal),
-        ManagedFiles = [], ContentFiles = []
+        ManagedFiles = [], ContentFiles = [],
+        ManagedDetourTargets = new SortedSet<string>(StringComparer.Ordinal),
+        DirectManagedHooks = []
     };
 }
 
@@ -124,7 +126,8 @@ try
     Pass(AnalyzeSource("Static", "class Static {}") == CompatibilityClass.STATIC_MODULE, "static source class");
     Pass(AnalyzeSource("Event", "// Everest.Events.Level\nclass Event {}") == CompatibilityClass.NORMAL_EVENT, "ordinary event class");
     Pass(AnalyzeSource("OnHook", "// On.Celeste.Dialog.Clean += handler; On.Celeste.Dialog.orig_Clean orig\nclass Hook {}") == CompatibilityClass.ON_HOOK_SUPPORTED, "supported On hook");
-    Throws(() => AnalyzeSource("OtherOn", "// On.Celeste.Level.LoadLevel += handler\nclass Hook {}"), "ON_HOOK_DEFERRED", "unsupported On target");
+    Pass(AnalyzeSource("OtherOn", "// On.Celeste.Level.LoadLevel += handler\nclass Hook {}") == CompatibilityClass.ON_HOOK_SUPPORTED,
+        "catalogued On target accepted without analyzer special case");
     foreach ((string name, string source, string expected) in new[]
     {
         ("IL", "// IL.Celeste.Player.Update", "IL_HOOK_DEFERRED"),
@@ -138,7 +141,7 @@ try
         ("Watcher", "// FileSystemWatcher", "PLATFORM_UNSUPPORTED")
     }) Throws(() => AnalyzeSource(name, source + "\nclass Test {}"), expected, name + " analyzer rejection");
 
-    string BinaryFixture(string name, string hookNamespace, string hookType)
+    string BinaryFixture(string name, string hookNamespace, string hookType, string? hookEvent = null)
     {
         string root = NewDirectory("binary-" + name);
         Text(root, "everest.yaml", $"- Name: {name}\n  Version: 1.0.0\n  DLL: Code/{name}.dll\n  Dependencies:\n    - Name: Everest\n      Version: 1.6418.0\n");
@@ -148,22 +151,139 @@ try
             new AssemblyNameDefinition(name, new Version(1, 0, 0, 0)), name, ModuleKind.Dll);
         AssemblyNameReference celeste = new("Celeste", new Version(1, 0, 0, 0));
         AssemblyNameReference hooks = new("MMHOOK_Celeste", new Version(0, 0, 0, 0));
+        AssemblyNameReference xnaFacade = new("Microsoft.Xna.Framework", new Version(4, 0, 0, 0))
+        {
+            PublicKeyToken = [0x84, 0x2c, 0xf8, 0xbe, 0x1d, 0xe5, 0x05, 0x53]
+        };
         assembly.MainModule.AssemblyReferences.Add(celeste);
         assembly.MainModule.AssemblyReferences.Add(hooks);
+        assembly.MainModule.AssemblyReferences.Add(xnaFacade);
         TypeDefinition module = new("Fixture", name + "Module", TypeAttributes.Public | TypeAttributes.Sealed,
             new TypeReference("Celeste.Mod", "EverestModule", assembly.MainModule, celeste));
         MethodDefinition constructor = new(".ctor", MethodAttributes.Public | MethodAttributes.SpecialName | MethodAttributes.RTSpecialName,
             assembly.MainModule.TypeSystem.Void);
+        if (hookEvent != null)
+        {
+            TypeReference hookTypeReference = new(hookNamespace, hookType, assembly.MainModule, hooks);
+            MethodReference add = new("add_" + hookEvent, assembly.MainModule.TypeSystem.Void, hookTypeReference)
+            {
+                HasThis = false
+            };
+            add.Parameters.Add(new ParameterDefinition(new TypeReference(hookNamespace + "." + hookType, "hook_" + hookEvent,
+                assembly.MainModule, hooks)));
+            constructor.Body.Instructions.Add(Instruction.Create(OpCodes.Ldnull));
+            constructor.Body.Instructions.Add(Instruction.Create(OpCodes.Call, add));
+        }
         constructor.Body.Instructions.Add(Instruction.Create(OpCodes.Ret));
         module.Methods.Add(constructor);
         module.Fields.Add(new FieldDefinition("HookRoot", FieldAttributes.Public | FieldAttributes.Static,
             new TypeReference(hookNamespace, hookType, assembly.MainModule, hooks)));
+        module.Fields.Add(new FieldDefinition("LegacyFnaVector", FieldAttributes.Public,
+            new TypeReference("Microsoft.Xna.Framework", "Vector2", assembly.MainModule, xnaFacade)));
         assembly.MainModule.Types.Add(module);
         assembly.Write(path);
         return root;
     }
 
-    string binaryRoot = BinaryFixture("BinarySupported", "On.Monocle", "ParticleSystem");
+    string DirectBinaryFixture(string name, string mode)
+    {
+        string root = NewDirectory("direct-binary-" + name);
+        Text(root, "everest.yaml", $"- Name: {name}\n  Version: 1.0.0\n  DLL: Code/{name}.dll\n  Dependencies:\n    - Name: Everest\n      Version: 1.6418.0\n");
+        string path = Path.Combine(root, "Code", name + ".dll");
+        Directory.CreateDirectory(Path.GetDirectoryName(path)!);
+        using AssemblyDefinition assembly = AssemblyDefinition.CreateAssembly(
+            new AssemblyNameDefinition(name, new Version(1, 0, 0, 0)), name, ModuleKind.Dll);
+        ModuleDefinition module = assembly.MainModule;
+        AssemblyNameReference celeste = new("Celeste", new Version(1, 0, 0, 0));
+        AssemblyNameReference runtimeDetour = new("MonoMod.RuntimeDetour", new Version(25, 2, 3, 0));
+        module.AssemblyReferences.Add(celeste);
+        module.AssemblyReferences.Add(runtimeDetour);
+        AssemblyNameReference? hooks = null;
+        if (mode == "mixed")
+        {
+            hooks = new AssemblyNameReference("MMHOOK_Celeste", new Version(0, 0, 0, 0));
+            module.AssemblyReferences.Add(hooks);
+        }
+        TypeReference player = new("Celeste", "Player", module, celeste);
+        TypeReference playerDeadBody = new("Celeste", "PlayerDeadBody", module, celeste);
+        TypeReference vector2 = new("Microsoft.Xna.Framework", "Vector2", module, celeste);
+        TypeDefinition fixture = new("Fixture", name + "Module", TypeAttributes.Public | TypeAttributes.Sealed,
+            new TypeReference("Celeste.Mod", "EverestModule", module, celeste));
+        MethodDefinition detour = new("OnPlayerDie", MethodAttributes.Public | MethodAttributes.Static, playerDeadBody);
+        GenericInstanceType orig = new(new TypeReference("System", "Func`5", module, module.TypeSystem.CoreLibrary));
+        orig.GenericArguments.Add(player);
+        orig.GenericArguments.Add(vector2);
+        orig.GenericArguments.Add(module.TypeSystem.Boolean);
+        orig.GenericArguments.Add(module.TypeSystem.Boolean);
+        orig.GenericArguments.Add(playerDeadBody);
+        detour.Parameters.Add(new ParameterDefinition(orig));
+        detour.Parameters.Add(new ParameterDefinition(player));
+        detour.Parameters.Add(new ParameterDefinition(vector2));
+        detour.Parameters.Add(new ParameterDefinition(module.TypeSystem.Boolean));
+        detour.Parameters.Add(new ParameterDefinition(module.TypeSystem.Boolean));
+        detour.Body.Instructions.Add(Instruction.Create(OpCodes.Ldnull));
+        detour.Body.Instructions.Add(Instruction.Create(OpCodes.Ret));
+        fixture.Methods.Add(detour);
+        if (mode == "dynamic-detour")
+        {
+            MethodDefinition overload = new("OnPlayerDie", MethodAttributes.Public | MethodAttributes.Static, playerDeadBody);
+            overload.Body.Instructions.Add(Instruction.Create(OpCodes.Ldnull));
+            overload.Body.Instructions.Add(Instruction.Create(OpCodes.Ret));
+            fixture.Methods.Add(overload);
+        }
+
+        MethodDefinition constructor = new(".ctor", MethodAttributes.Public | MethodAttributes.SpecialName | MethodAttributes.RTSpecialName,
+            module.TypeSystem.Void);
+        MethodReference getType = module.ImportReference(typeof(Type).GetMethod(nameof(Type.GetTypeFromHandle))!);
+        MethodReference getTarget = module.ImportReference(typeof(Type).GetMethod(nameof(Type.GetMethod),
+            [typeof(string), typeof(System.Reflection.BindingFlags)])!);
+        MethodReference getDetour = module.ImportReference(typeof(Type).GetMethod(nameof(Type.GetMethod), [typeof(string)])!);
+        if (hooks != null)
+        {
+            TypeReference engineHook = new("On.Monocle", "Engine", module, hooks);
+            MethodReference addUpdate = new("add_Update", module.TypeSystem.Void, engineHook) { HasThis = false };
+            addUpdate.Parameters.Add(new ParameterDefinition(new TypeReference("On.Monocle.Engine", "hook_Update", module, hooks)));
+            constructor.Body.Instructions.Add(Instruction.Create(OpCodes.Ldnull));
+            constructor.Body.Instructions.Add(Instruction.Create(OpCodes.Call, addUpdate));
+        }
+        constructor.Body.Instructions.Add(mode == "dynamic-target"
+            ? Instruction.Create(OpCodes.Ldnull)
+            : Instruction.Create(OpCodes.Ldtoken, player));
+        constructor.Body.Instructions.Add(Instruction.Create(OpCodes.Call, getType));
+        constructor.Body.Instructions.Add(Instruction.Create(OpCodes.Ldstr, "orig_Die"));
+        constructor.Body.Instructions.Add(Instruction.Create(OpCodes.Ldc_I4_S,
+            mode == "wrong-binding-flags" ? (sbyte)16 : (sbyte)20));
+        constructor.Body.Instructions.Add(Instruction.Create(OpCodes.Callvirt, getTarget));
+        constructor.Body.Instructions.Add(Instruction.Create(OpCodes.Ldtoken, fixture));
+        constructor.Body.Instructions.Add(Instruction.Create(OpCodes.Call, getType));
+        constructor.Body.Instructions.Add(Instruction.Create(OpCodes.Ldstr, "OnPlayerDie"));
+        constructor.Body.Instructions.Add(Instruction.Create(OpCodes.Callvirt, getDetour));
+        TypeReference hook = new("MonoMod.RuntimeDetour", "Hook", module, runtimeDetour);
+        MethodReference hookConstructor = new(".ctor", module.TypeSystem.Void, hook) { HasThis = true };
+        hookConstructor.Parameters.Add(new ParameterDefinition(new TypeReference("System.Reflection", "MethodBase", module, module.TypeSystem.CoreLibrary)));
+        hookConstructor.Parameters.Add(new ParameterDefinition(new TypeReference("System.Reflection", "MethodInfo", module, module.TypeSystem.CoreLibrary)));
+        if (mode == "config")
+        {
+            constructor.Body.Instructions.Add(Instruction.Create(OpCodes.Ldnull));
+            hookConstructor.Parameters.Add(new ParameterDefinition(new TypeReference(
+                "MonoMod.RuntimeDetour", "DetourConfig", module, runtimeDetour)));
+        }
+        constructor.Body.Instructions.Add(Instruction.Create(OpCodes.Newobj, hookConstructor));
+        if (mode == "unsupported-member")
+        {
+            MethodReference unsupported = new("get_Target", new TypeReference(
+                "System.Reflection", "MethodBase", module, module.TypeSystem.CoreLibrary), hook) { HasThis = true };
+            constructor.Body.Instructions.Add(Instruction.Create(OpCodes.Callvirt, unsupported));
+        }
+        constructor.Body.Instructions.Add(Instruction.Create(OpCodes.Pop));
+        constructor.Body.Instructions.Add(Instruction.Create(OpCodes.Ret));
+        fixture.Methods.Add(constructor);
+        assembly.MainModule.Types.Add(fixture);
+        assembly.Write(path);
+        return root;
+    }
+
+    string binaryRoot = BinaryFixture("BinarySupported", "On.Monocle", "ParticleSystem", "Emit_ParticleType_Vector2");
     ModInput binaryInput = SafeModIngestor.Ingest(binaryRoot, NewDirectory("stage-binary-supported"), 0);
     ResolvedMod binaryMod = CompatibilityAnalyzer.Analyze(binaryInput, binaryInput.Metadata[0]);
     Pass(binaryMod.Classification == CompatibilityClass.ON_HOOK_SUPPORTED, "precompiled typed hook accepted");
@@ -171,12 +291,16 @@ try
     Pass(binaryMod.ManagedFiles.SequenceEqual(["Code/BinarySupported.dll"]), "precompiled DLL accepted without source");
     string frozen = Path.Combine(NewDirectory("frozen"), "BinarySupported.dll");
     (string frozenAssemblyName, string originalHash, string frozenHash) = AssemblyFreezer.Freeze(
-        Path.Combine(binaryInput.StagingRoot, "Code", "BinarySupported.dll"), frozen);
+        Path.Combine(binaryInput.StagingRoot, "Code", "BinarySupported.dll"), frozen, []);
     using (AssemblyDefinition frozenAssembly = AssemblyDefinition.ReadAssembly(frozen))
     {
         Pass(frozenAssembly.MainModule.AssemblyReferences.All(reference => reference.Name != "MMHOOK_Celeste"), "frozen assembly removes HookGen runtime reference");
         Pass(frozenAssembly.MainModule.GetTypeReferences().Any(type => type.Namespace == "On.Monocle" && type.Name == "ParticleSystem" &&
              type.Scope is AssemblyNameReference reference && reference.Name == "Celeste"), "frozen typed hook binds to static Celeste facade");
+        Pass(frozenAssembly.MainModule.AssemblyReferences.All(reference => reference.Name != "Microsoft.Xna.Framework") &&
+             frozenAssembly.MainModule.GetTypeReferences().Any(type => type.Namespace == "Microsoft.Xna.Framework" && type.Name == "Vector2" &&
+                 type.Scope is AssemblyNameReference reference && reference.Name == "FNA"),
+            "legacy strong-named FNA facade binds to the canonical FNA assembly for static AOT");
     }
     Pass(frozenAssemblyName == "BinarySupported", "frozen assembly identity recorded for generic AOT rooting");
     Pass(originalHash.Length == 64 && frozenHash.Length == 64 && originalHash != frozenHash, "original and frozen assembly hashes recorded");
@@ -194,7 +318,58 @@ try
     Throws(() => RuntimeClosureScanner.VerifyPreserved(frozen, stripped), "lost executable methods",
         "trimmed external method body rejected");
 
-    string ApiContract(string directory, bool includeExpectedMethod)
+    string directRoot = DirectBinaryFixture("DirectSupported", "supported");
+    ModInput directInput = SafeModIngestor.Ingest(directRoot, NewDirectory("stage-direct-supported"), 0);
+    ResolvedMod directMod = CompatibilityAnalyzer.Analyze(directInput, directInput.Metadata[0]);
+    Pass(directMod.Classification == CompatibilityClass.DIRECT_HOOK_SUPPORTED && directMod.DirectManagedHooks.Count == 1,
+        "precompiled direct Hook constructor accepted");
+    DirectManagedHookPlan directPlan = directMod.DirectManagedHooks.Single();
+    Pass(directPlan.TargetId == "celeste-player-die" && directPlan.Capture == "STATIC" &&
+         directPlan.DetourType == "Fixture.DirectSupportedModule" && directPlan.DetourMethod == "OnPlayerDie",
+        "direct Hook target and detour statically resolved");
+    string frozenDirect = Path.Combine(NewDirectory("frozen-direct"), "DirectSupported.dll");
+    _ = AssemblyFreezer.Freeze(Path.Combine(directInput.StagingRoot, "Code", "DirectSupported.dll"), frozenDirect,
+        directMod.DirectManagedHooks);
+    using (AssemblyDefinition frozenDirectAssembly = AssemblyDefinition.ReadAssembly(frozenDirect))
+    {
+        Pass(frozenDirectAssembly.MainModule.AssemblyReferences.All(reference => reference.Name != "MonoMod.RuntimeDetour"),
+            "frozen direct Hook assembly removes desktop RuntimeDetour reference");
+        MethodDefinition frozenConstructor = frozenDirectAssembly.MainModule.Types.Single(type => type.Name == "DirectSupportedModule")
+            .Methods.Single(method => method.IsConstructor);
+        MethodReference rewrittenConstructor = frozenConstructor.Body.Instructions.Select(instruction => instruction.Operand)
+            .OfType<MethodReference>().Single(method => method.DeclaringType.FullName == "MonoMod.RuntimeDetour.Hook" && method.Name == ".ctor");
+        Pass(rewrittenConstructor.Parameters.Count == 1 && rewrittenConstructor.Parameters[0].ParameterType.FullName == "System.String" &&
+             rewrittenConstructor.DeclaringType.Scope is AssemblyNameReference reference && reference.Name == "Celeste" &&
+             frozenConstructor.Body.Instructions.Any(instruction => instruction.OpCode == OpCodes.Ldstr &&
+                 Equals(instruction.Operand, directPlan.PlanId)),
+            "direct Hook construction lowered to a fixed plan ID and Apple static facade");
+    }
+    string mixedRoot = DirectBinaryFixture("MixedSupported", "mixed");
+    ModInput mixedInput = SafeModIngestor.Ingest(mixedRoot, NewDirectory("stage-mixed-supported"), 0);
+    ResolvedMod mixedMod = CompatibilityAnalyzer.Analyze(mixedInput, mixedInput.Metadata[0]);
+    Pass(mixedMod.Classification == CompatibilityClass.MIXED_MANAGED_DETOURS_SUPPORTED &&
+         mixedMod.ManagedDetourTargets.SetEquals(["celeste-player-die", "monocle-engine-update"]) &&
+         mixedMod.DirectManagedHooks.Count == 1,
+        "precompiled mixed HookGen/direct Hook module shares one managed-detour classification");
+    foreach ((string mode, CompatibilityClass expected, string message) in new[]
+    {
+        ("dynamic-target", CompatibilityClass.DYNAMIC_TARGET_DEFERRED, "DEFERRED_DYNAMIC_TARGET"),
+        ("wrong-binding-flags", CompatibilityClass.DYNAMIC_TARGET_DEFERRED, "DEFERRED_DYNAMIC_TARGET"),
+        ("dynamic-detour", CompatibilityClass.DYNAMIC_DETOUR_DEFERRED, "DEFERRED_DYNAMIC_DETOUR"),
+        ("config", CompatibilityClass.DETOUR_CONFIG_DEFERRED, "DEFERRED_DETOUR_CONFIG"),
+        ("unsupported-member", CompatibilityClass.DIRECT_HOOK_DEFERRED, "unsupported direct Hook member")
+    })
+    {
+        string root = DirectBinaryFixture("Direct" + mode.Replace("-", "", StringComparison.Ordinal), mode);
+        ModInput input = SafeModIngestor.Ingest(root, NewDirectory("stage-direct-" + mode), 0);
+        ResolvedMod audit = CompatibilityAnalyzer.Audit(input, input.Metadata[0]);
+        Pass(audit.Classification == expected && audit.Mechanisms.Any(value => value.Contains(message, StringComparison.Ordinal)),
+            mode + " direct Hook audit classification");
+        Throws(() => CompatibilityAnalyzer.Analyze(input, input.Metadata[0]), message,
+            mode + " direct Hook rejected before AOT");
+    }
+
+    string ApiContract(string directory, bool includeExpectedMethod, bool publicExpectedMethod = true)
     {
         string path = Path.Combine(NewDirectory(directory), "TargetApi.dll");
         using AssemblyDefinition assembly = AssemblyDefinition.CreateAssembly(
@@ -203,7 +378,8 @@ try
             TypeAttributes.Sealed, assembly.MainModule.TypeSystem.Object);
         if (includeExpectedMethod)
         {
-            MethodDefinition expected = new("Expected", MethodAttributes.Public | MethodAttributes.Static,
+            MethodDefinition expected = new("Expected", (publicExpectedMethod ? MethodAttributes.Public :
+                    MethodAttributes.Private) | MethodAttributes.Static,
                 assembly.MainModule.TypeSystem.Void);
             expected.Body.Instructions.Add(Instruction.Create(OpCodes.Ret));
             contract.Methods.Add(expected);
@@ -215,6 +391,8 @@ try
 
     string goodApi = ApiContract("api-good", includeExpectedMethod: true);
     string badApi = ApiContract("api-bad", includeExpectedMethod: false);
+    string inaccessibleApi = ApiContract("api-inaccessible", includeExpectedMethod: true,
+        publicExpectedMethod: false);
     string apiConsumer = Path.Combine(NewDirectory("api-consumer"), "ApiConsumer.dll");
     using (AssemblyDefinition assembly = AssemblyDefinition.CreateAssembly(
         new AssemblyNameDefinition("ApiConsumer", new Version(1, 0, 0, 0)), "ApiConsumer", ModuleKind.Dll))
@@ -240,7 +418,23 @@ try
     Pass(true, "external assembly API closure accepts the complete target contract");
     Throws(() => RuntimeClosureScanner.VerifyReferencedApi(apiConsumer, badApi), "absent from the linked TargetApi contract",
         "external assembly API closure rejects a missing target method before device AOT");
-    string unsupportedRoot = BinaryFixture("BinaryDeferred", "On.Celeste", "Player");
+    Throws(() => RuntimeClosureScanner.VerifyReferencedApi(apiConsumer, inaccessibleApi), "inaccessible-method",
+        "external assembly API closure rejects a private target method before device AOT");
+
+    Pass(AppleApiSurface.Members.Count == 3 && AppleApiSurface.ContractSha256.Length == 64,
+        "exact reviewed Apple external API surface contract");
+    string apiSurfaceRoot = NewDirectory("apple-api-surface");
+    Text(apiSurfaceRoot, "Celeste/Level.cs",
+        "namespace Celeste;\npublic class Level\n{\n\tprivate float unpauseTimer;\n\tprivate void StartPauseEffects() {}\n\tprivate void EndPauseEffects() {}\n}\n");
+    AppleApiSurface.Apply(apiSurfaceRoot);
+    string apiSurfaceLevel = File.ReadAllText(Path.Combine(apiSurfaceRoot, "Celeste", "Level.cs"));
+    Pass(apiSurfaceLevel.Contains("public float unpauseTimer", StringComparison.Ordinal) &&
+         apiSurfaceLevel.Contains("public void StartPauseEffects()", StringComparison.Ordinal) &&
+         apiSurfaceLevel.Contains("public void EndPauseEffects()", StringComparison.Ordinal),
+        "exact reviewed Apple API surface is applied");
+    Throws(() => AppleApiSurface.Apply(apiSurfaceRoot), "must occur exactly once",
+        "Apple API surface rejects duplicate application");
+    string unsupportedRoot = BinaryFixture("BinaryDeferred", "On.Celeste", "Player", "UnknownMethod");
     ModInput unsupportedInput = SafeModIngestor.Ingest(unsupportedRoot, NewDirectory("stage-binary-deferred"), 0);
     Throws(() => CompatibilityAnalyzer.Analyze(unsupportedInput, unsupportedInput.Metadata[0]), "ON_HOOK_DEFERRED", "unknown precompiled hook target rejected");
     string binaryIlRoot = BinaryFixture("BinaryIlDeferred", "IL.Celeste", "SummitCheckpoint");
@@ -299,7 +493,71 @@ try
     Pass(profile.RootElement.GetProperty("everest").GetProperty("sha256Commit").GetString() == "4bbde91b8dbaaddef2ceec75ca0cd6d59b3b8d00", "Everest pin");
     Pass(profile.RootElement.GetProperty("dependencies").GetProperty("monoModCommit").GetString() == "dfc30a1506d37fb88a2c2be004f525205f46a24c", "MonoMod pin");
     Pass(profile.RootElement.GetProperty("host").GetProperty("dotnetSdk").GetString() == "8.0.424", "host SDK pin");
-    Pass(File.ReadAllText(Path.Combine(repository, "apple-everest/runtime/OnDialogStaticDispatch.cs")).Contains("orig_Clean chain", StringComparison.Ordinal), "typed production dispatcher");
+    using (JsonDocument targetCatalog = JsonDocument.Parse(File.ReadAllBytes(
+        Path.Combine(repository, "apple-everest/managed-detour-targets-v1.json"))))
+    {
+        Pass(targetCatalog.RootElement.GetProperty("schemaVersion").GetInt32() == 1 &&
+             targetCatalog.RootElement.GetProperty("targets").GetArrayLength() >= 18,
+            "signature-driven managed-detour target catalog");
+    }
+    ManagedDetourTarget SyntheticTarget(string id, string eventName, bool isStatic, string returnType,
+        params (string Type, string Name)[] parameters) => new()
+    {
+        Id = id,
+        SourceFile = id + ".cs",
+        SourceDeclaration = "public " + (isStatic ? "static " : "") + returnType + " " + eventName + "(" +
+            string.Join(", ", parameters.Select(value => value.Type + " " + value.Name)) + ")",
+        OriginalDeclaration = "private " + (isStatic ? "static " : "") + returnType + " Original_" + eventName + "(" +
+            string.Join(", ", parameters.Select(value => value.Type + " " + value.Name)) + ")",
+        OriginalAlias = "Original_" + eventName,
+        HookNamespace = "On.Fixture",
+        HookType = "SignatureMatrix",
+        EventName = eventName,
+        OrigDelegate = "orig_" + eventName,
+        HookDelegate = "hook_" + eventName,
+        IsStatic = isStatic,
+        ReceiverType = isStatic ? null : "global::Fixture.SignatureMatrix",
+        ReturnType = returnType,
+        Parameters = parameters.Select(value => new ManagedDetourParameter { Type = value.Type, Name = value.Name }).ToArray()
+    };
+    ManagedDetourTarget[] signatureMatrix =
+    [
+        SyntheticTarget("fixture-static-void", "StaticVoid", true, "void"),
+        SyntheticTarget("fixture-static-int", "StaticInt", true, "int", ("int", "value")),
+        SyntheticTarget("fixture-instance-void", "InstanceVoid", false, "void"),
+        SyntheticTarget("fixture-instance-return", "InstanceReturn", false, "int",
+            ("int", "value"), ("global::Microsoft.Xna.Framework.Vector2", "position"), ("string", "label"))
+    ];
+    string signatureSource = ManagedDetourGenerator.DispatcherSource(signatureMatrix);
+    Pass(signatureSource.Contains("delegate void orig_StaticVoid()", StringComparison.Ordinal) &&
+         signatureSource.Contains("delegate int orig_StaticInt(int value)", StringComparison.Ordinal) &&
+         signatureSource.Contains("delegate void orig_InstanceVoid(global::Fixture.SignatureMatrix self)", StringComparison.Ordinal) &&
+         signatureSource.Contains("delegate int orig_InstanceReturn(global::Fixture.SignatureMatrix self, int value, global::Microsoft.Xna.Framework.Vector2 position, string label)", StringComparison.Ordinal),
+        "signature generator covers static/instance, void/value return, struct/reference and multiple arguments");
+    Pass(!signatureSource.Contains("DynamicInvoke", StringComparison.Ordinal) &&
+         !signatureSource.Contains("object[]", StringComparison.Ordinal) &&
+         signatureSource.Contains("AppleEverestHookList.Version", StringComparison.Ordinal),
+        "generated signature matrix remains strongly typed and version-cached");
+    string signatureRoot = NewDirectory("signature-rewrite");
+    foreach (ManagedDetourTarget target in signatureMatrix)
+        Text(signatureRoot, target.SourceFile,
+            "namespace Fixture; public class SignatureMatrix\n{\n\t" + target.SourceDeclaration + "\n\t{\n\t\t" +
+            (target.ReturnType == "void" ? "return;" : "return 0;") + "\n\t}\n}\n");
+    ManagedDetourGenerator.RewriteTargets(signatureRoot, signatureMatrix);
+    Pass(signatureMatrix.All(target => File.ReadAllText(Path.Combine(signatureRoot, target.SourceFile))
+            .Contains(target.OriginalDeclaration, StringComparison.Ordinal)),
+        "signature generator rewrites each synthetic target into one wrapper and one original body");
+    DirectManagedHookPlan directEvidencePlan = new(
+        "fixture:direct-evidence", "Fixture", "Fixture", "Fixture.DirectEvidence::.ctor", 0,
+        "fixture-instance-return", "InstanceReturn", "Fixture.DirectEvidence", "Apply", true, "int",
+        [
+            "global::System.Func<global::Fixture.SignatureMatrix, int, global::Microsoft.Xna.Framework.Vector2, string, int>",
+            "global::Fixture.SignatureMatrix", "int", "global::Microsoft.Xna.Framework.Vector2", "string"
+        ], "STATIC", "System.Reflection.MethodBase,System.Reflection.MethodInfo");
+    string directEvidenceSource = ManagedDetourGenerator.DirectRegistrySource(
+        [directEvidencePlan], signatureMatrix.ToDictionary(target => target.Id, StringComparer.Ordinal));
+    Pass(directEvidenceSource.Contains("RecordDirectHookInvocation(\"fixture:direct-evidence\")", StringComparison.Ordinal),
+        "generated direct adapter records one bounded device invocation proof");
     string staticRuntime = File.ReadAllText(Path.Combine(repository, "apple-everest/runtime/AppleEverestStaticRuntime.cs"));
     Pass(staticRuntime.Contains("SaveData.InitializeDebugMode(loadExisting: false)", StringComparison.Ordinal),
         "content canary provides an isolated save context before file selection");
@@ -321,6 +579,9 @@ try
     Pass(closureGenerator.Contains("AppleEverestExternalAssemblyRoots.props", StringComparison.Ordinal) &&
          closureGenerator.Contains("TrimmerRootAssembly", StringComparison.Ordinal),
         "external assembly identities generate complete trimmer roots");
+    Pass(closureGenerator.Contains("ButtonBindingProperties", StringComparison.Ordinal) &&
+         closureGenerator.Contains("new global::Celeste.Mod.ButtonBinding()", StringComparison.Ordinal),
+        "precompiled settings button bindings receive reflection-free static initialization");
     string iosHostProject = File.ReadAllText(Path.Combine(repository, "modern-ios/CelesteIOSRuntimeHost/CelesteIOSRuntimeHost.csproj"));
     string tvosHostProject = File.ReadAllText(Path.Combine(repository, "tvos/CelesteTvOSRuntimeHost/CelesteTvOSRuntimeHost.csproj"));
     Pass(iosHostProject.Contains("AppleEverestExternalAssemblyRoots.props", StringComparison.Ordinal) &&
@@ -334,32 +595,49 @@ try
     string runtimeApi = File.ReadAllText(Path.Combine(repository, "apple-everest/runtime/EverestStaticApi.cs"));
     Pass(runtimeApi.Contains("public static class Content", StringComparison.Ordinal) &&
          runtimeApi.Contains("public static readonly List<ModContent> Mods", StringComparison.Ordinal) &&
-         runtimeApi.Contains("public EverestModuleMetadata Mod;", StringComparison.Ordinal),
-        "binary-compatible Everest content facade preserves nested types and fields");
+         runtimeApi.Contains("public EverestModuleMetadata Mod;", StringComparison.Ordinal) &&
+         runtimeApi.Contains("protected EverestModuleSettings _Settings { get; private set; }", StringComparison.Ordinal) &&
+         runtimeApi.Contains("protected EverestModuleSession _Session { get; private set; }", StringComparison.Ordinal) &&
+         runtimeApi.Contains("public static void SetLogLevel(string tag, LogLevel level)", StringComparison.Ordinal) &&
+         runtimeApi.Contains("public static void Log(string tag, string value)", StringComparison.Ordinal),
+        "binary-compatible Everest content and module-state facades preserve compiled accessor shapes");
+    Pass(runtimeApi.Contains("public sealed class ButtonBinding", StringComparison.Ordinal) &&
+         runtimeApi.Contains("public bool Pressed => false", StringComparison.Ordinal),
+        "minimal unsupported host binding remains a deterministic non-triggering data facade");
+    string closureScanner = File.ReadAllText(Path.Combine(repository, "tools/AppleEverestBuilder/RuntimeClosureScanner.cs"));
+    Pass(closureScanner.Contains("AllowedStaticFacadeType", StringComparison.Ordinal) &&
+         closureScanner.Contains("AllowedStaticFacadeCall", StringComparison.Ordinal) &&
+         closureScanner.Contains("type.Name is \"Hook\" or \"DetourConfig\"", StringComparison.Ordinal),
+        "post-link scanner permits only the exact data-only RuntimeDetour facade types");
     Pass(!Directory.EnumerateFiles(Path.Combine(repository, "apple-everest/runtime"), "*.cs").Select(File.ReadAllText)
-        .Any(text => text.Contains("DynamicInvoke", StringComparison.Ordinal) || text.Contains("Assembly.Load", StringComparison.Ordinal) || text.Contains("RuntimeDetour", StringComparison.Ordinal)), "runtime forbidden APIs absent");
+        .Any(text => text.Contains("DynamicInvoke", StringComparison.Ordinal) || text.Contains("Assembly.Load", StringComparison.Ordinal) ||
+                     text.Contains("DynamicMethod", StringComparison.Ordinal) || text.Contains("Reflection.Emit", StringComparison.Ordinal) ||
+                     text.Contains("NativeDetour", StringComparison.Ordinal)), "runtime forbidden executable mutation APIs absent");
     Pass(RuntimeClosureScanner.Inspect(typeof(ResolvedMod).Assembly.Location)
         .Any(value => value.Contains("System.Diagnostics.Process::Start", StringComparison.Ordinal)),
         "linked-runtime scanner detects a real forbidden API in the host-only builder");
     Pass(RuntimeClosureScanner.Inspect(System.Reflection.Assembly.GetExecutingAssembly().Location).Count == 0,
         "linked-runtime scanner accepts the deterministic test closure");
 
-    Pass(ProductPolicy.TransformerVersion == "apple-everest-static-v2", "real-ZIP transformer version");
+    Pass(ProductPolicy.TransformerVersion == "apple-everest-static-v3", "real-ZIP transformer version");
     Pass(File.Exists(Path.Combine(repository, "tools/AppleEverestBuilder/AssemblyFreezer.cs")),
         "binary-first assembly freezer exists");
     string models = File.ReadAllText(Path.Combine(repository, "tools/AppleEverestBuilder/Models.cs"));
     Pass(models.Contains("OriginalSha256", StringComparison.Ordinal) && models.Contains("FrozenSha256", StringComparison.Ordinal),
         "original and transformed binary provenance model");
     string analyzerSource = File.ReadAllText(Path.Combine(repository, "tools/AppleEverestBuilder/CompatibilityAnalyzer.cs"));
-    Pass(analyzerSource.Contains("On.Monocle.ParticleSystem", StringComparison.Ordinal) &&
-         analyzerSource.Contains("On.Celeste.TrailManager", StringComparison.Ordinal),
-        "bounded real HookGen target catalog");
-    string particleDispatch = File.ReadAllText(Path.Combine(repository, "apple-everest/runtime/OnParticleStaticDispatch.cs"));
-    Pass(particleDispatch.Contains("AppleEverestHookList.Version", StringComparison.Ordinal) &&
-         particleDispatch.Contains("activeE", StringComparison.Ordinal), "hot particle hook chains are version-cached");
-    string trailDispatch = File.ReadAllText(Path.Combine(repository, "apple-everest/runtime/OnTrailStaticDispatch.cs"));
-    Pass(trailDispatch.Contains("activeVersion", StringComparison.Ordinal) &&
-         trailDispatch.Contains("activeHandler", StringComparison.Ordinal), "trail hook chain is version-cached");
+    Pass(analyzerSource.Contains("ManagedDetourCatalog.RequireByHookType", StringComparison.Ordinal) &&
+         analyzerSource.Contains("ResolveDirectHookPlan", StringComparison.Ordinal),
+        "generic HookGen and direct-Hook analysis uses the reviewed target catalog");
+    string detourGenerator = File.ReadAllText(Path.Combine(repository, "tools/AppleEverestBuilder/ManagedDetourGenerator.cs"));
+    Pass(detourGenerator.Contains("DispatcherSource", StringComparison.Ordinal) &&
+         detourGenerator.Contains("DirectRegistrySource", StringComparison.Ordinal) &&
+         detourGenerator.Contains("AppleEverestHookList.Version", StringComparison.Ordinal),
+        "signature-driven generated dispatchers share a version-cached backend");
+    Pass(!File.Exists(Path.Combine(repository, "apple-everest/runtime/OnDialogStaticDispatch.cs")) &&
+         !File.Exists(Path.Combine(repository, "apple-everest/runtime/OnParticleStaticDispatch.cs")) &&
+         !File.Exists(Path.Combine(repository, "apple-everest/runtime/OnTrailStaticDispatch.cs")),
+        "bespoke target dispatch files removed");
     string programSource = File.ReadAllText(Path.Combine(repository, "tools/AppleEverestBuilder/Program.cs"));
     Pass(programSource.Contains("case \"audit\"", StringComparison.Ordinal) &&
          programSource.Contains("transformerVersion", StringComparison.Ordinal), "deterministic compatibility-report command");

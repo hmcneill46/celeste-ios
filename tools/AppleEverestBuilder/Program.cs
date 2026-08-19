@@ -70,7 +70,8 @@ internal static class Program
                             contentFileCount = mod.ContentFiles.Count,
                             dependencies = metadata.Dependencies.Select(dependency => new { dependency.Name, dependency.Version }).ToArray(),
                             status = mod.Classification is CompatibilityClass.CONTENT_ONLY or CompatibilityClass.STATIC_MODULE or
-                                CompatibilityClass.NORMAL_EVENT or CompatibilityClass.ON_HOOK_SUPPORTED ? "candidate" : "deferred"
+                                CompatibilityClass.NORMAL_EVENT or CompatibilityClass.ON_HOOK_SUPPORTED or CompatibilityClass.DIRECT_HOOK_SUPPORTED or
+                                CompatibilityClass.MIXED_MANAGED_DETOURS_SUPPORTED ? "candidate" : "deferred"
                         });
                     }
                 }

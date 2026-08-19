@@ -5,9 +5,12 @@ namespace Celeste.Mod;
 
 public abstract class EverestModule
 {
-    protected EverestModuleSettings _Settings;
-    protected EverestModuleSaveData _SaveData;
-    protected EverestModuleSession _Session;
+    // Everest exposes these as protected properties. Keeping the accessor
+    // shape is important for precompiled mods: their IL calls get__Settings,
+    // get__SaveData and get__Session rather than reading fields directly.
+    protected EverestModuleSettings _Settings { get; private set; }
+    protected EverestModuleSaveData _SaveData { get; private set; }
+    protected EverestModuleSession _Session { get; private set; }
     public EverestModuleMetadata Metadata { get; internal set; }
     public virtual Type SettingsType => null;
     public virtual Type SaveDataType => null;
@@ -28,6 +31,22 @@ public abstract class EverestModule
 public abstract class EverestModuleSettings { }
 public abstract class EverestModuleSaveData { }
 public abstract class EverestModuleSession { }
+
+// Bounded settings ABI needed by supported precompiled modules. The normal
+// Everest loader initializes these bindings reflectively; the static closure
+// generator emits equivalent typed construction for every declared property.
+public sealed class ButtonBinding
+{
+    public bool Pressed => false;
+}
+
+public static class Extensions
+{
+    public static global::Celeste.TextMenu.Item AddDescription(
+        this global::Celeste.TextMenu.Item option,
+        global::Celeste.TextMenu containingMenu,
+        string description) => option;
+}
 
 public sealed class EverestModuleMetadata
 {
@@ -79,9 +98,19 @@ public sealed class ModAsset
 
 public static partial class Logger
 {
-    public static void Info(string tag, string value) => AppleEverestStaticRuntime.Log($"mod-info tag={tag} message={value}");
-    public static void Warn(string tag, string value) => AppleEverestStaticRuntime.Log($"mod-warning tag={tag} message={value}");
-    public static void Error(string tag, string value) => AppleEverestStaticRuntime.Log($"mod-error tag={tag} message={value}");
+    public static void SetLogLevel(string tag, LogLevel level) => AppleEverestLogPolicy.Set(tag, level);
+
+    public static void Log(string tag, string value) => Write(LogLevel.Verbose, "mod-verbose", tag, value);
+    public static void Info(string tag, string value) => Write(LogLevel.Info, "mod-info", tag, value);
+    public static void Warn(string tag, string value) => Write(LogLevel.Warn, "mod-warning", tag, value);
+    public static void Error(string tag, string value) => Write(LogLevel.Error, "mod-error", tag, value);
+
+    internal static bool ShouldLog(string tag, LogLevel level) => AppleEverestLogPolicy.ShouldLog(tag, level);
+
+    private static void Write(LogLevel level, string label, string tag, string value)
+    {
+        if (ShouldLog(tag, level)) AppleEverestStaticRuntime.Log($"{label} tag={tag} message={value}");
+    }
 }
 
 internal sealed class AppleEverestModuleDescriptor

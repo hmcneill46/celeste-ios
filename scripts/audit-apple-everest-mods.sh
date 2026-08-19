@@ -23,5 +23,5 @@ output="$(python3 -c 'import pathlib,sys; print(pathlib.Path(sys.argv[1]).resolv
 "$SCRIPT_DIR/bootstrap-apple-everest-host.sh" >/dev/null
 args=()
 for mod in "${mods[@]}"; do args+=(--mod "$mod"); done
-(cd "$REPO_ROOT/tools/AppleEverestBuilder" && "$DOTNET8" run --project AppleEverestBuilder.csproj --no-restore -- \
+(cd /private/tmp && "$DOTNET8" run --project "$REPO_ROOT/tools/AppleEverestBuilder/AppleEverestBuilder.csproj" --no-restore -- \
   audit "${args[@]}" --output "$output")

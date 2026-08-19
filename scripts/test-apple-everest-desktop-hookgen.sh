@@ -15,7 +15,7 @@ TEST_ROOT="$REPO_ROOT/apple-everest/tests/desktop-hookgen"
 WORK="$REPO_ROOT/.build/apple-everest/desktop-hookgen"
 
 "$SCRIPT_DIR/bootstrap-apple-everest-host.sh"
-(cd "$REPO_ROOT/tools/AppleEverestBuilder" && "$DOTNET8" run --project AppleEverestBuilder.csproj --no-restore -- acquire \
+(cd /private/tmp && "$DOTNET8" run --project "$REPO_ROOT/tools/AppleEverestBuilder/AppleEverestBuilder.csproj" --no-restore -- acquire \
   --profile "$REPO_ROOT/apple-everest/profiles/stable-1.6458.0.json" --output "$UPSTREAM")
 
 # The historical MonoMod project is multi-targeted. Restore only the supported
@@ -34,11 +34,11 @@ WORK="$REPO_ROOT/.build/apple-everest/desktop-hookgen"
 [[ -f "$HOOKGEN_OUT/MonoMod.RuntimeDetour.HookGen.dll" ]] || { echo "error: pinned HookGen build missing" >&2; exit 1; }
 if [[ -d "$WORK" ]]; then find "$WORK" -depth -delete; fi
 mkdir -p "$WORK"
-(cd "$TEST_ROOT" && "$DOTNET8" build Target/Target.csproj -c Release --artifacts-path "$WORK/target-artifacts" >/dev/null)
+(cd /private/tmp && "$DOTNET8" build "$TEST_ROOT/Target/Target.csproj" -c Release --artifacts-path "$WORK/target-artifacts" >/dev/null)
 target="$(find "$WORK/target-artifacts" -type f -name AppleEverestDesktopHookGenTarget.dll -path '*/bin/*' | head -1)"
 [[ -f "$target" ]] || { echo "error: desktop target missing" >&2; exit 1; }
 cp "$target" "$WORK/AppleEverestDesktopHookGenTarget.dll"
 (cd "$WORK" && "$DOTNET8" "$HOOKGEN_OUT/MonoMod.RuntimeDetour.HookGen.dll" AppleEverestDesktopHookGenTarget.dll >/dev/null)
 [[ -f "$WORK/MMHOOK_AppleEverestDesktopHookGenTarget.dll" ]] || { echo "error: HookGen output missing" >&2; exit 1; }
-(cd "$TEST_ROOT" && "$DOTNET8" run --project Runner/Runner.csproj -c Release \
+(cd /private/tmp && "$DOTNET8" run --project "$TEST_ROOT/Runner/Runner.csproj" -c Release \
   -p:AppleEverestDesktopReferenceRoot="$WORK" -p:AppleEverestHookGenToolRoot="$HOOKGEN_OUT")

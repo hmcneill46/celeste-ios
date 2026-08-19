@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "members": [
+    {
+      "id": "celeste-level-unpause-timer",
+      "sourceFile": "Celeste/Level.cs",
+      "originalDeclaration": "\tprivate float unpauseTimer;",
+      "replacementDeclaration": "\tpublic float unpauseTimer;"
+    },
+    {
+      "id": "celeste-level-start-pause-effects",
+      "sourceFile": "Celeste/Level.cs",
+      "originalDeclaration": "\tprivate void StartPauseEffects()",
+      "replacementDeclaration": "\tpublic void StartPauseEffects()"
+    },
+    {
+      "id": "celeste-level-end-pause-effects",
+      "sourceFile": "Celeste/Level.cs",
+      "originalDeclaration": "\tprivate void EndPauseEffects()",
+      "replacementDeclaration": "\tpublic void EndPauseEffects()"
+    }
+  ]
+}

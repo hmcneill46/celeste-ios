@@ -23,10 +23,12 @@ public static class AppleEverestStaticRuntime
 
     private static readonly List<Loaded> LoadedModules = new();
     private static readonly List<string> HookTrace = new();
+    private static readonly HashSet<string> ObservedDirectHooks = new(StringComparer.Ordinal);
     private static bool started;
     private static bool contentReady;
     private static string currentOwner = "AppleEverestCore";
     private static ModeProperties originalPrologueMode;
+    internal static bool NonPersistentModSession { get; private set; }
 
     internal static string CurrentOwner => currentOwner;
     public static IReadOnlyList<EverestModule> Modules => LoadedModules.Select(item => item.Module).ToArray();
@@ -94,15 +96,20 @@ public static class AppleEverestStaticRuntime
         else
         {
             InvokeOwned(loaded, loaded.Module.Unload);
+            GeneratedAppleEverestManagedDetourRegistry.RemoveOwner(loaded.Descriptor.Name);
             loaded.Enabled = false;
         }
         AppleEverestHookList.Invalidate();
-        On.Celeste.Dialog.RebuildActiveChain();
         ShowStatus($"{name}: {(enabled ? "ENABLED" : "DISABLED")}");
-        Log($"module={name} enabled={enabled.ToString().ToLowerInvariant()} active-hooks={On.Celeste.Dialog.ActiveHandlerCount}");
+        Log($"module={name} enabled={enabled.ToString().ToLowerInvariant()} detour-generation={AppleEverestHookList.Version}");
     }
 
     public static void RecordHook(string value) => HookTrace.Add(value);
+
+    internal static void RecordDirectHookInvocation(string planId)
+    {
+        if (ObservedDirectHooks.Add(planId)) Log($"direct-hook=PASS plan={planId}");
+    }
 
     public static void RunHookProbe()
     {
@@ -121,6 +128,7 @@ public static class AppleEverestStaticRuntime
         // intentionally has no active SaveData. LevelLoader requires one, so
         // give the separate canary product Celeste's standard non-persistent
         // debug context instead of depending on a player-owned slot.
+        NonPersistentModSession = true;
         bool createdDebugSave = SaveData.Instance == null;
         if (createdDebugSave) SaveData.InitializeDebugMode(loadExisting: false);
         Input.MenuConfirm.ConsumePress();
@@ -145,6 +153,7 @@ public static class AppleEverestStaticRuntime
     {
         string path = GeneratedAppleEverestContentManifest.FirstMapPath;
         if (string.IsNullOrWhiteSpace(path)) return;
+        NonPersistentModSession = true;
         bool createdDebugSave = SaveData.Instance == null;
         if (createdDebugSave) SaveData.InitializeDebugMode(loadExisting: false);
         Input.MenuConfirm.ConsumePress();
@@ -272,6 +281,9 @@ public static class AppleEverestStaticRuntime
 
     internal static T GetSettings<T>(string moduleName) where T : class =>
         LoadedModules.Single(item => item.Descriptor.Name == moduleName).Settings as T;
+
+    internal static T GetModule<T>(string moduleName) where T : EverestModule =>
+        LoadedModules.Single(item => item.Descriptor.Name == moduleName).Module as T;
 
     internal static void Log(string value)
     {

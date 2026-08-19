@@ -25,13 +25,14 @@ internal static class RuntimeClosureScanner
 
         foreach (TypeDefinition type in assembly.MainModule.Types.SelectMany(AllTypes))
         {
-            if (Forbidden(type.FullName)) violations.Add("type:" + type.FullName);
+            if (Forbidden(type.FullName) && !AllowedStaticFacadeType(assembly, type) && !AllowedEmbeddedCompilerMarker(type))
+                violations.Add("type:" + type.FullName);
             foreach (MethodDefinition method in type.Methods.Where(value => value.HasBody))
             foreach (Instruction instruction in method.Body.Instructions)
             {
                 if (instruction.Operand is not MethodReference called) continue;
                 string full = called.DeclaringType.FullName + "::" + called.Name;
-                if (Forbidden(full)) violations.Add("call:" + full);
+                if (Forbidden(full) && !AllowedStaticFacadeCall(called)) violations.Add("call:" + full);
             }
         }
 
@@ -105,6 +106,14 @@ internal static class RuntimeClosureScanner
         {
             try
             {
+                string? inaccessible = member switch
+                {
+                    MethodReference method when method.Resolve() is MethodDefinition definition &&
+                        !ExternalAccess(definition) => "inaccessible-method:" + method.FullName,
+                    FieldReference field when field.Resolve() is FieldDefinition definition &&
+                        !ExternalAccess(definition) => "inaccessible-field:" + field.FullName,
+                    _ => null
+                };
                 bool resolved = member switch
                 {
                     MethodReference method => method.Resolve() != null,
@@ -112,6 +121,7 @@ internal static class RuntimeClosureScanner
                     _ => true
                 };
                 if (!resolved) unresolved.Add("member:" + member.FullName);
+                else if (inaccessible != null) unresolved.Add(inaccessible);
             }
             catch (ResolutionException)
             {
@@ -120,7 +130,7 @@ internal static class RuntimeClosureScanner
         }
         if (unresolved.Count != 0)
             throw new InvalidDataException("external assembly references APIs absent from the linked " + targetName +
-                " contract: " + string.Join(", ", unresolved.Distinct(StringComparer.Ordinal).Take(12)));
+                " contract or inaccessible: " + string.Join(", ", unresolved.Distinct(StringComparer.Ordinal).Take(12)));
     }
 
     internal static void VerifyAotObjects(string sourceAssemblyPath, IReadOnlyList<string> objectPaths)
@@ -155,8 +165,19 @@ internal static class RuntimeClosureScanner
         {
             string methodName = AotName(type.FullName) + "_" + AotName(method.Name);
             string llvmPrefix = "_" + AotName(source.Name.Name) + "_" + methodName;
-            if (!symbols.Any(symbol => symbol.StartsWith(llvmPrefix, StringComparison.Ordinal) ||
-                                       symbol.StartsWith(methodName, StringComparison.Ordinal)))
+            bool present = symbols.Any(symbol => symbol.StartsWith(llvmPrefix, StringComparison.Ordinal) ||
+                                                 symbol.StartsWith(methodName, StringComparison.Ordinal));
+            // The full-AOT compiler may eliminate an individually preserved
+            // but unreachable compiler-generated lambda while still emitting
+            // the closure type and every reachable sibling. Require native
+            // evidence for that exact generated type instead of inventing a
+            // symbol the compiler intentionally did not emit.
+            if (!present && CompilerGenerated(type, method))
+            {
+                string typePrefix = "_" + AotName(source.Name.Name) + "_" + AotName(type.FullName) + "_";
+                present = symbols.Any(symbol => symbol.StartsWith(typePrefix, StringComparison.Ordinal));
+            }
+            if (!present)
                 missing.Add(method.FullName);
         }
         if (missing.Count != 0)
@@ -171,10 +192,26 @@ internal static class RuntimeClosureScanner
         _ => string.Empty
     };
 
+    private static bool ExternalAccess(MethodDefinition method) =>
+        method.IsPublic || method.IsFamily || method.IsFamilyOrAssembly;
+
+    private static bool ExternalAccess(FieldDefinition field) =>
+        field.IsPublic || field.IsFamily || field.IsFamilyOrAssembly;
+
+    private static bool CompilerGenerated(TypeDefinition type, MethodDefinition method) =>
+        type.Name.Contains('<', StringComparison.Ordinal) || method.Name.Contains('<', StringComparison.Ordinal) ||
+        type.CustomAttributes.Any(attribute => attribute.AttributeType.FullName ==
+            "System.Runtime.CompilerServices.CompilerGeneratedAttribute") ||
+        method.CustomAttributes.Any(attribute => attribute.AttributeType.FullName ==
+            "System.Runtime.CompilerServices.CompilerGeneratedAttribute");
+
     private static string AotName(string value)
     {
-        char[] result = value.Select(character => char.IsLetterOrDigit(character) ? character : '_').ToArray();
-        return new string(result);
+        // Mono's AOT symbol mangling maps the opening compiler-generated angle
+        // bracket to an underscore, drops the closing bracket, and maps other
+        // metadata punctuation to underscores.
+        return new string(value.Where(character => character != '>')
+            .Select(character => char.IsLetterOrDigit(character) ? character : '_').ToArray());
     }
 
     private static bool Forbidden(string value) =>
@@ -186,6 +223,30 @@ internal static class RuntimeClosureScanner
         value.Contains("System.Runtime.InteropServices.NativeLibrary::Load", StringComparison.Ordinal) ||
         value.Contains("System.Diagnostics.Process::Start", StringComparison.Ordinal) ||
         value.Contains("System.IO.FileSystemWatcher::.ctor", StringComparison.Ordinal);
+
+    private static bool AllowedStaticFacadeType(AssemblyDefinition assembly, TypeDefinition type) =>
+        assembly.Name.Name == "Celeste" && type.Namespace == "MonoMod.RuntimeDetour" &&
+        type.Name is "Hook" or "DetourConfig";
+
+    private static bool AllowedEmbeddedCompilerMarker(TypeDefinition type) =>
+        type.FullName == "Microsoft.CodeAnalysis.EmbeddedAttribute" &&
+        type.BaseType?.FullName == "System.Attribute" &&
+        type.Methods.All(method => method.IsConstructor && method.Parameters.Count == 0);
+
+    private static bool AllowedStaticFacadeCall(MethodReference method)
+    {
+        if (ScopeName(method.DeclaringType) != "Celeste" || method.DeclaringType.Namespace != "MonoMod.RuntimeDetour")
+            return false;
+        return method.DeclaringType.Name switch
+        {
+            "Hook" => method.Name is ".ctor" or "Apply" or "Undo" or "Dispose" or
+                "get_IsApplied" or "get_IsValid",
+            "DetourConfig" => method.Name is ".ctor" or "get_ID" or "set_ID" or
+                "get_Priority" or "set_Priority" or "get_SubPriority" or "set_SubPriority" or
+                "get_Before" or "set_Before" or "get_After" or "set_After",
+            _ => false
+        };
+    }
 
     private static IEnumerable<TypeDefinition> AllTypes(TypeDefinition root)
     {

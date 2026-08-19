@@ -47,8 +47,17 @@ namespace Celeste.Mod
                 string tag,
                 out bool shouldLog)
             {
-                ShouldLog = shouldLog = true;
+                ShouldLog = shouldLog = Logger.ShouldLog(tag, Level());
                 handler = new DefaultInterpolatedStringHandler(literalLength, formattedCount);
+            }
+
+            private static LogLevel Level()
+            {
+                if (typeof(TLevel) == typeof(LogLevelConstTypes.Verbose)) return LogLevel.Verbose;
+                if (typeof(TLevel) == typeof(LogLevelConstTypes.Debug)) return LogLevel.Debug;
+                if (typeof(TLevel) == typeof(LogLevelConstTypes.Warn)) return LogLevel.Warn;
+                if (typeof(TLevel) == typeof(LogLevelConstTypes.Error)) return LogLevel.Error;
+                return LogLevel.Info;
             }
 
             internal string ToStringAndClear() => handler.ToStringAndClear();

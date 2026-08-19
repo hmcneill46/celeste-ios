@@ -6,6 +6,8 @@
     <Nullable>disable</Nullable>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="../../../../apple-everest/runtime/OnDialogStaticDispatch.cs" Link="OnDialogStaticDispatch.cs" />
+    <Compile Include="../../../../apple-everest/runtime/AppleEverestHookList.cs" Link="AppleEverestHookList.cs" />
+    <Compile Include="../../../../apple-everest/runtime/AppleEverestLogPolicy.cs" Link="AppleEverestLogPolicy.cs" />
+    <Compile Include="../../../../apple-everest/runtime/MonoModRuntimeDetourStaticFacade.cs" Link="MonoModRuntimeDetourStaticFacade.cs" />
   </ItemGroup>
 </Project>

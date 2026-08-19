@@ -9,4 +9,11 @@ public static class Target
         Trace.Add("original");
         return value + 1;
     }
+
+    [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.NoInlining)]
+    public static int DirectCompute(int value)
+    {
+        Trace.Add("original");
+        return value + 1;
+    }
 }

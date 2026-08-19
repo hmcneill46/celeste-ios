@@ -12,7 +12,7 @@ DOTNET9="$REPO_ROOT/.build/apple-everest/toolchain/dotnet9/dotnet"
 MONOMOD_SHA="dfc30a1506d37fb88a2c2be004f525205f46a24c"
 
 "$SCRIPT_DIR/bootstrap-apple-everest-host.sh"
-(cd "$REPO_ROOT/tools/AppleEverestBuilder" && "$DOTNET8" run --project AppleEverestBuilder.csproj -- acquire --profile "$PROFILE" --output "$UPSTREAM")
+(cd /private/tmp && "$DOTNET8" run --project "$REPO_ROOT/tools/AppleEverestBuilder/AppleEverestBuilder.csproj" -- acquire --profile "$PROFILE" --output "$UPSTREAM")
 [[ "$(git -C "$UPSTREAM/external/MonoMod" rev-parse HEAD)" == "$MONOMOD_SHA" ]] || { echo "error: MonoMod pin mismatch" >&2; exit 1; }
 
 (cd "$UPSTREAM/external/MonoMod" && "$DOTNET9" build src/MonoMod.Utils/MonoMod.Utils.csproj \
@@ -21,13 +21,13 @@ MONOMOD_UTILS="$UPSTREAM/external/MonoMod/artifacts/bin/MonoMod.Utils/release_ne
 [[ -f "$MONOMOD_UTILS" ]] || { echo "error: pinned MonoMod.Utils output missing" >&2; exit 1; }
 
 mkdir -p "$OUTPUT/frozen"
-(cd "$TEST_ROOT" && "$DOTNET8" build Runner/Runner.csproj -c Release --nologo >/dev/null)
+(cd /private/tmp && "$DOTNET8" build "$TEST_ROOT/Runner/Runner.csproj" -c Release --nologo >/dev/null)
 RUNNER="$TEST_ROOT/Runner/bin/Release/net8.0/Runner.dll"
 TARGET_IN_RUNNER="$TEST_ROOT/Runner/bin/Release/net8.0/AppleEverestIlFreezeTarget.dll"
 EXPECTED=10 "$DOTNET8" "$RUNNER"
 
-(cd "$TEST_ROOT" && "$DOTNET8" restore Freezer/Freezer.csproj -p:MonoModUtilsPath="$MONOMOD_UTILS" --locked-mode >/dev/null)
-(cd "$TEST_ROOT" && "$DOTNET8" build Freezer/Freezer.csproj -c Release --no-restore -p:MonoModUtilsPath="$MONOMOD_UTILS" --nologo >/dev/null)
+(cd /private/tmp && "$DOTNET8" restore "$TEST_ROOT/Freezer/Freezer.csproj" -p:MonoModUtilsPath="$MONOMOD_UTILS" --locked-mode >/dev/null)
+(cd /private/tmp && "$DOTNET8" build "$TEST_ROOT/Freezer/Freezer.csproj" -c Release --no-restore -p:MonoModUtilsPath="$MONOMOD_UTILS" --nologo >/dev/null)
 "$DOTNET8" "$TEST_ROOT/Freezer/bin/Release/net8.0/Freezer.dll" \
   "$TARGET_IN_RUNNER" "$OUTPUT/frozen/AppleEverestIlFreezeTarget.dll"
 cp "$OUTPUT/frozen/AppleEverestIlFreezeTarget.dll" "$TARGET_IN_RUNNER"
