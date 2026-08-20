@@ -1,7 +1,7 @@
 # Apple Everest real-mod compatibility
 
 This is a technical test matrix for the experimental shared Apple static-AOT
-builder. It lists only exact public inputs inspected through Stage 25D-C. It is not
+builder. It lists only exact public inputs inspected through Stage 25E. It is not
 a promise that similarly named, newer, older, or dependent mods work. The
 normal iOS and tvOS products do not contain these mods.
 
@@ -22,9 +22,22 @@ Status vocabulary:
 | [Particle Palette Helper](https://github.com/KnowHT1515/ParticlePaletteHelper/releases/tag/v1.0.0) | 1.0.0; ZIP `f9cf8874…be19`; source `9a791bcb…bb82` | Precompiled module + six `On.*` targets | **SUPPORTED_WITH_STATIC_TRANSFORM** | iOS, iPadOS, tvOS | Everest ≥ 1.6418.0 | MIT. Ordinary DLL, no source required. Assembly identity is retained. Current proof covers lifecycle, hook add/remove, cached typed `orig` pass-through, trim and AOT. Palette YAML deserialization/content enumeration remains deferred. |
 | [Feather Maddy](https://gamebanana.com/mods/467551) | 1.3; ZIP `a8f11047…e40e`; source `d9d339c0…fd64` | Precompiled module + nine newly catalogued `On.*` targets | **SUPPORTED_WITH_STATIC_TRANSFORM** | iOS, iPadOS, tvOS | Everest ≥ 1.3471.0 | Ordinary DLL, no source required. This is the former deferred HookGen fixture and proves generated target expansion, lifecycle cleanup, argument/return typing, and gameplay-hook pass-through. No explicit redistribution license was located; bytes remain ignored. |
 | [Lag Pauser](https://gamebanana.com/mods/591485) | 1.3.0; ZIP `32dac84d…9d10`; source `ec217fd9…e7` | `On.Monocle.Engine.Update` + direct static `Hook` on `Player.orig_Die` | **SUPPORTED_WITH_STATIC_TRANSFORM** | iOS, iPadOS, tvOS | EverestCore ≥ 1.4673.0 | Ordinary DLL, no source required. The Mac resolves its fixed reflection pattern into one static plan and exposes only its three reviewed Everest-patched `Level` API members. Device behavior uses the shared typed chain and explicit `Dispose` lifetime; there is no runtime target reflection, publicizer, or patching. No explicit redistribution license was located; bytes remain ignored. |
+| [Cpop Helper](https://gamebanana.com/mods/434438) | 1.3.0; ZIP `7a807a8f…b63`; DLL `235d767a…5c9`; source `f8b70384…cb2` | Precompiled helper; four custom entities and three custom triggers | **SUPPORTED_WITH_STATIC_TRANSFORM** | iOS, iPadOS, tvOS | Everest ≥ 1.3471.0 | Ordinary DLL, no source required. Static metadata discovery emits seven direct factories. The README grants reuse with credit and at own risk but no SPDX license file was found; the ZIP, DLL, content, and source remain ignored and are not redistributed. |
+| QuizSample | 0.0.1; ZIP `5cb8351b…b3e` | Content-only map depending on Cpop Helper ≥ 1.0.0 | **SUPPORTED** | iOS, iPadOS, tvOS | Everest ≥ 1.3761.0; Cpop Helper ≥ 1.0.0 | Real four-room quiz map. Normal map loading instantiates `quizController` and `quizAnswerTrigger`; wrong answers kill/respawn and the correct trigger produces the configured outcome. Its Text/Image/HighResImage number styles intentionally differ. The release omits four dialog keys used by its question labels, so those labels use Celeste's `XXX` missing-dialog fallback; answer values intentionally reroll after death. No source repository or explicit redistribution license was located, so its bytes remain ignored and are not redistributed. |
 
 The selected closure uses Everest stable 1.6458.0 and its one shared hash is
-`4e7abe3f76fa18c55213241f6fb11e5670610eb440cc923b870fec63cbb44e6f`.
+`d685d6277588b822831d911ff4f674036068d215dd7027bf6cfca5f8f43cbe82`.
+
+The Cpop/QuizSample pair is the first supported real helper ecosystem. Its
+declared dependency resolves before AOT, and omitting Cpop or supplying a
+version below 1.0.0 fails early. Generated entity/trigger factories contain
+direct type and constructor references; no device reflection scan or dynamic
+activation is used. The same closure also exposes bounded Mod Options for real
+Feather Maddy and Lag Pauser settings. Supported automatic shapes are boolean,
+enum, and explicitly ranged integer. Their shared logical settings format is
+stored privately in Application Support on iOS/iPadOS and under
+`CelesteAppleEverest.Settings.v1` on tvOS. This is module-settings persistence,
+not durable module SaveData.
 
 Precompiled Everest map binaries are validated as Celeste map containers and
 their package header is normalized to the exact static mount path. This is the
@@ -57,7 +70,10 @@ from becoming an on-device failure or JIT fallback.
 | [Extended Variant Mode](https://github.com/maddie480/ExtendedVariantMode) | source audit `fa9a25c3…cc3` | **UNSUPPORTED_LUA** | Real NLua dependency; Lua is not present in the device product. |
 | [SmoothCeleste](https://github.com/bybrooklyn/SmoothCeleste) | source audit `b4169752…f5a` | **UNSUPPORTED_NATIVE** | Runtime native-library loading and platform P/Invoke are outside the fixed native closure. |
 
-The full exact SHA-256 values, source pins, and license findings are in
+The full Stage 25E candidate audit, exact selected SHA-256 values, source pins,
+and license findings are in
+[`apple-everest/helper-ecosystem-compatibility-stage25e.json`](../apple-everest/helper-ecosystem-compatibility-stage25e.json).
+Earlier managed-detour findings remain in
 [`apple-everest/managed-detour-compatibility-stage25d.json`](../apple-everest/managed-detour-compatibility-stage25d.json).
 No third-party ZIP, DLL, map, texture, or source file is tracked.
 
@@ -66,7 +82,8 @@ No third-party ZIP, DLL, map, texture, or source file is tracked.
 Unknown `On.*`, any unresolved `IL.*`, dynamic/ambiguous direct Hook,
 `ILHook`, unsupported RuntimeDetour members/configuration,
 NativeDetour, native/P/Invoke additions, Lua, dynamic assembly loading,
-Reflection.Emit, desktop process/file-watcher behavior, helper ecosystems,
-general ModInterop, general settings/save persistence, and custom mod audio all
+Reflection.Emit, desktop process/file-watcher behavior, unregistered helper
+ecosystems, general ModInterop, settings outside the bounded shapes, durable
+module SaveData, and custom mod audio all
 fail closed or remain explicitly deferred. Strawberry Jam has not been
 downloaded, built, or tested.

@@ -193,17 +193,87 @@ transformed generically without a mod-specific source edit. **SOURCE-PORTED**
 means a source change was required for Apple. No Stage 25C success fixture is
 reported as binary-compatible if it needed that.
 
-The current selected closure contains four ordinary public ZIPs: the
-content-only map *I Accidentally Four Cassette Blocks* 1.0.0; *Particle Palette
-Helper* 1.0.0; *Feather Maddy* 1.3; and *Lag Pauser* 1.3.0. All three managed
-mods are `BINARY-COMPATIBLE_WITH_STATIC_TRANSFORM`: their ordinary DLLs are
-accepted without source trees or mod-specific source edits. Particle Palette
-Helper's optional palette-file content API is not yet implemented, so its
-evidence covers module/hook execution and vanilla pass-through rather than
-custom palette deserialization.
+The Stage 25E selected closure contains six ordinary public ZIPs: the four
+Stage 25C/25D fixtures above, *Cpop Helper* 1.3.0, and its real dependent map
+*QuizSample* 0.0.1. All four managed mods are
+`BINARY-COMPATIBLE_WITH_STATIC_TRANSFORM`: their ordinary DLLs are accepted
+without source trees or mod-specific source edits. Particle Palette Helper's
+optional palette-file content API is not yet implemented, so its evidence
+covers module/hook execution and vanilla pass-through rather than custom
+palette deserialization.
 
 The exact tested-mod matrix is in
 [Apple Everest compatibility](APPLE_EVEREST_COMPATIBILITY.md).
+
+## Helper graphs, gameplay registries, and Mod Options
+
+Stage 25E adds the first ordinary map-to-helper dependency graph. The pinned
+`QuizSample` metadata requires Cpop Helper, so the graph resolver orders the
+helper before the map and rejects a missing or too-old helper before AOT. The
+helper cannot be disabled while the dependent map is present. This is a
+generic dependency rule, not a Cpop-specific runtime patch.
+
+For a precompiled helper DLL the Mac builder reads pinned Everest
+`CustomEntity` and `CustomBackdrop` metadata with Mono.Cecil. It emits direct,
+strongly typed entity, trigger, and backdrop factories plus AOT roots; map
+binaries are independently inspected so the compatibility manifest records
+which real IDs resolve to which owning module. Device code performs a switch
+over those exact IDs and calls normal constructors or reviewed static
+factories. It never calls `Assembly.GetTypes`, `Activator.CreateInstance`, or a
+runtime mod loader. Duplicate IDs and unsupported constructor/factory shapes
+fail on the Mac.
+
+Everest's own `everest/coreMessage` entity is a separate, pinned MIT-licensed
+core factory. It is included explicitly because real dependent maps can use
+Everest core entities even when their helper DLL does not declare them. The
+lab lists every staged map through one generated `MapPaths` inventory, so a
+dependent map can be launched deliberately rather than relying on ZIP order.
+
+The selected real map resolves `quizController` and `quizAnswerTrigger` from
+Cpop Helper. Cpop declares four custom entities and three custom triggers in
+total. The selected pair has no custom backdrop; the pinned Everest
+`ID[=factory]` backdrop convention is covered by a generated deterministic
+canary rather than adding an unrelated physical mod.
+
+This is the first production proof in which a real **custom entity** and a
+real **custom trigger** are both instantiated from ordinary dependent-map
+data through the generated registry.
+
+QuizSample contains four rooms which deliberately exercise Cpop's `Text`,
+`Image`, and `HighResImage` answer modes. The distributed dialog fragment
+defines the answer digits but omits the four question/choice keys referenced
+by its `everest/coreMessage` entities (`PickTheEvenNumber`,
+`IsThisNumberEven`, `Yes`, and `No`). Celeste therefore displays its normal
+`XXX` missing-dialog fallback for those labels. Answer values also reroll
+after death because Cpop includes the session death count in its quiz seed.
+These are properties of the exact public sample fixture, not static-AOT
+rendering or dialog-loader failures; the builder does not invent replacement
+map text.
+
+Cpop also consumes four members which pinned desktop Everest publicizes:
+`Actor.movementCounter`, `Glider.sprite`, `Glider.destroyed`, and
+`Glider.DestroyAnimationRoutine`. They are the only Stage 25E additions to the
+reviewed Apple API surface. `TagsExt.SubHUD` is supplied as a small shared
+Everest API facade and uses Celeste's existing high-resolution HUD pass; no
+broad publicizer or separate desktop SubHUD event system is shipped.
+
+Simple `EverestModuleSettings` properties are also discovered on the Mac and
+become typed Celeste `TextMenu` entries under Mod Options. The current bounded
+production shapes are `bool`, enum, and `int` with an explicit small
+`SettingRange`. Unsupported or unbounded properties are listed in the
+manifest rather than guessed. The current real closure exposes Feather Maddy's
+three booleans and Lag Pauser's `Enable` boolean.
+
+One versioned 16 KiB logical settings document is shared by both Apple
+platforms. On iOS/iPadOS it is atomically stored in private Application
+Support at `AppleEverest/ModuleSettings.v1`; it is not a live Documents file.
+On tvOS the same logical data uses the separate bounded app-private
+`CelesteAppleEverest.Settings.v1` `NSUserDefaults` key. It is outside vanilla
+Settings, SaveData, compressed tvOS save generations, and Save Manager.
+Malformed, truncated, wrong-type, duplicate, or oversized data falls back to
+normal module defaults without changing vanilla state. `EverestModuleSaveData`
+remains intentionally non-durable; module session objects last only for the
+current process.
 
 The deferred IL rung uses the ordinary GoldenTrainer 1.5.4 release. Its DLL
 contains `IL.Celeste.SummitCheckpoint.Update` plus a direct `ILHook` on
@@ -241,7 +311,8 @@ This foundation does **not** promise arbitrary Everest mods, runtime mod
 installation, runtime enable/disable of code outside the prebuilt registry,
 IL hooks on-device, arbitrary direct detours, Lua, native mods, content hot reload,
 Everest networking/updating, dependency downloading, general mod
-settings/save persistence, the complete Everest virtual-content API, or
+settings shapes, durable `EverestModuleSaveData`, the complete Everest
+virtual-content API, or
 desktop parity. Only
 exactly analysed packages and explicitly registered mechanisms can enter the
 closure. Extending support requires a new deterministic transform plus desktop
