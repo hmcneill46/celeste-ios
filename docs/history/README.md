@@ -56,6 +56,7 @@ support matrix, and limitations are in [project status](../STATUS.md).
 38. [Stage 25B — production shared Apple Everest static-AOT foundation](stages/APPLE_EVEREST_STATIC_FOUNDATION_STAGE25B_REPORT.md)
 39. [Stage 25C — real Everest ZIP compatibility ladder I](stages/APPLE_EVEREST_REAL_MODS_STAGE25C_REPORT.md)
 40. [Stage 25D-C — scalable HookGen and direct managed-detour compatibility](stages/APPLE_EVEREST_MANAGED_DETOURS_STAGE25D_REPORT.md)
+41. [Stage 25E — real helper dependency ecosystem and module settings](stages/APPLE_EVEREST_HELPER_ECOSYSTEM_STAGE25E_REPORT.md)
 
 Diagnostic-only stages whose evidence was intentionally kept in ignored local
 build directories are not reconstructed here. The index covers every tracked
