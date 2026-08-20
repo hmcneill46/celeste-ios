@@ -283,7 +283,9 @@ def main() -> int:
     c.require(git(root, "rev-parse", "v1.0.0-rc.2^{}") == RC2, "tvOS RC2")
     c.require(not git(root, "tag", "-l", "v1.0.0-rc.3"), "RC3 tag absent")
     c.require(git(root, "rev-parse", "origin/release/v1.0.0-rc.3") == RC3, "deferred RC3 preserved")
-    c.require(git(root, "rev-parse", "tvos-port") == BASE and git(root, "rev-parse", "origin/tvos-port") == BASE,
+    local_tvos = git(root, "branch", "--list", "tvos-port")
+    c.require(git(root, "rev-parse", "origin/tvos-port") == BASE and
+              (not local_tvos or git(root, "rev-parse", "tvos-port") == BASE),
               "integration branch preserved")
     c.require(git(root, "diff", "--name-only", BASE, "--", ".github") == "", "GitHub Actions untouched")
 

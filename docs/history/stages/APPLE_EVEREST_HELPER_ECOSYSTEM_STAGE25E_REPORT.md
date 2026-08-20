@@ -23,7 +23,8 @@ reflection, `IL.*`, `ILHook`, NativeDetour, Lua, custom mod audio, or durable
 | --- | --- |
 | Starting commit | `3a11b16c04ac77a73328c5cd9b4f8874f854f1e9` |
 | Feature branch | `feature/apple-everest-helper-ecosystem` |
-| Final acceptance commit | The commit containing this report; the final response records its exact full SHA |
+| Acceptance-record commit | The commit containing this report |
+| Final feature-branch commit | The final response records its exact full SHA |
 | Everest stable source | `4bbde91b8dbaaddef2ceec75ca0cd6d59b3b8d00` |
 | MonoMod source | `dfc30a1506d37fb88a2c2be004f525205f46a24c` |
 | iOS recovery tag | `ios-v0.1.1-rc.1^{}` -> `27e16b4724d94d3991b99c4795f680fcb0e5830c` |
