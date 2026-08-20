@@ -18,6 +18,30 @@
       "sourceFile": "Celeste/Level.cs",
       "originalDeclaration": "\tprivate void EndPauseEffects()",
       "replacementDeclaration": "\tpublic void EndPauseEffects()"
+    },
+    {
+      "id": "celeste-actor-movement-counter",
+      "sourceFile": "Celeste/Actor.cs",
+      "originalDeclaration": "\tprivate Vector2 movementCounter;",
+      "replacementDeclaration": "\tpublic Vector2 movementCounter;"
+    },
+    {
+      "id": "celeste-glider-destroyed",
+      "sourceFile": "Celeste/Glider.cs",
+      "originalDeclaration": "\tprivate bool destroyed;",
+      "replacementDeclaration": "\tpublic bool destroyed;"
+    },
+    {
+      "id": "celeste-glider-sprite",
+      "sourceFile": "Celeste/Glider.cs",
+      "originalDeclaration": "\tprivate Sprite sprite;",
+      "replacementDeclaration": "\tpublic Sprite sprite;"
+    },
+    {
+      "id": "celeste-glider-destroy-animation-routine",
+      "sourceFile": "Celeste/Glider.cs",
+      "originalDeclaration": "\tprivate IEnumerator DestroyAnimationRoutine()",
+      "replacementDeclaration": "\tpublic IEnumerator DestroyAnimationRoutine()"
     }
   ]
 }
