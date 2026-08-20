@@ -54,6 +54,10 @@ Check(Celeste.Mod.AppleEverestLogPolicy.ShouldLog("FeatherMaddyModule", Celeste.
     "longest tag-prefix log rule wins");
 Check(!Celeste.Mod.AppleEverestLogPolicy.ShouldLog("FeatherOther", Celeste.Mod.LogLevel.Info),
     "broader tag-prefix log rule remains enforced");
+Celeste.Mod.AppleEverestLogPolicy.Set("DebugRelease", Celeste.Mod.LogLevel.Verbose);
+Check(!Celeste.Mod.AppleEverestLogPolicy.ShouldLog("DebugReleaseModule", Celeste.Mod.LogLevel.Verbose) &&
+      Celeste.Mod.AppleEverestLogPolicy.ShouldLog("DebugReleaseModule", Celeste.Mod.LogLevel.Info),
+    "production log policy clamps third-party verbose requests to Info");
 
 Runtime.CurrentOwner = "A";
 On.Celeste.Dialog.Clean += A;

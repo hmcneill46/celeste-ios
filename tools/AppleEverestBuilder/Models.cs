@@ -9,7 +9,7 @@ internal static class ProductPolicy
     public const long MaxSingleFileBytes = 64L * 1024 * 1024;
     public const int MaxPathDepth = 24;
     public const int MaxYamlBytes = 1024 * 1024;
-    public const string TransformerVersion = "apple-everest-static-v3";
+    public const string TransformerVersion = "apple-everest-static-v4";
     public const string CanonicalClass = "celeste-1.4.0.0-a";
 }
 
@@ -73,6 +73,39 @@ internal sealed class AppleStaticDeclaration
     public string? SessionType { get; set; }
     public string[] ButtonBindingProperties { get; set; } = [];
     public string[] TrackedEntityTypes { get; set; } = [];
+    public AppleCustomEntityFactory[] CustomEntityFactories { get; set; } = [];
+    public AppleCustomBackdropFactory[] CustomBackdropFactories { get; set; } = [];
+    public AppleSettingProperty[] SettingsProperties { get; set; } = [];
+    public string[] OmittedSettingsProperties { get; set; } = [];
+}
+
+internal sealed class AppleCustomEntityFactory
+{
+    public string Id { get; set; } = "";
+    public string Type { get; set; } = "";
+    public string Kind { get; set; } = "";
+    public string Constructor { get; set; } = "";
+}
+
+internal sealed class AppleCustomBackdropFactory
+{
+    public string Id { get; set; } = "";
+    public string Type { get; set; } = "";
+    public string Factory { get; set; } = "";
+    public string Method { get; set; } = "";
+}
+
+internal sealed class AppleSettingProperty
+{
+    public string Name { get; set; } = "";
+    public string Label { get; set; } = "";
+    public string Kind { get; set; } = "";
+    public string Type { get; set; } = "";
+    public string[] EnumNames { get; set; } = [];
+    public int[] EnumValues { get; set; } = [];
+    public int Minimum { get; set; }
+    public int Maximum { get; set; }
+    public int Step { get; set; } = 1;
 }
 
 internal enum CompatibilityClass

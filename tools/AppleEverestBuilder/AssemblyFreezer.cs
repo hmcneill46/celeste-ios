@@ -1,4 +1,5 @@
 using System.Text.Json;
+using System.Text;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
 
@@ -28,6 +29,15 @@ internal static class AssemblyFreezer
         if (!module.Methods.Any(method => method.IsConstructor && !method.IsStatic && method.Parameters.Count == 0))
             throw new InvalidDataException($"{mod} module has no parameterless constructor");
         TypeDefinition? settingsDefinition = OverrideTypeDefinition(module, "get_SettingsType");
+        TypeDefinition[] customTypes = assembly.MainModule.Types.SelectMany(AllTypes)
+            .Where(type => type.CustomAttributes.Any(attribute => attribute.AttributeType.FullName == "Celeste.Mod.Entities.CustomEntityAttribute"))
+            .OrderBy(type => type.FullName, StringComparer.Ordinal)
+            .ToArray();
+        TypeDefinition[] backdropTypes = assembly.MainModule.Types.SelectMany(AllTypes)
+            .Where(type => type.CustomAttributes.Any(attribute => attribute.AttributeType.FullName == "Celeste.Mod.Backdrops.CustomBackdropAttribute"))
+            .OrderBy(type => type.FullName, StringComparer.Ordinal)
+            .ToArray();
+        (AppleSettingProperty[] settings, string[] omittedSettings) = InspectSettings(settingsDefinition);
         AppleStaticDeclaration declaration = new()
         {
             SchemaVersion = 1,
@@ -39,9 +49,12 @@ internal static class AssemblyFreezer
                 .Where(property => property.PropertyType.FullName == "Celeste.Mod.ButtonBinding" &&
                                    property.SetMethod is { IsPublic: true })
                 .Select(property => property.Name).OrderBy(value => value, StringComparer.Ordinal).ToArray() ?? [],
-            TrackedEntityTypes = assembly.MainModule.Types.SelectMany(AllTypes)
-                .Where(type => type.CustomAttributes.Any(attribute => attribute.AttributeType.FullName == "Celeste.Mod.Entities.CustomEntityAttribute"))
-                .Select(type => type.FullName.Replace('/', '.')).OrderBy(value => value, StringComparer.Ordinal).ToArray()
+            TrackedEntityTypes = customTypes.Select(type => type.FullName.Replace('/', '.')).ToArray(),
+            CustomEntityFactories = customTypes.SelectMany(CustomFactories).OrderBy(value => value.Id, StringComparer.Ordinal).ToArray(),
+            CustomBackdropFactories = backdropTypes.SelectMany(CustomBackdropFactories)
+                .OrderBy(value => value.Id, StringComparer.Ordinal).ToArray(),
+            SettingsProperties = settings,
+            OmittedSettingsProperties = omittedSettings
         };
         Validate(declaration, mod);
         return declaration;
@@ -138,6 +151,204 @@ internal static class AssemblyFreezer
         catch (AssemblyResolutionException) { return null; }
     }
 
+    private static IEnumerable<AppleCustomEntityFactory> CustomFactories(TypeDefinition type)
+    {
+        // A custom entity can derive from a vanilla Celeste entity (for
+        // example Glider) whose assembly is intentionally not loaded by this
+        // host-only Cecil pass. Trigger is identifiable from its reviewed
+        // base chain; every other attributed type is emitted as an Entity and
+        // the normal shared managed compile proves the assignability.
+        string kind = Inherits(type, "Celeste.Trigger") ? "trigger" : "entity";
+        if (!PublicType(type) || type.IsAbstract)
+            throw new InvalidDataException($"custom entity factory type must be public and concrete: {type.FullName}");
+        string constructor = ConstructorKind(type);
+        foreach (CustomAttribute attribute in type.CustomAttributes.Where(value =>
+                     value.AttributeType.FullName == "Celeste.Mod.Entities.CustomEntityAttribute"))
+        {
+            foreach (string id in AttributeStrings(attribute))
+            {
+                if (id.Length is < 1 or > 192 || id.Any(char.IsControl) || id.Contains('=') || id.Contains(','))
+                    throw new InvalidDataException($"unsupported custom entity ID on {type.FullName}");
+                yield return new AppleCustomEntityFactory
+                {
+                    Id = id,
+                    Type = type.FullName.Replace('/', '.'),
+                    Kind = kind,
+                    Constructor = constructor
+                };
+            }
+        }
+    }
+
+    private static IEnumerable<string> AttributeStrings(CustomAttribute attribute)
+    {
+        foreach (CustomAttributeArgument argument in attribute.ConstructorArguments)
+        {
+            if (argument.Value is string text) yield return text;
+            else if (argument.Value is CustomAttributeArgument[] values)
+                foreach (CustomAttributeArgument item in values)
+                    if (item.Value is string value) yield return value;
+        }
+    }
+
+    private static IEnumerable<AppleCustomBackdropFactory> CustomBackdropFactories(TypeDefinition type)
+    {
+        if (!PublicType(type) || type.IsAbstract || !Inherits(type, "Celeste.Backdrop"))
+            throw new InvalidDataException($"custom backdrop factory type must be public and concrete: {type.FullName}");
+        foreach (CustomAttribute attribute in type.CustomAttributes.Where(value =>
+                     value.AttributeType.FullName == "Celeste.Mod.Backdrops.CustomBackdropAttribute"))
+        {
+            foreach (string full in AttributeStrings(attribute))
+            {
+                string[] parts = full.Split('=');
+                if (parts.Length is < 1 or > 2)
+                    throw new InvalidDataException($"unsupported custom backdrop ID on {type.FullName}");
+                string id = parts[0].Trim();
+                string method = parts.Length == 2 ? parts[1].Trim() : "Load";
+                if (id.Length is < 1 or > 192 || id.Any(char.IsControl) || !MemberName(method))
+                    throw new InvalidDataException($"unsupported custom backdrop ID on {type.FullName}");
+                MethodDefinition? generator = type.Methods.SingleOrDefault(candidate => candidate.Name == method &&
+                    candidate.IsPublic && candidate.IsStatic && candidate.Parameters.Count == 1 &&
+                    candidate.Parameters[0].ParameterType.FullName == "Celeste.BinaryPacker/Element" &&
+                    (candidate.ReturnType.FullName is "Celeste.Backdrop" ||
+                     candidate.ReturnType.FullName == type.FullName));
+                MethodDefinition? constructor = type.Methods.SingleOrDefault(candidate => candidate.IsConstructor &&
+                    candidate.IsPublic && !candidate.IsStatic && candidate.Parameters.Count == 1 &&
+                    candidate.Parameters[0].ParameterType.FullName == "Celeste.BinaryPacker/Element");
+                if (generator == null && constructor == null)
+                    throw new InvalidDataException($"custom backdrop type has no supported public factory: {type.FullName}");
+                yield return new AppleCustomBackdropFactory
+                {
+                    Id = id,
+                    Type = type.FullName.Replace('/', '.'),
+                    Factory = generator != null ? "static-method" : "constructor",
+                    Method = generator != null ? method : ""
+                };
+            }
+        }
+    }
+
+    private static string ConstructorKind(TypeDefinition type)
+    {
+        static string Signature(MethodDefinition method) => string.Join(",", method.Parameters.Select(value => value.ParameterType.FullName));
+        string[] supported =
+        [
+            "Celeste.EntityData,Microsoft.Xna.Framework.Vector2",
+            "Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID",
+            "Celeste.EntityID,Celeste.EntityData,Microsoft.Xna.Framework.Vector2"
+        ];
+        MethodDefinition[] constructors = type.Methods.Where(method => method.IsConstructor && !method.IsStatic && method.IsPublic &&
+            supported.Contains(Signature(method), StringComparer.Ordinal)).ToArray();
+        if (constructors.Length != 1)
+            throw new InvalidDataException($"custom entity type must expose exactly one supported public constructor: {type.FullName}");
+        return Signature(constructors[0]) switch
+        {
+            "Celeste.EntityData,Microsoft.Xna.Framework.Vector2" => "entity-data-vector2",
+            "Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID" => "entity-data-vector2-entity-id",
+            "Celeste.EntityID,Celeste.EntityData,Microsoft.Xna.Framework.Vector2" => "entity-id-entity-data-vector2",
+            _ => throw new InvalidDataException("unreachable custom entity constructor")
+        };
+    }
+
+    private static (AppleSettingProperty[] Supported, string[] Omitted) InspectSettings(TypeDefinition? settings)
+    {
+        if (settings == null) return ([], []);
+        List<AppleSettingProperty> supported = [];
+        List<string> omitted = [];
+        foreach (PropertyDefinition property in settings.Properties.OrderBy(value => value.Name, StringComparer.Ordinal))
+        {
+            if (property.GetMethod is not { IsPublic: true, IsStatic: false } ||
+                property.SetMethod is not { IsPublic: true, IsStatic: false })
+            {
+                omitted.Add(property.Name + ":not-public-read-write");
+                continue;
+            }
+            string typeName = property.PropertyType.FullName.Replace('/', '.');
+            AppleSettingProperty? descriptor = null;
+            if (typeName == "System.Boolean")
+            {
+                descriptor = new AppleSettingProperty { Name = property.Name, Label = Humanize(property.Name), Kind = "bool", Type = typeName };
+            }
+            else
+            {
+                TypeDefinition? definition = Resolve(property.PropertyType);
+                if (definition?.IsEnum == true)
+                {
+                    (string Name, int Value)[] values = definition.Fields.Where(field => field.IsStatic && field.HasConstant)
+                        .Select(field => (Name: field.Name, Value: Convert.ToInt32(field.Constant, System.Globalization.CultureInfo.InvariantCulture)))
+                        .OrderBy(value => value.Value).ThenBy(value => value.Name, StringComparer.Ordinal).ToArray();
+                    if (values.Length is > 0 and <= 64 && values.Select(value => value.Value).Distinct().Count() == values.Length)
+                    {
+                        descriptor = new AppleSettingProperty
+                        {
+                            Name = property.Name,
+                            Label = Humanize(property.Name),
+                            Kind = "enum",
+                            Type = typeName,
+                            EnumNames = values.Select(value => Humanize(value.Name)).ToArray(),
+                            EnumValues = values.Select(value => value.Value).ToArray()
+                        };
+                    }
+                }
+                else if (typeName == "System.Int32" && TryRange(property, out int minimum, out int maximum) &&
+                         maximum >= minimum && maximum - minimum <= 255)
+                {
+                    descriptor = new AppleSettingProperty
+                    {
+                        Name = property.Name,
+                        Label = Humanize(property.Name),
+                        Kind = "int",
+                        Type = typeName,
+                        Minimum = minimum,
+                        Maximum = maximum,
+                        Step = 1
+                    };
+                }
+            }
+            if (descriptor == null) omitted.Add(property.Name + ":" + typeName);
+            else supported.Add(descriptor);
+        }
+        return (supported.ToArray(), omitted.ToArray());
+    }
+
+    private static bool TryRange(PropertyDefinition property, out int minimum, out int maximum)
+    {
+        minimum = maximum = 0;
+        CustomAttribute? range = property.CustomAttributes.FirstOrDefault(attribute =>
+            (attribute.AttributeType.Name is "SettingRangeAttribute" or "SettingNumberInputAttribute") &&
+            attribute.ConstructorArguments.Count >= 2);
+        if (range == null) return false;
+        try
+        {
+            minimum = Convert.ToInt32(range.ConstructorArguments[0].Value, System.Globalization.CultureInfo.InvariantCulture);
+            maximum = Convert.ToInt32(range.ConstructorArguments[1].Value, System.Globalization.CultureInfo.InvariantCulture);
+            return true;
+        }
+        catch (Exception) { return false; }
+    }
+
+    private static TypeDefinition? Resolve(TypeReference type)
+    {
+        try { return type.Resolve(); }
+        catch (AssemblyResolutionException) { return null; }
+    }
+
+    private static bool PublicType(TypeDefinition type) => type.IsPublic ||
+        type.IsNestedPublic && type.DeclaringType != null && PublicType(type.DeclaringType);
+
+    private static string Humanize(string value)
+    {
+        StringBuilder result = new();
+        for (int index = 0; index < value.Length; index++)
+        {
+            char current = value[index];
+            if (index > 0 && char.IsUpper(current) && (char.IsLower(value[index - 1]) ||
+                index + 1 < value.Length && char.IsLower(value[index + 1]))) result.Append(' ');
+            result.Append(current);
+        }
+        return result.ToString();
+    }
+
     private static bool Inherits(TypeDefinition type, string expected)
     {
         TypeReference? current = type.BaseType;
@@ -166,6 +377,28 @@ internal static class AssemblyFreezer
             throw new InvalidDataException($"invalid button-binding factory declaration for {mod}");
         if (declaration.TrackedEntityTypes.Length > 256 || declaration.TrackedEntityTypes.Any(type => !TypeName(type)))
             throw new InvalidDataException($"invalid tracked entity declaration for {mod}");
+        if (declaration.CustomEntityFactories.Length > 512 || declaration.CustomEntityFactories.Any(factory =>
+                factory.Id.Length is < 1 or > 192 || !TypeName(factory.Type) ||
+                factory.Kind is not ("entity" or "trigger") ||
+                factory.Constructor is not ("entity-data-vector2" or "entity-data-vector2-entity-id" or "entity-id-entity-data-vector2")))
+            throw new InvalidDataException($"invalid custom entity factory declaration for {mod}");
+        if (declaration.CustomEntityFactories.Select(factory => factory.Id).Distinct(StringComparer.Ordinal).Count() !=
+            declaration.CustomEntityFactories.Length)
+            throw new InvalidDataException($"duplicate custom entity factory ID for {mod}");
+        if (declaration.CustomBackdropFactories.Length > 256 || declaration.CustomBackdropFactories.Any(factory =>
+                factory.Id.Length is < 1 or > 192 || !TypeName(factory.Type) ||
+                factory.Factory is not ("constructor" or "static-method") ||
+                factory.Factory == "static-method" && !MemberName(factory.Method)))
+            throw new InvalidDataException($"invalid custom backdrop factory declaration for {mod}");
+        if (declaration.CustomBackdropFactories.Select(factory => factory.Id).Distinct(StringComparer.Ordinal).Count() !=
+            declaration.CustomBackdropFactories.Length)
+            throw new InvalidDataException($"duplicate custom backdrop factory ID for {mod}");
+        if (declaration.SettingsProperties.Length > 128 || declaration.SettingsProperties.Any(property =>
+                !MemberName(property.Name) || property.Label.Length is < 1 or > 192 ||
+                property.Kind is not ("bool" or "enum" or "int") || !TypeName(property.Type)))
+            throw new InvalidDataException($"invalid settings property declaration for {mod}");
+        if (declaration.OmittedSettingsProperties.Length > 128 || declaration.OmittedSettingsProperties.Any(value => value.Length is < 1 or > 256))
+            throw new InvalidDataException($"invalid omitted settings declaration for {mod}");
     }
 
     private static bool TypeName(string value) => value.Length is > 0 and < 256 &&

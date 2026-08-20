@@ -12,6 +12,12 @@ internal static class AppleEverestLogPolicy
 
     internal static void Set(string tag, LogLevel level)
     {
+        // The closed Apple product is always a production build. Some public
+        // mod ZIPs contain assemblies compiled with DEBUG and request Verbose
+        // logging in their constructor; honoring that request can turn a
+        // per-frame diagnostic into sustained device I/O. Preserve Everest's
+        // tag-prefix policy while enforcing the production Info floor.
+        if (level < LogLevel.Info) level = LogLevel.Info;
         lock (MinimumLevels) MinimumLevels[tag ?? string.Empty] = level;
     }
 

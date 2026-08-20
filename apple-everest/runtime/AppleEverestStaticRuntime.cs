@@ -24,10 +24,13 @@ public static class AppleEverestStaticRuntime
     private static readonly List<Loaded> LoadedModules = new();
     private static readonly List<string> HookTrace = new();
     private static readonly HashSet<string> ObservedDirectHooks = new(StringComparer.Ordinal);
+    private static readonly HashSet<string> ObservedCustomFactories = new(StringComparer.Ordinal);
     private static bool started;
     private static bool contentReady;
     private static string currentOwner = "AppleEverestCore";
     private static ModeProperties originalPrologueMode;
+    private static SaveData saveDataBeforeModSession;
+    private static bool suppressedModSessionSaveLogged;
     internal static bool NonPersistentModSession { get; private set; }
 
     internal static string CurrentOwner => currentOwner;
@@ -52,6 +55,11 @@ public static class AppleEverestStaticRuntime
                 Session = descriptor.SessionFactory?.Invoke()
             };
             LoadedModules.Add(loaded);
+        }
+        AppleEverestSettingsPersistence.LoadAndApply(GeneratedAppleEverestModuleRegistry.Settings);
+        foreach (Loaded loaded in LoadedModules)
+        {
+            EverestModule module = loaded.Module;
             module.SetStaticState(loaded.Settings as EverestModuleSettings, loaded.SaveData as EverestModuleSaveData,
                 loaded.Session as EverestModuleSession);
             InvokeOwned(loaded, module.Load);
@@ -63,6 +71,7 @@ public static class AppleEverestStaticRuntime
     {
         if (contentReady) return;
         contentReady = true;
+        MountStaticAtlases();
         if (GeneratedAppleEverestContentManifest.Has("AppleEverest/Dialog/Canary.txt")) LoadCanaryDialog();
         LoadStaticDialogFragments();
         if (GeneratedAppleEverestContentManifest.Has("AppleEverest/Canary/precedence.txt")) VerifyContentPrecedence();
@@ -74,6 +83,40 @@ public static class AppleEverestStaticRuntime
         Log($"content=PASS mounts={GeneratedAppleEverestContentManifest.Entries.Length}");
     }
 
+    private static void MountStaticAtlases()
+    {
+        int game = 0;
+        int gui = 0;
+        foreach (AppleEverestAtlasMountDescriptor descriptor in GeneratedAppleEverestContentManifest.AtlasMounts)
+        {
+            Atlas atlas;
+            if (descriptor.Atlas == "Gameplay")
+            {
+                atlas = GFX.Game;
+                game++;
+            }
+            else if (descriptor.Atlas == "Gui")
+            {
+                atlas = GFX.Gui;
+                gui++;
+            }
+            else
+            {
+                throw new InvalidOperationException($"unsupported static Everest atlas: {descriptor.Atlas}");
+            }
+
+            // The closure contains the exact release PNG as a private,
+            // deterministic content mount.  Register it under the ordinary
+            // Everest atlas key before any module Initialize/LoadContent call.
+            // Later dependency-order entries intentionally win duplicate keys.
+            VirtualTexture texture = VirtualContent.CreateTexture(descriptor.LogicalPath);
+            MTexture mounted = new(texture) { AtlasPath = descriptor.Key };
+            atlas.Sources.Add(texture);
+            atlas[descriptor.Key] = mounted;
+        }
+        Log($"content-atlas=PASS gameplay={game} gui={gui} precedence=dependency-order");
+    }
+
     public static bool IsModuleEnabled(string name) =>
         LoadedModules.FirstOrDefault(item => item.Descriptor.Name == name)?.Enabled ?? name == "AppleEverestCore";
 
@@ -83,6 +126,12 @@ public static class AppleEverestStaticRuntime
     {
         Loaded loaded = LoadedModules.Single(item => item.Descriptor.Name == name);
         if (loaded.Enabled == enabled) return;
+        if (!enabled && loaded.Descriptor.RequiredBy.Length > 0)
+        {
+            ShowStatus($"{name} IS REQUIRED BY\n{string.Join(", ", loaded.Descriptor.RequiredBy)}");
+            Log($"module={name} disable=blocked required-by={string.Join(",", loaded.Descriptor.RequiredBy)}");
+            return;
+        }
         if (enabled)
         {
             loaded.Enabled = true;
@@ -111,6 +160,12 @@ public static class AppleEverestStaticRuntime
         if (ObservedDirectHooks.Add(planId)) Log($"direct-hook=PASS plan={planId}");
     }
 
+    internal static void RecordCustomFactoryUse(string owner, string id, string kind)
+    {
+        string key = owner + "\0" + kind + "\0" + id;
+        if (ObservedCustomFactories.Add(key)) Log($"custom-factory=PASS owner={owner} kind={kind} id={id}");
+    }
+
     public static void RunHookProbe()
     {
         HookTrace.Clear();
@@ -128,9 +183,7 @@ public static class AppleEverestStaticRuntime
         // intentionally has no active SaveData. LevelLoader requires one, so
         // give the separate canary product Celeste's standard non-persistent
         // debug context instead of depending on a player-owned slot.
-        NonPersistentModSession = true;
-        bool createdDebugSave = SaveData.Instance == null;
-        if (createdDebugSave) SaveData.InitializeDebugMode(loadExisting: false);
+        bool createdDebugSave = BeginNonPersistentModSession();
         Input.MenuConfirm.ConsumePress();
         Input.Jump.ConsumePress();
         originalPrologueMode ??= AreaData.Areas[0].Mode[0];
@@ -151,11 +204,13 @@ public static class AppleEverestStaticRuntime
 
     public static void LaunchFirstModMap()
     {
-        string path = GeneratedAppleEverestContentManifest.FirstMapPath;
+        LaunchModMap(GeneratedAppleEverestContentManifest.FirstMapPath);
+    }
+
+    public static void LaunchModMap(string path)
+    {
         if (string.IsNullOrWhiteSpace(path)) return;
-        NonPersistentModSession = true;
-        bool createdDebugSave = SaveData.Instance == null;
-        if (createdDebugSave) SaveData.InitializeDebugMode(loadExisting: false);
+        bool createdDebugSave = BeginNonPersistentModSession();
         Input.MenuConfirm.ConsumePress();
         Input.Jump.ConsumePress();
         originalPrologueMode ??= AreaData.Areas[0].Mode[0];
@@ -172,6 +227,55 @@ public static class AppleEverestStaticRuntime
         Session session = new(new AreaKey(0));
         Engine.Scene = new LevelLoader(session) { PlayerIntroTypeOverride = Player.IntroTypes.None };
         Log($"content-map=launch path={path} debug-save-created={createdDebugSave.ToString().ToLowerInvariant()}");
+    }
+
+    private static bool BeginNonPersistentModSession()
+    {
+        if (NonPersistentModSession) return false;
+
+        saveDataBeforeModSession = SaveData.Instance;
+        bool createdWithoutExistingSave = saveDataBeforeModSession == null;
+
+        // A static mod map is an explicitly bounded compatibility surface, not
+        // a vanilla file-select slot. Always give it its own debug SaveData so
+        // map/session mutations cannot leak into a selected player save.
+        SaveData.InitializeDebugMode(loadExisting: false);
+        NonPersistentModSession = true;
+        suppressedModSessionSaveLogged = false;
+        Log($"mod-session=begin isolated=true prior-save={(createdWithoutExistingSave ? "none" : "preserved")}");
+        return createdWithoutExistingSave;
+    }
+
+    internal static bool FilterVanillaFileSave(bool requested)
+    {
+        if (!requested || !NonPersistentModSession) return requested;
+        if (!suppressedModSessionSaveLogged)
+        {
+            suppressedModSessionSaveLogged = true;
+            Log("mod-session-save=suppressed reason=nonpersistent");
+        }
+        return false;
+    }
+
+    internal static Overworld.StartMode CompleteNonPersistentModSession(Overworld.StartMode requestedStartMode)
+    {
+        if (!NonPersistentModSession) return requestedStartMode;
+
+        SaveData.Instance = saveDataBeforeModSession;
+        saveDataBeforeModSession = null;
+        NonPersistentModSession = false;
+        suppressedModSessionSaveLogged = false;
+        if (originalPrologueMode != null) AreaData.Areas[0].Mode[0] = originalPrologueMode;
+
+        // LevelExit normally requests AreaQuit for Return to Map. That mode
+        // constructs chapter-select UI and requires a live file-slot SaveData.
+        // A mod map can instead have been launched from main-menu Options,
+        // where the preserved vanilla state is intentionally null. Return to
+        // the ordinary main menu after every bounded static-mod session: this
+        // is safe both with and without a previously selected vanilla slot and
+        // never exposes the isolated debug SaveData to normal menu gameplay.
+        Log($"mod-session=complete prior-save-restored=true requested={requestedStartMode} applied={Overworld.StartMode.MainMenu}");
+        return Overworld.StartMode.MainMenu;
     }
 
     public static void AttachCanaryBanner(global::Celeste.Level level, string source)
@@ -385,13 +489,53 @@ internal static class AppleEverestLab
     public static void AddOptions(TextMenu menu)
     {
         menu.Add(new TextMenu.SubHeader("APPLE EVEREST STATIC LAB"));
-        if (!string.IsNullOrWhiteSpace(GeneratedAppleEverestContentManifest.FirstMapPath))
-            menu.Add(new TextMenu.Button("Play First Static Mod Map").Pressed(AppleEverestStaticRuntime.LaunchFirstModMap));
+        foreach (string mapPath in GeneratedAppleEverestContentManifest.MapPaths)
+        {
+            string selectedMap = mapPath;
+            string label = Path.GetFileName(selectedMap);
+            menu.Add(new TextMenu.Button("Play Static Mod Map: " + label)
+                .Pressed(() => AppleEverestStaticRuntime.LaunchModMap(selectedMap)));
+        }
         foreach (EverestModule module in AppleEverestStaticRuntime.Modules)
         {
             string name = module.Metadata.Name;
-            menu.Add(new TextMenu.OnOff(name, AppleEverestStaticRuntime.ModuleEnabled(name))
-                .Change(value => AppleEverestStaticRuntime.SetModuleEnabled(name, value)));
+            AppleEverestModuleDescriptor descriptor = GeneratedAppleEverestModuleRegistry.Modules.Single(value => value.Name == name);
+            if (descriptor.RequiredBy.Length > 0)
+                menu.Add(new TextMenu.SubHeader(name + " (REQUIRED BY " + string.Join(", ", descriptor.RequiredBy) + ")"));
+            else
+                menu.Add(new TextMenu.OnOff(name, AppleEverestStaticRuntime.ModuleEnabled(name))
+                    .Change(value => AppleEverestStaticRuntime.SetModuleEnabled(name, value)));
+        }
+        foreach (IGrouping<string, AppleEverestSettingDescriptor> group in GeneratedAppleEverestModuleRegistry.Settings
+                     .GroupBy(value => value.Module, StringComparer.Ordinal))
+        {
+            menu.Add(new TextMenu.SubHeader(group.Key + " MOD OPTIONS"));
+            foreach (AppleEverestSettingDescriptor descriptor in group)
+            {
+                int current = descriptor.Get();
+                if (descriptor.Kind == AppleEverestSettingKind.Boolean)
+                {
+                    menu.Add(new TextMenu.OnOff(descriptor.Label, current != 0)
+                        .Change(value => AppleEverestSettingsPersistence.Set(descriptor, value ? 1 : 0)));
+                }
+                else if (descriptor.Kind == AppleEverestSettingKind.Enum)
+                {
+                    TextMenu.Option<int> option = new(descriptor.Label);
+                    for (int index = 0; index < descriptor.EnumValues.Length; index++)
+                        option.Add(descriptor.EnumNames[index], descriptor.EnumValues[index], descriptor.EnumValues[index] == current);
+                    menu.Add(option.Change(value => AppleEverestSettingsPersistence.Set(descriptor, value)));
+                }
+                else
+                {
+                    int stepCount = (descriptor.Maximum - descriptor.Minimum) / descriptor.Step;
+                    int currentStep = (current - descriptor.Minimum) / descriptor.Step;
+                    menu.Add(new TextMenu.Slider(descriptor.Label,
+                        index => (descriptor.Minimum + index * descriptor.Step).ToString(),
+                        0, stepCount, currentStep)
+                        .Change(index => AppleEverestSettingsPersistence.Set(descriptor,
+                            descriptor.Minimum + index * descriptor.Step)));
+                }
+            }
         }
         if (AppleEverestStaticRuntime.ModuleEnabled("AppleEverestCanaryHookA") || AppleEverestStaticRuntime.ModuleEnabled("AppleEverestCanaryHookB"))
             menu.Add(new TextMenu.Button("Run Hook Chain Probe").Pressed(AppleEverestStaticRuntime.RunHookProbe));

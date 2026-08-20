@@ -11,6 +11,7 @@
   <ItemGroup>
     <ProjectReference Include="../AppleEverestBuilder.csproj" />
     <PackageReference Include="Mono.Cecil" Version="0.11.6" />
+    <Compile Include="../../../apple-everest/runtime/AppleEverestSettingsCodec.cs" Link="AppleEverestSettingsCodec.cs" />
     <Compile Remove="HookSemantics/**/*.cs" />
   </ItemGroup>
 </Project>

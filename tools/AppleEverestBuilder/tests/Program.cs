@@ -2,6 +2,7 @@ using System.IO.Compression;
 using System.Text;
 using System.Text.Json;
 using AppleEverestBuilder;
+using Celeste.Mod;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
 
@@ -70,6 +71,24 @@ try
     Pass(EverestVersion.Satisfies(required, EverestVersion.Parse("0.0.1")), "Everest dev version");
     Throws(() => EverestVersion.Parse("1.bad"), "invalid Everest version", "invalid version rejected");
 
+    AppleEverestSettingRecord[] settingRecords =
+    [
+        new("ZetaHelper", "Enabled", 1),
+        new("AlphaHelper", "Mode", 2)
+    ];
+    string encodedSettings = AppleEverestSettingsCodec.Encode(settingRecords);
+    Pass(AppleEverestSettingsCodec.TryDecode(encodedSettings, out AppleEverestSettingRecord[] decodedSettings) &&
+         decodedSettings.SequenceEqual(settingRecords.Reverse()), "module settings deterministic round trip");
+    Pass(encodedSettings.StartsWith(AppleEverestSettingsCodec.Header + "\n", StringComparison.Ordinal) &&
+         encodedSettings.IndexOf("AlphaHelper", StringComparison.Ordinal) < 0,
+        "module settings use a versioned encoded namespace");
+    Pass(!AppleEverestSettingsCodec.TryDecode(encodedSettings.Replace("\t2\n", "\tbad\n", StringComparison.Ordinal), out _),
+        "module settings malformed value rejected");
+    string duplicateSettings = AppleEverestSettingsCodec.Header + "\nQQ\tQg\t0\nQQ\tQg\t1\n";
+    Pass(!AppleEverestSettingsCodec.TryDecode(duplicateSettings, out _), "module settings duplicate key rejected");
+    Pass(!AppleEverestSettingsCodec.TryDecode(AppleEverestSettingsCodec.Header + "\n" +
+         new string('A', AppleEverestSettingsCodec.MaximumBytes), out _), "module settings oversized payload rejected");
+
     ResolvedMod graphA = Mod("A");
     ResolvedMod graphB = Mod("B", dependencies: [("A", "1.0.0")]);
     Pass(EverestGraphResolver.Resolve([graphB, graphA]).Select(mod => mod.Metadata.Name).SequenceEqual(["A", "B"]), "dependency order");
@@ -82,6 +101,13 @@ try
     Throws(() => EverestGraphResolver.Resolve([Mod("A"), Mod("B", conflicts: [("A", "1.0.0")])]), "conflict", "conflict");
     Pass(EverestGraphResolver.Resolve([graphB, graphA]).Select(mod => mod.Metadata.Name).SequenceEqual(
         EverestGraphResolver.Resolve([graphA, graphB]).Select(mod => mod.Metadata.Name)), "stable graph order");
+    ResolvedMod cpopGraph = Mod("CpopHelper", "1.3.0", [("Everest", "1.3471.0")]);
+    ResolvedMod quizGraph = Mod("QuizSample", "0.0.1", [("CpopHelper", "1.0.0"), ("Everest", "1.3761.0")]);
+    Pass(EverestGraphResolver.Resolve([quizGraph, cpopGraph]).Select(mod => mod.Metadata.Name)
+        .SequenceEqual(["CpopHelper", "QuizSample"]), "real map-to-helper dependency order");
+    Throws(() => EverestGraphResolver.Resolve([quizGraph]), "missing dependency", "real map missing helper rejected");
+    Throws(() => EverestGraphResolver.Resolve([quizGraph, Mod("CpopHelper", "0.9.0")]), "incompatible",
+        "real map wrong helper version rejected");
 
     string content = NewDirectory("content");
     Text(content, "everest.yaml", "- Name: MultiA\n  Version: 1.0.0\n- Name: MultiB\n  Version: 2.0.0\n");
@@ -181,6 +207,128 @@ try
         module.Fields.Add(new FieldDefinition("LegacyFnaVector", FieldAttributes.Public,
             new TypeReference("Microsoft.Xna.Framework", "Vector2", assembly.MainModule, xnaFacade)));
         assembly.MainModule.Types.Add(module);
+        assembly.Write(path);
+        return root;
+    }
+
+    string GameplayFixture(string name, bool duplicateId = false, bool invalidConstructor = false)
+    {
+        string root = NewDirectory("gameplay-" + name);
+        Text(root, "everest.yaml", $"- Name: {name}\n  Version: 1.0.0\n  DLL: Code/{name}.dll\n  Dependencies:\n    - Name: Everest\n      Version: 1.6418.0\n");
+        string path = Path.Combine(root, "Code", name + ".dll");
+        Directory.CreateDirectory(Path.GetDirectoryName(path)!);
+        using AssemblyDefinition assembly = AssemblyDefinition.CreateAssembly(
+            new AssemblyNameDefinition(name, new Version(1, 0, 0, 0)), name, ModuleKind.Dll);
+        ModuleDefinition module = assembly.MainModule;
+        AssemblyNameReference celeste = new("Celeste", new Version(1, 4, 0, 0));
+        AssemblyNameReference fna = new("FNA", new Version(21, 3, 5, 0));
+        module.AssemblyReferences.Add(celeste);
+        module.AssemblyReferences.Add(fna);
+        TypeReference vector2 = new("Microsoft.Xna.Framework", "Vector2", module, fna);
+        TypeReference entityData = new("Celeste", "EntityData", module, celeste);
+        TypeReference entityId = new("Celeste", "EntityID", module, celeste);
+
+        TypeDefinition settings = new("Fixture", name + "Settings", TypeAttributes.Public | TypeAttributes.Sealed,
+            module.TypeSystem.Object);
+        void Property(string propertyName, TypeReference type, CustomAttribute? attribute = null)
+        {
+            FieldDefinition field = new("_" + propertyName, FieldAttributes.Private, type);
+            settings.Fields.Add(field);
+            MethodDefinition getter = new("get_" + propertyName, MethodAttributes.Public | MethodAttributes.HideBySig |
+                MethodAttributes.SpecialName, type);
+            getter.Body.Instructions.Add(Instruction.Create(OpCodes.Ldarg_0));
+            getter.Body.Instructions.Add(Instruction.Create(OpCodes.Ldfld, field));
+            getter.Body.Instructions.Add(Instruction.Create(OpCodes.Ret));
+            MethodDefinition setter = new("set_" + propertyName, MethodAttributes.Public | MethodAttributes.HideBySig |
+                MethodAttributes.SpecialName, module.TypeSystem.Void);
+            setter.Parameters.Add(new ParameterDefinition("value", ParameterAttributes.None, type));
+            setter.Body.Instructions.Add(Instruction.Create(OpCodes.Ldarg_0));
+            setter.Body.Instructions.Add(Instruction.Create(OpCodes.Ldarg_1));
+            setter.Body.Instructions.Add(Instruction.Create(OpCodes.Stfld, field));
+            setter.Body.Instructions.Add(Instruction.Create(OpCodes.Ret));
+            settings.Methods.Add(getter);
+            settings.Methods.Add(setter);
+            PropertyDefinition property = new(propertyName, PropertyAttributes.None, type) { GetMethod = getter, SetMethod = setter };
+            if (attribute != null) property.CustomAttributes.Add(attribute);
+            settings.Properties.Add(property);
+        }
+        TypeDefinition mode = new("Fixture", name + "Mode", TypeAttributes.Public | TypeAttributes.Sealed,
+            module.ImportReference(typeof(Enum)));
+        mode.Fields.Add(new FieldDefinition("value__", FieldAttributes.Public | FieldAttributes.SpecialName |
+            FieldAttributes.RTSpecialName, module.TypeSystem.Int32));
+        mode.Fields.Add(new FieldDefinition("Quiet", FieldAttributes.Public | FieldAttributes.Static | FieldAttributes.Literal,
+            mode) { Constant = 0 });
+        mode.Fields.Add(new FieldDefinition("Loud", FieldAttributes.Public | FieldAttributes.Static | FieldAttributes.Literal,
+            mode) { Constant = 2 });
+        module.Types.Add(mode);
+        TypeReference rangeAttribute = new("Celeste.Mod", "SettingRangeAttribute", module, celeste);
+        MethodReference rangeConstructor = new(".ctor", module.TypeSystem.Void, rangeAttribute) { HasThis = true };
+        rangeConstructor.Parameters.Add(new ParameterDefinition(module.TypeSystem.Int32));
+        rangeConstructor.Parameters.Add(new ParameterDefinition(module.TypeSystem.Int32));
+        CustomAttribute range = new(rangeConstructor);
+        range.ConstructorArguments.Add(new CustomAttributeArgument(module.TypeSystem.Int32, 1));
+        range.ConstructorArguments.Add(new CustomAttributeArgument(module.TypeSystem.Int32, 5));
+        Property("Enabled", module.TypeSystem.Boolean);
+        Property("DisplayMode", mode);
+        Property("Amount", module.TypeSystem.Int32, range);
+        Property("Unbounded", module.TypeSystem.Int32);
+        module.Types.Add(settings);
+
+        TypeDefinition everestModule = new("Fixture", name + "Module", TypeAttributes.Public | TypeAttributes.Sealed,
+            new TypeReference("Celeste.Mod", "EverestModule", module, celeste));
+        MethodDefinition moduleConstructor = new(".ctor", MethodAttributes.Public | MethodAttributes.SpecialName |
+            MethodAttributes.RTSpecialName, module.TypeSystem.Void);
+        moduleConstructor.Body.Instructions.Add(Instruction.Create(OpCodes.Ret));
+        everestModule.Methods.Add(moduleConstructor);
+        MethodDefinition settingsType = new("get_SettingsType", MethodAttributes.Public | MethodAttributes.Virtual |
+            MethodAttributes.HideBySig | MethodAttributes.SpecialName, module.ImportReference(typeof(Type)));
+        settingsType.Body.Instructions.Add(Instruction.Create(OpCodes.Ldtoken, settings));
+        settingsType.Body.Instructions.Add(Instruction.Create(OpCodes.Call,
+            module.ImportReference(typeof(Type).GetMethod(nameof(Type.GetTypeFromHandle))!)));
+        settingsType.Body.Instructions.Add(Instruction.Create(OpCodes.Ret));
+        everestModule.Methods.Add(settingsType);
+        module.Types.Add(everestModule);
+
+        void CustomType(string typeName, string baseName, string[] ids, TypeReference[] parameters)
+        {
+            TypeDefinition type = new("Fixture", typeName, TypeAttributes.Public | TypeAttributes.Sealed,
+                new TypeReference("Celeste", baseName, module, celeste));
+            MethodDefinition constructor = new(".ctor", MethodAttributes.Public | MethodAttributes.SpecialName |
+                MethodAttributes.RTSpecialName, module.TypeSystem.Void);
+            foreach (TypeReference parameter in parameters)
+                constructor.Parameters.Add(new ParameterDefinition(parameter));
+            constructor.Body.Instructions.Add(Instruction.Create(OpCodes.Ret));
+            type.Methods.Add(constructor);
+            TypeReference customAttributeType = new("Celeste.Mod.Entities", "CustomEntityAttribute", module, celeste);
+            MethodReference customAttributeConstructor = new(".ctor", module.TypeSystem.Void, customAttributeType) { HasThis = true };
+            customAttributeConstructor.Parameters.Add(new ParameterDefinition(new ArrayType(module.TypeSystem.String)));
+            CustomAttribute custom = new(customAttributeConstructor);
+            custom.ConstructorArguments.Add(new CustomAttributeArgument(new ArrayType(module.TypeSystem.String),
+                ids.Select(id => new CustomAttributeArgument(module.TypeSystem.String, id)).ToArray()));
+            type.CustomAttributes.Add(custom);
+            module.Types.Add(type);
+        }
+        CustomType("CustomBlock", "Entity", duplicateId ? ["fixture/shared", "fixture/shared"] :
+            ["fixture/block", "fixture/blockAlias"], invalidConstructor ? [entityData] : [entityData, vector2]);
+        CustomType("CustomTrigger", "Trigger", ["fixture/trigger"], [entityData, vector2, entityId]);
+        CustomType("CustomIdFirst", "Entity", ["fixture/idFirst"], [entityId, entityData, vector2]);
+
+        TypeReference element = new("Celeste", "BinaryPacker/Element", module, celeste);
+        TypeReference backdrop = new("Celeste", "Backdrop", module, celeste);
+        TypeDefinition customBackdrop = new("Fixture", "CustomBackdrop", TypeAttributes.Public | TypeAttributes.Sealed, backdrop);
+        MethodDefinition backdropFactory = new("Build", MethodAttributes.Public | MethodAttributes.Static, backdrop);
+        backdropFactory.Parameters.Add(new ParameterDefinition(element));
+        backdropFactory.Body.Instructions.Add(Instruction.Create(OpCodes.Ldnull));
+        backdropFactory.Body.Instructions.Add(Instruction.Create(OpCodes.Ret));
+        customBackdrop.Methods.Add(backdropFactory);
+        TypeReference backdropAttributeType = new("Celeste.Mod.Backdrops", "CustomBackdropAttribute", module, celeste);
+        MethodReference backdropAttributeConstructor = new(".ctor", module.TypeSystem.Void, backdropAttributeType) { HasThis = true };
+        backdropAttributeConstructor.Parameters.Add(new ParameterDefinition(new ArrayType(module.TypeSystem.String)));
+        CustomAttribute backdropAttribute = new(backdropAttributeConstructor);
+        backdropAttribute.ConstructorArguments.Add(new CustomAttributeArgument(new ArrayType(module.TypeSystem.String),
+            new[] { new CustomAttributeArgument(module.TypeSystem.String, "fixture/backdrop=Build") }));
+        customBackdrop.CustomAttributes.Add(backdropAttribute);
+        module.Types.Add(customBackdrop);
         assembly.Write(path);
         return root;
     }
@@ -304,6 +452,45 @@ try
     }
     Pass(frozenAssemblyName == "BinarySupported", "frozen assembly identity recorded for generic AOT rooting");
     Pass(originalHash.Length == 64 && frozenHash.Length == 64 && originalHash != frozenHash, "original and frozen assembly hashes recorded");
+
+    string gameplayRoot = GameplayFixture("GameplayRegistry");
+    ModInput gameplayInput = SafeModIngestor.Ingest(gameplayRoot, NewDirectory("stage-gameplay-registry"), 0);
+    ResolvedMod gameplayMod = CompatibilityAnalyzer.Analyze(gameplayInput, gameplayInput.Metadata[0]);
+    AppleStaticDeclaration gameplayDeclaration = gameplayMod.Declaration!;
+    Pass(gameplayDeclaration.CustomEntityFactories.Length == 4 &&
+         gameplayDeclaration.CustomEntityFactories.Count(value => value.Kind == "entity") == 3 &&
+         gameplayDeclaration.CustomEntityFactories.Count(value => value.Kind == "trigger") == 1,
+        "Cecil custom entity and trigger discovery");
+    Pass(gameplayDeclaration.CustomEntityFactories.Any(value => value.Id == "fixture/blockAlias") &&
+         gameplayDeclaration.CustomEntityFactories.Select(value => value.Constructor).Distinct(StringComparer.Ordinal)
+             .OrderBy(value => value, StringComparer.Ordinal).SequenceEqual(
+                 ["entity-data-vector2", "entity-data-vector2-entity-id", "entity-id-entity-data-vector2"]),
+        "multi-ID attributes and all bounded constructor shapes");
+    Pass(gameplayDeclaration.CustomBackdropFactories.Length == 1 &&
+         gameplayDeclaration.CustomBackdropFactories[0].Id == "fixture/backdrop" &&
+         gameplayDeclaration.CustomBackdropFactories[0].Factory == "static-method" &&
+         gameplayDeclaration.CustomBackdropFactories[0].Method == "Build",
+        "Cecil custom backdrop discovery and static factory selection");
+    Pass(gameplayDeclaration.SettingsProperties.Length == 3 &&
+         gameplayDeclaration.SettingsProperties.Any(value => value.Name == "Enabled" && value.Kind == "bool") &&
+         gameplayDeclaration.SettingsProperties.Any(value => value.Name == "DisplayMode" && value.Kind == "enum" &&
+             value.EnumValues.SequenceEqual([0, 2])) &&
+         gameplayDeclaration.SettingsProperties.Any(value => value.Name == "Amount" && value.Kind == "int" &&
+             value.Minimum == 1 && value.Maximum == 5),
+        "bounded bool, enum and ranged-int settings discovery");
+    Pass(gameplayDeclaration.OmittedSettingsProperties.SequenceEqual(["Unbounded:System.Int32"]),
+        "unsupported unbounded setting is explicitly omitted");
+    string invalidGameplayRoot = GameplayFixture("InvalidGameplay", invalidConstructor: true);
+    ModInput invalidGameplayInput = SafeModIngestor.Ingest(invalidGameplayRoot,
+        NewDirectory("stage-invalid-gameplay"), 0);
+    Throws(() => CompatibilityAnalyzer.Analyze(invalidGameplayInput, invalidGameplayInput.Metadata[0]),
+        "supported public constructor", "unsupported entity factory rejected before AOT");
+    string duplicateGameplayRoot = GameplayFixture("DuplicateGameplay", duplicateId: true);
+    ModInput duplicateGameplayInput = SafeModIngestor.Ingest(duplicateGameplayRoot,
+        NewDirectory("stage-duplicate-gameplay"), 0);
+    Throws(() => CompatibilityAnalyzer.Analyze(duplicateGameplayInput, duplicateGameplayInput.Metadata[0]),
+        "duplicate custom entity factory ID", "duplicate custom entity ID rejected before AOT");
+
     RuntimeClosureScanner.VerifyPreserved(frozen, frozen);
     Pass(true, "complete external assembly preservation accepts intact methods");
     string stripped = Path.Combine(NewDirectory("stripped"), "BinarySupported.dll");
@@ -421,17 +608,28 @@ try
     Throws(() => RuntimeClosureScanner.VerifyReferencedApi(apiConsumer, inaccessibleApi), "inaccessible-method",
         "external assembly API closure rejects a private target method before device AOT");
 
-    Pass(AppleApiSurface.Members.Count == 3 && AppleApiSurface.ContractSha256.Length == 64,
+    Pass(AppleApiSurface.Members.Count == 7 && AppleApiSurface.ContractSha256.Length == 64,
         "exact reviewed Apple external API surface contract");
     string apiSurfaceRoot = NewDirectory("apple-api-surface");
     Text(apiSurfaceRoot, "Celeste/Level.cs",
         "namespace Celeste;\npublic class Level\n{\n\tprivate float unpauseTimer;\n\tprivate void StartPauseEffects() {}\n\tprivate void EndPauseEffects() {}\n}\n");
+    Text(apiSurfaceRoot, "Celeste/Actor.cs",
+        "namespace Celeste;\npublic class Actor\n{\n\tprivate Vector2 movementCounter;\n}\n");
+    Text(apiSurfaceRoot, "Celeste/Glider.cs",
+        "namespace Celeste;\npublic class Glider\n{\n\tprivate bool destroyed;\n\tprivate Sprite sprite;\n\tprivate IEnumerator DestroyAnimationRoutine() {}\n}\n");
     AppleApiSurface.Apply(apiSurfaceRoot);
     string apiSurfaceLevel = File.ReadAllText(Path.Combine(apiSurfaceRoot, "Celeste", "Level.cs"));
     Pass(apiSurfaceLevel.Contains("public float unpauseTimer", StringComparison.Ordinal) &&
          apiSurfaceLevel.Contains("public void StartPauseEffects()", StringComparison.Ordinal) &&
          apiSurfaceLevel.Contains("public void EndPauseEffects()", StringComparison.Ordinal),
         "exact reviewed Apple API surface is applied");
+    string apiSurfaceActor = File.ReadAllText(Path.Combine(apiSurfaceRoot, "Celeste", "Actor.cs"));
+    string apiSurfaceGlider = File.ReadAllText(Path.Combine(apiSurfaceRoot, "Celeste", "Glider.cs"));
+    Pass(apiSurfaceActor.Contains("public Vector2 movementCounter", StringComparison.Ordinal) &&
+         apiSurfaceGlider.Contains("public bool destroyed", StringComparison.Ordinal) &&
+         apiSurfaceGlider.Contains("public Sprite sprite", StringComparison.Ordinal) &&
+         apiSurfaceGlider.Contains("public IEnumerator DestroyAnimationRoutine()", StringComparison.Ordinal),
+        "Cpop's exact pinned-Everest publicized members are reviewed and applied");
     Throws(() => AppleApiSurface.Apply(apiSurfaceRoot), "must occur exactly once",
         "Apple API surface rejects duplicate application");
     string unsupportedRoot = BinaryFixture("BinaryDeferred", "On.Celeste", "Player", "UnknownMethod");
@@ -460,6 +658,15 @@ try
     Pass(File.ReadAllBytes(Path.Combine(contentOut, "AppleEverest/banner.png")).Take(8).SequenceEqual(new byte[] { 137,80,78,71,13,10,26,10 }), "generated PNG");
     Pass(ContentCompiler.Stage(map, "Content/Maps/AppleEverest/Canary.xml", contentOut) == "Maps/AppleEverest/Canary.bin", "map logical path");
     Pass(File.ReadAllBytes(Path.Combine(contentOut, "Maps/AppleEverest/Canary.bin")).Length > 64, "compiled map");
+    string gameplayMap = Path.Combine(temporary, "gameplay-registry-map.xml");
+    File.WriteAllText(gameplayMap,
+        "<Map><levels><level><entities><fixtureBlock /></entities><triggers><fixtureTrigger /></triggers></level></levels>" +
+        "<Style><Backgrounds><fixtureBackdrop /></Backgrounds><Foregrounds /></Style></Map>");
+    string gameplayMapOutput = NewDirectory("gameplay-map-content");
+    ContentCompiler.Stage(gameplayMap, "Content/Maps/Fixture/Registry.xml", gameplayMapOutput);
+    Pass(ContentCompiler.InspectGameplayIds(Path.Combine(gameplayMapOutput, "Maps/Fixture/Registry.bin"))
+            .SequenceEqual(new[] { ("backdrop", "fixtureBackdrop"), ("entity", "fixtureBlock"), ("trigger", "fixtureTrigger") }),
+        "map metadata discovers custom entity, trigger and backdrop identifiers without loading code");
     string genericMap = Path.Combine(contentOut, "Maps/AppleEverest/Canary.bin");
     string normalizedOut = NewDirectory("normalized-map-content");
     Pass(ContentCompiler.Stage(genericMap, "Content/Maps/Author/RealMap.bin", normalizedOut) == "Maps/Author/RealMap.bin",
@@ -493,6 +700,24 @@ try
     Pass(profile.RootElement.GetProperty("everest").GetProperty("sha256Commit").GetString() == "4bbde91b8dbaaddef2ceec75ca0cd6d59b3b8d00", "Everest pin");
     Pass(profile.RootElement.GetProperty("dependencies").GetProperty("monoModCommit").GetString() == "dfc30a1506d37fb88a2c2be004f525205f46a24c", "MonoMod pin");
     Pass(profile.RootElement.GetProperty("host").GetProperty("dotnetSdk").GetString() == "8.0.424", "host SDK pin");
+    using (JsonDocument ecosystem = JsonDocument.Parse(File.ReadAllBytes(
+        Path.Combine(repository, "apple-everest/helper-ecosystem-compatibility-stage25e.json"))))
+    {
+        JsonElement selected = ecosystem.RootElement.GetProperty("selected");
+        Pass(ecosystem.RootElement.GetProperty("helperCandidates").GetArrayLength() >= 8 &&
+             ecosystem.RootElement.GetProperty("mapCandidates").GetArrayLength() >= 12,
+            "Stage 25E candidate audit breadth");
+        Pass(selected.GetProperty("helper").GetProperty("name").GetString() == "CpopHelper" &&
+             selected.GetProperty("helper").GetProperty("zipSha256").GetString() ==
+                 "7a807a8f9ce6ccb4d6ad0c664bb7791a60734533fb33cfcd6beccb202d846b63" &&
+             selected.GetProperty("map").GetProperty("name").GetString() == "QuizSample" &&
+             selected.GetProperty("map").GetProperty("zipSha256").GetString() ==
+                 "5cb8351bb263aa316831d2b683cb8b04acd270587edfe7c9e3df3bb8e6b83b3e",
+            "selected ordinary helper and dependent-map release pins");
+        Pass(selected.GetProperty("sourceTreesRequiredForProduction").GetBoolean() == false &&
+             selected.GetProperty("redistributedThirdPartyBytes").GetBoolean() == false,
+            "selected helper ecosystem is source-free and not redistributed");
+    }
     using (JsonDocument targetCatalog = JsonDocument.Parse(File.ReadAllBytes(
         Path.Combine(repository, "apple-everest/managed-detour-targets-v1.json"))))
     {
@@ -559,8 +784,16 @@ try
     Pass(directEvidenceSource.Contains("RecordDirectHookInvocation(\"fixture:direct-evidence\")", StringComparison.Ordinal),
         "generated direct adapter records one bounded device invocation proof");
     string staticRuntime = File.ReadAllText(Path.Combine(repository, "apple-everest/runtime/AppleEverestStaticRuntime.cs"));
-    Pass(staticRuntime.Contains("SaveData.InitializeDebugMode(loadExisting: false)", StringComparison.Ordinal),
-        "content canary provides an isolated save context before file selection");
+    Pass(staticRuntime.Contains("SaveData.InitializeDebugMode(loadExisting: false)", StringComparison.Ordinal) &&
+         staticRuntime.Contains("saveDataBeforeModSession = SaveData.Instance", StringComparison.Ordinal) &&
+         staticRuntime.Contains("SaveData.Instance = saveDataBeforeModSession", StringComparison.Ordinal),
+        "content maps use an isolated debug context and restore any prior player save");
+    Pass(staticRuntime.Contains("FilterVanillaFileSave", StringComparison.Ordinal) &&
+         staticRuntime.Contains("mod-session-save=suppressed reason=nonpersistent", StringComparison.Ordinal) &&
+         staticRuntime.Contains("CompleteNonPersistentModSession", StringComparison.Ordinal) &&
+         staticRuntime.Contains("return Overworld.StartMode.MainMenu", StringComparison.Ordinal) &&
+         staticRuntime.Contains("requested={requestedStartMode} applied={Overworld.StartMode.MainMenu}", StringComparison.Ordinal),
+        "nonpersistent mod maps suppress temporary file writes and return through the null-safe main menu boundary");
     Pass(staticRuntime.Contains("Input.MenuConfirm.ConsumePress()", StringComparison.Ordinal) &&
          staticRuntime.Contains("Input.Jump.ConsumePress()", StringComparison.Ordinal),
         "content canary consumes its launch edge");
@@ -574,6 +807,43 @@ try
     Pass(closureGenerator.Contains("GeneratedAppleEverestGameplayRegistry", StringComparison.Ordinal) &&
          closureGenerator.Contains("RegisterTrackerTypes", StringComparison.Ordinal),
         "typed static gameplay registry is generated and installed into Tracker initialization");
+    Pass(closureGenerator.Contains("InheritedTrackedEntityTypes", StringComparison.Ordinal) &&
+         closureGenerator.Contains("typeof(global::Celeste.Trigger)", StringComparison.Ordinal) &&
+         closureGenerator.Contains("inheritedBase.IsAssignableFrom(type)", StringComparison.Ordinal) &&
+         closureGenerator.Contains("Tracker.TrackedEntityTypes.Add(type, trackedAs)", StringComparison.Ordinal),
+        "external custom entities preserve canonical inherited Monocle tracker buckets");
+    Pass(closureGenerator.Contains("TryCreateEntity", StringComparison.Ordinal) &&
+         closureGenerator.Contains("TryCreateTrigger", StringComparison.Ordinal) &&
+         closureGenerator.Contains("TryCreateBackdrop", StringComparison.Ordinal) &&
+         closureGenerator.Contains("if (mod.DeclaredAssemblyPath == null)", StringComparison.Ordinal),
+        "generated entity, trigger and backdrop factories are reflection-free and binary modules remain source-free");
+    Pass(closureGenerator.Contains("everest/coreMessage", StringComparison.Ordinal) &&
+         closureGenerator.Contains("EverestCore", StringComparison.Ordinal) &&
+         File.ReadAllText(Path.Combine(repository, "apple-everest/runtime/EverestCoreEntitiesStaticApi.cs"))
+             .Contains("class CustomCoreMessage", StringComparison.Ordinal),
+        "pinned Everest core message entity has an explicit typed AOT factory");
+    string tagsApi = File.ReadAllText(Path.Combine(repository, "apple-everest/runtime/EverestTagsStaticApi.cs"));
+    Pass(tagsApi.Contains("readonly BitTag SubHUD = Tags.HUD", StringComparison.Ordinal),
+        "static Apple SubHUD facade retains the helper's high-resolution coordinate space");
+    Pass(closureGenerator.Contains("internal static readonly string[] MapPaths", StringComparison.Ordinal) &&
+         staticRuntime.Contains("Play Static Mod Map:", StringComparison.Ordinal) &&
+         staticRuntime.Contains("LaunchModMap(selectedMap)", StringComparison.Ordinal),
+        "all staged maps are exposed through the generic static map launcher");
+    Pass(closureGenerator.Contains("AppleEverestAtlasMountDescriptor", StringComparison.Ordinal) &&
+         closureGenerator.Contains("Graphics/Atlases/Gameplay/", StringComparison.Ordinal) &&
+         closureGenerator.Contains("Graphics/Atlases/Gui/", StringComparison.Ordinal) &&
+         closureGenerator.Contains("ThenBy(value => value.SourcePath", StringComparison.Ordinal),
+        "ordinary release PNGs generate dependency-ordered gameplay and GUI atlas mounts");
+    Pass(closureGenerator.Contains("PatchNonPersistentSave(Path.Combine(managedRoot, \"Celeste\", \"UserIO.cs\"))", StringComparison.Ordinal) &&
+         closureGenerator.Contains("FilterVanillaFileSave(file)", StringComparison.Ordinal) &&
+         closureGenerator.Contains("PatchNonPersistentOverworldReturn", StringComparison.Ordinal) &&
+         closureGenerator.Contains("StartMode = global::Celeste.Mod.AppleEverestStaticRuntime.CompleteNonPersistentModSession(StartMode);", StringComparison.Ordinal),
+        "locked generated-source transforms keep debug SaveData out of durable storage and normalize its overworld return");
+    Pass(staticRuntime.Contains("MountStaticAtlases();", StringComparison.Ordinal) &&
+         staticRuntime.Contains("VirtualContent.CreateTexture(descriptor.LogicalPath)", StringComparison.Ordinal) &&
+         staticRuntime.Contains("atlas[descriptor.Key] = mounted", StringComparison.Ordinal) &&
+         staticRuntime.Contains("content-atlas=PASS", StringComparison.Ordinal),
+        "static atlas mounts enter the live Celeste atlas without filesystem or type discovery");
     Pass(closureGenerator.Contains("typeof(global::", StringComparison.Ordinal),
         "generated AOT roots use namespace-unambiguous global type references");
     Pass(closureGenerator.Contains("AppleEverestExternalAssemblyRoots.props", StringComparison.Ordinal) &&
@@ -604,6 +874,21 @@ try
     Pass(runtimeApi.Contains("public sealed class ButtonBinding", StringComparison.Ordinal) &&
          runtimeApi.Contains("public bool Pressed => false", StringComparison.Ordinal),
         "minimal unsupported host binding remains a deterministic non-triggering data facade");
+    string settingsPersistence = File.ReadAllText(Path.Combine(repository,
+        "apple-everest/runtime/AppleEverestSettingsPersistence.cs"));
+    Pass(settingsPersistence.Contains("CelesteAppleEverest.Settings.v1", StringComparison.Ordinal) &&
+         settingsPersistence.Contains("AppleEverest/ModuleSettings.v1", StringComparison.Ordinal) &&
+         settingsPersistence.Contains("ApplicationSupportDirectory", StringComparison.Ordinal) &&
+         settingsPersistence.Contains("#if TVOS", StringComparison.Ordinal) &&
+         !settingsPersistence.Contains("#if TVOS_CELESTE_RUNTIME_HOST", StringComparison.Ordinal) &&
+         settingsPersistence.Contains("defaults.Synchronize()", StringComparison.Ordinal),
+        "module settings use separate bounded iOS Application Support and tvOS defaults adapters");
+    Pass(settingsPersistence.Contains("if (!descriptor.Accepts(value))", StringComparison.Ordinal) &&
+         settingsPersistence.Contains("module-settings=corrupt action=defaults", StringComparison.Ordinal),
+        "module settings fail safely on invalid values or corrupt storage");
+    Pass(!settingsPersistence.Contains("SaveData", StringComparison.Ordinal) &&
+         !settingsPersistence.Contains("settings.celeste", StringComparison.Ordinal),
+        "module settings remain isolated from vanilla Settings and SaveData");
     string closureScanner = File.ReadAllText(Path.Combine(repository, "tools/AppleEverestBuilder/RuntimeClosureScanner.cs"));
     Pass(closureScanner.Contains("AllowedStaticFacadeType", StringComparison.Ordinal) &&
          closureScanner.Contains("AllowedStaticFacadeCall", StringComparison.Ordinal) &&
@@ -619,7 +904,7 @@ try
     Pass(RuntimeClosureScanner.Inspect(System.Reflection.Assembly.GetExecutingAssembly().Location).Count == 0,
         "linked-runtime scanner accepts the deterministic test closure");
 
-    Pass(ProductPolicy.TransformerVersion == "apple-everest-static-v3", "real-ZIP transformer version");
+    Pass(ProductPolicy.TransformerVersion == "apple-everest-static-v4", "real-ZIP transformer version");
     Pass(File.Exists(Path.Combine(repository, "tools/AppleEverestBuilder/AssemblyFreezer.cs")),
         "binary-first assembly freezer exists");
     string models = File.ReadAllText(Path.Combine(repository, "tools/AppleEverestBuilder/Models.cs"));

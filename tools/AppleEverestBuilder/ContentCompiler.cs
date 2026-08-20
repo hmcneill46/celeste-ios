@@ -7,6 +7,36 @@ namespace AppleEverestBuilder;
 
 internal static class ContentCompiler
 {
+    internal static IReadOnlyList<(string Kind, string Id)> InspectGameplayIds(string path)
+    {
+        using FileStream stream = File.OpenRead(path);
+        using BinaryReader reader = new(stream, Encoding.UTF8, leaveOpen: false);
+        try
+        {
+            if (reader.ReadString() != "CELESTE MAP") throw new InvalidDataException("map binary has an invalid Celeste header");
+            string package = reader.ReadString();
+            if (package.Length is < 1 or > 1024) throw new InvalidDataException("map binary package is invalid");
+            int count = reader.ReadInt16();
+            if (count is < 1 or > 8192) throw new InvalidDataException("map string table is invalid");
+            string[] table = new string[count];
+            for (int index = 0; index < count; index++)
+            {
+                table[index] = reader.ReadString();
+                if (table[index].Length > 4096) throw new InvalidDataException("map string table value is too long");
+            }
+            List<(string Kind, string Id)> result = [];
+            int elements = 0;
+            ReadElement(reader, table, null, 0, ref elements, result);
+            if (stream.Position != stream.Length) throw new InvalidDataException("map binary contains trailing bytes");
+            return result.Distinct().OrderBy(value => value.Kind, StringComparer.Ordinal)
+                .ThenBy(value => value.Id, StringComparer.Ordinal).ToArray();
+        }
+        catch (EndOfStreamException exception)
+        {
+            throw new InvalidDataException("map binary body is truncated", exception);
+        }
+    }
+
     public static string Stage(string source, string relative, string contentOutput)
     {
         string logical = relative.StartsWith("Content/", StringComparison.Ordinal)
@@ -132,7 +162,12 @@ internal static class ContentCompiler
             throw new InvalidDataException("map binary has an invalid Celeste header", exception);
         }
         if (magic != "CELESTE MAP") throw new InvalidDataException("map binary has an invalid Celeste header");
-        if (sourcePackage.Length is < 1 or > 1024) throw new InvalidDataException("map binary package is invalid");
+        // Older Everest sample maps may deliberately leave the package label
+        // empty and rely on Everest to supply the mounted path. The Apple
+        // closure already replaces that header with the exact logical map
+        // path, so an empty source label is safe; only an oversized label is
+        // rejected here.
+        if (sourcePackage.Length > 1024) throw new InvalidDataException("map binary package is invalid");
         long bodyOffset = input.Position;
         byte[] body = new byte[checked((int)(input.Length - bodyOffset))];
         input.ReadExactly(body);
@@ -149,6 +184,47 @@ internal static class ContentCompiler
         writer.Write(package);
         writer.Write(body);
     }
+
+    private static void ReadElement(BinaryReader reader, string[] table, string? parent, int depth, ref int elements,
+        List<(string Kind, string Id)> result)
+    {
+        if (depth > 128 || ++elements > 100000) throw new InvalidDataException("map element bounds exceeded");
+        string name = Lookup(table, reader.ReadInt16());
+        if (parent == "entities") result.Add(("entity", name));
+        else if (parent == "triggers") result.Add(("trigger", name));
+        else if (parent != null && (parent.Equals("backgrounds", StringComparison.OrdinalIgnoreCase) ||
+                 parent.Equals("foregrounds", StringComparison.OrdinalIgnoreCase)))
+            result.Add(("backdrop", name));
+        int attributes = reader.ReadByte();
+        for (int index = 0; index < attributes; index++)
+        {
+            _ = Lookup(table, reader.ReadInt16());
+            switch (reader.ReadByte())
+            {
+                case 0: _ = reader.ReadBoolean(); break;
+                case 1: _ = reader.ReadByte(); break;
+                case 2: _ = reader.ReadInt16(); break;
+                case 3: _ = reader.ReadInt32(); break;
+                case 4: _ = reader.ReadSingle(); break;
+                case 5: _ = Lookup(table, reader.ReadInt16()); break;
+                case 6:
+                    if (reader.ReadString().Length > 1024 * 1024) throw new InvalidDataException("map text value is too long");
+                    break;
+                case 7:
+                    int length = reader.ReadInt16();
+                    if (length < 0 || reader.ReadBytes(length).Length != length) throw new EndOfStreamException();
+                    break;
+                default: throw new InvalidDataException("map value type is invalid");
+            }
+        }
+        int children = reader.ReadInt16();
+        if (children < 0) throw new InvalidDataException("map child count is invalid");
+        for (int index = 0; index < children; index++) ReadElement(reader, table, name, depth + 1, ref elements, result);
+    }
+
+    private static string Lookup(string[] table, short index) => index >= 0 && index < table.Length
+        ? table[index]
+        : throw new InvalidDataException("map string table index is invalid");
 
     private static void WriteElement(BinaryWriter writer, XmlElement element, IReadOnlyDictionary<string, short> lookup)
     {

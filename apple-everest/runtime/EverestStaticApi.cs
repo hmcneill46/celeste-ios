@@ -118,6 +118,7 @@ internal sealed class AppleEverestModuleDescriptor
     public string Name { get; }
     public string Version { get; }
     public string[] Dependencies { get; }
+    public string[] RequiredBy { get; }
     public Func<EverestModule> ModuleFactory { get; }
     public Func<EverestModuleSettings> SettingsFactory { get; }
     public Func<EverestModuleSaveData> SaveDataFactory { get; }
@@ -127,6 +128,7 @@ internal sealed class AppleEverestModuleDescriptor
         string name,
         string version,
         string[] dependencies,
+        string[] requiredBy,
         Func<EverestModule> moduleFactory,
         Func<EverestModuleSettings> settingsFactory,
         Func<EverestModuleSaveData> saveDataFactory,
@@ -135,9 +137,83 @@ internal sealed class AppleEverestModuleDescriptor
         Name = name;
         Version = version;
         Dependencies = dependencies;
+        RequiredBy = requiredBy;
         ModuleFactory = moduleFactory;
         SettingsFactory = settingsFactory;
         SaveDataFactory = saveDataFactory;
         SessionFactory = sessionFactory;
+    }
+}
+
+internal enum AppleEverestSettingKind
+{
+    Boolean,
+    Enum,
+    Integer
+}
+
+internal sealed class AppleEverestSettingDescriptor
+{
+    public string Module { get; }
+    public string Property { get; }
+    public string Label { get; }
+    public AppleEverestSettingKind Kind { get; }
+    public Func<int> Get { get; }
+    public Action<int> Set { get; }
+    public string[] EnumNames { get; }
+    public int[] EnumValues { get; }
+    public int Minimum { get; }
+    public int Maximum { get; }
+    public int Step { get; }
+
+    public AppleEverestSettingDescriptor(
+        string module,
+        string property,
+        string label,
+        AppleEverestSettingKind kind,
+        Func<int> get,
+        Action<int> set,
+        string[] enumNames,
+        int[] enumValues,
+        int minimum,
+        int maximum,
+        int step)
+    {
+        Module = module;
+        Property = property;
+        Label = label;
+        Kind = kind;
+        Get = get;
+        Set = set;
+        EnumNames = enumNames;
+        EnumValues = enumValues;
+        Minimum = minimum;
+        Maximum = maximum;
+        Step = step;
+    }
+
+    public bool Accepts(int value) => Kind switch
+    {
+        AppleEverestSettingKind.Boolean => value is 0 or 1,
+        AppleEverestSettingKind.Enum => Array.IndexOf(EnumValues, value) >= 0,
+        AppleEverestSettingKind.Integer => value >= Minimum && value <= Maximum &&
+            (value - Minimum) % Math.Max(1, Step) == 0,
+        _ => false
+    };
+}
+
+internal sealed class AppleEverestAtlasMountDescriptor
+{
+    internal string Owner { get; }
+    internal string Atlas { get; }
+    internal string Key { get; }
+    internal string LogicalPath { get; }
+
+    internal AppleEverestAtlasMountDescriptor(string owner, string atlas, string key, string logicalPath)
+    {
+        Owner = owner;
+        Atlas = atlas;
+        Key = key;
+        LogicalPath = logicalPath;
     }
 }
