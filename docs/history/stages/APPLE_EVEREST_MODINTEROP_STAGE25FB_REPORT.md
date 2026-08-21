@@ -33,7 +33,10 @@ No GitHub Actions workflow was run.
 The branch uses two primary coherent commits: `feat: add static MonoMod
 ModInterop plans`, followed by `test: record Apple Everest ModInterop
 acceptance`. A focused third correction adds the missing locked builder
-restore before the desktop conformance runner's `--no-restore` invocation.
+restore before the desktop conformance runner's `--no-restore` invocation. A
+second verifier-only correction permits a single-branch clean clone to verify
+the exact deferred RC3 SHA through `git ls-remote` when that unrelated remote
+tracking ref is intentionally absent locally.
 
 ## Pinned behavior and desktop reference
 

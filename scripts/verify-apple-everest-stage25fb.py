@@ -54,6 +54,18 @@ def git(root: pathlib.Path, *arguments: str) -> str:
     return subprocess.check_output(["git", "-C", str(root), *arguments], text=True).strip()
 
 
+def origin_branch(root: pathlib.Path, branch: str) -> str:
+    local = subprocess.run(
+        ["git", "-C", str(root), "rev-parse", "--verify", "--quiet", f"origin/{branch}^{{commit}}"],
+        capture_output=True,
+        text=True,
+    )
+    if local.returncode == 0:
+        return local.stdout.strip()
+    remote = git(root, "ls-remote", "--heads", "origin", f"refs/heads/{branch}").split()
+    return remote[0] if len(remote) == 2 else ""
+
+
 def sha(path: pathlib.Path) -> str:
     digest = hashlib.sha256()
     with path.open("rb") as stream:
@@ -286,7 +298,7 @@ def main() -> int:
     c.require(git(root, "rev-parse", "ios-v0.1.1-rc.1^{}") == IOS_RC, "immutable iOS RC")
     c.require(git(root, "rev-parse", "v1.0.0-rc.1^{}") == RC1, "immutable tvOS RC1")
     c.require(git(root, "rev-parse", "v1.0.0-rc.2^{}") == RC2, "immutable tvOS RC2")
-    c.require(git(root, "rev-parse", "origin/release/v1.0.0-rc.3") == RC3, "deferred RC3 branch")
+    c.require(origin_branch(root, "release/v1.0.0-rc.3") == RC3, "deferred RC3 branch")
     c.require(not git(root, "tag", "-l", "v1.0.0-rc.3"), "RC3 remains untagged")
 
     print(f"PASS: Stage 25F-B static ModInterop verifier ({c.count})")
