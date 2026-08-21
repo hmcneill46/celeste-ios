@@ -1,0 +1,2 @@
+Achievement_AppleEverestModInteropAcceptance_First_Apple_Death_Name=FIRST APPLE DEATH
+Achievement_AppleEverestModInteropAcceptance_First_Apple_Death_Description=THE REAL STATIC MODINTEROP CHAIN FIRED

@@ -1,0 +1,4 @@
+- Mod: AppleEverestModInteropAcceptance
+  Name: First_Apple_Death
+  Icon: areaselect/startpoint
+  Condition: totalDeaths() > 0

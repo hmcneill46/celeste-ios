@@ -183,6 +183,13 @@ internal static class ModInteropTests
                 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Field)] public sealed class ModImportNameAttribute : Attribute
                 { public string Name { get; } public ModImportNameAttribute(string name) => Name = name; }
             }
+            namespace Celeste.Mod
+            {
+                public static class AppleEverestStaticRuntime
+                {
+                    public static void RecordModInteropBinding(string name, bool bound) { }
+                }
+            }
             """);
         File.WriteAllText(Path.Combine(root, "Program.cs"), """
             using MonoMod.ModInterop;

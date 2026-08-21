@@ -1,0 +1,5 @@
+- Name: AppleEverestModInteropAcceptance
+  Version: 1.0.0
+  Dependencies:
+    - Name: AchievementHelper
+      Version: 1.0.5

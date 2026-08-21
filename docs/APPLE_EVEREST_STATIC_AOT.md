@@ -152,6 +152,16 @@ Stage 25D-C registers nine additional Celeste targets used by Feather Maddy
 the former deferred HookGen fixture: its ordinary distributed DLL now enters
 the same generated backend without a mod-specific transformer.
 
+Stage 25F-B2 expands the same reviewed catalog from 18 to 51 targets for the
+exact ConditionHelper 1.0.0 and AchievementHelper 1.0.5 binary closure. The
+complete census contains 29 provider events and five consumer events; only
+`Level.LoadLevel` was already present, so exactly 33 descriptors were added.
+The signature-driven generator now proves an eight-explicit-argument static
+target, two `IEnumerator` targets, two clone/reference return targets, exact
+overload selection, and distinct inherited `Entity` and `Player` lifecycle
+targets. Each canonical target body is still rewritten exactly once. The
+expansion contains no helper-name checks and no speculative Celeste methods.
+
 For a direct `Hook`, the Mac host recognises a narrow fixed-IL construction
 pattern, resolves the exact target and detour signatures against the catalog,
 validates their typed `orig` contract, records a static plan, and replaces the
@@ -311,11 +321,23 @@ MonoMod.Utils runtime. Dynamic registration types, open generic surfaces,
 readonly imports and unsupported delegate shapes are rejected on the Mac.
 
 The selected real ConditionHelper/AchievementHelper binaries prove all four
-qualified imports resolve in one deterministic plan. They remain a **YELLOW**
-physical candidate because those same ordinary DLLs also require a bounded set
-of unrelated HookGen targets not yet in the reviewed catalog. The current
-accepted regression closure therefore exercises the generated empty-plan path
-without pretending that real cross-mod invocation ran on a device.
+qualified imports resolve in one deterministic plan. Stage 25F-B2 completes
+their bounded HookGen closure while preserving the exact plan SHA-256
+`9e755781f2d107d37bec45bd9fe4b551a28e9ddf8919f91f11d878c1dd041318`.
+The project-owned acceptance package contains data only: its
+`totalDeaths() > 0` definition makes the ordinary AchievementHelper call the
+ordinary ConditionHelper exports. A real `SaveData.AddDeath` event drives
+reevaluation and displays **First Apple Death** on iPhone, iPadOS 15.8.8, and
+Apple TV.
+
+AchievementHelper's `ButtonBinding` setting exposed one physical-only startup
+ordering issue: pinned Everest constructs the logical binding before Celeste
+input exists, then attaches the `VirtualButton` after input initialization.
+The generated registry now follows that typed two-phase lifecycle. It neither
+reflects settings nor dereferences the gamepad during module construction.
+The exact Everest-publicized `TextMenu.Items` and `TextMenu.SubHeader(string)`
+surface and the helper's bounded YAML achievement asset were likewise supplied
+as narrow shared Apple APIs. No provider or consumer source patch was needed.
 
 ## Module settings, SaveData, and Session
 

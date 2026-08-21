@@ -1,0 +1,101 @@
+{
+  "schemaVersion": 1,
+  "stage": "25F-B2",
+  "classification": "GREEN",
+  "parentYellowCommit": "6cde1ad9ba93bbd2f57f2867baf3b189b2824b1b",
+  "provider": {
+    "name": "ConditionHelper",
+    "version": "1.0.0",
+    "zipSha256": "cefd1f8264d4eba9ccd8abb324f88764b99c1fda7812cb6cbbb84cef05c6e8ed",
+    "dllSha256": "f4471853b8e6c2abdd107609eeee2852076cde4c7e70667367b71a38d72a62b9",
+    "hookEvents": [
+      "On.Celeste.AreaModeStats::Clone",
+      "On.Celeste.AreaStats::Clone",
+      "On.Celeste.Commands::CmdHeartGem",
+      "On.Celeste.Commands::CmdHearts_int",
+      "On.Celeste.Commands::CmdHearts_int_string",
+      "On.Celeste.Commands::CmdLevelFlag",
+      "On.Celeste.Commands::CmdOWComplete",
+      "On.Celeste.HeartGem::RegisterAsCollected",
+      "On.Celeste.Level::LoadLevel",
+      "On.Celeste.Level::Reload",
+      "On.Celeste.Level::Update",
+      "On.Celeste.Level::UpdateTime",
+      "On.Celeste.MapData::Load",
+      "On.Celeste.Player::Added",
+      "On.Celeste.Player::CallDashEvents",
+      "On.Celeste.Player::Removed",
+      "On.Celeste.Player::SceneEnd",
+      "On.Celeste.SaveData::AddDeath",
+      "On.Celeste.SaveData::AddStrawberry_AreaKey_EntityID_bool",
+      "On.Celeste.SaveData::RegisterCassette",
+      "On.Celeste.SaveData::RegisterCompletion",
+      "On.Celeste.SaveData::RegisterHeartGem",
+      "On.Celeste.SaveData::StartSession",
+      "On.Celeste.Session::SetFlag",
+      "On.Celeste.Session::UpdateLevelStartDashes",
+      "On.Monocle.Entity::Added",
+      "On.Monocle.Entity::Removed",
+      "On.Monocle.Entity::SceneEnd",
+      "On.Monocle.Scene::Begin"
+    ]
+  },
+  "consumer": {
+    "name": "AchievementHelper",
+    "version": "1.0.5",
+    "zipSha256": "155b2ff92857e92f2c4510270e2c6d391b40510945fe3c6c31f9d8fa43a58177",
+    "dllSha256": "5dd3ceadbd5c085c5b1c4ffebef9f7560c80c8a94f9dc35d4001f2b4443ba5b0",
+    "hookEvents": [
+      "On.Celeste.OuiChapterSelect::Enter",
+      "On.Celeste.OuiChapterSelect::Leave",
+      "On.Celeste.OuiChapterSelect::Render",
+      "On.Celeste.OuiChapterSelect::Update",
+      "On.Celeste.SaveData::InitializeDebugMode"
+    ]
+  },
+  "blockerCensus": {
+    "conditionHelperHookEvents": 29,
+    "achievementHelperHookEvents": 5,
+    "totalDistinctPairEvents": 34,
+    "previouslyCatalogued": 1,
+    "newTargetDescriptors": 33,
+    "catalogBefore": 18,
+    "catalogAfter": 51,
+    "nonHookGenBlockersAfterFixes": [],
+    "resolvedSecondOrderBlockers": [
+      "AchievementHelper 1.0.5 references Everest-publicized TextMenu.Items and TextMenu.SubHeader(string); B2 exposes that exact bounded ABI in the derived Apple tree.",
+      "The stricter full-product external-API gate found metadata-only Everest settings attributes referenced by retained Stage 25F-A/25E regression helpers; B2 provides their exact passive constructors without adding runtime reflection.",
+      "The first full-AOT physical launch proved AchievementHelper constructs its ButtonBinding settings before Celeste input exists; B2 now mirrors Everest's typed two-phase construction and post-input attachment lifecycle without reflection."
+    ]
+  },
+  "modInterop": {
+    "planSha256": "9e755781f2d107d37bec45bd9fe4b551a28e9ddf8919f91f11d878c1dd041318",
+    "registrations": 3,
+    "exports": 7,
+    "imports": 4,
+    "resolvedImports": 4,
+    "importsByName": [
+      "ConditionChanged",
+      "WatchConditions",
+      "RemoveCallback",
+      "EvaluateConditionExpression"
+    ]
+  },
+  "acceptance": {
+    "dataOnlyMod": "AppleEverestModInteropAcceptance",
+    "condition": "totalDeaths() > 0",
+    "watcherTarget": "celeste-save-data-add-death",
+    "visibleAchievement": "First Apple Death",
+    "replacementProviderCode": false,
+    "replacementConsumerCode": false
+  },
+  "closure": {
+    "transformerVersion": "apple-everest-static-v7",
+    "managedDetourCatalogSchema": 2,
+    "managedDetourTargetCount": 51,
+    "sharedClosureSha256": "d55f262c376c944a81cf5d253f84dc97592da41ea6e67115ccb33ad6e6b5fabe",
+    "managedLogicalSha256": "2fd67cb7f4cf817dd7098f82484b497b17f232947626b409ea96641afe91a49e",
+    "contentLogicalSha256": "26c10db8e2d358a45db18e3ef63147069f123054a74b25728ccb5ffbdf60419e",
+    "hookTransformSha256": "8c84c0c895f8c2959e4c6fbf70f684cc03ac44e538c518fb495e26266152472f"
+  }
+}

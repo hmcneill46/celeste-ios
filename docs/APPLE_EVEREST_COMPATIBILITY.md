@@ -1,7 +1,7 @@
 # Apple Everest real-mod compatibility
 
 This is a technical test matrix for the experimental shared Apple static-AOT
-builder. It lists only exact public inputs inspected through Stage 25F-B. It is not
+builder. It lists only exact public inputs inspected through Stage 25F-B2. It is not
 a promise that similarly named, newer, older, or dependent mods work. The
 normal iOS and tvOS products do not contain these mods.
 
@@ -40,16 +40,29 @@ The exact selected proof pair is:
 
 | Mod | Exact input | Static ModInterop result | Overall result |
 | --- | --- | --- | --- |
-| [ConditionHelper](https://github.com/Brokemia/ConditionHelper) | 1.0.0; ZIP `cefd1f82…e8ed`; DLL `f4471853…2b9`; source `1d42c6a7…9dd`; MIT | Four exports found: `ConditionChanged`, `WatchConditions`, `RemoveCallback`, and `EvaluateConditionExpression`, each under qualified and unqualified names. | **DEFERRED_ON_HOOK** — the ordinary DLL also needs reviewed `On.*` targets outside the current catalog. |
-| [AchievementHelper](https://github.com/Brokemia/AchievementHelper) | 1.0.5; ZIP `155b2ff9…8177`; DLL `5dd3cead…a5b0`; source `6f8bb780…483b`; MIT | Four qualified imports bind exactly to ConditionHelper; its own three exports are also discovered. | **DEFERRED_ON_HOOK** — five unrelated `OuiChapterSelect`/SaveData HookGen targets are not yet catalogued. |
+| [ConditionHelper](https://github.com/Brokemia/ConditionHelper) | 1.0.0; ZIP `cefd1f82…e8ed`; DLL `f4471853…2b9`; source `1d42c6a7…9dd`; MIT | Four exports found: `ConditionChanged`, `WatchConditions`, `RemoveCallback`, and `EvaluateConditionExpression`, each under qualified and unqualified names; all 29 referenced HookGen events are in the reviewed static catalog. | **SUPPORTED_WITH_STATIC_TRANSFORM** — ordinary release DLL, no source tree or replacement provider code. |
+| [AchievementHelper](https://github.com/Brokemia/AchievementHelper) | 1.0.5; ZIP `155b2ff9…8177`; DLL `5dd3cead…a5b0`; source `6f8bb780…483b`; MIT | Four qualified imports bind exactly to ConditionHelper; its own three exports and all five referenced HookGen events are generated statically. | **SUPPORTED_WITH_STATIC_TRANSFORM** — ordinary release DLL plus project-owned data-only achievement definition; no replacement consumer code. |
 
 The ordinary distributed DLLs produce three registrations, seven exports and
 four resolved imports with plan SHA-256
 `9e755781f2d107d37bec45bd9fe4b551a28e9ddf8919f91f11d878c1dd041318`.
-Static analysis therefore passes, but real provider-to-consumer device
-invocation is deliberately not claimed. Stage 25F-B is **YELLOW** until a
-small follow-up reviews the pair's bounded HookGen targets and performs the
-full physical iPhone/iPad/tvOS proof.
+Stage 25F-B2 closes the historical YELLOW rung without changing that plan. A
+complete binary census found 29 ConditionHelper and five AchievementHelper
+HookGen events: one was already catalogued and exactly 33 descriptors were
+added, taking the reviewed catalog from 18 to 51 targets. The added signature
+classes include an eight-argument static method, two `IEnumerator` returns,
+two reference returns, exact overloads, and distinct inherited
+`Entity`/`Player` lifecycle targets.
+
+A project-owned data-only achievement watches the real condition
+`totalDeaths() > 0`. A normal death runs the newly catalogued
+`SaveData.AddDeath` hook, ConditionHelper reevaluates the watch, and the
+ordinary AchievementHelper consumer displays **First Apple Death**. That path
+was physically accepted on iPhone, iPadOS 15.8.8, and Apple TV. Its module
+SaveData persists after normal Save and Quit and suppresses a duplicate award
+after cold relaunch. As with ordinary Celeste state, externally terminating
+the process before a requested save is complete does not promise to preserve
+the newest unsaved award.
 
 Supported plan semantics include provider-first and consumer-first load order,
 late refresh, idempotent type registration, default assembly prefixes,
@@ -67,8 +80,9 @@ process-local and has no Apple-specific unregister or persisted state.
 The complete 18-release audit and exact selected binary/source pins are in
 [`apple-everest/modinterop-audit-stage25fb.json`](../apple-everest/modinterop-audit-stage25fb.json).
 
-The Stage 25F-A selected closure uses Everest stable 1.6458.0 and its one shared
-hash is `b85472c06b68757bc02de8a33171890df15015924178024c72da48556d8a3a01`.
+The Stage 25F-B2 selected regression closure uses Everest stable 1.6458.0 and
+its one shared iOS/tvOS hash is
+`d55f262c376c944a81cf5d253f84dc97592da41ea6e67115ccb33ad6e6b5fabe`.
 
 The Cpop/QuizSample pair is the first supported real helper ecosystem. Its
 declared dependency resolves before AOT, and omitting Cpop or supplying a

@@ -727,11 +727,21 @@ try
             "selected helper ecosystem is source-free and not redistributed");
     }
     using (JsonDocument targetCatalog = JsonDocument.Parse(File.ReadAllBytes(
-        Path.Combine(repository, "apple-everest/managed-detour-targets-v1.json"))))
+        Path.Combine(repository, "apple-everest/managed-detour-targets-v2.json"))))
     {
-        Pass(targetCatalog.RootElement.GetProperty("schemaVersion").GetInt32() == 1 &&
-             targetCatalog.RootElement.GetProperty("targets").GetArrayLength() >= 18,
-            "signature-driven managed-detour target catalog");
+        JsonElement targets = targetCatalog.RootElement.GetProperty("targets");
+        Pass(targetCatalog.RootElement.GetProperty("schemaVersion").GetInt32() == 2 &&
+             targets.GetArrayLength() == 51,
+            "signature-driven managed-detour target catalog v2");
+        string[] ids = targets.EnumerateArray().Select(target => target.GetProperty("id").GetString()!).ToArray();
+        Pass(ids.Distinct(StringComparer.Ordinal).Count() == 51 &&
+             ids.Contains("celeste-commands-cmd-ow-complete", StringComparer.Ordinal) &&
+             ids.Contains("celeste-oui-chapter-select-enter", StringComparer.Ordinal) &&
+             ids.Contains("celeste-area-mode-stats-clone", StringComparer.Ordinal) &&
+             ids.Contains("celeste-save-data-add-death", StringComparer.Ordinal) &&
+             ids.Contains("celeste-player-added", StringComparer.Ordinal) &&
+             ids.Contains("monocle-entity-added", StringComparer.Ordinal),
+            "B2 target catalog covers exact high-arity, IEnumerator, reference-return and inherited target shapes");
     }
     ManagedDetourTarget SyntheticTarget(string id, string eventName, bool isStatic, string returnType,
         params (string Type, string Name)[] parameters) => new()
@@ -759,14 +769,24 @@ try
         SyntheticTarget("fixture-static-int", "StaticInt", true, "int", ("int", "value")),
         SyntheticTarget("fixture-instance-void", "InstanceVoid", false, "void"),
         SyntheticTarget("fixture-instance-return", "InstanceReturn", false, "int",
-            ("int", "value"), ("global::Microsoft.Xna.Framework.Vector2", "position"), ("string", "label"))
+            ("int", "value"), ("global::Microsoft.Xna.Framework.Vector2", "position"), ("string", "label")),
+        SyntheticTarget("fixture-high-arity", "HighArity", true, "void",
+            ("int", "a"), ("int", "b"), ("int", "c"), ("int", "d"),
+            ("int", "e"), ("int", "f"), ("int", "g"), ("int", "h")),
+        SyntheticTarget("fixture-ienumerator-return", "EnumeratorReturn", false,
+            "global::System.Collections.IEnumerator", ("int", "from")),
+        SyntheticTarget("fixture-reference-return", "ReferenceReturn", false,
+            "global::Fixture.SignatureMatrix", ("string", "label"))
     ];
     string signatureSource = ManagedDetourGenerator.DispatcherSource(signatureMatrix);
     Pass(signatureSource.Contains("delegate void orig_StaticVoid()", StringComparison.Ordinal) &&
          signatureSource.Contains("delegate int orig_StaticInt(int value)", StringComparison.Ordinal) &&
          signatureSource.Contains("delegate void orig_InstanceVoid(global::Fixture.SignatureMatrix self)", StringComparison.Ordinal) &&
-         signatureSource.Contains("delegate int orig_InstanceReturn(global::Fixture.SignatureMatrix self, int value, global::Microsoft.Xna.Framework.Vector2 position, string label)", StringComparison.Ordinal),
-        "signature generator covers static/instance, void/value return, struct/reference and multiple arguments");
+         signatureSource.Contains("delegate int orig_InstanceReturn(global::Fixture.SignatureMatrix self, int value, global::Microsoft.Xna.Framework.Vector2 position, string label)", StringComparison.Ordinal) &&
+         signatureSource.Contains("delegate void orig_HighArity(int a, int b, int c, int d, int e, int f, int g, int h)", StringComparison.Ordinal) &&
+         signatureSource.Contains("delegate global::System.Collections.IEnumerator orig_EnumeratorReturn(global::Fixture.SignatureMatrix self, int from)", StringComparison.Ordinal) &&
+         signatureSource.Contains("delegate global::Fixture.SignatureMatrix orig_ReferenceReturn(global::Fixture.SignatureMatrix self, string label)", StringComparison.Ordinal),
+        "signature generator covers static/instance, high arity, IEnumerator/reference return, struct/reference and multiple arguments");
     Pass(!signatureSource.Contains("DynamicInvoke", StringComparison.Ordinal) &&
          !signatureSource.Contains("object[]", StringComparison.Ordinal) &&
          signatureSource.Contains("AppleEverestHookList.Version", StringComparison.Ordinal),
@@ -858,8 +878,10 @@ try
          closureGenerator.Contains("TrimmerRootAssembly", StringComparison.Ordinal),
         "external assembly identities generate complete trimmer roots");
     Pass(closureGenerator.Contains("ButtonBindingProperties", StringComparison.Ordinal) &&
-         closureGenerator.Contains("new global::Celeste.Mod.ButtonBinding()", StringComparison.Ordinal),
-        "precompiled settings button bindings receive reflection-free static initialization");
+         closureGenerator.Contains("new global::Celeste.Mod.ButtonBinding()", StringComparison.Ordinal) &&
+         closureGenerator.Contains("InputBindingInitializer", StringComparison.Ordinal) &&
+         closureGenerator.Contains("InitializeCurrentInput", StringComparison.Ordinal),
+        "precompiled settings button bindings receive reflection-free post-input initialization");
     string iosHostProject = File.ReadAllText(Path.Combine(repository, "modern-ios/CelesteIOSRuntimeHost/CelesteIOSRuntimeHost.csproj"));
     string tvosHostProject = File.ReadAllText(Path.Combine(repository, "tvos/CelesteTvOSRuntimeHost/CelesteTvOSRuntimeHost.csproj"));
     Pass(iosHostProject.Contains("AppleEverestExternalAssemblyRoots.props", StringComparison.Ordinal) &&
@@ -882,8 +904,10 @@ try
          runtimeApi.Contains("public static void Log(string tag, string value)", StringComparison.Ordinal),
         "binary-compatible Everest content and module-state facades preserve compiled accessor shapes");
     Pass(runtimeApi.Contains("public sealed class ButtonBinding", StringComparison.Ordinal) &&
-         runtimeApi.Contains("public bool Pressed => false", StringComparison.Ordinal),
-        "minimal unsupported host binding remains a deterministic non-triggering data facade");
+         runtimeApi.Contains("public VirtualButton Button", StringComparison.Ordinal) &&
+         runtimeApi.Contains("internal void InitializeCurrentInput()", StringComparison.Ordinal) &&
+         runtimeApi.Contains("public bool Pressed => Button?.Pressed ?? false", StringComparison.Ordinal),
+        "bounded ButtonBinding facade preserves the real default shortcut binding ABI and lifecycle");
     string settingsPersistence = File.ReadAllText(Path.Combine(repository,
         "apple-everest/runtime/AppleEverestSettingsPersistence.cs"));
     Pass(settingsPersistence.Contains("CelesteAppleEverest.Settings.v1", StringComparison.Ordinal) &&
@@ -917,7 +941,7 @@ try
          testClosureViolations[0].Contains("System.Diagnostics.Process::Start", StringComparison.Ordinal),
         "linked-runtime scanner isolates the intentional desktop static-plan test host spawn");
 
-    Pass(ProductPolicy.TransformerVersion == "apple-everest-static-v6", "real-ZIP transformer version");
+    Pass(ProductPolicy.TransformerVersion == "apple-everest-static-v7", "real-ZIP transformer version");
     Pass(File.Exists(Path.Combine(repository, "tools/AppleEverestBuilder/AssemblyFreezer.cs")),
         "binary-first assembly freezer exists");
     string models = File.ReadAllText(Path.Combine(repository, "tools/AppleEverestBuilder/Models.cs"));
@@ -942,6 +966,23 @@ try
     Pass(programSource.Contains("verify-referenced-api", StringComparison.Ordinal) &&
          programSource.Contains("verify-aot-object", StringComparison.Ordinal),
         "external binary API and native AOT body verification commands");
+    Pass(File.Exists(Path.Combine(repository, "tools/AppleEverestBuilder/StaticAssetGenerator.cs")) &&
+         closureGenerator.Contains("GeneratedAppleEverestStaticAssets.cs", StringComparison.Ordinal) &&
+         runtimeApi.Contains("GeneratedAppleEverestStaticAssets.TryDeserialize", StringComparison.Ordinal),
+        "closed typed YAML factories replace runtime YamlDotNet/reflection");
+    Pass(closureGenerator.Contains("public List<Item> Items => items", StringComparison.Ordinal) &&
+         closureGenerator.Contains("public SubHeader(string title) : this(title, true)", StringComparison.Ordinal) &&
+         closureGenerator.Contains("ConditionHelper+AchievementHelper-reviewed-members:v2", StringComparison.Ordinal),
+        "pinned AchievementHelper TextMenu public ABI is explicit and bounded");
+    Pass(runtimeApi.Contains("SettingSubTextAttribute", StringComparison.Ordinal) &&
+         runtimeApi.Contains("SettingRangeAttribute", StringComparison.Ordinal) &&
+         runtimeApi.Contains("DefaultButtonBindingAttribute", StringComparison.Ordinal),
+        "metadata-only settings attributes keep accepted frozen helper DLLs linkable");
+    string modInteropGenerator = File.ReadAllText(Path.Combine(repository, "tools/AppleEverestBuilder/ModInteropPlanner.cs"));
+    Pass(modInteropGenerator.Contains("ReportStatus", StringComparison.Ordinal) &&
+         staticRuntime.Contains("RecordModInteropExportInvocation", StringComparison.Ordinal) &&
+         staticRuntime.Contains("RecordModInteropBinding", StringComparison.Ordinal),
+        "bounded ModInterop diagnostics prove bindings and first real export invocations");
     string buildScript = File.ReadAllText(Path.Combine(repository, "scripts/build-apple-everest-canary.sh"));
     Pass(buildScript.Contains("verify-referenced-api", StringComparison.Ordinal) &&
          buildScript.Contains("verify-aot-object", StringComparison.Ordinal) &&
