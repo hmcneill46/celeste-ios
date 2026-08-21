@@ -1,7 +1,7 @@
 # Apple Everest real-mod compatibility
 
 This is a technical test matrix for the experimental shared Apple static-AOT
-builder. It lists only exact public inputs inspected through Stage 25F-B2. It is not
+builder. It lists only exact public inputs inspected through Stage 25G. It is not
 a promise that similarly named, newer, older, or dependent mods work. The
 normal iOS and tvOS products do not contain these mods.
 
@@ -25,6 +25,28 @@ Status vocabulary:
 | [Cpop Helper](https://gamebanana.com/mods/434438) | 1.3.0; ZIP `7a807a8f…b63`; DLL `235d767a…5c9`; source `f8b70384…cb2` | Precompiled helper; four custom entities and three custom triggers | **SUPPORTED_WITH_STATIC_TRANSFORM** | iOS, iPadOS, tvOS | Everest ≥ 1.3471.0 | Ordinary DLL, no source required. Static metadata discovery emits seven direct factories. The README grants reuse with credit and at own risk but no SPDX license file was found; the ZIP, DLL, content, and source remain ignored and are not redistributed. |
 | QuizSample | 0.0.1; ZIP `5cb8351b…b3e` | Content-only map depending on Cpop Helper ≥ 1.0.0 | **SUPPORTED** | iOS, iPadOS, tvOS | Everest ≥ 1.3761.0; Cpop Helper ≥ 1.0.0 | Real four-room quiz map. Normal map loading instantiates `quizController` and `quizAnswerTrigger`; wrong answers kill/respawn and the correct trigger produces the configured outcome. Its Text/Image/HighResImage number styles intentionally differ. The release omits four dialog keys used by its question labels, so those labels use Celeste's `XXX` missing-dialog fallback; answer values intentionally reroll after death. No source repository or explicit redistribution license was located, so its bytes remain ignored and are not redistributed. |
 | [DeathMarkers](https://gamebanana.com/mods/53649) | 2.0.0; ZIP `94ad7d14…e6fc7`; DLL `620e5b63…ff8`; source `24c9b821…965` | Precompiled module + `Player.Die` HookGen target + default YAML SaveData/Session | **SUPPORTED_WITH_STATIC_TRANSFORM** | iOS, iPadOS, tvOS | EverestCore ≥ 1.5577.0 | MIT. Ordinary DLL is authoritative and source is not needed. Stage 25F-A proves per-slot persistent `Dictionary<string,List<Death>>`, continuation `List<Death>`, nested record/`Vector2` serialization, cold restore, new-session reset, deletion/replacement isolation, and bounded A/B recovery. |
+
+## Multi-helper map graph audit
+
+Stage 25G screened 53 real map packages, deeply audited 24 plausible composed
+graphs, and stopped at the pre-AOT gate. The strongest graph was
+[Noctambule](https://gamebanana.com/mods/561341) 0.0.1 with two direct,
+map-used code helpers:
+
+| Root/helper | Exact input | Actual map use | Result |
+| --- | --- | --- | --- |
+| Noctambule | ZIP `cc48ce48…a4d6`; map `97d0937e…22e1` | Ordinary map data contains both helper-owned triggers below. | **DEFERRED_ACTIVE_LUA** |
+| LuaCutscenes 0.2.13 | ZIP `c57913d1…aac8`; DLL `dc697f1a…b57`; MIT | `luaCutscenes/luaCutsceneTrigger` executes the packaged completion cutscene. | **UNSUPPORTED_LUA** — NLua/KeraLua are deliberately absent from the installed full-AOT closure. |
+| ShroomHelper 1.2.10 | ZIP `6a2c3eac…97d7`; DLL `2428be46…fa1d`; MIT | `ShroomHelper/GradualChangeColorGradeTrigger` changes the map color grade. | **DEFERRED_ON_HOOK** — no active IL in this release, but DynamicData and five uncatalogued `On.*` targets remain. |
+
+Noctambule has no active `IL.*`, `ILHook`, native/P/Invoke payload, or custom
+FMOD bank, and neither declared helper is unused. Its Lua trigger is real
+gameplay, however, so removing it or source-editing the helper would not be an
+honest compatibility result. No source-free closure or Apple product was built.
+This YELLOW audit adds no accepted map/helper profile and does not generalize
+support to other packages using either helper. Exact evidence and rejection
+statistics are in
+[`apple-everest/multi-helper-candidate-audit-stage25g.json`](../apple-everest/multi-helper-candidate-audit-stage25g.json).
 
 ## Bounded static MonoMod ModInterop
 

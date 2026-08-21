@@ -81,6 +81,44 @@ reviewed members needed by the accepted closure through
 and the post-link scanner rejects any absent **or inaccessible** external API
 before installation. This is intentionally not a broad publicizer.
 
+### Composed map graphs and the pre-AOT gate
+
+Multi-helper composition uses the same closed architecture rather than a
+second runtime loader:
+
+```text
+public map/helper ZIP graph
+          |
+  dependency resolver
+          |
+per-assembly and map-content compatibility census
+          |
+  +-------+---------+---------+---------+
+  |                 |         |         |
+hooks           registries  interop   content
+  |                 |         |         |
+  +-----------------+---------+---------+
+                    |
+          static composed closure
+                    |
+             iOS/tvOS AOT hosts
+```
+
+The census maps actual entity, trigger, backdrop, processor, asset and audio
+usage back to the owning helper; a declaration in `everest.yaml` alone is not
+evidence that a helper participates. The complete transitive graph must have
+zero unclassified blockers before an expensive product build starts. Missing
+or wrong-version dependencies, cycles, conflicting IDs, unsupported hooks,
+active IL, Lua/native code, custom audio, and unknown content fail before AOT.
+
+Stage 25G applied that policy to 53 real maps and 24 deep graphs. Noctambule
+was the strongest small graph, with two genuine helper triggers and no active
+IL or custom bank, but one trigger executes a packaged Lua completion cutscene.
+Because NLua/KeraLua are intentionally absent, the result is a classified
+pre-AOT YELLOW rather than a stripped map or a misleading product build. The
+runtime module set for any accepted installed build remains immutable: helper
+ZIPs, DLLs, scripts, and registries cannot be added or replaced on-device.
+
 ## One shared Apple closure
 
 The tool emits one deterministic closure, not separate iOS and tvOS mod forks.

@@ -1,0 +1,251 @@
+{
+  "schemaVersion": 1,
+  "stage": "25G",
+  "status": "YELLOW",
+  "classification": "DEFERRED_ACTIVE_LUA",
+  "retrievedAt": "2026-08-21",
+  "baseline": {
+    "integrationCommit": "8ed17c42ee3bd6f00fde8516d1ac8da833cf3f3e",
+    "everestCommit": "4bbde91b8dbaaddef2ceec75ca0cd6d59b3b8d00",
+    "monoModCommit": "dfc30a1506d37fb88a2c2be004f525205f46a24c",
+    "managedDetourCatalogVersion": 2,
+    "managedDetourTargetCount": 51
+  },
+  "publicMetadata": [
+    {
+      "name": "Everest dependency graph",
+      "url": "https://maddie480.ovh/celeste/mod_dependency_graph.yaml",
+      "sha256": "ecec2aef46d38525e9c7064129b98ad19ea02743425cec01ed34d6feb3cbf13e",
+      "entryCount": 6056
+    },
+    {
+      "name": "Everest mod search database",
+      "url": "https://maddie480.ovh/celeste/mod_search_database.yaml",
+      "sha256": "eaf55346084b60bb97e76cc07ae8f874a6434117e1197ca4662d87532cd109d9",
+      "entryCount": 6031
+    },
+    {
+      "name": "Everest update database",
+      "url": "https://maddie480.ovh/celeste/everest_update.yaml",
+      "sha256": "b16438e92cbb33eb3e6f2697a09dd4123530afee5759309f05267ffbaea5b602"
+    },
+    {
+      "name": "Everest mod-files database",
+      "url": "https://maddie480.ovh/celeste/mod_files_database.zip",
+      "sha256": "efa254e5a869838647d8dd9d3f9ed8aaba1df151bf1e9acb4b0509b32f9b0989"
+    }
+  ],
+  "discovery": {
+    "joinedRealMapEntries": 4739,
+    "twoToFourDependencyCandidates": 865,
+    "realMapPackagesScreened": 53,
+    "helperPackagesDownloadedAndScanned": 99,
+    "deepGraphsAudited": 24,
+    "requiredThirtyCohort": [
+      "NightClimb",
+      "HappyNationalAviationDay",
+      "433",
+      "obby",
+      "TheSpire",
+      "MountBaker",
+      "void",
+      "Astraeus",
+      "LittleEpic's Precision Challenge",
+      "CaveofEntropyShowcase",
+      "Wholesome Theo Gameplay",
+      "IntroCar",
+      "fountain",
+      "Celess",
+      "madeline's adventure for a blue slushie",
+      "QLetterAurora",
+      "TeraBlast",
+      "SnowRidge",
+      "Partnership",
+      "Mineclimber",
+      "FrogelineSummit",
+      "UncycledMadness",
+      "7X1D",
+      "Etna",
+      "Ricochet",
+      "idoremember",
+      "RockClimbing",
+      "Sunset",
+      "GLACEIR",
+      "The Fall"
+    ],
+    "deepGraphPrimaryBlockers": {
+      "activeIL": 18,
+      "customAudio": 3,
+      "luaOrNative": 1,
+      "apiContentOrUsageBreadth": 2,
+      "compatibleWithCurrentNonILProfile": 0,
+      "note": "These are exclusive primary classifications across 24 graphs; secondary blockers overlap. The luaOrNative category contains one Lua graph and zero native-primary graphs."
+    }
+  },
+  "scoring": {
+    "method": "Reward two demonstrably active code helpers, small closure, ordinary public ZIPs, source-auditable permissive helpers, modest map size, entity/trigger/backdrop evidence, and existing compatibility reuse; penalize active IL/ILHook, Lua/native code, custom banks, unused declared dependencies, broad hook/API surfaces, and large progression requirements.",
+    "topCandidates": [
+      {
+        "name": "Noctambule",
+        "rank": 1,
+        "strength": "Exactly two map-used code helpers; no active IL, ILHook, custom bank, native code, or P/Invoke.",
+        "primaryBlocker": "The real completion trigger executes a packaged Lua cutscene, requiring NLua/KeraLua."
+      },
+      {
+        "name": "UnfortunateWaveCave",
+        "rank": 2,
+        "strength": "Two map-used helpers (AurorasHelper and ShroomHelper).",
+        "primaryBlocker": "The root includes a 7,312,640-byte custom FMOD bank; both helpers also have unresolved compatibility breadth."
+      },
+      {
+        "name": "NightClimb",
+        "rank": 3,
+        "strength": "Real MaxHelpingHand custom backdrop plus ContortHelper trigger with no Lua or custom audio.",
+        "primaryBlocker": "Current MaxHelpingHand has active IL/RuntimeDetour and a large public API surface; ContortHelper has unsupported hooks."
+      },
+      {
+        "name": "FUNNIEST MAP NAME EVER",
+        "rank": 4,
+        "strength": "Two map-used helpers.",
+        "primaryBlocker": "HonlyHelper and SorbetHelper bring custom banks and broad dynamic/IL behavior."
+      }
+    ]
+  },
+  "strongestCandidate": {
+    "name": "Noctambule",
+    "version": "0.0.1",
+    "gameBananaModId": 561341,
+    "creator": "exopta",
+    "downloadUrl": "https://gamebanana.com/mmdl/1541978",
+    "zipSha256": "cc48ce4800bea0663ebe80f2a694fc1f9a1fdf503d62fc906f5fef98b3b1a4d6",
+    "license": "No explicit redistribution license located; package remains external and ignored.",
+    "map": {
+      "path": "Maps/exopta/noctambule.bin",
+      "bytes": 9688,
+      "sha256": "97d0937ee630bb563d54119a8a9b4bc97a832b9a7200adebb06dc14e977022e1",
+      "mapCount": 1
+    },
+    "script": {
+      "path": "Assets/exopta/Noctambule/end_point.lua",
+      "bytes": 401,
+      "sha256": "6a0fd0ec87d1b41088d140c946257eb5387d4d3c0635fbe7732cb27db61f6fc8",
+      "reachablePurpose": "Completion cutscene reached from luaCutscenes/luaCutsceneTrigger; controls the player/camera and completes the area."
+    },
+    "dependencyRequirements": [
+      { "name": "Everest", "minimumVersion": "1.5105.0" },
+      { "name": "LuaCutscenes", "minimumVersion": "0.2.12" },
+      { "name": "ShroomHelper", "minimumVersion": "1.2.8" }
+    ],
+    "resolvedLoadOrder": [
+      "Everest stable-1.6458.0",
+      "LuaCutscenes 0.2.13",
+      "ShroomHelper 1.2.10",
+      "Noctambule 0.0.1"
+    ],
+    "codeHelperCount": 2,
+    "helpers": [
+      {
+        "name": "LuaCutscenes",
+        "version": "0.2.13",
+        "relationship": "direct",
+        "downloadUrl": "https://gamebanana.com/mmdl/1305773",
+        "zipSha256": "c57913d16596b129275a5dc288bc44fc31a9a67d6f47d7e855efe479dacaaac8",
+        "dllPath": "LuaCutscenes.dll",
+        "dllSha256": "dc697f1adfaa18bdb219df0a3ee569e1a785a452f17c46cd7626a8730440eb57",
+        "sourceUrl": "https://github.com/Cruor/LuaCutscenes",
+        "sourceCommit": "356dcfb7b0280c1381ed6d47b09a77e44d87bcc3",
+        "license": "MIT",
+        "actualMapUsage": [
+          { "kind": "trigger", "id": "luaCutscenes/luaCutsceneTrigger", "effect": "Runs the packaged end_point.lua completion cutscene." }
+        ],
+        "blockers": [
+          "References NLua 1.4.25.0.",
+          "The selected map executes Lua; this is not a dormant dependency.",
+          "NLua and KeraLua are excluded from the installed Apple closure."
+        ]
+      },
+      {
+        "name": "ShroomHelper",
+        "version": "1.2.10",
+        "relationship": "direct",
+        "downloadUrl": "https://gamebanana.com/mmdl/1361856",
+        "zipSha256": "6a2c3eacc68353c0f8bb69bb9b59ca62128e6d3f54ff38a8ff1f282f0cdd97d7",
+        "dllPath": "Code/bin/ShroomHelper.dll",
+        "dllSha256": "2428be4659522324b4b426452b17a095a78b857048d6340a0c4720151c08fa1d",
+        "sourceUrl": "https://github.com/CommunalHelper/ShroomHelper",
+        "sourceCommit": "771918ac8e04cca0db56f4cc1b3f96b235678d68",
+        "license": "MIT",
+        "actualMapUsage": [
+          { "kind": "trigger", "id": "ShroomHelper/GradualChangeColorGradeTrigger", "effect": "Gradually changes the map color grade." }
+        ],
+        "blockers": [
+          "Uses MonoMod.Utils.DynamicData.",
+          "Requires five currently uncatalogued On.* targets: DashSwitch.OnDashed, Player.RedBoost, Player.StartDash, Player.UseRefill, and Session.Restart."
+        ]
+      }
+    ],
+    "actualUsageIds": [
+      "ShroomHelper/GradualChangeColorGradeTrigger",
+      "luaCutscenes/luaCutsceneTrigger"
+    ],
+    "unusedDeclaredHelpers": [],
+    "mechanismCensus": {
+      "activeIL": false,
+      "activeILHook": false,
+      "directHook": false,
+      "modInterop": false,
+      "lua": true,
+      "nativeOrPInvoke": false,
+      "customFmodBank": false,
+      "customEntityRegistrations": 0,
+      "customTriggerRegistrations": 2,
+      "customBackdropRegistrations": 0,
+      "moduleSettings": false,
+      "moduleSaveData": false,
+      "moduleSession": false
+    },
+    "preAotDecision": {
+      "result": "BLOCKED",
+      "diagnostic": "LUA_UNSUPPORTED: reachable Lua cutscene requires NLua/KeraLua, which are intentionally absent from the source-free full-AOT Apple runtime.",
+      "unclassifiedBlockers": 0,
+      "fullBuildAllowed": false
+    }
+  },
+  "productionResult": {
+    "runtimeOrBuilderChanges": false,
+    "newHookGenTargets": 0,
+    "targetCatalogCount": 51,
+    "newReviewedPublicizedMembers": 0,
+    "sourceFreeClosureGenerated": false,
+    "sharedClosureSha256": null,
+    "managedTreeSha256": null,
+    "contentTreeSha256": null,
+    "registrySha256": null,
+    "iosProductBuilt": false,
+    "tvosProductBuilt": false,
+    "physicalIphone": "NOT_RUN_PRE_AOT_BLOCKER",
+    "physicalIpad": "NOT_RUN_PRE_AOT_BLOCKER",
+    "physicalAppleTv": "NOT_RUN_PRE_AOT_BLOCKER",
+    "fullAot": "NOT_RUN_PRE_AOT_BLOCKER",
+    "fullTrim": "NOT_RUN_PRE_AOT_BLOCKER",
+    "noInterpreterNoJit": "NOT_RUN_PRE_AOT_BLOCKER",
+    "customMapProgression": "DEFERRED",
+    "saveAndQuitInDebugMapLane": "REMAINS_SUPPRESSED"
+  },
+  "unchangedLocks": {
+    "vanillaIosTree": "2f5d6fffaa151530f48deac7ff402c2c6d475b20eeef5579f1db784d57da2357",
+    "canonicalContent": "30a1c147d1a3ab0aa45762094e393ed7fd69951dd66e5af063447641e0699c46",
+    "canonicalRaw": "db7b722159fbdef8625c81608165aea162957dce956fcd5b16eeceaa1089a273",
+    "canonicalPatched": "0c6515adadf58251ab2da66c6c61a1f61bd19b85f5dcdd4f1280552af650a4b5",
+    "canonicalStage6": "1a981bc5994261775c1fea497cd042780fdbbcb24b7390a2f4db6aab1be747d9",
+    "iosNative": "9fb302d221180e39f270ea5ebf48e18433b67bd0a40943c042a227fe0f8ad6a2",
+    "tvosNative": "6286e0545b32e9c56732955d4cf816ed8f5dc0d816ab610dd9fe1752090a01fc",
+    "stage25fb2ModInteropPlan": "9e755781f2d107d37bec45bd9fe4b551a28e9ddf8919f91f11d878c1dd041318"
+  },
+  "nextStageRecommendation": {
+    "highestValueClass": "DETERMINISTIC_IL_LOWERING_FEASIBILITY",
+    "reason": "Active IL was the exclusive primary blocker for 18 of 24 deep graphs. It dominates custom audio (3), Lua/native (1), and API/content/usage breadth (2).",
+    "noManualDownloadRequiredYet": true,
+    "notes": "Noctambule remains a strong future Lua compatibility fixture, but Lua is not the highest-payoff next class. Strawberry Jam remains premature."
+  }
+}
