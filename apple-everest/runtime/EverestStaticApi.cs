@@ -5,20 +5,25 @@ namespace Celeste.Mod;
 
 public abstract class EverestModule
 {
-    // Everest exposes these as protected properties. Keeping the accessor
-    // shape is important for precompiled mods: their IL calls get__Settings,
-    // get__SaveData and get__Session rather than reading fields directly.
-    protected EverestModuleSettings _Settings { get; private set; }
-    protected EverestModuleSaveData _SaveData { get; private set; }
-    protected EverestModuleSession _Session { get; private set; }
-    public EverestModuleMetadata Metadata { get; internal set; }
+    // Keep the exact public virtual property ABI used by pinned desktop
+    // Everest. Precompiled modules call these accessors directly.
+    public virtual EverestModuleSettings _Settings { get; set; }
+    public virtual EverestModuleSaveData _SaveData { get; set; }
+    public virtual EverestModuleSession _Session { get; set; }
+    public virtual EverestModuleMetadata Metadata { get; set; }
     public virtual Type SettingsType => null;
     public virtual Type SaveDataType => null;
     public virtual Type SessionType => null;
+    public virtual bool SaveDataAsync { get; set; } = true;
     public virtual void Load() { }
     public virtual void Initialize() { }
     public virtual void LoadContent(bool firstLoad) { }
     public virtual void Unload() { }
+    // Exact pinned public override point. The static product builds supported
+    // settings controls from its closed descriptor graph; accepted modules may
+    // still call the base implementation from their own optional menu code.
+    public virtual void CreateModMenuSection(global::Celeste.TextMenu menu, bool inGame,
+        global::FMOD.Studio.EventInstance snapshot) { }
 
     internal void SetStaticState(EverestModuleSettings settings, EverestModuleSaveData saveData, EverestModuleSession session)
     {
@@ -29,8 +34,18 @@ public abstract class EverestModule
 }
 
 public abstract class EverestModuleSettings { }
-public abstract class EverestModuleSaveData { }
-public abstract class EverestModuleSession { }
+public abstract class EverestModuleSaveData
+{
+    // Desktop Everest assigns the selected numbered slot before and after
+    // deserializing a module payload.  Keep the same public ABI and semantics
+    // without allowing the index to enter the YAML property graph.
+    public int Index { get; set; }
+}
+
+public abstract class EverestModuleSession
+{
+    public int Index { get; set; }
+}
 
 // Bounded settings ABI needed by supported precompiled modules. The normal
 // Everest loader initializes these bindings reflectively; the static closure
@@ -123,6 +138,7 @@ internal sealed class AppleEverestModuleDescriptor
     public Func<EverestModuleSettings> SettingsFactory { get; }
     public Func<EverestModuleSaveData> SaveDataFactory { get; }
     public Func<EverestModuleSession> SessionFactory { get; }
+    public AppleEverestModuleDurabilityAdapter Durability { get; }
 
     public AppleEverestModuleDescriptor(
         string name,
@@ -132,7 +148,8 @@ internal sealed class AppleEverestModuleDescriptor
         Func<EverestModule> moduleFactory,
         Func<EverestModuleSettings> settingsFactory,
         Func<EverestModuleSaveData> saveDataFactory,
-        Func<EverestModuleSession> sessionFactory)
+        Func<EverestModuleSession> sessionFactory,
+        AppleEverestModuleDurabilityAdapter durability)
     {
         Name = name;
         Version = version;
@@ -142,6 +159,30 @@ internal sealed class AppleEverestModuleDescriptor
         SettingsFactory = settingsFactory;
         SaveDataFactory = saveDataFactory;
         SessionFactory = sessionFactory;
+        Durability = durability;
+    }
+}
+
+internal sealed class AppleEverestModuleDurabilityAdapter
+{
+    public string Schema { get; }
+    public Func<EverestModuleSaveData, byte[]> SerializeSaveData { get; }
+    public Func<byte[], int, EverestModuleSaveData> DeserializeSaveData { get; }
+    public Func<EverestModuleSession, byte[]> SerializeSession { get; }
+    public Func<byte[], int, EverestModuleSession> DeserializeSession { get; }
+
+    public AppleEverestModuleDurabilityAdapter(
+        string schema,
+        Func<EverestModuleSaveData, byte[]> serializeSaveData,
+        Func<byte[], int, EverestModuleSaveData> deserializeSaveData,
+        Func<EverestModuleSession, byte[]> serializeSession,
+        Func<byte[], int, EverestModuleSession> deserializeSession)
+    {
+        Schema = schema;
+        SerializeSaveData = serializeSaveData;
+        DeserializeSaveData = deserializeSaveData;
+        SerializeSession = serializeSession;
+        DeserializeSession = deserializeSession;
     }
 }
 

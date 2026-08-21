@@ -26,7 +26,9 @@ public static class AppleEverestStaticRuntime
     private static readonly HashSet<string> ObservedDirectHooks = new(StringComparer.Ordinal);
     private static readonly HashSet<string> ObservedCustomFactories = new(StringComparer.Ordinal);
     private static bool started;
+    private static bool startupCompleted;
     private static bool contentReady;
+    private static bool contentLifecycleCompleted;
     private static string currentOwner = "AppleEverestCore";
     private static ModeProperties originalPrologueMode;
     private static SaveData saveDataBeforeModSession;
@@ -55,15 +57,31 @@ public static class AppleEverestStaticRuntime
                 Session = descriptor.SessionFactory?.Invoke()
             };
             LoadedModules.Add(loaded);
+            // Establish the exact Everest module state ABI immediately. Some
+            // ordinary module setting setters refer back through their owning
+            // module's static Settings/SaveData/Session properties.
+            module.SetStaticState(loaded.Settings as EverestModuleSettings,
+                loaded.SaveData as EverestModuleSaveData, loaded.Session as EverestModuleSession);
         }
+    }
+
+    // Persisted settings can have ordinary module-defined side effects which
+    // inspect Celeste.Instance.scene directly. Assigning Engine.Scene only
+    // queues nextScene; Engine's first update is the point at which GameLoader
+    // becomes the live scene. Complete startup immediately after that update,
+    // before GameLoader's first update/draw, without a module-specific bypass.
+    public static void CompleteStartup()
+    {
+        if (startupCompleted) return;
+        if (global::Celeste.Celeste.Instance?.scene == null) return;
+        startupCompleted = true;
         AppleEverestSettingsPersistence.LoadAndApply(GeneratedAppleEverestModuleRegistry.Settings);
         foreach (Loaded loaded in LoadedModules)
         {
             EverestModule module = loaded.Module;
-            module.SetStaticState(loaded.Settings as EverestModuleSettings, loaded.SaveData as EverestModuleSaveData,
-                loaded.Session as EverestModuleSession);
             InvokeOwned(loaded, module.Load);
         }
+        CompleteContentLifecycle();
         Log($"startup=PASS profile={GeneratedAppleEverestModuleRegistry.Profile} modules={LoadedModules.Count} runtime-dll-load=false runtime-detour=false");
     }
 
@@ -75,12 +93,19 @@ public static class AppleEverestStaticRuntime
         if (GeneratedAppleEverestContentManifest.Has("AppleEverest/Dialog/Canary.txt")) LoadCanaryDialog();
         LoadStaticDialogFragments();
         if (GeneratedAppleEverestContentManifest.Has("AppleEverest/Canary/precedence.txt")) VerifyContentPrecedence();
+        CompleteContentLifecycle();
+        Log($"content=PASS mounts={GeneratedAppleEverestContentManifest.Entries.Length}");
+    }
+
+    private static void CompleteContentLifecycle()
+    {
+        if (contentLifecycleCompleted || !contentReady || !startupCompleted) return;
+        contentLifecycleCompleted = true;
         foreach (Loaded loaded in LoadedModules)
         {
             InvokeOwned(loaded, loaded.Module.Initialize);
             InvokeOwned(loaded, () => loaded.Module.LoadContent(true));
         }
-        Log($"content=PASS mounts={GeneratedAppleEverestContentManifest.Entries.Length}");
     }
 
     private static void MountStaticAtlases()
@@ -276,6 +301,150 @@ public static class AppleEverestStaticRuntime
         // never exposes the isolated debug SaveData to normal menu gameplay.
         Log($"mod-session=complete prior-save-restored=true requested={requestedStartMode} applied={Overworld.StartMode.MainMenu}");
         return Overworld.StartMode.MainMenu;
+    }
+
+    internal static AppleEverestModuleSnapshotEntry[] CaptureModuleSnapshotEntries(
+        int slot, AppleEverestModuleSnapshot previous)
+    {
+        Dictionary<string, AppleEverestModuleSnapshotEntry> previousEntries = previous?.Entries?
+            .ToDictionary(value => value.Name, StringComparer.Ordinal) ?? new(StringComparer.Ordinal);
+        List<AppleEverestModuleSnapshotEntry> entries = new();
+        foreach (Loaded loaded in LoadedModules)
+        {
+            AppleEverestModuleDurabilityAdapter adapter = loaded.Descriptor.Durability;
+            if (adapter == null) continue;
+            byte[] saveData = null;
+            byte[] session = null;
+            bool previousCompatible = previousEntries.TryGetValue(loaded.Descriptor.Name,
+                out AppleEverestModuleSnapshotEntry previousEntry) &&
+                previousEntry.Version == loaded.Descriptor.Version &&
+                previousEntry.Schema == adapter.Schema;
+            try
+            {
+                if (adapter.SerializeSaveData != null)
+                {
+                    if (loaded.SaveData is EverestModuleSaveData indexed) indexed.Index = slot;
+                    saveData = adapter.SerializeSaveData(loaded.SaveData as EverestModuleSaveData);
+                }
+            }
+            catch (Exception exception)
+            {
+                saveData = previousCompatible && previousEntry.SaveDataValid ? previousEntry.SaveData : null;
+                Log($"module-data=serialize-failed module={loaded.Descriptor.Name} kind=savedata category={exception.GetType().Name} action={(saveData != null ? "preserve-previous" : "default")}");
+            }
+            try
+            {
+                if (adapter.SerializeSession != null)
+                {
+                    if (loaded.Session is EverestModuleSession indexed) indexed.Index = slot;
+                    session = adapter.SerializeSession(loaded.Session as EverestModuleSession);
+                }
+            }
+            catch (Exception exception)
+            {
+                session = previousCompatible && previousEntry.SessionValid ? previousEntry.Session : null;
+                Log($"module-data=serialize-failed module={loaded.Descriptor.Name} kind=session category={exception.GetType().Name} action={(session != null ? "preserve-previous" : "default")}");
+            }
+            entries.Add(new AppleEverestModuleSnapshotEntry(loaded.Descriptor.Name,
+                loaded.Descriptor.Version, adapter.Schema, saveData, session));
+            Log($"module-data=serialized module={loaded.Descriptor.Name} save-bytes={saveData?.Length ?? -1} session-bytes={session?.Length ?? -1}");
+        }
+        return entries.ToArray();
+    }
+
+    internal static void ApplyModuleSnapshot(int slot, AppleEverestModuleSnapshot snapshot, bool includeSession)
+    {
+        Dictionary<string, AppleEverestModuleSnapshotEntry> entries = snapshot?.Entries?
+            .ToDictionary(value => value.Name, StringComparer.Ordinal) ?? new(StringComparer.Ordinal);
+        foreach (Loaded loaded in LoadedModules)
+        {
+            AppleEverestModuleDurabilityAdapter adapter = loaded.Descriptor.Durability;
+            if (adapter == null) continue;
+            bool compatible = entries.TryGetValue(loaded.Descriptor.Name, out AppleEverestModuleSnapshotEntry entry) &&
+                              entry.Version == loaded.Descriptor.Version && entry.Schema == adapter.Schema;
+            loaded.SaveData = DeserializeSaveData(loaded, adapter,
+                compatible && entry.SaveDataValid ? entry.SaveData : null, slot);
+            if (includeSession)
+                loaded.Session = DeserializeSession(loaded, adapter,
+                    compatible && entry.SessionValid ? entry.Session : null, slot);
+            loaded.Module.SetStaticState(loaded.Settings as EverestModuleSettings,
+                loaded.SaveData as EverestModuleSaveData, loaded.Session as EverestModuleSession);
+        }
+        Log($"module-data=activated slot={slot} generation={snapshot?.Generation ?? 0} session={includeSession.ToString().ToLowerInvariant()}");
+    }
+
+    internal static void ResetModuleData(int slot, bool includeSession)
+    {
+        foreach (Loaded loaded in LoadedModules)
+        {
+            loaded.SaveData = NewSaveData(loaded, slot);
+            if (includeSession) loaded.Session = NewSession(loaded, slot);
+            loaded.Module.SetStaticState(loaded.Settings as EverestModuleSettings,
+                loaded.SaveData as EverestModuleSaveData, loaded.Session as EverestModuleSession);
+        }
+    }
+
+    internal static void ResetModuleSessions(int slot)
+    {
+        foreach (Loaded loaded in LoadedModules)
+        {
+            loaded.Session = NewSession(loaded, slot);
+            loaded.Module.SetStaticState(loaded.Settings as EverestModuleSettings,
+                loaded.SaveData as EverestModuleSaveData, loaded.Session as EverestModuleSession);
+        }
+        Log($"module-session=reset slot={slot} reason=new-vanilla-session");
+    }
+
+    private static EverestModuleSaveData DeserializeSaveData(Loaded loaded,
+        AppleEverestModuleDurabilityAdapter adapter, byte[] payload, int slot)
+    {
+        try
+        {
+            EverestModuleSaveData value = payload == null || adapter.DeserializeSaveData == null
+                ? NewSaveData(loaded, slot)
+                : adapter.DeserializeSaveData(payload, slot);
+            value ??= NewSaveData(loaded, slot);
+            if (value != null) value.Index = slot;
+            return value;
+        }
+        catch (Exception exception)
+        {
+            Log($"module-data=deserialize-failed module={loaded.Descriptor.Name} kind=savedata category={exception.GetType().Name} action=module-default");
+            return NewSaveData(loaded, slot);
+        }
+    }
+
+    private static EverestModuleSession DeserializeSession(Loaded loaded,
+        AppleEverestModuleDurabilityAdapter adapter, byte[] payload, int slot)
+    {
+        try
+        {
+            EverestModuleSession value = payload == null || adapter.DeserializeSession == null
+                ? NewSession(loaded, slot)
+                : adapter.DeserializeSession(payload, slot);
+            value ??= NewSession(loaded, slot);
+            if (value != null) value.Index = slot;
+            return value;
+        }
+        catch (Exception exception)
+        {
+            Log($"module-data=deserialize-failed module={loaded.Descriptor.Name} kind=session category={exception.GetType().Name} action=module-default");
+            return NewSession(loaded, slot);
+        }
+    }
+
+    private static EverestModuleSaveData NewSaveData(Loaded loaded, int slot)
+    {
+        EverestModuleSaveData value = loaded.Descriptor.SaveDataFactory?.Invoke();
+        if (value != null) value.Index = slot;
+        return value;
+    }
+
+    private static EverestModuleSession NewSession(Loaded loaded, int slot)
+    {
+        EverestModuleSession value = loaded.Descriptor.SessionFactory?.Invoke();
+        if (value != null) value.Index = slot;
+        return value;
     }
 
     public static void AttachCanaryBanner(global::Celeste.Level level, string source)

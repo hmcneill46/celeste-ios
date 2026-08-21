@@ -9,7 +9,7 @@ internal static class ProductPolicy
     public const long MaxSingleFileBytes = 64L * 1024 * 1024;
     public const int MaxPathDepth = 24;
     public const int MaxYamlBytes = 1024 * 1024;
-    public const string TransformerVersion = "apple-everest-static-v4";
+    public const string TransformerVersion = "apple-everest-static-v5";
     public const string CanonicalClass = "celeste-1.4.0.0-a";
 }
 
@@ -74,9 +74,26 @@ internal sealed class AppleStaticDeclaration
     public string[] ButtonBindingProperties { get; set; } = [];
     public string[] TrackedEntityTypes { get; set; } = [];
     public AppleCustomEntityFactory[] CustomEntityFactories { get; set; } = [];
+    public AppleOmittedCustomEntityFactory[] OmittedCustomEntityFactories { get; set; } = [];
     public AppleCustomBackdropFactory[] CustomBackdropFactories { get; set; } = [];
     public AppleSettingProperty[] SettingsProperties { get; set; } = [];
     public string[] OmittedSettingsProperties { get; set; } = [];
+    public AppleModuleDurabilityCompatibility Durability { get; set; } = new();
+}
+
+internal sealed class AppleModuleDurabilityCompatibility
+{
+    public string SaveDataClass { get; set; } = "NONE";
+    public string SessionClass { get; set; } = "NONE";
+    public string AsyncClass { get; set; } = "DEFAULT_ASYNC";
+    public string[] RejectedOverrides { get; set; } = [];
+}
+
+internal sealed class AppleOmittedCustomEntityFactory
+{
+    public string Id { get; set; } = "";
+    public string Type { get; set; } = "";
+    public string Reason { get; set; } = "";
 }
 
 internal sealed class AppleCustomEntityFactory

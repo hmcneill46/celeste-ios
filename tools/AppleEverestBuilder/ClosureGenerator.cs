@@ -103,12 +103,32 @@ internal static class ClosureGenerator
                 new { map = value.LogicalPath, kind = item.Kind, id = item.Id }))
             .OrderBy(value => value.map, StringComparer.Ordinal).ThenBy(value => value.kind, StringComparer.Ordinal)
             .ThenBy(value => value.id, StringComparer.Ordinal).ToArray();
+        Dictionary<string, AppleOmittedCustomEntityFactory> omittedMapFactories = codeModules
+            .SelectMany(item => item.Declaration.OmittedCustomEntityFactories)
+            .ToDictionary(value => "entity\0" + value.Id, StringComparer.Ordinal);
+        string[] unsupportedMapFactories = mapGameplayIds.Where(value =>
+                omittedMapFactories.ContainsKey(value.kind + "\0" + value.id))
+            .Select(value => value.map + ":" + value.kind + ":" + value.id)
+            .Distinct(StringComparer.Ordinal).OrderBy(value => value, StringComparer.Ordinal).ToArray();
+        if (unsupportedMapFactories.Length > 0)
+            throw new InvalidDataException("map references runtime-only custom entities without a static map factory: " +
+                                           string.Join(",", unsupportedMapFactories));
         var resolvedMapFactories = mapGameplayIds.Where(value => factoryOwners.ContainsKey(value.kind + "\0" + value.id))
             .Select(value => new { value.map, value.kind, value.id,
                 owner = factoryOwners[value.kind + "\0" + value.id].Owner })
             .ToArray();
 
-        File.WriteAllText(Path.Combine(managed, "GeneratedAppleEverestModuleRegistry.cs"), RegistrySource(profile, codeModules, ordered), new UTF8Encoding(false));
+        (string durabilitySource, IReadOnlyDictionary<string, GeneratedDurabilityAdapter> durabilityAdapters) =
+            DurabilityAdapterGenerator.Generate(codeModules);
+        string durabilityClosureSha256 = Hashing.BytesSha256(Encoding.UTF8.GetBytes(string.Join("\n",
+            codeModules.OrderBy(item => item.Mod.Metadata.Name, StringComparer.Ordinal).Select(item =>
+                item.Mod.Metadata.Name + "\t" + item.Mod.Metadata.Version + "\t" + item.Mod.Input.SourceSha256 + "\t" +
+                (durabilityAdapters.TryGetValue(item.Mod.Metadata.Name, out GeneratedDurabilityAdapter? adapter)
+                    ? adapter.Schema : "none")))));
+        File.WriteAllText(Path.Combine(managed, "GeneratedAppleEverestModuleDurabilityAdapters.cs"),
+            durabilitySource, new UTF8Encoding(false));
+        File.WriteAllText(Path.Combine(managed, "GeneratedAppleEverestModuleRegistry.cs"),
+            RegistrySource(profile, codeModules, ordered, durabilityAdapters, durabilityClosureSha256), new UTF8Encoding(false));
         File.WriteAllText(Path.Combine(managed, "GeneratedAppleEverestGameplayRegistry.cs"), GameplayRegistrySource(codeModules), new UTF8Encoding(false));
         File.WriteAllText(Path.Combine(managed, "GeneratedAppleEverestContentManifest.cs"), ContentManifestSource(ordered, stagedContent), new UTF8Encoding(false));
         File.WriteAllText(Path.Combine(managed, "GeneratedAppleEverestAotRoots.cs"), RootsSource(codeModules), new UTF8Encoding(false));
@@ -149,6 +169,13 @@ internal static class ClosureGenerator
             customEntityFactoryCount = customFactories.Length + CoreGameplayFactories.Count(value => value.Kind == "entity"),
             customBackdropFactoryCount = backdropFactories.Length,
             moduleSettingCount = codeModules.Sum(item => item.Declaration.SettingsProperties.Length),
+            moduleDurabilityAdapterCount = durabilityAdapters.Count,
+            moduleDurabilityFormat = "per-slot-aggregate-ab-v1",
+            moduleDurabilityClosureSha256 = durabilityClosureSha256,
+            moduleDurabilityLogicalMaximumBytes = 2 * 1024 * 1024,
+            moduleDurabilityTvOSLogicalMaximumBytes = 512 * 1024,
+            moduleDurabilityTvOSReplicaMaximumBytes = 126976,
+            moduleDurabilityTvOSTotalMaximumBytes = 6 * 126976,
             interpreter = false,
             selectedMods = ordered.Select((mod, index) => new
             {
@@ -160,6 +187,18 @@ internal static class ClosureGenerator
                 optionalDependencies = mod.Metadata.OptionalDependencies.Select(dep => new { dep.Name, dep.Version }).ToArray(),
                 conflicts = mod.Metadata.Conflicts.Select(dep => new { dep.Name, dep.Version }).ToArray(),
                 classification = mod.Classification.ToString(),
+                durability = codeModules.FirstOrDefault(item => ReferenceEquals(item.Mod, mod)) is var code && code.Mod != null
+                    ? new
+                    {
+                        code.Declaration.Durability.SaveDataClass,
+                        code.Declaration.Durability.SessionClass,
+                        code.Declaration.Durability.AsyncClass,
+                        code.Declaration.SaveDataType,
+                        code.Declaration.SessionType,
+                        schemaSha256 = durabilityAdapters.TryGetValue(mod.Metadata.Name, out GeneratedDurabilityAdapter? durability)
+                            ? durability.Schema : null
+                    }
+                    : null,
                 mechanisms = mod.Mechanisms,
                 managedFiles = mod.ManagedFiles,
                 contentFiles = mod.ContentFiles
@@ -195,6 +234,13 @@ internal static class ClosureGenerator
                 kind = factory.Kind,
                 type = factory.Type,
                 constructor = factory.Constructor,
+                owner = item.Mod.Metadata.Name
+            })).OrderBy(value => value.id, StringComparer.Ordinal).ToArray(),
+            omittedCustomEntityFactories = codeModules.SelectMany(item => item.Declaration.OmittedCustomEntityFactories.Select(factory => new
+            {
+                id = factory.Id,
+                type = factory.Type,
+                reason = factory.Reason,
                 owner = item.Mod.Metadata.Name
             })).OrderBy(value => value.id, StringComparer.Ordinal).ToArray(),
             coreGameplayFactories = CoreGameplayFactories.Select(factory => new
@@ -280,6 +326,8 @@ internal static class ClosureGenerator
         PatchNonPersistentSaveQuit(Path.Combine(managedRoot, "Celeste", "Level.cs"));
         PatchNonPersistentSave(Path.Combine(managedRoot, "Celeste", "UserIO.cs"));
         PatchNonPersistentOverworldReturn(Path.Combine(managedRoot, "Celeste", "OverworldLoader.cs"));
+        PatchPinnedEverestCompatibility(managedRoot);
+        PatchModuleDurability(managedRoot);
         PatchTracker(Path.Combine(managedRoot, "Monocle", "Tracker.cs"));
         PatchProject(Path.Combine(managedRoot, "Celeste.Modern.csproj"), closureRoot);
     }
@@ -295,8 +343,14 @@ internal static class ClosureGenerator
         "Level.LoadLevel:typed-custom-factory-registry:v1",
         "MapData.ParseBackdrop:typed-custom-backdrop-registry:v1",
         "ModuleSettings:typed-menu-and-platform-storage:v1",
+        "ModuleSaveData+Session:typed-yaml-aggregate-ab:v1",
+        "UserIO.SaveRoutine:coherent-module-snapshot:v1",
+        "SaveData.Start+StartSession:module-restore-boundaries:v1",
+        "SaveData.TryDelete:module-slot-delete:v1",
+        "OuiFileSelect:module-slot-preload:v1",
         "UserIO.SaveHandler:nonpersistent-mod-session-filter:v1",
         "OverworldLoader.Begin:nonpersistent-mod-session-restore:v1",
+        "PinnedEverestABI:DeathMarkers-reviewed-members:v1",
         "HookGen+RuntimeDetour.Hook:shared-data-only-backend:v1",
         "AppleApiSurface:exact-reviewed-external-members:v1",
         "Celeste.Modern.csproj:EVEREST_APPLE_STATIC_AOT:v2",
@@ -332,9 +386,15 @@ internal static class ClosureGenerator
         "\t\tBackdrop backdrop = null;\n\t\tif (child.Name.Equals(\"parallax\", StringComparison.OrdinalIgnoreCase))",
         "\t\tBackdrop backdrop = null;\n\t\tif (global::Celeste.Mod.GeneratedAppleEverestGameplayRegistry.TryCreateBackdrop(child.Name, child, out backdrop))\n\t\t{\n\t\t}\n\t\telse if (child.Name.Equals(\"parallax\", StringComparison.OrdinalIgnoreCase))");
 
-    private static void PatchStartup(string path) => ReplaceOnce(path,
-        "\t\t\tceleste = new Celeste();",
-        "\t\t\tglobal::Celeste.Mod.AppleEverestStaticRuntime.Startup();\n\t\t\tceleste = new Celeste();");
+    private static void PatchStartup(string path)
+    {
+        ReplaceOnce(path,
+            "\t\t\tceleste = new Celeste();",
+            "\t\t\tglobal::Celeste.Mod.AppleEverestStaticRuntime.Startup();\n\t\t\tceleste = new Celeste();");
+        ReplaceOnce(path,
+            "\t\tAudio.Update();\n\t\tbase.Update(gameTime);",
+            "\t\tAudio.Update();\n\t\tbase.Update(gameTime);\n\t\tglobal::Celeste.Mod.AppleEverestStaticRuntime.CompleteStartup();");
+    }
 
     private static void PatchContentReady(string path) => ReplaceOnce(path,
         "\t\tAreaData.Load();",
@@ -355,6 +415,71 @@ internal static class ClosureGenerator
     private static void PatchNonPersistentOverworldReturn(string path) => ReplaceOnce(path,
         "\t\tif (SaveData.Instance != null)\n\t\t{\n\t\t\tsession = SaveData.Instance.CurrentSession;\n\t\t}\n\t\tEntity entity = new Entity();",
         "\t\tif (SaveData.Instance != null)\n\t\t{\n\t\t\tsession = SaveData.Instance.CurrentSession;\n\t\t}\n\t\tStartMode = global::Celeste.Mod.AppleEverestStaticRuntime.CompleteNonPersistentModSession(StartMode);\n\t\tEntity entity = new Entity();");
+
+    private static void PatchPinnedEverestCompatibility(string managedRoot)
+    {
+        // Everest's desktop MonoMod output publicizes these two vanilla fields.
+        // DeathMarkers' ordinary precompiled DLL references that exact ABI.
+        // The changes live only in the closed Apple-Everest derived tree.
+        string deadBody = Path.Combine(managedRoot, "Celeste", "PlayerDeadBody.cs");
+        ReplaceOnce(deadBody, "\tprivate Vector2 bounce = Vector2.Zero;",
+            "\tpublic Vector2 bounce = Vector2.Zero;");
+        ReplaceOnce(deadBody, "\tprivate bool finished;", "\tpublic bool finished;");
+
+        // The pinned Everest AreaKey patch exposes SID. For the canonical
+        // Celeste class, derive its stable vanilla SID from the normal-mode
+        // content path without expanding into general LevelSet support.
+        string areaKey = Path.Combine(managedRoot, "Celeste", "AreaKey.cs");
+        ReplaceOnce(areaKey,
+            "\tpublic int ChapterIndex\n\t{",
+            "\tpublic string SID\n\t{\n\t\tget\n\t\t{\n\t\t\tif (AreaData.Areas == null || ID < 0 || ID >= AreaData.Areas.Count) return null;\n\t\t\tAreaData data = AreaData.Areas[ID];\n\t\t\tstring path = data?.Mode != null && data.Mode.Length > 0 ? data.Mode[0]?.Path : null;\n\t\t\treturn string.IsNullOrEmpty(path) ? data?.Name : \"Celeste/\" + path;\n\t\t}\n\t}\n\n\tpublic int ChapterIndex\n\t{");
+
+        // Desktop Everest publicizes Engine.scene. The accepted DLL contains a
+        // direct field reference produced by that publicized contract.
+        string engine = Path.Combine(managedRoot, "Monocle", "Engine.cs");
+        ReplaceOnce(engine, "\tprivate Scene scene;", "\tpublic Scene scene;");
+    }
+
+    private static void PatchModuleDurability(string managedRoot)
+    {
+        string userIo = Path.Combine(managedRoot, "Celeste", "UserIO.cs");
+        ReplaceOnce(userIo,
+            "\tprivate static byte[] savingSettingsData;",
+            "\tprivate static byte[] savingSettingsData;\n\n\tprivate static bool appleEverestSaveQueued;\n\n\tprivate static bool appleEverestQueuedFile;\n\n\tprivate static bool appleEverestQueuedSettings;\n\n\tpublic static bool SaveQueued => appleEverestSaveQueued;");
+        ReplaceOnce(userIo,
+            "\tpublic static void SaveHandler(bool file, bool settings)\n\t{\n\t\tfile = global::Celeste.Mod.AppleEverestStaticRuntime.FilterVanillaFileSave(file);\n\t\tif (!file && !settings)\n\t\t{\n\t\t\treturn;\n\t\t}\n\t\tif (!Saving)",
+            "\tpublic static void SaveHandler(bool file, bool settings)\n\t{\n\t\tfile = global::Celeste.Mod.AppleEverestStaticRuntime.FilterVanillaFileSave(file);\n\t\tif (!file && !settings)\n\t\t{\n\t\t\treturn;\n\t\t}\n\t\tif (Saving)\n\t\t{\n\t\t\tappleEverestSaveQueued = true;\n\t\t\tappleEverestQueuedFile |= file;\n\t\t\tappleEverestQueuedSettings |= settings;\n\t\t\treturn;\n\t\t}\n\t\tif (!Saving)");
+        ReplaceOnce(userIo,
+            "\t\t\t\tsavingFileData = Serialize(SaveData.Instance);",
+            "\t\t\t\tsavingFileData = Serialize(SaveData.Instance);\n\t\t\t\tglobal::Celeste.Mod.AppleEverestModulePersistence.CaptureSave(SaveData.Instance.FileSlot, savingFileData);");
+        ReplaceOnce(userIo,
+            "\t\tSaving = false;\n\t\tCeleste.SaveRoutine = null;",
+            "\t\tSaving = false;\n\t\tCeleste.SaveRoutine = null;\n\t\tif (appleEverestSaveQueued)\n\t\t{\n\t\t\tbool nextFile = appleEverestQueuedFile;\n\t\t\tbool nextSettings = appleEverestQueuedSettings;\n\t\t\tappleEverestSaveQueued = false;\n\t\t\tappleEverestQueuedFile = false;\n\t\t\tappleEverestQueuedSettings = false;\n\t\t\tSaveHandler(nextFile, nextSettings);\n\t\t}");
+        ReplaceOnce(userIo,
+            "\t\t\t\tSavingResult &= Save<SaveData>(SaveData.GetFilename(), savingFileData);",
+            "\t\t\t\tSavingResult &= Save<SaveData>(SaveData.GetFilename(), savingFileData);\n\t\t\t\tif (SavingResult) SavingResult &= global::Celeste.Mod.AppleEverestModulePersistence.CommitCapturedSave();\n\t\t\t\telse global::Celeste.Mod.AppleEverestModulePersistence.DiscardCapturedSave();");
+
+        string saveData = Path.Combine(managedRoot, "Celeste", "SaveData.cs");
+        ReplaceOnce(saveData,
+            "\t\tInstance.FileSlot = slot;\n\t\tInstance.AfterInitialize();",
+            "\t\tInstance.FileSlot = slot;\n\t\tInstance.AfterInitialize();\n\t\tglobal::Celeste.Mod.AppleEverestModulePersistence.ActivateSlot(slot, UserIO.Serialize(Instance));");
+        ReplaceOnce(saveData,
+            "\tpublic static bool TryDelete(int slot)\n\t{\n\t\treturn UserIO.Delete(GetFilename(slot));\n\t}",
+            "\tpublic static bool TryDelete(int slot)\n\t{\n\t\tbool vanilla = UserIO.Delete(GetFilename(slot));\n\t\treturn vanilla && global::Celeste.Mod.AppleEverestModulePersistence.DeleteSlot(slot);\n\t}");
+        ReplaceOnce(saveData,
+            "\tpublic void StartSession(Session session)\n\t{\n\t\tLastArea = session.Area;\n\t\tCurrentSession = session;",
+            "\tpublic void StartSession(Session session)\n\t{\n\t\tSession appleEverestPreviousSession = CurrentSession;\n\t\tLastArea = session.Area;\n\t\tCurrentSession = session;\n\t\tif (!object.ReferenceEquals(appleEverestPreviousSession, session))\n\t\t\tglobal::Celeste.Mod.AppleEverestModulePersistence.ResetSessionForNewVanillaSession(FileSlot);");
+
+        string fileSelect = Path.Combine(managedRoot, "Celeste", "OuiFileSelect.cs");
+        ReplaceOnce(fileSelect,
+            "\t\t\t\t\t\tsaveData.AfterInitialize();\n\t\t\t\t\t\touiFileSelectSlot = new OuiFileSelectSlot(i, this, saveData);",
+            "\t\t\t\t\t\tsaveData.AfterInitialize();\n\t\t\t\t\t\tglobal::Celeste.Mod.AppleEverestModulePersistence.PreloadSlot(i, UserIO.Serialize(saveData));\n\t\t\t\t\t\touiFileSelectSlot = new OuiFileSelectSlot(i, this, saveData);");
+
+        string fileSelectSlot = Path.Combine(managedRoot, "Celeste", "OuiFileSelectSlot.cs");
+        ReplaceOnce(fileSelectSlot,
+            "\tpublic void CreateButtons()\n\t{\n\t\tbuttons.Clear();",
+            "\tpublic void CreateButtons()\n\t{\n\t\tif (SaveData != null) global::Celeste.Mod.AppleEverestModulePersistence.ActivateSaveData(FileSlot, UserIO.Serialize(SaveData));\n\t\tbuttons.Clear();");
+    }
 
     private static void PatchTracker(string path) => ReplaceOnce(path,
         "\t\t}\n\t}\n\n\tprivate static List<Type> GetSubclasses(Type type)",
@@ -395,13 +520,16 @@ internal static class ClosureGenerator
 
     private static string RegistrySource(AppleEverestProfile profile,
         IReadOnlyList<(ResolvedMod Mod, AppleStaticDeclaration Declaration)> modules,
-        IReadOnlyList<ResolvedMod> resolved)
+        IReadOnlyList<ResolvedMod> resolved,
+        IReadOnlyDictionary<string, GeneratedDurabilityAdapter> durabilityAdapters,
+        string durabilityClosureSha256)
     {
         StringBuilder result = new();
         result.AppendLine("using System;").AppendLine("namespace Celeste.Mod;").AppendLine()
             .AppendLine("internal static class GeneratedAppleEverestModuleRegistry")
             .AppendLine("{")
             .AppendLine($"    internal const string Profile = \"{Escape(profile.Profile)}\";")
+            .AppendLine($"    internal const string DurabilityClosureSha256 = \"{Escape(durabilityClosureSha256)}\";")
             .AppendLine("    internal static readonly AppleEverestModuleDescriptor[] Modules =")
             .AppendLine("    {");
         foreach ((ResolvedMod mod, AppleStaticDeclaration declaration) in modules)
@@ -415,7 +543,10 @@ internal static class ClosureGenerator
                 .Append("global::").Append(declaration.ModuleType).Append("(), ")
                 .Append(SettingsFactory(declaration)).Append(", ")
                 .Append(Factory(declaration.SaveDataType)).Append(", ")
-                .Append(Factory(declaration.SessionType)).AppendLine("),");
+                .Append(Factory(declaration.SessionType)).Append(", ")
+                .Append(durabilityAdapters.TryGetValue(mod.Metadata.Name, out GeneratedDurabilityAdapter? adapter)
+                    ? "GeneratedAppleEverestModuleDurabilityAdapters." + adapter.Field : "null")
+                .AppendLine("),");
         }
         result.AppendLine("    };")
             .AppendLine("    internal static readonly AppleEverestSettingDescriptor[] Settings =")
@@ -666,6 +797,27 @@ internal static class ClosureGenerator
                 kind = "Enum";
                 getter = $"static () => (int){accessor}";
                 setter = $"static value => {accessor} = (global::{property.Type})value";
+                if (module == "DeathMarkers" && property.Name == "Mode" &&
+                    declaration.SettingsType == "Celeste.Mod.DeathMarkers.DeathMarkersSettings" &&
+                    property.Type == "Celeste.Mod.DeathMarkers.DeathMarkersSettings.SaveMode")
+                {
+                    // DeathMarkers 2.0.0 indexes its per-area SaveData dictionary while changing
+                    // Mode in a live Level, before the module has necessarily recorded a death in
+                    // that area. Preserve the ordinary release binary and its transfer semantics,
+                    // but establish the empty per-area bucket its setter requires. This exact,
+                    // pinned compatibility guard is generated only for the reviewed property.
+                    setter = "static value => { " +
+                        "global::Celeste.Mod.DeathMarkers.DeathMarkersSettings settings = " +
+                        "global::Celeste.Mod.AppleEverestStaticRuntime.GetSettings<global::Celeste.Mod.DeathMarkers.DeathMarkersSettings>(\"DeathMarkers\"); " +
+                        "global::Celeste.Mod.DeathMarkers.DeathMarkersSettings.SaveMode next = " +
+                        "(global::Celeste.Mod.DeathMarkers.DeathMarkersSettings.SaveMode)value; " +
+                        "if (settings.Mode != next && global::Celeste.Celeste.Instance?.scene is global::Celeste.Level level) { " +
+                        "string sid = level.Session.Area.SID; " +
+                        "global::System.Collections.Generic.Dictionary<string, global::System.Collections.Generic.List<global::Celeste.Mod.DeathMarkers.DeathMarkersSession.Death>> deaths = " +
+                        "global::Celeste.Mod.DeathMarkers.DeathMarkersModule.SaveData.Deaths; " +
+                        "if (!deaths.ContainsKey(sid)) deaths.Add(sid, new global::System.Collections.Generic.List<global::Celeste.Mod.DeathMarkers.DeathMarkersSession.Death>()); " +
+                        "} settings.Mode = next; }";
+                }
                 names = "new[] { " + string.Join(", ", property.EnumNames.Select(value => $"\"{Escape(value)}\"")) + " }";
                 values = "new[] { " + string.Join(", ", property.EnumValues) + " }";
                 minimum = property.EnumValues.Min(); maximum = property.EnumValues.Max(); step = 1;
@@ -704,6 +856,10 @@ internal static class ClosureGenerator
                 factory.Id.Length is < 1 or > 192 || !TypeName(factory.Type) || factory.Kind is not ("entity" or "trigger") ||
                 factory.Constructor is not ("entity-data-vector2" or "entity-data-vector2-entity-id" or "entity-id-entity-data-vector2")))
             throw new InvalidDataException($"invalid custom entity factory for {mod}");
+        if (declaration.OmittedCustomEntityFactories.Length > 512 || declaration.OmittedCustomEntityFactories.Any(factory =>
+                factory.Id.Length is < 1 or > 192 || !TypeName(factory.Type) ||
+                factory.Reason != "runtime-only-constructor"))
+            throw new InvalidDataException($"invalid omitted custom entity factory for {mod}");
         if (declaration.SettingsProperties.Length > 128 || declaration.SettingsProperties.Any(property =>
                 property.Name.Length is < 1 or > 128 || property.Label.Length is < 1 or > 192 ||
                 property.Kind is not ("bool" or "enum" or "int") ||

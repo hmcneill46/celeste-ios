@@ -1,7 +1,7 @@
 # Apple Everest real-mod compatibility
 
 This is a technical test matrix for the experimental shared Apple static-AOT
-builder. It lists only exact public inputs inspected through Stage 25E. It is not
+builder. It lists only exact public inputs inspected through Stage 25F-A. It is not
 a promise that similarly named, newer, older, or dependent mods work. The
 normal iOS and tvOS products do not contain these mods.
 
@@ -24,9 +24,10 @@ Status vocabulary:
 | [Lag Pauser](https://gamebanana.com/mods/591485) | 1.3.0; ZIP `32dac84d…9d10`; source `ec217fd9…e7` | `On.Monocle.Engine.Update` + direct static `Hook` on `Player.orig_Die` | **SUPPORTED_WITH_STATIC_TRANSFORM** | iOS, iPadOS, tvOS | EverestCore ≥ 1.4673.0 | Ordinary DLL, no source required. The Mac resolves its fixed reflection pattern into one static plan and exposes only its three reviewed Everest-patched `Level` API members. Device behavior uses the shared typed chain and explicit `Dispose` lifetime; there is no runtime target reflection, publicizer, or patching. No explicit redistribution license was located; bytes remain ignored. |
 | [Cpop Helper](https://gamebanana.com/mods/434438) | 1.3.0; ZIP `7a807a8f…b63`; DLL `235d767a…5c9`; source `f8b70384…cb2` | Precompiled helper; four custom entities and three custom triggers | **SUPPORTED_WITH_STATIC_TRANSFORM** | iOS, iPadOS, tvOS | Everest ≥ 1.3471.0 | Ordinary DLL, no source required. Static metadata discovery emits seven direct factories. The README grants reuse with credit and at own risk but no SPDX license file was found; the ZIP, DLL, content, and source remain ignored and are not redistributed. |
 | QuizSample | 0.0.1; ZIP `5cb8351b…b3e` | Content-only map depending on Cpop Helper ≥ 1.0.0 | **SUPPORTED** | iOS, iPadOS, tvOS | Everest ≥ 1.3761.0; Cpop Helper ≥ 1.0.0 | Real four-room quiz map. Normal map loading instantiates `quizController` and `quizAnswerTrigger`; wrong answers kill/respawn and the correct trigger produces the configured outcome. Its Text/Image/HighResImage number styles intentionally differ. The release omits four dialog keys used by its question labels, so those labels use Celeste's `XXX` missing-dialog fallback; answer values intentionally reroll after death. No source repository or explicit redistribution license was located, so its bytes remain ignored and are not redistributed. |
+| [DeathMarkers](https://gamebanana.com/mods/53649) | 2.0.0; ZIP `94ad7d14…e6fc7`; DLL `620e5b63…ff8`; source `24c9b821…965` | Precompiled module + `Player.Die` HookGen target + default YAML SaveData/Session | **SUPPORTED_WITH_STATIC_TRANSFORM** | iOS, iPadOS, tvOS | EverestCore ≥ 1.5577.0 | MIT. Ordinary DLL is authoritative and source is not needed. Stage 25F-A proves per-slot persistent `Dictionary<string,List<Death>>`, continuation `List<Death>`, nested record/`Vector2` serialization, cold restore, new-session reset, deletion/replacement isolation, and bounded A/B recovery. |
 
-The selected closure uses Everest stable 1.6458.0 and its one shared hash is
-`d685d6277588b822831d911ff4f674036068d215dd7027bf6cfca5f8f43cbe82`.
+The Stage 25F-A selected closure uses Everest stable 1.6458.0 and its one shared
+hash is `b85472c06b68757bc02de8a33171890df15015924178024c72da48556d8a3a01`.
 
 The Cpop/QuizSample pair is the first supported real helper ecosystem. Its
 declared dependency resolves before AOT, and omitting Cpop or supplying a
@@ -36,8 +37,52 @@ activation is used. The same closure also exposes bounded Mod Options for real
 Feather Maddy and Lag Pauser settings. Supported automatic shapes are boolean,
 enum, and explicitly ranged integer. Their shared logical settings format is
 stored privately in Application Support on iOS/iPadOS and under
-`CelesteAppleEverest.Settings.v1` on tvOS. This is module-settings persistence,
-not durable module SaveData.
+`CelesteAppleEverest.Settings.v1` on tvOS. Module settings remain global and
+separate from the numbered-slot durability described below.
+
+## Bounded module SaveData and Session
+
+Stage 25F-A supports only the exact default async YAML class selected by the
+Mac analyser. SaveData and Session root types, constructors, property graphs,
+typed codecs, trimmer roots, and AOT roots are generated before compilation;
+there is no runtime assembly/type scan. Current supported property shapes are
+primitive and enum values, nullable values, arrays, lists, string-keyed
+dictionaries, nested classes/records, and `Microsoft.Xna.Framework.Vector2`.
+
+DeathMarkers 2.0.0 is the positive real distributed fixture. Its SaveData is
+`Dictionary<string,List<DeathMarkersSession.Death>> Deaths`; its Session is
+`List<Death>`, and each nested record contains `Room`, `Position`, and `Amount`.
+Both use pinned Everest's default YAML behavior with `SaveDataAsync=true` and
+no custom/legacy override. Deterministic desktop interoperability verifies
+pinned YamlDotNet can read Apple-emitted logical bytes and the bounded Apple
+reader can read pinned desktop YAML with equivalent typed state.
+
+The distributed Mode setter expects a per-area SaveData bucket to exist when it
+is changed inside a live Level. The static adapter establishes that empty bucket
+for the exact reviewed DeathMarkers 2.0.0 property before calling the ordinary
+setter; the release DLL and its transfer semantics remain authoritative. This
+is a pinned compatibility guard, not a general mod-specific runtime patch lane.
+
+For each numbered slot, one versioned aggregate binds module payloads to the
+exact logical Celeste base-save SHA-256 and static closure. iOS uses private
+Application Support A/B snapshots. tvOS uses the separate bounded compressed
+keys `CelesteAppleEverest.Slot<N>.State.{A,B}.v1`. Previous-good data is only
+selected when it matches the exact base save; otherwise the affected module
+returns to its normal default. Base-save replacement, deletion, malformed
+data, and closure/schema changes therefore cannot silently inherit unrelated
+module state.
+
+The initial bounds are 512 KiB per module SaveData/Session payload and 2 MiB
+per logical iOS slot aggregate. tvOS additionally limits each expanded replica
+to 512 KiB, each compressed replica to 126,976 bytes, and all six numbered-slot
+A/B replicas to 761,856 bytes. The selected fixture is tiny relative to these
+bounds. Module settings keep their independent 16 KiB global document.
+
+Binary SaveData/Session, custom `Serialize`/`Deserialize`, custom `Read`/`Write`,
+legacy synchronous save APIs, and unsupported dynamic graphs are explicitly
+deferred. The static map launcher still uses nonpersistent debug slot `-1`;
+this work does not enable general custom-map Save and Quit or Everest LevelSet
+progression.
 
 Precompiled Everest map binaries are validated as Celeste map containers and
 their package header is normalized to the exact static mount path. This is the
@@ -70,7 +115,9 @@ from becoming an on-device failure or JIT fallback.
 | [Extended Variant Mode](https://github.com/maddie480/ExtendedVariantMode) | source audit `fa9a25c3…cc3` | **UNSUPPORTED_LUA** | Real NLua dependency; Lua is not present in the device product. |
 | [SmoothCeleste](https://github.com/bybrooklyn/SmoothCeleste) | source audit `b4169752…f5a` | **UNSUPPORTED_NATIVE** | Runtime native-library loading and platform P/Invoke are outside the fixed native closure. |
 
-The full Stage 25E candidate audit, exact selected SHA-256 values, source pins,
+The full Stage 25F-A ten-mod durability audit is in
+[`apple-everest/module-durability-audit-stage25f.json`](../apple-everest/module-durability-audit-stage25f.json).
+The earlier Stage 25E candidate audit, exact selected SHA-256 values, source pins,
 and license findings are in
 [`apple-everest/helper-ecosystem-compatibility-stage25e.json`](../apple-everest/helper-ecosystem-compatibility-stage25e.json).
 Earlier managed-detour findings remain in
@@ -83,7 +130,7 @@ Unknown `On.*`, any unresolved `IL.*`, dynamic/ambiguous direct Hook,
 `ILHook`, unsupported RuntimeDetour members/configuration,
 NativeDetour, native/P/Invoke additions, Lua, dynamic assembly loading,
 Reflection.Emit, desktop process/file-watcher behavior, unregistered helper
-ecosystems, general ModInterop, settings outside the bounded shapes, durable
-module SaveData, and custom mod audio all
+ecosystems, general ModInterop, settings outside the bounded shapes, module
+SaveData/Session outside the bounded default-YAML class, and custom mod audio all
 fail closed or remain explicitly deferred. Strawberry Jam has not been
 downloaded, built, or tested.

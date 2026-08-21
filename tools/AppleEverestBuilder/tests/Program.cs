@@ -63,6 +63,8 @@ ResolvedMod Mod(string name, string version = "1.0.0", IEnumerable<(string Name,
 
 try
 {
+    passed += ModuleDurabilityTests.Run(repository, temporary);
+
     EverestVersion required = EverestVersion.Parse("1.2.3.4");
     Pass(EverestVersion.Satisfies(required, EverestVersion.Parse("1.2.3.4")), "exact version");
     Pass(EverestVersion.Satisfies(required, EverestVersion.Parse("1.3.0")), "newer minor");
@@ -483,8 +485,12 @@ try
     string invalidGameplayRoot = GameplayFixture("InvalidGameplay", invalidConstructor: true);
     ModInput invalidGameplayInput = SafeModIngestor.Ingest(invalidGameplayRoot,
         NewDirectory("stage-invalid-gameplay"), 0);
-    Throws(() => CompatibilityAnalyzer.Analyze(invalidGameplayInput, invalidGameplayInput.Metadata[0]),
-        "supported public constructor", "unsupported entity factory rejected before AOT");
+    ResolvedMod invalidGameplayMod = CompatibilityAnalyzer.Analyze(
+        invalidGameplayInput, invalidGameplayInput.Metadata[0]);
+    Pass(invalidGameplayMod.Declaration?.OmittedCustomEntityFactories.Length == 2 &&
+         invalidGameplayMod.Declaration.OmittedCustomEntityFactories.All(item =>
+             item.Reason == "runtime-only-constructor"),
+        "runtime-created entity without a map factory is explicitly omitted before AOT");
     string duplicateGameplayRoot = GameplayFixture("DuplicateGameplay", duplicateId: true);
     ModInput duplicateGameplayInput = SafeModIngestor.Ingest(duplicateGameplayRoot,
         NewDirectory("stage-duplicate-gameplay"), 0);
@@ -866,8 +872,10 @@ try
     Pass(runtimeApi.Contains("public static class Content", StringComparison.Ordinal) &&
          runtimeApi.Contains("public static readonly List<ModContent> Mods", StringComparison.Ordinal) &&
          runtimeApi.Contains("public EverestModuleMetadata Mod;", StringComparison.Ordinal) &&
-         runtimeApi.Contains("protected EverestModuleSettings _Settings { get; private set; }", StringComparison.Ordinal) &&
-         runtimeApi.Contains("protected EverestModuleSession _Session { get; private set; }", StringComparison.Ordinal) &&
+         runtimeApi.Contains("public virtual EverestModuleSettings _Settings { get; set; }", StringComparison.Ordinal) &&
+         runtimeApi.Contains("public virtual EverestModuleSaveData _SaveData { get; set; }", StringComparison.Ordinal) &&
+         runtimeApi.Contains("public virtual EverestModuleSession _Session { get; set; }", StringComparison.Ordinal) &&
+         runtimeApi.Contains("public virtual bool SaveDataAsync { get; set; } = true;", StringComparison.Ordinal) &&
          runtimeApi.Contains("public static void SetLogLevel(string tag, LogLevel level)", StringComparison.Ordinal) &&
          runtimeApi.Contains("public static void Log(string tag, string value)", StringComparison.Ordinal),
         "binary-compatible Everest content and module-state facades preserve compiled accessor shapes");
@@ -904,7 +912,7 @@ try
     Pass(RuntimeClosureScanner.Inspect(System.Reflection.Assembly.GetExecutingAssembly().Location).Count == 0,
         "linked-runtime scanner accepts the deterministic test closure");
 
-    Pass(ProductPolicy.TransformerVersion == "apple-everest-static-v4", "real-ZIP transformer version");
+    Pass(ProductPolicy.TransformerVersion == "apple-everest-static-v5", "real-ZIP transformer version");
     Pass(File.Exists(Path.Combine(repository, "tools/AppleEverestBuilder/AssemblyFreezer.cs")),
         "binary-first assembly freezer exists");
     string models = File.ReadAllText(Path.Combine(repository, "tools/AppleEverestBuilder/Models.cs"));

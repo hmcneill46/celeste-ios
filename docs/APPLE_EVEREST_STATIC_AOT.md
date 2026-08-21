@@ -271,9 +271,88 @@ On tvOS the same logical data uses the separate bounded app-private
 `CelesteAppleEverest.Settings.v1` `NSUserDefaults` key. It is outside vanilla
 Settings, SaveData, compressed tvOS save generations, and Save Manager.
 Malformed, truncated, wrong-type, duplicate, or oversized data falls back to
-normal module defaults without changing vanilla state. `EverestModuleSaveData`
-remains intentionally non-durable; module session objects last only for the
-current process.
+normal module defaults without changing vanilla state.
+
+## Module settings, SaveData, and Session
+
+Stage 25F-A adds a separate, deliberately bounded compatibility class for
+pinned Everest's default YAML `EverestModuleSaveData` and
+`EverestModuleSession`. These three concepts remain distinct:
+
+- module **Settings** are global app preferences in the existing 16 KiB
+  `ModuleSettings.v1` store;
+- module **SaveData** belongs to one numbered Celeste slot;
+- module **Session** belongs to that slot's current continuation and is reset
+  when Celeste starts a genuinely new `Session`.
+
+The Mac analyser finds the two declared root types in the precompiled mod DLL,
+walks their closed property graph, validates constructors and writable YAML
+properties, and emits direct typed factories plus serializer methods. The
+current supported graph includes primitives, enums, nullable values, arrays,
+`List<T>`, string-keyed `Dictionary<string,T>`, nested classes/records, and
+FNA `Vector2`. It rejects external/dynamic object types, excessive depth or
+type count, custom serializers, custom IO, legacy synchronous save methods,
+and binary SaveData before AOT. The generated reader accepts ordinary bounded
+block YAML from pinned desktop YamlDotNet and deterministic JSON flow YAML; it
+rejects runtime type tags, anchors, aliases, directives, duplicate keys,
+oversized values, and unknown construction paths.
+
+During a real Celeste save request, module objects are serialized immediately
+beside the already-serialized immutable base-save bytes. Repeated requests
+during an active save coalesce into one bounded latest-state follow-up. The
+shared logical transaction is:
+
+```text
+                    module objects
+                         |
+                   save snapshot
+                         |
+                shared serialized state
+                         |
+             base-save SHA-256 match
+                    /          \
+                  iOS          tvOS
+       Application Support     bounded UserDefaults
+          A/B snapshots        compressed A/B snapshots
+                    \          /
+                    load/recovery
+                         |
+                typed module restore
+```
+
+Each numbered-slot aggregate records its schema, slot, generation, exact base
+save SHA-256, static durability-closure identity, module ID/version/type-graph
+schema, and separate SaveData/Session payload hashes. The highest valid A/B
+generation matching both the exact base save and closure is selected. This
+provides coherent primary/previous-good recovery across the unavoidable
+base-save/sidecar crash window. If neither replica matches, module objects use
+fresh defaults; stale state is never attached to an imported or recreated
+slot. A valid aggregate may isolate one bad module payload, but a broken
+aggregate checksum or structure fails closed as a whole.
+
+iOS/iPadOS stores private replicas below Application Support at
+`Celeste/Everest/Slots/<N>/module-state-v1.{a,b}.snapshot` using atomic
+Foundation writes. The logical aggregate is bounded to 2 MiB and every module
+SaveData or Session payload to 512 KiB. tvOS stores the same logical model in
+the separate keys `CelesteAppleEverest.Slot<N>.State.{A,B}.v1`, compressed with
+the existing managed Deflate strategy. tvOS admits at most 512 KiB expanded
+and 126,976 bytes per compressed replica, with six replicas (A/B for slots
+0–2) capped at 761,856 bytes total. An oversized or unverifiable candidate is
+rejected before it can replace previous-good data.
+
+DeathMarkers 2.0.0 is the first real positive fixture. Its ordinary public
+precompiled DLL uses default async YAML for both a persistent
+`Dictionary<string,List<Death>>` and current-session `List<Death>`, with nested
+`Room`, `Vector2 Position`, and `Amount` state. The logical YAML boundary
+round-trips semantically with pinned desktop YamlDotNet without a source build
+or runtime reflection.
+
+This does not make arbitrary module persistence compatible. Binary module
+data, custom serializer overrides, custom IO, legacy synchronous APIs, and
+dynamic property graphs remain deferred. The Cpop/QuizSample map launcher also
+remains an isolated slot `-1` debug lane: it is deliberately nonpersistent and
+Save and Quit remains suppressed. General Everest LevelSet/custom-map
+progression is separate future work.
 
 The deferred IL rung uses the ordinary GoldenTrainer 1.5.4 release. Its DLL
 contains `IL.Celeste.SummitCheckpoint.Update` plus a direct `ILHook` on
@@ -311,8 +390,8 @@ This foundation does **not** promise arbitrary Everest mods, runtime mod
 installation, runtime enable/disable of code outside the prebuilt registry,
 IL hooks on-device, arbitrary direct detours, Lua, native mods, content hot reload,
 Everest networking/updating, dependency downloading, general mod
-settings shapes, durable `EverestModuleSaveData`, the complete Everest
-virtual-content API, or
+settings shapes, module SaveData/Session outside the exact bounded default-YAML
+class, the complete Everest virtual-content API, or
 desktop parity. Only
 exactly analysed packages and explicitly registered mechanisms can enter the
 closure. Extending support requires a new deterministic transform plus desktop

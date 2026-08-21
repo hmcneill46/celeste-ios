@@ -29,6 +29,10 @@ internal static class AssemblyFreezer
         if (!module.Methods.Any(method => method.IsConstructor && !method.IsStatic && method.Parameters.Count == 0))
             throw new InvalidDataException($"{mod} module has no parameterless constructor");
         TypeDefinition? settingsDefinition = OverrideTypeDefinition(module, "get_SettingsType");
+        TypeDefinition? saveDataDefinition = OverrideTypeDefinition(module, "get_SaveDataType");
+        TypeDefinition? sessionDefinition = OverrideTypeDefinition(module, "get_SessionType");
+        AppleModuleDurabilityCompatibility durability = InspectDurability(module,
+            saveDataDefinition, sessionDefinition, mod);
         TypeDefinition[] customTypes = assembly.MainModule.Types.SelectMany(AllTypes)
             .Where(type => type.CustomAttributes.Any(attribute => attribute.AttributeType.FullName == "Celeste.Mod.Entities.CustomEntityAttribute"))
             .OrderBy(type => type.FullName, StringComparer.Ordinal)
@@ -38,6 +42,8 @@ internal static class AssemblyFreezer
             .OrderBy(type => type.FullName, StringComparer.Ordinal)
             .ToArray();
         (AppleSettingProperty[] settings, string[] omittedSettings) = InspectSettings(settingsDefinition);
+        (AppleCustomEntityFactory[] customEntityFactories,
+            AppleOmittedCustomEntityFactory[] omittedCustomEntityFactories) = InspectCustomEntities(customTypes);
         AppleStaticDeclaration declaration = new()
         {
             SchemaVersion = 1,
@@ -50,11 +56,13 @@ internal static class AssemblyFreezer
                                    property.SetMethod is { IsPublic: true })
                 .Select(property => property.Name).OrderBy(value => value, StringComparer.Ordinal).ToArray() ?? [],
             TrackedEntityTypes = customTypes.Select(type => type.FullName.Replace('/', '.')).ToArray(),
-            CustomEntityFactories = customTypes.SelectMany(CustomFactories).OrderBy(value => value.Id, StringComparer.Ordinal).ToArray(),
+            CustomEntityFactories = customEntityFactories,
+            OmittedCustomEntityFactories = omittedCustomEntityFactories,
             CustomBackdropFactories = backdropTypes.SelectMany(CustomBackdropFactories)
                 .OrderBy(value => value.Id, StringComparer.Ordinal).ToArray(),
             SettingsProperties = settings,
-            OmittedSettingsProperties = omittedSettings
+            OmittedSettingsProperties = omittedSettings,
+            Durability = durability
         };
         Validate(declaration, mod);
         return declaration;
@@ -136,7 +144,7 @@ internal static class AssemblyFreezer
 
     private static string? OverrideType(TypeDefinition module, string getter)
     {
-        MethodDefinition? method = module.Methods.SingleOrDefault(candidate => candidate.Name == getter && candidate.HasBody);
+        MethodDefinition? method = FindModuleMethod(module, getter);
         if (method == null) return null;
         TypeReference? result = method.Body.Instructions.Select(instruction => instruction.Operand).OfType<TypeReference>().LastOrDefault();
         return result?.FullName.Replace('/', '.');
@@ -144,40 +152,140 @@ internal static class AssemblyFreezer
 
     private static TypeDefinition? OverrideTypeDefinition(TypeDefinition module, string getter)
     {
-        MethodDefinition? method = module.Methods.SingleOrDefault(candidate => candidate.Name == getter && candidate.HasBody);
+        MethodDefinition? method = FindModuleMethod(module, getter);
         TypeReference? result = method?.Body.Instructions.Select(instruction => instruction.Operand)
             .OfType<TypeReference>().LastOrDefault();
         try { return result?.Resolve(); }
         catch (AssemblyResolutionException) { return null; }
     }
 
-    private static IEnumerable<AppleCustomEntityFactory> CustomFactories(TypeDefinition type)
+    private static AppleModuleDurabilityCompatibility InspectDurability(TypeDefinition module,
+        TypeDefinition? saveData, TypeDefinition? session, string mod)
     {
-        // A custom entity can derive from a vanilla Celeste entity (for
-        // example Glider) whose assembly is intentionally not loaded by this
-        // host-only Cecil pass. Trigger is identifiable from its reviewed
-        // base chain; every other attributed type is emitted as an Entity and
-        // the normal shared managed compile proves the assignability.
-        string kind = Inherits(type, "Celeste.Trigger") ? "trigger" : "entity";
-        if (!PublicType(type) || type.IsAbstract)
-            throw new InvalidDataException($"custom entity factory type must be public and concrete: {type.FullName}");
-        string constructor = ConstructorKind(type);
-        foreach (CustomAttribute attribute in type.CustomAttributes.Where(value =>
-                     value.AttributeType.FullName == "Celeste.Mod.Entities.CustomEntityAttribute"))
+        string[] customSerializers =
         {
-            foreach (string id in AttributeStrings(attribute))
+            "SerializeSaveData", "DeserializeSaveData", "SerializeSession", "DeserializeSession"
+        };
+        string[] customIo = { "ReadSaveData", "WriteSaveData", "ReadSession", "WriteSession" };
+        string[] legacy =
+        {
+            "LoadSaveData", "SaveSaveData", "DeleteSaveData", "LoadSession", "SaveSession", "DeleteSession"
+        };
+        TypeDefinition[] moduleHierarchy = ModuleHierarchy(module).ToArray();
+        HashSet<string> declared = moduleHierarchy.SelectMany(type => type.Methods)
+            .Select(method => method.Name).ToHashSet(StringComparer.Ordinal);
+        List<string> rejected = customSerializers.Concat(customIo).Concat(legacy)
+            .Where(declared.Contains).OrderBy(value => value, StringComparer.Ordinal).ToList();
+        bool asyncCustomized = declared.Contains("get_SaveDataAsync") || declared.Contains("set_SaveDataAsync") ||
+            moduleHierarchy.SelectMany(type => type.Methods).Where(method => method.IsConstructor && method.HasBody)
+                .SelectMany(method => method.Body.Instructions)
+                .Select(instruction => instruction.Operand).OfType<MethodReference>()
+                .Any(method => method.Name == "set_SaveDataAsync" && method.DeclaringType.FullName == "Celeste.Mod.EverestModule");
+        if (asyncCustomized) rejected.Add("SaveDataAsync");
+
+        string saveClass = saveData == null ? "NONE" : "DEFAULT_YAML_SAVEDATA_SUPPORTED";
+        string sessionClass = session == null ? "NONE" : "DEFAULT_YAML_SESSION_SUPPORTED";
+        if (saveData != null && Inherits(saveData, "Celeste.Mod.EverestModuleBinarySaveData"))
+            saveClass = "BINARY_SAVEDATA_DEFERRED";
+        if (session != null && Inherits(session, "Celeste.Mod.EverestModuleBinarySession"))
+            sessionClass = "BINARY_SESSION_DEFERRED";
+        if (rejected.Any(customSerializers.Contains))
+        {
+            if (saveData != null) saveClass = "CUSTOM_SERIALIZER_DEFERRED";
+            if (session != null) sessionClass = "CUSTOM_SERIALIZER_DEFERRED";
+        }
+        else if (rejected.Any(customIo.Contains))
+        {
+            if (saveData != null) saveClass = "CUSTOM_IO_DEFERRED";
+            if (session != null) sessionClass = "CUSTOM_IO_DEFERRED";
+        }
+        else if (rejected.Any(legacy.Contains))
+        {
+            if (saveData != null) saveClass = "LEGACY_SYNC_SAVEDATA_DEFERRED";
+            if (session != null) sessionClass = "LEGACY_SYNC_SESSION_DEFERRED";
+        }
+
+        ValidateDurableRoot(saveData, "SaveData", mod);
+        ValidateDurableRoot(session, "Session", mod);
+        AppleModuleDurabilityCompatibility result = new()
+        {
+            SaveDataClass = saveClass,
+            SessionClass = sessionClass,
+            AsyncClass = asyncCustomized ? "CUSTOM_ASYNC_POLICY_DEFERRED" : "DEFAULT_ASYNC",
+            RejectedOverrides = rejected.Distinct(StringComparer.Ordinal).OrderBy(value => value, StringComparer.Ordinal).ToArray()
+        };
+        if (saveClass.EndsWith("DEFERRED", StringComparison.Ordinal) ||
+            sessionClass.EndsWith("DEFERRED", StringComparison.Ordinal) || asyncCustomized)
+            throw new InvalidDataException($"{mod} module durability is outside the bounded static profile: " +
+                $"save={saveClass} session={sessionClass} async={result.AsyncClass} overrides={string.Join(',', result.RejectedOverrides)}");
+        return result;
+    }
+
+    private static MethodDefinition? FindModuleMethod(TypeDefinition module, string name) =>
+        ModuleHierarchy(module).SelectMany(type => type.Methods)
+            .FirstOrDefault(method => method.Name == name && method.HasBody);
+
+    private static IEnumerable<TypeDefinition> ModuleHierarchy(TypeDefinition module)
+    {
+        TypeDefinition? current = module;
+        while (current != null && current.FullName != "Celeste.Mod.EverestModule")
+        {
+            yield return current;
+            try { current = current.BaseType?.Resolve(); }
+            catch (AssemblyResolutionException) { yield break; }
+        }
+    }
+
+    private static void ValidateDurableRoot(TypeDefinition? type, string kind, string mod)
+    {
+        if (type == null) return;
+        if (!PublicType(type) || type.IsAbstract || !type.Methods.Any(method => method.IsConstructor &&
+                method.IsPublic && !method.IsStatic && method.Parameters.Count == 0))
+            throw new InvalidDataException($"{mod} {kind} type requires a public parameterless constructor: {type.FullName}");
+    }
+
+    private static (AppleCustomEntityFactory[] Supported, AppleOmittedCustomEntityFactory[] Omitted)
+        InspectCustomEntities(IEnumerable<TypeDefinition> types)
+    {
+        List<AppleCustomEntityFactory> supported = [];
+        List<AppleOmittedCustomEntityFactory> omitted = [];
+        foreach (TypeDefinition type in types)
+        {
+            string kind = Inherits(type, "Celeste.Trigger") ? "trigger" : "entity";
+            if (!PublicType(type) || type.IsAbstract)
+                throw new InvalidDataException($"custom entity type must be public and concrete: {type.FullName}");
+            string? constructor = ConstructorKind(type);
+            foreach (CustomAttribute attribute in type.CustomAttributes.Where(value =>
+                         value.AttributeType.FullName == "Celeste.Mod.Entities.CustomEntityAttribute"))
             {
-                if (id.Length is < 1 or > 192 || id.Any(char.IsControl) || id.Contains('=') || id.Contains(','))
-                    throw new InvalidDataException($"unsupported custom entity ID on {type.FullName}");
-                yield return new AppleCustomEntityFactory
+                foreach (string id in AttributeStrings(attribute))
                 {
-                    Id = id,
-                    Type = type.FullName.Replace('/', '.'),
-                    Kind = kind,
-                    Constructor = constructor
-                };
+                    if (id.Length is < 1 or > 192 || id.Any(char.IsControl) || id.Contains('=') || id.Contains(','))
+                        throw new InvalidDataException($"unsupported custom entity ID on {type.FullName}");
+                    if (constructor == null)
+                    {
+                        omitted.Add(new AppleOmittedCustomEntityFactory
+                        {
+                            Id = id,
+                            Type = type.FullName.Replace('/', '.'),
+                            Reason = "runtime-only-constructor"
+                        });
+                    }
+                    else
+                    {
+                        supported.Add(new AppleCustomEntityFactory
+                        {
+                            Id = id,
+                            Type = type.FullName.Replace('/', '.'),
+                            Kind = kind,
+                            Constructor = constructor
+                        });
+                    }
+                }
             }
         }
+        return (supported.OrderBy(value => value.Id, StringComparer.Ordinal).ToArray(),
+            omitted.OrderBy(value => value.Id, StringComparer.Ordinal).ToArray());
     }
 
     private static IEnumerable<string> AttributeStrings(CustomAttribute attribute)
@@ -228,7 +336,7 @@ internal static class AssemblyFreezer
         }
     }
 
-    private static string ConstructorKind(TypeDefinition type)
+    private static string? ConstructorKind(TypeDefinition type)
     {
         static string Signature(MethodDefinition method) => string.Join(",", method.Parameters.Select(value => value.ParameterType.FullName));
         string[] supported =
@@ -239,8 +347,9 @@ internal static class AssemblyFreezer
         ];
         MethodDefinition[] constructors = type.Methods.Where(method => method.IsConstructor && !method.IsStatic && method.IsPublic &&
             supported.Contains(Signature(method), StringComparer.Ordinal)).ToArray();
+        if (constructors.Length == 0) return null;
         if (constructors.Length != 1)
-            throw new InvalidDataException($"custom entity type must expose exactly one supported public constructor: {type.FullName}");
+            throw new InvalidDataException($"custom entity type has ambiguous supported constructors: {type.FullName}");
         return Signature(constructors[0]) switch
         {
             "Celeste.EntityData,Microsoft.Xna.Framework.Vector2" => "entity-data-vector2",
@@ -373,6 +482,10 @@ internal static class AssemblyFreezer
             throw new InvalidDataException($"invalid static module declaration for {mod}");
         foreach (string? type in new[] { declaration.SettingsType, declaration.SaveDataType, declaration.SessionType })
             if (type != null && !TypeName(type)) throw new InvalidDataException($"invalid factory type for {mod}");
+        if (declaration.Durability.SaveDataClass is not ("NONE" or "DEFAULT_YAML_SAVEDATA_SUPPORTED") ||
+            declaration.Durability.SessionClass is not ("NONE" or "DEFAULT_YAML_SESSION_SUPPORTED") ||
+            declaration.Durability.AsyncClass != "DEFAULT_ASYNC" || declaration.Durability.RejectedOverrides.Length != 0)
+            throw new InvalidDataException($"unsupported durability declaration for {mod}");
         if (declaration.ButtonBindingProperties.Length > 64 || declaration.ButtonBindingProperties.Any(name => !MemberName(name)))
             throw new InvalidDataException($"invalid button-binding factory declaration for {mod}");
         if (declaration.TrackedEntityTypes.Length > 256 || declaration.TrackedEntityTypes.Any(type => !TypeName(type)))
@@ -385,6 +498,10 @@ internal static class AssemblyFreezer
         if (declaration.CustomEntityFactories.Select(factory => factory.Id).Distinct(StringComparer.Ordinal).Count() !=
             declaration.CustomEntityFactories.Length)
             throw new InvalidDataException($"duplicate custom entity factory ID for {mod}");
+        if (declaration.OmittedCustomEntityFactories.Length > 512 || declaration.OmittedCustomEntityFactories.Any(factory =>
+                factory.Id.Length is < 1 or > 192 || !TypeName(factory.Type) ||
+                factory.Reason != "runtime-only-constructor"))
+            throw new InvalidDataException($"invalid omitted custom entity factory declaration for {mod}");
         if (declaration.CustomBackdropFactories.Length > 256 || declaration.CustomBackdropFactories.Any(factory =>
                 factory.Id.Length is < 1 or > 192 || !TypeName(factory.Type) ||
                 factory.Factory is not ("constructor" or "static-method") ||
