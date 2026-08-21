@@ -59,6 +59,7 @@ support matrix, and limitations are in [project status](../STATUS.md).
 41. [Stage 25E — real helper dependency ecosystem and module settings](stages/APPLE_EVEREST_HELPER_ECOSYSTEM_STAGE25E_REPORT.md)
 42. [Stage 25F-A — real module SaveData and Session durability](stages/APPLE_EVEREST_MODULE_DURABILITY_STAGE25F_REPORT.md)
 43. [Stage 25F-B — bounded static MonoMod ModInterop compatibility](stages/APPLE_EVEREST_MODINTEROP_STAGE25FB_REPORT.md)
+44. [Stage 25F-B2 — real ModInterop pair and bounded HookGen completion](stages/APPLE_EVEREST_MODINTEROP_STAGE25FB2_REPORT.md)
 
 Diagnostic-only stages whose evidence was intentionally kept in ignored local
 build directories are not reconstructed here. The index covers every tracked
