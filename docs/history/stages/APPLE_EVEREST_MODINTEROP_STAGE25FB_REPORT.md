@@ -30,8 +30,10 @@ invocation and integration.
 No release reference, integration branch or historical report was changed.
 No GitHub Actions workflow was run.
 
-The branch uses two coherent commits: `feat: add static MonoMod ModInterop
-plans`, followed by `test: record Apple Everest ModInterop acceptance`.
+The branch uses two primary coherent commits: `feat: add static MonoMod
+ModInterop plans`, followed by `test: record Apple Everest ModInterop
+acceptance`. A focused third correction adds the missing locked builder
+restore before the desktop conformance runner's `--no-restore` invocation.
 
 ## Pinned behavior and desktop reference
 

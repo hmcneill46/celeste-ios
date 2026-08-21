@@ -12,6 +12,8 @@ UTILS_OUT="$MONOMOD/artifacts/bin/MonoMod.Utils/release_net8.0"
 TEST_ROOT="$REPO_ROOT/apple-everest/tests/desktop-modinterop"
 
 "$SCRIPT_DIR/bootstrap-apple-everest-host.sh"
+(cd /private/tmp && "$DOTNET8" restore \
+  "$REPO_ROOT/tools/AppleEverestBuilder/AppleEverestBuilder.csproj" --locked-mode >/dev/null)
 (cd /private/tmp && "$DOTNET8" run --project "$REPO_ROOT/tools/AppleEverestBuilder/AppleEverestBuilder.csproj" --no-restore -- acquire \
   --profile "$REPO_ROOT/apple-everest/profiles/stable-1.6458.0.json" --output "$UPSTREAM")
 
