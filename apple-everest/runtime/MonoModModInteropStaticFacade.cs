@@ -14,6 +14,7 @@ namespace MonoMod.ModInterop
             if (type == null) throw new ArgumentNullException(nameof(type));
             if (!global::Celeste.Mod.GeneratedAppleEverestModInterop.Register(type))
                 throw new InvalidOperationException("ModInterop type is absent from the closed Apple static-AOT plan");
+            global::Celeste.Mod.AppleEverestStaticRuntime.RecordModInteropRegistration(type.FullName);
         }
     }
 

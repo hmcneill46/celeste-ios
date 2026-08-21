@@ -1,0 +1,617 @@
+{
+  "schemaVersion": 2,
+  "targets": [
+    {
+      "id": "celeste-area-mode-stats-clone",
+      "sourceFile": "Celeste/AreaModeStats.cs",
+      "sourceDeclaration": "public AreaModeStats Clone()",
+      "originalDeclaration": "private AreaModeStats AppleEverestOriginal_Clone()",
+      "originalAlias": "AppleEverestOriginal_Clone",
+      "hookNamespace": "On.Celeste", "hookType": "AreaModeStats", "eventName": "Clone",
+      "origDelegate": "orig_Clone", "hookDelegate": "hook_Clone",
+      "isStatic": false, "receiverType": "global::Celeste.AreaModeStats", "returnType": "global::Celeste.AreaModeStats", "parameters": []
+    },
+    {
+      "id": "celeste-area-stats-clone",
+      "sourceFile": "Celeste/AreaStats.cs",
+      "sourceDeclaration": "public AreaStats Clone()",
+      "originalDeclaration": "private AreaStats AppleEverestOriginal_Clone()",
+      "originalAlias": "AppleEverestOriginal_Clone",
+      "hookNamespace": "On.Celeste", "hookType": "AreaStats", "eventName": "Clone",
+      "origDelegate": "orig_Clone", "hookDelegate": "hook_Clone",
+      "isStatic": false, "receiverType": "global::Celeste.AreaStats", "returnType": "global::Celeste.AreaStats", "parameters": []
+    },
+    {
+      "id": "celeste-commands-cmd-heart-gem",
+      "sourceFile": "Celeste/Commands.cs",
+      "sourceDeclaration": "private static void CmdHeartGem(int area, int mode, bool gem = true)",
+      "originalDeclaration": "private static void AppleEverestOriginal_CmdHeartGem(int area, int mode, bool gem)",
+      "originalAlias": "AppleEverestOriginal_CmdHeartGem",
+      "hookNamespace": "On.Celeste", "hookType": "Commands", "eventName": "CmdHeartGem",
+      "origDelegate": "orig_CmdHeartGem", "hookDelegate": "hook_CmdHeartGem",
+      "isStatic": true, "returnType": "void",
+      "parameters": [{ "type": "int", "name": "area" }, { "type": "int", "name": "mode" }, { "type": "bool", "name": "gem", "default": "true" }]
+    },
+    {
+      "id": "celeste-commands-cmd-hearts-int",
+      "sourceFile": "Celeste/Commands.cs",
+      "sourceDeclaration": "private static void CmdHearts(int amount = 24)",
+      "originalDeclaration": "private static void AppleEverestOriginal_CmdHearts_int(int amount)",
+      "originalAlias": "AppleEverestOriginal_CmdHearts_int",
+      "hookNamespace": "On.Celeste", "hookType": "Commands", "eventName": "CmdHearts_int",
+      "origDelegate": "orig_CmdHearts_int", "hookDelegate": "hook_CmdHearts_int",
+      "isStatic": true, "returnType": "void", "parameters": [{ "type": "int", "name": "amount", "default": "24" }]
+    },
+    {
+      "id": "celeste-commands-cmd-hearts-int-string",
+      "sourceFile": "Celeste/Commands.cs",
+      "sourceDeclaration": "private static void CmdHearts(int amount, string levelSet)",
+      "originalDeclaration": "private static void AppleEverestOriginal_CmdHearts_int_string(int amount, string levelSet)",
+      "originalAlias": "AppleEverestOriginal_CmdHearts_int_string",
+      "hookNamespace": "On.Celeste", "hookType": "Commands", "eventName": "CmdHearts_int_string",
+      "origDelegate": "orig_CmdHearts_int_string", "hookDelegate": "hook_CmdHearts_int_string",
+      "isStatic": true, "returnType": "void", "parameters": [{ "type": "int", "name": "amount" }, { "type": "string", "name": "levelSet" }]
+    },
+    {
+      "id": "celeste-commands-cmd-level-flag",
+      "sourceFile": "Celeste/Commands.cs",
+      "sourceDeclaration": "private static void CmdLevelFlag(string flag)",
+      "originalDeclaration": "private static void AppleEverestOriginal_CmdLevelFlag(string flag)",
+      "originalAlias": "AppleEverestOriginal_CmdLevelFlag",
+      "hookNamespace": "On.Celeste", "hookType": "Commands", "eventName": "CmdLevelFlag",
+      "origDelegate": "orig_CmdLevelFlag", "hookDelegate": "hook_CmdLevelFlag",
+      "isStatic": true, "returnType": "void", "parameters": [{ "type": "string", "name": "flag" }]
+    },
+    {
+      "id": "celeste-commands-cmd-ow-complete",
+      "sourceFile": "Celeste/Commands.cs",
+      "sourceDeclaration": "private static void CmdOWComplete(int index = 1, int mode = 0, int deaths = 0, int strawberries = -1, bool cassette = true, bool heartGem = true, float beatBestTimeBy = 1.7921f, float beatBestFullClearTimeBy = 1.7921f)",
+      "originalDeclaration": "private static void AppleEverestOriginal_CmdOWComplete(int index, int mode, int deaths, int strawberries, bool cassette, bool heartGem, float beatBestTimeBy, float beatBestFullClearTimeBy)",
+      "originalAlias": "AppleEverestOriginal_CmdOWComplete",
+      "hookNamespace": "On.Celeste", "hookType": "Commands", "eventName": "CmdOWComplete",
+      "origDelegate": "orig_CmdOWComplete", "hookDelegate": "hook_CmdOWComplete",
+      "isStatic": true, "returnType": "void",
+      "parameters": [{ "type": "int", "name": "index", "default": "1" }, { "type": "int", "name": "mode", "default": "0" }, { "type": "int", "name": "deaths", "default": "0" }, { "type": "int", "name": "strawberries", "default": "-1" }, { "type": "bool", "name": "cassette", "default": "true" }, { "type": "bool", "name": "heartGem", "default": "true" }, { "type": "float", "name": "beatBestTimeBy", "default": "1.7921f" }, { "type": "float", "name": "beatBestFullClearTimeBy", "default": "1.7921f" }]
+    },
+    {
+      "id": "celeste-heart-gem-register-as-collected",
+      "sourceFile": "Celeste/HeartGem.cs",
+      "sourceDeclaration": "private void RegisterAsCollected(Level level, string poemID)",
+      "originalDeclaration": "private void AppleEverestOriginal_RegisterAsCollected(Level level, string poemID)",
+      "originalAlias": "AppleEverestOriginal_RegisterAsCollected",
+      "hookNamespace": "On.Celeste", "hookType": "HeartGem", "eventName": "RegisterAsCollected",
+      "origDelegate": "orig_RegisterAsCollected", "hookDelegate": "hook_RegisterAsCollected",
+      "isStatic": false, "receiverType": "global::Celeste.HeartGem", "returnType": "void",
+      "parameters": [{ "type": "global::Celeste.Level", "name": "level" }, { "type": "string", "name": "poemID" }]
+    },
+    {
+      "id": "celeste-level-reload",
+      "sourceFile": "Celeste/Level.cs", "sourceDeclaration": "public void Reload()",
+      "originalDeclaration": "private void AppleEverestOriginal_Reload()", "originalAlias": "AppleEverestOriginal_Reload",
+      "hookNamespace": "On.Celeste", "hookType": "Level", "eventName": "Reload",
+      "origDelegate": "orig_Reload", "hookDelegate": "hook_Reload",
+      "isStatic": false, "receiverType": "global::Celeste.Level", "returnType": "void", "parameters": []
+    },
+    {
+      "id": "celeste-level-update",
+      "sourceFile": "Celeste/Level.cs", "sourceDeclaration": "public override void Update()",
+      "originalDeclaration": "private void AppleEverestOriginal_Update()", "originalAlias": "AppleEverestOriginal_Update",
+      "hookNamespace": "On.Celeste", "hookType": "Level", "eventName": "Update",
+      "origDelegate": "orig_Update", "hookDelegate": "hook_Update",
+      "isStatic": false, "receiverType": "global::Celeste.Level", "returnType": "void", "parameters": []
+    },
+    {
+      "id": "celeste-level-update-time",
+      "sourceFile": "Celeste/Level.cs", "sourceDeclaration": "public void UpdateTime()",
+      "originalDeclaration": "private void AppleEverestOriginal_UpdateTime()", "originalAlias": "AppleEverestOriginal_UpdateTime",
+      "hookNamespace": "On.Celeste", "hookType": "Level", "eventName": "UpdateTime",
+      "origDelegate": "orig_UpdateTime", "hookDelegate": "hook_UpdateTime",
+      "isStatic": false, "receiverType": "global::Celeste.Level", "returnType": "void", "parameters": []
+    },
+    {
+      "id": "celeste-map-data-load",
+      "sourceFile": "Celeste/MapData.cs", "sourceDeclaration": "private void Load()",
+      "originalDeclaration": "private void AppleEverestOriginal_Load()", "originalAlias": "AppleEverestOriginal_Load",
+      "hookNamespace": "On.Celeste", "hookType": "MapData", "eventName": "Load",
+      "origDelegate": "orig_Load", "hookDelegate": "hook_Load",
+      "isStatic": false, "receiverType": "global::Celeste.MapData", "returnType": "void", "parameters": []
+    },
+    {
+      "id": "celeste-oui-chapter-select-enter",
+      "sourceFile": "Celeste/OuiChapterSelect.cs", "sourceDeclaration": "public override IEnumerator Enter(Oui from)",
+      "originalDeclaration": "private IEnumerator AppleEverestOriginal_Enter(Oui from)", "originalAlias": "AppleEverestOriginal_Enter",
+      "hookNamespace": "On.Celeste", "hookType": "OuiChapterSelect", "eventName": "Enter",
+      "origDelegate": "orig_Enter", "hookDelegate": "hook_Enter",
+      "isStatic": false, "receiverType": "global::Celeste.OuiChapterSelect", "returnType": "global::System.Collections.IEnumerator", "parameters": [{ "type": "global::Celeste.Oui", "name": "from" }]
+    },
+    {
+      "id": "celeste-oui-chapter-select-leave",
+      "sourceFile": "Celeste/OuiChapterSelect.cs", "sourceDeclaration": "public override IEnumerator Leave(Oui next)",
+      "originalDeclaration": "private IEnumerator AppleEverestOriginal_Leave(Oui next)", "originalAlias": "AppleEverestOriginal_Leave",
+      "hookNamespace": "On.Celeste", "hookType": "OuiChapterSelect", "eventName": "Leave",
+      "origDelegate": "orig_Leave", "hookDelegate": "hook_Leave",
+      "isStatic": false, "receiverType": "global::Celeste.OuiChapterSelect", "returnType": "global::System.Collections.IEnumerator", "parameters": [{ "type": "global::Celeste.Oui", "name": "next" }]
+    },
+    {
+      "id": "celeste-oui-chapter-select-render",
+      "sourceFile": "Celeste/OuiChapterSelect.cs", "sourceDeclaration": "public override void Render()",
+      "originalDeclaration": "private void AppleEverestOriginal_Render()", "originalAlias": "AppleEverestOriginal_Render",
+      "hookNamespace": "On.Celeste", "hookType": "OuiChapterSelect", "eventName": "Render",
+      "origDelegate": "orig_Render", "hookDelegate": "hook_Render",
+      "isStatic": false, "receiverType": "global::Celeste.OuiChapterSelect", "returnType": "void", "parameters": []
+    },
+    {
+      "id": "celeste-oui-chapter-select-update",
+      "sourceFile": "Celeste/OuiChapterSelect.cs", "sourceDeclaration": "public override void Update()",
+      "originalDeclaration": "private void AppleEverestOriginal_Update()", "originalAlias": "AppleEverestOriginal_Update",
+      "hookNamespace": "On.Celeste", "hookType": "OuiChapterSelect", "eventName": "Update",
+      "origDelegate": "orig_Update", "hookDelegate": "hook_Update",
+      "isStatic": false, "receiverType": "global::Celeste.OuiChapterSelect", "returnType": "void", "parameters": []
+    },
+    {
+      "id": "celeste-player-added",
+      "sourceFile": "Celeste/Player.cs", "sourceDeclaration": "public override void Added(Scene scene)",
+      "originalDeclaration": "private void AppleEverestOriginal_Added(Scene scene)", "originalAlias": "AppleEverestOriginal_Added",
+      "hookNamespace": "On.Celeste", "hookType": "Player", "eventName": "Added",
+      "origDelegate": "orig_Added", "hookDelegate": "hook_Added",
+      "isStatic": false, "receiverType": "global::Celeste.Player", "returnType": "void", "parameters": [{ "type": "global::Monocle.Scene", "name": "scene" }]
+    },
+    {
+      "id": "celeste-player-call-dash-events",
+      "sourceFile": "Celeste/Player.cs", "sourceDeclaration": "private void CallDashEvents()",
+      "originalDeclaration": "private void AppleEverestOriginal_CallDashEvents()", "originalAlias": "AppleEverestOriginal_CallDashEvents",
+      "hookNamespace": "On.Celeste", "hookType": "Player", "eventName": "CallDashEvents",
+      "origDelegate": "orig_CallDashEvents", "hookDelegate": "hook_CallDashEvents",
+      "isStatic": false, "receiverType": "global::Celeste.Player", "returnType": "void", "parameters": []
+    },
+    {
+      "id": "celeste-player-removed",
+      "sourceFile": "Celeste/Player.cs", "sourceDeclaration": "public override void Removed(Scene scene)",
+      "originalDeclaration": "private void AppleEverestOriginal_Removed(Scene scene)", "originalAlias": "AppleEverestOriginal_Removed",
+      "hookNamespace": "On.Celeste", "hookType": "Player", "eventName": "Removed",
+      "origDelegate": "orig_Removed", "hookDelegate": "hook_Removed",
+      "isStatic": false, "receiverType": "global::Celeste.Player", "returnType": "void", "parameters": [{ "type": "global::Monocle.Scene", "name": "scene" }]
+    },
+    {
+      "id": "celeste-player-scene-end",
+      "sourceFile": "Celeste/Player.cs", "sourceDeclaration": "public override void SceneEnd(Scene scene)",
+      "originalDeclaration": "private void AppleEverestOriginal_SceneEnd(Scene scene)", "originalAlias": "AppleEverestOriginal_SceneEnd",
+      "hookNamespace": "On.Celeste", "hookType": "Player", "eventName": "SceneEnd",
+      "origDelegate": "orig_SceneEnd", "hookDelegate": "hook_SceneEnd",
+      "isStatic": false, "receiverType": "global::Celeste.Player", "returnType": "void", "parameters": [{ "type": "global::Monocle.Scene", "name": "scene" }]
+    },
+    {
+      "id": "celeste-save-data-add-death",
+      "sourceFile": "Celeste/SaveData.cs", "sourceDeclaration": "public void AddDeath(AreaKey area)",
+      "originalDeclaration": "private void AppleEverestOriginal_AddDeath(AreaKey area)", "originalAlias": "AppleEverestOriginal_AddDeath",
+      "hookNamespace": "On.Celeste", "hookType": "SaveData", "eventName": "AddDeath",
+      "origDelegate": "orig_AddDeath", "hookDelegate": "hook_AddDeath",
+      "isStatic": false, "receiverType": "global::Celeste.SaveData", "returnType": "void", "parameters": [{ "type": "global::Celeste.AreaKey", "name": "area" }]
+    },
+    {
+      "id": "celeste-save-data-add-strawberry-area-key-entity-id-bool",
+      "sourceFile": "Celeste/SaveData.cs", "sourceDeclaration": "public void AddStrawberry(AreaKey area, EntityID strawberry, bool golden)",
+      "originalDeclaration": "private void AppleEverestOriginal_AddStrawberry_AreaKey_EntityID_bool(AreaKey area, EntityID strawberry, bool golden)", "originalAlias": "AppleEverestOriginal_AddStrawberry_AreaKey_EntityID_bool",
+      "hookNamespace": "On.Celeste", "hookType": "SaveData", "eventName": "AddStrawberry_AreaKey_EntityID_bool",
+      "origDelegate": "orig_AddStrawberry_AreaKey_EntityID_bool", "hookDelegate": "hook_AddStrawberry_AreaKey_EntityID_bool",
+      "isStatic": false, "receiverType": "global::Celeste.SaveData", "returnType": "void", "parameters": [{ "type": "global::Celeste.AreaKey", "name": "area" }, { "type": "global::Celeste.EntityID", "name": "strawberry" }, { "type": "bool", "name": "golden" }]
+    },
+    {
+      "id": "celeste-save-data-initialize-debug-mode",
+      "sourceFile": "Celeste/SaveData.cs", "sourceDeclaration": "public static void InitializeDebugMode(bool loadExisting = true)",
+      "originalDeclaration": "private static void AppleEverestOriginal_InitializeDebugMode(bool loadExisting)", "originalAlias": "AppleEverestOriginal_InitializeDebugMode",
+      "hookNamespace": "On.Celeste", "hookType": "SaveData", "eventName": "InitializeDebugMode",
+      "origDelegate": "orig_InitializeDebugMode", "hookDelegate": "hook_InitializeDebugMode",
+      "isStatic": true, "returnType": "void", "parameters": [{ "type": "bool", "name": "loadExisting", "default": "true" }]
+    },
+    {
+      "id": "celeste-save-data-register-cassette",
+      "sourceFile": "Celeste/SaveData.cs", "sourceDeclaration": "public void RegisterCassette(AreaKey area)",
+      "originalDeclaration": "private void AppleEverestOriginal_RegisterCassette(AreaKey area)", "originalAlias": "AppleEverestOriginal_RegisterCassette",
+      "hookNamespace": "On.Celeste", "hookType": "SaveData", "eventName": "RegisterCassette",
+      "origDelegate": "orig_RegisterCassette", "hookDelegate": "hook_RegisterCassette",
+      "isStatic": false, "receiverType": "global::Celeste.SaveData", "returnType": "void", "parameters": [{ "type": "global::Celeste.AreaKey", "name": "area" }]
+    },
+    {
+      "id": "celeste-save-data-register-completion",
+      "sourceFile": "Celeste/SaveData.cs", "sourceDeclaration": "public void RegisterCompletion(Session session)",
+      "originalDeclaration": "private void AppleEverestOriginal_RegisterCompletion(Session session)", "originalAlias": "AppleEverestOriginal_RegisterCompletion",
+      "hookNamespace": "On.Celeste", "hookType": "SaveData", "eventName": "RegisterCompletion",
+      "origDelegate": "orig_RegisterCompletion", "hookDelegate": "hook_RegisterCompletion",
+      "isStatic": false, "receiverType": "global::Celeste.SaveData", "returnType": "void", "parameters": [{ "type": "global::Celeste.Session", "name": "session" }]
+    },
+    {
+      "id": "celeste-save-data-register-heart-gem",
+      "sourceFile": "Celeste/SaveData.cs", "sourceDeclaration": "public void RegisterHeartGem(AreaKey area)",
+      "originalDeclaration": "private void AppleEverestOriginal_RegisterHeartGem(AreaKey area)", "originalAlias": "AppleEverestOriginal_RegisterHeartGem",
+      "hookNamespace": "On.Celeste", "hookType": "SaveData", "eventName": "RegisterHeartGem",
+      "origDelegate": "orig_RegisterHeartGem", "hookDelegate": "hook_RegisterHeartGem",
+      "isStatic": false, "receiverType": "global::Celeste.SaveData", "returnType": "void", "parameters": [{ "type": "global::Celeste.AreaKey", "name": "area" }]
+    },
+    {
+      "id": "celeste-save-data-start-session",
+      "sourceFile": "Celeste/SaveData.cs", "sourceDeclaration": "public void StartSession(Session session)",
+      "originalDeclaration": "private void AppleEverestOriginal_StartSession(Session session)", "originalAlias": "AppleEverestOriginal_StartSession",
+      "hookNamespace": "On.Celeste", "hookType": "SaveData", "eventName": "StartSession",
+      "origDelegate": "orig_StartSession", "hookDelegate": "hook_StartSession",
+      "isStatic": false, "receiverType": "global::Celeste.SaveData", "returnType": "void", "parameters": [{ "type": "global::Celeste.Session", "name": "session" }]
+    },
+    {
+      "id": "celeste-session-set-flag",
+      "sourceFile": "Celeste/Session.cs", "sourceDeclaration": "public void SetFlag(string flag, bool setTo = true)",
+      "originalDeclaration": "private void AppleEverestOriginal_SetFlag(string flag, bool setTo)", "originalAlias": "AppleEverestOriginal_SetFlag",
+      "hookNamespace": "On.Celeste", "hookType": "Session", "eventName": "SetFlag",
+      "origDelegate": "orig_SetFlag", "hookDelegate": "hook_SetFlag",
+      "isStatic": false, "receiverType": "global::Celeste.Session", "returnType": "void", "parameters": [{ "type": "string", "name": "flag" }, { "type": "bool", "name": "setTo", "default": "true" }]
+    },
+    {
+      "id": "celeste-session-update-level-start-dashes",
+      "sourceFile": "Celeste/Session.cs", "sourceDeclaration": "public void UpdateLevelStartDashes()",
+      "originalDeclaration": "private void AppleEverestOriginal_UpdateLevelStartDashes()", "originalAlias": "AppleEverestOriginal_UpdateLevelStartDashes",
+      "hookNamespace": "On.Celeste", "hookType": "Session", "eventName": "UpdateLevelStartDashes",
+      "origDelegate": "orig_UpdateLevelStartDashes", "hookDelegate": "hook_UpdateLevelStartDashes",
+      "isStatic": false, "receiverType": "global::Celeste.Session", "returnType": "void", "parameters": []
+    },
+    {
+      "id": "monocle-entity-added",
+      "sourceFile": "Monocle/Entity.cs", "sourceDeclaration": "public virtual void Added(Scene scene)",
+      "originalDeclaration": "private void AppleEverestOriginal_Added(Scene scene)", "originalAlias": "AppleEverestOriginal_Added",
+      "hookNamespace": "On.Monocle", "hookType": "Entity", "eventName": "Added",
+      "origDelegate": "orig_Added", "hookDelegate": "hook_Added",
+      "isStatic": false, "receiverType": "global::Monocle.Entity", "returnType": "void", "parameters": [{ "type": "global::Monocle.Scene", "name": "scene" }]
+    },
+    {
+      "id": "monocle-entity-removed",
+      "sourceFile": "Monocle/Entity.cs", "sourceDeclaration": "public virtual void Removed(Scene scene)",
+      "originalDeclaration": "private void AppleEverestOriginal_Removed(Scene scene)", "originalAlias": "AppleEverestOriginal_Removed",
+      "hookNamespace": "On.Monocle", "hookType": "Entity", "eventName": "Removed",
+      "origDelegate": "orig_Removed", "hookDelegate": "hook_Removed",
+      "isStatic": false, "receiverType": "global::Monocle.Entity", "returnType": "void", "parameters": [{ "type": "global::Monocle.Scene", "name": "scene" }]
+    },
+    {
+      "id": "monocle-entity-scene-end",
+      "sourceFile": "Monocle/Entity.cs", "sourceDeclaration": "public virtual void SceneEnd(Scene scene)",
+      "originalDeclaration": "private void AppleEverestOriginal_SceneEnd(Scene scene)", "originalAlias": "AppleEverestOriginal_SceneEnd",
+      "hookNamespace": "On.Monocle", "hookType": "Entity", "eventName": "SceneEnd",
+      "origDelegate": "orig_SceneEnd", "hookDelegate": "hook_SceneEnd",
+      "isStatic": false, "receiverType": "global::Monocle.Entity", "returnType": "void", "parameters": [{ "type": "global::Monocle.Scene", "name": "scene" }]
+    },
+    {
+      "id": "monocle-scene-begin",
+      "sourceFile": "Monocle/Scene.cs", "sourceDeclaration": "public virtual void Begin()",
+      "originalDeclaration": "private void AppleEverestOriginal_Begin()", "originalAlias": "AppleEverestOriginal_Begin",
+      "hookNamespace": "On.Monocle", "hookType": "Scene", "eventName": "Begin",
+      "origDelegate": "orig_Begin", "hookDelegate": "hook_Begin",
+      "isStatic": false, "receiverType": "global::Monocle.Scene", "returnType": "void", "parameters": []
+    },
+    {
+      "id": "celeste-dialog-clean",
+      "sourceFile": "Celeste/Dialog.cs",
+      "sourceDeclaration": "public static string Clean(string name, Language language = null)",
+      "originalDeclaration": "internal static string AppleEverestOriginal_Clean(string name, Language language)",
+      "originalAlias": "AppleEverestOriginal_Clean",
+      "hookNamespace": "On.Celeste",
+      "hookType": "Dialog",
+      "eventName": "Clean",
+      "origDelegate": "orig_Clean",
+      "hookDelegate": "hook_Clean",
+      "isStatic": true,
+      "returnType": "string",
+      "parameters": [
+        { "type": "string", "name": "name" },
+        { "type": "global::Celeste.Language", "name": "language", "default": "null" }
+      ]
+    },
+    {
+      "id": "celeste-level-load-level",
+      "sourceFile": "Celeste/Level.cs",
+      "sourceDeclaration": "public void LoadLevel(Player.IntroTypes playerIntro, bool isFromLoader = false)",
+      "originalDeclaration": "private void AppleEverestOriginal_LoadLevel(Player.IntroTypes playerIntro, bool isFromLoader)",
+      "originalAlias": "AppleEverestOriginal_LoadLevel",
+      "hookNamespace": "On.Celeste",
+      "hookType": "Level",
+      "eventName": "LoadLevel",
+      "origDelegate": "orig_LoadLevel",
+      "hookDelegate": "hook_LoadLevel",
+      "isStatic": false,
+      "receiverType": "global::Celeste.Level",
+      "returnType": "void",
+      "parameters": [
+        { "type": "global::Celeste.Player.IntroTypes", "name": "playerIntro" },
+        { "type": "bool", "name": "isFromLoader", "default": "false" }
+      ]
+    },
+    {
+      "id": "celeste-level-transition-to",
+      "sourceFile": "Celeste/Level.cs",
+      "sourceDeclaration": "public void TransitionTo(LevelData next, Vector2 direction)",
+      "originalDeclaration": "private void AppleEverestOriginal_TransitionTo(LevelData next, Vector2 direction)",
+      "originalAlias": "AppleEverestOriginal_TransitionTo",
+      "hookNamespace": "On.Celeste",
+      "hookType": "Level",
+      "eventName": "TransitionTo",
+      "origDelegate": "orig_TransitionTo",
+      "hookDelegate": "hook_TransitionTo",
+      "isStatic": false,
+      "receiverType": "global::Celeste.Level",
+      "returnType": "void",
+      "parameters": [
+        { "type": "global::Celeste.LevelData", "name": "next" },
+        { "type": "global::Microsoft.Xna.Framework.Vector2", "name": "direction" }
+      ]
+    },
+    {
+      "id": "celeste-player-dash-begin",
+      "sourceFile": "Celeste/Player.cs",
+      "sourceDeclaration": "private void DashBegin()",
+      "originalDeclaration": "private void AppleEverestOriginal_DashBegin()",
+      "originalAlias": "AppleEverestOriginal_DashBegin",
+      "hookNamespace": "On.Celeste",
+      "hookType": "Player",
+      "eventName": "DashBegin",
+      "origDelegate": "orig_DashBegin",
+      "hookDelegate": "hook_DashBegin",
+      "isStatic": false,
+      "receiverType": "global::Celeste.Player",
+      "returnType": "void",
+      "parameters": []
+    },
+    {
+      "id": "celeste-player-refill-dash",
+      "sourceFile": "Celeste/Player.cs",
+      "sourceDeclaration": "public bool RefillDash()",
+      "originalDeclaration": "private bool AppleEverestOriginal_RefillDash()",
+      "originalAlias": "AppleEverestOriginal_RefillDash",
+      "hookNamespace": "On.Celeste",
+      "hookType": "Player",
+      "eventName": "RefillDash",
+      "origDelegate": "orig_RefillDash",
+      "hookDelegate": "hook_RefillDash",
+      "isStatic": false,
+      "receiverType": "global::Celeste.Player",
+      "returnType": "bool",
+      "parameters": []
+    },
+    {
+      "id": "celeste-player-star-fly-end",
+      "sourceFile": "Celeste/Player.cs",
+      "sourceDeclaration": "private void StarFlyEnd()",
+      "originalDeclaration": "private void AppleEverestOriginal_StarFlyEnd()",
+      "originalAlias": "AppleEverestOriginal_StarFlyEnd",
+      "hookNamespace": "On.Celeste",
+      "hookType": "Player",
+      "eventName": "StarFlyEnd",
+      "origDelegate": "orig_StarFlyEnd",
+      "hookDelegate": "hook_StarFlyEnd",
+      "isStatic": false,
+      "receiverType": "global::Celeste.Player",
+      "returnType": "void",
+      "parameters": []
+    },
+    {
+      "id": "celeste-player-update",
+      "sourceFile": "Celeste/Player.cs",
+      "sourceDeclaration": "public override void Update()",
+      "originalDeclaration": "private void AppleEverestOriginal_Update()",
+      "originalAlias": "AppleEverestOriginal_Update",
+      "hookNamespace": "On.Celeste",
+      "hookType": "Player",
+      "eventName": "Update",
+      "origDelegate": "orig_Update",
+      "hookDelegate": "hook_Update",
+      "isStatic": false,
+      "receiverType": "global::Celeste.Player",
+      "returnType": "void",
+      "parameters": []
+    },
+    {
+      "id": "celeste-player-intro-respawn-begin",
+      "sourceFile": "Celeste/Player.cs",
+      "sourceDeclaration": "private void IntroRespawnBegin()",
+      "originalDeclaration": "private void AppleEverestOriginal_IntroRespawnBegin()",
+      "originalAlias": "AppleEverestOriginal_IntroRespawnBegin",
+      "hookNamespace": "On.Celeste",
+      "hookType": "Player",
+      "eventName": "IntroRespawnBegin",
+      "origDelegate": "orig_IntroRespawnBegin",
+      "hookDelegate": "hook_IntroRespawnBegin",
+      "isStatic": false,
+      "receiverType": "global::Celeste.Player",
+      "returnType": "void",
+      "parameters": []
+    },
+    {
+      "id": "celeste-player-render",
+      "sourceFile": "Celeste/Player.cs",
+      "sourceDeclaration": "public override void Render()",
+      "originalDeclaration": "private void AppleEverestOriginal_Render()",
+      "originalAlias": "AppleEverestOriginal_Render",
+      "hookNamespace": "On.Celeste",
+      "hookType": "Player",
+      "eventName": "Render",
+      "origDelegate": "orig_Render",
+      "hookDelegate": "hook_Render",
+      "isStatic": false,
+      "receiverType": "global::Celeste.Player",
+      "returnType": "void",
+      "parameters": []
+    },
+    {
+      "id": "celeste-player-die",
+      "sourceFile": "Celeste/Player.cs",
+      "sourceDeclaration": "public PlayerDeadBody Die(Vector2 direction, bool evenIfInvincible = false, bool registerDeathInStats = true)",
+      "originalDeclaration": "public PlayerDeadBody orig_Die(Vector2 direction, bool evenIfInvincible, bool registerDeathInStats)",
+      "originalAlias": "orig_Die",
+      "hookNamespace": "On.Celeste",
+      "hookType": "Player",
+      "eventName": "Die",
+      "origDelegate": "orig_Die",
+      "hookDelegate": "hook_Die",
+      "isStatic": false,
+      "receiverType": "global::Celeste.Player",
+      "returnType": "global::Celeste.PlayerDeadBody",
+      "parameters": [
+        { "type": "global::Microsoft.Xna.Framework.Vector2", "name": "direction" },
+        { "type": "bool", "name": "evenIfInvincible", "default": "false" },
+        { "type": "bool", "name": "registerDeathInStats", "default": "true" }
+      ],
+      "directAliases": [ "Celeste.Player::orig_Die", "Celeste.Player::Die" ]
+    },
+    {
+      "id": "celeste-refill-on-player",
+      "sourceFile": "Celeste/Refill.cs",
+      "sourceDeclaration": "private void OnPlayer(Player player)",
+      "originalDeclaration": "private void AppleEverestOriginal_OnPlayer(Player player)",
+      "originalAlias": "AppleEverestOriginal_OnPlayer",
+      "hookNamespace": "On.Celeste",
+      "hookType": "Refill",
+      "eventName": "OnPlayer",
+      "origDelegate": "orig_OnPlayer",
+      "hookDelegate": "hook_OnPlayer",
+      "isStatic": false,
+      "receiverType": "global::Celeste.Refill",
+      "returnType": "void",
+      "parameters": [ { "type": "global::Celeste.Player", "name": "player" } ]
+    },
+    {
+      "id": "monocle-engine-update",
+      "sourceFile": "Monocle/Engine.cs",
+      "sourceDeclaration": "protected override void Update(GameTime gameTime)",
+      "originalDeclaration": "private void AppleEverestOriginal_Update(GameTime gameTime)",
+      "originalAlias": "AppleEverestOriginal_Update",
+      "hookNamespace": "On.Monocle",
+      "hookType": "Engine",
+      "eventName": "Update",
+      "origDelegate": "orig_Update",
+      "hookDelegate": "hook_Update",
+      "isStatic": false,
+      "receiverType": "global::Monocle.Engine",
+      "returnType": "void",
+      "parameters": [ { "type": "global::Microsoft.Xna.Framework.GameTime", "name": "gameTime" } ]
+    },
+    {
+      "id": "monocle-particle-emit-vector2",
+      "sourceFile": "Monocle/ParticleSystem.cs",
+      "sourceDeclaration": "public void Emit(ParticleType type, Vector2 position)",
+      "originalDeclaration": "private void AppleEverestOriginal_Emit_Vector2(ParticleType type, Vector2 position)",
+      "originalAlias": "AppleEverestOriginal_Emit_Vector2",
+      "hookNamespace": "On.Monocle",
+      "hookType": "ParticleSystem",
+      "eventName": "Emit_ParticleType_Vector2",
+      "origDelegate": "orig_Emit_ParticleType_Vector2",
+      "hookDelegate": "hook_Emit_ParticleType_Vector2",
+      "isStatic": false,
+      "receiverType": "global::Monocle.ParticleSystem",
+      "returnType": "void",
+      "parameters": [
+        { "type": "global::Monocle.ParticleType", "name": "type" },
+        { "type": "global::Microsoft.Xna.Framework.Vector2", "name": "position" }
+      ]
+    },
+    {
+      "id": "monocle-particle-emit-vector2-float",
+      "sourceFile": "Monocle/ParticleSystem.cs",
+      "sourceDeclaration": "public void Emit(ParticleType type, Vector2 position, float direction)",
+      "originalDeclaration": "private void AppleEverestOriginal_Emit_Vector2_float(ParticleType type, Vector2 position, float direction)",
+      "originalAlias": "AppleEverestOriginal_Emit_Vector2_float",
+      "hookNamespace": "On.Monocle",
+      "hookType": "ParticleSystem",
+      "eventName": "Emit_ParticleType_Vector2_float",
+      "origDelegate": "orig_Emit_ParticleType_Vector2_float",
+      "hookDelegate": "hook_Emit_ParticleType_Vector2_float",
+      "isStatic": false,
+      "receiverType": "global::Monocle.ParticleSystem",
+      "returnType": "void",
+      "parameters": [
+        { "type": "global::Monocle.ParticleType", "name": "type" },
+        { "type": "global::Microsoft.Xna.Framework.Vector2", "name": "position" },
+        { "type": "float", "name": "direction" }
+      ]
+    },
+    {
+      "id": "monocle-particle-emit-vector2-color",
+      "sourceFile": "Monocle/ParticleSystem.cs",
+      "sourceDeclaration": "public void Emit(ParticleType type, Vector2 position, Color color)",
+      "originalDeclaration": "private void AppleEverestOriginal_Emit_Vector2_Color(ParticleType type, Vector2 position, Color color)",
+      "originalAlias": "AppleEverestOriginal_Emit_Vector2_Color",
+      "hookNamespace": "On.Monocle",
+      "hookType": "ParticleSystem",
+      "eventName": "Emit_ParticleType_Vector2_Color",
+      "origDelegate": "orig_Emit_ParticleType_Vector2_Color",
+      "hookDelegate": "hook_Emit_ParticleType_Vector2_Color",
+      "isStatic": false,
+      "receiverType": "global::Monocle.ParticleSystem",
+      "returnType": "void",
+      "parameters": [
+        { "type": "global::Monocle.ParticleType", "name": "type" },
+        { "type": "global::Microsoft.Xna.Framework.Vector2", "name": "position" },
+        { "type": "global::Microsoft.Xna.Framework.Color", "name": "color" }
+      ]
+    },
+    {
+      "id": "monocle-particle-emit-vector2-color-float",
+      "sourceFile": "Monocle/ParticleSystem.cs",
+      "sourceDeclaration": "public void Emit(ParticleType type, Vector2 position, Color color, float direction)",
+      "originalDeclaration": "private void AppleEverestOriginal_Emit_Vector2_Color_float(ParticleType type, Vector2 position, Color color, float direction)",
+      "originalAlias": "AppleEverestOriginal_Emit_Vector2_Color_float",
+      "hookNamespace": "On.Monocle",
+      "hookType": "ParticleSystem",
+      "eventName": "Emit_ParticleType_Vector2_Color_float",
+      "origDelegate": "orig_Emit_ParticleType_Vector2_Color_float",
+      "hookDelegate": "hook_Emit_ParticleType_Vector2_Color_float",
+      "isStatic": false,
+      "receiverType": "global::Monocle.ParticleSystem",
+      "returnType": "void",
+      "parameters": [
+        { "type": "global::Monocle.ParticleType", "name": "type" },
+        { "type": "global::Microsoft.Xna.Framework.Vector2", "name": "position" },
+        { "type": "global::Microsoft.Xna.Framework.Color", "name": "color" },
+        { "type": "float", "name": "direction" }
+      ]
+    },
+    {
+      "id": "monocle-particle-emit-entity",
+      "sourceFile": "Monocle/ParticleSystem.cs",
+      "sourceDeclaration": "public void Emit(ParticleType type, Entity track, int amount, Vector2 position, Vector2 positionRange, float direction)",
+      "originalDeclaration": "private void AppleEverestOriginal_Emit_Entity(ParticleType type, Entity track, int amount, Vector2 position, Vector2 positionRange, float direction)",
+      "originalAlias": "AppleEverestOriginal_Emit_Entity",
+      "hookNamespace": "On.Monocle",
+      "hookType": "ParticleSystem",
+      "eventName": "Emit_ParticleType_Entity_int_Vector2_Vector2_float",
+      "origDelegate": "orig_Emit_ParticleType_Entity_int_Vector2_Vector2_float",
+      "hookDelegate": "hook_Emit_ParticleType_Entity_int_Vector2_Vector2_float",
+      "isStatic": false,
+      "receiverType": "global::Monocle.ParticleSystem",
+      "returnType": "void",
+      "parameters": [
+        { "type": "global::Monocle.ParticleType", "name": "type" },
+        { "type": "global::Monocle.Entity", "name": "track" },
+        { "type": "int", "name": "amount" },
+        { "type": "global::Microsoft.Xna.Framework.Vector2", "name": "position" },
+        { "type": "global::Microsoft.Xna.Framework.Vector2", "name": "positionRange" },
+        { "type": "float", "name": "direction" }
+      ]
+    },
+    {
+      "id": "celeste-trail-add-entity-color",
+      "sourceFile": "Celeste/TrailManager.cs",
+      "sourceDeclaration": "public static void Add(Entity entity, Color color, float duration = 1f, bool frozenUpdate = false, bool useRawDeltaTime = false)",
+      "originalDeclaration": "private static void AppleEverestOriginal_Add_Entity_Color(global::Monocle.Entity entity, global::Microsoft.Xna.Framework.Color color, float duration, bool frozenUpdate, bool useRawDeltaTime)",
+      "originalAlias": "AppleEverestOriginal_Add_Entity_Color",
+      "hookNamespace": "On.Celeste",
+      "hookType": "TrailManager",
+      "eventName": "Add_Entity_Color_float_bool_bool",
+      "origDelegate": "orig_Add_Entity_Color_float_bool_bool",
+      "hookDelegate": "hook_Add_Entity_Color_float_bool_bool",
+      "isStatic": true,
+      "returnType": "void",
+      "parameters": [
+        { "type": "global::Monocle.Entity", "name": "entity" },
+        { "type": "global::Microsoft.Xna.Framework.Color", "name": "color" },
+        { "type": "float", "name": "duration", "default": "1f" },
+        { "type": "bool", "name": "frozenUpdate", "default": "false" },
+        { "type": "bool", "name": "useRawDeltaTime", "default": "false" }
+      ]
+    }
+  ]
+}

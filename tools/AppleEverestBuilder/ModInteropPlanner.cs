@@ -244,7 +244,18 @@ internal static class ModInteropPlanner
             }
             source.AppendLine("        }");
         }
-        source.AppendLine("    }\n}\n");
+        source.AppendLine("    }")
+            .AppendLine()
+            .AppendLine("    internal static void ReportStatus()")
+            .AppendLine("    {");
+        foreach (var binding in bindings)
+        {
+            string field = "global::" + binding.Import.DeclaringType + "." + binding.Import.Field;
+            source.Append("        global::Celeste.Mod.AppleEverestStaticRuntime.RecordModInteropBinding(\"")
+                .Append(Escape(binding.Import.ImportName)).Append("\", ").Append(field).AppendLine(" != null);");
+        }
+        source.AppendLine("    }")
+            .AppendLine("}");
 
         object stable = new
         {
@@ -536,6 +547,9 @@ internal static class ModInteropPlanner
     }
 
     private static string CSharpTypeName(TypeReference type) => type.FullName.Replace('/', '.');
+
+    private static string Escape(string value) => value.Replace("\\", "\\\\", StringComparison.Ordinal)
+        .Replace("\"", "\\\"", StringComparison.Ordinal);
 
     private static string AttributeName(CustomAttribute attribute, string expected, string owner)
     {

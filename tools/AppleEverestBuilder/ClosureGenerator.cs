@@ -1,6 +1,7 @@
 using System.Text;
 using System.Text.Json;
 using System.Security;
+using Mono.Cecil;
 
 namespace AppleEverestBuilder;
 
@@ -43,15 +44,7 @@ internal static class ClosureGenerator
                 codeModules.Add((mod, declaration));
                 if (mod.DeclaredAssemblyPath != null)
                 {
-                    string sourceAssembly = Path.Combine(mod.Input.StagingRoot,
-                        mod.DeclaredAssemblyPath.Replace('/', Path.DirectorySeparatorChar));
-                    string fileName = Path.GetFileName(mod.DeclaredAssemblyPath);
-                    string destinationAssembly = Path.Combine(assemblies, fileName);
-                    if (File.Exists(destinationAssembly))
-                        throw new InvalidDataException($"duplicate frozen assembly filename: {fileName}");
-                    (string assemblyName, string original, string frozen) = AssemblyFreezer.Freeze(
-                        sourceAssembly, destinationAssembly, mod.DirectManagedHooks, mod.ModInteropRegistrations);
-                    frozenAssemblies.Add(new FrozenAssemblyRecord(mod.Metadata.Name, assemblyName, fileName, original, frozen));
+                    FreezeManagedAssemblyClosure(mod, assemblies, frozenAssemblies);
                 }
                 // A binary module's declared DLL is the complete production input. Some ordinary
                 // release ZIPs also contain incidental obj/Debug-generated C# files; compiling those
@@ -131,6 +124,8 @@ internal static class ClosureGenerator
             RegistrySource(profile, codeModules, ordered, durabilityAdapters, durabilityClosureSha256), new UTF8Encoding(false));
         File.WriteAllText(Path.Combine(managed, "GeneratedAppleEverestGameplayRegistry.cs"), GameplayRegistrySource(codeModules), new UTF8Encoding(false));
         File.WriteAllText(Path.Combine(managed, "GeneratedAppleEverestContentManifest.cs"), ContentManifestSource(ordered, stagedContent), new UTF8Encoding(false));
+        StaticAssetGeneration staticAssets = StaticAssetGenerator.Generate(codeModules, stagedContent, content);
+        File.WriteAllText(Path.Combine(managed, "GeneratedAppleEverestStaticAssets.cs"), staticAssets.Source, new UTF8Encoding(false));
         File.WriteAllText(Path.Combine(managed, "GeneratedAppleEverestAotRoots.cs"), RootsSource(codeModules), new UTF8Encoding(false));
         IReadOnlyList<ManagedDetourTarget> detourTargets = ManagedDetourCatalog.Targets;
         IReadOnlyList<DirectManagedHookPlan> directPlans = ordered.SelectMany(mod => mod.DirectManagedHooks).ToArray();
@@ -166,7 +161,7 @@ internal static class ClosureGenerator
             runtimeDllLoading = false,
             precompiledAssembliesAotLinked = frozenAssemblies.Count,
             runtimeDetour = directPlans.Count > 0 ? "static-data-only" : "absent",
-            managedDetourCatalogSchema = 1,
+            managedDetourCatalogSchema = 2,
             managedDetourTargetCount = detourTargets.Count,
             directManagedHookCount = directPlans.Count,
             modInteropSchema = 1,
@@ -232,6 +227,8 @@ internal static class ClosureGenerator
                 logicalPath = mount.LogicalPath,
                 sha256 = mount.Sha256
             }).ToArray(),
+            staticAssetDeserializerTypeCount = staticAssets.TypeCount,
+            staticAssetFactoryCount = staticAssets.FactoryCount,
             frozenAssemblies = frozenAssemblies.Select(assembly => new
             {
                 owner = assembly.Owner,
@@ -328,6 +325,7 @@ internal static class ClosureGenerator
         }
 
         AppleApiSurface.Apply(managedRoot);
+        PreparePinnedEverestManagedTargets(managedRoot);
         ManagedDetourGenerator.RewriteTargets(managedRoot, ManagedDetourCatalog.Targets);
         PatchLevel(Path.Combine(managedRoot, "Celeste", "Level.cs"));
         PatchGameplayLoading(Path.Combine(managedRoot, "Celeste", "Level.cs"));
@@ -346,7 +344,7 @@ internal static class ClosureGenerator
 
     public static string TargetPatchContract => string.Join("\n", new[]
     {
-        "ManagedDetourCatalog:typed-static-dispatch:v3",
+        "ManagedDetourCatalog:typed-static-dispatch:v4",
         "Level.LoadLevel:ordinary-event:v1",
         "Celeste.Run:static-registry-startup:v1",
         "GameLoader:content-ready:v1",
@@ -362,6 +360,7 @@ internal static class ClosureGenerator
         "OuiFileSelect:module-slot-preload:v1",
         "UserIO.SaveHandler:nonpersistent-mod-session-filter:v1",
         "OverworldLoader.Begin:nonpersistent-mod-session-restore:v1",
+        "PinnedEverestABI:ConditionHelper+AchievementHelper-reviewed-members:v2",
         "PinnedEverestABI:DeathMarkers-reviewed-members:v1",
         "HookGen+RuntimeDetour.Hook:shared-data-only-backend:v1",
         "MonoMod.ModInterop:host-cecil-static-typed-plan:v1",
@@ -369,6 +368,67 @@ internal static class ClosureGenerator
         "Celeste.Modern.csproj:EVEREST_APPLE_STATIC_AOT:v2",
         "ExternalAssembly:full-trimmer-root:v1"
     });
+
+    private static void FreezeManagedAssemblyClosure(ResolvedMod mod, string destinationRoot,
+        List<FrozenAssemblyRecord> frozenAssemblies)
+    {
+        string declared = mod.DeclaredAssemblyPath
+            ?? throw new InvalidDataException($"{mod.Metadata.Name} has no declared assembly path");
+        Dictionary<string, List<(string Path, string Sha)>> packagedCandidates = new(StringComparer.Ordinal);
+        foreach (string relative in mod.ManagedFiles.Where(path =>
+                     path.EndsWith(".dll", StringComparison.OrdinalIgnoreCase)).Order(StringComparer.Ordinal))
+        {
+            string source = Path.Combine(mod.Input.StagingRoot,
+                relative.Replace('/', Path.DirectorySeparatorChar));
+            using AssemblyDefinition assembly = AssemblyDefinition.ReadAssembly(source,
+                new ReaderParameters { ReadSymbols = false });
+            string identity = assembly.Name.Name;
+            if (!packagedCandidates.TryGetValue(identity, out List<(string Path, string Sha)>? candidates))
+                packagedCandidates[identity] = candidates = [];
+            candidates.Add((relative, Hashing.FileSha256(source)));
+        }
+        Dictionary<string, string> packagedByIdentity = new(StringComparer.Ordinal);
+        foreach ((string identity, List<(string Path, string Sha)> candidates) in packagedCandidates)
+        {
+            if (candidates.Select(candidate => candidate.Sha).Distinct(StringComparer.Ordinal).Count() != 1)
+                throw new InvalidDataException($"conflicting managed dependency identity in {mod.Metadata.Name}: {identity}");
+            packagedByIdentity.Add(identity, candidates.Any(candidate => candidate.Path == declared)
+                ? declared
+                : candidates.OrderBy(candidate => candidate.Path.Count(character => character == '/'))
+                    .ThenBy(candidate => candidate.Path, StringComparer.Ordinal).First().Path);
+        }
+        Queue<string> pending = new();
+        HashSet<string> selected = new(StringComparer.Ordinal);
+        pending.Enqueue(declared);
+        while (pending.Count > 0)
+        {
+            string relative = pending.Dequeue();
+            if (!selected.Add(relative)) continue;
+            string source = Path.Combine(mod.Input.StagingRoot,
+                relative.Replace('/', Path.DirectorySeparatorChar));
+            using AssemblyDefinition assembly = AssemblyDefinition.ReadAssembly(source,
+                new ReaderParameters { ReadSymbols = false });
+            foreach (string dependency in assembly.MainModule.AssemblyReferences.Select(reference => reference.Name)
+                         .Where(packagedByIdentity.ContainsKey).Order(StringComparer.Ordinal))
+                pending.Enqueue(packagedByIdentity[dependency]);
+        }
+
+        foreach (string relative in selected.OrderBy(path => path == declared ? "" : path, StringComparer.Ordinal))
+        {
+            string source = Path.Combine(mod.Input.StagingRoot,
+                relative.Replace('/', Path.DirectorySeparatorChar));
+            string fileName = Path.GetFileName(relative);
+            string destination = Path.Combine(destinationRoot, fileName);
+            if (File.Exists(destination))
+                throw new InvalidDataException($"duplicate frozen assembly filename: {fileName}");
+            bool module = string.Equals(relative, declared, StringComparison.Ordinal);
+            (string assemblyName, string original, string frozen) = AssemblyFreezer.Freeze(
+                source, destination,
+                module ? mod.DirectManagedHooks : Array.Empty<DirectManagedHookPlan>(),
+                module ? mod.ModInteropRegistrations : Array.Empty<ModInteropRegistrationPlan>());
+            frozenAssemblies.Add(new FrozenAssemblyRecord(mod.Metadata.Name, assemblyName, fileName, original, frozen));
+        }
+    }
 
     private static string ExternalAssemblyRootsSource(IReadOnlyList<FrozenAssemblyRecord> assemblies)
     {
@@ -447,10 +507,75 @@ internal static class ClosureGenerator
             "\tpublic int ChapterIndex\n\t{",
             "\tpublic string SID\n\t{\n\t\tget\n\t\t{\n\t\t\tif (AreaData.Areas == null || ID < 0 || ID >= AreaData.Areas.Count) return null;\n\t\t\tAreaData data = AreaData.Areas[ID];\n\t\t\tstring path = data?.Mode != null && data.Mode.Length > 0 ? data.Mode[0]?.Path : null;\n\t\t\treturn string.IsNullOrEmpty(path) ? data?.Name : \"Celeste/\" + path;\n\t\t}\n\t}\n\n\tpublic int ChapterIndex\n\t{");
 
+        ReplaceOnce(areaKey,
+            "\tpublic int ChapterIndex\n\t{",
+            "\tpublic string LevelSet\n\t{\n\t\tget\n\t\t{\n\t\t\tstring sid = SID;\n\t\t\tif (string.IsNullOrEmpty(sid)) return null;\n\t\t\tint slash = sid.IndexOf('/');\n\t\t\treturn slash > 0 ? sid.Substring(0, slash) : \"Celeste\";\n\t\t}\n\t}\n\n\tpublic int ChapterIndex\n\t{");
+
+        // ConditionHelper 1.0.0 is compiled against Everest's publicized
+        // canonical-level-set ABI. Keep the ordinary serialized LastArea as
+        // the source of truth and expose the reviewed nonserialized alias and
+        // aggregate view used by that exact release.
+        string saveData = Path.Combine(managedRoot, "Celeste", "SaveData.cs");
+        ReplaceOnce(saveData,
+            "\tpublic AreaKey LastArea;",
+            "\tpublic AreaKey LastArea;\n\n\t[NonSerialized]\n\t[XmlIgnore]\n\tpublic AreaKey LastArea_Safe;");
+        ReplaceOnce(saveData,
+            "\tpublic int UnlockedModes\n\t{",
+            "\tpublic LevelSetStats LevelSetStats => new LevelSetStats(this);\n\n\tpublic int UnlockedModes\n\t{");
+        ReplaceOnce(saveData,
+            "\tpublic void AfterInitialize()\n\t{",
+            "\tpublic void AfterInitialize()\n\t{\n\t\tLastArea_Safe = LastArea;");
+        ReplaceOnce(saveData,
+            "\t\tLastArea = session.Area;",
+            "\t\tLastArea = session.Area;\n\t\tLastArea_Safe = LastArea;");
+
+        string levelSetStats = Path.Combine(managedRoot, "Celeste", "LevelSetStats.cs");
+        if (File.Exists(levelSetStats))
+            throw new InvalidDataException("pinned Everest LevelSetStats target already exists");
+        File.WriteAllText(levelSetStats,
+            "namespace Celeste;\n\n" +
+            "public sealed class LevelSetStats\n{\n" +
+            "\tprivate readonly SaveData saveData;\n\n" +
+            "\tinternal LevelSetStats(SaveData saveData) { this.saveData = saveData; }\n\n" +
+            "\tpublic int TotalStrawberries => saveData?.TotalStrawberries ?? 0;\n" +
+            "\tpublic int TotalGoldenStrawberries => saveData?.TotalGoldenStrawberries ?? 0;\n" +
+            "\tpublic int TotalHeartGems => saveData?.TotalHeartGems ?? 0;\n" +
+            "\tpublic int TotalCassettes => saveData?.TotalCassettes ?? 0;\n" +
+            "}\n", new UTF8Encoding(false));
+
         // Desktop Everest publicizes Engine.scene. The accepted DLL contains a
         // direct field reference produced by that publicized contract.
         string engine = Path.Combine(managedRoot, "Monocle", "Engine.cs");
         ReplaceOnce(engine, "\tprivate Scene scene;", "\tpublic Scene scene;");
+
+        // AchievementHelper 1.0.5 uses the exact TextMenu ABI exposed by its
+        // pinned Everest build: the public Items view and the one-argument
+        // SubHeader constructor. Keep the canonical list private and expose a
+        // read-only property; the constructor delegates to vanilla behavior.
+        string textMenu = Path.Combine(managedRoot, "Celeste", "TextMenu.cs");
+        ReplaceOnce(textMenu,
+            "\t\tpublic SubHeader(string title, bool topPadding = true)\n\t\t{",
+            "\t\tpublic SubHeader(string title) : this(title, true) { }\n\n" +
+            "\t\tpublic SubHeader(string title, bool topPadding)\n\t\t{");
+        ReplaceOnce(textMenu,
+            "\tprivate List<Item> items = new List<Item>();",
+            "\tprivate List<Item> items = new List<Item>();\n\n\tpublic List<Item> Items => items;");
+    }
+
+    private static void PreparePinnedEverestManagedTargets(string managedRoot)
+    {
+        // The pinned Everest Commands patch adds a level-set-aware overload.
+        // The closed Apple product supports only the canonical Celeste class,
+        // so its exact reviewed ABI delegates to vanilla for that class and
+        // safely ignores unknown level-set names. This must exist before the
+        // managed-detour catalog rewrites both overloads.
+        string commands = Path.Combine(managedRoot, "Celeste", "Commands.cs");
+        ReplaceOnce(commands,
+            "\tprivate static void CmdHearts(int amount = 24)\n\t{",
+            "\tprivate static void CmdHearts(int amount, string levelSet)\n\t{\n" +
+            "\t\tif (string.IsNullOrEmpty(levelSet) || levelSet == \"Celeste\") CmdHearts(amount);\n" +
+            "\t}\n\n" +
+            "\tprivate static void CmdHearts(int amount = 24)\n\t{");
     }
 
     private static void PatchModuleDurability(string managedRoot)
@@ -480,8 +605,8 @@ internal static class ClosureGenerator
             "\tpublic static bool TryDelete(int slot)\n\t{\n\t\treturn UserIO.Delete(GetFilename(slot));\n\t}",
             "\tpublic static bool TryDelete(int slot)\n\t{\n\t\tbool vanilla = UserIO.Delete(GetFilename(slot));\n\t\treturn vanilla && global::Celeste.Mod.AppleEverestModulePersistence.DeleteSlot(slot);\n\t}");
         ReplaceOnce(saveData,
-            "\tpublic void StartSession(Session session)\n\t{\n\t\tLastArea = session.Area;\n\t\tCurrentSession = session;",
-            "\tpublic void StartSession(Session session)\n\t{\n\t\tSession appleEverestPreviousSession = CurrentSession;\n\t\tLastArea = session.Area;\n\t\tCurrentSession = session;\n\t\tif (!object.ReferenceEquals(appleEverestPreviousSession, session))\n\t\t\tglobal::Celeste.Mod.AppleEverestModulePersistence.ResetSessionForNewVanillaSession(FileSlot);");
+            "\tprivate void AppleEverestOriginal_StartSession(Session session)\n\t{\n\t\tLastArea = session.Area;\n\t\tLastArea_Safe = LastArea;\n\t\tCurrentSession = session;",
+            "\tprivate void AppleEverestOriginal_StartSession(Session session)\n\t{\n\t\tSession appleEverestPreviousSession = CurrentSession;\n\t\tLastArea = session.Area;\n\t\tLastArea_Safe = LastArea;\n\t\tCurrentSession = session;\n\t\tif (!object.ReferenceEquals(appleEverestPreviousSession, session))\n\t\t\tglobal::Celeste.Mod.AppleEverestModulePersistence.ResetSessionForNewVanillaSession(FileSlot);");
 
         string fileSelect = Path.Combine(managedRoot, "Celeste", "OuiFileSelect.cs");
         ReplaceOnce(fileSelect,
@@ -555,6 +680,7 @@ internal static class ClosureGenerator
                 .Append(requiredBy).Append(", static () => new ")
                 .Append("global::").Append(declaration.ModuleType).Append("(), ")
                 .Append(SettingsFactory(declaration)).Append(", ")
+                .Append(InputBindingInitializer(declaration)).Append(", ")
                 .Append(Factory(declaration.SaveDataType)).Append(", ")
                 .Append(Factory(declaration.SessionType)).Append(", ")
                 .Append(durabilityAdapters.TryGetValue(mod.Metadata.Name, out GeneratedDurabilityAdapter? adapter)
@@ -588,6 +714,27 @@ internal static class ClosureGenerator
             .Distinct(StringComparer.Ordinal)
             .OrderBy(value => value, StringComparer.Ordinal)
             .ToArray();
+        result.AppendLine("    };")
+            .AppendLine("    internal static readonly AppleEverestModContentDescriptor[] ModContents =")
+            .AppendLine("    {");
+        foreach (ResolvedMod mod in mods)
+            result.Append("        new AppleEverestModContentDescriptor(\"").Append(Escape(mod.Metadata.Name))
+                .Append("\", \"").Append(Escape(mod.Metadata.Version)).AppendLine("\"),");
+        result.AppendLine("    };")
+            .AppendLine("    internal static readonly AppleEverestStaticAssetDescriptor[] StaticAssets =")
+            .AppendLine("    {");
+        foreach (ContentMountRecord mount in staged.OrderBy(value => value.Order)
+                     .ThenBy(value => value.SourcePath, StringComparer.Ordinal))
+        {
+            string extension = Path.GetExtension(mount.SourcePath);
+            string virtualPath = StaticAssetGenerator.VirtualPath(mount.SourcePath);
+            bool yaml = extension.Equals(".yaml", StringComparison.OrdinalIgnoreCase) ||
+                        extension.Equals(".yml", StringComparison.OrdinalIgnoreCase);
+            result.Append("        new AppleEverestStaticAssetDescriptor(\"").Append(Escape(mount.Owner))
+                .Append("\", \"").Append(Escape(virtualPath)).Append("\", \"")
+                .Append(Escape(mount.LogicalPath)).Append("\", ").Append(yaml ? "true" : "false")
+                .Append(", \"").Append(Escape(extension.TrimStart('.').ToLowerInvariant())).AppendLine("\"),");
+        }
         result.AppendLine("    };")
             .AppendLine("    internal static readonly AppleEverestAtlasMountDescriptor[] AtlasMounts =")
             .AppendLine("    {");
@@ -779,11 +926,19 @@ internal static class ClosureGenerator
     private static string SettingsFactory(AppleStaticDeclaration declaration)
     {
         if (declaration.SettingsType == null) return "null";
-        string assignments = string.Join(", ", declaration.ButtonBindingProperties.Select(property =>
-            property + " = new global::Celeste.Mod.ButtonBinding()"));
-        return assignments.Length == 0
-            ? $"static () => new global::{declaration.SettingsType}()"
-            : $"static () => new global::{declaration.SettingsType} {{ {assignments} }}";
+        if (declaration.ButtonBindingProperties.Length == 0)
+            return $"static () => new global::{declaration.SettingsType}()";
+        string assignments = string.Join(" ", declaration.ButtonBindingProperties.Select(property =>
+            $"settings.{property} ??= new global::Celeste.Mod.ButtonBinding();"));
+        return $"static () => {{ global::{declaration.SettingsType} settings = new global::{declaration.SettingsType}(); {assignments} return settings; }}";
+    }
+
+    private static string InputBindingInitializer(AppleStaticDeclaration declaration)
+    {
+        if (declaration.SettingsType == null || declaration.ButtonBindingProperties.Length == 0) return "null";
+        string assignments = string.Join(" ", declaration.ButtonBindingProperties.Select(property =>
+            $"settings.{property}?.InitializeCurrentInput();"));
+        return $"static value => {{ global::{declaration.SettingsType} settings = (global::{declaration.SettingsType})value; {assignments} }}";
     }
 
     private static string SettingDescriptor(string module, AppleStaticDeclaration declaration, AppleSettingProperty property)

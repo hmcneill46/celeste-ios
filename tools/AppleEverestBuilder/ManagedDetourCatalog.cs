@@ -31,13 +31,13 @@ internal static class ManagedDetourCatalog
     private static IReadOnlyList<ManagedDetourTarget> Load()
     {
         // AppleEverest.ManagedDetourTargets.json is embedded directly from
-        // apple-everest/managed-detour-targets-v1.json by the project file.
+        // apple-everest/managed-detour-targets-v2.json by the project file.
         using Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("AppleEverest.ManagedDetourTargets.json")
             ?? throw new InvalidDataException("embedded managed-detour target catalog is missing");
         ManagedDetourTargetCatalog catalog = JsonSerializer.Deserialize<ManagedDetourTargetCatalog>(stream,
             new JsonSerializerOptions { PropertyNameCaseInsensitive = true })
             ?? throw new InvalidDataException("managed-detour target catalog is empty");
-        if (catalog.SchemaVersion != 1 || catalog.Targets.Length == 0)
+        if (catalog.SchemaVersion != 2 || catalog.Targets.Length == 0)
             throw new InvalidDataException("invalid managed-detour target catalog schema");
         HashSet<string> ids = new(StringComparer.Ordinal);
         HashSet<string> hooks = new(StringComparer.Ordinal);

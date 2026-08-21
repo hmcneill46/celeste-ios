@@ -87,9 +87,11 @@ internal static class AssemblyFreezer
         AssemblyNameReference? hook = assembly.MainModule.AssemblyReferences.SingleOrDefault(reference => reference.Name == "MMHOOK_Celeste");
         AssemblyNameReference? runtimeDetour = assembly.MainModule.AssemblyReferences.SingleOrDefault(reference => reference.Name == "MonoMod.RuntimeDetour");
         AssemblyNameReference? monoModUtils = assembly.MainModule.AssemblyReferences.SingleOrDefault(reference => reference.Name == "MonoMod.Utils");
-        AssemblyNameReference celeste = assembly.MainModule.AssemblyReferences.Single(reference => reference.Name == "Celeste");
+        AssemblyNameReference? celeste = assembly.MainModule.AssemblyReferences.SingleOrDefault(reference => reference.Name == "Celeste");
         foreach (AssemblyNameReference reference in new[] { hook, runtimeDetour }.Where(reference => reference != null).Cast<AssemblyNameReference>())
         {
+            if (celeste == null)
+                throw new InvalidDataException("managed detour facade requires a Celeste assembly reference");
             foreach (TypeReference type in assembly.MainModule.GetTypeReferences())
                 if (ReferenceEquals(type.Scope, reference)) type.Scope = celeste;
             if (!assembly.MainModule.GetTypeReferences().Any(type => ReferenceEquals(type.Scope, reference)))
@@ -107,7 +109,11 @@ internal static class AssemblyFreezer
                     assembly.CustomAttributes.RemoveAt(index);
             foreach (TypeReference type in assembly.MainModule.GetTypeReferences().Where(type =>
                          ReferenceEquals(type.Scope, monoModUtils) && type.Namespace == "MonoMod.ModInterop"))
+            {
+                if (celeste == null)
+                    throw new InvalidDataException("ModInterop facade requires a Celeste assembly reference");
                 type.Scope = celeste;
+            }
             TypeReference[] residual = assembly.MainModule.GetTypeReferences()
                 .Where(type => ReferenceEquals(type.Scope, monoModUtils) &&
                                type.FullName != "System.Runtime.CompilerServices.IgnoresAccessChecksToAttribute").ToArray();
@@ -115,6 +121,36 @@ internal static class AssemblyFreezer
                 throw new InvalidDataException("DEFERRED_MONOMOD_UTILS_SURFACE:" + string.Join(',',
                     residual.Select(type => type.FullName).Distinct(StringComparer.Ordinal).Order(StringComparer.Ordinal).Take(12)));
             assembly.MainModule.AssemblyReferences.Remove(monoModUtils);
+        }
+
+        // Static YAML factories are generated and type-checked on the Mac.
+        // The device never reflects over YamlDotNet attributes or carries the
+        // desktop serializer, so remove the marker after it has informed the
+        // host-side DTO audit and drop the now-unused package reference.
+        AssemblyNameReference? yamlDotNet = assembly.MainModule.AssemblyReferences.SingleOrDefault(reference =>
+            reference.Name == "YamlDotNet");
+        if (yamlDotNet != null)
+        {
+            foreach (TypeDefinition type in assembly.MainModule.Types.SelectMany(AllTypes))
+            foreach (PropertyDefinition property in type.Properties)
+                for (int index = property.CustomAttributes.Count - 1; index >= 0; index--)
+                    if (property.CustomAttributes[index].AttributeType.FullName ==
+                        "YamlDotNet.Serialization.YamlIgnoreAttribute")
+                        property.CustomAttributes.RemoveAt(index);
+            TypeReference[] residualYaml = assembly.MainModule.GetTypeReferences().Where(type =>
+                ReferenceEquals(type.Scope, yamlDotNet)).ToArray();
+            TypeReference[] unsupportedYaml = residualYaml.Where(type =>
+                type.FullName != "YamlDotNet.Serialization.YamlIgnoreAttribute").ToArray();
+            if (unsupportedYaml.Length != 0)
+                throw new InvalidDataException("DEFERRED_YAMLDOTNET_SURFACE:" + string.Join(',', unsupportedYaml
+                    .Select(type => type.FullName).Distinct(StringComparer.Ordinal).Order(StringComparer.Ordinal).Take(12)));
+            if (residualYaml.Length != 0)
+            {
+                if (celeste == null)
+                    throw new InvalidDataException("static YAML marker normalization requires a Celeste assembly reference");
+                foreach (TypeReference marker in residualYaml) marker.Scope = celeste;
+            }
+            assembly.MainModule.AssemblyReferences.Remove(yamlDotNet);
         }
 
         // Older FNA-targeting mods were compiled against FNA's historical
@@ -137,6 +173,8 @@ internal static class AssemblyFreezer
         }
         foreach (DirectManagedHookPlan plan in directHooks)
         {
+            if (celeste == null)
+                throw new InvalidDataException("direct managed Hook requires a Celeste assembly reference");
             TypeDefinition type = assembly.MainModule.Types.SelectMany(AllTypes)
                 .Single(candidate => candidate.FullName.Replace('/', '.') == plan.DetourType);
             MethodDefinition method = type.Methods.Single(candidate => candidate.Name == plan.DetourMethod);
@@ -172,6 +210,7 @@ internal static class AssemblyFreezer
             if (type == null) continue;
             MakePublic(type);
         }
+        InstrumentModInteropExports(assembly, celeste, modInteropRegistrations);
         Directory.CreateDirectory(Path.GetDirectoryName(destination)!);
         assembly.Write(destination, new WriterParameters { WriteSymbols = false });
         return (assemblyName, Hashing.FileSha256(source), Hashing.FileSha256(destination));
@@ -193,6 +232,40 @@ internal static class AssemblyFreezer
             type.IsNestedAssembly = false;
             type.IsNestedFamilyAndAssembly = false;
             type.IsNestedFamilyOrAssembly = false;
+        }
+    }
+
+    private static void InstrumentModInteropExports(AssemblyDefinition assembly, AssemblyNameReference? celeste,
+        IReadOnlyList<ModInteropRegistrationPlan> registrations)
+    {
+        if (registrations.Count == 0) return;
+        if (celeste == null)
+            throw new InvalidDataException("static ModInterop diagnostics require a Celeste assembly reference");
+        TypeReference runtime = new("Celeste.Mod", "AppleEverestStaticRuntime", assembly.MainModule, celeste);
+        MethodReference record = new("RecordModInteropExportInvocation", assembly.MainModule.TypeSystem.Void, runtime)
+        {
+            HasThis = false
+        };
+        record.Parameters.Add(new ParameterDefinition(assembly.MainModule.TypeSystem.String));
+        foreach (ModInteropRegistrationPlan registration in registrations)
+        {
+            TypeDefinition type = assembly.MainModule.Types.SelectMany(AllTypes)
+                .Single(candidate => candidate.FullName.Replace('/', '.') == registration.RegisteredType);
+            MethodDefinition[] methods = type.Methods.Where(method => method.IsPublic && method.IsStatic && !method.IsConstructor)
+                .ToArray();
+            foreach (ModInteropExportPlan export in registration.Exports)
+            {
+                if (export.MethodOrder < 0 || export.MethodOrder >= methods.Length ||
+                    methods[export.MethodOrder].Name != export.Method)
+                    throw new InvalidDataException($"static ModInterop export order drifted: {registration.RegisteredType}::{export.Method}");
+                MethodDefinition method = methods[export.MethodOrder];
+                if (!method.HasBody)
+                    throw new InvalidDataException($"static ModInterop export has no body: {registration.RegisteredType}::{export.Method}");
+                ILProcessor il = method.Body.GetILProcessor();
+                Instruction first = method.Body.Instructions.First();
+                il.InsertBefore(first, il.Create(OpCodes.Ldstr, export.Names.Last()));
+                il.InsertBefore(first, il.Create(OpCodes.Call, record));
+            }
         }
     }
 

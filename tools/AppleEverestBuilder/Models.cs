@@ -9,7 +9,7 @@ internal static class ProductPolicy
     public const long MaxSingleFileBytes = 64L * 1024 * 1024;
     public const int MaxPathDepth = 24;
     public const int MaxYamlBytes = 1024 * 1024;
-    public const string TransformerVersion = "apple-everest-static-v6";
+    public const string TransformerVersion = "apple-everest-static-v7";
     public const string CanonicalClass = "celeste-1.4.0.0-a";
 }
 

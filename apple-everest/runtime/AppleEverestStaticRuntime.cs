@@ -25,6 +25,8 @@ public static class AppleEverestStaticRuntime
     private static readonly List<string> HookTrace = new();
     private static readonly HashSet<string> ObservedDirectHooks = new(StringComparer.Ordinal);
     private static readonly HashSet<string> ObservedCustomFactories = new(StringComparer.Ordinal);
+    private static readonly HashSet<string> ObservedModInteropRegistrations = new(StringComparer.Ordinal);
+    private static readonly HashSet<string> ObservedModInteropExports = new(StringComparer.Ordinal);
     private static bool started;
     private static bool startupCompleted;
     private static bool contentReady;
@@ -78,9 +80,11 @@ public static class AppleEverestStaticRuntime
         AppleEverestSettingsPersistence.LoadAndApply(GeneratedAppleEverestModuleRegistry.Settings);
         foreach (Loaded loaded in LoadedModules)
         {
+            loaded.Descriptor.InputBindingInitializer?.Invoke((EverestModuleSettings)loaded.Settings);
             EverestModule module = loaded.Module;
             InvokeOwned(loaded, module.Load);
         }
+        GeneratedAppleEverestModInterop.ReportStatus();
         CompleteContentLifecycle();
         Log($"startup=PASS profile={GeneratedAppleEverestModuleRegistry.Profile} modules={LoadedModules.Count} runtime-dll-load=false runtime-detour=false");
     }
@@ -90,6 +94,7 @@ public static class AppleEverestStaticRuntime
         if (contentReady) return;
         contentReady = true;
         MountStaticAtlases();
+        MountStaticModContent();
         if (GeneratedAppleEverestContentManifest.Has("AppleEverest/Dialog/Canary.txt")) LoadCanaryDialog();
         LoadStaticDialogFragments();
         if (GeneratedAppleEverestContentManifest.Has("AppleEverest/Canary/precedence.txt")) VerifyContentPrecedence();
@@ -142,6 +147,36 @@ public static class AppleEverestStaticRuntime
         Log($"content-atlas=PASS gameplay={game} gui={gui} precedence=dependency-order");
     }
 
+    private static void MountStaticModContent()
+    {
+        Everest.Content.Mods.Clear();
+        Everest.Content.Map.Clear();
+        Dictionary<string, ModContent> owners = new(StringComparer.Ordinal);
+        foreach (AppleEverestModContentDescriptor descriptor in GeneratedAppleEverestContentManifest.ModContents)
+        {
+            ModContent content = new(descriptor.Name)
+            {
+                Mod = new EverestModuleMetadata
+                {
+                    Name = descriptor.Name,
+                    Version = new Version(descriptor.Version)
+                }
+            };
+            owners.Add(descriptor.Name, content);
+            Everest.Content.Mods.Add(content);
+        }
+        foreach (AppleEverestStaticAssetDescriptor descriptor in GeneratedAppleEverestContentManifest.StaticAssets)
+        {
+            if (!owners.TryGetValue(descriptor.Owner, out ModContent owner))
+                throw new InvalidDataException($"static content owner is unresolved: {descriptor.Owner}");
+            Type type = descriptor.IsYaml ? typeof(AssetTypeYaml) : null;
+            ModAsset asset = new(owner, descriptor.PathVirtual, descriptor.LogicalPath, type, descriptor.Format);
+            owner.Map[descriptor.PathVirtual] = asset;
+            Everest.Content.Map[descriptor.PathVirtual] = asset;
+        }
+        Log($"content-assets=PASS owners={owners.Count} assets={GeneratedAppleEverestContentManifest.StaticAssets.Length} typed-yaml={GeneratedAppleEverestStaticAssets.FactoryCount}");
+    }
+
     public static bool IsModuleEnabled(string name) =>
         LoadedModules.FirstOrDefault(item => item.Descriptor.Name == name)?.Enabled ?? name == "AppleEverestCore";
 
@@ -190,6 +225,21 @@ public static class AppleEverestStaticRuntime
         string key = owner + "\0" + kind + "\0" + id;
         if (ObservedCustomFactories.Add(key)) Log($"custom-factory=PASS owner={owner} kind={kind} id={id}");
     }
+
+    public static void RecordModInteropRegistration(string type)
+    {
+        if (ObservedModInteropRegistrations.Add(type ?? "<null>"))
+            Log($"modinterop-registration=PASS type={type}");
+    }
+
+    public static void RecordModInteropExportInvocation(string export)
+    {
+        if (ObservedModInteropExports.Add(export ?? "<null>"))
+            Log($"modinterop-export-invoked=PASS export={export}");
+    }
+
+    internal static void RecordModInteropBinding(string import, bool bound) =>
+        Log($"modinterop-binding={(bound ? "PASS" : "FAIL")} import={import}");
 
     public static void RunHookProbe()
     {

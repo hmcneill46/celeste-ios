@@ -1,5 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using Microsoft.Xna.Framework.Input;
+using Monocle;
 
 namespace Celeste.Mod;
 
@@ -52,7 +55,97 @@ public abstract class EverestModuleSession
 // generator emits equivalent typed construction for every declared property.
 public sealed class ButtonBinding
 {
-    public bool Pressed => false;
+    public List<Buttons> Buttons
+    {
+        get => Binding.Controller;
+        set => Binding.Controller = value ?? new List<Buttons>();
+    }
+
+    public List<Keys> Keys
+    {
+        get => Binding.Keyboard;
+        set => Binding.Keyboard = value ?? new List<Keys>();
+    }
+
+    public Binding Binding { get; private set; }
+    public VirtualButton Button;
+
+    public bool Check => Button?.Check ?? false;
+    public bool Pressed => Button?.Pressed ?? false;
+    public bool Released => Button?.Released ?? false;
+    public bool Repeating => Button?.Repeating ?? false;
+
+    public ButtonBinding() : this(0) { }
+
+    public ButtonBinding(Buttons buttons, params Keys[] keys)
+    {
+        Binding = new Binding
+        {
+            Controller = Enum.GetValues<Buttons>()
+                .Where(button => button != 0 && (buttons & button) == button).ToList(),
+            Keyboard = new List<Keys>(keys ?? Array.Empty<Keys>())
+        };
+    }
+
+    // Desktop Everest deliberately constructs settings before Celeste input
+    // exists, then attaches each ButtonBinding from OnInputInitialize. The
+    // static product emits that same typed second phase without reflection.
+    internal void InitializeCurrentInput()
+    {
+        if (Button != null) return;
+        if (global::Celeste.Input.Gamepad == null)
+            throw new InvalidOperationException("Celeste input is not initialized");
+        Button = new VirtualButton(Binding, global::Celeste.Input.Gamepad, 0.08f, 0.2f);
+    }
+
+    public void ConsumeBuffer() => Button?.ConsumeBuffer();
+    public void ConsumePress() => Button?.ConsumePress();
+    public void SetRepeat(float repeatTime) => Button?.SetRepeat(repeatTime);
+    public void SetRepeat(float repeatTime, float multiRepeatTime) => Button?.SetRepeat(repeatTime, multiRepeatTime);
+}
+
+[AttributeUsage(AttributeTargets.Property)]
+public sealed class SettingNameAttribute : Attribute
+{
+    public string Name { get; }
+    public SettingNameAttribute(string name) { Name = name; }
+}
+
+// Metadata-only Everest settings ABI referenced by accepted precompiled
+// modules. The host generator consumes these attributes before AOT and emits
+// typed menu/binding descriptors; the device runtime keeps only their exact
+// harmless constructors so the frozen assemblies remain linkable.
+[AttributeUsage(AttributeTargets.Property)]
+public sealed class SettingSubTextAttribute : Attribute
+{
+    public string Description { get; }
+    public SettingSubTextAttribute(string description) { Description = description; }
+}
+
+[AttributeUsage(AttributeTargets.Property)]
+public sealed class SettingRangeAttribute : Attribute
+{
+    public int Min { get; }
+    public int Max { get; }
+    public bool LargeRange { get; }
+    public SettingRangeAttribute(int min, int max, bool largeRange = false)
+    {
+        Min = min;
+        Max = max;
+        LargeRange = largeRange;
+    }
+}
+
+[AttributeUsage(AttributeTargets.Property)]
+public sealed class DefaultButtonBindingAttribute : Attribute
+{
+    public Buttons Button { get; }
+    public Keys Key { get; }
+    public DefaultButtonBindingAttribute(Buttons button, Keys key)
+    {
+        Button = button;
+        Key = key;
+    }
 }
 
 public static class Extensions
@@ -79,6 +172,9 @@ public static partial class Everest
     {
         public static readonly List<ModContent> Mods = new();
         public static readonly Dictionary<string, ModAsset> Map = new(StringComparer.Ordinal);
+        public static event Action<ModAsset, ModAsset> OnUpdate;
+
+        internal static void RaiseUpdate(ModAsset oldAsset, ModAsset newAsset) => OnUpdate?.Invoke(oldAsset, newAsset);
     }
 
     public static partial class Events
@@ -104,18 +200,37 @@ public sealed class ModContent
 
 public sealed class ModAsset
 {
+    public ModContent Source;
+    public Type Type;
+    public string Format;
+    public string PathVirtual;
+    internal string LogicalPath;
+
+    internal ModAsset(ModContent source, string pathVirtual, string logicalPath, Type type, string format)
+    {
+        Source = source;
+        PathVirtual = pathVirtual;
+        LogicalPath = logicalPath;
+        Type = type;
+        Format = format;
+    }
+
     public bool TryDeserialize<T>(out T value)
     {
-        value = default;
-        return false;
+        return GeneratedAppleEverestStaticAssets.TryDeserialize(this, out value);
     }
+
+    public T Deserialize<T>() => TryDeserialize(out T value) ? value : default;
 }
+
+public sealed class AssetTypeYaml { private AssetTypeYaml() { } }
 
 public static partial class Logger
 {
     public static void SetLogLevel(string tag, LogLevel level) => AppleEverestLogPolicy.Set(tag, level);
 
     public static void Log(string tag, string value) => Write(LogLevel.Verbose, "mod-verbose", tag, value);
+    public static void Log(LogLevel level, string tag, string value) => Write(level, "mod-" + level.ToString().ToLowerInvariant(), tag, value);
     public static void Info(string tag, string value) => Write(LogLevel.Info, "mod-info", tag, value);
     public static void Warn(string tag, string value) => Write(LogLevel.Warn, "mod-warning", tag, value);
     public static void Error(string tag, string value) => Write(LogLevel.Error, "mod-error", tag, value);
@@ -136,6 +251,7 @@ internal sealed class AppleEverestModuleDescriptor
     public string[] RequiredBy { get; }
     public Func<EverestModule> ModuleFactory { get; }
     public Func<EverestModuleSettings> SettingsFactory { get; }
+    public Action<EverestModuleSettings> InputBindingInitializer { get; }
     public Func<EverestModuleSaveData> SaveDataFactory { get; }
     public Func<EverestModuleSession> SessionFactory { get; }
     public AppleEverestModuleDurabilityAdapter Durability { get; }
@@ -147,6 +263,7 @@ internal sealed class AppleEverestModuleDescriptor
         string[] requiredBy,
         Func<EverestModule> moduleFactory,
         Func<EverestModuleSettings> settingsFactory,
+        Action<EverestModuleSettings> inputBindingInitializer,
         Func<EverestModuleSaveData> saveDataFactory,
         Func<EverestModuleSession> sessionFactory,
         AppleEverestModuleDurabilityAdapter durability)
@@ -157,6 +274,7 @@ internal sealed class AppleEverestModuleDescriptor
         RequiredBy = requiredBy;
         ModuleFactory = moduleFactory;
         SettingsFactory = settingsFactory;
+        InputBindingInitializer = inputBindingInitializer;
         SaveDataFactory = saveDataFactory;
         SessionFactory = sessionFactory;
         Durability = durability;
@@ -256,5 +374,36 @@ internal sealed class AppleEverestAtlasMountDescriptor
         Atlas = atlas;
         Key = key;
         LogicalPath = logicalPath;
+    }
+}
+
+internal sealed class AppleEverestModContentDescriptor
+{
+    internal string Name { get; }
+    internal string Version { get; }
+
+    internal AppleEverestModContentDescriptor(string name, string version)
+    {
+        Name = name;
+        Version = version;
+    }
+}
+
+internal sealed class AppleEverestStaticAssetDescriptor
+{
+    internal string Owner { get; }
+    internal string PathVirtual { get; }
+    internal string LogicalPath { get; }
+    internal bool IsYaml { get; }
+    internal string Format { get; }
+
+    internal AppleEverestStaticAssetDescriptor(string owner, string pathVirtual,
+        string logicalPath, bool isYaml, string format)
+    {
+        Owner = owner;
+        PathVirtual = pathVirtual;
+        LogicalPath = logicalPath;
+        IsYaml = isYaml;
+        Format = format;
     }
 }

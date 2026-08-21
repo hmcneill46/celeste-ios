@@ -433,6 +433,13 @@ internal static class CompatibilityAnalyzer
     private static bool IsContent(string path)
     {
         string[] roots = ["Content/", "Maps/", "Dialog/", "Graphics/", "Tutorials/", "Audio/", "Effects/", "Atlases/", "Decals/", "Characters/", "Config/"];
-        return roots.Any(root => path.StartsWith(root, StringComparison.Ordinal));
+        if (roots.Any(root => path.StartsWith(root, StringComparison.Ordinal))) return true;
+        // Everest exposes ordinary root YAML files as virtual content assets.
+        // The metadata file itself is control data, not game content.
+        return !path.Contains('/') &&
+               (path.EndsWith(".yaml", StringComparison.OrdinalIgnoreCase) ||
+                path.EndsWith(".yml", StringComparison.OrdinalIgnoreCase)) &&
+               !path.Equals("everest.yaml", StringComparison.OrdinalIgnoreCase) &&
+               !path.Equals("everest.yml", StringComparison.OrdinalIgnoreCase);
     }
 }
