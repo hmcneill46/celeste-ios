@@ -225,8 +225,9 @@ internal static class RuntimeClosureScanner
         value.Contains("System.IO.FileSystemWatcher::.ctor", StringComparison.Ordinal);
 
     private static bool AllowedStaticFacadeType(AssemblyDefinition assembly, TypeDefinition type) =>
-        assembly.Name.Name == "Celeste" && type.Namespace == "MonoMod.RuntimeDetour" &&
-        type.Name is "Hook" or "DetourConfig";
+        assembly.Name.Name == "Celeste" &&
+        (type.Namespace == "MonoMod.RuntimeDetour" && type.Name is "Hook" or "DetourConfig" ||
+         type.Namespace == "MonoMod.ModInterop" && type.Name is "ModInteropManager" or "ModExportNameAttribute" or "ModImportNameAttribute");
 
     private static bool AllowedEmbeddedCompilerMarker(TypeDefinition type) =>
         type.FullName == "Microsoft.CodeAnalysis.EmbeddedAttribute" &&
@@ -235,8 +236,16 @@ internal static class RuntimeClosureScanner
 
     private static bool AllowedStaticFacadeCall(MethodReference method)
     {
-        if (ScopeName(method.DeclaringType) != "Celeste" || method.DeclaringType.Namespace != "MonoMod.RuntimeDetour")
+        if (ScopeName(method.DeclaringType) != "Celeste")
             return false;
+        if (method.DeclaringType.Namespace == "MonoMod.ModInterop")
+            return method.DeclaringType.Name switch
+            {
+                "ModInteropManager" => method.Name == "ModInterop",
+                "ModExportNameAttribute" or "ModImportNameAttribute" => method.Name is ".ctor" or "get_Name",
+                _ => false
+            };
+        if (method.DeclaringType.Namespace != "MonoMod.RuntimeDetour") return false;
         return method.DeclaringType.Name switch
         {
             "Hook" => method.Name is ".ctor" or "Apply" or "Undo" or "Dispose" or

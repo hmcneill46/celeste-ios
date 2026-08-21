@@ -273,6 +273,50 @@ Settings, SaveData, compressed tvOS save generations, and Save Manager.
 Malformed, truncated, wrong-type, duplicate, or oversized data falls back to
 normal module defaults without changing vanilla state.
 
+## Static MonoMod ModInterop plans
+
+Pinned desktop MonoMod implements its common interop facility dynamically:
+
+```text
+Type.ModInterop()
+  -> reflect public static methods and delegate fields
+  -> store MethodInfo entries by logical name
+  -> Delegate.CreateDelegate for compatible imports
+```
+
+Stage 25F-B preserves those observable semantics while moving discovery to the
+Mac:
+
+```text
+ordinary distributed mod DLLs
+  -> Mono.Cecil resolves literal typeof(T).ModInterop() calls
+  -> generated export/import candidates and typed AOT roots
+  -> device Type.ModInterop() marks one known plan registered
+  -> direct typed delegate fields are refreshed
+  -> subsequent calls are ordinary delegate calls
+```
+
+Registration remains per type, idempotent and process-local. Each public static
+method is available under both its unqualified name and its assembly-name (or
+`ModExportName`) prefix. Imports are public static delegate fields and honour
+field-level and type-level `ModImportName`. The generated plan keeps pinned
+registration order, skips incompatible same-name methods, selects the first
+compatible registered provider, and refreshes already-registered importers
+when a provider appears later. Missing optional providers leave fields null.
+
+The device facade retains only the exact `MonoMod.ModInterop` ABI expected by
+the precompiled DLLs. It has no `GetMethods`, `GetFields`, `MethodInfo` registry,
+`Delegate.CreateDelegate`, assembly loading, executable mutation or general
+MonoMod.Utils runtime. Dynamic registration types, open generic surfaces,
+readonly imports and unsupported delegate shapes are rejected on the Mac.
+
+The selected real ConditionHelper/AchievementHelper binaries prove all four
+qualified imports resolve in one deterministic plan. They remain a **YELLOW**
+physical candidate because those same ordinary DLLs also require a bounded set
+of unrelated HookGen targets not yet in the reviewed catalog. The current
+accepted regression closure therefore exercises the generated empty-plan path
+without pretending that real cross-mod invocation ran on a device.
+
 ## Module settings, SaveData, and Session
 
 Stage 25F-A adds a separate, deliberately bounded compatibility class for

@@ -50,7 +50,7 @@ internal static class ClosureGenerator
                     if (File.Exists(destinationAssembly))
                         throw new InvalidDataException($"duplicate frozen assembly filename: {fileName}");
                     (string assemblyName, string original, string frozen) = AssemblyFreezer.Freeze(
-                        sourceAssembly, destinationAssembly, mod.DirectManagedHooks);
+                        sourceAssembly, destinationAssembly, mod.DirectManagedHooks, mod.ModInteropRegistrations);
                     frozenAssemblies.Add(new FrozenAssemblyRecord(mod.Metadata.Name, assemblyName, fileName, original, frozen));
                 }
                 // A binary module's declared DLL is the complete production input. Some ordinary
@@ -139,6 +139,9 @@ internal static class ClosureGenerator
             ManagedDetourGenerator.DispatcherSource(detourTargets), new UTF8Encoding(false));
         File.WriteAllText(Path.Combine(managed, "GeneratedAppleEverestDirectHooks.cs"),
             ManagedDetourGenerator.DirectRegistrySource(directPlans, detourTargetsById), new UTF8Encoding(false));
+        GeneratedModInteropPlan modInterop = ModInteropPlanner.Generate(ordered);
+        File.WriteAllText(Path.Combine(managed, "GeneratedAppleEverestModInterop.cs"),
+            modInterop.Source, new UTF8Encoding(false));
         File.WriteAllText(Path.Combine(managed, "AppleEverestExternalAssemblyRoots.props"),
             ExternalAssemblyRootsSource(frozenAssemblies), new UTF8Encoding(false));
 
@@ -166,6 +169,14 @@ internal static class ClosureGenerator
             managedDetourCatalogSchema = 1,
             managedDetourTargetCount = detourTargets.Count,
             directManagedHookCount = directPlans.Count,
+            modInteropSchema = 1,
+            modInteropBehavior = "monomod-dfc30a1506d37fb88a2c2be004f525205f46a24c-static-v1",
+            modInteropPlanSha256 = modInterop.PlanSha256,
+            modInteropRegistrationCount = modInterop.RegistrationCount,
+            modInteropExportCount = modInterop.ExportCount,
+            modInteropImportCount = modInterop.ImportCount,
+            modInteropResolvedImportCount = modInterop.ResolvedImportCount,
+            modInteropPlan = modInterop.Manifest,
             customEntityFactoryCount = customFactories.Length + CoreGameplayFactories.Count(value => value.Kind == "entity"),
             customBackdropFactoryCount = backdropFactories.Length,
             moduleSettingCount = codeModules.Sum(item => item.Declaration.SettingsProperties.Length),
@@ -200,6 +211,7 @@ internal static class ClosureGenerator
                     }
                     : null,
                 mechanisms = mod.Mechanisms,
+                modInteropRegistrations = mod.ModInteropRegistrations.Select(registration => registration.RegisteredType).ToArray(),
                 managedFiles = mod.ManagedFiles,
                 contentFiles = mod.ContentFiles
             }).ToArray(),
@@ -352,6 +364,7 @@ internal static class ClosureGenerator
         "OverworldLoader.Begin:nonpersistent-mod-session-restore:v1",
         "PinnedEverestABI:DeathMarkers-reviewed-members:v1",
         "HookGen+RuntimeDetour.Hook:shared-data-only-backend:v1",
+        "MonoMod.ModInterop:host-cecil-static-typed-plan:v1",
         "AppleApiSurface:exact-reviewed-external-members:v1",
         "Celeste.Modern.csproj:EVEREST_APPLE_STATIC_AOT:v2",
         "ExternalAssembly:full-trimmer-root:v1"

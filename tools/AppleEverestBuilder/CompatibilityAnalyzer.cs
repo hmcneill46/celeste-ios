@@ -25,7 +25,8 @@ internal static class CompatibilityAnalyzer
         ("System.Reflection.Emit", CompatibilityClass.DYNAMIC_CODE_UNSUPPORTED),
         ("RuntimeDetour", CompatibilityClass.DIRECT_HOOK_DEFERRED),
         ("Process.Start", CompatibilityClass.PLATFORM_UNSUPPORTED),
-        ("FileSystemWatcher", CompatibilityClass.PLATFORM_UNSUPPORTED)
+        ("FileSystemWatcher", CompatibilityClass.PLATFORM_UNSUPPORTED),
+        ("ModInterop(", CompatibilityClass.MODINTEROP_DEFERRED)
     ];
 
     public static ResolvedMod Analyze(ModInput input, EverestYamlEntry metadata) => AnalyzeCore(input, metadata, rejectUnsupported: true);
@@ -45,6 +46,8 @@ internal static class CompatibilityAnalyzer
         string? declaredAssembly = null;
         SortedSet<string> managedDetourTargets = new(StringComparer.Ordinal);
         List<DirectManagedHookPlan> directManagedHooks = [];
+        List<ModInteropRegistrationPlan> modInteropRegistrations = [];
+        string? normalizedDeclaredEntry = metadata.DLL?.Replace('\\', '/');
         foreach (string relative in managed)
         {
             string path = Path.Combine(input.StagingRoot, relative.Replace('/', Path.DirectorySeparatorChar));
@@ -59,8 +62,17 @@ internal static class CompatibilityAnalyzer
             }
             else if (relative.EndsWith(".dll", StringComparison.OrdinalIgnoreCase))
             {
-                AnalyzeAssembly(path, metadata.Name, managedDetourTargets, directManagedHooks,
+                List<ModInteropRegistrationPlan> assemblyModInterop = [];
+                AnalyzeAssembly(path, metadata.Name, managedDetourTargets, directManagedHooks, assemblyModInterop,
                     (mechanism, detected) => Record($"{relative}:{mechanism}", detected), rejectUnsupported);
+                if (assemblyModInterop.Count > 0 && !string.Equals(relative, normalizedDeclaredEntry, StringComparison.Ordinal))
+                {
+                    Record($"{relative}:DEFERRED_UNLINKED_MODINTEROP_ASSEMBLY", CompatibilityClass.MODINTEROP_DEFERRED);
+                }
+                else
+                {
+                    modInteropRegistrations.AddRange(assemblyModInterop);
+                }
             }
         }
 
@@ -88,7 +100,7 @@ internal static class CompatibilityAnalyzer
             }
         }
 
-        if (rejectUnsupported && classification is (CompatibilityClass.ON_HOOK_DEFERRED or CompatibilityClass.IL_HOOK_DEFERRED or CompatibilityClass.DIRECT_HOOK_DEFERRED or
+        if (rejectUnsupported && classification is (CompatibilityClass.MODINTEROP_DEFERRED or CompatibilityClass.ON_HOOK_DEFERRED or CompatibilityClass.IL_HOOK_DEFERRED or CompatibilityClass.DIRECT_HOOK_DEFERRED or
             CompatibilityClass.DYNAMIC_TARGET_DEFERRED or CompatibilityClass.DYNAMIC_DETOUR_DEFERRED or CompatibilityClass.DETOUR_CONFIG_DEFERRED or
             CompatibilityClass.DYNAMIC_CODE_UNSUPPORTED or CompatibilityClass.NATIVE_UNSUPPORTED or
             CompatibilityClass.LUA_UNSUPPORTED or CompatibilityClass.PLATFORM_UNSUPPORTED))
@@ -105,7 +117,8 @@ internal static class CompatibilityAnalyzer
             Declaration = declaration,
             DeclaredAssemblyPath = declaredAssembly,
             ManagedDetourTargets = managedDetourTargets,
-            DirectManagedHooks = directManagedHooks
+            DirectManagedHooks = directManagedHooks,
+            ModInteropRegistrations = modInteropRegistrations
         };
 
         void Record(string mechanism, CompatibilityClass detected)
@@ -148,12 +161,32 @@ internal static class CompatibilityAnalyzer
         string owner,
         SortedSet<string> targets,
         List<DirectManagedHookPlan> directHooks,
+        List<ModInteropRegistrationPlan> modInteropRegistrations,
         Action<string, CompatibilityClass> record,
         bool rejectUnsupported)
     {
         try
         {
             using AssemblyDefinition assembly = AssemblyDefinition.ReadAssembly(path, new ReaderParameters { ReadSymbols = false });
+            IReadOnlyList<ModInteropRegistrationPlan> interop = ModInteropPlanner.Analyze(assembly, owner,
+                rejectUnsupported, mechanism => record(mechanism,
+                    mechanism.StartsWith("DEFERRED_", StringComparison.Ordinal)
+                        ? CompatibilityClass.MODINTEROP_DEFERRED
+                        : CompatibilityClass.MODINTEROP_STATIC_SUPPORTED));
+            if (interop.Count > 0)
+            {
+                modInteropRegistrations.AddRange(interop);
+                foreach (ModInteropRegistrationPlan registration in interop)
+                    record($"static-modinterop:{registration.RegisteredType}", CompatibilityClass.MODINTEROP_STATIC_SUPPORTED);
+            }
+            TypeReference[] residualMonoModUtils = assembly.MainModule.GetTypeReferences().Where(type =>
+                type.Scope is AssemblyNameReference reference && reference.Name == "MonoMod.Utils" &&
+                type.Namespace != "MonoMod.ModInterop" &&
+                type.FullName != "System.Runtime.CompilerServices.IgnoresAccessChecksToAttribute").ToArray();
+            if (residualMonoModUtils.Length != 0)
+                record("DEFERRED_MONOMOD_UTILS_SURFACE:" + string.Join(',', residualMonoModUtils
+                    .Select(type => type.FullName).Distinct(StringComparer.Ordinal).Order(StringComparer.Ordinal).Take(12)),
+                    CompatibilityClass.MODINTEROP_DEFERRED);
             foreach (TypeReference type in assembly.MainModule.GetTypeReferences()
                          .Where(type => type.Namespace.StartsWith("IL.", StringComparison.Ordinal)))
             {
@@ -379,6 +412,8 @@ internal static class CompatibilityAnalyzer
             CompatibilityClass.ON_HOOK_SUPPORTED => 3,
             CompatibilityClass.DIRECT_HOOK_SUPPORTED => 4,
             CompatibilityClass.MIXED_MANAGED_DETOURS_SUPPORTED => 5,
+            CompatibilityClass.MODINTEROP_STATIC_SUPPORTED => 6,
+            CompatibilityClass.MODINTEROP_DEFERRED => 8,
             CompatibilityClass.ON_HOOK_DEFERRED => 9,
             CompatibilityClass.IL_HOOK_DEFERRED => 10,
             CompatibilityClass.DIRECT_HOOK_DEFERRED => 11,

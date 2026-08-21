@@ -45,6 +45,7 @@ internal static class Program
         string staging = Path.Combine(Path.GetTempPath(), "apple-everest-audit-" + Guid.NewGuid().ToString("N"));
         Directory.CreateDirectory(staging);
         List<object> results = [];
+        List<ResolvedMod> auditedMods = [];
         try
         {
             for (int index = 0; index < modPaths.Count; index++)
@@ -56,6 +57,7 @@ internal static class Program
                     foreach (EverestYamlEntry metadata in input.Metadata)
                     {
                         ResolvedMod mod = CompatibilityAnalyzer.Audit(input, metadata);
+                        auditedMods.Add(mod);
                         results.Add(new
                         {
                             input = Path.GetFileName(source),
@@ -71,7 +73,8 @@ internal static class Program
                             dependencies = metadata.Dependencies.Select(dependency => new { dependency.Name, dependency.Version }).ToArray(),
                             status = mod.Classification is CompatibilityClass.CONTENT_ONLY or CompatibilityClass.STATIC_MODULE or
                                 CompatibilityClass.NORMAL_EVENT or CompatibilityClass.ON_HOOK_SUPPORTED or CompatibilityClass.DIRECT_HOOK_SUPPORTED or
-                                CompatibilityClass.MIXED_MANAGED_DETOURS_SUPPORTED ? "candidate" : "deferred"
+                                CompatibilityClass.MIXED_MANAGED_DETOURS_SUPPORTED or CompatibilityClass.MODINTEROP_STATIC_SUPPORTED
+                                ? "candidate" : "deferred"
                         });
                     }
                 }
@@ -85,7 +88,23 @@ internal static class Program
         {
             if (Directory.Exists(staging)) Directory.Delete(staging, recursive: true);
         }
-        object report = new { schemaVersion = 1, transformerVersion = ProductPolicy.TransformerVersion, audited = results.Count, results };
+        GeneratedModInteropPlan modInterop = ModInteropPlanner.Generate(auditedMods, rejectRequiredMissing: false);
+        object report = new
+        {
+            schemaVersion = 2,
+            transformerVersion = ProductPolicy.TransformerVersion,
+            audited = results.Count,
+            results,
+            modInterop = new
+            {
+                modInterop.PlanSha256,
+                modInterop.RegistrationCount,
+                modInterop.ExportCount,
+                modInterop.ImportCount,
+                modInterop.ResolvedImportCount,
+                plan = modInterop.Manifest
+            }
+        };
         output = Path.GetFullPath(output);
         Directory.CreateDirectory(Path.GetDirectoryName(output)!);
         File.WriteAllText(output, JsonSerializer.Serialize(report, new JsonSerializerOptions { WriteIndented = true }) + "\n");

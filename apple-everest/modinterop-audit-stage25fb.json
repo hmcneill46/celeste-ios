@@ -1,0 +1,97 @@
+{
+  "schemaVersion": 1,
+  "stage": "25F-B",
+  "classification": "YELLOW",
+  "everestCommit": "4bbde91b8dbaaddef2ceec75ca0cd6d59b3b8d00",
+  "monoModCommit": "dfc30a1506d37fb88a2c2be004f525205f46a24c",
+  "transformerVersion": "apple-everest-static-v6",
+  "policy": {
+    "binaryFirst": true,
+    "sourceRequiredForProduction": false,
+    "runtimeReflection": false,
+    "runtimeDelegateCreationFromMethodInfo": false,
+    "registrationLifetime": "process-local-no-unregister",
+    "unsupportedDynamicTypes": "DEFERRED_DYNAMIC_MODINTEROP_TYPE",
+    "unsupportedOpenGenerics": "DEFERRED_OPEN_GENERIC_MODINTEROP_*"
+  },
+  "selected": {
+    "provider": {
+      "name": "ConditionHelper",
+      "version": "1.0.0",
+      "releaseUrl": "https://gamebanana.com/mmdl/1081578",
+      "zipSha256": "cefd1f8264d4eba9ccd8abb324f88764b99c1fda7812cb6cbbb84cef05c6e8ed",
+      "dllSha256": "f4471853b8e6c2abdd107609eeee2852076cde4c7e70667367b71a38d72a62b9",
+      "sourceUrl": "https://github.com/Brokemia/ConditionHelper",
+      "sourceCommit": "1d42c6a756b41ea7165a11891b91869252ed59dd",
+      "license": "MIT",
+      "registrationType": "Celeste.Mod.ConditionHelper.ConditionHelperExports",
+      "classification": "MODINTEROP_STATIC_SUPPORTED_BUT_ON_HOOK_DEFERRED"
+    },
+    "consumer": {
+      "name": "AchievementHelper",
+      "version": "1.0.5",
+      "releaseUrl": "https://gamebanana.com/mmdl/1081965",
+      "zipSha256": "155b2ff92857e92f2c4510270e2c6d391b40510945fe3c6c31f9d8fa43a58177",
+      "dllSha256": "5dd3ceadbd5c085c5b1c4ffebef9f7560c80c8a94f9dc35d4001f2b4443ba5b0",
+      "sourceUrl": "https://github.com/Brokemia/AchievementHelper",
+      "sourceCommit": "6f8bb7807b077195c149f2336be2fb166a0e483b",
+      "license": "MIT",
+      "registrationTypes": [
+        "Celeste.Mod.AchievementHelper.AchievementHelperExports",
+        "Celeste.Mod.AchievementHelper.ConditionHelperImports"
+      ],
+      "classification": "MODINTEROP_STATIC_SUPPORTED_BUT_ON_HOOK_DEFERRED"
+    },
+    "dependency": "AchievementHelper requires ConditionHelper 1.0.0",
+    "planSha256": "9e755781f2d107d37bec45bd9fe4b551a28e9ddf8919f91f11d878c1dd041318",
+    "registrations": 3,
+    "exports": 7,
+    "imports": 4,
+    "resolvedImports": 4,
+    "physicalInvocation": false,
+    "physicalBlocker": "The ordinary distributed provider and consumer DLLs also require bounded On.* targets not yet present in the reviewed HookGen catalog."
+  },
+  "selectedBindings": [
+    {
+      "import": "ConditionHelper.ConditionChanged",
+      "delegate": "Action<string>",
+      "export": "ConditionHelperExports.ConditionChanged"
+    },
+    {
+      "import": "ConditionHelper.WatchConditions",
+      "delegate": "Func<string,Action,int>",
+      "export": "ConditionHelperExports.WatchConditions"
+    },
+    {
+      "import": "ConditionHelper.RemoveCallback",
+      "delegate": "Action<int>",
+      "export": "ConditionHelperExports.RemoveCallback"
+    },
+    {
+      "import": "ConditionHelper.EvaluateConditionExpression",
+      "delegate": "Func<string,bool>",
+      "export": "ConditionHelperExports.EvaluateConditionExpression"
+    }
+  ],
+  "candidateAudit": [
+    {"name":"CavernHelper","version":"1.3.7","zipSha256":"9e699b141e1f2336a6aab795161498c09f986f6ff7b8fa426a3b9d53f2490041","dllSha256":"6178b52a7f40985e627f75c70f590c432422fe71d87241cb086c8cdeb50127da","result":"resolver-deferred"},
+    {"name":"CelesteTAS-EverestInterop","version":"3.47.1","zipSha256":"06a5a6e0c4f35bb6255c20ff8edb0f77c50fd5fa5cf18a1cddbf40cd1919033a","dllSha256":"6f066de6a1803e7672c84c1b2e1655a70c734b3e1223522c701119da41bbca90","result":"resolver-and-large-graph-deferred"},
+    {"name":"CollabUtils2","version":"1.13.4","zipSha256":"4bcea8a9011edb8b7d27b433c47f1f4a871b8f7a4dd7f2bffac67bb99c7f6ad5","dllSha256":"ce7d646252a2fc51f1f513071d97eaa1acedf7ddb0871276c688914e37319f60","result":"resolver-and-large-graph-deferred"},
+    {"name":"CommunalHelper","version":"1.25.5","zipSha256":"44f4fb0b277a4900fd2a555e1a73e661140aa7b2455d3c7776cf420193349e3c","dllSha256":"4011b959ed4e9cc4cb98bf43f6884ae81361fecc994787640553205029c94a8a","result":"resolver-and-large-graph-deferred"},
+    {"name":"GameHelper","version":"1.11.3","zipSha256":"f4ae436322440cc50835cbdc1939a019c830288d07c5b30d9650b5a7f7c7195d","dllSha256":"e08226ef7b2df39728b256f4a5cac90c1dab48971010c91eebe3f556c312c1f8","result":"static-plan-found-il-and-hooks-deferred"},
+    {"name":"GravityHelper","version":"1.2.28","zipSha256":"d4a40744f4c155d655973754422643980321b6660027bc01b660a71b0d00649b","dllSha256":"6cc0d6cad8ab95dfcd022f80be58695d689a919cbcf6a4a7de4d7b5718dfae80","result":"resolver-and-large-graph-deferred"},
+    {"name":"Hyperline","version":"0.3.10","zipSha256":"ad0e864a67b2f5b3ac33032940d8e7ca510fede056265ccd584d546b76cbd61b","dllSha256":"7d8425ecf38b9650edd621ba0d89711e12f5a5cfcb106f11d06c912b031b32e2","result":"companion-assembly-resolver-deferred"},
+    {"name":"LuckyHelper","version":"0.32.4","zipSha256":"775ee02de44e386902e1ae65442e41c9811f08be0c2c7a6f0e0e17ef7a29657c","dllSha256":"3815a638ef194819ea0142894510cd454217a8d96ced8dca80242ece1e6a4d5f","result":"invalid-archive-path-rejected"},
+    {"name":"MaxHelpingHand","version":"1.40.9","zipSha256":"abfc5d167936410e9b6665018335ee654455e30710caffe01540b232da468fee","dllSha256":"6f463f2c014eb60c4abb61e395eb5065455d4bf469f4c83fce9814fb7bfcdfa6","result":"unsupported-custom-entity-and-large-graph"},
+    {"name":"MiscUtils","version":"0.1.0","zipSha256":"b34833ef743d14f9e2ee94757b152f72943776e0ada10485a469d64c182133b5","dllSha256":"bd570ee5d05c9b5461da9323685e1a19f811a91a7efa52b667e0dbe9881ea716","result":"detour-config-and-hooks-deferred"},
+    {"name":"MotionSmoothing","version":"1.6.4","zipSha256":"1970d4c87bffc17e17e62c9fae569e5b215b1202ce189c8046ae2e8ffe88a268","dllSha256":"593c4364939e97d4c5dffd2b18cfa08282d534ef3823ebb24f6f097b4f6d98d9","result":"newer-fna-reference-deferred"},
+    {"name":"NerdHelper","version":"1.6.4","zipSha256":"87637d29ea2af08916bab8c0d76dc9ff9b8c8ccbcac05fcad82f47396c255861","dllSha256":"e04c941adb82f9171a902b0ccc31688fe1971e7f404476b08f6de0b6b3a8975f","result":"newer-fna-reference-deferred"},
+    {"name":"OverworldHelper","version":"0.5.0.1","zipSha256":"89da81657fc6ec57f1570beb067cd0dff15ccbdc683da64b74c79ec4e21d017b","dllSha256":"20992bc96f4a98ad4f49cab9ab6f904cb1e70da9a416ce977ff67963b331c12c","result":"resolver-deferred"},
+    {"name":"Picoline","version":"0.6.0","zipSha256":"be8c871ac67acda9c7bce0f421bd73f0278a8f253dcb02c613e0219d7333d423","dllSha256":"d56ac6ae3362a6e42649b40d0e7d1bebe50a33503ed67b3dfd9f70d303171d7f","result":"static-plan-found-detour-config-and-dynamicdata-deferred"},
+    {"name":"Randomizer","version":"0.8.7","zipSha256":"697aa68aa7248bd2419930c086f63218e0a3b4ad5de7712e8356fbf7d4ba219f","dllSha256":"a88982969370e15ea954b811df393b0d5599d5bcac4f4504ca3c78dfba3824e1","result":"resolver-and-large-graph-deferred"},
+    {"name":"SkinModHelper","version":"0.6.1","zipSha256":"9b5f1a8c33601f7ee641d9f0743b54a42b2ceaff1ab2b0a8fdb742ea954ca34c","dllSha256":"ac37f8cdb1564544ace4ab1bcaedc16715d0633955273089871c274110332ab4","result":"unsupported-custom-entity"},
+    {"name":"SpeedrunTool","version":"3.27.19","zipSha256":"4746459095152cf0e6c3d6bcd194a82fdf3ea7420bc337e1b013f44013bfbc85","dllSha256":"3e0573cd5cf5529f2db22e43c30d7f043fa4950e60231644dae77cc67aa3326d","result":"resolver-and-large-graph-deferred"},
+    {"name":"StaminaBar","version":"1.1.2","zipSha256":"2cc43671cd0c9695987c36f954ebad52ab685bc4794e095af7fa46ca177d7256","dllSha256":"7fc894af08f8aa20b75ad1f2abe4741e57140f6bdd6905a4132ddf72d6c20bba","result":"MODINTEROP_STATIC_SUPPORTED_OPTIONAL_PROVIDER_ABSENT"}
+  ],
+  "candidateSourcePolicy": "Exact source commits and licenses were independently pinned for the selected production-proof pair. Nonselected entries are binary compatibility candidates only; this file deliberately makes no unverified source/license claim for them."
+}

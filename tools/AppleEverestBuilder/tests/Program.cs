@@ -57,12 +57,14 @@ ResolvedMod Mod(string name, string version = "1.0.0", IEnumerable<(string Name,
         Mechanisms = new SortedSet<string>(StringComparer.Ordinal),
         ManagedFiles = [], ContentFiles = [],
         ManagedDetourTargets = new SortedSet<string>(StringComparer.Ordinal),
-        DirectManagedHooks = []
+        DirectManagedHooks = [],
+        ModInteropRegistrations = []
     };
 }
 
 try
 {
+    passed += ModInteropTests.Run(repository, temporary);
     passed += ModuleDurabilityTests.Run(repository, temporary);
 
     EverestVersion required = EverestVersion.Parse("1.2.3.4");
@@ -909,10 +911,13 @@ try
     Pass(RuntimeClosureScanner.Inspect(typeof(ResolvedMod).Assembly.Location)
         .Any(value => value.Contains("System.Diagnostics.Process::Start", StringComparison.Ordinal)),
         "linked-runtime scanner detects a real forbidden API in the host-only builder");
-    Pass(RuntimeClosureScanner.Inspect(System.Reflection.Assembly.GetExecutingAssembly().Location).Count == 0,
-        "linked-runtime scanner accepts the deterministic test closure");
+    IReadOnlyList<string> testClosureViolations = RuntimeClosureScanner.Inspect(
+        System.Reflection.Assembly.GetExecutingAssembly().Location);
+    Pass(testClosureViolations.Count == 1 &&
+         testClosureViolations[0].Contains("System.Diagnostics.Process::Start", StringComparison.Ordinal),
+        "linked-runtime scanner isolates the intentional desktop static-plan test host spawn");
 
-    Pass(ProductPolicy.TransformerVersion == "apple-everest-static-v5", "real-ZIP transformer version");
+    Pass(ProductPolicy.TransformerVersion == "apple-everest-static-v6", "real-ZIP transformer version");
     Pass(File.Exists(Path.Combine(repository, "tools/AppleEverestBuilder/AssemblyFreezer.cs")),
         "binary-first assembly freezer exists");
     string models = File.ReadAllText(Path.Combine(repository, "tools/AppleEverestBuilder/Models.cs"));

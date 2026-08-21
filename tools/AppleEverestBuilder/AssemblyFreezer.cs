@@ -71,7 +71,13 @@ internal static class AssemblyFreezer
     public static (string AssemblyName, string OriginalSha256, string FrozenSha256) Freeze(
         string source,
         string destination,
-        IReadOnlyList<DirectManagedHookPlan> directHooks)
+        IReadOnlyList<DirectManagedHookPlan> directHooks) => Freeze(source, destination, directHooks, []);
+
+    public static (string AssemblyName, string OriginalSha256, string FrozenSha256) Freeze(
+        string source,
+        string destination,
+        IReadOnlyList<DirectManagedHookPlan> directHooks,
+        IReadOnlyList<ModInteropRegistrationPlan> modInteropRegistrations)
     {
         using AssemblyDefinition assembly = AssemblyDefinition.ReadAssembly(source, new ReaderParameters { ReadSymbols = false });
         string assemblyName = assembly.Name.Name;
@@ -80,6 +86,7 @@ internal static class AssemblyFreezer
             throw new InvalidDataException("external assembly has an unsafe identity");
         AssemblyNameReference? hook = assembly.MainModule.AssemblyReferences.SingleOrDefault(reference => reference.Name == "MMHOOK_Celeste");
         AssemblyNameReference? runtimeDetour = assembly.MainModule.AssemblyReferences.SingleOrDefault(reference => reference.Name == "MonoMod.RuntimeDetour");
+        AssemblyNameReference? monoModUtils = assembly.MainModule.AssemblyReferences.SingleOrDefault(reference => reference.Name == "MonoMod.Utils");
         AssemblyNameReference celeste = assembly.MainModule.AssemblyReferences.Single(reference => reference.Name == "Celeste");
         foreach (AssemblyNameReference reference in new[] { hook, runtimeDetour }.Where(reference => reference != null).Cast<AssemblyNameReference>())
         {
@@ -87,6 +94,27 @@ internal static class AssemblyFreezer
                 if (ReferenceEquals(type.Scope, reference)) type.Scope = celeste;
             if (!assembly.MainModule.GetTypeReferences().Any(type => ReferenceEquals(type.Scope, reference)))
                 assembly.MainModule.AssemblyReferences.Remove(reference);
+        }
+        if (monoModUtils != null)
+        {
+            // Publicized desktop mod builds commonly carry MonoMod's compiler
+            // access-bypass marker. The closed Apple product exposes only the
+            // reviewed ABI surface, so discard that assembly-level request
+            // rather than preserving a broad private-access capability.
+            for (int index = assembly.CustomAttributes.Count - 1; index >= 0; index--)
+                if (assembly.CustomAttributes[index].AttributeType.FullName ==
+                    "System.Runtime.CompilerServices.IgnoresAccessChecksToAttribute")
+                    assembly.CustomAttributes.RemoveAt(index);
+            foreach (TypeReference type in assembly.MainModule.GetTypeReferences().Where(type =>
+                         ReferenceEquals(type.Scope, monoModUtils) && type.Namespace == "MonoMod.ModInterop"))
+                type.Scope = celeste;
+            TypeReference[] residual = assembly.MainModule.GetTypeReferences()
+                .Where(type => ReferenceEquals(type.Scope, monoModUtils) &&
+                               type.FullName != "System.Runtime.CompilerServices.IgnoresAccessChecksToAttribute").ToArray();
+            if (residual.Length != 0)
+                throw new InvalidDataException("DEFERRED_MONOMOD_UTILS_SURFACE:" + string.Join(',',
+                    residual.Select(type => type.FullName).Distinct(StringComparer.Ordinal).Order(StringComparer.Ordinal).Take(12)));
+            assembly.MainModule.AssemblyReferences.Remove(monoModUtils);
         }
 
         // Older FNA-targeting mods were compiled against FNA's historical
@@ -137,9 +165,35 @@ internal static class AssemblyFreezer
             staticConstructor.Parameters.Add(new ParameterDefinition(assembly.MainModule.TypeSystem.String));
             instructions[constructorIndex].Operand = staticConstructor;
         }
+        foreach (string name in ModInteropPlanner.RequiredPublicTypes(modInteropRegistrations).Distinct(StringComparer.Ordinal))
+        {
+            TypeDefinition? type = assembly.MainModule.Types.SelectMany(AllTypes)
+                .SingleOrDefault(candidate => candidate.FullName.Replace('/', '.') == name);
+            if (type == null) continue;
+            MakePublic(type);
+        }
         Directory.CreateDirectory(Path.GetDirectoryName(destination)!);
         assembly.Write(destination, new WriterParameters { WriteSymbols = false });
         return (assemblyName, Hashing.FileSha256(source), Hashing.FileSha256(destination));
+    }
+
+    private static void MakePublic(TypeDefinition type)
+    {
+        if (type.DeclaringType == null)
+        {
+            type.IsPublic = true;
+            type.IsNotPublic = false;
+        }
+        else
+        {
+            MakePublic(type.DeclaringType);
+            type.IsNestedPublic = true;
+            type.IsNestedPrivate = false;
+            type.IsNestedFamily = false;
+            type.IsNestedAssembly = false;
+            type.IsNestedFamilyAndAssembly = false;
+            type.IsNestedFamilyOrAssembly = false;
+        }
     }
 
     private static string? OverrideType(TypeDefinition module, string getter)

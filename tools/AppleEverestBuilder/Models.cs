@@ -9,7 +9,7 @@ internal static class ProductPolicy
     public const long MaxSingleFileBytes = 64L * 1024 * 1024;
     public const int MaxPathDepth = 24;
     public const int MaxYamlBytes = 1024 * 1024;
-    public const string TransformerVersion = "apple-everest-static-v5";
+    public const string TransformerVersion = "apple-everest-static-v6";
     public const string CanonicalClass = "celeste-1.4.0.0-a";
 }
 
@@ -133,6 +133,8 @@ internal enum CompatibilityClass
     ON_HOOK_SUPPORTED,
     DIRECT_HOOK_SUPPORTED,
     MIXED_MANAGED_DETOURS_SUPPORTED,
+    MODINTEROP_STATIC_SUPPORTED,
+    MODINTEROP_DEFERRED,
     ON_HOOK_DEFERRED,
     IL_HOOK_DEFERRED,
     DIRECT_HOOK_DEFERRED,
@@ -219,4 +221,5 @@ internal sealed class ResolvedMod
     public string? DeclaredAssemblyPath { get; init; }
     public required SortedSet<string> ManagedDetourTargets { get; init; }
     public required IReadOnlyList<DirectManagedHookPlan> DirectManagedHooks { get; init; }
+    public required IReadOnlyList<ModInteropRegistrationPlan> ModInteropRegistrations { get; init; }
 }
