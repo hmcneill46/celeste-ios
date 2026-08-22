@@ -136,6 +136,7 @@ internal enum CompatibilityClass
     MODINTEROP_STATIC_SUPPORTED,
     STATIC_IL_EVENT_FREEZE,
     STATIC_IL_EVENT_SEQUENCE,
+    STATIC_DIRECT_ILHOOK_FREEZE,
     MODINTEROP_DEFERRED,
     ON_HOOK_DEFERRED,
     IL_HOOK_DEFERRED,
@@ -161,6 +162,7 @@ internal sealed class ManagedDetourTargetCatalog
 
 internal sealed class ManagedDetourTarget
 {
+    public string SourceKind { get; set; } = "method";
     public string Id { get; set; } = "";
     public string TargetAssembly { get; set; } = "Celeste";
     public string SourceFile { get; set; } = "";
@@ -200,7 +202,9 @@ internal sealed record DirectManagedHookPlan(
     string DetourReturnType,
     string[] DetourParameterTypes,
     string Capture,
-    string ConstructorSignature);
+    string ConstructorSignature,
+    int ExpressionInstructionCount = 9,
+    bool CustomOriginalDelegate = false);
 
 internal sealed record FrozenIlTransformPlan(
     string PlanId,
@@ -219,7 +223,15 @@ internal sealed record FrozenIlTransformPlan(
     string AfterSha256,
     string DiffSha256,
     string[] InjectedMethods,
-    string[] ExpectedDelegateTargets);
+    string[] ExpectedDelegateTargets,
+    string Mechanism = "HOOKGEN_IL_EVENT",
+    string ConstructorSignature = "",
+    string TargetExpression = "",
+    string ManipulatorExpression = "",
+    string Config = "absent",
+    string ApplyByDefault = "implicit-true",
+    string Storage = "",
+    string Lifetime = "MODULE_IMMUTABLE_ACTIVE");
 
 internal sealed class ModInput
 {

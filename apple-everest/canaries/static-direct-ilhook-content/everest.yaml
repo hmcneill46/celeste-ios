@@ -1,0 +1,5 @@
+- Name: AppleEverestStaticDirectIlHookContentCanary
+  Version: 1.0.0
+  Dependencies:
+    - Name: CaeruleaHelper
+      Version: 1.11.1

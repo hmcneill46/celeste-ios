@@ -674,6 +674,79 @@
       "hookNamespace": "On.Celeste", "hookType": "CrystalStaticSpinner", "eventName": "CreateSprites",
       "origDelegate": "orig_CreateSprites", "hookDelegate": "hook_CreateSprites",
       "isStatic": false, "receiverType": "global::Celeste.CrystalStaticSpinner", "returnType": "void", "parameters": []
+    },
+    {
+      "id": "celeste-actor-on-ground-int", "sourceFile": "Celeste/Actor.cs",
+      "sourceDeclaration": "public bool OnGround(int downCheck = 1)", "originalDeclaration": "private bool AppleEverestOriginal_OnGround_int(int downCheck)", "originalAlias": "AppleEverestOriginal_OnGround_int",
+      "hookNamespace": "On.Celeste", "hookType": "Actor", "eventName": "OnGround_int", "origDelegate": "orig_OnGround_int", "hookDelegate": "hook_OnGround_int",
+      "isStatic": false, "receiverType": "global::Celeste.Actor", "returnType": "bool", "parameters": [{ "type": "int", "name": "downCheck", "default": "1" }]
+    },
+    {
+      "id": "celeste-actor-on-ground-vector2-int", "sourceFile": "Celeste/Actor.cs",
+      "sourceDeclaration": "public bool OnGround(Vector2 at, int downCheck = 1)", "originalDeclaration": "private bool AppleEverestOriginal_OnGround_Vector2_int(Vector2 at, int downCheck)", "originalAlias": "AppleEverestOriginal_OnGround_Vector2_int",
+      "hookNamespace": "On.Celeste", "hookType": "Actor", "eventName": "OnGround_Vector2_int", "origDelegate": "orig_OnGround_Vector2_int", "hookDelegate": "hook_OnGround_Vector2_int",
+      "isStatic": false, "receiverType": "global::Celeste.Actor", "returnType": "bool", "parameters": [{ "type": "global::Microsoft.Xna.Framework.Vector2", "name": "at" }, { "type": "int", "name": "downCheck", "default": "1" }]
+    },
+    {
+      "id": "celeste-booster-player-boosted", "sourceFile": "Celeste/Booster.cs",
+      "sourceDeclaration": "public void PlayerBoosted(Player player, Vector2 direction)", "originalDeclaration": "private void AppleEverestOriginal_PlayerBoosted(Player player, Vector2 direction)", "originalAlias": "AppleEverestOriginal_PlayerBoosted",
+      "hookNamespace": "On.Celeste", "hookType": "Booster", "eventName": "PlayerBoosted", "origDelegate": "orig_PlayerBoosted", "hookDelegate": "hook_PlayerBoosted",
+      "isStatic": false, "receiverType": "global::Celeste.Booster", "returnType": "void", "parameters": [{ "type": "global::Celeste.Player", "name": "player" }, { "type": "global::Microsoft.Xna.Framework.Vector2", "name": "direction" }]
+    },
+    {
+      "id": "celeste-booster-respawn", "sourceFile": "Celeste/Booster.cs",
+      "sourceDeclaration": "public void Respawn()", "originalDeclaration": "private void AppleEverestOriginal_Respawn()", "originalAlias": "AppleEverestOriginal_Respawn",
+      "hookNamespace": "On.Celeste", "hookType": "Booster", "eventName": "Respawn", "origDelegate": "orig_Respawn", "hookDelegate": "hook_Respawn",
+      "isStatic": false, "receiverType": "global::Celeste.Booster", "returnType": "void", "parameters": []
+    },
+    {
+      "id": "celeste-northern-lights-update", "sourceFile": "Celeste/NorthernLights.cs",
+      "sourceDeclaration": "public override void Update(Scene scene)", "originalDeclaration": "private void AppleEverestOriginal_Update(Scene scene)", "originalAlias": "AppleEverestOriginal_Update",
+      "hookNamespace": "On.Celeste", "hookType": "NorthernLights", "eventName": "Update", "origDelegate": "orig_Update", "hookDelegate": "hook_Update",
+      "isStatic": false, "receiverType": "global::Celeste.NorthernLights", "returnType": "void", "parameters": [{ "type": "global::Monocle.Scene", "name": "scene" }]
+    },
+    {
+      "id": "celeste-player-hiccup-jump", "sourceFile": "Celeste/Player.cs",
+      "sourceDeclaration": "public void HiccupJump()", "originalDeclaration": "private void AppleEverestOriginal_HiccupJump()", "originalAlias": "AppleEverestOriginal_HiccupJump",
+      "hookNamespace": "On.Celeste", "hookType": "Player", "eventName": "HiccupJump", "origDelegate": "orig_HiccupJump", "hookDelegate": "hook_HiccupJump",
+      "isStatic": false, "receiverType": "global::Celeste.Player", "returnType": "void", "parameters": []
+    },
+    {
+      "id": "celeste-player-jump", "sourceFile": "Celeste/Player.cs",
+      "sourceDeclaration": "public void Jump(bool particles = true, bool playSfx = true)", "originalDeclaration": "private void AppleEverestOriginal_Jump(bool particles, bool playSfx)", "originalAlias": "AppleEverestOriginal_Jump",
+      "hookNamespace": "On.Celeste", "hookType": "Player", "eventName": "Jump", "origDelegate": "orig_Jump", "hookDelegate": "hook_Jump",
+      "isStatic": false, "receiverType": "global::Celeste.Player", "returnType": "void", "parameters": [{ "type": "bool", "name": "particles", "default": "true" }, { "type": "bool", "name": "playSfx", "default": "true" }]
+    },
+    {
+      "id": "celeste-player-super-jump", "sourceFile": "Celeste/Player.cs",
+      "sourceDeclaration": "private void SuperJump()", "originalDeclaration": "private void AppleEverestOriginal_SuperJump()", "originalAlias": "AppleEverestOriginal_SuperJump",
+      "hookNamespace": "On.Celeste", "hookType": "Player", "eventName": "SuperJump", "origDelegate": "orig_SuperJump", "hookDelegate": "hook_SuperJump",
+      "isStatic": false, "receiverType": "global::Celeste.Player", "returnType": "void", "parameters": []
+    },
+    {
+      "id": "celeste-player-wall-jump", "sourceFile": "Celeste/Player.cs",
+      "sourceDeclaration": "private void WallJump(int dir)", "originalDeclaration": "private void AppleEverestOriginal_WallJump(int dir)", "originalAlias": "AppleEverestOriginal_WallJump",
+      "hookNamespace": "On.Celeste", "hookType": "Player", "eventName": "WallJump", "origDelegate": "orig_WallJump", "hookDelegate": "hook_WallJump",
+      "isStatic": false, "receiverType": "global::Celeste.Player", "returnType": "void", "parameters": [{ "type": "int", "name": "dir" }]
+    },
+    {
+      "id": "celeste-player-super-wall-jump", "sourceFile": "Celeste/Player.cs",
+      "sourceDeclaration": "private void SuperWallJump(int dir)", "originalDeclaration": "private void AppleEverestOriginal_SuperWallJump(int dir)", "originalAlias": "AppleEverestOriginal_SuperWallJump",
+      "hookNamespace": "On.Celeste", "hookType": "Player", "eventName": "SuperWallJump", "origDelegate": "orig_SuperWallJump", "hookDelegate": "hook_SuperWallJump",
+      "isStatic": false, "receiverType": "global::Celeste.Player", "returnType": "void", "parameters": [{ "type": "int", "name": "dir" }]
+    },
+    {
+      "id": "celeste-star-jump-block-open", "sourceFile": "Celeste/StarJumpBlock.cs",
+      "sourceDeclaration": "private bool Open(float x, float y)", "originalDeclaration": "private bool AppleEverestOriginal_Open(float x, float y)", "originalAlias": "AppleEverestOriginal_Open",
+      "hookNamespace": "On.Celeste", "hookType": "StarJumpBlock", "eventName": "Open", "origDelegate": "orig_Open", "hookDelegate": "hook_Open",
+      "isStatic": false, "receiverType": "global::Celeste.StarJumpBlock", "returnType": "bool", "parameters": [{ "type": "float", "name": "x" }, { "type": "float", "name": "y" }]
+    },
+    {
+      "id": "celeste-player-super-wall-jump-angle-check", "sourceKind": "property-getter", "sourceFile": "Celeste/Player.cs",
+      "sourceDeclaration": "private bool SuperWallJumpAngleCheck", "originalDeclaration": "private bool AppleEverestOriginal_get_SuperWallJumpAngleCheck()", "originalAlias": "AppleEverestOriginal_get_SuperWallJumpAngleCheck",
+      "hookNamespace": "On.Celeste", "hookType": "Player", "eventName": "get_SuperWallJumpAngleCheck", "origDelegate": "orig_get_SuperWallJumpAngleCheck", "hookDelegate": "hook_get_SuperWallJumpAngleCheck",
+      "isStatic": false, "receiverType": "global::Celeste.Player", "returnType": "bool", "parameters": [],
+      "directAliases": ["Celeste.Player::get_SuperWallJumpAngleCheck"]
     }
   ]
 }

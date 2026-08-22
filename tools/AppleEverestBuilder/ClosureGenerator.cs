@@ -176,8 +176,8 @@ internal static class ClosureGenerator
             modInteropImportCount = modInterop.ImportCount,
             modInteropResolvedImportCount = modInterop.ResolvedImportCount,
             modInteropPlan = modInterop.Manifest,
-            frozenIlSchema = 2,
-            frozenIlWorker = frozenIlTransforms.Count == 0 ? "absent" : StaticIlFreeze.WorkerVersion,
+            frozenIlSchema = frozenIlTransforms.Count == 0 ? 0 : StaticIlFreeze.SchemaVersionFor(frozenIlTransforms),
+            frozenIlWorker = frozenIlTransforms.Count == 0 ? "absent" : StaticIlFreeze.WorkerVersionFor(frozenIlTransforms),
             frozenIlPlanSha256,
             frozenIlTransformCount = frozenIlTransforms.Count,
             frozenIlTransforms = frozenIlTransforms.Select(plan => new
@@ -384,6 +384,7 @@ internal static class ClosureGenerator
         PreparePinnedEverestManagedTargets(managedRoot);
         ManagedDetourGenerator.RewriteTargets(managedRoot, ManagedDetourCatalog.Targets);
         PatchLevel(Path.Combine(managedRoot, "Celeste", "Level.cs"));
+        PatchPlayerEvents(Path.Combine(managedRoot, "Celeste", "Player.cs"));
         PatchGameplayLoading(Path.Combine(managedRoot, "Celeste", "Level.cs"));
         PatchBackdropLoading(Path.Combine(managedRoot, "Celeste", "MapData.cs"));
         PatchStartup(Path.Combine(managedRoot, "Celeste", "Celeste.cs"));
@@ -402,12 +403,13 @@ internal static class ClosureGenerator
     {
         "ManagedDetourCatalog:typed-static-dispatch:v4",
         "Level.LoadLevel:ordinary-event:v1",
+        "Player.Update:ordinary-after-update-event:v1",
         "Celeste.Run:static-registry-startup:v1",
         "GameLoader:content-ready:v1",
         "MenuOptions:diagnostic-panel:v1",
         "Tracker.Initialize:typed-gameplay-registry:v1",
         "Level.LoadLevel:typed-custom-factory-registry:v1",
-        "MapData.ParseBackdrop:typed-custom-backdrop-registry:v1",
+        "MapData.ParseBackdrop:everest-event-and-typed-custom-backdrop-registry:v2",
         "ModuleSettings:typed-menu-and-platform-storage:v1",
         "ModuleSaveData+Session:typed-yaml-aggregate-ab:v1",
         "UserIO.SaveRoutine:coherent-module-snapshot:v1",
@@ -418,6 +420,7 @@ internal static class ClosureGenerator
         "OverworldLoader.Begin:nonpersistent-mod-session-restore:v1",
         "PinnedEverestABI:ConditionHelper+AchievementHelper-reviewed-members:v2",
         "PinnedEverestABI:DeathMarkers-reviewed-members:v1",
+        "PinnedEverestABI:CaeruleaHelper-reviewed-members:v1",
         "HookGen+RuntimeDetour.Hook:shared-data-only-backend:v1",
         "MonoMod.ModInterop:host-cecil-static-typed-plan:v1",
         "HookGen.IL:hash-locked-host-freeze-immutable:v1",
@@ -509,6 +512,11 @@ internal static class ClosureGenerator
             "Mono.Cecil.dll", "Mono.Cecil.Rocks.dll", "Mono.Cecil.Pdb.dll", "Mono.Cecil.Mdb.dll", "MonoMod.Utils.dll",
             "MonoMod.Backports.dll", "MonoMod.ILHelpers.dll"
         };
+        if (plans.Any(plan => plan.Mechanism == "DIRECT_ILHOOK"))
+            required = required.Concat(new[]
+            {
+                "MonoMod.RuntimeDetour.dll", "MonoMod.Core.dll", "MonoMod.Iced.dll"
+            }).ToArray();
         if (required.Any(file => !File.Exists(Path.Combine(worker, file))))
             throw new InvalidDataException("build the exact pinned AppleEverestIlWorker before creating a frozen-IL closure");
         string host = Path.Combine(outputRoot, "host", "static-il");
@@ -529,8 +537,8 @@ internal static class ClosureGenerator
             StaticIlFreeze.Targets(plans), new UTF8Encoding(false));
         File.WriteAllText(Path.Combine(host, "frozen-il-plan.json"), JsonSerializer.Serialize(new
         {
-            schemaVersion = 2,
-            worker = StaticIlFreeze.WorkerVersion,
+            schemaVersion = StaticIlFreeze.SchemaVersionFor(plans),
+            worker = StaticIlFreeze.WorkerVersionFor(plans),
             planSha256 = StaticIlFreeze.PlanSha256(plans),
             transforms = plans
         }, new JsonSerializerOptions { WriteIndented = true }) + "\n", new UTF8Encoding(false));
@@ -555,6 +563,16 @@ internal static class ClosureGenerator
         "\t\tCalc.PopRandom();\n\t}\n\n\tpublic void UnloadLevel()",
         "\t\tCalc.PopRandom();\n\t\tglobal::Celeste.Mod.Everest.Events.Level.RaiseOnLoadLevel(this, playerIntro, isFromLoader);\n\t}\n\n\tpublic void UnloadLevel()");
 
+    private static void PatchPlayerEvents(string path)
+    {
+        ReplaceOnce(path,
+            "\t\t\t\tif (component2.Check(this) && Dead)\n\t\t\t\t{\n\t\t\t\t\tbase.Collider = collider;\n\t\t\t\t\treturn;\n\t\t\t\t}",
+            "\t\t\t\tif (component2.Check(this) && Dead)\n\t\t\t\t{\n\t\t\t\t\tbase.Collider = collider;\n\t\t\t\t\tglobal::Celeste.Mod.Everest.Events.Player.RaiseOnAfterUpdate(this);\n\t\t\t\t\treturn;\n\t\t\t\t}");
+        ReplaceOnce(path,
+            "\t\twasOnGround = onGround;\n\t\twindMovedUp = false;\n\t}",
+            "\t\twasOnGround = onGround;\n\t\twindMovedUp = false;\n\t\tglobal::Celeste.Mod.Everest.Events.Player.RaiseOnAfterUpdate(this);\n\t}");
+    }
+
     private static void PatchGameplayLoading(string path)
     {
         ReplaceOnce(path,
@@ -567,7 +585,7 @@ internal static class ClosureGenerator
 
     private static void PatchBackdropLoading(string path) => ReplaceOnce(path,
         "\t\tBackdrop backdrop = null;\n\t\tif (child.Name.Equals(\"parallax\", StringComparison.OrdinalIgnoreCase))",
-        "\t\tBackdrop backdrop = null;\n\t\tif (global::Celeste.Mod.GeneratedAppleEverestGameplayRegistry.TryCreateBackdrop(child.Name, child, out backdrop))\n\t\t{\n\t\t}\n\t\telse if (child.Name.Equals(\"parallax\", StringComparison.OrdinalIgnoreCase))");
+        "\t\tBackdrop backdrop = global::Celeste.Mod.Everest.Events.Level.LoadBackdrop(this, child, above);\n\t\tif (backdrop != null)\n\t\t{\n\t\t}\n\t\telse if (global::Celeste.Mod.GeneratedAppleEverestGameplayRegistry.TryCreateBackdrop(child.Name, child, out backdrop))\n\t\t{\n\t\t}\n\t\telse if (child.Name.Equals(\"parallax\", StringComparison.OrdinalIgnoreCase))");
 
     private static void PatchStartup(string path)
     {
@@ -630,6 +648,9 @@ internal static class ClosureGenerator
             "\tpublic AreaKey LastArea;",
             "\tpublic AreaKey LastArea;\n\n\t[NonSerialized]\n\t[XmlIgnore]\n\tpublic AreaKey LastArea_Safe;");
         ReplaceOnce(saveData,
+            "\tpublic List<AreaStats> Areas = new List<AreaStats>();",
+            "\tpublic List<AreaStats> Areas = new List<AreaStats>();\n\n\tpublic List<AreaStats> Areas_Safe => Areas;");
+        ReplaceOnce(saveData,
             "\tpublic int UnlockedModes\n\t{",
             "\tpublic LevelSetStats LevelSetStats => new LevelSetStats(this);\n\n\tpublic int UnlockedModes\n\t{");
         ReplaceOnce(saveData,
@@ -657,6 +678,14 @@ internal static class ClosureGenerator
         // direct field reference produced by that publicized contract.
         string engine = Path.Combine(managedRoot, "Monocle", "Engine.cs");
         ReplaceOnce(engine, "\tprivate Scene scene;", "\tpublic Scene scene;");
+
+        // CaeruleaHelper 1.11.1 calls Everest's public PointWrap backdrop
+        // entry point. Keep the canonical renderer otherwise unchanged: the
+        // helper explicitly ends this batch before returning to vanilla.
+        string backdropRenderer = Path.Combine(managedRoot, "Celeste", "BackdropRenderer.cs");
+        ReplaceOnce(backdropRenderer,
+            "\tpublic void EndSpritebatch()",
+            "\tpublic void StartSpritebatchLooping(BlendState blendState)\n\t{\n\t\tif (!usingSpritebatch)\n\t\t{\n\t\t\tDraw.SpriteBatch.Begin(SpriteSortMode.Deferred, blendState, SamplerState.PointWrap, DepthStencilState.None, RasterizerState.CullNone, null, Matrix);\n\t\t}\n\t\tusingSpritebatch = true;\n\t}\n\n\tpublic void EndSpritebatch()");
 
         // AchievementHelper 1.0.5 uses the exact TextMenu ABI exposed by its
         // pinned Everest build: the public Items view and the one-argument

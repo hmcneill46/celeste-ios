@@ -51,6 +51,7 @@ internal static class ManagedDetourCatalog
             if (!hooks.Add(hook))
                 throw new InvalidDataException($"duplicate managed-detour target hook: {hook}");
             if (
+                target.SourceKind is not ("method" or "property-getter") ||
                 string.IsNullOrWhiteSpace(target.SourceFile) || target.SourceFile.Contains("..", StringComparison.Ordinal) ||
                 string.IsNullOrWhiteSpace(target.SourceDeclaration) || string.IsNullOrWhiteSpace(target.OriginalDeclaration) ||
                 !SafeToken(target.OriginalAlias) || !SafeNamespace(target.HookNamespace) || !SafeToken(target.HookType) ||

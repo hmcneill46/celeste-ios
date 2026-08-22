@@ -126,6 +126,60 @@
       "sourceFile": "Celeste/EntityData.cs",
       "originalDeclaration": "\tpublic string Attr(string key, string defaultValue = \"\")",
       "replacementDeclaration": "\tpublic string String(string key, string defaultValue = \"\") => Attr(key, defaultValue);\n\n\tpublic string Attr(string key, string defaultValue = \"\")"
+    },
+    {
+      "id": "celeste-northern-lights-node-type",
+      "sourceFile": "Celeste/NorthernLights.cs",
+      "originalDeclaration": "\tprivate class Node",
+      "replacementDeclaration": "\tpublic class Node"
+    },
+    {
+      "id": "celeste-northern-lights-strand-type",
+      "sourceFile": "Celeste/NorthernLights.cs",
+      "originalDeclaration": "\tprivate class Strand",
+      "replacementDeclaration": "\tpublic class Strand"
+    },
+    {
+      "id": "celeste-northern-lights-strands",
+      "sourceFile": "Celeste/NorthernLights.cs",
+      "originalDeclaration": "\tprivate List<Strand> strands = new List<Strand>();",
+      "replacementDeclaration": "\tpublic List<Strand> strands = new List<Strand>();"
+    },
+    {
+      "id": "celeste-northern-lights-timer",
+      "sourceFile": "Celeste/NorthernLights.cs",
+      "originalDeclaration": "\tprivate float timer;",
+      "replacementDeclaration": "\tpublic float timer;"
+    },
+    {
+      "id": "celeste-floaty-space-block-sine-wave",
+      "sourceFile": "Celeste/FloatySpaceBlock.cs",
+      "originalDeclaration": "\tprivate float sineWave;",
+      "replacementDeclaration": "\tpublic float sineWave;"
+    },
+    {
+      "id": "celeste-strawberry-golden-setter",
+      "sourceFile": "Celeste/Strawberry.cs",
+      "originalDeclaration": "\tpublic bool Golden { get; private set; }",
+      "replacementDeclaration": "\tpublic bool Golden { get; set; }"
+    },
+    {
+      "id": "celeste-booster-sprite",
+      "sourceFile": "Celeste/Booster.cs",
+      "originalDeclaration": "\tprivate Sprite sprite;",
+      "replacementDeclaration": "\tpublic Sprite sprite;"
+    },
+    {
+      "id": "celeste-booster-particle-type",
+      "sourceFile": "Celeste/Booster.cs",
+      "originalDeclaration": "\tprivate ParticleType particleType;",
+      "replacementDeclaration": "\tpublic ParticleType particleType;"
+    },
+    {
+      "id": "celeste-booster-red",
+      "sourceFile": "Celeste/Booster.cs",
+      "originalDeclaration": "\tprivate bool red;",
+      "replacementDeclaration": "\tpublic bool red;"
     }
   ]
 }

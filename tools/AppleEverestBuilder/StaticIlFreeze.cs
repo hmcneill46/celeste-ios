@@ -33,7 +33,21 @@ internal static class StaticIlFreeze
     internal const string VortexHelperUrl = "https://gamebanana.com/mmdl/1368600";
     internal const string VortexHelperSourceCommit = "b37b67b9365d769ba0fd19a67a1327260988fd6e";
     internal const string VortexHelperLicenseSha256 = "051f92453f04ec0a8a9dff60882264ca949ea8e86de5f6aa96e04acdee90d359";
+    internal const string CaeruleaName = "CaeruleaHelper";
+    internal const string CaeruleaVersion = "1.11.1";
+    internal const string CaeruleaSourceSha256 = "036bc9adbc5471931ca6cfb1aa574d0bbcfe3a6dce9025a09b56a0c522054d07";
+    internal const string CaeruleaDllSha256 = "3c5b79a57ce03b6c98e8ae12d781ec6baddce944995b2b4928f067a5ad7973ae";
+    internal const string CaeruleaZipSha256 = "6a0649518d49cd0d17b84da3be53929cdd602d89d922e2d3ab87c524345e3807";
+    internal const string CaeruleaUrl = "https://gamebanana.com/mmdl/1784884";
+    internal const string CaeruleaSourceCommit = "ce2ad0694feb28cd3dff0a5d7501f6e60d620fd5";
     internal const string WorkerVersion = "apple-everest-static-il-worker-v2";
+    internal const string DirectWorkerVersion = "apple-everest-static-il-worker-v3";
+
+    internal static int SchemaVersionFor(IEnumerable<FrozenIlTransformPlan> plans) =>
+        plans.Any(plan => plan.Mechanism == "DIRECT_ILHOOK") ? 3 : 2;
+
+    internal static string WorkerVersionFor(IEnumerable<FrozenIlTransformPlan> plans) =>
+        plans.Any(plan => plan.Mechanism == "DIRECT_ILHOOK") ? DirectWorkerVersion : WorkerVersion;
 
     private static readonly FrozenIlTransformPlan[] DashTogglePlans =
     [
@@ -124,6 +138,58 @@ internal static class StaticIlFreeze
             [], ["Celeste.Mod.VortexHelper.Entities.PurpleBooster+Hooks+<>c::<Player_WallJumpCheck>b__3_1"])
     ];
 
+    private static readonly FrozenIlTransformPlan[] CaeruleaPlans =
+    [
+        new("CaeruleaHelper:BackdropRenderer.Render:ModifyBackdropRenderer", CaeruleaName, "bin/CaeruleaHelper.dll", CaeruleaDllSha256,
+            "IL.Celeste.BackdropRenderer", "Render", "System.Void Celeste.BackdropRenderer::Render(Monocle.Scene)", "System.Void Celeste.BackdropRenderer::Render(Monocle.Scene)",
+            "Celeste.Mod.CaeruleaHelper.Hooks.BackdropRenderHook", "ModifyBackdropRenderer", true, 0,
+            "05d01dd1e76c07bcea466886f6fd1e9b958b6b5bec7d1979ab8236271bebdbcd", "184e32955ca81217fbaba56b9e08a5bfef303f02876c23bb078c91f410c6c526", "8d3917f245aaaa315152a81027a59ddb815f2cc640c1ddcc5ef6944643a7e3de", [],
+            ["Celeste.Mod.CaeruleaHelper.Hooks.BackdropRenderHook::ShouldBeTakenByCaerulea", "Celeste.Mod.CaeruleaHelper.Hooks.BackdropRenderHook::RenderBackdrop"]),
+        new("CaeruleaHelper:Strawberry.Added:ModSprite", CaeruleaName, "bin/CaeruleaHelper.dll", CaeruleaDllSha256,
+            "IL.Celeste.Strawberry", "Added", "System.Void Celeste.Strawberry::Added(Monocle.Scene)", "System.Void Celeste.Strawberry::Added(Monocle.Scene)",
+            "Celeste.Mod.CaeruleaHelper.Hooks.BerryHook", "ModSprite", true, 0,
+            "939b9a1e1faaf43b20fa16d1fb56e13062e06d844bf7e2e7e997575a5f81220c", "b8948879c28f56887ff2bafd9ec16e70e26869b4607b9ce765edf71691f117ec", "7d7caf17dba771689cbbee54eea05ebaf795f36474b4b56e1360949489066109", [],
+            ["Celeste.Mod.CaeruleaHelper.Hooks.BerryHook::HookSprite"]),
+        new("CaeruleaHelper:Spikes.OnCollide:ModifySpikesCollideIL", CaeruleaName, "bin/CaeruleaHelper.dll", CaeruleaDllSha256,
+            "IL.Celeste.Spikes", "OnCollide", "System.Void Celeste.Spikes::OnCollide(Celeste.Player)", "System.Void Celeste.Spikes::OnCollide(Celeste.Player)",
+            "Celeste.Mod.CaeruleaHelper.Hooks.DashCorrectionProtection", "ModifySpikesCollideIL", true, 0,
+            "dd08f8a2c271fd3ad42a4c2fb4673ac1b1630064f83f3ea302263f3df46b4c2c", "554cdbfe0a0c833e9c75876e5134b7aff16528c0a2d72ad5bb9fc78b39ae520e", "e28e6965dbfae21d1e60213189ea9b41a35b37b029a89e68e8e9e0ae8b69aa1b", [],
+            ["Celeste.Mod.CaeruleaHelper.Hooks.DashCorrectionProtection::ShouldProtect", "Celeste.Mod.CaeruleaHelper.Hooks.DashCorrectionProtection::ShouldProtect", "Celeste.Mod.CaeruleaHelper.Hooks.DashCorrectionProtection::ShouldProtect", "Celeste.Mod.CaeruleaHelper.Hooks.DashCorrectionProtection::ShouldProtect"]),
+        new("CaeruleaHelper:Player.DashUpdate:ModifyPlayerDashIL", CaeruleaName, "bin/CaeruleaHelper.dll", CaeruleaDllSha256,
+            "IL.Celeste.Player", "DashUpdate", "System.Int32 Celeste.Player::DashUpdate()", "System.Int32 Celeste.Player::DashUpdate()",
+            "Celeste.Mod.CaeruleaHelper.Hooks.SuperJumpHook", "ModifyPlayerDashIL", true, 0,
+            "df42662b02b0a77c87500037bdc0390f959cc1267a42d962cbea39a40fefb6ae", "f5018ad2a07cb777ddf9e1790cc2397d221437ba1232547f07102de5b6ad3894", "8199216c3624e9ddcb28c4a8c98d0864a70c16d1b0c418549f576b2e87f841a2", [],
+            ["Celeste.Mod.CaeruleaHelper.Hooks.SuperJumpHook::JumpGraceTimerFactor"]),
+        new("CaeruleaHelper:Player.RedDashUpdate:ModifyPlayerDashIL", CaeruleaName, "bin/CaeruleaHelper.dll", CaeruleaDllSha256,
+            "IL.Celeste.Player", "RedDashUpdate", "System.Int32 Celeste.Player::RedDashUpdate()", "System.Int32 Celeste.Player::RedDashUpdate()",
+            "Celeste.Mod.CaeruleaHelper.Hooks.SuperJumpHook", "ModifyPlayerDashIL", true, 0,
+            "4d812db45ef141b543a278cc513ca808b203ec32a0fbe2e739471b36edcf1cfb", "b41644bac8a95fe829afabff1b765aa6606a4feedf11e8d85493b790bfd7c77e", "8ab8cd706add63aad38aca5ba529a4173a611542752cf3d7106926bd3742b8ff", [],
+            ["Celeste.Mod.CaeruleaHelper.Hooks.SuperJumpHook::JumpGraceTimerFactor"]),
+        new("CaeruleaHelper:Player.WallJumpCheck:ModifyWallJumpCheckIL", CaeruleaName, "bin/CaeruleaHelper.dll", CaeruleaDllSha256,
+            "IL.Celeste.Player", "WallJumpCheck", "System.Boolean Celeste.Player::WallJumpCheck(System.Int32)", "System.Boolean Celeste.Player::WallJumpCheck(System.Int32)",
+            "Celeste.Mod.CaeruleaHelper.Hooks.SuperJumpHook", "ModifyWallJumpCheckIL", true, 0,
+            "7c87ba1ac56a612e7487dfc598e2d4b2f7d81817bd0d97fe1ec1e0d329128cf0", "9ff7c55d36cd3d7d5f290a1a41db985fc947a11b488af11b4065c9075726cb25", "00e1b541ac05c4bdcb76381af59fd4a10518b6c9f019f50a07fb0e89accb2794", [],
+            ["Celeste.Mod.CaeruleaHelper.Hooks.SuperJumpHook::CheckWallBouncable"]),
+        new("CaeruleaHelper:StarJumpBlock.Awake:ModifyAwake", CaeruleaName, "bin/CaeruleaHelper.dll", CaeruleaDllSha256,
+            "IL.Celeste.StarJumpBlock", "Awake", "System.Void Celeste.StarJumpBlock::Awake(Monocle.Scene)", "System.Void Celeste.StarJumpBlock::Awake(Monocle.Scene)",
+            "Celeste.Mod.CaeruleaHelper.Entities.CustomStarJumpBlock", "ModifyAwake", true, 0,
+            "d6dcbeb3c3f59add0b5355861ab37af8f309729e2498ae61dce92004e37563cb", "6616737eac7570da180eec43d65c6c742bc5c052bf2b47164d465244d19237b5", "7d1c0061c5c2d5d1c0155f6b0ce48e0a47934fdd63eeb8df7d384025efe32d90", [],
+            ["Celeste.Mod.CaeruleaHelper.Entities.CustomStarJumpBlock::WrapImage", "Celeste.Mod.CaeruleaHelper.Entities.CustomStarJumpBlock::WrapImage", "Celeste.Mod.CaeruleaHelper.Entities.CustomStarJumpBlock::WrapImage", "Celeste.Mod.CaeruleaHelper.Entities.CustomStarJumpBlock::WrapImage", "Celeste.Mod.CaeruleaHelper.Entities.CustomStarJumpBlock::WrapImage", "Celeste.Mod.CaeruleaHelper.Entities.CustomStarJumpBlock::WrapImage", "Celeste.Mod.CaeruleaHelper.Entities.CustomStarJumpBlock::ShouldRender", "Celeste.Mod.CaeruleaHelper.Entities.CustomStarJumpBlock::ShouldRender", "Celeste.Mod.CaeruleaHelper.Entities.CustomStarJumpBlock::ShouldRender", "Celeste.Mod.CaeruleaHelper.Entities.CustomStarJumpBlock::ShouldRender", "Celeste.Mod.CaeruleaHelper.Entities.CustomStarJumpBlock::ShouldRender", "Celeste.Mod.CaeruleaHelper.Entities.CustomStarJumpBlock::ShouldRender", "Celeste.Mod.CaeruleaHelper.Entities.CustomStarJumpBlock::ShouldRender", "Celeste.Mod.CaeruleaHelper.Entities.CustomStarJumpBlock::ShouldRender"]),
+        new("CaeruleaHelper:NorthernLights.Strand.Reset:ModifyStrandReset", CaeruleaName, "bin/CaeruleaHelper.dll", CaeruleaDllSha256,
+            "IL.Celeste.NorthernLights/Strand", "Reset", "System.Void Celeste.NorthernLights/Strand::Reset(System.Single)", "System.Void Celeste.NorthernLights/Strand::Reset(System.Single)",
+            "Celeste.Mod.CaeruleaHelper.Hooks.NorthernLightsHook", "ModifyStrandReset", true, 0,
+            "2916caccb38f808aee2584bfb89016a02671bc56678627bc929b82f43d8e62cf", "24eb224abd9a5b42137daa81c87caa646cb1721e079f3fbaf302a963901d4ab0", "f14a019c7a6b02bd3433a639889b60905acfb91aed73e09b3f642035007a2ace", [],
+            ["Celeste.Mod.CaeruleaHelper.Hooks.NorthernLightsHook::GetSeededRandomNumber", "Celeste.Mod.CaeruleaHelper.Hooks.NorthernLightsHook::GetSeededRandomNumber", "Celeste.Mod.CaeruleaHelper.Hooks.NorthernLightsHook::OverridePositionRNG"]),
+        new("CaeruleaHelper:Player.DashCoroutine.MoveNext:ModifyDashCoroutineIL", CaeruleaName, "bin/CaeruleaHelper.dll", CaeruleaDllSha256,
+            "DIRECT_ILHOOK", "DashCoroutine.MoveNext", "System.Boolean Celeste.Player/<DashCoroutine>d__*::MoveNext()", "System.Boolean Celeste.Player/<DashCoroutine>d__::MoveNext()",
+            "Celeste.Mod.CaeruleaHelper.Hooks.DashSpeedHook", "ModifyDashCoroutineIL", true, 0,
+            "65ad66657afe6ca8d9d440be58b258cb48159b966b515aafe7b3b3ae85325416", "ebafbfe93b806ace3b0e49324702ff7a164adbd0379f142af2c864a6ae697abc", "a941d338396c91447d9c0f331137cbd0d04016da5b2eaf32ab0f684a71a93f30", [],
+            ["Celeste.Mod.CaeruleaHelper.Hooks.DashSpeedHook::PositiveINF", "Celeste.Mod.CaeruleaHelper.Hooks.DashSpeedHook::PositiveINF"],
+            "DIRECT_ILHOOK", "System.Void MonoMod.RuntimeDetour.ILHook::.ctor(System.Reflection.MethodBase,MonoMod.Cil.ILContext/Manipulator)",
+            "typeof(Celeste.Player).GetMethod(\"DashCoroutine\", NonPublic|Instance).GetStateMachineTarget()",
+            "Celeste.Mod.CaeruleaHelper.Hooks.DashSpeedHook.ModifyDashCoroutineIL", "absent", "implicit-true", "DashCoroutineHook", "MODULE_IMMUTABLE_ACTIVE")
+    ];
+
     internal static IReadOnlyList<FrozenIlTransformPlan> Resolve(ModInput input, EverestYamlEntry metadata)
     {
         if (metadata.Name == FixtureName && metadata.Version == FixtureVersion &&
@@ -166,6 +232,20 @@ internal static class StaticIlFreeze
             ValidateRegistrations(dll, VortexHelperPlans, VortexHelperName);
             return VortexHelperPlans;
         }
+        if (metadata.Name == CaeruleaName && metadata.Version == CaeruleaVersion &&
+            input.SourceSha256 == CaeruleaSourceSha256 && metadata.DLL == "bin/CaeruleaHelper.dll")
+        {
+            string dll = Path.Combine(input.StagingRoot, "bin", "CaeruleaHelper.dll");
+            if (Hashing.FileSha256(dll) != CaeruleaDllSha256)
+                throw new InvalidDataException("registered CaeruleaHelper DLL hash mismatch");
+            if (metadata.Dependencies.Count != 1 || metadata.Dependencies[0].Name != "EverestCore" ||
+                metadata.Dependencies[0].Version != "1.5577.0" || metadata.OptionalDependencies.Count != 1 ||
+                metadata.OptionalDependencies[0].Name != "DashlessHelper" ||
+                metadata.OptionalDependencies[0].Version != "1.0.0")
+                throw new InvalidDataException("registered CaeruleaHelper metadata drifted");
+            ValidateCaeruleaRegistrations(dll);
+            return CaeruleaPlans;
+        }
         return [];
     }
 
@@ -197,7 +277,9 @@ internal static class StaticIlFreeze
                     manipulator.DeclaringType.FullName + "::" + manipulator.Name));
             }
         }
-        foreach (FrozenIlTransformPlan plan in plans)
+        foreach (FrozenIlTransformPlan plan in plans.GroupBy(plan =>
+                     plan.ManipulatorType + "\0" + plan.ManipulatorMethod, StringComparer.Ordinal)
+                     .Select(group => group.First()))
         {
             string cecilManipulatorType = plan.ManipulatorType.Replace('+', '/');
             string manipulator = cecilManipulatorType + "::" + plan.ManipulatorMethod;
@@ -222,13 +304,81 @@ internal static class StaticIlFreeze
             throw new InvalidDataException("registered fixture unexpectedly uses direct ILHook");
     }
 
+    private static void ValidateCaeruleaRegistrations(string dll)
+    {
+        using AssemblyDefinition assembly = AssemblyDefinition.ReadAssembly(dll,
+            new ReaderParameters { ReadSymbols = false });
+        FrozenIlTransformPlan[] events = CaeruleaPlans.Where(plan => plan.Mechanism == "HOOKGEN_IL_EVENT").ToArray();
+        List<(string Operation, string EventType, string EventName, string Manipulator)> found = [];
+        int directConstructors = 0;
+        int directDisposals = 0;
+        foreach (MethodDefinition method in assembly.MainModule.Types.SelectMany(AllTypes)
+                     .SelectMany(type => type.Methods).Where(method => method.HasBody))
+        foreach (Instruction instruction in method.Body.Instructions)
+        {
+            if (instruction.Operand is not MethodReference called) continue;
+            if (called.DeclaringType.FullName.StartsWith("IL.", StringComparison.Ordinal) &&
+                (called.Name.StartsWith("add_", StringComparison.Ordinal) ||
+                 called.Name.StartsWith("remove_", StringComparison.Ordinal)))
+            {
+                MethodReference? manipulator = method.Body.Instructions.TakeWhile(value => value != instruction)
+                    .Reverse().Take(16).Where(value => value.OpCode == OpCodes.Ldftn)
+                    .Select(value => value.Operand).OfType<MethodReference>().FirstOrDefault();
+                if (manipulator == null)
+                    throw new InvalidDataException("CaeruleaHelper IL event is not a bounded static delegate");
+                found.Add((called.Name.StartsWith("add_", StringComparison.Ordinal) ? "add" : "remove",
+                    called.DeclaringType.FullName, called.Name[(called.Name[0] == 'a' ? 4 : 7)..],
+                    manipulator.DeclaringType.FullName.Replace('/', '+') + "::" + manipulator.Name));
+            }
+            if (called.DeclaringType.FullName == "MonoMod.RuntimeDetour.ILHook" && called.Name == ".ctor")
+            {
+                directConstructors++;
+                if (method.FullName != "System.Void Celeste.Mod.CaeruleaHelper.Hooks.DashSpeedHook::Load()" ||
+                    instruction.Offset != 55 || called.Parameters.Count != 2)
+                    throw new InvalidDataException("CaeruleaHelper direct ILHook constructor contract drifted");
+            }
+            if (called.DeclaringType.FullName == "MonoMod.RuntimeDetour.ILHook" && called.Name == "Dispose")
+            {
+                directDisposals++;
+                if (method.FullName != "System.Void Celeste.Mod.CaeruleaHelper.Hooks.DashSpeedHook::Unload()" ||
+                    instruction.Offset != 6)
+                    throw new InvalidDataException("CaeruleaHelper direct ILHook lifetime contract drifted");
+            }
+        }
+        foreach (FrozenIlTransformPlan plan in events)
+        {
+            string manipulator = plan.ManipulatorType + "::" + plan.ManipulatorMethod;
+            if (found.Count(item => item.Operation == "add" && item.EventType == plan.EventType &&
+                    item.EventName == plan.EventName && item.Manipulator == manipulator) != 1 ||
+                found.Count(item => item.Operation == "remove" && item.EventType == plan.EventType &&
+                    item.EventName == plan.EventName && item.Manipulator == manipulator) != 1)
+                throw new InvalidDataException("CaeruleaHelper frozen-IL event contract drifted: " + plan.PlanId +
+                    " found=" + string.Join('|', found.Select(item => item.EventType + "." + item.EventName +
+                        ":" + item.Operation + ":" + item.Manipulator)));
+        }
+        if (found.Count != events.Length * 2 || directConstructors != 1 || directDisposals != 1)
+            throw new InvalidDataException("CaeruleaHelper contains an unreviewed IL lifecycle operation");
+        TypeDefinition dashSpeed = assembly.MainModule.Types.SelectMany(AllTypes).Single(type =>
+            type.FullName == "Celeste.Mod.CaeruleaHelper.Hooks.DashSpeedHook");
+        FieldDefinition storage = dashSpeed.Fields.Single(field => field.Name == "DashCoroutineHook");
+        if (storage.FieldType.FullName != "MonoMod.RuntimeDetour.ILHook" ||
+            dashSpeed.Methods.Any(method => method.Name is "Apply" or "Undo"))
+            throw new InvalidDataException("CaeruleaHelper direct ILHook storage/apply contract drifted");
+    }
+
     internal static void RewriteDeviceAssembly(AssemblyDefinition assembly,
         IReadOnlyList<FrozenIlTransformPlan> plans)
     {
         if (plans.Count == 0) return;
         if (plans.Any(plan => plan.Owner != assembly.Name.Name) ||
-            assembly.Name.Name is not (FixtureName or DisposableTheoName or VortexHelperName))
+            assembly.Name.Name is not (FixtureName or DisposableTheoName or VortexHelperName or CaeruleaName))
             throw new InvalidDataException("frozen-IL device rewrite received an unregistered assembly");
+
+        if (assembly.Name.Name == CaeruleaName)
+        {
+            RewriteCaerulea(assembly, plans);
+            return;
+        }
 
         if (assembly.Name.Name == DisposableTheoName)
         {
@@ -518,6 +668,154 @@ internal static class StaticIlFreeze
         // live DynamicData usage. Stage 25H-C does not broaden into that class.
     }
 
+    private static void RewriteCaerulea(AssemblyDefinition assembly,
+        IReadOnlyList<FrozenIlTransformPlan> plans)
+    {
+        if (plans.Count != 9 || plans.Count(plan => plan.Mechanism == "DIRECT_ILHOOK") != 1)
+            throw new InvalidDataException("CaeruleaHelper complete frozen-IL census drifted");
+
+        int removedEvents = 0;
+        foreach (MethodDefinition method in assembly.MainModule.Types.SelectMany(AllTypes)
+                     .SelectMany(type => type.Methods).Where(method => method.HasBody))
+        {
+            Instruction[] body = method.Body.Instructions.ToArray();
+            foreach (int index in Enumerable.Range(0, body.Length).Where(index =>
+                         body[index].Operand is MethodReference called &&
+                         called.DeclaringType.FullName.StartsWith("IL.", StringComparison.Ordinal) &&
+                         (called.Name.StartsWith("add_", StringComparison.Ordinal) ||
+                          called.Name.StartsWith("remove_", StringComparison.Ordinal))))
+            {
+                int lower = Math.Max(0, index - 16);
+                int start = Enumerable.Range(lower, index - lower)
+                    .Where(candidate => body[candidate].OpCode == OpCodes.Ldsfld).LastOrDefault(-1);
+                if (start < 0)
+                    start = Enumerable.Range(lower, index - lower)
+                        .Where(candidate => body[candidate].OpCode == OpCodes.Ldnull).LastOrDefault(-1);
+                if (start < 0 || !body.Skip(start).Take(index - start).Any(value => value.OpCode == OpCodes.Ldftn))
+                    throw new InvalidDataException("CaeruleaHelper IL event removal shape drifted: " + method.FullName);
+                for (int cursor = start; cursor <= index; cursor++)
+                {
+                    body[cursor].OpCode = OpCodes.Nop;
+                    body[cursor].Operand = null;
+                }
+                removedEvents++;
+            }
+        }
+        if (removedEvents != 16)
+            throw new InvalidDataException("CaeruleaHelper frozen event removal count drifted: " + removedEvents);
+
+        foreach (FrozenIlTransformPlan plan in plans.GroupBy(plan =>
+                     plan.ManipulatorType + "\0" + plan.ManipulatorMethod, StringComparer.Ordinal)
+                     .Select(group => group.First()))
+        {
+            TypeDefinition owner = assembly.MainModule.Types.SelectMany(AllTypes).Single(type =>
+                type.FullName == plan.ManipulatorType.Replace('+', '/'));
+            MethodDefinition manipulator = owner.Methods.Single(method => method.Name == plan.ManipulatorMethod);
+            owner.Methods.Remove(manipulator);
+        }
+
+        TypeDefinition dashSpeed = assembly.MainModule.Types.SelectMany(AllTypes).Single(type =>
+            type.FullName == "Celeste.Mod.CaeruleaHelper.Hooks.DashSpeedHook");
+        RewriteAsReturn(dashSpeed.Methods.Single(method => method.Name == "Load"));
+        RewriteAsReturn(dashSpeed.Methods.Single(method => method.Name == "Unload"));
+        dashSpeed.Fields.Remove(dashSpeed.Fields.Single(field => field.Name == "DashCoroutineHook"));
+
+        // DashlessHelper is an optional dependency outside this selected static
+        // closure. Freeze the exact ordinary StarJumpBlock.Open fallback and
+        // remove only the unreachable reflective direct-Hook branch.
+        TypeDefinition star = assembly.MainModule.Types.SelectMany(AllTypes).Single(type =>
+            type.FullName == "Celeste.Mod.CaeruleaHelper.Entities.CustomStarJumpBlock");
+        RewriteOnOnly(star.Methods.Single(method => method.Name == "Load"), "add_", "Open", "IsOpen");
+        RewriteOnOnly(star.Methods.Single(method => method.Name == "Unload"), "remove_", "Open", "IsOpen");
+        MethodDefinition starInitializer = star.Methods.Single(method => method.IsConstructor && method.IsStatic);
+        Instruction[] initializerBody = starInitializer.Body.Instructions.ToArray();
+        foreach (string fieldName in new[] { "hook_dashless_open", "normal_hook" })
+        {
+            int store = Array.FindIndex(initializerBody, instruction => instruction.OpCode == OpCodes.Stsfld &&
+                instruction.Operand is FieldReference field && field.Name == fieldName);
+            if (store <= 0)
+                throw new InvalidDataException("CaeruleaHelper optional field initializer drifted: " + fieldName);
+            initializerBody[store - 1].OpCode = OpCodes.Nop;
+            initializerBody[store - 1].Operand = null;
+            initializerBody[store].OpCode = OpCodes.Nop;
+            initializerBody[store].Operand = null;
+        }
+        foreach (string field in new[] { "hook_dashless_open", "normal_hook" })
+            star.Fields.Remove(star.Fields.Single(value => value.Name == field));
+        star.Methods.Remove(star.Methods.Single(method => method.Name == "IsOpenDashless"));
+        TypeDefinition dashlessDelegate = star.NestedTypes.Single(type => type.Name == "DashlessHelperHookOpen");
+        star.NestedTypes.Remove(dashlessDelegate);
+
+        HashSet<string> runtimeMethods = plans.SelectMany(plan => plan.ExpectedDelegateTargets)
+            .Select(value => value[(value.LastIndexOf("::", StringComparison.Ordinal) + 2)..])
+            .ToHashSet(StringComparer.Ordinal);
+        foreach (TypeDefinition type in assembly.MainModule.Types.SelectMany(AllTypes).ToArray())
+        {
+            foreach (MethodDefinition method in type.Methods.Where(method => MethodUsesHostIl(method)).ToArray())
+                type.Methods.Remove(method);
+            foreach (FieldDefinition field in type.Fields.Where(field =>
+                         field.FieldType.Scope?.Name is "MonoMod.Utils" or "Mono.Cecil" ||
+                         field.FieldType.FullName.Contains("MonoMod.Cil", StringComparison.Ordinal) ||
+                         field.FieldType.FullName.Contains("Mono.Cecil", StringComparison.Ordinal) ||
+                         field.FieldType.FullName == "MonoMod.RuntimeDetour.ILHook").ToArray())
+                type.Fields.Remove(field);
+            foreach (MethodDefinition method in type.Methods.Where(method => runtimeMethods.Contains(method.Name)))
+            {
+                method.IsPublic = true;
+                method.IsPrivate = false;
+                MakePublic(type);
+            }
+        }
+        foreach (TypeDefinition custom in assembly.MainModule.Types.SelectMany(AllTypes).Where(type =>
+                     type.CustomAttributes.Any(attribute =>
+                         attribute.AttributeType.FullName == "Celeste.Mod.Entities.CustomEntityAttribute")))
+            MakePublic(custom);
+
+        foreach (string referenceName in new[] { "Mono.Cecil", "MonoMod.Utils" })
+        {
+            AssemblyNameReference? reference = assembly.MainModule.AssemblyReferences.SingleOrDefault(value =>
+                value.Name == referenceName);
+            if (reference == null) continue;
+            string[] residual = ActiveReferenceIdentities(assembly.MainModule, referenceName).ToArray();
+            if (residual.Length != 0)
+                throw new InvalidDataException("CaeruleaHelper host IL reference survived: " +
+                                               referenceName + ":" + string.Join(',', residual));
+            assembly.MainModule.AssemblyReferences.Remove(reference);
+        }
+    }
+
+    private static void RewriteAsReturn(MethodDefinition method)
+    {
+        method.Body.Instructions.Clear();
+        method.Body.ExceptionHandlers.Clear();
+        method.Body.Variables.Clear();
+        method.Body.InitLocals = false;
+        method.Body.GetILProcessor().Append(Instruction.Create(OpCodes.Ret));
+    }
+
+    private static void RewriteOnOnly(MethodDefinition method, string operation, string eventName, string handlerName)
+    {
+        Instruction[] original = method.Body.Instructions.ToArray();
+        MethodReference eventMethod = original.Select(value => value.Operand).OfType<MethodReference>().Single(value =>
+            value.DeclaringType.FullName == "On.Celeste.StarJumpBlock" &&
+            value.Name == operation + eventName);
+        MethodReference handler = original.Select(value => value.Operand).OfType<MethodReference>().Single(value =>
+            value.DeclaringType.FullName == method.DeclaringType.FullName && value.Name == handlerName);
+        MethodReference constructor = original.Select(value => value.Operand).OfType<MethodReference>()
+            .First(value => value.Name == ".ctor" && value.DeclaringType.FullName ==
+                "On.Celeste.StarJumpBlock/hook_Open");
+        method.Body.Instructions.Clear();
+        method.Body.ExceptionHandlers.Clear();
+        method.Body.Variables.Clear();
+        method.Body.InitLocals = false;
+        ILProcessor il = method.Body.GetILProcessor();
+        il.Append(il.Create(OpCodes.Ldnull));
+        il.Append(il.Create(OpCodes.Ldftn, handler));
+        il.Append(il.Create(OpCodes.Newobj, constructor));
+        il.Append(il.Create(OpCodes.Call, eventMethod));
+        il.Append(il.Create(OpCodes.Ret));
+    }
+
     private static IEnumerable<string> ActiveReferenceIdentities(ModuleDefinition module, string assemblyName)
     {
         foreach (TypeDefinition type in module.Types.SelectMany(AllTypes))
@@ -664,7 +962,7 @@ internal static class StaticIlFreeze
         (method.ReturnType.Scope?.Name is "MonoMod.Utils" or "Mono.Cecil" ||
          method.Parameters.Any(parameter => parameter.ParameterType.Scope?.Name is "MonoMod.Utils" or "Mono.Cecil") ||
          method.Body.Instructions.Select(instruction => instruction.Operand).OfType<MemberReference>()
-             .Any(reference => reference.DeclaringType.Scope?.Name is "MonoMod.Utils" or "Mono.Cecil"));
+             .Any(reference => reference.DeclaringType?.Scope?.Name is "MonoMod.Utils" or "Mono.Cecil"));
 
     private static bool TypeUsesHostIl(TypeDefinition type) =>
         type.Fields.Any(field => field.FieldType.Scope?.Name is "MonoMod.Utils" or "Mono.Cecil" ||
@@ -690,7 +988,10 @@ internal static class StaticIlFreeze
             .Select(plan => string.Join("\0", plan.PlanId, plan.AssemblySha256, plan.EventType, plan.EventName,
                 plan.TargetMethod, plan.CanonicalTargetMethod, plan.ManipulatorType, plan.ManipulatorMethod,
                 plan.ManipulatorIsStatic, plan.RegistrationOrdinal, plan.BeforeSha256,
-                plan.AfterSha256, plan.DiffSha256, string.Join(',', plan.ExpectedDelegateTargets)))) + "\n"));
+                plan.AfterSha256, plan.DiffSha256, string.Join(',', plan.ExpectedDelegateTargets)) +
+                (plan.Mechanism == "DIRECT_ILHOOK" ? "\0" + string.Join("\0", plan.Mechanism,
+                    plan.ConstructorSignature, plan.TargetExpression, plan.ManipulatorExpression,
+                    plan.Config, plan.ApplyByDefault, plan.Storage, plan.Lifetime) : ""))) + "\n"));
 
     internal static string Targets(IReadOnlyList<FrozenIlTransformPlan> plans)
     {

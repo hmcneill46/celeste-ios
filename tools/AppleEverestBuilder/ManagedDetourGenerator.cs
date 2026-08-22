@@ -81,6 +81,12 @@ internal static class ManagedDetourGenerator
         {
             string path = Path.Combine(managedRoot, target.SourceFile.Replace('/', Path.DirectorySeparatorChar));
             string text = File.ReadAllText(path);
+            if (target.SourceKind == "property-getter")
+            {
+                text = RewritePropertyGetter(text, target);
+                File.WriteAllText(path, text, new UTF8Encoding(false));
+                continue;
+            }
             string needle = "\t" + target.SourceDeclaration + "\n\t{";
             int first = text.IndexOf(needle, StringComparison.Ordinal);
             if (first < 0 || first != text.LastIndexOf(needle, StringComparison.Ordinal))
@@ -106,6 +112,40 @@ internal static class ManagedDetourGenerator
             text = text[..first] + wrapper + text[(first + needle.Length)..];
             File.WriteAllText(path, text, new UTF8Encoding(false));
         }
+    }
+
+    private static string RewritePropertyGetter(string text, ManagedDetourTarget target)
+    {
+        string declaration = "\t" + target.SourceDeclaration + "\n\t{";
+        int first = text.IndexOf(declaration, StringComparison.Ordinal);
+        if (first < 0 || first != text.LastIndexOf(declaration, StringComparison.Ordinal))
+            throw new InvalidDataException($"managed-detour property target drifted or is ambiguous: {target.Id}");
+        int propertyOpen = first + declaration.Length - 1;
+        int propertyClose = MatchingBrace(text, propertyOpen);
+        string getterNeedle = "\n\t\tget\n\t\t{";
+        int getter = text.IndexOf(getterNeedle, propertyOpen, propertyClose - propertyOpen,
+            StringComparison.Ordinal);
+        if (getter < 0)
+            throw new InvalidDataException($"managed-detour property getter is missing: {target.Id}");
+        int getterOpen = getter + getterNeedle.Length - 1;
+        int getterClose = MatchingBrace(text, getterOpen);
+        string body = text[(getterOpen + 1)..getterClose];
+        string wrapper = "\t" + target.SourceDeclaration + "\n\t{\n\t\tget\n\t\t{\n\t\t\treturn global::" +
+            target.HookNamespace + "." + target.HookType + ".Invoke_" + target.EventName +
+            "(this, appleSelf => appleSelf." + target.OriginalAlias + "());\n\t\t}\n\t}\n\n\t" +
+            target.OriginalDeclaration + "\n\t{" + body + "\n\t}";
+        return text[..first] + wrapper + text[(propertyClose + 1)..];
+    }
+
+    private static int MatchingBrace(string text, int open)
+    {
+        int depth = 0;
+        for (int index = open; index < text.Length; index++)
+        {
+            if (text[index] == '{') depth++;
+            else if (text[index] == '}' && --depth == 0) return index;
+        }
+        throw new InvalidDataException("managed-detour source contains an unterminated block");
     }
 
     private static void EmitTarget(StringBuilder source, ManagedDetourTarget target)
@@ -180,7 +220,8 @@ internal static class ManagedDetourGenerator
         arguments.AddRange(target.Parameters.Select(parameter => parameter.Type));
         string expectedOrig = "global::System.Func<" + string.Join(", ", arguments.Append(target.ReturnType)) + ">";
         if (target.ReturnType == "void" || plan.DetourReturnType != target.ReturnType || plan.DetourParameterTypes.Length != arguments.Count + 1 ||
-            plan.DetourParameterTypes[0] != expectedOrig || !plan.DetourParameterTypes.Skip(1).SequenceEqual(arguments, StringComparer.Ordinal))
+            (!plan.CustomOriginalDelegate && plan.DetourParameterTypes[0] != expectedOrig) ||
+            !plan.DetourParameterTypes.Skip(1).SequenceEqual(arguments, StringComparer.Ordinal))
             throw new InvalidDataException($"DEFERRED_DIRECT_HOOK_SIGNATURE: {plan.Owner} {plan.DetourType}::{plan.DetourMethod}");
     }
 

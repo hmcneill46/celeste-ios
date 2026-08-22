@@ -2,6 +2,7 @@ using System.Reflection;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
+using System.Text.RegularExpressions;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
 using MonoMod.Cil;
@@ -44,6 +45,14 @@ internal static class Program
         public string AfterSha256 { get; set; } = "";
         public string DiffSha256 { get; set; } = "";
         public string[] ExpectedDelegateTargets { get; set; } = [];
+        public string Mechanism { get; set; } = "HOOKGEN_IL_EVENT";
+        public string ConstructorSignature { get; set; } = "";
+        public string TargetExpression { get; set; } = "";
+        public string ManipulatorExpression { get; set; } = "";
+        public string Config { get; set; } = "absent";
+        public string ApplyByDefault { get; set; } = "implicit-true";
+        public string Storage { get; set; } = "";
+        public string Lifetime { get; set; } = "MODULE_IMMUTABLE_ACTIVE";
     }
 
     private sealed record DelegateLowering(string Kind, string Target, int ParameterCount);
@@ -60,8 +69,12 @@ internal static class Program
             PlanDocument document = JsonSerializer.Deserialize<PlanDocument>(File.ReadAllText(options.Plan),
                 new JsonSerializerOptions { PropertyNameCaseInsensitive = true })
                 ?? throw new InvalidDataException("frozen-IL plan is empty");
-            if (document.SchemaVersion != 2 || document.Worker != "apple-everest-static-il-worker-v2")
+            bool legacy = document.SchemaVersion == 2 && document.Worker == "apple-everest-static-il-worker-v2";
+            bool direct = document.SchemaVersion == 3 && document.Worker == "apple-everest-static-il-worker-v3";
+            if (!legacy && !direct)
                 throw new InvalidDataException("unsupported frozen-IL plan schema/worker");
+            if (document.Transforms.Any(transform => transform.Mechanism == "DIRECT_ILHOOK") != direct)
+                throw new InvalidDataException("direct-ILHook plans require the exact v3 worker schema");
             string actualPlanSha256 = PlanSha256(document.Transforms);
             if (!string.Equals(document.PlanSha256, actualPlanSha256, StringComparison.OrdinalIgnoreCase))
                 throw new InvalidDataException($"frozen-IL plan hash mismatch: expected {document.PlanSha256}; actual {actualPlanSha256}");
@@ -94,9 +107,7 @@ internal static class Program
 
             ReaderParameters reader = new() { AssemblyResolver = cecilResolver, ReadSymbols = false };
             using ModuleDefinition module = ModuleDefinition.ReadModule(options.Target, reader);
-            MethodDefinition target = module.Types.SelectMany(AllTypes).SelectMany(type => type.Methods)
-                .SingleOrDefault(method => method.FullName == options.TargetMethod)
-                ?? throw new InvalidDataException("exact target method not found: " + options.TargetMethod);
+            MethodDefinition target = ResolveTarget(module, options.TargetMethod);
 
             string canonicalTarget = transforms[0].CanonicalTargetMethod;
             string beforeText = Normalize(target, canonicalTarget);
@@ -146,11 +157,14 @@ internal static class Program
                 if (Delegate.CreateDelegate(typeof(ILContext.Manipulator), instance, manipulatorMethod,
                         throwOnBindFailure: true) is not ILContext.Manipulator manipulator)
                     throw new InvalidDataException("exact manipulator delegate could not be created");
+                Dictionary<string, int> directCallsBefore = ExpectedDirectCallCounts(target,
+                    transform.ExpectedDelegateTargets);
                 DelegateLowering[] lowerings;
                 using (ILContext context = new(target))
                 {
                     context.Invoke(manipulator);
-                    lowerings = LowerEmitDelegates(target, module, transform.ExpectedDelegateTargets);
+                    lowerings = LowerEmitDelegates(target, module, transform.ExpectedDelegateTargets,
+                        directCallsBefore);
                 }
 
                 ValidateBody(target);
@@ -192,9 +206,20 @@ internal static class Program
     }
 
     private static DelegateLowering[] LowerEmitDelegates(MethodDefinition method, ModuleDefinition module,
-        IReadOnlyList<string> expectedTargets)
+        IReadOnlyList<string> expectedTargets, IReadOnlyDictionary<string, int> directCallsBefore)
     {
         List<DelegateLowering> lowered = [];
+        Dictionary<string, int> directCallsAfter = ExpectedDirectCallCounts(method, expectedTargets);
+        foreach ((string identity, int count) in directCallsAfter.OrderBy(value => value.Key, StringComparer.Ordinal))
+        {
+            directCallsBefore.TryGetValue(identity, out int before);
+            for (int index = before; index < count; index++)
+            {
+                MethodReference called = method.Body.Instructions.Select(instruction => instruction.Operand)
+                    .OfType<MethodReference>().First(reference => RuntimeMethodIdentity(reference) == identity);
+                lowered.Add(new DelegateLowering("static-noncapturing-direct", identity, called.Parameters.Count));
+            }
+        }
         Mono.Collections.Generic.Collection<Instruction> body = method.Body.Instructions;
         for (int index = 0; index + 3 < body.Count; index++)
         {
@@ -270,6 +295,19 @@ internal static class Program
         return lowered.ToArray();
     }
 
+    private static Dictionary<string, int> ExpectedDirectCallCounts(MethodDefinition method,
+        IReadOnlyList<string> expectedTargets)
+    {
+        HashSet<string> expected = expectedTargets.ToHashSet(StringComparer.Ordinal);
+        return method.Body.Instructions.Select(instruction => instruction.Operand).OfType<MethodReference>()
+            .Select(RuntimeMethodIdentity).Where(expected.Contains)
+            .GroupBy(identity => identity, StringComparer.Ordinal)
+            .ToDictionary(group => group.Key, group => group.Count(), StringComparer.Ordinal);
+    }
+
+    private static string RuntimeMethodIdentity(MethodReference method) =>
+        method.DeclaringType.FullName.Replace('/', '+') + "::" + method.Name;
+
     private static bool TryReadInt32(Instruction instruction, out int value)
     {
         if (instruction.OpCode == OpCodes.Ldc_I4) { value = (int)instruction.Operand; return true; }
@@ -290,7 +328,7 @@ internal static class Program
     {
         var manifest = new
         {
-            schemaVersion = 2,
+            schemaVersion = document.SchemaVersion,
             worker = document.Worker,
             planSha256 = document.PlanSha256,
             target,
@@ -358,6 +396,26 @@ internal static class Program
                 yield return descendant;
     }
 
+    private static MethodDefinition ResolveTarget(ModuleDefinition module, string identity)
+    {
+        MethodDefinition[] methods = module.Types.SelectMany(AllTypes).SelectMany(type => type.Methods).ToArray();
+        MethodDefinition[] exact = methods.Where(method => method.FullName == identity).ToArray();
+        if (exact.Length == 1) return exact[0];
+        if (exact.Length != 0)
+            throw new InvalidDataException("exact target method is ambiguous: " + identity);
+        const string dashIterator = "System.Boolean Celeste.Player/<DashCoroutine>d__*::MoveNext()";
+        if (identity != dashIterator)
+            throw new InvalidDataException("exact target method not found: " + identity);
+        MethodDefinition[] iterator = methods.Where(method =>
+            method.Name == "MoveNext" && method.ReturnType.FullName == "System.Boolean" && !method.HasParameters &&
+            method.DeclaringType.DeclaringType?.FullName == "Celeste.Player" &&
+            method.DeclaringType.Name.StartsWith("<DashCoroutine>d__", StringComparison.Ordinal) &&
+            method.DeclaringType.Name["<DashCoroutine>d__".Length..].All(char.IsAsciiDigit)).ToArray();
+        if (iterator.Length != 1)
+            throw new InvalidDataException("exact DashCoroutine iterator target is missing or ambiguous");
+        return iterator[0];
+    }
+
     private static string Normalize(MethodDefinition method, string semanticIdentity)
     {
         StringBuilder text = new();
@@ -383,7 +441,10 @@ internal static class Program
                 .Append(Label(handler.HandlerStart, positions)).Append(' ').Append(Label(handler.HandlerEnd, positions)).Append(' ')
                 .Append(Label(handler.FilterStart, positions)).Append(' ')
                 .Append(handler.CatchType == null ? "-" : TypeIdentity(handler.CatchType)).AppendLine();
-        return text.ToString();
+        string result = text.ToString();
+        return semanticIdentity.Contains("<DashCoroutine>d__::", StringComparison.Ordinal)
+            ? Regex.Replace(result, @"(?<=<DashCoroutine>d__)\d+", "", RegexOptions.CultureInvariant)
+            : result;
     }
 
     private static string OperandIdentity(object? operand, IReadOnlyDictionary<Instruction, int> positions) => operand switch
@@ -463,7 +524,10 @@ internal static class Program
             transform.CanonicalTargetMethod, transform.ManipulatorType,
             transform.ManipulatorMethod, transform.ManipulatorIsStatic, transform.RegistrationOrdinal,
             transform.BeforeSha256, transform.AfterSha256, transform.DiffSha256,
-            string.Join(',', transform.ExpectedDelegateTargets)))) + "\n");
+            string.Join(',', transform.ExpectedDelegateTargets)) +
+            (transform.Mechanism == "DIRECT_ILHOOK" ? "\0" + string.Join("\0", transform.Mechanism,
+                transform.ConstructorSignature, transform.TargetExpression, transform.ManipulatorExpression,
+                transform.Config, transform.ApplyByDefault, transform.Storage, transform.Lifetime) : ""))) + "\n");
     private static string FileSha256(string path) => Sha256(File.ReadAllBytes(path));
     private static string Sha256(byte[] bytes)
     {

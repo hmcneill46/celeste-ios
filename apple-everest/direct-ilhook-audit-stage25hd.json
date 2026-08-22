@@ -1,0 +1,283 @@
+{
+  "schemaVersion": 1,
+  "stage": "25H-D",
+  "status": "GREEN",
+  "highPrioritySource": {
+    "constructionSites": 53,
+    "packages": {
+      "CaeruleaHelper": 1,
+      "CrystallineHelper": 2,
+      "LuckyHelper": 8,
+      "MaxHelpingHand": 34,
+      "TeraHelper": 8
+    },
+    "note": "The 53-site union is the deduplicated direct-ILHook surface of the exact Stage 25H-C high-priority graphs; other exact H-C helpers remain in the 126-site full inventory."
+  },
+  "classificationPolicy": {
+    "primaryOrder": [
+      "C_STATIC_CONFIGURED",
+      "D_DYNAMIC_TARGET",
+      "E_DYNAMIC_MANIPULATOR",
+      "F_MULTIPLE_DIRECT_HOOKS_SAME_TARGET",
+      "G_CONDITIONAL_RUNTIME_CREATION",
+      "B_STATIC_UNCONFIGURED_DYNAMIC_LIFETIME",
+      "A_STATIC_UNCONFIGURED_IMMUTABLE",
+      "H_OTHER"
+    ],
+    "A_STATIC_UNCONFIGURED_IMMUTABLE": "One statically resolved target and manipulator, no direct or ambient DetourConfig, immediate constructor application, field storage, and only module-unload/process-teardown disposal.",
+    "B_STATIC_UNCONFIGURED_DYNAMIC_LIFETIME": "Static target and manipulator without config, but gameplay/map lifecycle constructs or disposes the hook.",
+    "C_STATIC_CONFIGURED": "Construction executes under a non-null DetourConfig/DetourConfigContext, including an ambient caller context; configuration is primary even when another secondary risk is present.",
+    "D_DYNAMIC_TARGET": "The target depends on a runtime Type/module lookup, generic runtime type, fallback choice, variable method name, or otherwise cannot be uniquely fixed from the distributed site.",
+    "E_DYNAMIC_MANIPULATOR": "The manipulator delegate target is runtime-selected or mutable and cannot be reduced to an exact static/stateless singleton method.",
+    "F_MULTIPLE_DIRECT_HOOKS_SAME_TARGET": "Two or more unconfigured immutable direct constructions in the same distributed helper target the same canonical method; exact composition must be proven separately.",
+    "G_CONDITIONAL_RUNTIME_CREATION": "A construction with otherwise static arguments is selected by runtime state/dependency and is not covered by a higher-priority class.",
+    "H_OTHER": "A construction not proven to belong to a more precise class.",
+    "secondaryFlagsOverlap": true
+  },
+  "summary": {
+    "primaryCounts": {
+      "A_STATIC_UNCONFIGURED_IMMUTABLE": 12,
+      "B_STATIC_UNCONFIGURED_DYNAMIC_LIFETIME": 2,
+      "C_STATIC_CONFIGURED": 32,
+      "D_DYNAMIC_TARGET": 1,
+      "E_DYNAMIC_MANIPULATOR": 0,
+      "F_MULTIPLE_DIRECT_HOOKS_SAME_TARGET": 6,
+      "G_CONDITIONAL_RUNTIME_CREATION": 0,
+      "H_OTHER": 0
+    },
+    "eligibleStaticUnconfiguredImmutable": 12,
+    "configuredSites": 32,
+    "dynamicGameplayLifetimeSites": 3,
+    "dynamicTargetSites": 12,
+    "dynamicManipulatorSites": 0,
+    "multipleDirectSameTargetSites": 13,
+    "multipleDirectSameTargetGroups": 5,
+    "allSitesExactlyClassified": true
+  },
+  "commonSemantics": {
+    "constructor": "System.Void MonoMod.RuntimeDetour.ILHook::.ctor(System.Reflection.MethodBase,MonoMod.Cil.ILContext/Manipulator)",
+    "applyByDefault": "implicit-true",
+    "isAppliedReads": 0,
+    "isValidReads": 0,
+    "undoCalls": 0,
+    "ordinaryDisposePolicy": "module unload/process teardown unless dynamicGameplayLifetime is true"
+  },
+  "sites": [
+    {"id":"caerulea-dash-coroutine","package":"CaeruleaHelper","assembly":"CaeruleaHelper","method":"Celeste.Mod.CaeruleaHelper.Hooks.DashSpeedHook.Load","offset":55,"primary":"A_STATIC_UNCONFIGURED_IMMUTABLE","target":"Celeste.Player.DashCoroutine state-machine MoveNext","manipulator":"Celeste.Mod.CaeruleaHelper.Hooks.DashSpeedHook.ModifyDashCoroutineIL","storage":"static field DashCoroutineHook","config":"absent","separateApply":false,"dispose":"module Unload only","dynamicGameplayLifetime":false,"dynamicTarget":false,"dynamicManipulator":false,"multipleSameTarget":false,"conditionalCreation":false},
+
+    {"id":"crystalline-module-player-update","package":"CrystallineHelper","assembly":"CrystallineHelper","method":"vitmod.VitModule.Load","offset":460,"primary":"F_MULTIPLE_DIRECT_HOOKS_SAME_TARGET","target":"Celeste.Player.orig_Update","manipulator":"vitmod.VitModule.Player_IL_Update","storage":"static field hookedPlayerUpdate","config":"absent","separateApply":false,"dispose":"module Unload only","dynamicGameplayLifetime":false,"dynamicTarget":false,"dynamicManipulator":false,"multipleSameTarget":true,"conditionalCreation":false},
+    {"id":"crystalline-chaser-player-update","package":"CrystallineHelper","assembly":"CrystallineHelper","method":"vitmod.InteractiveChaser.Load","offset":250,"primary":"F_MULTIPLE_DIRECT_HOOKS_SAME_TARGET","target":"Celeste.Player.orig_Update","manipulator":"vitmod.InteractiveChaser.Player_orig_Update","storage":"static field playerOrigUpdateHook","config":"absent","separateApply":true,"dispose":"module Unload only","dynamicGameplayLifetime":false,"dynamicTarget":false,"dynamicManipulator":false,"multipleSameTarget":true,"conditionalCreation":false},
+
+    {"id":"lucky-camera-player-update","package":"LuckyHelper","assembly":"LuckyHelper","method":"LuckyHelper.Triggers.CameraUpdateHelper.Load","offset":49,"primary":"A_STATIC_UNCONFIGURED_IMMUTABLE","target":"Celeste.Player.orig_Update","manipulator":"LuckyHelper.Triggers.CameraUpdateHelper.OnPlayerOrigUpdate","storage":"static field playerOrigUpdateHook","config":"absent","separateApply":false,"dispose":"module Unload only","dynamicGameplayLifetime":false,"dynamicTarget":false,"dynamicManipulator":false,"multipleSameTarget":false,"conditionalCreation":false},
+    {"id":"lucky-heart-collect-coroutine","package":"LuckyHelper","assembly":"LuckyHelper","method":"LuckyHelper.Modules.CrystalHeartDialogControllerModule.Load","offset":54,"primary":"A_STATIC_UNCONFIGURED_IMMUTABLE","target":"Celeste.HeartGem.orig_CollectRoutine state-machine MoveNext","manipulator":"LuckyHelper.Modules.CrystalHeartDialogControllerModule.ILHookHeartGemCollectCoroutine","storage":"static field heartGemCollectCoroutineHook","config":"absent","separateApply":false,"dispose":"module Unload only","dynamicGameplayLifetime":false,"dynamicTarget":false,"dynamicManipulator":false,"multipleSameTarget":false,"conditionalCreation":false},
+    {"id":"lucky-textbox-run-coroutine","package":"LuckyHelper","assembly":"LuckyHelper","method":"LuckyHelper.Modules.DefaultTextboxPathHook.Load","offset":86,"primary":"A_STATIC_UNCONFIGURED_IMMUTABLE","target":"Celeste.Textbox.RunRoutine state-machine MoveNext","manipulator":"LuckyHelper.Modules.DefaultTextboxPathHook.ILHookDashCoroutine","storage":"static field textboxCoroutineHook","config":"absent","separateApply":false,"dispose":"module Unload only","dynamicGameplayLifetime":false,"dynamicTarget":false,"dynamicManipulator":false,"multipleSameTarget":false,"conditionalCreation":false},
+    {"id":"lucky-mini-textbox-ctor","package":"LuckyHelper","assembly":"LuckyHelper","method":"LuckyHelper.Modules.DefaultTextboxPathHook.Load","offset":145,"primary":"A_STATIC_UNCONFIGURED_IMMUTABLE","target":"Celeste.MiniTextbox.orig_ctor","manipulator":"LuckyHelper.Modules.DefaultTextboxPathHook.ILHookMiniTextboxCtor","storage":"static field miniTextboxCtorHook","config":"absent","separateApply":false,"dispose":"module Unload only","dynamicGameplayLifetime":false,"dynamicTarget":false,"dynamicManipulator":false,"multipleSameTarget":false,"conditionalCreation":false},
+    {"id":"lucky-player-wall-jump","package":"LuckyHelper","assembly":"LuckyHelper","method":"LuckyHelper.Modules.PlayerMovementControllerModule.Load","offset":113,"primary":"A_STATIC_UNCONFIGURED_IMMUTABLE","target":"Celeste.Player.orig_WallJump","manipulator":"LuckyHelper.Modules.PlayerMovementControllerModule.WallJumpHook","storage":"static field wallJumpHook","config":"absent","separateApply":false,"dispose":"module Unload only","dynamicGameplayLifetime":false,"dynamicTarget":false,"dynamicManipulator":false,"multipleSameTarget":false,"conditionalCreation":false},
+    {"id":"lucky-zipmover-sequence","package":"LuckyHelper","assembly":"LuckyHelper","method":"LuckyHelper.Handlers.Impl.ZipMoverNodeHandler.Load","offset":54,"primary":"A_STATIC_UNCONFIGURED_IMMUTABLE","target":"Celeste.ZipMover.Sequence state-machine MoveNext","manipulator":"LuckyHelper.Handlers.Impl.ZipMoverNodeHandler.ZipMover_Sequence","storage":"static field zipMoverSequenceHook","config":"absent","separateApply":false,"dispose":"module Unload only","dynamicGameplayLifetime":false,"dynamicTarget":false,"dynamicManipulator":false,"multipleSameTarget":false,"conditionalCreation":false},
+    {"id":"lucky-level-load","package":"LuckyHelper","assembly":"LuckyHelper","method":"LuckyHelper.Entities.Room.PasteRoom.Load","offset":47,"primary":"A_STATIC_UNCONFIGURED_IMMUTABLE","target":"Celeste.Level.orig_LoadLevel","manipulator":"LuckyHelper.Entities.Room.PasteRoom.LevelOnOirgLoadLevelILHook","storage":"static field origLevelLoadHook","config":"absent","separateApply":false,"dispose":"module Unload only","dynamicGameplayLifetime":false,"dynamicTarget":false,"dynamicManipulator":false,"multipleSameTarget":false,"conditionalCreation":false},
+    {"id":"lucky-viv-leader-update","package":"LuckyHelper","assembly":"LuckyHelper","method":"LuckyHelper.Entities.EeveeLike.FollowerContainer.Load","offset":124,"primary":"D_DYNAMIC_TARGET","target":"runtime-discovered VivHelper module newLeaderUpdate","manipulator":"LuckyHelper.Entities.EeveeLike.FollowerContainer.LeaderOnUpdate","storage":"static field VivLeaderHook","config":"absent","separateApply":false,"dispose":"module Unload only","dynamicGameplayLifetime":false,"dynamicTarget":true,"dynamicManipulator":false,"multipleSameTarget":false,"conditionalCreation":true},
+
+    {"id":"max-gui-checkpoint","package":"MaxHelpingHand","assembly":"MaxHelpingHand","method":"Celeste.Mod.MaxHelpingHand.Module.GuiStrawberryReskin.Load","offset":179,"primary":"C_STATIC_CONFIGURED","target":"runtime fallback: Celeste.OuiChapterPanel.orig_DrawCheckpoint or DrawCheckpoint","manipulator":"Celeste.Mod.MaxHelpingHand.Module.GuiStrawberryReskin.modStrawberrySkin","storage":"static field hookChapterPanelDrawCheckpoint","config":"ambient MaddieHelpingHand_Default","separateApply":false,"dispose":"module Unload only","dynamicGameplayLifetime":false,"dynamicTarget":true,"dynamicManipulator":false,"multipleSameTarget":false,"conditionalCreation":false},
+    {"id":"max-camera-catchup-player-update","package":"MaxHelpingHand","assembly":"MaxHelpingHand","method":"Celeste.Mod.MaxHelpingHand.Triggers.CameraCatchupSpeedTrigger.Load","offset":94,"primary":"C_STATIC_CONFIGURED","target":"Celeste.Player.orig_Update","manipulator":"Celeste.Mod.MaxHelpingHand.Triggers.CameraCatchupSpeedTrigger.modPlayerOrigUpdate","storage":"static field playerOrigUpdateHook","config":"MaddieHelpingHand_BeforeAll priority int.MinValue inside ambient default","separateApply":false,"dispose":"module Unload only","dynamicGameplayLifetime":false,"dynamicTarget":false,"dynamicManipulator":false,"multipleSameTarget":true,"conditionalCreation":false},
+    {"id":"max-gradient-dust-render","package":"MaxHelpingHand","assembly":"MaxHelpingHand","method":"Celeste.Mod.MaxHelpingHand.Triggers.GradientDustTrigger.Load","offset":187,"primary":"C_STATIC_CONFIGURED","target":"Celeste.DustGraphic+Eyeballs.Render","manipulator":"Celeste.Mod.MaxHelpingHand.Triggers.GradientDustTrigger.modDustEyesRender","storage":"static field eyeballHook","config":"ambient MaddieHelpingHand_Default","separateApply":false,"dispose":"module Unload only","dynamicGameplayLifetime":false,"dynamicTarget":false,"dynamicManipulator":false,"multipleSameTarget":false,"conditionalCreation":false},
+    {"id":"max-frost-lava-update","package":"MaxHelpingHand","assembly":"MaxHelpingHand","method":"Celeste.Mod.MaxHelpingHand.Triggers.InstantLavaBlockerTrigger.HookMods","offset":153,"primary":"C_STATIC_CONFIGURED","target":"runtime-discovered FrostHelper.CustomRisingLava.Update","manipulator":"Celeste.Mod.MaxHelpingHand.Triggers.InstantLavaBlockerTrigger.onRisingLavaUpdate","storage":"static field frostHelperHook","config":"ambient MaddieHelpingHand_Default","separateApply":false,"dispose":"module Unload only","dynamicGameplayLifetime":false,"dynamicTarget":true,"dynamicManipulator":false,"multipleSameTarget":false,"conditionalCreation":true},
+    {"id":"max-oneway-player-update","package":"MaxHelpingHand","assembly":"MaxHelpingHand","method":"Celeste.Mod.MaxHelpingHand.Triggers.OneWayCameraTrigger.Load","offset":47,"primary":"C_STATIC_CONFIGURED","target":"Celeste.Player.orig_Update","manipulator":"Celeste.Mod.MaxHelpingHand.Triggers.OneWayCameraTrigger.ilHookCameraTarget","storage":"static field hookOrigUpdate","config":"ambient MaddieHelpingHand_Default","separateApply":false,"dispose":"module Unload only","dynamicGameplayLifetime":false,"dynamicTarget":false,"dynamicManipulator":false,"multipleSameTarget":true,"conditionalCreation":false},
+    {"id":"max-oneway-level-load","package":"MaxHelpingHand","assembly":"MaxHelpingHand","method":"Celeste.Mod.MaxHelpingHand.Triggers.OneWayCameraTrigger.Load","offset":104,"primary":"C_STATIC_CONFIGURED","target":"Celeste.Level.orig_LoadLevel","manipulator":"Celeste.Mod.MaxHelpingHand.Triggers.OneWayCameraTrigger.ilHookGetFullCameraTarget","storage":"static field hookLoadLevel","config":"ambient MaddieHelpingHand_Default","separateApply":false,"dispose":"module Unload only","dynamicGameplayLifetime":false,"dynamicTarget":false,"dynamicManipulator":false,"multipleSameTarget":false,"conditionalCreation":false},
+    {"id":"max-oneway-transition","package":"MaxHelpingHand","assembly":"MaxHelpingHand","method":"Celeste.Mod.MaxHelpingHand.Triggers.OneWayCameraTrigger.Load","offset":168,"primary":"C_STATIC_CONFIGURED","target":"Celeste.Level.orig_TransitionRoutine state-machine MoveNext","manipulator":"Celeste.Mod.MaxHelpingHand.Triggers.OneWayCameraTrigger.ilHookGetFullCameraTarget","storage":"static field hookTransitionRoutine","config":"ambient MaddieHelpingHand_Default","separateApply":false,"dispose":"module Unload only","dynamicGameplayLifetime":false,"dynamicTarget":false,"dynamicManipulator":false,"multipleSameTarget":false,"conditionalCreation":false},
+    {"id":"max-crumble-added","package":"MaxHelpingHand","assembly":"MaxHelpingHand","method":"Celeste.Mod.MaxHelpingHand.Entities.CustomizableCrumblePlatform.Load","offset":47,"primary":"C_STATIC_CONFIGURED","target":"Celeste.CrumblePlatform.orig_Added","manipulator":"Celeste.Mod.MaxHelpingHand.Entities.CustomizableCrumblePlatform.onCrumblePlatformAdded","storage":"static field crumblePlatformOrigAddedHook","config":"ambient MaddieHelpingHand_Default","separateApply":false,"dispose":"module Unload only","dynamicGameplayLifetime":false,"dynamicTarget":false,"dynamicManipulator":false,"multipleSameTarget":false,"conditionalCreation":false},
+    {"id":"max-crumble-tileout","package":"MaxHelpingHand","assembly":"MaxHelpingHand","method":"Celeste.Mod.MaxHelpingHand.Entities.CustomizableCrumblePlatform.Load","offset":94,"primary":"C_STATIC_CONFIGURED","target":"Celeste.CrumblePlatform.TileOut state-machine MoveNext","manipulator":"Celeste.Mod.MaxHelpingHand.Entities.CustomizableCrumblePlatform.onCrumblePlatformTileOut","storage":"static field crumblePlatformTileOutHook","config":"ambient MaddieHelpingHand_Default","separateApply":false,"dispose":"module Unload only","dynamicGameplayLifetime":false,"dynamicTarget":false,"dynamicManipulator":false,"multipleSameTarget":false,"conditionalCreation":false},
+    {"id":"max-eevee-holdable-update","package":"MaxHelpingHand","assembly":"MaxHelpingHand","method":"Celeste.Mod.MaxHelpingHand.Entities.CustomSeekerBarrier.LoadMods","offset":199,"primary":"C_STATIC_CONFIGURED","target":"runtime-discovered EeveeHelper.HoldableContainer.Update","manipulator":"Celeste.Mod.MaxHelpingHand.Entities.CustomSeekerBarrier.onHoldableContainerUpdate","storage":"static field eeveeHoldableContainerUpdateHook","config":"MaddieHelpingHand_AfterAll priority int.MaxValue inside ambient default","separateApply":false,"dispose":"module Unload only","dynamicGameplayLifetime":false,"dynamicTarget":true,"dynamicManipulator":false,"multipleSameTarget":false,"conditionalCreation":true},
+    {"id":"max-kevin-move-h","package":"MaxHelpingHand","assembly":"MaxHelpingHand","method":"Celeste.Mod.MaxHelpingHand.Entities.KevinBarrier.hookKevin","offset":149,"primary":"C_STATIC_CONFIGURED","target":"runtime Type parameter MoveHCheck","manipulator":"Celeste.Mod.MaxHelpingHand.Entities.KevinBarrier.modKevinMoveCheck","storage":"static IDisposable list allSetHooks","config":"ambient MaddieHelpingHand_Default","separateApply":false,"dispose":"module Unload list disposal","dynamicGameplayLifetime":false,"dynamicTarget":true,"dynamicManipulator":false,"multipleSameTarget":false,"conditionalCreation":true},
+    {"id":"max-kevin-move-v","package":"MaxHelpingHand","assembly":"MaxHelpingHand","method":"Celeste.Mod.MaxHelpingHand.Entities.KevinBarrier.hookKevin","offset":204,"primary":"C_STATIC_CONFIGURED","target":"runtime Type parameter MoveVCheck","manipulator":"Celeste.Mod.MaxHelpingHand.Entities.KevinBarrier.modKevinMoveCheck","storage":"static IDisposable list allSetHooks","config":"ambient MaddieHelpingHand_Default","separateApply":false,"dispose":"module Unload list disposal","dynamicGameplayLifetime":false,"dynamicTarget":true,"dynamicManipulator":false,"multipleSameTarget":false,"conditionalCreation":true},
+    {"id":"max-hyperline-hair","package":"MaxHelpingHand","assembly":"MaxHelpingHand","method":"Celeste.Mod.MaxHelpingHand.Entities.MadelineSprite.HookMods","offset":137,"primary":"C_STATIC_CONFIGURED","target":"runtime-discovered Hyperline.GetHairColor","manipulator":"Celeste.Mod.MaxHelpingHand.Entities.MadelineSprite.modHyperlineHairFlash","storage":"static field hyperlineHook","config":"ambient MaddieHelpingHand_Default","separateApply":false,"dispose":"module Unload only","dynamicGameplayLifetime":false,"dynamicTarget":true,"dynamicManipulator":false,"multipleSameTarget":false,"conditionalCreation":true},
+    {"id":"max-mini-heart-update","package":"MaxHelpingHand","assembly":"MaxHelpingHand","method":"Celeste.Mod.MaxHelpingHand.Entities.MiniHeartDoorUnfixController.Initialize","offset":124,"primary":"C_STATIC_CONFIGURED","target":"runtime-discovered CollabUtils2.MiniHeartDoor.Update","manipulator":"Celeste.Mod.MaxHelpingHand.Entities.MiniHeartDoorUnfixController.modMiniHeartDoorUpdate","storage":"static field miniHeartDoorHook","config":"ambient MaddieHelpingHand_Default","separateApply":false,"dispose":"module Unload only","dynamicGameplayLifetime":false,"dynamicTarget":true,"dynamicManipulator":false,"multipleSameTarget":false,"conditionalCreation":true},
+    {"id":"max-custom-npc-talk","package":"MaxHelpingHand","assembly":"MaxHelpingHand","method":"Celeste.Mod.MaxHelpingHand.Entities.MoreCustomNPC.Load","offset":65,"primary":"C_STATIC_CONFIGURED","target":"Celeste.Mod.Entities.CustomNPC.Talk state-machine MoveNext","manipulator":"Celeste.Mod.MaxHelpingHand.Entities.MoreCustomNPC.modTalkCutscene","storage":"static field hookCustomNPCTalk","config":"ambient MaddieHelpingHand_Default","separateApply":false,"dispose":"module Unload only","dynamicGameplayLifetime":false,"dynamicTarget":false,"dynamicManipulator":false,"multipleSameTarget":false,"conditionalCreation":false},
+    {"id":"max-outback-touch-switch","package":"MaxHelpingHand","assembly":"MaxHelpingHand","method":"Celeste.Mod.MaxHelpingHand.Entities.MovingFlagTouchSwitch.HookMods","offset":198,"primary":"C_STATIC_CONFIGURED","target":"runtime-discovered OutbackHelper.MovingTouchSwitch.TriggeredSwitch state-machine MoveNext","manipulator":"Celeste.Mod.MaxHelpingHand.Entities.MovingFlagTouchSwitch.modMovingTouchSwitchColor","storage":"static field hookMovingTouchSwitch","config":"ambient MaddieHelpingHand_Default","separateApply":false,"dispose":"module Unload only","dynamicGameplayLifetime":false,"dynamicTarget":true,"dynamicManipulator":false,"multipleSameTarget":false,"conditionalCreation":true},
+    {"id":"max-crush-attack-sequence","package":"MaxHelpingHand","assembly":"MaxHelpingHand","method":"Celeste.Mod.MaxHelpingHand.Entities.ReskinnableCrushBlock.Load","offset":192,"primary":"C_STATIC_CONFIGURED","target":"Celeste.CrushBlock.AttackSequence state-machine MoveNext","manipulator":"Celeste.Mod.MaxHelpingHand.Entities.ReskinnableCrushBlock.modCrushBlockAttackSequence","storage":"static field modCrushBlockAttackSequenceHook","config":"ambient MaddieHelpingHand_Default","separateApply":false,"dispose":"module Unload only","dynamicGameplayLifetime":false,"dynamicTarget":false,"dynamicManipulator":false,"multipleSameTarget":false,"conditionalCreation":false},
+    {"id":"max-guneline-rotate-spinner","package":"MaxHelpingHand","assembly":"MaxHelpingHand","method":"Celeste.Mod.MaxHelpingHand.Entities.ReskinnableStarRotateSpinner.LoadMods","offset":154,"primary":"C_STATIC_CONFIGURED","target":"runtime-discovered Guneline.Bullet.CollisionCheck","manipulator":"Celeste.Mod.MaxHelpingHand.Entities.ReskinnableStarRotateSpinner.turnOffGunelineCollisionCheck","storage":"static field modGunelineCollisionCheck","config":"ambient MaddieHelpingHand_Default","separateApply":false,"dispose":"module Unload only","dynamicGameplayLifetime":false,"dynamicTarget":true,"dynamicManipulator":false,"multipleSameTarget":false,"conditionalCreation":true},
+    {"id":"max-guneline-track-spinner","package":"MaxHelpingHand","assembly":"MaxHelpingHand","method":"Celeste.Mod.MaxHelpingHand.Entities.ReskinnableStarTrackSpinner.LoadMods","offset":154,"primary":"C_STATIC_CONFIGURED","target":"runtime-discovered Guneline.Bullet.CollisionCheck","manipulator":"Celeste.Mod.MaxHelpingHand.Entities.ReskinnableStarTrackSpinner.turnOffGunelineCollisionCheck","storage":"static field modGunelineCollisionCheck","config":"ambient MaddieHelpingHand_Default","separateApply":false,"dispose":"module Unload only","dynamicGameplayLifetime":false,"dynamicTarget":true,"dynamicManipulator":false,"multipleSameTarget":false,"conditionalCreation":true},
+    {"id":"max-swap-path-renderer","package":"MaxHelpingHand","assembly":"MaxHelpingHand","method":"Celeste.Mod.MaxHelpingHand.Entities.ReskinnableSwapBlock.Load","offset":184,"primary":"C_STATIC_CONFIGURED","target":"Celeste.SwapBlock+PathRenderer constructor(SwapBlock)","manipulator":"Celeste.Mod.MaxHelpingHand.Entities.ReskinnableSwapBlock.modSwapBlockTexturesInPathRenderer","storage":"static field hookOnPathRendererConstructor","config":"ambient MaddieHelpingHand_Default","separateApply":false,"dispose":"module Unload only","dynamicGameplayLifetime":false,"dynamicTarget":false,"dynamicManipulator":false,"multipleSameTarget":false,"conditionalCreation":false},
+    {"id":"max-respawning-jelly-update","package":"MaxHelpingHand","assembly":"MaxHelpingHand","method":"Celeste.Mod.MaxHelpingHand.Entities.RespawningJellyfishGeneric.Load","offset":47,"primary":"C_STATIC_CONFIGURED","target":"generic runtime BaseType.Update","manipulator":"Celeste.Mod.MaxHelpingHand.Entities.RespawningJellyfishGeneric.modGliderUpdate","storage":"closed-generic static field hookGliderUpdate","config":"ambient MaddieHelpingHand_Default","separateApply":false,"dispose":"module Unload only","dynamicGameplayLifetime":false,"dynamicTarget":true,"dynamicManipulator":false,"multipleSameTarget":false,"conditionalCreation":false},
+    {"id":"max-reversible-dash-coroutine","package":"MaxHelpingHand","assembly":"MaxHelpingHand","method":"Celeste.Mod.MaxHelpingHand.Entities.ReversibleRetentionBooster.Load","offset":129,"primary":"C_STATIC_CONFIGURED","target":"Celeste.Player.DashCoroutine state-machine MoveNext","manipulator":"Celeste.Mod.MaxHelpingHand.Entities.ReversibleRetentionBooster.retainSpeedInBothDirections","storage":"static field playerDashCoroutineHook","config":"ambient MaddieHelpingHand_Default","separateApply":false,"dispose":"module Unload only","dynamicGameplayLifetime":false,"dynamicTarget":false,"dynamicManipulator":false,"multipleSameTarget":false,"conditionalCreation":false},
+    {"id":"max-lunatic-gate-routine","package":"MaxHelpingHand","assembly":"MaxHelpingHand","method":"Celeste.Mod.MaxHelpingHand.Entities.SaveFileStrawberryGate.hookLunaticHelper","offset":54,"primary":"C_STATIC_CONFIGURED","target":"LunaticHelper.StrawberryGate.Routine state-machine MoveNext","manipulator":"Celeste.Mod.MaxHelpingHand.Entities.SaveFileStrawberryGate.modStrawberryGateRoutine","storage":"static field hookStrawberryGateRoutine","config":"ambient MaddieHelpingHand_Default","separateApply":false,"dispose":"module Unload only","dynamicGameplayLifetime":false,"dynamicTarget":false,"dynamicManipulator":false,"multipleSameTarget":false,"conditionalCreation":true},
+    {"id":"max-lunatic-gate-added","package":"MaxHelpingHand","assembly":"MaxHelpingHand","method":"Celeste.Mod.MaxHelpingHand.Entities.SaveFileStrawberryGate.hookLunaticHelper","offset":111,"primary":"C_STATIC_CONFIGURED","target":"LunaticHelper.StrawberryGate.Added","manipulator":"Celeste.Mod.MaxHelpingHand.Entities.SaveFileStrawberryGate.modStrawberryGateAdded","storage":"static field hookStrawberryGateAdded","config":"ambient MaddieHelpingHand_Default","separateApply":false,"dispose":"module Unload only","dynamicGameplayLifetime":false,"dynamicTarget":false,"dynamicManipulator":false,"multipleSameTarget":false,"conditionalCreation":true},
+    {"id":"max-lunatic-gate-render","package":"MaxHelpingHand","assembly":"MaxHelpingHand","method":"Celeste.Mod.MaxHelpingHand.Entities.SaveFileStrawberryGate.hookLunaticHelper","offset":201,"primary":"C_STATIC_CONFIGURED","target":"LunaticHelper.StrawberryGate.Render","manipulator":"Celeste.Mod.MaxHelpingHand.Entities.SaveFileStrawberryGate.fixForStrawberryGateRender","storage":"static field fixStrawberryGateRender","config":"ambient MaddieHelpingHand_Default","separateApply":false,"dispose":"module Unload only","dynamicGameplayLifetime":false,"dynamicTarget":false,"dynamicManipulator":false,"multipleSameTarget":false,"conditionalCreation":true},
+    {"id":"max-secret-berry-collect-skin","package":"MaxHelpingHand","assembly":"MaxHelpingHand","method":"Celeste.Mod.MaxHelpingHand.Entities.SecretBerry.Load","offset":151,"primary":"C_STATIC_CONFIGURED","target":"Celeste.Strawberry.CollectRoutine state-machine MoveNext","manipulator":"Celeste.Mod.MaxHelpingHand.Entities.SecretBerry.replaceStrawberryStrings","storage":"static field strawberryCollectRoutineHook","config":"ambient MaddieHelpingHand_Default","separateApply":false,"dispose":"module Unload only","dynamicGameplayLifetime":false,"dynamicTarget":false,"dynamicManipulator":false,"multipleSameTarget":true,"conditionalCreation":false},
+    {"id":"max-secret-berry-collect-sound","package":"MaxHelpingHand","assembly":"MaxHelpingHand","method":"Celeste.Mod.MaxHelpingHand.Entities.SecretBerry.Load","offset":188,"primary":"C_STATIC_CONFIGURED","target":"Celeste.Strawberry.CollectRoutine state-machine MoveNext","manipulator":"Celeste.Mod.MaxHelpingHand.Entities.SecretBerry.injectMoonBerrySound","storage":"static field strawberryCollectRoutineHook2","config":"ambient MaddieHelpingHand_Default","separateApply":false,"dispose":"module Unload only","dynamicGameplayLifetime":false,"dynamicTarget":false,"dynamicManipulator":false,"multipleSameTarget":true,"conditionalCreation":false},
+    {"id":"max-secret-berry-update","package":"MaxHelpingHand","assembly":"MaxHelpingHand","method":"Celeste.Mod.MaxHelpingHand.Entities.SecretBerry.Load","offset":309,"primary":"C_STATIC_CONFIGURED","target":"Celeste.Strawberry.orig_Update","manipulator":"Celeste.Mod.MaxHelpingHand.Entities.SecretBerry.modStrawberryOrigUpdate","storage":"static field strawberryOrigUpdateHook","config":"ambient MaddieHelpingHand_Default","separateApply":false,"dispose":"module Unload only","dynamicGameplayLifetime":false,"dynamicTarget":false,"dynamicManipulator":false,"multipleSameTarget":false,"conditionalCreation":false},
+    {"id":"max-sideways-player-update","package":"MaxHelpingHand","assembly":"MaxHelpingHand","method":"Celeste.Mod.MaxHelpingHand.Entities.SidewaysJumpThru.activateHooks","offset":429,"primary":"B_STATIC_UNCONFIGURED_DYNAMIC_LIFETIME","target":"Celeste.Player.orig_Update","manipulator":"Celeste.Mod.MaxHelpingHand.Entities.SidewaysJumpThru.modCollideChecks","storage":"static field hookOnOrigUpdate","config":"absent at gameplay construction","separateApply":false,"dispose":"gameplay map/overworld transition","dynamicGameplayLifetime":true,"dynamicTarget":false,"dynamicManipulator":false,"multipleSameTarget":true,"conditionalCreation":true},
+    {"id":"max-sideways-player-sprite","package":"MaxHelpingHand","assembly":"MaxHelpingHand","method":"Celeste.Mod.MaxHelpingHand.Entities.SidewaysJumpThru.activateHooks","offset":584,"primary":"B_STATIC_UNCONFIGURED_DYNAMIC_LIFETIME","target":"Celeste.Player.orig_UpdateSprite","manipulator":"Celeste.Mod.MaxHelpingHand.Entities.SidewaysJumpThru.modCollideChecks","storage":"static field hookOnUpdateSprite","config":"absent at gameplay construction","separateApply":false,"dispose":"gameplay map/overworld transition","dynamicGameplayLifetime":true,"dynamicTarget":false,"dynamicManipulator":false,"multipleSameTarget":false,"conditionalCreation":true},
+    {"id":"max-spike-refill-player-update","package":"MaxHelpingHand","assembly":"MaxHelpingHand","method":"Celeste.Mod.MaxHelpingHand.Entities.SpikeRefillController.Load","offset":32,"primary":"C_STATIC_CONFIGURED","target":"Celeste.Player.orig_Update cached MethodInfo","manipulator":"Celeste.Mod.MaxHelpingHand.Entities.SpikeRefillController.HookSpikeRefillPrevention","storage":"static field Hook_OrigUpdate","config":"ambient MaddieHelpingHand_Default","separateApply":false,"dispose":"module Unload only","dynamicGameplayLifetime":false,"dynamicTarget":false,"dynamicManipulator":false,"multipleSameTarget":true,"conditionalCreation":false},
+    {"id":"max-upside-player-update","package":"MaxHelpingHand","assembly":"MaxHelpingHand","method":"Celeste.Mod.MaxHelpingHand.Entities.UpsideDownJumpThru.activateHooks","offset":252,"primary":"C_STATIC_CONFIGURED","target":"Celeste.Player.orig_Update","manipulator":"Celeste.Mod.MaxHelpingHand.Entities.UpsideDownJumpThru.filterOutJumpThrusFromCollideChecks","storage":"static field playerOrigUpdateHook","config":"MaxHelpingHand priority int.MaxValue","separateApply":false,"dispose":"gameplay map/overworld transition","dynamicGameplayLifetime":true,"dynamicTarget":false,"dynamicManipulator":false,"multipleSameTarget":true,"conditionalCreation":true},
+    {"id":"max-northern-strand-reset","package":"MaxHelpingHand","assembly":"MaxHelpingHand","method":"Celeste.Mod.MaxHelpingHand.Effects.NorthernLightsCustomColors.Load","offset":123,"primary":"C_STATIC_CONFIGURED","target":"Celeste.NorthernLights+Strand.Reset","manipulator":"Celeste.Mod.MaxHelpingHand.Effects.NorthernLightsCustomColors.modStrandReset","storage":"static field strandILHook","config":"ambient MaddieHelpingHand_Default","separateApply":false,"dispose":"module Unload only","dynamicGameplayLifetime":false,"dynamicTarget":false,"dynamicManipulator":false,"multipleSameTarget":false,"conditionalCreation":false},
+    {"id":"max-sine-backdrop","package":"MaxHelpingHand","assembly":"MaxHelpingHand","method":"Celeste.Mod.MaxHelpingHand.Effects.SineAnimatedParallax.Load","offset":27,"primary":"C_STATIC_CONFIGURED","target":"FlaglinesAndSuch.Class1.Level_OnLoadBackdrop","manipulator":"static cached delegate SineAnimatedParallax._onParseBackdrop -> onParseBackdrop","storage":"static field hookOnStylegroundConstructor","config":"ambient MaddieHelpingHand_Default","separateApply":false,"dispose":"module Unload only","dynamicGameplayLifetime":false,"dynamicTarget":false,"dynamicManipulator":false,"multipleSameTarget":false,"conditionalCreation":true},
+
+    {"id":"tera-barrier-player-update","package":"TeraHelper","assembly":"TeraHelper","method":"Celeste.Mod.TeraHelper.Entities.TeraBarrier.OnLoad","offset":48,"primary":"F_MULTIPLE_DIRECT_HOOKS_SAME_TARGET","target":"Celeste.Player.orig_Update","manipulator":"Celeste.Mod.TeraHelper.Entities.TeraBarrier.UpdateTeraBarrier","storage":"static field playerUpdateHook","config":"absent","separateApply":false,"dispose":"module OnUnload only","dynamicGameplayLifetime":false,"dynamicTarget":false,"dynamicManipulator":false,"multipleSameTarget":true,"conditionalCreation":false},
+    {"id":"tera-block-player-update","package":"TeraHelper","assembly":"TeraHelper","method":"Celeste.Mod.TeraHelper.Entities.TeraBlock.OnLoad","offset":345,"primary":"F_MULTIPLE_DIRECT_HOOKS_SAME_TARGET","target":"Celeste.Player.orig_Update","manipulator":"Celeste.Mod.TeraHelper.Entities.TeraBlock.CheckDangerousSpikes","storage":"static field playerUpdateHook","config":"absent","separateApply":false,"dispose":"module OnUnload only","dynamicGameplayLifetime":false,"dynamicTarget":false,"dynamicManipulator":false,"multipleSameTarget":true,"conditionalCreation":false},
+    {"id":"tera-block-lift-boost","package":"TeraHelper","assembly":"TeraHelper","method":"Celeste.Mod.TeraHelper.Entities.TeraBlock.OnLoad","offset":590,"primary":"A_STATIC_UNCONFIGURED_IMMUTABLE","target":"Celeste.Player.get_LiftBoost","manipulator":"Celeste.Mod.TeraHelper.Entities.TeraBlock.ModifyLiftBoost","storage":"static field liftBoostHook","config":"absent","separateApply":false,"dispose":"module OnUnload only","dynamicGameplayLifetime":false,"dynamicTarget":false,"dynamicManipulator":false,"multipleSameTarget":false,"conditionalCreation":false},
+    {"id":"tera-crush-attack","package":"TeraHelper","assembly":"TeraHelper","method":"Celeste.Mod.TeraHelper.Entities.TeraCrushBlock.OnLoad","offset":88,"primary":"F_MULTIPLE_DIRECT_HOOKS_SAME_TARGET","target":"Celeste.CrushBlock.AttackSequence state-machine MoveNext","manipulator":"Celeste.Mod.TeraHelper.Entities.TeraCrushBlock.TeraSequence","storage":"static field sequenceHook","config":"absent","separateApply":false,"dispose":"module OnUnload only","dynamicGameplayLifetime":false,"dynamicTarget":false,"dynamicManipulator":false,"multipleSameTarget":true,"conditionalCreation":false},
+    {"id":"tera-falling-sequence","package":"TeraHelper","assembly":"TeraHelper","method":"Celeste.Mod.TeraHelper.Entities.TeraFallingBlock.OnLoad","offset":88,"primary":"A_STATIC_UNCONFIGURED_IMMUTABLE","target":"Celeste.FallingBlock.Sequence state-machine MoveNext","manipulator":"Celeste.Mod.TeraHelper.Entities.TeraFallingBlock.TeraSequence","storage":"static field sequenceHook","config":"absent","separateApply":false,"dispose":"module OnUnload only","dynamicGameplayLifetime":false,"dynamicTarget":false,"dynamicManipulator":false,"multipleSameTarget":false,"conditionalCreation":false},
+    {"id":"tera-falling-crush-attack","package":"TeraHelper","assembly":"TeraHelper","method":"Celeste.Mod.TeraHelper.Entities.TeraFallingBlock.OnLoad","offset":152,"primary":"F_MULTIPLE_DIRECT_HOOKS_SAME_TARGET","target":"Celeste.CrushBlock.AttackSequence state-machine MoveNext","manipulator":"Celeste.Mod.TeraHelper.Entities.TeraFallingBlock.TeraCrushSequence","storage":"static field crushSequenceHook","config":"absent","separateApply":false,"dispose":"module OnUnload only","dynamicGameplayLifetime":false,"dynamicTarget":false,"dynamicManipulator":false,"multipleSameTarget":true,"conditionalCreation":false},
+    {"id":"tera-move-controller","package":"TeraHelper","assembly":"TeraHelper","method":"Celeste.Mod.TeraHelper.Entities.TeraMoveBlock.OnLoad","offset":55,"primary":"A_STATIC_UNCONFIGURED_IMMUTABLE","target":"Celeste.MoveBlock.Controller state-machine MoveNext","manipulator":"Celeste.Mod.TeraHelper.Entities.TeraMoveBlock.TeraSequence","storage":"static field sequenceHook","config":"absent","separateApply":false,"dispose":"module OnUnload only","dynamicGameplayLifetime":false,"dynamicTarget":false,"dynamicManipulator":false,"multipleSameTarget":false,"conditionalCreation":false},
+    {"id":"tera-zip-sequence","package":"TeraHelper","assembly":"TeraHelper","method":"Celeste.Mod.TeraHelper.Entities.TeraZipMover.OnLoad","offset":55,"primary":"A_STATIC_UNCONFIGURED_IMMUTABLE","target":"Celeste.ZipMover.Sequence state-machine MoveNext","manipulator":"Celeste.Mod.TeraHelper.Entities.TeraZipMover.TeraSequence","storage":"static field sequenceHook","config":"absent","separateApply":false,"dispose":"module OnUnload only","dynamicGameplayLifetime":false,"dynamicTarget":false,"dynamicManipulator":false,"multipleSameTarget":false,"conditionalCreation":false}
+  ],
+  "exactFixtureReacquisition": [
+    {"package":"CaeruleaHelper","version":"1.11.1","zipSha256":"6a0649518d49cd0d17b84da3be53929cdd602d89d922e2d3ab87c524345e3807","dllSha256":"3c5b79a57ce03b6c98e8ae12d781ec6baddce944995b2b4928f067a5ad7973ae"},
+    {"package":"CrystallineHelper","version":"1.17.2","zipSha256":"4573f5e45dce0905142cd2b119f4a9a744bdce8ef3199319d1e46b6d1d342747","dllSha256":"456410258fbce4594c3e987d025bf651e1bd3f49d2d676a921d8ea9f27ba052a"},
+    {"package":"ExtendedVariantMode","version":"0.50.5","zipSha256":"4019b362d9ad1b2d3a6a670f833ef6324d735d5791a0bf21b62cf5cfbc0d639d","dllSha256":"cb28846f7f7348ddb996f63498c97694616436e97ef34f67880b697ba024fe81"},
+    {"package":"GravityHelper","version":"1.2.28","zipSha256":"d4a40744f4c155d655973754422643980321b6660027bc01b660a71b0d00649b","dllSha256":"6cc0d6cad8ab95dfcd022f80be58695d689a919cbcf6a4a7de4d7b5718dfae80"},
+    {"package":"LuckyHelper","version":"0.32.4","zipSha256":"775ee02de44e386902e1ae65442e41c9811f08be0c2c7a6f0e0e17ef7a29657c","dllSha256":"3815a638ef194819ea0142894510cd454217a8d96ced8dca80242ece1e6a4d5f"},
+    {"package":"MaxHelpingHand","version":"1.40.9","zipSha256":"abfc5d167936410e9b6665018335ee654455e30710caffe01540b232da468fee","dllSha256":"6f463f2c014eb60c4abb61e395eb5065455d4bf469f4c83fce9814fb7bfcdfa6"},
+    {"package":"SorbetHelper","version":"1.9.2","zipSha256":"992ddebc35b86d584c73d45a7e81424927740f0d1ae3980cd618be1782c274d6","dllSha256":"470d34b97542c6e5280718bd3ee01f1c46e3bf570f8f5a4bb547874a28a85b75"},
+    {"package":"TeraHelper","version":"1.0.4","zipSha256":"73b75996e5510993d20b6626a5844fc9fb62a27d941ef41d183464f42d08363b","dllSha256":"c7e2e90963d63979136e8b0dc47d885ccec85c2be539670fbf1f60ef78a65fb1"}
+  ],
+  "selectedFixture": {
+    "package":"CaeruleaHelper",
+    "version":"1.11.1",
+    "zipUrl":"https://gamebanana.com/mmdl/1784884",
+    "zipSha256":"6a0649518d49cd0d17b84da3be53929cdd602d89d922e2d3ab87c524345e3807",
+    "dllSha256":"3c5b79a57ce03b6c98e8ae12d781ec6baddce944995b2b4928f067a5ad7973ae",
+    "sourceLogicalSha256":"036bc9adbc5471931ca6cfb1aa574d0bbcfe3a6dce9025a09b56a0c522054d07",
+    "sourceCommit":"ce2ad0694feb28cd3dff0a5d7501f6e60d620fd5",
+    "license":"MIT",
+    "planClass":"STATIC_DIRECT_ILHOOK_FREEZE",
+    "runtimeRewrite":"constructor, storage field and unload Dispose are removed; no facade remains",
+    "sourceRequiredForProduction":false
+  },
+  "productionTransform": {
+    "schemaVersion": 3,
+    "worker": "apple-everest-static-il-worker-v3",
+    "mechanism": "DIRECT_ILHOOK",
+    "constructor": "System.Void MonoMod.RuntimeDetour.ILHook::.ctor(System.Reflection.MethodBase,MonoMod.Cil.ILContext/Manipulator)",
+    "targetExpression": "typeof(Celeste.Player).GetMethod(\"DashCoroutine\", NonPublic|Instance).GetStateMachineTarget()",
+    "resolvedTarget": "System.Boolean Celeste.Player/<DashCoroutine>d__*::MoveNext()",
+    "manipulatorExpression": "ModifyDashCoroutineIL",
+    "resolvedManipulator": "Celeste.Mod.CaeruleaHelper.Hooks.DashSpeedHook.ModifyDashCoroutineIL",
+    "config": null,
+    "applyByDefault": true,
+    "storage": "static field DashCoroutineHook",
+    "separateApplyCalls": 0,
+    "gameplayUndoCalls": 0,
+    "gameplayDisposeCalls": 0,
+    "moduleUnloadDisposeCalls": 1,
+    "baselineSha256": "65ad66657afe6ca8d9d440be58b258cb48159b966b515aafe7b3b3ae85325416",
+    "afterSha256": "ebafbfe93b806ace3b0e49324702ff7a164adbd0379f142af2c864a6ae697abc",
+    "diffSha256": "a941d338396c91447d9c0f331137cbd0d04016da5b2eaf32ab0f684a71a93f30",
+    "frozenPlanSha256": "b3f1f7ee1b14028759bf29156b14d5145218144638d11f03df29728c80a63ca7",
+    "originalDllSha256": "3c5b79a57ce03b6c98e8ae12d781ec6baddce944995b2b4928f067a5ad7973ae",
+    "frozenDllSha256": "a4debb7153959317b9ce2b7366b55834091d26b28056a5f2b30d9131a41ade28",
+    "threeRunDeterminism": {
+      "independentRuns": 3,
+      "allIdentical": true,
+      "planSha256": "b3f1f7ee1b14028759bf29156b14d5145218144638d11f03df29728c80a63ca7"
+    },
+    "desktopReference": "MATCH",
+    "runtimeCallsiteRewrite": "exact constructor, static field assignment and module-unload Dispose removed",
+    "remainingFacade": null,
+    "deviceForbiddenRuntimeReferences": [],
+    "behavior": "No Dash Speed Reset trigger preserves speed after horizontal and up-diagonal dashes"
+  },
+  "compositionConformance": {
+    "pinnedMonoModCommit": "dfc30a1506d37fb88a2c2be004f525205f46a24c",
+    "eventThenDirect": {
+      "desktopResult": 55,
+      "appleFrozenResult": 55
+    },
+    "directThenEvent": {
+      "desktopResult": 43,
+      "appleFrozenResult": 43
+    },
+    "directThenOn": {
+      "desktopResult": 140,
+      "appleFrozenUnderlyingResult": 40,
+      "onWrapperDelta": 100
+    },
+    "eventEventDirectThenOn": {
+      "desktopResult": 148,
+      "appleFrozenUnderlyingResult": 48,
+      "onWrapperDelta": 100
+    },
+    "desktopEntryPoints": [
+      "HookEndpointManager.Modify",
+      "ILHook(MethodBase,ILContext.Manipulator)",
+      "HookEndpointManager.Add"
+    ],
+    "deviceRuntimeIlHookBackend": false
+  },
+  "productEvidence": {
+    "sharedClosureSha256": "769741d8cde76ffe7e7497263b326f434f889d416c94ea7b6f05422ebb7ff05e",
+    "managedLogicalSha256": "1c30df8984dca04801ed11f23a33b9ad758c93dd376abd5262141466793ed5aa",
+    "contentLogicalSha256": "bdc8dd0805f2f14bc59a400b3b0e8add8809c443619e0b53a3c6d6c6dca133a1",
+    "hookTransformSha256": "6c8b00738fd06f3e091aaced109261cf35ab0d147b09615393056c1eafdb08b7",
+    "modInteropPlanSha256": "84f0267040cda9cc51d4dc08da367a4b934aa0e9f43cf3d553815e594f25899d",
+    "appleApiSurfaceSha256": "d594dea86e944b468819818773f2177312445bbebe022bcbc7ea1ff779c8652c",
+    "fullTrim": true,
+    "fullAot": true,
+    "useInterpreter": false,
+    "jit": false,
+    "unsignedIos": {
+      "bytes": 882016940,
+      "sha256": "e59554b51e5b750266b59468d294111e94e352c8d8f5e8dda29ab7d834398450"
+    },
+    "unsignedTvos": {
+      "bytes": 896194867,
+      "sha256": "2e0780ca797144d259bb56c6b41102123acc63aa5270498e7d3b18b2f9a44224"
+    },
+    "signedBuildSeconds": 1487.2,
+    "signedIos": {
+      "bytes": 882189558,
+      "sha256": "667358e7879812ff5649798853bbcace2ce0ae58221e78b12ffa93fd3dae995f"
+    },
+    "signedTvos": {
+      "bytes": 896602166,
+      "sha256": "782c864c8b8071abe34a59020a377977a4e2a61006d544c28b2a7b085b6578ed"
+    },
+    "physical": {
+      "iphone": {
+        "status": "PASS",
+        "directBehavior": true,
+        "touchControllerAudio": true,
+        "deathRespawnPauseLifecycleRotation": true,
+        "dashToggleAndDisposableTheo": true
+      },
+      "ipadOs15_8_8": {
+        "status": "PASS",
+        "sameUniversalIosProduct": true,
+        "directBehavior": true,
+        "touchControllerAudioRotationBackgroundReopen": true
+      },
+      "appleTv": {
+        "status": "PASS",
+        "sameSharedClosure": true,
+        "fna3dMetal": true,
+        "sevenFmodBanks": true,
+        "directBehaviorControllerAudioPauseHomeColdRelaunch": true
+      }
+    }
+  },
+  "graphPayoff": {
+    "selectedGraph":"QLetterAurora",
+    "selectedGraphHelpers":["CpopHelper","CaeruleaHelper","MaxHelpingHand","LuckyHelper"],
+    "directIlHookSitesBefore":43,
+    "directIlHookSitesAfterSelectedFixture":42,
+    "materiallyAdvancedGraphs":["QLetterAurora"],
+    "zeroDirectIlHookGraphs":[],
+    "zeroIlBlockerGraphs":[],
+    "zeroOverallBlockerGraphs":[],
+    "closestOverallAfterStage":"LittleEpic's Precision Challenge",
+    "readyForStage25G2":false,
+    "reasonNoRealGraphProduct":"QLetterAurora still contains configured MaxHelpingHand hooks, other direct hooks, ordinary IL/API/content breadth, and no exact zero-blocker graph was produced."
+  },
+  "unchangedLocks": {
+    "canonicalContent":"30a1c147d1a3ab0aa45762094e393ed7fd69951dd66e5af063447641e0699c46",
+    "canonicalRaw":"db7b722159fbdef8625c81608165aea162957dce956fcd5b16eeceaa1089a273",
+    "canonicalPatched":"0c6515adadf58251ab2da66c6c61a1f61bd19b85f5dcdd4f1280552af650a4b5",
+    "stage6RealAudio":"1a981bc5994261775c1fea497cd042780fdbbcb24b7390a2f4db6aab1be747d9",
+    "iosNative":"9fb302d221180e39f270ea5ebf48e18433b67bd0a40943c042a227fe0f8ad6a2",
+    "tvosNative":"6286e0545b32e9c56732955d4cf816ed8f5dc0d816ab610dd9fe1752090a01fc",
+    "vanillaIosTree":"2f5d6fffaa151530f48deac7ff402c2c6d475b20eeef5579f1db784d57da2357",
+    "stage25haFrozenDll":"79d06fd9428e33613b81f089693651f03c6445e0a6f22368902bb3fcb49e904f",
+    "stage25hcVortexPlan":"96726af5fa21c129d1b1bd39746a1f6f903be38e2b53b20b79275eb05d5a3261",
+    "stage25fb2ModInteropPlan":"9e755781f2d107d37bec45bd9fe4b551a28e9ddf8919f91f11d878c1dd041318"
+  }
+}

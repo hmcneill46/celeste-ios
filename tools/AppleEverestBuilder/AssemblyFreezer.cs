@@ -192,13 +192,14 @@ internal static class AssemblyFreezer
                 .Single(candidate => candidate.FullName == plan.ContainingMethod);
             Instruction[] instructions = containing.Body.Instructions.ToArray();
             int constructorIndex = Array.FindIndex(instructions, instruction => instruction.Offset == plan.ConstructorOffset);
-            if (constructorIndex < 9 || instructions[constructorIndex].OpCode != OpCodes.Newobj ||
+            int expressionStart = constructorIndex - plan.ExpressionInstructionCount;
+            if (expressionStart < 0 || instructions[constructorIndex].OpCode != OpCodes.Newobj ||
                 instructions[constructorIndex].Operand is not MethodReference originalConstructor ||
                 originalConstructor.DeclaringType.FullName != "MonoMod.RuntimeDetour.Hook")
                 throw new InvalidDataException($"direct managed Hook rewrite drifted: {plan.PlanId}");
-            instructions[constructorIndex - 9].OpCode = OpCodes.Ldstr;
-            instructions[constructorIndex - 9].Operand = plan.PlanId;
-            for (int index = constructorIndex - 8; index < constructorIndex; index++)
+            instructions[expressionStart].OpCode = OpCodes.Ldstr;
+            instructions[expressionStart].Operand = plan.PlanId;
+            for (int index = expressionStart + 1; index < constructorIndex; index++)
             {
                 instructions[index].OpCode = OpCodes.Nop;
                 instructions[index].Operand = null;

@@ -110,12 +110,23 @@ safe_replace() {
 (cd /private/tmp && "$DOTNET8" run --project "$BUILDER_PROJECT" -- acquire --profile "$PROFILE" --output "$UPSTREAM")
 (cd "$UPSTREAM/external/MonoMod" && "$DOTNET9" build src/MonoMod.Utils/MonoMod.Utils.csproj \
   -c Release -f net8.0 -p:RestoreLockedMode=false --nologo >/dev/null)
+(cd "$UPSTREAM/external/MonoMod" && "$DOTNET9" build src/MonoMod.RuntimeDetour/MonoMod.RuntimeDetour.csproj \
+  -c Release -f net8.0 -p:RestoreLockedMode=false --nologo >/dev/null)
 MONOMOD_UTILS="$UPSTREAM/external/MonoMod/artifacts/bin/MonoMod.Utils/release_net8.0/MonoMod.Utils.dll"
+MONOMOD_RUNTIME_DETOUR="$UPSTREAM/external/MonoMod/artifacts/bin/MonoMod.RuntimeDetour/release_net8.0"
 [[ -f "$MONOMOD_UTILS" ]] || { echo "error: exact pinned MonoMod.Utils host build is missing" >&2; exit 1; }
+for host_dependency in MonoMod.RuntimeDetour.dll MonoMod.Core.dll MonoMod.Iced.dll; do
+  [[ -f "$MONOMOD_RUNTIME_DETOUR/$host_dependency" ]] || {
+    echo "error: exact pinned direct-ILHook host dependency is missing: $host_dependency" >&2; exit 1; }
+done
 (cd "$REPO_ROOT" && dotnet restore "$IL_WORKER_PROJECT" \
   -p:MonoModUtilsPath="$MONOMOD_UTILS" --locked-mode --nologo >/dev/null)
 (cd "$REPO_ROOT" && dotnet build "$IL_WORKER_PROJECT" -c Release --no-restore \
   -p:MonoModUtilsPath="$MONOMOD_UTILS" --nologo >/dev/null)
+for host_dependency in MonoMod.RuntimeDetour.dll MonoMod.Core.dll MonoMod.Iced.dll; do
+  cp "$MONOMOD_RUNTIME_DETOUR/$host_dependency" \
+    "$REPO_ROOT/tools/AppleEverestIlWorker/bin/Release/net10.0/$host_dependency"
+done
 safe_replace "$CLOSURE" .apple-everest-static-closure
 if ((${#MODS[@]} == 0)); then
   MODS=(
@@ -130,8 +141,10 @@ fi
 # the real frozen spinner/block behavior rather than only successful startup.
 static_il_fixture_sha="677e8fbd067340d7b3133cc908e4ecafc0f5deab2c38b7eeb79a62eb5f61d523"
 static_il_compose_fixture_sha="df291c0175df46682791fb6373c47eb557c47483eca3db96895eba9b5bbe85b5"
+static_direct_ilhook_fixture_sha="6a0649518d49cd0d17b84da3be53929cdd602d89d922e2d3ab87c524345e3807"
 include_static_il_canary=0
 include_static_il_compose_canary=0
+include_static_direct_ilhook_canary=0
 for mod in "${MODS[@]}"; do
   if [[ -f "$mod" && "$(shasum -a 256 "$mod" | awk '{print $1}')" == "$static_il_fixture_sha" ]]; then
     include_static_il_canary=1
@@ -139,12 +152,18 @@ for mod in "${MODS[@]}"; do
   if [[ -f "$mod" && "$(shasum -a 256 "$mod" | awk '{print $1}')" == "$static_il_compose_fixture_sha" ]]; then
     include_static_il_compose_canary=1
   fi
+  if [[ -f "$mod" && "$(shasum -a 256 "$mod" | awk '{print $1}')" == "$static_direct_ilhook_fixture_sha" ]]; then
+    include_static_direct_ilhook_canary=1
+  fi
 done
 if ((include_static_il_canary)); then
   MODS+=("$REPO_ROOT/apple-everest/canaries/static-il-content")
 fi
 if ((include_static_il_compose_canary)); then
   MODS+=("$REPO_ROOT/apple-everest/canaries/static-il-compose-content")
+fi
+if ((include_static_direct_ilhook_canary)); then
+  MODS+=("$REPO_ROOT/apple-everest/canaries/static-direct-ilhook-content")
 fi
 mod_args=()
 for mod in "${MODS[@]}"; do mod_args+=(--mod "$mod"); done

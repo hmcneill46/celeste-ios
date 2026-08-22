@@ -578,6 +578,59 @@ The manipulators capture live module settings/state, and several accompanying
 rejected before AOT rather than partially frozen. Dashless Dream Blocks is
 retained separately as a direct-`Hook` negative fixture.
 
+## Bounded static direct ILHook freeze
+
+Stage 25H-D adds one deliberately narrow direct-construction class:
+`STATIC_DIRECT_ILHOOK_FREEZE`. Desktop Everest normally executes the following
+at module load:
+
+```text
+new ILHook(exact MethodBase, exact manipulator)
+  -> immediate live runtime mutation
+  -> stored hook remains active
+  -> Dispose only during module unload/process teardown
+```
+
+For an accepted Apple build, the Mac instead discovers that exact constructor
+in the distributed DLL, proves the target, manipulator, absent configuration,
+and immutable-effective lifetime, verifies the canonical target fingerprint,
+runs the real distributed manipulator through the same pinned worker, and
+freezes its output. The exact constructor, storage field, and teardown-only
+`Dispose` are removed from the device assembly before ordinary full AOT:
+
+```text
+distributed binary constructor
+  -> static target/manipulator/lifetime proof
+  -> pinned real manipulator runs on Mac
+  -> target body hash-locked and frozen
+  -> runtime constructor/lifecycle removed
+  -> ordinary linked and AOT-compiled code
+```
+
+CaeruleaHelper 1.11.1 is the first production fixture. Its static
+`DashSpeedHook.Load` resolves `Player.DashCoroutine`'s compiler-generated
+`MoveNext`, passes static `ModifyDashCoroutineIL`, supplies no `DetourConfig`,
+and relies on the constructor's immediate apply. The hook is stored in one
+static field and is disposed only by module unload. Its real No Dash Speed
+Reset trigger therefore remains observable while the installed profile is
+immutable-active. Omitting the helper from a later build restores the exact
+canonical target; no runtime unfreeze is promised or needed.
+
+The device contains no `ILHook` facade or patching backend. Configured hooks,
+runtime-resolved targets or manipulators, gameplay/room-scoped construction or
+disposal, `applyByDefault=false` with live `Apply`, and multiple direct hooks
+on one target remain deferred. Those are different semantic classes and are
+not silently made permanent. The complete 53-site classification is in
+[`apple-everest/direct-ilhook-audit-stage25hd.json`](../apple-everest/direct-ilhook-audit-stage25hd.json).
+
+Project-owned conformance executes the actual pinned desktop
+`HookEndpointManager.Modify`, direct `ILHook`, and
+`HookEndpointManager.Add` entry points. It proves both direct/event
+registration orders, proves a normal On-style `orig` observes the frozen
+direct-IL target, and proves an H-B A/B sequence followed by a direct
+manipulator and On wrapper. Those exact results are compared with the schema-3
+Apple worker; no runtime IL backend is added to the device.
+
 ## Content model
 
 Accepted content is compiled into the normal Celeste content tree on the build

@@ -1,7 +1,7 @@
 # Apple Everest real-mod compatibility
 
 This is a technical test matrix for the experimental shared Apple static-AOT
-builder. It lists only exact public inputs inspected through Stage 25H-B. It is not
+builder. It lists only exact public inputs inspected through Stage 25H-D. It is not
 a promise that similarly named, newer, older, or dependent mods work. The
 normal iOS and tvOS products do not contain these mods.
 
@@ -27,6 +27,7 @@ Status vocabulary:
 | [DeathMarkers](https://gamebanana.com/mods/53649) | 2.0.0; ZIP `94ad7d14…e6fc7`; DLL `620e5b63…ff8`; source `24c9b821…965` | Precompiled module + `Player.Die` HookGen target + default YAML SaveData/Session | **SUPPORTED_WITH_STATIC_TRANSFORM** | iOS, iPadOS, tvOS | EverestCore ≥ 1.5577.0 | MIT. Ordinary DLL is authoritative and source is not needed. Stage 25F-A proves per-slot persistent `Dictionary<string,List<Death>>`, continuation `List<Death>`, nested record/`Vector2` serialization, cold restore, new-session reset, deletion/replacement isolation, and bounded A/B recovery. |
 | [Dash Toggle Helper](https://github.com/kyfex-uwu/DashToggleHelper) | 1.1.0; ZIP `677e8fbd…d523`; DLL `531eaa8a…a083`; source `9b140684…530c`; MIT | Two exact HookGen `IL.*` manipulators plus six ordinary `On.*` targets | **SUPPORTED_WITH_STATIC_TRANSFORM** | iOS, iPadOS, tvOS | EverestCore ≥ 1.5421.0 | The pinned MonoMod manipulator methods run in an isolated Mac build process against two exact Celeste target-body fingerprints. The deterministic final bodies are frozen before full AOT; the device contains no Cecil, `MonoMod.Cil`, `ILHook`, dynamic method, or runtime code-patching backend. The module is immutable-active for the installed build. |
 | [Disposable Theo](https://gamebanana.com/mods/53752) | 1.0.6; ZIP `df291c01…b5b5`; DLL `1d47c082…52dcc` | Two instance-owned HookGen `IL.*` manipulators, two ordinary `On.*` hooks, and two compiler-singleton noncapturing delegates | **SUPPORTED_WITH_STATIC_TRANSFORM** | iOS, iPadOS, tvOS | Everest ≥ 1.0.0 | The source-free distributed DLL proves generic lowering of compiler-generated `<>c` singleton delegates which consume runtime stack values. The Mac freezes both exact target bodies and roots the ordinary singleton methods/fields; no host closure object or dynamic-reference cell enters the app. No license declaration was located, so external bytes are not redistributed. |
+| [CaeruleaHelper](https://github.com/azure-bluet/CaeruleaHelper) | 1.11.1; ZIP `6a064951…3807`; DLL `3c5b79a5…973a`; source `036bc9ad…4d07`; MIT | One direct `ILHook` plus eight ordinary HookGen `IL.*` targets | **SUPPORTED_WITH_STATIC_TRANSFORM** | iOS, iPadOS, tvOS | EverestCore ≥ 1.5577.0 | The direct construction fits `STATIC_DIRECT_ILHOOK_FREEZE`: exact static `DashCoroutine.MoveNext` target, static manipulator, no `DetourConfig`, immediate apply, and module-lifetime storage with teardown-only disposal. The real No Dash Speed Reset behavior is frozen source-free; the constructor, field, disposal, Cecil, `MonoMod.Cil`, and runtime ILHook backend are absent on device. This exact profile is immutable-active. |
 
 ## Bounded build-time frozen IL
 
@@ -68,6 +69,30 @@ termination; excluding it from a new build restores the exact baseline method.
 Any target, registration, ordinal, intermediate/final hash, or reference
 mismatch fails before linker/AOT. The exact H-B census is in
 [`apple-everest/il-compatibility-audit-stage25hb.json`](../apple-everest/il-compatibility-audit-stage25hb.json).
+
+Stage 25H-D adds `STATIC_DIRECT_ILHOOK_FREEZE`, but only for a construction
+whose target and manipulator are exact and static, whose `DetourConfig` is
+absent, and whose effective installed-build lifetime is immutable-active. The
+same pinned worker executes the real distributed manipulator on the Mac; the
+device receives only the frozen target and statically rooted introduced calls.
+CaeruleaHelper 1.11.1 is the first accepted real release.
+
+This is not general direct-`ILHook` support. The following remain explicit:
+
+- `DEFERRED_CONFIGURED_ILHOOK` for priority/subpriority/ID/Before/After or
+  ambient `DetourContext` semantics;
+- `DEFERRED_DYNAMIC_DIRECT_ILHOOK_LIFETIME` for gameplay-scoped construction,
+  `Apply`, `Undo`, or `Dispose`;
+- deferred dynamic targets/manipulators and multiple direct hooks on one
+  target unless their exact ordering is separately proven.
+
+The exact Stage 25H-D census classified all 53 high-priority direct
+constructions: 12 fit the static/unconfigured/immutable primary class, 32 were
+configured, three had gameplay-dynamic lifetime as a secondary property, 12
+had dynamic targets, zero had dynamic manipulators, and 13 participated in
+five same-target groups. QLetterAurora is materially advanced by its one
+CaeruleaHelper site, but still has 42 other direct sites plus configured and
+ordinary breadth; no complete real map is newly unlocked.
 
 ## Multi-helper map graph audit
 
@@ -249,7 +274,8 @@ No third-party ZIP, DLL, map, texture, or source file is tracked.
 ## What is not supported yet
 
 Unknown `On.*`, any unregistered `IL.*`, dynamic/ambiguous direct Hook,
-`ILHook`, unsupported RuntimeDetour members/configuration,
+direct `ILHook` outside the exact static/unconfigured/immutable class,
+unsupported RuntimeDetour members/configuration,
 NativeDetour, native/P/Invoke additions, Lua, dynamic assembly loading,
 Reflection.Emit, desktop process/file-watcher behavior, unregistered helper
 ecosystems, dynamic/open-generic or custom runtime ModInterop systems, settings

@@ -653,7 +653,7 @@ try
     Throws(() => RuntimeClosureScanner.VerifyReferencedApi(apiConsumer, inaccessibleApi), "inaccessible-method",
         "external assembly API closure rejects a private target method before device AOT");
 
-    Pass(AppleApiSurface.Members.Count == 21 && AppleApiSurface.ContractSha256.Length == 64,
+    Pass(AppleApiSurface.Members.Count == 30 && AppleApiSurface.ContractSha256.Length == 64,
         "exact reviewed Apple external API surface contract");
     string apiSurfaceRoot = NewDirectory("apple-api-surface");
     Text(apiSurfaceRoot, "Celeste/Level.cs",
@@ -668,6 +668,14 @@ try
         "namespace Celeste;\npublic class CrystalStaticSpinner\n{\n\tprivate class Border : Entity\n\t{\n\t\tprivate Entity[] drawing = new Entity[2];\n\t}\n\tprivate Entity filler;\n\tprivate Border border;\n\tprivate int randomSeed;\n\tprivate void AddSprite(Vector2 offset) {}\n\tprivate bool SolidCheck(Vector2 position) => false;\n}\n");
     Text(apiSurfaceRoot, "Celeste/EntityData.cs",
         "namespace Celeste;\npublic class EntityData\n{\n\tpublic string Attr(string key, string defaultValue = \"\") => defaultValue;\n}\n");
+    Text(apiSurfaceRoot, "Celeste/NorthernLights.cs",
+        "namespace Celeste;\npublic class NorthernLights\n{\n\tprivate class Node { }\n\tprivate class Strand { public List<Node> Nodes = new List<Node>(); }\n\tprivate List<Strand> strands = new List<Strand>();\n\tprivate float timer;\n}\n");
+    Text(apiSurfaceRoot, "Celeste/FloatySpaceBlock.cs",
+        "namespace Celeste;\npublic class FloatySpaceBlock\n{\n\tprivate float sineWave;\n}\n");
+    Text(apiSurfaceRoot, "Celeste/Strawberry.cs",
+        "namespace Celeste;\npublic class Strawberry\n{\n\tpublic bool Golden { get; private set; }\n}\n");
+    Text(apiSurfaceRoot, "Celeste/Booster.cs",
+        "namespace Celeste;\npublic class Booster\n{\n\tprivate Sprite sprite;\n\tprivate ParticleType particleType;\n\tprivate bool red;\n}\n");
     AppleApiSurface.Apply(apiSurfaceRoot);
     string apiSurfaceLevel = File.ReadAllText(Path.Combine(apiSurfaceRoot, "Celeste", "Level.cs"));
     Pass(apiSurfaceLevel.Contains("public float unpauseTimer", StringComparison.Ordinal) &&
@@ -699,6 +707,20 @@ try
          apiSurfaceSpinner.Contains("public bool SolidCheck", StringComparison.Ordinal) &&
          apiSurfaceEntityData.Contains("public string String", StringComparison.Ordinal),
         "DashToggle's exact pinned-Everest publicized members are reviewed and applied");
+    string apiSurfaceNorthernLights = File.ReadAllText(Path.Combine(apiSurfaceRoot, "Celeste", "NorthernLights.cs"));
+    string apiSurfaceFloaty = File.ReadAllText(Path.Combine(apiSurfaceRoot, "Celeste", "FloatySpaceBlock.cs"));
+    string apiSurfaceStrawberry = File.ReadAllText(Path.Combine(apiSurfaceRoot, "Celeste", "Strawberry.cs"));
+    string apiSurfaceBooster = File.ReadAllText(Path.Combine(apiSurfaceRoot, "Celeste", "Booster.cs"));
+    Pass(apiSurfaceNorthernLights.Contains("public class Node", StringComparison.Ordinal) &&
+         apiSurfaceNorthernLights.Contains("public class Strand", StringComparison.Ordinal) &&
+         apiSurfaceNorthernLights.Contains("public List<Strand> strands", StringComparison.Ordinal) &&
+         apiSurfaceNorthernLights.Contains("public float timer", StringComparison.Ordinal) &&
+         apiSurfaceFloaty.Contains("public float sineWave", StringComparison.Ordinal) &&
+         apiSurfaceStrawberry.Contains("public bool Golden { get; set; }", StringComparison.Ordinal) &&
+         apiSurfaceBooster.Contains("public Sprite sprite", StringComparison.Ordinal) &&
+         apiSurfaceBooster.Contains("public ParticleType particleType", StringComparison.Ordinal) &&
+         apiSurfaceBooster.Contains("public bool red", StringComparison.Ordinal),
+        "CaeruleaHelper's exact pinned-Everest publicized members are reviewed and applied");
     Throws(() => AppleApiSurface.Apply(apiSurfaceRoot), "must occur exactly once",
         "Apple API surface rejects duplicate application");
     string unsupportedRoot = BinaryFixture("BinaryDeferred", "On.Celeste", "Player", "UnknownMethod");
@@ -792,17 +814,20 @@ try
     {
         JsonElement targets = targetCatalog.RootElement.GetProperty("targets");
         Pass(targetCatalog.RootElement.GetProperty("schemaVersion").GetInt32() == 2 &&
-             targets.GetArrayLength() == 57,
+             targets.GetArrayLength() == 69,
             "signature-driven managed-detour target catalog v2");
         string[] ids = targets.EnumerateArray().Select(target => target.GetProperty("id").GetString()!).ToArray();
-        Pass(ids.Distinct(StringComparer.Ordinal).Count() == 57 &&
+        Pass(ids.Distinct(StringComparer.Ordinal).Count() == 69 &&
              ids.Contains("celeste-commands-cmd-ow-complete", StringComparer.Ordinal) &&
              ids.Contains("celeste-oui-chapter-select-enter", StringComparer.Ordinal) &&
              ids.Contains("celeste-area-mode-stats-clone", StringComparer.Ordinal) &&
              ids.Contains("celeste-save-data-add-death", StringComparer.Ordinal) &&
              ids.Contains("celeste-player-added", StringComparer.Ordinal) &&
-             ids.Contains("monocle-entity-added", StringComparer.Ordinal),
-            "B2 target catalog covers exact high-arity, IEnumerator, reference-return and inherited target shapes");
+             ids.Contains("monocle-entity-added", StringComparer.Ordinal) &&
+             ids.Contains("celeste-player-super-jump", StringComparer.Ordinal) &&
+             ids.Contains("celeste-player-super-wall-jump-angle-check", StringComparer.Ordinal) &&
+             ids.Contains("celeste-star-jump-block-open", StringComparer.Ordinal),
+            "B2/H-D target catalog covers exact high-arity, IEnumerator, reference-return, inherited and property-getter target shapes");
     }
     ManagedDetourTarget SyntheticTarget(string id, string eventName, bool isStatic, string returnType,
         params (string Type, string Name)[] parameters) => new()
@@ -1088,6 +1113,35 @@ try
          StaticIlFreeze.VortexHelperLicenseSha256 ==
          "051f92453f04ec0a8a9dff60882264ca949ea8e86de5f6aa96e04acdee90d359",
         "Stage 25H-C source and MIT-license provenance locks");
+    Pass(StaticIlFreeze.CaeruleaName == "CaeruleaHelper" &&
+         StaticIlFreeze.CaeruleaVersion == "1.11.1" &&
+         StaticIlFreeze.CaeruleaZipSha256 ==
+         "6a0649518d49cd0d17b84da3be53929cdd602d89d922e2d3ab87c524345e3807" &&
+         StaticIlFreeze.CaeruleaDllSha256 ==
+         "3c5b79a57ce03b6c98e8ae12d781ec6baddce944995b2b4928f067a5ad7973ae",
+        "Stage 25H-D exact CaeruleaHelper release and DLL locks");
+    Pass(StaticIlFreeze.CaeruleaSourceSha256 ==
+         "036bc9adbc5471931ca6cfb1aa574d0bbcfe3a6dce9025a09b56a0c522054d07" &&
+         StaticIlFreeze.CaeruleaSourceCommit ==
+         "ce2ad0694feb28cd3dff0a5d7501f6e60d620fd5",
+        "Stage 25H-D source-audit provenance is exact but not a production input");
+    FrozenIlTransformPlan directPolicyPlan = FrozenPlan("Direct", "Direct", sharedFrozenTarget) with
+    {
+        Mechanism = "DIRECT_ILHOOK",
+        ConstructorSignature =
+            "System.Void MonoMod.RuntimeDetour.ILHook::.ctor(System.Reflection.MethodBase,MonoMod.Cil.ILContext/Manipulator)",
+        TargetExpression = "typeof(Target).GetMethod(\"Run\")",
+        ManipulatorExpression = "Fixture.Manipulator.Run",
+        Config = "absent",
+        ApplyByDefault = "implicit-true",
+        Storage = "static field",
+        Lifetime = "MODULE_IMMUTABLE_ACTIVE"
+    };
+    Pass(StaticIlFreeze.SchemaVersionFor([directPolicyPlan]) == 3 &&
+         StaticIlFreeze.WorkerVersionFor([directPolicyPlan]) ==
+         "apple-everest-static-il-worker-v3" &&
+         StaticIlFreeze.SchemaVersionFor([FrozenPlan("Event", "Event", sharedFrozenTarget)]) == 2,
+        "direct ILHook plans advance only their own deterministic plan schema");
     Pass(staticIlFreeze.Contains("VortexHelper:Player.NormalUpdate:Player_FrictionNormalUpdate",
              StringComparison.Ordinal) &&
          staticIlFreeze.Contains("VortexHelper:Player.WallJumpCheck:Player_WallJumpCheck",
@@ -1113,6 +1167,14 @@ try
         "unexpected additional manipulator rejected");
     Pass(staticIlFreeze.Contains("registered fixture unexpectedly uses direct ILHook", StringComparison.Ordinal),
         "direct ILHook remains rejected");
+    Pass(staticIlFreeze.Contains("CaeruleaHelper direct ILHook constructor contract drifted", StringComparison.Ordinal) &&
+         staticIlFreeze.Contains("CaeruleaHelper direct ILHook lifetime contract drifted", StringComparison.Ordinal) &&
+         staticIlFreeze.Contains("MODULE_IMMUTABLE_ACTIVE", StringComparison.Ordinal),
+        "exact direct constructor, target, manipulator, storage and lifetime fail closed");
+    Pass(staticIlFreeze.Contains("RewriteCaerulea", StringComparison.Ordinal) &&
+         staticIlFreeze.Contains("DashCoroutineHook", StringComparison.Ordinal) &&
+         staticIlFreeze.Contains("dashSpeed.Fields.Remove", StringComparison.Ordinal),
+        "Caerulea runtime constructor, field and unload disposal are removed source-free");
     Pass(staticIlFreeze.Contains("RewriteLifecycleMethod", StringComparison.Ordinal) &&
          staticIlFreeze.Contains("method.Body.Instructions.Clear", StringComparison.Ordinal),
         "runtime subscriptions are removed from the frozen module");
@@ -1128,12 +1190,20 @@ try
          staticIlFreeze.Contains("frozen-IL On lifecycle contract drifted", StringComparison.Ordinal),
         "Load and Unload rewrites fail closed");
     Pass(staticIlFreeze.Contains("On.Celeste.CassetteBlock", StringComparison.Ordinal) == false &&
-         ManagedDetourCatalog.Targets.Count == 57,
+         ManagedDetourCatalog.Targets.Count == 69,
         "ordinary same-target On hooks remain catalog-driven");
     Pass(ManagedDetourCatalog.Targets.Any(target => target.Id == "celeste-crystal-static-spinner-create-sprites"),
         "same-target CrystalStaticSpinner On target registered");
     Pass(staticIlWorker.Contains("context.Invoke(manipulator)", StringComparison.Ordinal),
         "real pinned MonoMod manipulator is executed rather than reproduced");
+    Pass(staticIlWorker.Contains("ResolveTarget", StringComparison.Ordinal) &&
+         staticIlWorker.Contains("exact DashCoroutine iterator target is missing or ambiguous", StringComparison.Ordinal) &&
+         staticIlWorker.Contains("DashCoroutine", StringComparison.Ordinal),
+        "direct target resolution is exact, iterator-aware and ambiguity rejecting");
+    Pass(staticIlWorker.Contains("static-noncapturing-direct", StringComparison.Ordinal) &&
+         staticIlWorker.Contains("ExpectedDirectCallCounts", StringComparison.Ordinal) &&
+         staticIlWorker.Contains("EmitDelegate lowering count/targets drifted", StringComparison.Ordinal),
+        "modern direct EmitDelegate calls are statically lowered and counted");
     Pass(staticIlWorker.Contains("target baseline mismatch", StringComparison.Ordinal) &&
          staticIlWorker.Contains("transformed IL lock mismatch", StringComparison.Ordinal),
         "before/after/diff locks fail closed");
@@ -1159,6 +1229,10 @@ try
     Pass(buildScript.Contains("AppleEverestIlWorker.csproj", StringComparison.Ordinal) &&
          buildScript.Contains("MonoMod.Utils.csproj", StringComparison.Ordinal),
         "public canary build prepares exact pinned host worker");
+    Pass(buildScript.Contains("MonoMod.RuntimeDetour.dll", StringComparison.Ordinal) &&
+         buildScript.Contains("MonoMod.Core.dll", StringComparison.Ordinal) &&
+         buildScript.Contains("MonoMod.Iced.dll", StringComparison.Ordinal),
+        "pinned direct manipulator receives only the exact host-side detour dependency closure");
     Pass(buildScript.Contains("static_il_fixture_sha=\"677e8fbd067340d7b3133cc908e4ecafc0f5deab2c38b7eeb79a62eb5f61d523\"",
              StringComparison.Ordinal) &&
          buildScript.Contains("MODS+=(\"$REPO_ROOT/apple-everest/canaries/static-il-content\")",
@@ -1206,6 +1280,57 @@ try
             .Any(path => path.EndsWith(".dll", StringComparison.OrdinalIgnoreCase) ||
                          path.EndsWith(".zip", StringComparison.OrdinalIgnoreCase)),
         "tracked H-B behavior canary contains no third-party binary or source fixture");
+
+    string directAuditPath = Path.Combine(repository,
+        "apple-everest/direct-ilhook-audit-stage25hd.json");
+    using JsonDocument directAudit = JsonDocument.Parse(File.ReadAllText(directAuditPath));
+    JsonElement directAuditRoot = directAudit.RootElement;
+    JsonElement directSummary = directAuditRoot.GetProperty("summary");
+    JsonElement directSites = directAuditRoot.GetProperty("sites");
+    Pass(directSites.GetArrayLength() == 53 &&
+         directAuditRoot.GetProperty("highPrioritySource").GetProperty("constructionSites").GetInt32() == 53,
+        "all 53 high-priority direct construction sites are present exactly once");
+    Pass(directSites.EnumerateArray().Select(site => site.GetProperty("id").GetString()).Distinct().Count() == 53 &&
+         directSites.EnumerateArray().All(site =>
+             site.TryGetProperty("target", out _) && site.TryGetProperty("manipulator", out _) &&
+             site.TryGetProperty("config", out _) && site.TryGetProperty("dispose", out _)),
+        "direct audit site identities and required semantic records are complete");
+    Pass(directSummary.GetProperty("eligibleStaticUnconfiguredImmutable").GetInt32() == 12 &&
+         directSummary.GetProperty("configuredSites").GetInt32() == 32 &&
+         directSummary.GetProperty("dynamicGameplayLifetimeSites").GetInt32() == 3 &&
+         directSummary.GetProperty("dynamicTargetSites").GetInt32() == 12 &&
+         directSummary.GetProperty("dynamicManipulatorSites").GetInt32() == 0,
+        "direct audit exact eligibility/config/lifetime/target/manipulator counts are locked");
+    Pass(directSummary.GetProperty("multipleDirectSameTargetSites").GetInt32() == 13 &&
+         directSummary.GetProperty("multipleDirectSameTargetGroups").GetInt32() == 5 &&
+         directAuditRoot.GetProperty("graphPayoff").GetProperty("directIlHookSitesBefore").GetInt32() == 43 &&
+         directAuditRoot.GetProperty("graphPayoff").GetProperty("directIlHookSitesAfterSelectedFixture").GetInt32() == 42,
+        "same-target risk and exact QLetterAurora graph payoff are explicit");
+    Pass(directSites.EnumerateArray().Single(site =>
+             site.GetProperty("id").GetString() == "caerulea-dash-coroutine")
+         .GetProperty("primary").GetString() == "A_STATIC_UNCONFIGURED_IMMUTABLE",
+        "selected distributed Caerulea direct hook is in the bounded eligible class");
+    Pass(directSites.EnumerateArray().Where(site =>
+             site.GetProperty("primary").GetString() == "C_STATIC_CONFIGURED")
+         .All(site => site.GetProperty("package").GetString() == "MaxHelpingHand"),
+        "ambient MaxHelpingHand detour contexts are never mistaken for plain hooks");
+    string directContent = Path.Combine(repository,
+        "apple-everest/canaries/static-direct-ilhook-content/Content/Maps/AppleEverest/StaticDirectIlHook.xml");
+    Pass(File.Exists(directContent) && File.ReadAllText(directContent)
+        .Contains("CaeruleaHelper/NoDashSpeedResetTrigger", StringComparison.Ordinal),
+        "project-owned H-D map exposes the real helper trigger backed by the direct transform");
+    string compiledDirectMap = Path.Combine(NewDirectory("static-direct-ilhook-map"), "Content");
+    string directLogical = ContentCompiler.Stage(directContent,
+        "Content/Maps/AppleEverest/StaticDirectIlHook.xml", compiledDirectMap);
+    IReadOnlyList<(string Kind, string Id)> directIds = ContentCompiler.InspectGameplayIds(
+        Path.Combine(compiledDirectMap, directLogical.Replace('/', Path.DirectorySeparatorChar)));
+    Pass(directIds.Contains(("trigger", "CaeruleaHelper/NoDashSpeedResetTrigger")),
+        "H-D namespaced trigger wrapper compiles to the exact real custom trigger ID");
+    Pass(!Directory.EnumerateFiles(Path.Combine(repository,
+                 "apple-everest/canaries/static-direct-ilhook-content"), "*", SearchOption.AllDirectories)
+            .Any(path => path.EndsWith(".dll", StringComparison.OrdinalIgnoreCase) ||
+                         path.EndsWith(".zip", StringComparison.OrdinalIgnoreCase)),
+        "tracked H-D behavior canary contains no third-party binary or source fixture");
 
     Console.WriteLine($"PASS: AppleEverestBuilder deterministic tests ({passed})");
 }

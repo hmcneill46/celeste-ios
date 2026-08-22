@@ -179,12 +179,34 @@ public static partial class Everest
 
     public static partial class Events
     {
+        public static partial class Player
+        {
+            public static event Action<global::Celeste.Player> OnAfterUpdate;
+            internal static void RaiseOnAfterUpdate(global::Celeste.Player player) =>
+                OnAfterUpdate?.Invoke(player);
+        }
+
         public static partial class Level
         {
             public delegate void LoadLevelHandler(global::Celeste.Level level, global::Celeste.Player.IntroTypes playerIntro, bool isFromLoader);
             public static event LoadLevelHandler OnLoadLevel;
             internal static void RaiseOnLoadLevel(global::Celeste.Level level, global::Celeste.Player.IntroTypes intro, bool fromLoader) =>
                 OnLoadLevel?.Invoke(level, intro, fromLoader);
+
+            public delegate global::Celeste.Backdrop LoadBackdropHandler(global::Celeste.MapData map,
+                global::Celeste.BinaryPacker.Element child, global::Celeste.BinaryPacker.Element above);
+            public static event LoadBackdropHandler OnLoadBackdrop;
+            internal static global::Celeste.Backdrop LoadBackdrop(global::Celeste.MapData map,
+                global::Celeste.BinaryPacker.Element child, global::Celeste.BinaryPacker.Element above)
+            {
+                if (OnLoadBackdrop == null) return null;
+                foreach (LoadBackdropHandler handler in OnLoadBackdrop.GetInvocationList())
+                {
+                    global::Celeste.Backdrop result = handler(map, child, above);
+                    if (result != null) return result;
+                }
+                return null;
+            }
         }
     }
 }

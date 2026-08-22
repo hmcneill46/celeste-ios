@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <Deterministic>true</Deterministic>
+    <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="../Target/Target.csproj" />
+    <ProjectReference Include="../Manipulators/Manipulators.csproj" />
+    <Reference Include="MonoMod.RuntimeDetour" HintPath="$(MonoModRuntimeDetourPath)" Private="true" />
+    <Reference Include="MonoMod.Utils" HintPath="$(MonoModUtilsPath)" Private="true" />
+  </ItemGroup>
+  <Target Name="ValidatePinnedMonoMod" BeforeTargets="PrepareForBuild">
+    <Error Condition="'$(MonoModRuntimeDetourPath)' == '' or !Exists('$(MonoModRuntimeDetourPath)')"
+           Text="MonoModRuntimeDetourPath must identify the exact pinned host build." />
+    <Error Condition="'$(MonoModUtilsPath)' == '' or !Exists('$(MonoModUtilsPath)')"
+           Text="MonoModUtilsPath must identify the exact pinned host build." />
+  </Target>
+</Project>

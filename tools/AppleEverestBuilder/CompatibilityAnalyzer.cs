@@ -66,7 +66,9 @@ internal static class CompatibilityAnalyzer
                 List<ModInteropRegistrationPlan> assemblyModInterop = [];
                 AnalyzeAssembly(path, metadata.Name, managedDetourTargets, directManagedHooks, assemblyModInterop,
                     (mechanism, detected) => Record($"{relative}:{mechanism}", detected), rejectUnsupported,
-                    frozenIl.Count > 0 && string.Equals(relative, normalizedDeclaredEntry, StringComparison.Ordinal));
+                    frozenIl.Count > 0 && string.Equals(relative, normalizedDeclaredEntry, StringComparison.Ordinal),
+                    frozenIl.Any(plan => plan.Mechanism == "DIRECT_ILHOOK") &&
+                    string.Equals(relative, normalizedDeclaredEntry, StringComparison.Ordinal));
                 if (assemblyModInterop.Count > 0 && !string.Equals(relative, normalizedDeclaredEntry, StringComparison.Ordinal))
                 {
                     Record($"{relative}:DEFERRED_UNLINKED_MODINTEROP_ASSEMBLY", CompatibilityClass.MODINTEROP_DEFERRED);
@@ -105,7 +107,9 @@ internal static class CompatibilityAnalyzer
 
         if (frozenIl.Count > 0)
             Record("hash-locked-static-il-event-freeze:" + StaticIlFreeze.PlanSha256(frozenIl),
-                frozenIl.GroupBy(plan => plan.TargetMethod, StringComparer.Ordinal).Any(group => group.Count() > 1)
+                frozenIl.Any(plan => plan.Mechanism == "DIRECT_ILHOOK")
+                    ? CompatibilityClass.STATIC_DIRECT_ILHOOK_FREEZE
+                    : frozenIl.GroupBy(plan => plan.TargetMethod, StringComparer.Ordinal).Any(group => group.Count() > 1)
                     ? CompatibilityClass.STATIC_IL_EVENT_SEQUENCE
                     : CompatibilityClass.STATIC_IL_EVENT_FREEZE);
 
@@ -174,7 +178,8 @@ internal static class CompatibilityAnalyzer
         List<ModInteropRegistrationPlan> modInteropRegistrations,
         Action<string, CompatibilityClass> record,
         bool rejectUnsupported,
-        bool registeredStaticIl)
+        bool registeredStaticIl,
+        bool registeredDirectIl)
     {
         try
         {
@@ -194,15 +199,16 @@ internal static class CompatibilityAnalyzer
                 type.Scope is AssemblyNameReference reference && reference.Name == "MonoMod.Utils" &&
                 type.Namespace != "MonoMod.ModInterop" &&
                 !(registeredStaticIl && type.FullName.StartsWith("MonoMod.Cil.", StringComparison.Ordinal)) &&
+                !(registeredDirectIl && type.FullName == "MonoMod.Utils.Extensions") &&
                 type.FullName != "System.Runtime.CompilerServices.IgnoresAccessChecksToAttribute").ToArray();
             if (residualMonoModUtils.Length != 0)
                 record("DEFERRED_MONOMOD_UTILS_SURFACE:" + string.Join(',', residualMonoModUtils
                     .Select(type => type.FullName).Distinct(StringComparer.Ordinal).Order(StringComparer.Ordinal).Take(12)),
                     CompatibilityClass.MODINTEROP_DEFERRED);
             foreach (TypeReference type in assembly.MainModule.GetTypeReferences()
-                         .Where(type => type.Namespace.StartsWith("IL.", StringComparison.Ordinal)))
+                         .Where(type => type.FullName.StartsWith("IL.", StringComparison.Ordinal)))
             {
-                string hookType = type.Namespace + "." + type.Name;
+                string hookType = type.FullName;
                 record($"il-hook:{hookType}", registeredStaticIl
                     ? CompatibilityClass.STATIC_IL_EVENT_FREEZE
                     : CompatibilityClass.IL_HOOK_DEFERRED);
@@ -215,7 +221,9 @@ internal static class CompatibilityAnalyzer
                     case "Hook":
                         break;
                     case "ILHook":
-                        record($"runtime-detour-type:{type.FullName}", CompatibilityClass.IL_HOOK_DEFERRED);
+                        record($"runtime-detour-type:{type.FullName}", registeredDirectIl
+                            ? CompatibilityClass.STATIC_DIRECT_ILHOOK_FREEZE
+                            : CompatibilityClass.IL_HOOK_DEFERRED);
                         break;
                     case "NativeDetour":
                         record($"runtime-detour-type:{type.FullName}", CompatibilityClass.NATIVE_UNSUPPORTED);
@@ -267,10 +275,19 @@ internal static class CompatibilityAnalyzer
                         full.Contains("DynamicMethod", StringComparison.Ordinal) || full.Contains("System.Reflection.Emit", StringComparison.Ordinal))
                         record(full, CompatibilityClass.DYNAMIC_CODE_UNSUPPORTED);
                     else if (full.Contains("NativeDetour", StringComparison.Ordinal)) record(full, CompatibilityClass.NATIVE_UNSUPPORTED);
-                    else if (full.Contains("ILHook", StringComparison.Ordinal)) record(full, CompatibilityClass.IL_HOOK_DEFERRED);
+                    else if (full.Contains("ILHook", StringComparison.Ordinal)) record(full, registeredDirectIl
+                        ? CompatibilityClass.STATIC_DIRECT_ILHOOK_FREEZE
+                        : CompatibilityClass.IL_HOOK_DEFERRED);
                     else if (called.DeclaringType.FullName == "MonoMod.RuntimeDetour.Hook" && called.Name == ".ctor")
                     {
                         directConstructorCount++;
+                        if (registeredDirectIl && owner == StaticIlFreeze.CaeruleaName &&
+                            method.FullName == "System.Void Celeste.Mod.CaeruleaHelper.Entities.CustomStarJumpBlock::Load()")
+                        {
+                            record("static-optional-DashlessHelper-fallback:celeste-star-jump-block-open",
+                                CompatibilityClass.ON_HOOK_SUPPORTED);
+                            continue;
+                        }
                         try
                         {
                             DirectManagedHookPlan plan = ResolveDirectHookPlan(assembly, method, instruction, owner);
@@ -285,7 +302,8 @@ internal static class CompatibilityAnalyzer
                         }
                     }
                     else if (called.DeclaringType.FullName == "MonoMod.RuntimeDetour.ILHook")
-                        record(full, CompatibilityClass.IL_HOOK_DEFERRED);
+                        record(full, registeredDirectIl ? CompatibilityClass.STATIC_DIRECT_ILHOOK_FREEZE :
+                            CompatibilityClass.IL_HOOK_DEFERRED);
                     else if (called.DeclaringType.FullName.Contains("NativeDetour", StringComparison.Ordinal))
                         record(full, CompatibilityClass.NATIVE_UNSUPPORTED);
                     else if (called.DeclaringType.FullName == "MonoMod.RuntimeDetour.Hook" &&
@@ -318,19 +336,50 @@ internal static class CompatibilityAnalyzer
 
         Instruction[] body = containingMethod.Body.Instructions.ToArray();
         int index = Array.IndexOf(body, constructor);
-        if (index < 9 || body[index - 9].OpCode != OpCodes.Ldtoken || body[index - 9].Operand is not TypeReference targetType ||
-            body[index - 7].OpCode != OpCodes.Ldstr || body[index - 7].Operand is not string targetName ||
-            body[index - 6].OpCode != OpCodes.Ldc_I4_S || Convert.ToInt32(body[index - 6].Operand) !=
-                (int)(System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public) ||
-            body[index - 4].OpCode != OpCodes.Ldtoken || body[index - 4].Operand is not TypeReference detourType ||
-            body[index - 2].OpCode != OpCodes.Ldstr || body[index - 2].Operand is not string detourName ||
-            body[index - 8].Operand is not MethodReference targetGetType || targetGetType.Name != "GetTypeFromHandle" ||
-            body[index - 5].Operand is not MethodReference targetGetMethod ||
-                !IsGetMethod(targetGetMethod, "System.String", "System.Reflection.BindingFlags") ||
-            body[index - 3].Operand is not MethodReference detourGetType || detourGetType.Name != "GetTypeFromHandle" ||
-            body[index - 1].Operand is not MethodReference detourGetMethod ||
-                !IsGetMethod(detourGetMethod, "System.String"))
-            throw new InvalidDataException($"DEFERRED_DYNAMIC_TARGET: {owner} {containingMethod.FullName} has an unresolved direct Hook expression");
+        TypeReference targetType;
+        TypeReference detourType;
+        string targetName;
+        string detourName;
+        int expressionInstructionCount;
+        bool propertyGetter = index >= 12 && body[index - 12].OpCode == OpCodes.Ldtoken &&
+            body[index - 12].Operand is TypeReference && body[index - 10].OpCode == OpCodes.Ldstr &&
+            body[index - 10].Operand is string && body[index - 8].Operand is MethodReference getProperty &&
+            getProperty.DeclaringType.FullName == "System.Type" && getProperty.Name == "GetProperty" &&
+            body[index - 6].Operand is MethodReference getGetter && getGetter.DeclaringType.FullName ==
+            "System.Reflection.PropertyInfo" && getGetter.Name == "GetGetMethod" &&
+            body[index - 5].OpCode == OpCodes.Ldtoken && body[index - 5].Operand is TypeReference &&
+            body[index - 3].OpCode == OpCodes.Ldstr && body[index - 3].Operand is string &&
+            body[index - 1].Operand is MethodReference propertyDetourLookup &&
+            IsGetMethod(propertyDetourLookup, "System.String", "System.Reflection.BindingFlags");
+        if (propertyGetter)
+        {
+            targetType = (TypeReference)body[index - 12].Operand;
+            targetName = "get_" + (string)body[index - 10].Operand;
+            detourType = (TypeReference)body[index - 5].Operand;
+            detourName = (string)body[index - 3].Operand;
+            expressionInstructionCount = 12;
+        }
+        else
+        {
+            if (index < 9 || body[index - 9].OpCode != OpCodes.Ldtoken || body[index - 9].Operand is not TypeReference methodTargetType ||
+                body[index - 7].OpCode != OpCodes.Ldstr || body[index - 7].Operand is not string methodTargetName ||
+                body[index - 6].OpCode != OpCodes.Ldc_I4_S || Convert.ToInt32(body[index - 6].Operand) !=
+                    (int)(System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public) ||
+                body[index - 4].OpCode != OpCodes.Ldtoken || body[index - 4].Operand is not TypeReference methodDetourType ||
+                body[index - 2].OpCode != OpCodes.Ldstr || body[index - 2].Operand is not string methodDetourName ||
+                body[index - 8].Operand is not MethodReference targetGetType || targetGetType.Name != "GetTypeFromHandle" ||
+                body[index - 5].Operand is not MethodReference targetGetMethod ||
+                    !IsGetMethod(targetGetMethod, "System.String", "System.Reflection.BindingFlags") ||
+                body[index - 3].Operand is not MethodReference detourGetType || detourGetType.Name != "GetTypeFromHandle" ||
+                body[index - 1].Operand is not MethodReference detourGetMethod ||
+                    !IsGetMethod(detourGetMethod, "System.String"))
+                throw new InvalidDataException($"DEFERRED_DYNAMIC_TARGET: {owner} {containingMethod.FullName} has an unresolved direct Hook expression");
+            targetType = methodTargetType;
+            targetName = methodTargetName;
+            detourType = methodDetourType;
+            detourName = methodDetourName;
+            expressionInstructionCount = 9;
+        }
 
         ManagedDetourTarget target;
         try { target = ManagedDetourCatalog.RequireByDirectAlias(targetType.FullName, targetName); }
@@ -345,6 +394,17 @@ internal static class CompatibilityAnalyzer
         if (methods.Length != 1)
             throw new InvalidDataException($"DEFERRED_DYNAMIC_DETOUR: {owner} {detourType.FullName}::{detourName} resolved {methods.Length} methods");
         MethodDefinition detour = methods[0];
+        bool customOriginalDelegate = false;
+        if (propertyGetter && detour.Parameters.Count > 0)
+        {
+            TypeDefinition? originalDelegate = detour.Parameters[0].ParameterType.Resolve();
+            MethodDefinition? invoke = originalDelegate?.Methods.SingleOrDefault(method => method.Name == "Invoke");
+            customOriginalDelegate = originalDelegate?.BaseType?.FullName == "System.MulticastDelegate" &&
+                invoke != null && invoke.ReturnType.FullName == "System.Boolean" && invoke.Parameters.Count == 1 &&
+                invoke.Parameters[0].ParameterType.FullName == "Celeste.Player";
+            if (!customOriginalDelegate)
+                throw new InvalidDataException($"DEFERRED_DIRECT_HOOK_SIGNATURE: {owner} {detour.FullName}");
+        }
         string capture = detour.IsStatic ? "STATIC" :
             Inherits(detourDefinition!, "Celeste.Mod.EverestModule") ? "MODULE_INSTANCE" : "RUNTIME_DYNAMIC";
         if (capture == "RUNTIME_DYNAMIC")
@@ -364,7 +424,9 @@ internal static class CompatibilityAnalyzer
             CSharpType(detour.ReturnType),
             detour.Parameters.Select(parameter => CSharpType(parameter.ParameterType)).ToArray(),
             capture,
-            signature);
+            signature,
+            expressionInstructionCount,
+            customOriginalDelegate);
     }
 
     private static bool IsGetMethod(MethodReference method, params string[] parameterTypes) =>
@@ -429,17 +491,18 @@ internal static class CompatibilityAnalyzer
             CompatibilityClass.MODINTEROP_STATIC_SUPPORTED => 6,
             CompatibilityClass.STATIC_IL_EVENT_FREEZE => 7,
             CompatibilityClass.STATIC_IL_EVENT_SEQUENCE => 8,
-            CompatibilityClass.MODINTEROP_DEFERRED => 9,
-            CompatibilityClass.ON_HOOK_DEFERRED => 10,
-            CompatibilityClass.IL_HOOK_DEFERRED => 11,
-            CompatibilityClass.DIRECT_HOOK_DEFERRED => 12,
-            CompatibilityClass.DYNAMIC_TARGET_DEFERRED => 13,
-            CompatibilityClass.DYNAMIC_DETOUR_DEFERRED => 14,
-            CompatibilityClass.DETOUR_CONFIG_DEFERRED => 15,
-            CompatibilityClass.DYNAMIC_CODE_UNSUPPORTED => 16,
-            CompatibilityClass.NATIVE_UNSUPPORTED => 17,
-            CompatibilityClass.LUA_UNSUPPORTED => 18,
-            CompatibilityClass.PLATFORM_UNSUPPORTED => 19,
+            CompatibilityClass.STATIC_DIRECT_ILHOOK_FREEZE => 9,
+            CompatibilityClass.MODINTEROP_DEFERRED => 10,
+            CompatibilityClass.ON_HOOK_DEFERRED => 11,
+            CompatibilityClass.IL_HOOK_DEFERRED => 12,
+            CompatibilityClass.DIRECT_HOOK_DEFERRED => 13,
+            CompatibilityClass.DYNAMIC_TARGET_DEFERRED => 14,
+            CompatibilityClass.DYNAMIC_DETOUR_DEFERRED => 15,
+            CompatibilityClass.DETOUR_CONFIG_DEFERRED => 16,
+            CompatibilityClass.DYNAMIC_CODE_UNSUPPORTED => 17,
+            CompatibilityClass.NATIVE_UNSUPPORTED => 18,
+            CompatibilityClass.LUA_UNSUPPORTED => 19,
+            CompatibilityClass.PLATFORM_UNSUPPORTED => 20,
             _ => 99
         };
         return Rank(detected) > Rank(current) ? detected : current;

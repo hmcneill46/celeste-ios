@@ -52,7 +52,12 @@ def plan_sha(transforms: list[dict[str, object]]) -> str:
             str(item["registrationOrdinal"]), item["beforeSha256"], item["afterSha256"],
             item["diffSha256"], ",".join(item["expectedDelegateTargets"]),
         ]
-        lines.append("\0".join(str(value) for value in values))
+        line = "\0".join(str(value) for value in values)
+        if item.get("mechanism") == "DIRECT_ILHOOK":
+            line += "\0" + "\0".join(str(item[key]) for key in (
+                "mechanism", "constructorSignature", "targetExpression",
+                "manipulatorExpression", "config", "applyByDefault", "storage", "lifetime"))
+        lines.append(line)
     return text_sha("\n".join(lines) + "\n")
 
 
@@ -65,8 +70,9 @@ def reference(sequence: str, baseline: pathlib.Path, name: str) -> tuple[pathlib
         (destination / "reference.json").read_text())
 
 
-def transform(owner: str, manipulator: str, ordinal: int, step: dict[str, object]) -> dict[str, object]:
-    return {
+def transform(owner: str, manipulator: str, ordinal: int, step: dict[str, object], *,
+              mechanism: str = "HOOKGEN_IL_EVENT") -> dict[str, object]:
+    result: dict[str, object] = {
         "planId": f"{owner}:Compose:{manipulator}",
         "owner": owner,
         "assemblySha256": MANIP_SHA,
@@ -83,6 +89,19 @@ def transform(owner: str, manipulator: str, ordinal: int, step: dict[str, object
         "diffSha256": step["diffSha256"],
         "expectedDelegateTargets": [],
     }
+    if mechanism == "DIRECT_ILHOOK":
+        result.update({
+            "mechanism": mechanism,
+            "constructorSignature":
+                "System.Void MonoMod.RuntimeDetour.ILHook::.ctor(System.Reflection.MethodBase,MonoMod.Cil.ILContext/Manipulator)",
+            "targetExpression": "typeof(ComposeTarget).GetMethod(\"Compose\")",
+            "manipulatorExpression": f"{MANIPULATOR_TYPE}.{manipulator}",
+            "config": "absent",
+            "applyByDefault": "implicit-true",
+            "storage": "scoped fixture local",
+            "lifetime": "MODULE_IMMUTABLE_ACTIVE",
+        })
+    return result
 
 
 def worker(name: str, baseline: pathlib.Path, transforms: list[dict[str, object]], *,
@@ -93,7 +112,9 @@ def worker(name: str, baseline: pathlib.Path, transforms: list[dict[str, object]
     fixture_directory.mkdir()
     for owner in {str(item["owner"]) for item in transforms}:
         shutil.copy2(MANIP, fixture_directory / f"{owner}.original.dll")
-    plan = {"schemaVersion": 2, "worker": WORKER_ID,
+    direct = any(item.get("mechanism") == "DIRECT_ILHOOK" for item in transforms)
+    plan = {"schemaVersion": 3 if direct else 2,
+            "worker": "apple-everest-static-il-worker-v3" if direct else WORKER_ID,
             "planSha256": declared_sha or plan_sha(transforms), "transforms": transforms}
     plan_path = destination / "plan.json"
     plan_path.write_text(json.dumps(plan, indent=2) + "\n")
@@ -104,6 +125,16 @@ def worker(name: str, baseline: pathlib.Path, transforms: list[dict[str, object]
                   "--runtime-dir", WORKER.parent, "--runtime-dir", MANIP.parent,
                   "--runtime-dir", baseline.parent, expect=expected)
     return output, manifest, process.stdout
+
+
+def runtime_reference(scenario: str) -> int:
+    executable = DOTNET_ARTIFACTS / "bin/RuntimeReference/release/RuntimeReference.dll"
+    output = run(DOTNET8, executable, scenario).stdout
+    marker = "APPLE_EVEREST_RUNTIME_RESULT="
+    values = [line.removeprefix(marker) for line in output.splitlines() if line.startswith(marker)]
+    if len(values) != 1:
+        raise RuntimeError(f"pinned runtime reference did not emit one result for {scenario}")
+    return int(values[0])
 
 
 if ROOT.exists():
@@ -122,12 +153,25 @@ MONOMOD = UPSTREAM / "external/MonoMod/artifacts/bin/MonoMod.Utils/release_net8.
 if not MONOMOD.is_file():
     raise RuntimeError("pinned MonoMod.Utils output is missing")
 
+RUNTIME_DETOUR = (UPSTREAM / "external/MonoMod/artifacts/bin/MonoMod.RuntimeDetour.HookGen/"
+                  "release_net8.0/MonoMod.RuntimeDetour.dll")
+if not RUNTIME_DETOUR.is_file():
+    raise RuntimeError("pinned MonoMod.RuntimeDetour output is missing")
+
 run(DOTNET8, "restore", TEST / "Reference/Reference.csproj", "--locked-mode",
     "--artifacts-path", DOTNET_ARTIFACTS,
     f"-p:MonoModUtilsPath={MONOMOD}", cwd=pathlib.Path("/private/tmp"))
 run(DOTNET8, "build", TEST / "Reference/Reference.csproj", "-c", "Release", "--no-restore",
     "--artifacts-path", DOTNET_ARTIFACTS,
     f"-p:MonoModUtilsPath={MONOMOD}", cwd=pathlib.Path("/private/tmp"))
+run(DOTNET8, "restore", TEST / "RuntimeReference/RuntimeReference.csproj", "--locked-mode",
+    "--artifacts-path", DOTNET_ARTIFACTS,
+    f"-p:MonoModRuntimeDetourPath={RUNTIME_DETOUR}", f"-p:MonoModUtilsPath={MONOMOD}",
+    cwd=pathlib.Path("/private/tmp"))
+run(DOTNET8, "build", TEST / "RuntimeReference/RuntimeReference.csproj", "-c", "Release", "--no-restore",
+    "--artifacts-path", DOTNET_ARTIFACTS,
+    f"-p:MonoModRuntimeDetourPath={RUNTIME_DETOUR}", f"-p:MonoModUtilsPath={MONOMOD}",
+    cwd=pathlib.Path("/private/tmp"))
 run(DOTNET8, "build", TEST / "Target/Target.csproj", "-c", "Release",
     "--artifacts-path", DOTNET_ARTIFACTS, cwd=pathlib.Path("/private/tmp"))
 run(DOTNET8, "build", TEST / "Runner/Runner.csproj", "-c", "Release",
@@ -179,6 +223,56 @@ for name in ("A", "B", "AB", "BA", "ABC"):
                       "ABC": data_abc}[name]
     if actual["afterSha256"] != reference_data["finalSha256"]:
         raise RuntimeError(f"worker {name} did not match pinned desktop MonoMod")
+
+# Exercise the actual pinned desktop RuntimeDetour implementation. HookGen IL
+# events enter through HookEndpointManager.Modify, direct hooks use the exact
+# ILHook(MethodBase, Manipulator) constructor, and the On-style wrapper enters
+# through HookEndpointManager.Add. The Apple side freezes the observed order
+# into the same worker plan and therefore needs no runtime detour backend.
+runtime_results = {
+    "eventThenDirect": runtime_reference("event-direct"),
+    "directThenEvent": runtime_reference("direct-event"),
+    "directThenOn": runtime_reference("direct-on"),
+    "eventEventDirectThenOn": runtime_reference("event-event-direct-on"),
+}
+if runtime_results != {
+    "eventThenDirect": expected["AB"],
+    "directThenEvent": expected["BA"],
+    "directThenOn": expected["B"] + 100,
+    "eventEventDirectThenOn": expected["ABC"] + 100,
+}:
+    raise RuntimeError("pinned direct/event/On registration semantics drifted")
+
+direct_composition_plans = {
+    "event-direct": [
+        transform("FixtureA", "AddThree", 0, steps_ab[0]),
+        transform("FixtureB", "MultiplyFive", 1, steps_ab[1], mechanism="DIRECT_ILHOOK"),
+    ],
+    "direct-event": [
+        transform("FixtureB", "MultiplyFive", 0, steps_ba[0], mechanism="DIRECT_ILHOOK"),
+        transform("FixtureA", "AddThree", 1, steps_ba[1]),
+    ],
+    "direct-on-underlying": [
+        transform("FixtureB", "MultiplyFive", 0, step_b, mechanism="DIRECT_ILHOOK"),
+    ],
+    "event-event-direct-on-underlying": [
+        transform("FixtureA", "AddThree", 0, data_abc["steps"][0]),
+        transform("FixtureB", "MultiplyFive", 1, data_abc["steps"][1]),
+        transform("FixtureC", "SubtractSeven", 2, data_abc["steps"][2], mechanism="DIRECT_ILHOOK"),
+    ],
+}
+direct_expected = {
+    "event-direct": expected["AB"],
+    "direct-event": expected["BA"],
+    "direct-on-underlying": runtime_results["directThenOn"] - 100,
+    "event-event-direct-on-underlying": runtime_results["eventEventDirectThenOn"] - 100,
+}
+for name, direct_plans in direct_composition_plans.items():
+    output, manifest, _ = worker("direct-compose-" + name, BASELINE, direct_plans)
+    run(DOTNET8, runner, output, direct_expected[name])
+    evidence = json.loads(manifest.read_text())
+    if evidence["schemaVersion"] != 3 or evidence["worker"] != "apple-everest-static-il-worker-v3":
+        raise RuntimeError("mixed direct composition did not use the bounded v3 worker")
 
 # Pinned desktop MonoMod executes a compiler-generated singleton lambda as a
 # normal Func<int,int>. The production worker lowers the host dynamic cell to
@@ -251,6 +345,21 @@ summary = {
     "bThenAResult": expected["BA"],
     "aThenBThenCResult": expected["ABC"],
     "maximumSequenceLength": 3,
+    "directIlHookComposition": {
+        "desktopRegistrationResults": runtime_results,
+        "eventThenDirectAppleResult": direct_expected["event-direct"],
+        "directThenEventAppleResult": direct_expected["direct-event"],
+        "directThenOnUnderlyingAppleResult": direct_expected["direct-on-underlying"],
+        "eventEventDirectThenOnUnderlyingAppleResult":
+            direct_expected["event-event-direct-on-underlying"],
+        "onWrapperDelta": 100,
+        "desktopEntryPoints": [
+            "HookEndpointManager.Modify",
+            "ILHook(MethodBase,ILContext.Manipulator)",
+            "HookEndpointManager.Add",
+        ],
+        "appleRuntimeBackend": False,
+    },
     "compilerSingletonLambda": {
         "desktopReference": "pinned MonoMod dynamic-cell shape",
         "expectedResultAfterProductionPublicization": 19,
@@ -264,4 +373,4 @@ summary = {
                       "invalid-intermediate"],
 }
 (ROOT / "summary.json").write_text(json.dumps(summary, indent=2) + "\n")
-print("PASS: Stage 25H-B pinned same-target A/B/AB/ABC/neither composition, order, locks, rejection, and isolation")
+print("PASS: pinned H-B sequence plus H-D direct/event/On composition, order, locks, rejection, and isolation")

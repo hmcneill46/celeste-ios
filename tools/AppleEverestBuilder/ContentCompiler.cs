@@ -253,18 +253,19 @@ internal static class ContentCompiler
 
     private static string ElementName(XmlElement element)
     {
-        if (element.Name != "appleEverestEntity") return element.Name;
-        if (element.ParentNode is not XmlElement parent || parent.Name != "entities")
-            throw new InvalidDataException("appleEverestEntity is only valid directly below entities");
+        if (element.Name is not ("appleEverestEntity" or "appleEverestTrigger")) return element.Name;
+        string expectedParent = element.Name == "appleEverestEntity" ? "entities" : "triggers";
+        if (element.ParentNode is not XmlElement parent || parent.Name != expectedParent)
+            throw new InvalidDataException($"{element.Name} is only valid directly below {expectedParent}");
         string name = element.GetAttribute("name");
         if (name.Length is < 1 or > 1024 || !name.Contains('/', StringComparison.Ordinal))
-            throw new InvalidDataException("appleEverestEntity requires a bounded namespaced name");
+            throw new InvalidDataException($"{element.Name} requires a bounded namespaced name");
         return name;
     }
 
     private static IEnumerable<XmlAttribute> ElementAttributes(XmlElement element) =>
         element.Attributes.OfType<XmlAttribute>().Where(attribute =>
-            element.Name != "appleEverestEntity" || attribute.Name != "name");
+            element.Name is not ("appleEverestEntity" or "appleEverestTrigger") || attribute.Name != "name");
 
     private static string NormalizeText(XmlElement element)
     {
