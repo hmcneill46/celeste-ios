@@ -6,7 +6,8 @@ REPO_ROOT="$(CDPATH= cd -- "$SCRIPT_DIR/.." && pwd -P)"
 OUTPUT="${1:-$REPO_ROOT/.build/apple-everest/stage25hb/fixtures}"
 
 fetch_exact() {
-  local name="$1" expected="$2" url="$3" destination="$OUTPUT/$name" temporary="$OUTPUT/.$name.download"
+  local name="$1" expected="$2" url="$3"
+  local destination="$OUTPUT/$name" temporary="$OUTPUT/.$name.download"
   mkdir -p "$OUTPUT"
   if [[ -f "$destination" ]] && [[ "$(shasum -a 256 "$destination" | awk '{print $1}')" == "$expected" ]]; then
     printf 'verified: %s\n' "$name"

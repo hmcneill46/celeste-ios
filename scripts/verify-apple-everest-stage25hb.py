@@ -205,8 +205,12 @@ def main() -> int:
                   "compiler-singleton-lambda", "threeRunDeterminism", "post-rejection-isolation",
                   "DOTNET_ARTIFACTS"):
         c.require(token in compose, f"composition conformance {token}")
-    c.require("https://gamebanana.com/mmdl/929736" in paths["fetch"].read_text() and
-              DISPOSABLE_ZIP in paths["fetch"].read_text(), "exact source-free fixture fetch")
+    fetch = paths["fetch"].read_text()
+    c.require("https://gamebanana.com/mmdl/929736" in fetch and
+              DISPOSABLE_ZIP in fetch, "exact source-free fixture fetch")
+    c.require('local name="$1" expected="$2" url="$3"\n'
+              '  local destination="$OUTPUT/$name"' in fetch,
+              "nounset-safe fresh-clone fixture path construction")
 
     for token in ("STATIC_IL_EVENT_SEQUENCE", "Disposable Theo", "compiler-generated",
                   "real shared-target", "immutable-active"):
