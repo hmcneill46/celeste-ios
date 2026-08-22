@@ -17,7 +17,8 @@ internal static class AssemblyFreezer
         return declaration;
     }
 
-    public static AppleStaticDeclaration InspectDeclaration(string path, string mod)
+    public static AppleStaticDeclaration InspectDeclaration(string path, string mod,
+        bool allowNonPublicCustomFactories = false)
     {
         using AssemblyDefinition assembly = AssemblyDefinition.ReadAssembly(path, new ReaderParameters { ReadSymbols = false });
         TypeDefinition[] modules = assembly.MainModule.Types.SelectMany(AllTypes)
@@ -43,7 +44,8 @@ internal static class AssemblyFreezer
             .ToArray();
         (AppleSettingProperty[] settings, string[] omittedSettings) = InspectSettings(settingsDefinition);
         (AppleCustomEntityFactory[] customEntityFactories,
-            AppleOmittedCustomEntityFactory[] omittedCustomEntityFactories) = InspectCustomEntities(customTypes);
+            AppleOmittedCustomEntityFactory[] omittedCustomEntityFactories) = InspectCustomEntities(customTypes,
+                allowNonPublicCustomFactories);
         AppleStaticDeclaration declaration = new()
         {
             SchemaVersion = 1,
@@ -77,9 +79,12 @@ internal static class AssemblyFreezer
         string source,
         string destination,
         IReadOnlyList<DirectManagedHookPlan> directHooks,
-        IReadOnlyList<ModInteropRegistrationPlan> modInteropRegistrations)
+        IReadOnlyList<ModInteropRegistrationPlan> modInteropRegistrations,
+        IReadOnlyList<FrozenIlTransformPlan>? frozenIlTransforms = null)
     {
         using AssemblyDefinition assembly = AssemblyDefinition.ReadAssembly(source, new ReaderParameters { ReadSymbols = false });
+        frozenIlTransforms ??= [];
+        StaticIlFreeze.RewriteDeviceAssembly(assembly, frozenIlTransforms);
         string assemblyName = assembly.Name.Name;
         if (string.IsNullOrWhiteSpace(assemblyName) || assemblyName.Length > 255 ||
             assemblyName.Any(character => char.IsControl(character) || character is ';' or '<' or '>' or '"' or '\''))
@@ -372,14 +377,14 @@ internal static class AssemblyFreezer
     }
 
     private static (AppleCustomEntityFactory[] Supported, AppleOmittedCustomEntityFactory[] Omitted)
-        InspectCustomEntities(IEnumerable<TypeDefinition> types)
+        InspectCustomEntities(IEnumerable<TypeDefinition> types, bool allowNonPublic)
     {
         List<AppleCustomEntityFactory> supported = [];
         List<AppleOmittedCustomEntityFactory> omitted = [];
         foreach (TypeDefinition type in types)
         {
             string kind = Inherits(type, "Celeste.Trigger") ? "trigger" : "entity";
-            if (!PublicType(type) || type.IsAbstract)
+            if ((!PublicType(type) && !allowNonPublic) || type.IsAbstract)
                 throw new InvalidDataException($"custom entity type must be public and concrete: {type.FullName}");
             string? constructor = ConstructorKind(type);
             foreach (CustomAttribute attribute in type.CustomAttributes.Where(value =>

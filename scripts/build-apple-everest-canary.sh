@@ -9,7 +9,9 @@ WORK_ROOT="$REPO_ROOT/.build/apple-everest/production-canary"
 CLOSURE="$WORK_ROOT/shared-closure"
 OUTPUT="$REPO_ROOT/artifacts/apple-everest/canary"
 DOTNET8="$REPO_ROOT/.build/apple-everest/toolchain/dotnet8/dotnet"
+DOTNET9="$REPO_ROOT/.build/apple-everest/toolchain/dotnet9/dotnet"
 BUILDER_PROJECT="$REPO_ROOT/tools/AppleEverestBuilder/AppleEverestBuilder.csproj"
+IL_WORKER_PROJECT="$REPO_ROOT/tools/AppleEverestIlWorker/AppleEverestIlWorker.csproj"
 PLATFORM="all"
 SIGNING="unsigned"
 TEAM_ID=""
@@ -106,6 +108,14 @@ safe_replace() {
 
 "$SCRIPT_DIR/bootstrap-apple-everest-host.sh"
 (cd /private/tmp && "$DOTNET8" run --project "$BUILDER_PROJECT" -- acquire --profile "$PROFILE" --output "$UPSTREAM")
+(cd "$UPSTREAM/external/MonoMod" && "$DOTNET9" build src/MonoMod.Utils/MonoMod.Utils.csproj \
+  -c Release -f net8.0 -p:RestoreLockedMode=false --nologo >/dev/null)
+MONOMOD_UTILS="$UPSTREAM/external/MonoMod/artifacts/bin/MonoMod.Utils/release_net8.0/MonoMod.Utils.dll"
+[[ -f "$MONOMOD_UTILS" ]] || { echo "error: exact pinned MonoMod.Utils host build is missing" >&2; exit 1; }
+(cd "$REPO_ROOT" && dotnet restore "$IL_WORKER_PROJECT" \
+  -p:MonoModUtilsPath="$MONOMOD_UTILS" --locked-mode --nologo >/dev/null)
+(cd "$REPO_ROOT" && dotnet build "$IL_WORKER_PROJECT" -c Release --no-restore \
+  -p:MonoModUtilsPath="$MONOMOD_UTILS" --nologo >/dev/null)
 safe_replace "$CLOSURE" .apple-everest-static-closure
 if ((${#MODS[@]} == 0)); then
   MODS=(
@@ -114,6 +124,19 @@ if ((${#MODS[@]} == 0)); then
     "$REPO_ROOT/apple-everest/canaries/module-b"
     "$REPO_ROOT/apple-everest/canaries/module-c"
   )
+fi
+# The exact Stage 25H fixture has no playable map of its own. Mount the
+# project-owned data-only room in Canary products so physical acceptance tests
+# the real frozen spinner/block behavior rather than only successful startup.
+static_il_fixture_sha="677e8fbd067340d7b3133cc908e4ecafc0f5deab2c38b7eeb79a62eb5f61d523"
+include_static_il_canary=0
+for mod in "${MODS[@]}"; do
+  if [[ -f "$mod" && "$(shasum -a 256 "$mod" | awk '{print $1}')" == "$static_il_fixture_sha" ]]; then
+    include_static_il_canary=1
+  fi
+done
+if ((include_static_il_canary)); then
+  MODS+=("$REPO_ROOT/apple-everest/canaries/static-il-content")
 fi
 mod_args=()
 for mod in "${MODS[@]}"; do mod_args+=(--mod "$mod"); done
@@ -242,6 +265,14 @@ PY
 
 scan_product_runtime() {
   local app="$1" platform_build="$2" assembly assembly_name aot_object_count llvm_object mono_object
+  if find "$app" -type f \( \
+      -iname 'AppleEverestIlWorker*' -o -iname 'Mono.Cecil*' -o \
+      -iname 'MonoMod.Cil*' -o -iname 'MonoMod.Utils*' -o \
+      -iname 'MonoMod.RuntimeDetour*' -o -iname 'AppleEverestStaticIl.targets' -o \
+      -iname 'AppleEverestStaticIl.plan.json' \) -print | grep -q .; then
+    echo "error: host-only static-IL transformation material entered the device product" >&2
+    exit 1
+  fi
   (cd /private/tmp && "$DOTNET8" run --project "$BUILDER_PROJECT" -- \
     scan-runtime --assembly "$app/Celeste.dll")
   if [[ -d "$CLOSURE/assemblies" ]]; then
@@ -270,7 +301,7 @@ scan_product_runtime() {
 if [[ "$PLATFORM" != tvos ]]; then
   ios_artifacts="$WORK_ROOT/build/ios"
   if ((!REUSE_BUILD)); then
-    dotnet publish "$REPO_ROOT/modern-ios/CelesteIOSRuntimeHost/CelesteIOSRuntimeHost.csproj" -c Release -r ios-arm64 --self-contained true \
+    dotnet publish "$REPO_ROOT/modern-ios/CelesteIOSRuntimeHost/CelesteIOSRuntimeHost.csproj" -c Release -r ios-arm64 -m:1 -p:BuildInParallel=false --self-contained true \
       --artifacts-path "$ios_artifacts" -p:IOSProductMode=Celeste -p:EnableFmodDeviceFoundation=true \
       -p:CelesteIOSRuntimeRoot="$WORK_ROOT/ios-runtime" -p:CelesteAppleRepoRoot="$REPO_ROOT" \
       -p:AppBundleManifest="$ios_manifest" \

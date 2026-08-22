@@ -42,6 +42,90 @@
       "sourceFile": "Celeste/Glider.cs",
       "originalDeclaration": "\tprivate IEnumerator DestroyAnimationRoutine()",
       "replacementDeclaration": "\tpublic IEnumerator DestroyAnimationRoutine()"
+    },
+    {
+      "id": "celeste-cassette-block-color",
+      "sourceFile": "Celeste/CassetteBlock.cs",
+      "originalDeclaration": "\tprivate Vector2 groupOrigin;\n\n\tprivate Color color;",
+      "replacementDeclaration": "\tprivate Vector2 groupOrigin;\n\n\tpublic Color color;"
+    },
+    {
+      "id": "celeste-cassette-block-group",
+      "sourceFile": "Celeste/CassetteBlock.cs",
+      "originalDeclaration": "\tprivate List<CassetteBlock> group;",
+      "replacementDeclaration": "\tpublic List<CassetteBlock> group;"
+    },
+    {
+      "id": "celeste-cassette-block-pressed",
+      "sourceFile": "Celeste/CassetteBlock.cs",
+      "originalDeclaration": "\tprivate List<Image> pressed = new List<Image>();",
+      "replacementDeclaration": "\tpublic List<Image> pressed = new List<Image>();"
+    },
+    {
+      "id": "celeste-cassette-block-solid",
+      "sourceFile": "Celeste/CassetteBlock.cs",
+      "originalDeclaration": "\tprivate List<Image> solid = new List<Image>();",
+      "replacementDeclaration": "\tpublic List<Image> solid = new List<Image>();"
+    },
+    {
+      "id": "celeste-cassette-block-create-image",
+      "sourceFile": "Celeste/CassetteBlock.cs",
+      "originalDeclaration": "\tprivate Image CreateImage(float x, float y, int tx, int ty, MTexture tex)",
+      "replacementDeclaration": "\tpublic Image CreateImage(float x, float y, int tx, int ty, MTexture tex)"
+    },
+    {
+      "id": "celeste-cassette-block-shift-size",
+      "sourceFile": "Celeste/CassetteBlock.cs",
+      "originalDeclaration": "\tprivate void ShiftSize(int amount)",
+      "replacementDeclaration": "\tpublic void ShiftSize(int amount)"
+    },
+    {
+      "id": "celeste-crystal-spinner-filler",
+      "sourceFile": "Celeste/CrystalStaticSpinner.cs",
+      "originalDeclaration": "\tprivate Entity filler;",
+      "replacementDeclaration": "\tpublic Entity filler;"
+    },
+    {
+      "id": "celeste-crystal-spinner-border-type",
+      "sourceFile": "Celeste/CrystalStaticSpinner.cs",
+      "originalDeclaration": "\tprivate class Border : Entity",
+      "replacementDeclaration": "\tpublic class Border : Entity"
+    },
+    {
+      "id": "celeste-crystal-spinner-border-drawing",
+      "sourceFile": "Celeste/CrystalStaticSpinner.cs",
+      "originalDeclaration": "\t\tprivate Entity[] drawing = new Entity[2];",
+      "replacementDeclaration": "\t\tpublic Entity[] drawing = new Entity[2];"
+    },
+    {
+      "id": "celeste-crystal-spinner-border",
+      "sourceFile": "Celeste/CrystalStaticSpinner.cs",
+      "originalDeclaration": "\tprivate Border border;",
+      "replacementDeclaration": "\tpublic Border border;"
+    },
+    {
+      "id": "celeste-crystal-spinner-random-seed",
+      "sourceFile": "Celeste/CrystalStaticSpinner.cs",
+      "originalDeclaration": "\tprivate int randomSeed;",
+      "replacementDeclaration": "\tpublic int randomSeed;"
+    },
+    {
+      "id": "celeste-crystal-spinner-add-sprite",
+      "sourceFile": "Celeste/CrystalStaticSpinner.cs",
+      "originalDeclaration": "\tprivate void AddSprite(Vector2 offset)",
+      "replacementDeclaration": "\tpublic void AddSprite(Vector2 offset)"
+    },
+    {
+      "id": "celeste-crystal-spinner-solid-check",
+      "sourceFile": "Celeste/CrystalStaticSpinner.cs",
+      "originalDeclaration": "\tprivate bool SolidCheck(Vector2 position)",
+      "replacementDeclaration": "\tpublic bool SolidCheck(Vector2 position)"
+    },
+    {
+      "id": "celeste-entity-data-string-alias",
+      "sourceFile": "Celeste/EntityData.cs",
+      "originalDeclaration": "\tpublic string Attr(string key, string defaultValue = \"\")",
+      "replacementDeclaration": "\tpublic string String(string key, string defaultValue = \"\") => Attr(key, defaultValue);\n\n\tpublic string Attr(string key, string defaultValue = \"\")"
     }
   ]
 }

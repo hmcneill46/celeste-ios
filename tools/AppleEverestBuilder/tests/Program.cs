@@ -58,7 +58,8 @@ ResolvedMod Mod(string name, string version = "1.0.0", IEnumerable<(string Name,
         ManagedFiles = [], ContentFiles = [],
         ManagedDetourTargets = new SortedSet<string>(StringComparer.Ordinal),
         DirectManagedHooks = [],
-        ModInteropRegistrations = []
+        ModInteropRegistrations = [],
+        FrozenIlTransforms = []
     };
 }
 
@@ -616,7 +617,7 @@ try
     Throws(() => RuntimeClosureScanner.VerifyReferencedApi(apiConsumer, inaccessibleApi), "inaccessible-method",
         "external assembly API closure rejects a private target method before device AOT");
 
-    Pass(AppleApiSurface.Members.Count == 7 && AppleApiSurface.ContractSha256.Length == 64,
+    Pass(AppleApiSurface.Members.Count == 21 && AppleApiSurface.ContractSha256.Length == 64,
         "exact reviewed Apple external API surface contract");
     string apiSurfaceRoot = NewDirectory("apple-api-surface");
     Text(apiSurfaceRoot, "Celeste/Level.cs",
@@ -625,6 +626,12 @@ try
         "namespace Celeste;\npublic class Actor\n{\n\tprivate Vector2 movementCounter;\n}\n");
     Text(apiSurfaceRoot, "Celeste/Glider.cs",
         "namespace Celeste;\npublic class Glider\n{\n\tprivate bool destroyed;\n\tprivate Sprite sprite;\n\tprivate IEnumerator DestroyAnimationRoutine() {}\n}\n");
+    Text(apiSurfaceRoot, "Celeste/CassetteBlock.cs",
+        "namespace Celeste;\npublic class CassetteBlock\n{\n\tprivate List<CassetteBlock> group;\n\tprivate Vector2 groupOrigin;\n\n\tprivate Color color;\n\tprivate List<Image> pressed = new List<Image>();\n\tprivate List<Image> solid = new List<Image>();\n\tprivate Image CreateImage(float x, float y, int tx, int ty, MTexture tex) => null;\n\tprivate void ShiftSize(int amount) {}\n}\n");
+    Text(apiSurfaceRoot, "Celeste/CrystalStaticSpinner.cs",
+        "namespace Celeste;\npublic class CrystalStaticSpinner\n{\n\tprivate class Border : Entity\n\t{\n\t\tprivate Entity[] drawing = new Entity[2];\n\t}\n\tprivate Entity filler;\n\tprivate Border border;\n\tprivate int randomSeed;\n\tprivate void AddSprite(Vector2 offset) {}\n\tprivate bool SolidCheck(Vector2 position) => false;\n}\n");
+    Text(apiSurfaceRoot, "Celeste/EntityData.cs",
+        "namespace Celeste;\npublic class EntityData\n{\n\tpublic string Attr(string key, string defaultValue = \"\") => defaultValue;\n}\n");
     AppleApiSurface.Apply(apiSurfaceRoot);
     string apiSurfaceLevel = File.ReadAllText(Path.Combine(apiSurfaceRoot, "Celeste", "Level.cs"));
     Pass(apiSurfaceLevel.Contains("public float unpauseTimer", StringComparison.Ordinal) &&
@@ -638,6 +645,24 @@ try
          apiSurfaceGlider.Contains("public Sprite sprite", StringComparison.Ordinal) &&
          apiSurfaceGlider.Contains("public IEnumerator DestroyAnimationRoutine()", StringComparison.Ordinal),
         "Cpop's exact pinned-Everest publicized members are reviewed and applied");
+    string apiSurfaceCassette = File.ReadAllText(Path.Combine(apiSurfaceRoot, "Celeste", "CassetteBlock.cs"));
+    string apiSurfaceSpinner = File.ReadAllText(Path.Combine(apiSurfaceRoot, "Celeste", "CrystalStaticSpinner.cs"));
+    string apiSurfaceEntityData = File.ReadAllText(Path.Combine(apiSurfaceRoot, "Celeste", "EntityData.cs"));
+    Pass(apiSurfaceCassette.Contains("public List<CassetteBlock> group", StringComparison.Ordinal) &&
+         apiSurfaceCassette.Contains("public Color color", StringComparison.Ordinal) &&
+         apiSurfaceCassette.Contains("public List<Image> pressed", StringComparison.Ordinal) &&
+         apiSurfaceCassette.Contains("public List<Image> solid", StringComparison.Ordinal) &&
+         apiSurfaceCassette.Contains("public Image CreateImage", StringComparison.Ordinal) &&
+         apiSurfaceCassette.Contains("public void ShiftSize", StringComparison.Ordinal) &&
+         apiSurfaceSpinner.Contains("public class Border", StringComparison.Ordinal) &&
+         apiSurfaceSpinner.Contains("public Entity[] drawing", StringComparison.Ordinal) &&
+         apiSurfaceSpinner.Contains("public Entity filler", StringComparison.Ordinal) &&
+         apiSurfaceSpinner.Contains("public Border border", StringComparison.Ordinal) &&
+         apiSurfaceSpinner.Contains("public int randomSeed", StringComparison.Ordinal) &&
+         apiSurfaceSpinner.Contains("public void AddSprite", StringComparison.Ordinal) &&
+         apiSurfaceSpinner.Contains("public bool SolidCheck", StringComparison.Ordinal) &&
+         apiSurfaceEntityData.Contains("public string String", StringComparison.Ordinal),
+        "DashToggle's exact pinned-Everest publicized members are reviewed and applied");
     Throws(() => AppleApiSurface.Apply(apiSurfaceRoot), "must occur exactly once",
         "Apple API surface rejects duplicate application");
     string unsupportedRoot = BinaryFixture("BinaryDeferred", "On.Celeste", "Player", "UnknownMethod");
@@ -731,10 +756,10 @@ try
     {
         JsonElement targets = targetCatalog.RootElement.GetProperty("targets");
         Pass(targetCatalog.RootElement.GetProperty("schemaVersion").GetInt32() == 2 &&
-             targets.GetArrayLength() == 51,
+             targets.GetArrayLength() == 56,
             "signature-driven managed-detour target catalog v2");
         string[] ids = targets.EnumerateArray().Select(target => target.GetProperty("id").GetString()!).ToArray();
-        Pass(ids.Distinct(StringComparer.Ordinal).Count() == 51 &&
+        Pass(ids.Distinct(StringComparer.Ordinal).Count() == 56 &&
              ids.Contains("celeste-commands-cmd-ow-complete", StringComparer.Ordinal) &&
              ids.Contains("celeste-oui-chapter-select-enter", StringComparer.Ordinal) &&
              ids.Contains("celeste-area-mode-stats-clone", StringComparer.Ordinal) &&
@@ -941,7 +966,7 @@ try
          testClosureViolations[0].Contains("System.Diagnostics.Process::Start", StringComparison.Ordinal),
         "linked-runtime scanner isolates the intentional desktop static-plan test host spawn");
 
-    Pass(ProductPolicy.TransformerVersion == "apple-everest-static-v7", "real-ZIP transformer version");
+    Pass(ProductPolicy.TransformerVersion == "apple-everest-static-v8", "real-ZIP transformer version");
     Pass(File.Exists(Path.Combine(repository, "tools/AppleEverestBuilder/AssemblyFreezer.cs")),
         "binary-first assembly freezer exists");
     string models = File.ReadAllText(Path.Combine(repository, "tools/AppleEverestBuilder/Models.cs"));
@@ -992,6 +1017,93 @@ try
     Pass(File.Exists(Path.Combine(repository, "scripts/build-apple-everest-real-mods.sh")) &&
          File.Exists(Path.Combine(repository, "scripts/audit-apple-everest-mods.sh")),
         "ordinary-ZIP internal build and audit entry points");
+
+    string staticIlFreeze = File.ReadAllText(Path.Combine(repository,
+        "tools/AppleEverestBuilder/StaticIlFreeze.cs"));
+    string staticIlWorker = File.ReadAllText(Path.Combine(repository,
+        "tools/AppleEverestIlWorker/Program.cs"));
+    string staticIlProject = File.ReadAllText(Path.Combine(repository,
+        "tools/AppleEverestIlWorker/AppleEverestIlWorker.csproj"));
+    Pass(StaticIlFreeze.FixtureName == "DashToggleHelper" && StaticIlFreeze.FixtureVersion == "1.1.0",
+        "exact real frozen-IL fixture identity");
+    Pass(StaticIlFreeze.FixtureZipSha256 ==
+         "677e8fbd067340d7b3133cc908e4ecafc0f5deab2c38b7eeb79a62eb5f61d523",
+        "real release ZIP pin");
+    Pass(StaticIlFreeze.FixtureDllSha256 ==
+         "531eaa8a719cb81cc84adf2b9e930dcb3abae73c60406b8f44b823c9c4b4a083",
+        "authoritative precompiled DLL pin");
+    Pass(StaticIlFreeze.FixtureSourceSha256 ==
+         "a26ac163b4184cc0daccfd99f4ef11aeeeef7a2858b7d84938beb0dc6afd5d09",
+        "source-free logical input pin");
+    Pass(StaticIlFreeze.FixtureSourceCommit == "9b140684c2ee80ddae3c9ef032de0c767a67530c",
+        "public source provenance pin");
+    Pass(staticIlFreeze.Contains("ValidateRegistrations", StringComparison.Ordinal) &&
+         staticIlFreeze.Contains("found.Count != plans.Count * 2", StringComparison.Ordinal),
+        "exact binary IL add/remove discovery is closed");
+    Pass(staticIlFreeze.Contains("registered fixture contains an unreviewed IL event subscription", StringComparison.Ordinal),
+        "unexpected additional manipulator rejected");
+    Pass(staticIlFreeze.Contains("registered fixture unexpectedly uses direct ILHook", StringComparison.Ordinal),
+        "direct ILHook remains rejected");
+    Pass(staticIlFreeze.Contains("RewriteLifecycleMethod", StringComparison.Ordinal) &&
+         staticIlFreeze.Contains("method.Body.Instructions.Clear", StringComparison.Ordinal),
+        "runtime subscriptions are removed from the frozen module");
+    Pass(staticIlFreeze.Contains("frozen-IL lifecycle event count drifted", StringComparison.Ordinal) &&
+         staticIlFreeze.Contains("DashToggleHelper On lifecycle contract drifted", StringComparison.Ordinal),
+        "Load and Unload rewrites fail closed");
+    Pass(staticIlFreeze.Contains("On.Celeste.CassetteBlock", StringComparison.Ordinal) == false &&
+         ManagedDetourCatalog.Targets.Count == 56,
+        "ordinary same-target On hooks remain catalog-driven");
+    Pass(ManagedDetourCatalog.Targets.Any(target => target.Id == "celeste-crystal-static-spinner-create-sprites"),
+        "same-target CrystalStaticSpinner On target registered");
+    Pass(staticIlWorker.Contains("context.Invoke(manipulator)", StringComparison.Ordinal),
+        "real pinned MonoMod manipulator is executed rather than reproduced");
+    Pass(staticIlWorker.Contains("target baseline mismatch", StringComparison.Ordinal) &&
+         staticIlWorker.Contains("transformed IL lock mismatch", StringComparison.Ordinal),
+        "before/after/diff locks fail closed");
+    Pass(staticIlWorker.Contains("dangling branch target", StringComparison.Ordinal) &&
+         staticIlWorker.Contains("dangling exception-handler endpoint", StringComparison.Ordinal),
+        "branch and exception-region validation");
+    Pass(staticIlWorker.Contains("forbidden final IL reference", StringComparison.Ordinal) &&
+         staticIlWorker.Contains("DynamicReferenceManager", StringComparison.Ordinal) &&
+         staticIlWorker.Contains("Reflection.Emit", StringComparison.Ordinal),
+        "dynamic injected references fail before product build");
+    Pass(staticIlWorker.Contains("beforeNormalizedIl", StringComparison.Ordinal) &&
+         staticIlWorker.Contains("normalizedDiffSha256", StringComparison.Ordinal),
+        "normalized IL and semantic diff evidence emitted");
+    Pass(staticIlWorker.Contains("APPLE_EVEREST_STATIC_IL_ALREADY_FROZEN", StringComparison.Ordinal) &&
+         staticIlWorker.Contains("string.Equals(before, options.ExpectedAfter", StringComparison.Ordinal),
+        "incremental rebuild accepts only the exact locked already-frozen target body");
+    Pass(staticIlProject.Contains("<TargetFramework>net10.0</TargetFramework>", StringComparison.Ordinal) &&
+         !staticIlProject.Contains("MonoMod.RuntimeDetour", StringComparison.Ordinal),
+        "host worker matches compiled target runtime without device detour backend");
+    Pass(closureGenerator.Contains("AppleEverestStaticIl.targets", StringComparison.Ordinal) &&
+         closureGenerator.Contains(".AppleEverestStaticIlHost", StringComparison.Ordinal),
+        "host-only transform closure is applied at compile boundary");
+    Pass(buildScript.Contains("AppleEverestIlWorker.csproj", StringComparison.Ordinal) &&
+         buildScript.Contains("MonoMod.Utils.csproj", StringComparison.Ordinal),
+        "public canary build prepares exact pinned host worker");
+    Pass(buildScript.Contains("static_il_fixture_sha=\"677e8fbd067340d7b3133cc908e4ecafc0f5deab2c38b7eeb79a62eb5f61d523\"",
+             StringComparison.Ordinal) &&
+         buildScript.Contains("MODS+=(\"$REPO_ROOT/apple-everest/canaries/static-il-content\")",
+             StringComparison.Ordinal),
+        "exact Stage 25H Canary product mounts the project-owned behavior room");
+    string staticIlContent = Path.Combine(repository,
+        "apple-everest/canaries/static-il-content/Content/Maps/AppleEverest/StaticIl.xml");
+    Pass(File.Exists(staticIlContent) && File.ReadAllText(staticIlContent)
+        .Contains("DashToggleHelper/DashToggleStaticSpinner", StringComparison.Ordinal),
+        "project-owned real-behavior map uses the selected custom entity");
+    string compiledStaticIlMap = Path.Combine(NewDirectory("static-il-map"), "Content");
+    string staticIlLogical = ContentCompiler.Stage(staticIlContent,
+        "Content/Maps/AppleEverest/StaticIl.xml", compiledStaticIlMap);
+    IReadOnlyList<(string Kind, string Id)> staticIlIds = ContentCompiler.InspectGameplayIds(
+        Path.Combine(compiledStaticIlMap, staticIlLogical.Replace('/', Path.DirectorySeparatorChar)));
+    Pass(staticIlIds.Contains(("entity", "DashToggleHelper/DashToggleStaticSpinner")) &&
+         staticIlIds.Contains(("entity", "DashToggleHelper/DashToggleBlock")),
+        "custom namespaced XML canary compiles to exact Celeste map IDs");
+    Pass(!Directory.EnumerateFiles(Path.Combine(repository, "apple-everest/canaries/static-il-content"), "*",
+             SearchOption.AllDirectories).Any(path => path.EndsWith(".dll", StringComparison.OrdinalIgnoreCase) ||
+                                                       path.EndsWith(".zip", StringComparison.OrdinalIgnoreCase)),
+        "tracked behavior canary contains no third-party binary or source fixture");
 
     Console.WriteLine($"PASS: AppleEverestBuilder deterministic tests ({passed})");
 }

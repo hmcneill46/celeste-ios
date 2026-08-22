@@ -130,7 +130,7 @@ internal static class RuntimeClosureScanner
         }
         if (unresolved.Count != 0)
             throw new InvalidDataException("external assembly references APIs absent from the linked " + targetName +
-                " contract or inaccessible: " + string.Join(", ", unresolved.Distinct(StringComparer.Ordinal).Take(12)));
+                " contract or inaccessible: " + string.Join(", ", unresolved.Distinct(StringComparer.Ordinal).Take(64)));
     }
 
     internal static void VerifyAotObjects(string sourceAssemblyPath, IReadOnlyList<string> objectPaths)

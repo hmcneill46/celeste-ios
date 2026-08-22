@@ -124,8 +124,8 @@ internal static class ContentCompiler
         void Add(string value) { if (seen.Add(value)) table.Add(value); }
         void Visit(XmlElement element)
         {
-            Add(element.Name);
-            foreach (XmlAttribute attribute in element.Attributes)
+            Add(ElementName(element));
+            foreach (XmlAttribute attribute in ElementAttributes(element))
             {
                 Add(attribute.Name);
                 if (Value(attribute.Value).Type == 5) Add(attribute.Value);
@@ -230,9 +230,10 @@ internal static class ContentCompiler
     {
         XmlElement[] children = element.ChildNodes.OfType<XmlElement>().ToArray();
         string text = children.Length == 0 ? NormalizeText(element) : "";
-        writer.Write(lookup[element.Name]);
-        writer.Write(checked((byte)(element.Attributes.Count + (text.Length > 0 ? 1 : 0))));
-        foreach (XmlAttribute attribute in element.Attributes)
+        XmlAttribute[] attributes = ElementAttributes(element).ToArray();
+        writer.Write(lookup[ElementName(element)]);
+        writer.Write(checked((byte)(attributes.Length + (text.Length > 0 ? 1 : 0))));
+        foreach (XmlAttribute attribute in attributes)
         {
             (byte type, object parsed) = Value(attribute.Value);
             writer.Write(lookup[attribute.Name]); writer.Write(type); WriteValue(writer, type, parsed, lookup);
@@ -249,6 +250,21 @@ internal static class ContentCompiler
         writer.Write(checked((short)children.Length));
         foreach (XmlElement child in children) WriteElement(writer, child, lookup);
     }
+
+    private static string ElementName(XmlElement element)
+    {
+        if (element.Name != "appleEverestEntity") return element.Name;
+        if (element.ParentNode is not XmlElement parent || parent.Name != "entities")
+            throw new InvalidDataException("appleEverestEntity is only valid directly below entities");
+        string name = element.GetAttribute("name");
+        if (name.Length is < 1 or > 1024 || !name.Contains('/', StringComparison.Ordinal))
+            throw new InvalidDataException("appleEverestEntity requires a bounded namespaced name");
+        return name;
+    }
+
+    private static IEnumerable<XmlAttribute> ElementAttributes(XmlElement element) =>
+        element.Attributes.OfType<XmlAttribute>().Where(attribute =>
+            element.Name != "appleEverestEntity" || attribute.Name != "name");
 
     private static string NormalizeText(XmlElement element)
     {

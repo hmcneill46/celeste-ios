@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Map>
+  <levels>
+    <level name="lvl_static_il" x="0" y="0" width="320" height="184" music="event:/music/lvl1/main" ambience="event:/env/amb/01_main" windPattern="None" dark="false">
+      <entities>
+        <player id="0" x="24" y="152" />
+        <appleEverestEntity name="DashToggleHelper/DashToggleStaticSpinner" id="1" x="120" y="136" dashes="1" attachToSolid="false" prefix="objects/DashToggleHelper/dashtogglestaticspinner/" />
+        <appleEverestEntity name="DashToggleHelper/DashToggleStaticSpinner" id="2" x="136" y="136" dashes="1" attachToSolid="false" prefix="objects/DashToggleHelper/dashtogglestaticspinner/" />
+        <appleEverestEntity name="DashToggleHelper/DashToggleStaticSpinner" id="3" x="216" y="136" dashes="0" attachToSolid="false" prefix="objects/DashToggleHelper/dashtogglestaticspinner/" />
+        <appleEverestEntity name="DashToggleHelper/DashToggleBlock" id="4" x="152" y="152" width="32" height="16" dashes="1" prefix="objects/DashToggleHelper/dashtoggleblock/" />
+        <appleEverestEntity name="DashToggleHelper/DashToggleBlock" id="5" x="248" y="152" width="32" height="16" dashes="0" prefix="objects/DashToggleHelper/dashtoggleblock/" />
+      </entities>
+      <triggers />
+      <bgdecals />
+      <fgdecals />
+      <solids>0000000000000000000000000000000000000000
+0000000000000000000000000000000000000000
+0000000000000000000000000000000000000000
+0000000000000000000000000000000000000000
+0000000000000000000000000000000000000000
+0000000000000000000000000000000000000000
+0000000000000000000000000000000000000000
+0000000000000000000000000000000000000000
+0000000000000000000000000000000000000000
+0000000000000000000000000000000000000000
+0000000000000000000000000000000000000000
+0000000000000000000000000000000000000000
+0000000000000000000000000000000000000000
+0000000000000000000000000000000000000000
+0000000000000000000000000000000000000000
+0000000000000000000000000000000000000000
+0000000000000000000000000000000000000000
+0000000000000000000000000000000000000000
+0000000000000000000000000000000000000000
+0000000000000000000000000000000000000000
+0000000000000000000000000000000000000000
+1111111111111111111111111111111111111111
+1111111111111111111111111111111111111111</solids>
+      <bg>0000000000000000000000000000000000000000</bg>
+      <fgtiles />
+      <bgtiles />
+      <objtiles />
+    </level>
+  </levels>
+  <Filler />
+  <Style color="10152c">
+    <Backgrounds />
+    <Foregrounds />
+  </Style>
+</Map>

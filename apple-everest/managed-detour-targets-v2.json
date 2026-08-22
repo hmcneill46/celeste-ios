@@ -612,6 +612,60 @@
         { "type": "bool", "name": "frozenUpdate", "default": "false" },
         { "type": "bool", "name": "useRawDeltaTime", "default": "false" }
       ]
+    },
+    {
+      "id": "celeste-cassette-block-find-in-group",
+      "sourceFile": "Celeste/CassetteBlock.cs",
+      "sourceDeclaration": "private void FindInGroup(CassetteBlock block)",
+      "originalDeclaration": "private void AppleEverestOriginal_FindInGroup(CassetteBlock block)",
+      "originalAlias": "AppleEverestOriginal_FindInGroup",
+      "hookNamespace": "On.Celeste", "hookType": "CassetteBlock", "eventName": "FindInGroup",
+      "origDelegate": "orig_FindInGroup", "hookDelegate": "hook_FindInGroup",
+      "isStatic": false, "receiverType": "global::Celeste.CassetteBlock", "returnType": "void",
+      "parameters": [{ "type": "global::Celeste.CassetteBlock", "name": "block" }]
+    },
+    {
+      "id": "celeste-cassette-block-check-for-same",
+      "sourceFile": "Celeste/CassetteBlock.cs",
+      "sourceDeclaration": "private bool CheckForSame(float x, float y)",
+      "originalDeclaration": "private bool AppleEverestOriginal_CheckForSame(float x, float y)",
+      "originalAlias": "AppleEverestOriginal_CheckForSame",
+      "hookNamespace": "On.Celeste", "hookType": "CassetteBlock", "eventName": "CheckForSame",
+      "origDelegate": "orig_CheckForSame", "hookDelegate": "hook_CheckForSame",
+      "isStatic": false, "receiverType": "global::Celeste.CassetteBlock", "returnType": "bool",
+      "parameters": [{ "type": "float", "name": "x" }, { "type": "float", "name": "y" }]
+    },
+    {
+      "id": "celeste-cassette-block-set-image",
+      "sourceFile": "Celeste/CassetteBlock.cs",
+      "sourceDeclaration": "private void SetImage(float x, float y, int tx, int ty)",
+      "originalDeclaration": "private void AppleEverestOriginal_SetImage(float x, float y, int tx, int ty)",
+      "originalAlias": "AppleEverestOriginal_SetImage",
+      "hookNamespace": "On.Celeste", "hookType": "CassetteBlock", "eventName": "SetImage",
+      "origDelegate": "orig_SetImage", "hookDelegate": "hook_SetImage",
+      "isStatic": false, "receiverType": "global::Celeste.CassetteBlock", "returnType": "void",
+      "parameters": [{ "type": "float", "name": "x" }, { "type": "float", "name": "y" }, { "type": "int", "name": "tx" }, { "type": "int", "name": "ty" }]
+    },
+    {
+      "id": "celeste-cassette-block-shift-size",
+      "sourceFile": "Celeste/CassetteBlock.cs",
+      "sourceDeclaration": "public void ShiftSize(int amount)",
+      "originalDeclaration": "private void AppleEverestOriginal_ShiftSize(int amount)",
+      "originalAlias": "AppleEverestOriginal_ShiftSize",
+      "hookNamespace": "On.Celeste", "hookType": "CassetteBlock", "eventName": "ShiftSize",
+      "origDelegate": "orig_ShiftSize", "hookDelegate": "hook_ShiftSize",
+      "isStatic": false, "receiverType": "global::Celeste.CassetteBlock", "returnType": "void",
+      "parameters": [{ "type": "int", "name": "amount" }]
+    },
+    {
+      "id": "celeste-crystal-static-spinner-create-sprites",
+      "sourceFile": "Celeste/CrystalStaticSpinner.cs",
+      "sourceDeclaration": "private void CreateSprites()",
+      "originalDeclaration": "private void AppleEverestOriginal_CreateSprites()",
+      "originalAlias": "AppleEverestOriginal_CreateSprites",
+      "hookNamespace": "On.Celeste", "hookType": "CrystalStaticSpinner", "eventName": "CreateSprites",
+      "origDelegate": "orig_CreateSprites", "hookDelegate": "hook_CreateSprites",
+      "isStatic": false, "receiverType": "global::Celeste.CrystalStaticSpinner", "returnType": "void", "parameters": []
     }
   ]
 }

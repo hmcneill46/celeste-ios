@@ -34,6 +34,7 @@ internal static class CompatibilityAnalyzer
 
     private static ResolvedMod AnalyzeCore(ModInput input, EverestYamlEntry metadata, bool rejectUnsupported)
     {
+        IReadOnlyList<FrozenIlTransformPlan> frozenIl = StaticIlFreeze.Resolve(input, metadata);
         List<string> managed = input.Files.Where(file => IsManaged(file.Path)).Select(file => file.Path).ToList();
         List<string> content = input.Files.Where(file => IsContent(file.Path)).Select(file => file.Path).ToList();
         SortedSet<string> mechanisms = new(StringComparer.Ordinal);
@@ -64,7 +65,8 @@ internal static class CompatibilityAnalyzer
             {
                 List<ModInteropRegistrationPlan> assemblyModInterop = [];
                 AnalyzeAssembly(path, metadata.Name, managedDetourTargets, directManagedHooks, assemblyModInterop,
-                    (mechanism, detected) => Record($"{relative}:{mechanism}", detected), rejectUnsupported);
+                    (mechanism, detected) => Record($"{relative}:{mechanism}", detected), rejectUnsupported,
+                    frozenIl.Count > 0 && string.Equals(relative, normalizedDeclaredEntry, StringComparison.Ordinal));
                 if (assemblyModInterop.Count > 0 && !string.Equals(relative, normalizedDeclaredEntry, StringComparison.Ordinal))
                 {
                     Record($"{relative}:DEFERRED_UNLINKED_MODINTEROP_ASSEMBLY", CompatibilityClass.MODINTEROP_DEFERRED);
@@ -89,7 +91,8 @@ internal static class CompatibilityAnalyzer
             {
                 declaredAssembly = normalized;
                 declaration = AssemblyFreezer.InspectDeclaration(Path.Combine(input.StagingRoot,
-                    normalized.Replace('/', Path.DirectorySeparatorChar)), metadata.Name);
+                    normalized.Replace('/', Path.DirectorySeparatorChar)), metadata.Name,
+                    allowNonPublicCustomFactories: frozenIl.Count > 0);
             }
             else
             {
@@ -99,6 +102,10 @@ internal static class CompatibilityAnalyzer
                 declaration = AssemblyFreezer.ReadSourceDeclaration(declarationPath, metadata.Name);
             }
         }
+
+        if (frozenIl.Count > 0)
+            Record("hash-locked-static-il-event-freeze:" + StaticIlFreeze.PlanSha256(frozenIl),
+                CompatibilityClass.STATIC_IL_EVENT_FREEZE);
 
         if (rejectUnsupported && classification is (CompatibilityClass.MODINTEROP_DEFERRED or CompatibilityClass.ON_HOOK_DEFERRED or CompatibilityClass.IL_HOOK_DEFERRED or CompatibilityClass.DIRECT_HOOK_DEFERRED or
             CompatibilityClass.DYNAMIC_TARGET_DEFERRED or CompatibilityClass.DYNAMIC_DETOUR_DEFERRED or CompatibilityClass.DETOUR_CONFIG_DEFERRED or
@@ -118,7 +125,8 @@ internal static class CompatibilityAnalyzer
             DeclaredAssemblyPath = declaredAssembly,
             ManagedDetourTargets = managedDetourTargets,
             DirectManagedHooks = directManagedHooks,
-            ModInteropRegistrations = modInteropRegistrations
+            ModInteropRegistrations = modInteropRegistrations,
+            FrozenIlTransforms = frozenIl
         };
 
         void Record(string mechanism, CompatibilityClass detected)
@@ -163,7 +171,8 @@ internal static class CompatibilityAnalyzer
         List<DirectManagedHookPlan> directHooks,
         List<ModInteropRegistrationPlan> modInteropRegistrations,
         Action<string, CompatibilityClass> record,
-        bool rejectUnsupported)
+        bool rejectUnsupported,
+        bool registeredStaticIl)
     {
         try
         {
@@ -182,6 +191,7 @@ internal static class CompatibilityAnalyzer
             TypeReference[] residualMonoModUtils = assembly.MainModule.GetTypeReferences().Where(type =>
                 type.Scope is AssemblyNameReference reference && reference.Name == "MonoMod.Utils" &&
                 type.Namespace != "MonoMod.ModInterop" &&
+                !(registeredStaticIl && type.FullName.StartsWith("MonoMod.Cil.", StringComparison.Ordinal)) &&
                 type.FullName != "System.Runtime.CompilerServices.IgnoresAccessChecksToAttribute").ToArray();
             if (residualMonoModUtils.Length != 0)
                 record("DEFERRED_MONOMOD_UTILS_SURFACE:" + string.Join(',', residualMonoModUtils
@@ -191,7 +201,9 @@ internal static class CompatibilityAnalyzer
                          .Where(type => type.Namespace.StartsWith("IL.", StringComparison.Ordinal)))
             {
                 string hookType = type.Namespace + "." + type.Name;
-                record($"il-hook:{hookType}", CompatibilityClass.IL_HOOK_DEFERRED);
+                record($"il-hook:{hookType}", registeredStaticIl
+                    ? CompatibilityClass.STATIC_IL_EVENT_FREEZE
+                    : CompatibilityClass.IL_HOOK_DEFERRED);
             }
             foreach (TypeReference type in assembly.MainModule.GetTypeReferences()
                          .Where(type => type.Namespace == "MonoMod.RuntimeDetour"))
@@ -413,6 +425,7 @@ internal static class CompatibilityAnalyzer
             CompatibilityClass.DIRECT_HOOK_SUPPORTED => 4,
             CompatibilityClass.MIXED_MANAGED_DETOURS_SUPPORTED => 5,
             CompatibilityClass.MODINTEROP_STATIC_SUPPORTED => 6,
+            CompatibilityClass.STATIC_IL_EVENT_FREEZE => 7,
             CompatibilityClass.MODINTEROP_DEFERRED => 8,
             CompatibilityClass.ON_HOOK_DEFERRED => 9,
             CompatibilityClass.IL_HOOK_DEFERRED => 10,

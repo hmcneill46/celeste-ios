@@ -32,10 +32,12 @@ internal static class ClosureGenerator
         List<(ResolvedMod Mod, AppleStaticDeclaration Declaration)> codeModules = [];
         List<ContentMountRecord> stagedContent = [];
         List<FrozenAssemblyRecord> frozenAssemblies = [];
+        List<FrozenIlTransformPlan> frozenIlTransforms = [];
         int sourceIndex = 0;
         for (int modOrder = 0; modOrder < ordered.Count; modOrder++)
         {
             ResolvedMod mod = ordered[modOrder];
+            frozenIlTransforms.AddRange(mod.FrozenIlTransforms);
             if (!string.IsNullOrWhiteSpace(mod.Metadata.DLL))
             {
                 AppleStaticDeclaration declaration = mod.Declaration
@@ -139,6 +141,9 @@ internal static class ClosureGenerator
             modInterop.Source, new UTF8Encoding(false));
         File.WriteAllText(Path.Combine(managed, "AppleEverestExternalAssemblyRoots.props"),
             ExternalAssemblyRootsSource(frozenAssemblies), new UTF8Encoding(false));
+        string frozenIlPlanSha256 = StaticIlFreeze.PlanSha256(frozenIlTransforms);
+        if (frozenIlTransforms.Count > 0)
+            PrepareStaticIlHost(repositoryRoot, ordered, frozenIlTransforms, outputRoot, managed);
 
         IReadOnlyList<FileRecord> managedInventory = Hashing.Inventory(managed);
         IReadOnlyList<FileRecord> contentInventory = Hashing.Inventory(content);
@@ -149,7 +154,7 @@ internal static class ClosureGenerator
         string managedHash = Hashing.LogicalHash(managedInventory);
         string contentHash = Hashing.LogicalHash(contentInventory);
         string sharedClosureHash = Hashing.BytesSha256(Encoding.UTF8.GetBytes(
-            $"{ProductPolicy.TransformerVersion}\nmanaged:{managedHash}\ncontent:{contentHash}\napi-surface:{apiSurfaceHash}\n"));
+            $"{ProductPolicy.TransformerVersion}\nmanaged:{managedHash}\ncontent:{contentHash}\napi-surface:{apiSurfaceHash}\nstatic-il:{frozenIlPlanSha256}\n"));
         object manifest = new
         {
             schemaVersion = 1,
@@ -172,6 +177,26 @@ internal static class ClosureGenerator
             modInteropImportCount = modInterop.ImportCount,
             modInteropResolvedImportCount = modInterop.ResolvedImportCount,
             modInteropPlan = modInterop.Manifest,
+            frozenIlSchema = 1,
+            frozenIlWorker = frozenIlTransforms.Count == 0 ? "absent" : StaticIlFreeze.WorkerVersion,
+            frozenIlPlanSha256,
+            frozenIlTransformCount = frozenIlTransforms.Count,
+            frozenIlTransforms = frozenIlTransforms.Select(plan => new
+            {
+                plan.PlanId,
+                plan.Owner,
+                plan.AssemblySha256,
+                plan.EventType,
+                plan.EventName,
+                plan.TargetMethod,
+                plan.CanonicalTargetMethod,
+                plan.ManipulatorType,
+                plan.ManipulatorMethod,
+                plan.BeforeSha256,
+                plan.AfterSha256,
+                plan.DiffSha256,
+                runtimeUnload = "unsupported-immutable-active"
+            }).ToArray(),
             customEntityFactoryCount = customFactories.Length + CoreGameplayFactories.Count(value => value.Kind == "entity"),
             customBackdropFactoryCount = backdropFactories.Length,
             moduleSettingCount = codeModules.Sum(item => item.Declaration.SettingsProperties.Length),
@@ -207,6 +232,7 @@ internal static class ClosureGenerator
                     : null,
                 mechanisms = mod.Mechanisms,
                 modInteropRegistrations = mod.ModInteropRegistrations.Select(registration => registration.RegisteredType).ToArray(),
+                frozenIlTransforms = mod.FrozenIlTransforms.Select(plan => plan.PlanId).ToArray(),
                 managedFiles = mod.ManagedFiles,
                 contentFiles = mod.ContentFiles
             }).ToArray(),
@@ -315,6 +341,13 @@ internal static class ClosureGenerator
             File.Copy(source, Path.Combine(destination, Path.GetFileName(source)), overwrite: false);
         File.Copy(Path.Combine(closureRoot, "managed", "AppleEverestExternalAssemblyRoots.props"),
             Path.Combine(managedRoot, "AppleEverestExternalAssemblyRoots.props"), overwrite: false);
+        string frozenIlTargets = Path.Combine(closureRoot, "managed", "AppleEverestStaticIl.targets");
+        if (File.Exists(frozenIlTargets))
+        {
+            File.Copy(frozenIlTargets, Path.Combine(managedRoot, "AppleEverestStaticIl.targets"), overwrite: false);
+            CopyDirectory(Path.Combine(closureRoot, "host", "static-il"),
+                Path.Combine(managedRoot, ".AppleEverestStaticIlHost"));
+        }
         string closureAssemblies = Path.Combine(closureRoot, "assemblies");
         if (Directory.Exists(closureAssemblies))
         {
@@ -364,6 +397,7 @@ internal static class ClosureGenerator
         "PinnedEverestABI:DeathMarkers-reviewed-members:v1",
         "HookGen+RuntimeDetour.Hook:shared-data-only-backend:v1",
         "MonoMod.ModInterop:host-cecil-static-typed-plan:v1",
+        "HookGen.IL:hash-locked-host-freeze-immutable:v1",
         "AppleApiSurface:exact-reviewed-external-members:v1",
         "Celeste.Modern.csproj:EVEREST_APPLE_STATIC_AOT:v2",
         "ExternalAssembly:full-trimmer-root:v1"
@@ -425,7 +459,8 @@ internal static class ClosureGenerator
             (string assemblyName, string original, string frozen) = AssemblyFreezer.Freeze(
                 source, destination,
                 module ? mod.DirectManagedHooks : Array.Empty<DirectManagedHookPlan>(),
-                module ? mod.ModInteropRegistrations : Array.Empty<ModInteropRegistrationPlan>());
+                module ? mod.ModInteropRegistrations : Array.Empty<ModInteropRegistrationPlan>(),
+                module ? mod.FrozenIlTransforms : Array.Empty<FrozenIlTransformPlan>());
             frozenAssemblies.Add(new FrozenAssemblyRecord(mod.Metadata.Name, assemblyName, fileName, original, frozen));
         }
     }
@@ -439,6 +474,54 @@ internal static class ClosureGenerator
                 .AppendLine("\" />");
         source.Append("  </ItemGroup>\n</Project>\n");
         return source.ToString();
+    }
+
+    private static void PrepareStaticIlHost(string repositoryRoot, IReadOnlyList<ResolvedMod> mods,
+        IReadOnlyList<FrozenIlTransformPlan> plans, string outputRoot, string managedRoot)
+    {
+        string worker = Path.Combine(repositoryRoot, "tools", "AppleEverestIlWorker", "bin", "Release", "net10.0");
+        string[] required =
+        {
+            "AppleEverestIlWorker.dll", "AppleEverestIlWorker.deps.json", "AppleEverestIlWorker.runtimeconfig.json",
+            "Mono.Cecil.dll", "Mono.Cecil.Rocks.dll", "Mono.Cecil.Pdb.dll", "Mono.Cecil.Mdb.dll", "MonoMod.Utils.dll"
+        };
+        if (required.Any(file => !File.Exists(Path.Combine(worker, file))))
+            throw new InvalidDataException("build the exact pinned AppleEverestIlWorker before creating a frozen-IL closure");
+        string host = Path.Combine(outputRoot, "host", "static-il");
+        Directory.CreateDirectory(host);
+        foreach (string file in required)
+            File.Copy(Path.Combine(worker, file), Path.Combine(host, file), overwrite: false);
+        string fixtures = Path.Combine(host, "fixtures");
+        Directory.CreateDirectory(fixtures);
+        ResolvedMod fixture = mods.Single(mod => mod.Metadata.Name == StaticIlFreeze.FixtureName &&
+            mod.FrozenIlTransforms.Count > 0);
+        string source = Path.Combine(fixture.Input.StagingRoot,
+            fixture.DeclaredAssemblyPath!.Replace('/', Path.DirectorySeparatorChar));
+        File.Copy(source, Path.Combine(fixtures, "DashToggleHelper.original.dll"), overwrite: false);
+        File.WriteAllText(Path.Combine(managedRoot, "AppleEverestStaticIl.targets"),
+            StaticIlFreeze.Targets(plans), new UTF8Encoding(false));
+        File.WriteAllText(Path.Combine(host, "frozen-il-plan.json"), JsonSerializer.Serialize(new
+        {
+            schemaVersion = 1,
+            worker = StaticIlFreeze.WorkerVersion,
+            planSha256 = StaticIlFreeze.PlanSha256(plans),
+            transforms = plans
+        }, new JsonSerializerOptions { WriteIndented = true }) + "\n", new UTF8Encoding(false));
+    }
+
+    private static void CopyDirectory(string sourceRoot, string destinationRoot)
+    {
+        if (!Directory.Exists(sourceRoot))
+            throw new InvalidDataException("static-IL host closure is missing");
+        Directory.CreateDirectory(destinationRoot);
+        foreach (string source in Directory.EnumerateFiles(sourceRoot, "*", SearchOption.AllDirectories)
+                     .OrderBy(path => Path.GetRelativePath(sourceRoot, path), StringComparer.Ordinal))
+        {
+            string relative = Path.GetRelativePath(sourceRoot, source);
+            string destination = Path.Combine(destinationRoot, relative);
+            Directory.CreateDirectory(Path.GetDirectoryName(destination)!);
+            File.Copy(source, destination, overwrite: false);
+        }
     }
 
     private static void PatchLevel(string path) => ReplaceOnce(path,
@@ -636,6 +719,8 @@ internal static class ClosureGenerator
                 .Append(Path.GetFileName(assembly)).AppendLine("</HintPath><Private>true</Private></Reference>");
         }
         references.AppendLine("  </ItemGroup>");
+        if (File.Exists(Path.Combine(closureRoot, "managed", "AppleEverestStaticIl.targets")))
+            references.AppendLine("  <Import Project=\"AppleEverestStaticIl.targets\" />");
         ReplaceOnce(path, "</Project>", references + "</Project>");
     }
 

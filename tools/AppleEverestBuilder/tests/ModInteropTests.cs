@@ -278,7 +278,8 @@ internal static class ModInteropTests
             ContentFiles = [],
             ManagedDetourTargets = new SortedSet<string>(StringComparer.Ordinal),
             DirectManagedHooks = [],
-            ModInteropRegistrations = plans
+            ModInteropRegistrations = plans,
+            FrozenIlTransforms = []
         };
     }
 

@@ -71,9 +71,23 @@ internal static class Program
                             managedFiles = mod.ManagedFiles,
                             contentFileCount = mod.ContentFiles.Count,
                             dependencies = metadata.Dependencies.Select(dependency => new { dependency.Name, dependency.Version }).ToArray(),
+                            frozenIl = mod.FrozenIlTransforms.Select(plan => new
+                            {
+                                plan.PlanId,
+                                plan.EventType,
+                                plan.EventName,
+                                plan.TargetMethod,
+                                plan.ManipulatorType,
+                                plan.ManipulatorMethod,
+                                plan.BeforeSha256,
+                                plan.AfterSha256,
+                                plan.DiffSha256,
+                                runtimeUnload = "unsupported-immutable-active"
+                            }).ToArray(),
                             status = mod.Classification is CompatibilityClass.CONTENT_ONLY or CompatibilityClass.STATIC_MODULE or
                                 CompatibilityClass.NORMAL_EVENT or CompatibilityClass.ON_HOOK_SUPPORTED or CompatibilityClass.DIRECT_HOOK_SUPPORTED or
-                                CompatibilityClass.MIXED_MANAGED_DETOURS_SUPPORTED or CompatibilityClass.MODINTEROP_STATIC_SUPPORTED
+                                CompatibilityClass.MIXED_MANAGED_DETOURS_SUPPORTED or CompatibilityClass.MODINTEROP_STATIC_SUPPORTED or
+                                CompatibilityClass.STATIC_IL_EVENT_FREEZE
                                 ? "candidate" : "deferred"
                         });
                     }
