@@ -147,7 +147,8 @@ run(DOTNET8, "run", "--project", REPO / "tools/AppleEverestBuilder/AppleEverestB
     "--output", UPSTREAM, cwd=pathlib.Path("/private/tmp"))
 if run("git", "-C", UPSTREAM / "external/MonoMod", "rev-parse", "HEAD").stdout.strip() != MONOMOD_SHA:
     raise RuntimeError("pinned MonoMod checkout drifted")
-run(DOTNET9, "build", UPSTREAM / "external/MonoMod/src/MonoMod.Utils/MonoMod.Utils.csproj",
+run(DOTNET9, "build",
+    UPSTREAM / "external/MonoMod/src/MonoMod.RuntimeDetour.HookGen/MonoMod.RuntimeDetour.HookGen.csproj",
     "-c", "Release", "-f", "net8.0", "-p:RestoreLockedMode=false", cwd=pathlib.Path("/private/tmp"))
 MONOMOD = UPSTREAM / "external/MonoMod/artifacts/bin/MonoMod.Utils/release_net8.0/MonoMod.Utils.dll"
 if not MONOMOD.is_file():
