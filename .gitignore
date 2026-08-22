@@ -34,6 +34,8 @@ shared/**/bin/
 shared/**/obj/
 tools/AppleEverestBuilder/**/bin/
 tools/AppleEverestBuilder/**/obj/
+tools/AppleEverestIlWorker/**/bin/
+tools/AppleEverestIlWorker/**/obj/
 apple-everest/tests/**/bin/
 apple-everest/tests/**/obj/
 
