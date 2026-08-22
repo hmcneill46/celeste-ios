@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 1,
+  "pinnedMonoMod": "dfc30a1506d37fb88a2c2be004f525205f46a24c",
+  "hostCanaries": [
+    "replace constant",
+    "insert direct static call",
+    "insert branch and label",
+    "alter return value",
+    "create and round-trip local",
+    "remove instruction range"
+  ],
+  "productionRealFixture": [
+    "insert ordinary calls",
+    "branch and label preservation",
+    "local reuse",
+    "exception-region preservation",
+    "noncapturing EmitDelegate lowered by pinned MonoMod to direct static calls",
+    "same-target HookGen On.* wrapper whose orig calls frozen IL body"
+  ],
+  "failClosedCases": [
+    "target fingerprint mismatch",
+    "unexpected registration",
+    "second manipulator on a target",
+    "direct ILHook",
+    "configured ILHook",
+    "throwing or cursor-miss manipulator",
+    "forbidden dynamic-reference output"
+  ]
+}
