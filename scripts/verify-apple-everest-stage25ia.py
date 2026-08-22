@@ -110,6 +110,8 @@ def main() -> int:
               map_info["levelSet"] == "LittleEpic", "SID/LevelSet")
     c.require(map_info["roomCount"] == 8 and map_info["rooms"] ==
               ["1", "2", "3", "4", "5", "6", "7", "heart"], "eight exact rooms")
+    c.require(map_info["startingRoom"] == "1" and map_info["startingSpawn"] ==
+              {"room": "1", "x": 160, "y": 176, "entityId": 0}, "exact starting spawn")
 
     graph = audit["dependencyGraph"]
     c.require(graph["directCodeHelpers"] == ["ChronoHelper", "DJMapHelper"] and

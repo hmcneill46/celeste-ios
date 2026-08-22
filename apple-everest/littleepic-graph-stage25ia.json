@@ -30,7 +30,8 @@
       "levelSet": "LittleEpic",
       "roomCount": 8,
       "rooms": ["1", "2", "3", "4", "5", "6", "7", "heart"],
-      "startingRoom": "1"
+      "startingRoom": "1",
+      "startingSpawn": { "room": "1", "x": 160, "y": 176, "entityId": 0 }
     }
   },
   "dependencyGraph": {

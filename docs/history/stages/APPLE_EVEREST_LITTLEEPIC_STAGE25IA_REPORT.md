@@ -85,6 +85,7 @@ treated as competing production modules.
 | Rooms | `1`, `2`, `3`, `4`, `5`, `6`, `7`, `heart` |
 | Room count | 8 |
 | Start | Room `1` |
+| Starting spawn | Room `1`, `(160, 176)`, entity ID `0` |
 
 Both helper relationships are real rather than metadata-only:
 
