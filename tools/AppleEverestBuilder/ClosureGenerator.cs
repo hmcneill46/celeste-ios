@@ -32,12 +32,11 @@ internal static class ClosureGenerator
         List<(ResolvedMod Mod, AppleStaticDeclaration Declaration)> codeModules = [];
         List<ContentMountRecord> stagedContent = [];
         List<FrozenAssemblyRecord> frozenAssemblies = [];
-        List<FrozenIlTransformPlan> frozenIlTransforms = [];
+        IReadOnlyList<FrozenIlTransformPlan> frozenIlTransforms = ComposeFrozenIlTransforms(ordered);
         int sourceIndex = 0;
         for (int modOrder = 0; modOrder < ordered.Count; modOrder++)
         {
             ResolvedMod mod = ordered[modOrder];
-            frozenIlTransforms.AddRange(mod.FrozenIlTransforms);
             if (!string.IsNullOrWhiteSpace(mod.Metadata.DLL))
             {
                 AppleStaticDeclaration declaration = mod.Declaration
@@ -177,7 +176,7 @@ internal static class ClosureGenerator
             modInteropImportCount = modInterop.ImportCount,
             modInteropResolvedImportCount = modInterop.ResolvedImportCount,
             modInteropPlan = modInterop.Manifest,
-            frozenIlSchema = 1,
+            frozenIlSchema = 2,
             frozenIlWorker = frozenIlTransforms.Count == 0 ? "absent" : StaticIlFreeze.WorkerVersion,
             frozenIlPlanSha256,
             frozenIlTransformCount = frozenIlTransforms.Count,
@@ -192,9 +191,12 @@ internal static class ClosureGenerator
                 plan.CanonicalTargetMethod,
                 plan.ManipulatorType,
                 plan.ManipulatorMethod,
+                plan.ManipulatorIsStatic,
+                plan.RegistrationOrdinal,
                 plan.BeforeSha256,
                 plan.AfterSha256,
                 plan.DiffSha256,
+                plan.ExpectedDelegateTargets,
                 runtimeUnload = "unsupported-immutable-active"
             }).ToArray(),
             customEntityFactoryCount = customFactories.Length + CoreGameplayFactories.Count(value => value.Kind == "entity"),
@@ -317,6 +319,27 @@ internal static class ClosureGenerator
         File.WriteAllText(Path.Combine(outputRoot, "compatibility-manifest.json"),
             JsonSerializer.Serialize(manifest, new JsonSerializerOptions { WriteIndented = true }) + "\n", new UTF8Encoding(false));
         File.WriteAllText(Path.Combine(outputRoot, ".apple-everest-static-closure"), ProductPolicy.TransformerVersion + "\n", new UTF8Encoding(false));
+    }
+
+    internal static IReadOnlyList<FrozenIlTransformPlan> ComposeFrozenIlTransforms(
+        IReadOnlyList<ResolvedMod> ordered)
+    {
+        // Pinned MonoMod appends ordinary unconfigured IL hooks in registration order and
+        // rebuilds the target from its canonical baseline. The resolver's dependency order
+        // establishes module Load order; the registry preserves registration order within a
+        // module. Assign target-local ordinals only after combining those two sequences so
+        // separate modules which target the same method cannot both claim ordinal zero.
+        List<FrozenIlTransformPlan> result = [];
+        foreach (ResolvedMod mod in ordered)
+        {
+            foreach (FrozenIlTransformPlan plan in mod.FrozenIlTransforms)
+            {
+                int registrationOrdinal = result.Count(existing =>
+                    string.Equals(existing.TargetMethod, plan.TargetMethod, StringComparison.Ordinal));
+                result.Add(plan with { RegistrationOrdinal = registrationOrdinal });
+            }
+        }
+        return result;
     }
 
     public static void Apply(string closureRoot, string managedRoot)
@@ -483,7 +506,8 @@ internal static class ClosureGenerator
         string[] required =
         {
             "AppleEverestIlWorker.dll", "AppleEverestIlWorker.deps.json", "AppleEverestIlWorker.runtimeconfig.json",
-            "Mono.Cecil.dll", "Mono.Cecil.Rocks.dll", "Mono.Cecil.Pdb.dll", "Mono.Cecil.Mdb.dll", "MonoMod.Utils.dll"
+            "Mono.Cecil.dll", "Mono.Cecil.Rocks.dll", "Mono.Cecil.Pdb.dll", "Mono.Cecil.Mdb.dll", "MonoMod.Utils.dll",
+            "MonoMod.Backports.dll", "MonoMod.ILHelpers.dll"
         };
         if (required.Any(file => !File.Exists(Path.Combine(worker, file))))
             throw new InvalidDataException("build the exact pinned AppleEverestIlWorker before creating a frozen-IL closure");
@@ -493,16 +517,19 @@ internal static class ClosureGenerator
             File.Copy(Path.Combine(worker, file), Path.Combine(host, file), overwrite: false);
         string fixtures = Path.Combine(host, "fixtures");
         Directory.CreateDirectory(fixtures);
-        ResolvedMod fixture = mods.Single(mod => mod.Metadata.Name == StaticIlFreeze.FixtureName &&
-            mod.FrozenIlTransforms.Count > 0);
-        string source = Path.Combine(fixture.Input.StagingRoot,
-            fixture.DeclaredAssemblyPath!.Replace('/', Path.DirectorySeparatorChar));
-        File.Copy(source, Path.Combine(fixtures, "DashToggleHelper.original.dll"), overwrite: false);
+        foreach (string owner in plans.Select(plan => plan.Owner).Distinct(StringComparer.Ordinal))
+        {
+            ResolvedMod fixture = mods.Single(mod => mod.Metadata.Name == owner &&
+                mod.FrozenIlTransforms.Count > 0);
+            string source = Path.Combine(fixture.Input.StagingRoot,
+                fixture.DeclaredAssemblyPath!.Replace('/', Path.DirectorySeparatorChar));
+            File.Copy(source, Path.Combine(fixtures, owner + ".original.dll"), overwrite: false);
+        }
         File.WriteAllText(Path.Combine(managedRoot, "AppleEverestStaticIl.targets"),
             StaticIlFreeze.Targets(plans), new UTF8Encoding(false));
         File.WriteAllText(Path.Combine(host, "frozen-il-plan.json"), JsonSerializer.Serialize(new
         {
-            schemaVersion = 1,
+            schemaVersion = 2,
             worker = StaticIlFreeze.WorkerVersion,
             planSha256 = StaticIlFreeze.PlanSha256(plans),
             transforms = plans

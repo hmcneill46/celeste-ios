@@ -1,0 +1,205 @@
+{
+  "schemaVersion": 1,
+  "stage": "25H-B",
+  "status": "PASS_YELLOW",
+  "classification": [
+    "STATIC_IL_EVENT_FREEZE",
+    "STATIC_IL_EVENT_SEQUENCE",
+    "STATIC_NONCAPTURING_EMITDELEGATE",
+    "STATIC_COMPILER_SINGLETON_EMITDELEGATE"
+  ],
+  "baseline": {
+    "integrationCommit": "9bc5d75fcaf42571c1575843f943cea39ce626dc",
+    "stage25gHistoricalCommit": "9ffc1460d15bfe69074f55f6f3187d3cb2156365",
+    "stage25fbHistoricalCommit": "6cde1ad9ba93bbd2f57f2867baf3b189b2824b1b",
+    "everestCommit": "4bbde91b8dbaaddef2ceec75ca0cd6d59b3b8d00",
+    "monoModCommit": "dfc30a1506d37fb88a2c2be004f525205f46a24c",
+    "managedDetourTargetCountBefore": 56,
+    "managedDetourTargetCountAfter": 57,
+    "newManagedDetourTargets": [
+      "celeste-player-throw"
+    ]
+  },
+  "originalStage25HCohort": {
+    "realModsOrHelpers": 27,
+    "hookGenIlAddSites": 138,
+    "distinctSubscriptions": 135,
+    "distinctTargets": 115,
+    "targetsWithMultipleSubscribers": 23,
+    "emitDelegateSourceOccurrences": 201,
+    "directIlHookConstructions": 45,
+    "configuredIlHookSourceOccurrences": 4,
+    "note": "The H-A source corpus was not broadened or silently reclassified. Exact source reacquisition was rate-limited during H-B, so unresolved sites stay unresolved."
+  },
+  "emitDelegateTaxonomy": {
+    "originalCohort": {
+      "total": 201,
+      "staticMethodGroupNoCaptureProven": 6,
+      "compilerGeneratedStaticLambdaProven": 0,
+      "immutableLiteralOrValueCaptureProven": 0,
+      "moduleSingletonCaptureProven": 0,
+      "staticConfigurationCaptureProven": 0,
+      "mutableRuntimeObjectCaptureProven": 0,
+      "manipulatorLocalCaptureProven": 0,
+      "reflectionOrDynamicMethodInfoProven": 0,
+      "unknown": 195,
+      "lambdaAdjacentCandidatesWithinUnknown": 38
+    },
+    "additionalRealHBCandidate": {
+      "compilerGeneratedNoncapturingSingletonLambdas": 2,
+      "runtimeParameterDelegates": 2,
+      "capturedHostObjects": 0,
+      "owner": "DisposableTheo 1.0.6"
+    },
+    "acceptedProductionFixturesCombined": {
+      "ordinaryStaticNoncapturingSites": 6,
+      "compilerSingletonNoncapturingSites": 2,
+      "totalExactlyLoweredSites": 8
+    },
+    "deferred": [
+      "primitive captured constant lifting",
+      "module-instance capture",
+      "mutable runtime capture",
+      "manipulator-local or transient capture",
+      "reflection-selected delegate targets"
+    ]
+  },
+  "sequenceSemantics": {
+    "class": "STATIC_IL_EVENT_SEQUENCE",
+    "source": "pinned MonoMod ordinary unconfigured noConfigIlhooks behavior",
+    "order": "resolved dependency/module load order, then registration order within each module",
+    "rebuildBoundary": "one exact canonical baseline body per target",
+    "evolvingBody": true,
+    "intermediateValidation": true,
+    "intermediateHashing": true,
+    "duplicateRegistration": "rejected",
+    "configuredSequences": "DEFERRED_CONFIGURED_IL_SEQUENCE",
+    "runtimeUnapply": false,
+    "policy": "immutable-active installed closure"
+  },
+  "projectOwnedComposition": {
+    "maximumSequenceLength": 3,
+    "sequences": [
+      "neither",
+      "A",
+      "B",
+      "A,B",
+      "B,A",
+      "A,B,C"
+    ],
+    "aThenBResult": 55,
+    "bThenAResult": 43,
+    "aThenBThenCResult": 48,
+    "orderSensitive": true,
+    "desktopMonoModCompared": true,
+    "negativeCases": [
+      "ordinal gap",
+      "duplicate manipulator",
+      "semantic no-op",
+      "plan hash mismatch",
+      "altered baseline",
+      "dangling intermediate branch",
+      "post-failure worker isolation"
+    ]
+  },
+  "selectedFixture": {
+    "name": "DisposableTheo",
+    "version": "1.0.6",
+    "downloadUrl": "https://gamebanana.com/mmdl/929736",
+    "zipSha256": "df291c0175df46682791fb6373c47eb557c47483eca3db96895eba9b5bbe85b5",
+    "dllPath": "DisposableTheo.dll",
+    "dllSha256": "1d47c08238fd0dd29eaa5c6e53a36e7d72942fdb7b7abc2a3870f09fbc952dcc",
+    "sourceLogicalSha256": "fc6aa15ee69311eac205af76e382d8a09dfb16ebe73eb05163ba90da7c21d597",
+    "license": "No license declaration was located; external fixture bytes are not redistributed.",
+    "authoritativeInput": "ordinary public release ZIP and precompiled DLL",
+    "sourceRequiredForProduction": false,
+    "ordinaryIlRegistrations": 2,
+    "ordinaryOnRegistrations": 2,
+    "directIlHook": false,
+    "configuredIlHook": false,
+    "newHBSemantics": [
+      "instance IL manipulator owner",
+      "compiler-generated singleton noncapturing EmitDelegate",
+      "delegate consumes and returns runtime stack values"
+    ],
+    "behavior": "Theo may be discarded by death/out-of-bounds paths instead of being forced through vanilla tracker handling."
+  },
+  "acceptedRealTransforms": [
+    {
+      "owner": "DisposableTheo",
+      "ordinal": 0,
+      "target": "System.Void Celeste.TheoCrystal::Die()",
+      "manipulator": "Celeste.Mod.DisposableTheo.DisposableTheoModule::TheoCrystal_Die",
+      "beforeSha256": "ec6294022668396295da4d81b61192b01bcbc9e898399d94a8a74251d3c87911",
+      "afterSha256": "c538112f327281bfd4fa0af488a3ee175ff8662a63bfd3fced969e1d8e52ba55",
+      "diffSha256": "107ea6b57c066477eda086f303ca7331c86adbe40964fe30a266d27691c02987",
+      "delegateTarget": "Celeste.Mod.DisposableTheo.DisposableTheoModule+<>c::<TheoCrystal_Die>b__9_0"
+    },
+    {
+      "owner": "DisposableTheo",
+      "ordinal": 0,
+      "target": "System.Void Celeste.Level::EnforceBounds(Celeste.Player)",
+      "manipulator": "Celeste.Mod.DisposableTheo.DisposableTheoModule::Level_EnforceBounds",
+      "beforeSha256": "90f8c7928bd3cf8fff7db66aaebc122dc4f8082a947e41b78d5bba7d0021c1ac",
+      "afterSha256": "025cf84ebf83868acd00f5bab4bc7c028f6190159e89c4199ec08d03db5ecd78",
+      "diffSha256": "480bd4cdc59a703a66658d048a57067eebc55bde531c52acf344b6a3d3694fc1",
+      "delegateTarget": "Celeste.Mod.DisposableTheo.DisposableTheoModule+<>c::<Level_EnforceBounds>b__10_0"
+    }
+  ],
+  "realMultipleManipulatorEvidence": {
+    "sameTargetSequenceLocated": false,
+    "assessment": "YELLOW: none of the selected exact public high-value fixture closures provided two independently registered real ordinary manipulators on the same target. The sequence engine is proven against pinned MonoMod with project-owned A/B/C conformance only."
+  },
+  "stage25GGraphMapping": [
+    { "graph": "NightClimb", "ilHelpers": ["ContortHelper", "MaxHelpingHand"], "eventTypeFamilies": ["unresolved broad IL/RuntimeDetour"], "hBResult": "not exact-registered" },
+    { "graph": "obby", "ilHelpers": ["AchievementHelper", "SorbetHelper", "MaxHelpingHand"], "eventTypeFamilies": ["unresolved broad IL/RuntimeDetour"], "hBResult": "not exact-registered" },
+    { "graph": "MountBaker", "ilHelpers": ["MoreDasheline", "MaxHelpingHand", "DJMapHelper"], "eventTypeFamilies": ["IL.Celeste.FlingBird", "IL.Celeste.Player", "unresolved broad IL/RuntimeDetour"], "hBResult": "not exact-registered" },
+    { "graph": "void", "ilHelpers": ["BrokemiaHelper", "ChronoHelper", "MaxHelpingHand"], "eventTypeFamilies": ["IL.Celeste.Solid", "unresolved broad IL/RuntimeDetour"], "hBResult": "not exact-registered" },
+    { "graph": "Astraeus", "ilHelpers": ["OutbackHelper", "MaxHelpingHand", "PandorasBox"], "eventTypeFamilies": ["IL.Celeste.Player", "IL.Celeste.TalkComponent", "unresolved broad IL/RuntimeDetour"], "hBResult": "not exact-registered" },
+    { "graph": "LittleEpic's Precision Challenge", "ilHelpers": ["ChronoHelper", "DJMapHelper"], "eventTypeFamilies": ["IL.Celeste.Solid", "IL.Celeste.FlingBird", "IL.Celeste.Player"], "hBResult": "not exact-registered" },
+    { "graph": "Wholesome Theo Gameplay", "ilHelpers": ["ExtendedVariantMode", "DJMapHelper"], "eventTypeFamilies": ["IL.Celeste.FlingBird", "IL.Celeste.Player", "unresolved variant IL"], "hBResult": "not exact-registered" },
+    { "graph": "QLetterAurora", "ilHelpers": ["CpopHelper", "CaeruleaHelper", "MaxHelpingHand", "LuckyHelper"], "eventTypeFamilies": ["IL.Celeste.BackdropRenderer", "IL.Celeste.NorthernLights", "IL.Celeste.Player", "IL.Celeste.Spikes", "IL.Celeste.StarJumpBlock", "IL.Celeste.Strawberry", "direct ILHook"], "hBResult": "not exact-registered" },
+    { "graph": "TeraBlast", "ilHelpers": ["TeraHelper", "MaxHelpingHand"], "eventTypeFamilies": ["IL.Celeste.BounceBlock", "IL.Celeste.FallingBlock", "IL.Celeste.Platform", "IL.Celeste.Player", "IL.Celeste.Solid", "IL.Celeste.Spring", "IL.Celeste.TriggerSpikes", "direct ILHook"], "hBResult": "not exact-registered" },
+    { "graph": "GLACEIR", "ilHelpers": ["BrokemiaHelper", "DBBHelper", "ContortHelper"], "eventTypeFamilies": ["IL.Celeste.Level", "unresolved helper IL"], "hBResult": "not exact-registered" },
+    { "graph": "The Fall", "ilHelpers": ["LunaticHelper", "DJMapHelper"], "eventTypeFamilies": ["IL.Celeste.FlingBird", "IL.Celeste.Player", "configured detour"], "hBResult": "not exact-registered" },
+    { "graph": "Lightning Strike", "ilHelpers": ["BrokemiaHelper", "AdventureHelper"], "eventTypeFamilies": ["unresolved helper IL"], "hBResult": "not exact-registered" },
+    { "graph": "Coffee Pot Crystal Heaven", "ilHelpers": ["CrystallineHelper", "SafeRespawnCrumble"], "eventTypeFamilies": ["IL.Celeste.Player", "IL.Monocle.Engine", "IL.Monocle.EntityList", "IL.Monocle.RendererList", "direct/configured ILHook"], "hBResult": "not exact-registered" },
+    { "graph": "StupidLava", "ilHelpers": ["BounceHelper", "CrystallineHelper"], "eventTypeFamilies": ["IL.Celeste.Player", "IL.Monocle.Engine", "IL.Monocle.EntityList", "IL.Monocle.RendererList", "direct/configured ILHook"], "hBResult": "not exact-registered" },
+    { "graph": "Blue Ice", "ilHelpers": ["ShroomHelper", "CrystallineHelper"], "eventTypeFamilies": ["IL.Celeste.Player", "IL.Monocle.Engine", "IL.Monocle.EntityList", "IL.Monocle.RendererList", "direct/configured ILHook"], "hBResult": "not exact-registered" },
+    { "graph": "sillymap1", "ilHelpers": ["GravityHelper", "ShroomHelper"], "eventTypeFamilies": ["unresolved helper IL"], "hBResult": "not exact-registered" },
+    { "graph": "Space Trip", "ilHelpers": ["VortexHelper", "LunaticHelper"], "eventTypeFamilies": ["configured detour", "unresolved helper IL"], "hBResult": "not exact-registered" },
+    { "graph": "8bb1b", "ilHelpers": ["FlaglinesAndSuch", "BounceHelper", "CrystallineHelper"], "eventTypeFamilies": ["IL.Celeste.Player", "IL.Monocle.Engine", "IL.Monocle.EntityList", "IL.Monocle.RendererList", "direct/configured ILHook"], "hBResult": "not exact-registered" }
+  ],
+  "stage25GPayoff": {
+    "ilPrimaryGraphsAudited": 18,
+    "materiallyAdvancedByExactHBCandidate": 0,
+    "graphsWithNoRemainingIlBlocker": 0,
+    "graphsWithNoOverallBlocker": 0,
+    "broaderCandidateMapsDependingOnDisposableTheo": [
+      "Dbdmap",
+      "Colden Ridge",
+      "MadelineGoesSpelunking",
+      "Second Peak",
+      "Loenn101",
+      "boghantest"
+    ],
+    "assessment": "DisposableTheo advances the broader Stage 25G candidate corpus but was not a dependency in the exact 18 IL-primary deep graphs. No Stage 25G historical result is relabelled."
+  },
+  "deferredClasses": [
+    "DEFERRED_DIRECT_ILHOOK",
+    "DEFERRED_CONFIGURED_ILHOOK",
+    "DEFERRED_CONFIGURED_IL_SEQUENCE",
+    "DEFERRED_CAPTURED_MODULE_INSTANCE",
+    "DEFERRED_MUTABLE_CAPTURE",
+    "DEFERRED_HOST_LOCAL_CAPTURE",
+    "runtime IL unapply"
+  ],
+  "unchangedLocks": {
+    "canonicalContent": "30a1c147d1a3ab0aa45762094e393ed7fd69951dd66e5af063447641e0699c46",
+    "canonicalRaw": "db7b722159fbdef8625c81608165aea162957dce956fcd5b16eeceaa1089a273",
+    "canonicalPatched": "0c6515adadf58251ab2da66c6c61a1f61bd19b85f5dcdd4f1280552af650a4b5",
+    "canonicalStage6": "1a981bc5994261775c1fea497cd042780fdbbcb24b7390a2f4db6aab1be747d9",
+    "iosNative": "9fb302d221180e39f270ea5ebf48e18433b67bd0a40943c042a227fe0f8ad6a2",
+    "tvosNative": "6286e0545b32e9c56732955d4cf816ed8f5dc0d816ab610dd9fe1752090a01fc"
+  }
+}

@@ -1,0 +1,5 @@
+- Name: AppleEverestStaticIlComposeContentCanary
+  Version: 1.0.0
+  Dependencies:
+    - Name: DisposableTheo
+      Version: 1.0.6

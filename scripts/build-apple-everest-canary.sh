@@ -129,14 +129,22 @@ fi
 # project-owned data-only room in Canary products so physical acceptance tests
 # the real frozen spinner/block behavior rather than only successful startup.
 static_il_fixture_sha="677e8fbd067340d7b3133cc908e4ecafc0f5deab2c38b7eeb79a62eb5f61d523"
+static_il_compose_fixture_sha="df291c0175df46682791fb6373c47eb557c47483eca3db96895eba9b5bbe85b5"
 include_static_il_canary=0
+include_static_il_compose_canary=0
 for mod in "${MODS[@]}"; do
   if [[ -f "$mod" && "$(shasum -a 256 "$mod" | awk '{print $1}')" == "$static_il_fixture_sha" ]]; then
     include_static_il_canary=1
   fi
+  if [[ -f "$mod" && "$(shasum -a 256 "$mod" | awk '{print $1}')" == "$static_il_compose_fixture_sha" ]]; then
+    include_static_il_compose_canary=1
+  fi
 done
 if ((include_static_il_canary)); then
   MODS+=("$REPO_ROOT/apple-everest/canaries/static-il-content")
+fi
+if ((include_static_il_compose_canary)); then
+  MODS+=("$REPO_ROOT/apple-everest/canaries/static-il-compose-content")
 fi
 mod_args=()
 for mod in "${MODS[@]}"; do mod_args+=(--mod "$mod"); done

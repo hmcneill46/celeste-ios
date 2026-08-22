@@ -222,21 +222,25 @@ deferred until an exact distributed input is accepted.
 ## Build-time frozen HookGen IL
 
 Desktop HookGen `IL.*` normally constructs an `ILHook` and rewrites a live
-method. Stage 25H-A introduces a different, bounded Apple mechanism:
+method. Stages 25H-A/B use a different, bounded Apple mechanism:
 
 ```text
 exact release ZIP + precompiled DLL
   -> discover exact IL event add/remove registrations
   -> require exact normalized target-body SHA-256
-  -> isolated Mac host invokes the real pinned manipulator
-  -> validate and hash normalized final IL and semantic diff
+  -> isolated Mac host invokes real pinned manipulator A
+  -> validate/hash the intermediate body
+  -> invoke B, then C, in pinned registration order where registered
+  -> validate/hash every intermediate and the final semantic diff
+  -> lower reviewed dynamic delegate cells to ordinary rooted calls
   -> remove device IL subscriptions and host-only manipulator infrastructure
   -> root injected ordinary methods
   -> full trim + full AOT for the shared iOS/tvOS closure
 ```
 
-The initial `STATIC_IL_EVENT_FREEZE` class accepts only one reviewed static
-HookGen manipulator per target. The dedicated host worker receives explicit
+`STATIC_IL_EVENT_FREEZE` accepts one reviewed HookGen manipulator per target;
+`STATIC_IL_EVENT_SEQUENCE` accepts two or more exact ordinary unconfigured
+registrations. The dedicated host worker receives explicit
 hash-pinned assemblies, target and manipulator identities, and output paths.
 It uses pinned MonoMod commit `dfc30a1506d37fb88a2c2be004f525205f46a24c`
 and fails before mutation if the target fingerprint differs. A throwing
@@ -248,9 +252,40 @@ In particular, no `DynamicReferenceManager` cell survives.
 The selected Dash Toggle Helper 1.1.0 release uses noncapturing
 `EmitDelegate`. Pinned MonoMod resolves those delegates while building into
 ordinary direct calls to statically rooted methods in the frozen mod DLL; no
-dynamic-reference cell is present in final device IL. This is not a generic
-promise for `EmitDelegate`: captured closures and dynamic references remain
-deferred.
+dynamic-reference cell is present in final device IL. Stage 25H-B's real
+Disposable Theo 1.0.6 DLL broadens that lowering to compiler-generated
+noncapturing singleton lambdas. The worker preserves the delegate's typed
+runtime parameters and return value using normal locals, the exact rooted
+`<>c` singleton field, and an ordinary method call. It never serializes the Mac closure object.
+Captured constants, module/runtime state, mutable or
+transient captures, and dynamically selected delegates remain deferred.
+
+For a same-target sequence, pinned MonoMod ordering is reproduced exactly:
+
+```text
+canonical baseline body
+        ↓
+manipulator A → validate/hash
+        ↓
+manipulator B → validate/hash
+        ↓
+manipulator C → validate/hash (when present)
+        ↓
+delegate/reference lowering and final validation
+        ↓
+normal typed On/direct-Hook wrapper boundary
+        ↓
+full trim + full AOT
+```
+
+Resolved dependency/module load order is primary; declaration order within a
+module is secondary. The complete ordered sequence—not independently persisted
+partial patches—owns the target. Duplicate registrations, ordinal gaps, a
+no-op, an altered baseline, malformed intermediate branches, and changed
+intermediate/final hashes fail closed. The project-owned order-sensitive
+A→B/B→A/A→B→C conformance matches pinned desktop MonoMod. A real high-value
+two-manipulator same-target fixture was not found, so that physical evidence is
+still explicitly pending.
 
 Transform order is shared and platform-neutral. The reviewed managed-detour
 rewrite first creates the canonical typed `On.*` wrapper/original boundary;
@@ -265,8 +300,8 @@ hooks. The module is immutable-active for that installed build. Runtime unload
 or live disable is unsupported; removing the mod means rebuilding and
 reinstalling a closure which omits it, at which point the exact baseline
 method remains untouched. Multiple manipulators on one target, direct
-`new ILHook(...)`, configured IL ordering, dynamic targets, and runtime unapply
-are later compatibility classes.
+`new ILHook(...)`, configured IL ordering, dynamic targets, captured delegates,
+and runtime unapply are later compatibility classes.
 
 ## Current real-ZIP evidence
 

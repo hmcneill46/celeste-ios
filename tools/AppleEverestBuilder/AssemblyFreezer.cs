@@ -225,18 +225,12 @@ internal static class AssemblyFreezer
     {
         if (type.DeclaringType == null)
         {
-            type.IsPublic = true;
-            type.IsNotPublic = false;
+            type.Attributes = (type.Attributes & ~TypeAttributes.VisibilityMask) | TypeAttributes.Public;
         }
         else
         {
             MakePublic(type.DeclaringType);
-            type.IsNestedPublic = true;
-            type.IsNestedPrivate = false;
-            type.IsNestedFamily = false;
-            type.IsNestedAssembly = false;
-            type.IsNestedFamilyAndAssembly = false;
-            type.IsNestedFamilyOrAssembly = false;
+            type.Attributes = (type.Attributes & ~TypeAttributes.VisibilityMask) | TypeAttributes.NestedPublic;
         }
     }
 

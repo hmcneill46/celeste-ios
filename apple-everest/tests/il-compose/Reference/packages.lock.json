@@ -1,7 +1,7 @@
 {
   "version": 1,
   "dependencies": {
-    "net10.0": {
+    "net8.0": {
       "Mono.Cecil": {
         "type": "Direct",
         "requested": "[0.11.6, )",
@@ -22,6 +22,14 @@
         "requested": "[1.1.0, )",
         "resolved": "1.1.0",
         "contentHash": "L2FWjhTrv7tcIxshfZ+M3OcaNr4cNw0IwiVZEgwqRnZ5QAN3+RrNJ8ZwCzwXUWyPDqooJxMcjjg8PsSYUiNBjQ=="
+      },
+      "AppleEverestIlComposeManipulators": {
+        "type": "Project",
+        "dependencies": {
+          "Mono.Cecil": "[0.11.6, )",
+          "MonoMod.Backports": "[1.1.2, )",
+          "MonoMod.ILHelpers": "[1.1.0, )"
+        }
       }
     }
   }

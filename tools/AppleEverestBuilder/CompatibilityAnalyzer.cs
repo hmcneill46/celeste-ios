@@ -105,7 +105,9 @@ internal static class CompatibilityAnalyzer
 
         if (frozenIl.Count > 0)
             Record("hash-locked-static-il-event-freeze:" + StaticIlFreeze.PlanSha256(frozenIl),
-                CompatibilityClass.STATIC_IL_EVENT_FREEZE);
+                frozenIl.GroupBy(plan => plan.TargetMethod, StringComparer.Ordinal).Any(group => group.Count() > 1)
+                    ? CompatibilityClass.STATIC_IL_EVENT_SEQUENCE
+                    : CompatibilityClass.STATIC_IL_EVENT_FREEZE);
 
         if (rejectUnsupported && classification is (CompatibilityClass.MODINTEROP_DEFERRED or CompatibilityClass.ON_HOOK_DEFERRED or CompatibilityClass.IL_HOOK_DEFERRED or CompatibilityClass.DIRECT_HOOK_DEFERRED or
             CompatibilityClass.DYNAMIC_TARGET_DEFERRED or CompatibilityClass.DYNAMIC_DETOUR_DEFERRED or CompatibilityClass.DETOUR_CONFIG_DEFERRED or
@@ -426,17 +428,18 @@ internal static class CompatibilityAnalyzer
             CompatibilityClass.MIXED_MANAGED_DETOURS_SUPPORTED => 5,
             CompatibilityClass.MODINTEROP_STATIC_SUPPORTED => 6,
             CompatibilityClass.STATIC_IL_EVENT_FREEZE => 7,
-            CompatibilityClass.MODINTEROP_DEFERRED => 8,
-            CompatibilityClass.ON_HOOK_DEFERRED => 9,
-            CompatibilityClass.IL_HOOK_DEFERRED => 10,
-            CompatibilityClass.DIRECT_HOOK_DEFERRED => 11,
-            CompatibilityClass.DYNAMIC_TARGET_DEFERRED => 12,
-            CompatibilityClass.DYNAMIC_DETOUR_DEFERRED => 13,
-            CompatibilityClass.DETOUR_CONFIG_DEFERRED => 14,
-            CompatibilityClass.DYNAMIC_CODE_UNSUPPORTED => 15,
-            CompatibilityClass.NATIVE_UNSUPPORTED => 16,
-            CompatibilityClass.LUA_UNSUPPORTED => 17,
-            CompatibilityClass.PLATFORM_UNSUPPORTED => 18,
+            CompatibilityClass.STATIC_IL_EVENT_SEQUENCE => 8,
+            CompatibilityClass.MODINTEROP_DEFERRED => 9,
+            CompatibilityClass.ON_HOOK_DEFERRED => 10,
+            CompatibilityClass.IL_HOOK_DEFERRED => 11,
+            CompatibilityClass.DIRECT_HOOK_DEFERRED => 12,
+            CompatibilityClass.DYNAMIC_TARGET_DEFERRED => 13,
+            CompatibilityClass.DYNAMIC_DETOUR_DEFERRED => 14,
+            CompatibilityClass.DETOUR_CONFIG_DEFERRED => 15,
+            CompatibilityClass.DYNAMIC_CODE_UNSUPPORTED => 16,
+            CompatibilityClass.NATIVE_UNSUPPORTED => 17,
+            CompatibilityClass.LUA_UNSUPPORTED => 18,
+            CompatibilityClass.PLATFORM_UNSUPPORTED => 19,
             _ => 99
         };
         return Rank(detected) > Rank(current) ? detected : current;

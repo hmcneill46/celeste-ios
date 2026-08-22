@@ -165,6 +165,14 @@
       "isStatic": false, "receiverType": "global::Celeste.Player", "returnType": "void", "parameters": []
     },
     {
+      "id": "celeste-player-throw",
+      "sourceFile": "Celeste/Player.cs", "sourceDeclaration": "public void Throw()",
+      "originalDeclaration": "private void AppleEverestOriginal_Throw()", "originalAlias": "AppleEverestOriginal_Throw",
+      "hookNamespace": "On.Celeste", "hookType": "Player", "eventName": "Throw",
+      "origDelegate": "orig_Throw", "hookDelegate": "hook_Throw",
+      "isStatic": false, "receiverType": "global::Celeste.Player", "returnType": "void", "parameters": []
+    },
+    {
       "id": "celeste-player-removed",
       "sourceFile": "Celeste/Player.cs", "sourceDeclaration": "public override void Removed(Scene scene)",
       "originalDeclaration": "private void AppleEverestOriginal_Removed(Scene scene)", "originalAlias": "AppleEverestOriginal_Removed",

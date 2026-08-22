@@ -9,7 +9,7 @@ internal static class ProductPolicy
     public const long MaxSingleFileBytes = 64L * 1024 * 1024;
     public const int MaxPathDepth = 24;
     public const int MaxYamlBytes = 1024 * 1024;
-    public const string TransformerVersion = "apple-everest-static-v8";
+    public const string TransformerVersion = "apple-everest-static-v9";
     public const string CanonicalClass = "celeste-1.4.0.0-a";
 }
 
@@ -135,6 +135,7 @@ internal enum CompatibilityClass
     MIXED_MANAGED_DETOURS_SUPPORTED,
     MODINTEROP_STATIC_SUPPORTED,
     STATIC_IL_EVENT_FREEZE,
+    STATIC_IL_EVENT_SEQUENCE,
     MODINTEROP_DEFERRED,
     ON_HOOK_DEFERRED,
     IL_HOOK_DEFERRED,
@@ -212,10 +213,13 @@ internal sealed record FrozenIlTransformPlan(
     string CanonicalTargetMethod,
     string ManipulatorType,
     string ManipulatorMethod,
+    bool ManipulatorIsStatic,
+    int RegistrationOrdinal,
     string BeforeSha256,
     string AfterSha256,
     string DiffSha256,
-    string[] InjectedMethods);
+    string[] InjectedMethods,
+    string[] ExpectedDelegateTargets);
 
 internal sealed class ModInput
 {

@@ -5,6 +5,7 @@ using System.Text.Json;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
 using MonoMod.Cil;
+using MonoMod.Utils;
 
 internal static class Program
 {
@@ -12,28 +13,83 @@ internal static class Program
     {
         public string Target = "";
         public string Output = "";
-        public string Mod = "";
+        public string Plan = "";
         public string TargetMethod = "";
-        public string CanonicalTargetMethod = "";
-        public string ManipulatorType = "";
-        public string ManipulatorMethod = "";
-        public string ExpectedBefore = "";
-        public string ExpectedAfter = "";
-        public string ExpectedDiff = "";
         public string Manifest = "";
         public readonly List<string> RuntimeDirectories = new();
     }
+
+    private sealed class PlanDocument
+    {
+        public int SchemaVersion { get; set; }
+        public string Worker { get; set; } = "";
+        public string PlanSha256 { get; set; } = "";
+        public Transform[] Transforms { get; set; } = [];
+    }
+
+    private sealed class Transform
+    {
+        public string PlanId { get; set; } = "";
+        public string Owner { get; set; } = "";
+        public string AssemblySha256 { get; set; } = "";
+        public string EventType { get; set; } = "";
+        public string EventName { get; set; } = "";
+        public string TargetMethod { get; set; } = "";
+        public string CanonicalTargetMethod { get; set; } = "";
+        public string ManipulatorType { get; set; } = "";
+        public string ManipulatorMethod { get; set; } = "";
+        public bool ManipulatorIsStatic { get; set; }
+        public int RegistrationOrdinal { get; set; }
+        public string BeforeSha256 { get; set; } = "";
+        public string AfterSha256 { get; set; } = "";
+        public string DiffSha256 { get; set; } = "";
+        public string[] ExpectedDelegateTargets { get; set; } = [];
+    }
+
+    private sealed record DelegateLowering(string Kind, string Target, int ParameterCount);
+    private sealed record StepEvidence(string PlanId, string Owner, int RegistrationOrdinal,
+        string BeforeSha256, string AfterSha256, string NormalizedDiffSha256,
+        string BeforeNormalizedIl, string AfterNormalizedIl, string NormalizedDiff,
+        DelegateLowering[] DelegateLowerings);
 
     private static int Main(string[] args)
     {
         try
         {
             Options options = Parse(args);
-            InstallResolver(options);
+            PlanDocument document = JsonSerializer.Deserialize<PlanDocument>(File.ReadAllText(options.Plan),
+                new JsonSerializerOptions { PropertyNameCaseInsensitive = true })
+                ?? throw new InvalidDataException("frozen-IL plan is empty");
+            if (document.SchemaVersion != 2 || document.Worker != "apple-everest-static-il-worker-v2")
+                throw new InvalidDataException("unsupported frozen-IL plan schema/worker");
+            string actualPlanSha256 = PlanSha256(document.Transforms);
+            if (!string.Equals(document.PlanSha256, actualPlanSha256, StringComparison.OrdinalIgnoreCase))
+                throw new InvalidDataException($"frozen-IL plan hash mismatch: expected {document.PlanSha256}; actual {actualPlanSha256}");
+            Transform[] transforms = document.Transforms.Where(transform =>
+                transform.TargetMethod == options.TargetMethod).ToArray();
+            if (transforms.Length == 0)
+                throw new InvalidDataException("target has no registered transforms");
+            if (transforms.Select(transform => transform.CanonicalTargetMethod).Distinct(StringComparer.Ordinal).Count() != 1 ||
+                transforms.Select((transform, ordinal) => transform.RegistrationOrdinal == ordinal).Any(value => !value))
+                throw new InvalidDataException("same-target registration order is not closed and contiguous");
+            if (transforms.Any(transform => string.Equals(transform.BeforeSha256, transform.AfterSha256,
+                    StringComparison.OrdinalIgnoreCase)) ||
+                transforms.Skip(1).Select((transform, index) => string.Equals(transform.BeforeSha256,
+                    transforms[index].AfterSha256, StringComparison.OrdinalIgnoreCase)).Any(matches => !matches))
+                throw new InvalidDataException("same-target intermediate hash chain is not closed or contains a no-op");
+            string[] duplicateManipulators = transforms.GroupBy(transform => string.Join('\0',
+                    transform.AssemblySha256, transform.ManipulatorType, transform.ManipulatorMethod),
+                    StringComparer.Ordinal)
+                .Where(group => group.Count() > 1).Select(group => group.First().ManipulatorType + "::" +
+                    group.First().ManipulatorMethod).OrderBy(value => value, StringComparer.Ordinal).ToArray();
+            if (duplicateManipulators.Length != 0)
+                throw new InvalidDataException("duplicate frozen-IL manipulator registration: " +
+                    string.Join(',', duplicateManipulators));
+            InstallResolver(options, transforms);
 
             DefaultAssemblyResolver cecilResolver = new();
             foreach (string directory in options.RuntimeDirectories.Concat(new[]
-                     { Path.GetDirectoryName(options.Target)!, Path.GetDirectoryName(options.Mod)! }).Distinct())
+                     { Path.GetDirectoryName(options.Target)!, Path.Combine(Path.GetDirectoryName(options.Plan)!, "fixtures") }).Distinct())
                 cecilResolver.AddSearchDirectory(directory);
 
             ReaderParameters reader = new() { AssemblyResolver = cecilResolver, ReadSymbols = false };
@@ -42,9 +98,10 @@ internal static class Program
                 .SingleOrDefault(method => method.FullName == options.TargetMethod)
                 ?? throw new InvalidDataException("exact target method not found: " + options.TargetMethod);
 
-            string beforeText = Normalize(target, options.CanonicalTargetMethod);
+            string canonicalTarget = transforms[0].CanonicalTargetMethod;
+            string beforeText = Normalize(target, canonicalTarget);
             string before = Sha256(beforeText);
-            if (string.Equals(before, options.ExpectedAfter, StringComparison.OrdinalIgnoreCase))
+            if (string.Equals(before, transforms[^1].AfterSha256, StringComparison.OrdinalIgnoreCase))
             {
                 ValidateBody(target);
                 string[] alreadyFrozenReferences = target.Body.Instructions.Select(ReferenceIdentity)
@@ -57,42 +114,60 @@ internal static class Program
 
                 Directory.CreateDirectory(Path.GetDirectoryName(Path.GetFullPath(options.Output))!);
                 module.Write(options.Output);
-                WriteManifest(options, target.FullName, alreadyFrozen: true,
-                    options.ExpectedBefore, before, options.ExpectedDiff,
-                    beforeNormalizedIl: null, afterNormalizedIl: beforeText,
-                    normalizedDiff: null, alreadyFrozenReferences, alreadyFrozenForbidden);
+                WriteManifest(options, document, target.FullName, alreadyFrozen: true,
+                    transforms[0].BeforeSha256, before, [], beforeText,
+                    alreadyFrozenReferences, alreadyFrozenForbidden);
                 Console.WriteLine($"APPLE_EVEREST_STATIC_IL_ALREADY_FROZEN={before}");
                 return 0;
             }
-            if (!string.Equals(before, options.ExpectedBefore, StringComparison.OrdinalIgnoreCase))
-                throw new InvalidDataException($"target baseline mismatch: expected {options.ExpectedBefore}; actual {before}");
+            if (!string.Equals(before, transforms[0].BeforeSha256, StringComparison.OrdinalIgnoreCase))
+                throw new InvalidDataException($"target baseline mismatch: expected {transforms[0].BeforeSha256}; actual {before}");
 
-            Assembly mod = Assembly.LoadFrom(Path.GetFullPath(options.Mod));
-            Type manipulatorType = mod.GetType(options.ManipulatorType, throwOnError: true, ignoreCase: false)!;
-            MethodInfo manipulatorMethod = manipulatorType.GetMethod(options.ManipulatorMethod,
-                BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic,
-                binder: null, types: new[] { typeof(ILContext) }, modifiers: null)
-                ?? throw new InvalidDataException("exact static manipulator not found");
-            if (!manipulatorMethod.IsStatic || manipulatorMethod.ReturnType != typeof(void))
-                throw new InvalidDataException("only static void(ILContext) manipulators are accepted");
+            List<StepEvidence> steps = [];
+            foreach (Transform transform in transforms)
+            {
+                string currentText = Normalize(target, canonicalTarget);
+                string current = Sha256(currentText);
+                if (!string.Equals(current, transform.BeforeSha256, StringComparison.OrdinalIgnoreCase))
+                    throw new InvalidDataException($"intermediate chain mismatch before {transform.PlanId}: expected {transform.BeforeSha256}; actual {current}");
+                string modPath = Path.Combine(Path.GetDirectoryName(options.Plan)!, "fixtures", transform.Owner + ".original.dll");
+                if (FileSha256(modPath) != transform.AssemblySha256)
+                    throw new InvalidDataException("manipulator fixture hash mismatch: " + transform.Owner);
+                Assembly mod = Assembly.LoadFrom(Path.GetFullPath(modPath));
+                Type manipulatorType = mod.GetType(transform.ManipulatorType, throwOnError: true, ignoreCase: false)!;
+                MethodInfo manipulatorMethod = manipulatorType.GetMethod(transform.ManipulatorMethod,
+                    BindingFlags.Static | BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic,
+                    binder: null, types: new[] { typeof(ILContext) }, modifiers: null)
+                    ?? throw new InvalidDataException("exact manipulator not found");
+                if (manipulatorMethod.IsStatic != transform.ManipulatorIsStatic || manipulatorMethod.ReturnType != typeof(void))
+                    throw new InvalidDataException("manipulator static/instance signature drifted");
+                object? instance = manipulatorMethod.IsStatic ? null : Activator.CreateInstance(manipulatorType)
+                    ?? throw new InvalidDataException("instance manipulator owner could not be constructed");
+                if (Delegate.CreateDelegate(typeof(ILContext.Manipulator), instance, manipulatorMethod,
+                        throwOnBindFailure: true) is not ILContext.Manipulator manipulator)
+                    throw new InvalidDataException("exact manipulator delegate could not be created");
+                DelegateLowering[] lowerings;
+                using (ILContext context = new(target))
+                {
+                    context.Invoke(manipulator);
+                    lowerings = LowerEmitDelegates(target, module, transform.ExpectedDelegateTargets);
+                }
 
-            if (Delegate.CreateDelegate(typeof(ILContext.Manipulator), manipulatorMethod,
-                    throwOnBindFailure: true) is not ILContext.Manipulator manipulator)
-                throw new InvalidDataException("exact manipulator delegate could not be created");
-            using (ILContext context = new(target))
-                context.Invoke(manipulator);
-
-            ValidateBody(target);
-            string afterText = Normalize(target, options.CanonicalTargetMethod);
-            string after = Sha256(afterText);
-            if (before == after)
-                throw new InvalidDataException("manipulator produced no semantic target change");
-
-            string diff = Diff(beforeText, afterText);
-            string diffHash = Sha256(diff);
-            if (!string.Equals(after, options.ExpectedAfter, StringComparison.OrdinalIgnoreCase) ||
-                !string.Equals(diffHash, options.ExpectedDiff, StringComparison.OrdinalIgnoreCase))
-                throw new InvalidDataException($"transformed IL lock mismatch: after={after}; diff={diffHash}");
+                ValidateBody(target);
+                string afterText = Normalize(target, canonicalTarget);
+                string after = Sha256(afterText);
+                if (current == after)
+                    throw new InvalidDataException("manipulator produced no semantic target change: " + transform.PlanId);
+                string diff = Diff(currentText, afterText);
+                string diffHash = Sha256(diff);
+                if (!string.Equals(after, transform.AfterSha256, StringComparison.OrdinalIgnoreCase) ||
+                    !string.Equals(diffHash, transform.DiffSha256, StringComparison.OrdinalIgnoreCase))
+                    throw new InvalidDataException($"transformed IL lock mismatch for {transform.PlanId}: after={after}; diff={diffHash}");
+                steps.Add(new StepEvidence(transform.PlanId, transform.Owner, transform.RegistrationOrdinal,
+                    current, after, diffHash, currentText, afterText, diff, lowerings));
+            }
+            string finalText = Normalize(target, canonicalTarget);
+            string final = Sha256(finalText);
             string[] references = target.Body.Instructions.Select(ReferenceIdentity).Where(value => value != null)
                 .Cast<string>().Distinct(StringComparer.Ordinal).OrderBy(value => value, StringComparer.Ordinal).ToArray();
             string[] forbidden = references.Where(IsForbidden).ToArray();
@@ -101,11 +176,11 @@ internal static class Program
 
             Directory.CreateDirectory(Path.GetDirectoryName(Path.GetFullPath(options.Output))!);
             module.Write(options.Output);
-            WriteManifest(options, target.FullName, alreadyFrozen: false, before, after, diffHash,
-                beforeText, afterText, diff, references, forbidden);
+            WriteManifest(options, document, target.FullName, alreadyFrozen: false, before, final,
+                steps.ToArray(), finalText, references, forbidden);
             Console.WriteLine($"APPLE_EVEREST_STATIC_IL_BEFORE={before}");
-            Console.WriteLine($"APPLE_EVEREST_STATIC_IL_AFTER={after}");
-            Console.WriteLine($"APPLE_EVEREST_STATIC_IL_DIFF={diffHash}");
+            Console.WriteLine($"APPLE_EVEREST_STATIC_IL_AFTER={final}");
+            Console.WriteLine($"APPLE_EVEREST_STATIC_IL_STEPS={steps.Count}");
             return 0;
         }
         catch (Exception exception)
@@ -116,22 +191,114 @@ internal static class Program
         }
     }
 
-    private static void WriteManifest(Options options, string target, bool alreadyFrozen,
-        string before, string after, string diffHash, string? beforeNormalizedIl,
-        string afterNormalizedIl, string? normalizedDiff, string[] references, string[] forbidden)
+    private static DelegateLowering[] LowerEmitDelegates(MethodDefinition method, ModuleDefinition module,
+        IReadOnlyList<string> expectedTargets)
+    {
+        List<DelegateLowering> lowered = [];
+        Mono.Collections.Generic.Collection<Instruction> body = method.Body.Instructions;
+        for (int index = 0; index + 3 < body.Count; index++)
+        {
+            if (!TryReadInt32(body[index], out int cellIndex) ||
+                !TryReadInt32(body[index + 1], out int cellHash) ||
+                body[index + 2].Operand is not MethodReference get ||
+                get.DeclaringType.FullName != "MonoMod.Utils.DynamicReferenceManager" ||
+                body[index + 3].Operand is not GenericInstanceMethod invoke ||
+                !invoke.ElementMethod.DeclaringType.FullName.StartsWith("MonoMod.Cil.FastDelegateInvokers", StringComparison.Ordinal))
+                continue;
+
+            Delegate emitted = DynamicReferenceManager.GetValue<Delegate>(new DynamicReferenceCell(cellIndex, cellHash))
+                ?? throw new InvalidDataException("EmitDelegate dynamic cell did not contain a delegate");
+            string identity = emitted.Method.DeclaringType!.FullName + "::" + emitted.Method.Name;
+            if (!expectedTargets.Contains(identity, StringComparer.Ordinal))
+                throw new InvalidDataException("unreviewed EmitDelegate target: " + identity);
+            ILProcessor processor = method.Body.GetILProcessor();
+            MethodReference importedMethod = module.ImportReference(emitted.Method);
+            ParameterInfo[] parameters = emitted.Method.GetParameters();
+            List<Instruction> replacement = [];
+            string kind;
+            if (emitted.Target == null)
+            {
+                kind = "static-noncapturing";
+                replacement.Add(Instruction.Create(OpCodes.Call, importedMethod));
+            }
+            else
+            {
+                Type targetType = emitted.Target.GetType();
+                if (targetType.GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic).Length != 0)
+                    throw new InvalidDataException("capturing EmitDelegate closure is deferred: " + identity);
+                FieldInfo[] matching = targetType.GetFields(BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic)
+                    .Where(field => object.ReferenceEquals(field.GetValue(null), emitted.Target)).ToArray();
+                if (matching.Length != 1)
+                    throw new InvalidDataException("noncapturing EmitDelegate singleton is not unambiguous: " + identity);
+                kind = "compiler-singleton-noncapturing";
+                VariableDefinition[] arguments = parameters.Select(parameter =>
+                    new VariableDefinition(module.ImportReference(parameter.ParameterType))).ToArray();
+                foreach (VariableDefinition argument in arguments)
+                    method.Body.Variables.Add(argument);
+                method.Body.InitLocals = true;
+                for (int parameter = arguments.Length - 1; parameter >= 0; parameter--)
+                    replacement.Add(Instruction.Create(OpCodes.Stloc, arguments[parameter]));
+                replacement.Add(Instruction.Create(OpCodes.Ldsfld, module.ImportReference(matching[0])));
+                foreach (VariableDefinition argument in arguments)
+                    replacement.Add(Instruction.Create(OpCodes.Ldloc, argument));
+                replacement.Add(Instruction.Create(OpCodes.Callvirt, importedMethod));
+            }
+
+            Instruction first = body[index];
+            Instruction second = body[index + 1];
+            Instruction third = body[index + 2];
+            Instruction fourth = body[index + 3];
+            first.OpCode = replacement[0].OpCode;
+            first.Operand = replacement[0].Operand;
+            Instruction cursor = first;
+            foreach (Instruction instruction in replacement.Skip(1))
+            {
+                processor.InsertAfter(cursor, instruction);
+                cursor = instruction;
+            }
+            processor.Remove(second);
+            processor.Remove(third);
+            processor.Remove(fourth);
+            lowered.Add(new DelegateLowering(kind, identity, parameters.Length));
+            index--;
+        }
+        string[] actual = lowered.Select(value => value.Target).OrderBy(value => value, StringComparer.Ordinal).ToArray();
+        string[] expected = expectedTargets.OrderBy(value => value, StringComparer.Ordinal).ToArray();
+        if (!actual.SequenceEqual(expected, StringComparer.Ordinal))
+            throw new InvalidDataException("EmitDelegate lowering count/targets drifted: expected=" +
+                string.Join(',', expected) + "; actual=" + string.Join(',', actual));
+        return lowered.ToArray();
+    }
+
+    private static bool TryReadInt32(Instruction instruction, out int value)
+    {
+        if (instruction.OpCode == OpCodes.Ldc_I4) { value = (int)instruction.Operand; return true; }
+        if (instruction.OpCode == OpCodes.Ldc_I4_S) { value = (sbyte)instruction.Operand; return true; }
+        value = instruction.OpCode.Code switch
+        {
+            Code.Ldc_I4_M1 => -1, Code.Ldc_I4_0 => 0, Code.Ldc_I4_1 => 1,
+            Code.Ldc_I4_2 => 2, Code.Ldc_I4_3 => 3, Code.Ldc_I4_4 => 4,
+            Code.Ldc_I4_5 => 5, Code.Ldc_I4_6 => 6, Code.Ldc_I4_7 => 7,
+            Code.Ldc_I4_8 => 8, _ => 0
+        };
+        return instruction.OpCode.Code >= Code.Ldc_I4_M1 && instruction.OpCode.Code <= Code.Ldc_I4_8;
+    }
+
+    private static void WriteManifest(Options options, PlanDocument document, string target, bool alreadyFrozen,
+        string before, string after, StepEvidence[] steps, string afterNormalizedIl,
+        string[] references, string[] forbidden)
     {
         var manifest = new
         {
-            schemaVersion = 1,
+            schemaVersion = 2,
+            worker = document.Worker,
+            planSha256 = document.PlanSha256,
             target,
-            manipulator = options.ManipulatorType + "::" + options.ManipulatorMethod,
             alreadyFrozen,
             beforeSha256 = before,
             afterSha256 = after,
-            normalizedDiffSha256 = diffHash,
-            beforeNormalizedIl,
+            steps,
             afterNormalizedIl,
-            normalizedDiff,
             injectedReferences = references,
             forbiddenReferences = forbidden,
             outputSha256 = FileSha256(options.Output)
@@ -153,30 +320,24 @@ internal static class Program
             {
                 case "--target": options.Target = value; index++; break;
                 case "--output": options.Output = value; index++; break;
-                case "--mod": options.Mod = value; index++; break;
+                case "--plan": options.Plan = value; index++; break;
                 case "--target-method": options.TargetMethod = value; index++; break;
-                case "--canonical-target-method": options.CanonicalTargetMethod = value; index++; break;
-                case "--manipulator-type": options.ManipulatorType = value; index++; break;
-                case "--manipulator-method": options.ManipulatorMethod = value; index++; break;
-                case "--expected-before": options.ExpectedBefore = value; index++; break;
-                case "--expected-after": options.ExpectedAfter = value; index++; break;
-                case "--expected-diff": options.ExpectedDiff = value; index++; break;
                 case "--manifest": options.Manifest = value; index++; break;
                 case "--runtime-dir": options.RuntimeDirectories.Add(value); index++; break;
                 default: throw new ArgumentException("unknown argument: " + args[index]);
             }
         }
-        if (new[] { options.Target, options.Output, options.Mod, options.TargetMethod, options.CanonicalTargetMethod,
-                    options.ManipulatorType, options.ManipulatorMethod, options.ExpectedBefore, options.ExpectedAfter,
-                    options.ExpectedDiff, options.Manifest }.Any(string.IsNullOrWhiteSpace) ||
+        if (new[] { options.Target, options.Output, options.Plan, options.TargetMethod,
+                    options.Manifest }.Any(string.IsNullOrWhiteSpace) ||
             options.RuntimeDirectories.Count == 0)
             throw new ArgumentException("missing required static-IL worker argument");
         return options;
     }
 
-    private static void InstallResolver(Options options)
+    private static void InstallResolver(Options options, IEnumerable<Transform> transforms)
     {
-        string[] directories = options.RuntimeDirectories.Concat(new[] { Path.GetDirectoryName(options.Mod)! })
+        string[] directories = options.RuntimeDirectories.Concat(new[]
+            { Path.Combine(Path.GetDirectoryName(options.Plan)!, "fixtures") })
             .Select(Path.GetFullPath).Distinct(StringComparer.Ordinal).ToArray();
         AppDomain.CurrentDomain.AssemblyResolve += (_, eventArgs) =>
         {
@@ -295,6 +456,14 @@ internal static class Program
     }
 
     private static string Sha256(string value) => Sha256(Encoding.UTF8.GetBytes(value));
+
+    private static string PlanSha256(IEnumerable<Transform> transforms) => Sha256(
+        string.Join("\n", transforms.Select(transform => string.Join("\0", transform.PlanId,
+            transform.AssemblySha256, transform.EventType, transform.EventName, transform.TargetMethod,
+            transform.CanonicalTargetMethod, transform.ManipulatorType,
+            transform.ManipulatorMethod, transform.ManipulatorIsStatic, transform.RegistrationOrdinal,
+            transform.BeforeSha256, transform.AfterSha256, transform.DiffSha256,
+            string.Join(',', transform.ExpectedDelegateTargets)))) + "\n");
     private static string FileSha256(string path) => Sha256(File.ReadAllBytes(path));
     private static string Sha256(byte[] bytes)
     {

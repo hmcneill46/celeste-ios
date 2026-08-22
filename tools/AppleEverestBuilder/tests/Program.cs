@@ -63,6 +63,27 @@ ResolvedMod Mod(string name, string version = "1.0.0", IEnumerable<(string Name,
     };
 }
 
+FrozenIlTransformPlan FrozenPlan(string owner, string id, string target, int localOrdinal = 0) => new(
+    id, owner, owner + ".dll", new string('a', 64), "IL.Fixture.Target", "Run", target, target,
+    owner + ".Module", "Manipulate", true, localOrdinal, new string('b', 64), new string('c', 64),
+    new string('d', 64), [], []);
+
+ResolvedMod FrozenMod(string name, IReadOnlyList<FrozenIlTransformPlan> plans,
+    IEnumerable<(string Name, string Version)>? dependencies = null)
+{
+    ResolvedMod ordinary = Mod(name, dependencies: dependencies);
+    return new ResolvedMod
+    {
+        Metadata = ordinary.Metadata,
+        Input = ordinary.Input,
+        Classification = CompatibilityClass.STATIC_IL_EVENT_FREEZE,
+        Mechanisms = new SortedSet<string>(["HookGen IL.*"], StringComparer.Ordinal),
+        ManagedFiles = [], ContentFiles = [], Declaration = null, DeclaredAssemblyPath = null,
+        ManagedDetourTargets = new SortedSet<string>(StringComparer.Ordinal), DirectManagedHooks = [],
+        ModInteropRegistrations = [], FrozenIlTransforms = plans
+    };
+}
+
 try
 {
     passed += ModInteropTests.Run(repository, temporary);
@@ -106,6 +127,21 @@ try
     Throws(() => EverestGraphResolver.Resolve([Mod("A"), Mod("B", conflicts: [("A", "1.0.0")])]), "conflict", "conflict");
     Pass(EverestGraphResolver.Resolve([graphB, graphA]).Select(mod => mod.Metadata.Name).SequenceEqual(
         EverestGraphResolver.Resolve([graphA, graphB]).Select(mod => mod.Metadata.Name)), "stable graph order");
+    const string sharedFrozenTarget = "System.Int32 Fixture.Target::Run(System.Int32)";
+    ResolvedMod frozenA = FrozenMod("FrozenA", [FrozenPlan("FrozenA", "A", sharedFrozenTarget)]);
+    ResolvedMod frozenB = FrozenMod("FrozenB", [FrozenPlan("FrozenB", "B", sharedFrozenTarget)],
+        [("FrozenA", "1.0.0")]);
+    FrozenIlTransformPlan[] composed = ClosureGenerator.ComposeFrozenIlTransforms(
+        EverestGraphResolver.Resolve([frozenB, frozenA])).ToArray();
+    Pass(composed.Select(plan => plan.Owner).SequenceEqual(["FrozenA", "FrozenB"]) &&
+         composed.Select(plan => plan.RegistrationOrdinal).SequenceEqual([0, 1]),
+        "frozen IL sequence follows resolved module registration order");
+    FrozenIlTransformPlan[] independent = ClosureGenerator.ComposeFrozenIlTransforms([
+        FrozenMod("FrozenA", [FrozenPlan("FrozenA", "A", sharedFrozenTarget),
+            FrozenPlan("FrozenA", "Other", "System.Void Fixture.Other::Run()")]),
+        FrozenMod("FrozenB", [FrozenPlan("FrozenB", "B", sharedFrozenTarget)])]).ToArray();
+    Pass(independent.Select(plan => plan.RegistrationOrdinal).SequenceEqual([0, 0, 1]),
+        "frozen IL registration ordinals are target-local");
     ResolvedMod cpopGraph = Mod("CpopHelper", "1.3.0", [("Everest", "1.3471.0")]);
     ResolvedMod quizGraph = Mod("QuizSample", "0.0.1", [("CpopHelper", "1.0.0"), ("Everest", "1.3761.0")]);
     Pass(EverestGraphResolver.Resolve([quizGraph, cpopGraph]).Select(mod => mod.Metadata.Name)
@@ -756,10 +792,10 @@ try
     {
         JsonElement targets = targetCatalog.RootElement.GetProperty("targets");
         Pass(targetCatalog.RootElement.GetProperty("schemaVersion").GetInt32() == 2 &&
-             targets.GetArrayLength() == 56,
+             targets.GetArrayLength() == 57,
             "signature-driven managed-detour target catalog v2");
         string[] ids = targets.EnumerateArray().Select(target => target.GetProperty("id").GetString()!).ToArray();
-        Pass(ids.Distinct(StringComparer.Ordinal).Count() == 56 &&
+        Pass(ids.Distinct(StringComparer.Ordinal).Count() == 57 &&
              ids.Contains("celeste-commands-cmd-ow-complete", StringComparer.Ordinal) &&
              ids.Contains("celeste-oui-chapter-select-enter", StringComparer.Ordinal) &&
              ids.Contains("celeste-area-mode-stats-clone", StringComparer.Ordinal) &&
@@ -966,7 +1002,7 @@ try
          testClosureViolations[0].Contains("System.Diagnostics.Process::Start", StringComparison.Ordinal),
         "linked-runtime scanner isolates the intentional desktop static-plan test host spawn");
 
-    Pass(ProductPolicy.TransformerVersion == "apple-everest-static-v8", "real-ZIP transformer version");
+    Pass(ProductPolicy.TransformerVersion == "apple-everest-static-v9", "real-ZIP transformer version");
     Pass(File.Exists(Path.Combine(repository, "tools/AppleEverestBuilder/AssemblyFreezer.cs")),
         "binary-first assembly freezer exists");
     string models = File.ReadAllText(Path.Combine(repository, "tools/AppleEverestBuilder/Models.cs"));
@@ -1047,11 +1083,19 @@ try
     Pass(staticIlFreeze.Contains("RewriteLifecycleMethod", StringComparison.Ordinal) &&
          staticIlFreeze.Contains("method.Body.Instructions.Clear", StringComparison.Ordinal),
         "runtime subscriptions are removed from the frozen module");
+    Pass(staticIlFreeze.Contains("~TypeAttributes.VisibilityMask) | TypeAttributes.NestedPublic",
+             StringComparison.Ordinal),
+        "cross-assembly compiler singleton uses one atomic valid nested-public visibility value");
+    Pass(staticIlFreeze.Contains("RewriteDisposableTheoEverestAbi", StringComparison.Ordinal) &&
+         staticIlFreeze.Contains("DisposableTheo pinned integer-axis ABI contract drifted", StringComparison.Ordinal) &&
+         staticIlFreeze.Contains("DisposableTheo pinned rumble ABI contract drifted", StringComparison.Ordinal) &&
+         staticIlFreeze.Contains("DisposableTheo pinned desktop settings-menu ABI contract drifted", StringComparison.Ordinal),
+        "exact DisposableTheo desktop-Everest ABI normalization is bounded and fails closed");
     Pass(staticIlFreeze.Contains("frozen-IL lifecycle event count drifted", StringComparison.Ordinal) &&
-         staticIlFreeze.Contains("DashToggleHelper On lifecycle contract drifted", StringComparison.Ordinal),
+         staticIlFreeze.Contains("frozen-IL On lifecycle contract drifted", StringComparison.Ordinal),
         "Load and Unload rewrites fail closed");
     Pass(staticIlFreeze.Contains("On.Celeste.CassetteBlock", StringComparison.Ordinal) == false &&
-         ManagedDetourCatalog.Targets.Count == 56,
+         ManagedDetourCatalog.Targets.Count == 57,
         "ordinary same-target On hooks remain catalog-driven");
     Pass(ManagedDetourCatalog.Targets.Any(target => target.Id == "celeste-crystal-static-spinner-create-sprites"),
         "same-target CrystalStaticSpinner On target registered");
@@ -1067,11 +1111,11 @@ try
          staticIlWorker.Contains("DynamicReferenceManager", StringComparison.Ordinal) &&
          staticIlWorker.Contains("Reflection.Emit", StringComparison.Ordinal),
         "dynamic injected references fail before product build");
-    Pass(staticIlWorker.Contains("beforeNormalizedIl", StringComparison.Ordinal) &&
-         staticIlWorker.Contains("normalizedDiffSha256", StringComparison.Ordinal),
+    Pass(staticIlWorker.Contains("BeforeNormalizedIl", StringComparison.Ordinal) &&
+         staticIlWorker.Contains("NormalizedDiffSha256", StringComparison.Ordinal),
         "normalized IL and semantic diff evidence emitted");
     Pass(staticIlWorker.Contains("APPLE_EVEREST_STATIC_IL_ALREADY_FROZEN", StringComparison.Ordinal) &&
-         staticIlWorker.Contains("string.Equals(before, options.ExpectedAfter", StringComparison.Ordinal),
+         staticIlWorker.Contains("string.Equals(before, transforms[^1].AfterSha256", StringComparison.Ordinal),
         "incremental rebuild accepts only the exact locked already-frozen target body");
     Pass(staticIlProject.Contains("<TargetFramework>net10.0</TargetFramework>", StringComparison.Ordinal) &&
          !staticIlProject.Contains("MonoMod.RuntimeDetour", StringComparison.Ordinal),
@@ -1104,6 +1148,31 @@ try
              SearchOption.AllDirectories).Any(path => path.EndsWith(".dll", StringComparison.OrdinalIgnoreCase) ||
                                                        path.EndsWith(".zip", StringComparison.OrdinalIgnoreCase)),
         "tracked behavior canary contains no third-party binary or source fixture");
+
+    Pass(buildScript.Contains("static_il_compose_fixture_sha=\"df291c0175df46682791fb6373c47eb557c47483eca3db96895eba9b5bbe85b5\"",
+             StringComparison.Ordinal) &&
+         buildScript.Contains("MODS+=(\"$REPO_ROOT/apple-everest/canaries/static-il-compose-content\")",
+             StringComparison.Ordinal),
+        "exact Stage 25H-B fixture mounts the project-owned Disposable Theo behavior room");
+    string staticIlComposeContent = Path.Combine(repository,
+        "apple-everest/canaries/static-il-compose-content/Content/Maps/AppleEverest/StaticIlCompose.xml");
+    Pass(File.Exists(staticIlComposeContent) && File.ReadAllText(staticIlComposeContent)
+        .Contains("<theoCrystal", StringComparison.Ordinal),
+        "project-owned H-B behavior map uses Celeste's built-in Theo crystal");
+    string compiledStaticIlComposeMap = Path.Combine(NewDirectory("static-il-compose-map"), "Content");
+    string staticIlComposeLogical = ContentCompiler.Stage(staticIlComposeContent,
+        "Content/Maps/AppleEverest/StaticIlCompose.xml", compiledStaticIlComposeMap);
+    IReadOnlyList<(string Kind, string Id)> staticIlComposeIds = ContentCompiler.InspectGameplayIds(
+        Path.Combine(compiledStaticIlComposeMap,
+            staticIlComposeLogical.Replace('/', Path.DirectorySeparatorChar)));
+    Pass(staticIlComposeIds.Contains(("entity", "theoCrystal")) &&
+         staticIlComposeIds.Contains(("trigger", "DisposableTheoTrigger")),
+        "H-B behavior map compiles the built-in Theo and exact registered Disposable Theo trigger");
+    Pass(!Directory.EnumerateFiles(Path.Combine(repository,
+                 "apple-everest/canaries/static-il-compose-content"), "*", SearchOption.AllDirectories)
+            .Any(path => path.EndsWith(".dll", StringComparison.OrdinalIgnoreCase) ||
+                         path.EndsWith(".zip", StringComparison.OrdinalIgnoreCase)),
+        "tracked H-B behavior canary contains no third-party binary or source fixture");
 
     Console.WriteLine($"PASS: AppleEverestBuilder deterministic tests ({passed})");
 }

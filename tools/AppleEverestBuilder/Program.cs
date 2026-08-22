@@ -87,7 +87,7 @@ internal static class Program
                             status = mod.Classification is CompatibilityClass.CONTENT_ONLY or CompatibilityClass.STATIC_MODULE or
                                 CompatibilityClass.NORMAL_EVENT or CompatibilityClass.ON_HOOK_SUPPORTED or CompatibilityClass.DIRECT_HOOK_SUPPORTED or
                                 CompatibilityClass.MIXED_MANAGED_DETOURS_SUPPORTED or CompatibilityClass.MODINTEROP_STATIC_SUPPORTED or
-                                CompatibilityClass.STATIC_IL_EVENT_FREEZE
+                                CompatibilityClass.STATIC_IL_EVENT_FREEZE or CompatibilityClass.STATIC_IL_EVENT_SEQUENCE
                                 ? "candidate" : "deferred"
                         });
                     }

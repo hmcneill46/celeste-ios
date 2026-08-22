@@ -1,7 +1,7 @@
 # Apple Everest real-mod compatibility
 
 This is a technical test matrix for the experimental shared Apple static-AOT
-builder. It lists only exact public inputs inspected through Stage 25H-A. It is not
+builder. It lists only exact public inputs inspected through Stage 25H-B. It is not
 a promise that similarly named, newer, older, or dependent mods work. The
 normal iOS and tvOS products do not contain these mods.
 
@@ -26,10 +26,11 @@ Status vocabulary:
 | QuizSample | 0.0.1; ZIP `5cb8351b…b3e` | Content-only map depending on Cpop Helper ≥ 1.0.0 | **SUPPORTED** | iOS, iPadOS, tvOS | Everest ≥ 1.3761.0; Cpop Helper ≥ 1.0.0 | Real four-room quiz map. Normal map loading instantiates `quizController` and `quizAnswerTrigger`; wrong answers kill/respawn and the correct trigger produces the configured outcome. Its Text/Image/HighResImage number styles intentionally differ. The release omits four dialog keys used by its question labels, so those labels use Celeste's `XXX` missing-dialog fallback; answer values intentionally reroll after death. No source repository or explicit redistribution license was located, so its bytes remain ignored and are not redistributed. |
 | [DeathMarkers](https://gamebanana.com/mods/53649) | 2.0.0; ZIP `94ad7d14…e6fc7`; DLL `620e5b63…ff8`; source `24c9b821…965` | Precompiled module + `Player.Die` HookGen target + default YAML SaveData/Session | **SUPPORTED_WITH_STATIC_TRANSFORM** | iOS, iPadOS, tvOS | EverestCore ≥ 1.5577.0 | MIT. Ordinary DLL is authoritative and source is not needed. Stage 25F-A proves per-slot persistent `Dictionary<string,List<Death>>`, continuation `List<Death>`, nested record/`Vector2` serialization, cold restore, new-session reset, deletion/replacement isolation, and bounded A/B recovery. |
 | [Dash Toggle Helper](https://github.com/kyfex-uwu/DashToggleHelper) | 1.1.0; ZIP `677e8fbd…d523`; DLL `531eaa8a…a083`; source `9b140684…530c`; MIT | Two exact HookGen `IL.*` manipulators plus six ordinary `On.*` targets | **SUPPORTED_WITH_STATIC_TRANSFORM** | iOS, iPadOS, tvOS | EverestCore ≥ 1.5421.0 | The pinned MonoMod manipulator methods run in an isolated Mac build process against two exact Celeste target-body fingerprints. The deterministic final bodies are frozen before full AOT; the device contains no Cecil, `MonoMod.Cil`, `ILHook`, dynamic method, or runtime code-patching backend. The module is immutable-active for the installed build. |
+| [Disposable Theo](https://gamebanana.com/mods/53752) | 1.0.6; ZIP `df291c01…b5b5`; DLL `1d47c082…52dcc` | Two instance-owned HookGen `IL.*` manipulators, two ordinary `On.*` hooks, and two compiler-singleton noncapturing delegates | **SUPPORTED_WITH_STATIC_TRANSFORM** | iOS, iPadOS, tvOS | Everest ≥ 1.0.0 | The source-free distributed DLL proves generic lowering of compiler-generated `<>c` singleton delegates which consume runtime stack values. The Mac freezes both exact target bodies and roots the ordinary singleton methods/fields; no host closure object or dynamic-reference cell enters the app. No license declaration was located, so external bytes are not redistributed. |
 
 ## Bounded build-time frozen IL
 
-Stage 25H-A supports one deliberately narrow class named
+Stage 25H-A introduced one deliberately narrow class named
 `STATIC_IL_EVENT_FREEZE`: one exact, statically registered HookGen `IL.*`
 manipulator per exact target method. The ordinary hash-pinned public release
 DLL remains authoritative. On the Mac, the builder verifies the original
@@ -46,12 +47,27 @@ static mod-method calls in final IL; no `DynamicReferenceManager` cell survives.
 The same-target `On.CrystalStaticSpinner.CreateSprites` wrapper calls the
 already IL-modified original body, matching the pinned desktop ordering.
 
-This does not mean unrestricted “IL support.” Multiple manipulators on one
-target, direct or configured `ILHook`, captured/dynamic delegates, runtime
-targets, runtime unapply, and live module disable remain deferred. A frozen-IL
-module is immutable-active until process termination; excluding it from a new
-build restores the exact baseline method. Any target, registration,
-manipulator, output-hash, or final-reference mismatch fails before linker/AOT.
+Stage 25H-B adds `STATIC_IL_EVENT_SEQUENCE`. For two or more exact ordinary,
+unconfigured registrations on one target, the worker always starts with one
+canonical baseline and applies manipulators in resolved module/load order and
+then source registration order. Manipulator B sees A's output. Each
+intermediate body is structurally validated and hash-locked; the final body is
+then compiled normally. Project-owned A→B, B→A, and A→B→C cases match pinned
+MonoMod and make ordering observable. No suitable public high-value fixture
+with two real manipulators on the same target was located, so real shared-target
+composition remains a clearly labelled evidence gap rather than a broad claim.
+
+H-B also generically lowers compiler-generated noncapturing `<>c` singleton
+delegates. It spills runtime arguments to typed locals, loads the exact static
+singleton field, reloads the arguments, and calls the rooted instance method.
+Disposable Theo 1.0.6 proves this with two real `Func`-style paths. Primitive
+captured constants, module/runtime captures, mutable/transient closures, direct
+or configured `ILHook`, runtime targets, runtime unapply, and live module
+disable remain deferred. A frozen-IL module is immutable-active until process
+termination; excluding it from a new build restores the exact baseline method.
+Any target, registration, ordinal, intermediate/final hash, or reference
+mismatch fails before linker/AOT. The exact H-B census is in
+[`apple-everest/il-compatibility-audit-stage25hb.json`](../apple-everest/il-compatibility-audit-stage25hb.json).
 
 ## Multi-helper map graph audit
 
