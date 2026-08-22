@@ -1073,6 +1073,39 @@ try
         "source-free logical input pin");
     Pass(StaticIlFreeze.FixtureSourceCommit == "9b140684c2ee80ddae3c9ef032de0c767a67530c",
         "public source provenance pin");
+    Pass(StaticIlFreeze.VortexHelperName == "VortexHelper" &&
+         StaticIlFreeze.VortexHelperVersion == "1.2.19",
+        "Stage 25H-C exact VortexHelper identity");
+    Pass(StaticIlFreeze.VortexHelperZipSha256 ==
+         "b6280fe2e3c05d355c32a51049854137c41be72d24ec4aec9d997cc7c4394db2" &&
+         StaticIlFreeze.VortexHelperDllSha256 ==
+         "f5a32f02c2699dcdf41bb1af808ead631491571c3d259429761953693bd37f73" &&
+         StaticIlFreeze.VortexHelperSourceSha256 ==
+         "c071d33bb1cc4f0387ea204834e212bd020f3143aea68c9f4e56b9bfa35def1b",
+        "Stage 25H-C VortexHelper release, DLL, and logical-source locks");
+    Pass(StaticIlFreeze.VortexHelperSourceCommit ==
+         "b37b67b9365d769ba0fd19a67a1327260988fd6e" &&
+         StaticIlFreeze.VortexHelperLicenseSha256 ==
+         "051f92453f04ec0a8a9dff60882264ca949ea8e86de5f6aa96e04acdee90d359",
+        "Stage 25H-C source and MIT-license provenance locks");
+    Pass(staticIlFreeze.Contains("VortexHelper:Player.NormalUpdate:Player_FrictionNormalUpdate",
+             StringComparison.Ordinal) &&
+         staticIlFreeze.Contains("VortexHelper:Player.WallJumpCheck:Player_WallJumpCheck",
+             StringComparison.Ordinal) &&
+         staticIlFreeze.Contains("Entities.FloorBooster+Hooks", StringComparison.Ordinal) &&
+         staticIlFreeze.Contains("Entities.PurpleBooster+Hooks", StringComparison.Ordinal),
+        "Stage 25H-C freezes exactly the two selected entity-local IL registrations");
+    Pass(staticIlFreeze.Contains("metadata.Dependencies.Count != 1", StringComparison.Ordinal) &&
+         staticIlFreeze.Contains("metadata.OptionalDependencies.Count != 1", StringComparison.Ordinal) &&
+         staticIlFreeze.Contains("registered VortexHelper metadata drifted", StringComparison.Ordinal),
+        "Stage 25H-C VortexHelper metadata contract fails closed");
+    Pass(staticIlFreeze.Contains("RewriteVortexHelper", StringComparison.Ordinal) &&
+         staticIlFreeze.Contains("RewriteLifecycleMethod(floor.Methods.Single", StringComparison.Ordinal) &&
+         staticIlFreeze.Contains("RewriteLifecycleMethod(purple.Methods.Single", StringComparison.Ordinal),
+        "Stage 25H-C removes the exact nested runtime IL registrations before device AOT");
+    Pass(staticIlFreeze.Contains("MonoMod.Utils intentionally remains blocked", StringComparison.Ordinal) &&
+         staticIlFreeze.Contains("live DynamicData usage", StringComparison.Ordinal),
+        "Stage 25H-C does not hide VortexHelper's unrelated DynamicData blocker");
     Pass(staticIlFreeze.Contains("ValidateRegistrations", StringComparison.Ordinal) &&
          staticIlFreeze.Contains("found.Count != plans.Count * 2", StringComparison.Ordinal),
         "exact binary IL add/remove discovery is closed");

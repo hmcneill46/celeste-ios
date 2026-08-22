@@ -481,7 +481,7 @@ internal static class ModInteropPlanner
             if (definition != null)
                 values.AddRange(definition.Interfaces.Select(value => TypeKey(value.InterfaceType)));
         }
-        catch (ResolutionException)
+        catch (Exception exception) when (exception is ResolutionException or AssemblyResolutionException)
         {
             // Exact matching remains available when an unrelated metadata
             // dependency is absent from the bounded host resolver.

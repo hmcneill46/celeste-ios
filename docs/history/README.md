@@ -63,6 +63,7 @@ support matrix, and limitations are in [project status](../STATUS.md).
 45. [Stage 25G — real multi-helper map composition audit](stages/APPLE_EVEREST_MULTI_HELPER_STAGE25G_REPORT.md)
 46. [Stage 25H-A — deterministic build-time HookGen IL freeze](stages/APPLE_EVEREST_STATIC_IL_STAGE25H_REPORT.md)
 47. [Stage 25H-B — composed frozen IL and compiler-singleton delegates](stages/APPLE_EVEREST_STATIC_IL_COMPOSITION_STAGE25HB_REPORT.md)
+48. [Stage 25H-C — graph-driven IL closure and ordinary event breadth](stages/APPLE_EVEREST_GRAPH_IL_CLOSURE_STAGE25HC_REPORT.md)
 
 Diagnostic-only stages whose evidence was intentionally kept in ignored local
 build directories are not reconstructed here. The index covers every tracked

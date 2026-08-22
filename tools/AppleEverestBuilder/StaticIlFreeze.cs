@@ -25,6 +25,14 @@ internal static class StaticIlFreeze
     internal const string DisposableTheoDllSha256 = "1d47c08238fd0dd29eaa5c6e53a36e7d72942fdb7b7abc2a3870f09fbc952dcc";
     internal const string DisposableTheoZipSha256 = "df291c0175df46682791fb6373c47eb557c47483eca3db96895eba9b5bbe85b5";
     internal const string DisposableTheoUrl = "https://gamebanana.com/mmdl/929736";
+    internal const string VortexHelperName = "VortexHelper";
+    internal const string VortexHelperVersion = "1.2.19";
+    internal const string VortexHelperSourceSha256 = "c071d33bb1cc4f0387ea204834e212bd020f3143aea68c9f4e56b9bfa35def1b";
+    internal const string VortexHelperDllSha256 = "f5a32f02c2699dcdf41bb1af808ead631491571c3d259429761953693bd37f73";
+    internal const string VortexHelperZipSha256 = "b6280fe2e3c05d355c32a51049854137c41be72d24ec4aec9d997cc7c4394db2";
+    internal const string VortexHelperUrl = "https://gamebanana.com/mmdl/1368600";
+    internal const string VortexHelperSourceCommit = "b37b67b9365d769ba0fd19a67a1327260988fd6e";
+    internal const string VortexHelperLicenseSha256 = "051f92453f04ec0a8a9dff60882264ca949ea8e86de5f6aa96e04acdee90d359";
     internal const string WorkerVersion = "apple-everest-static-il-worker-v2";
 
     private static readonly FrozenIlTransformPlan[] DashTogglePlans =
@@ -83,6 +91,39 @@ internal static class StaticIlFreeze
             [], ["Celeste.Mod.DisposableTheo.DisposableTheoModule+<>c::<Level_EnforceBounds>b__10_0"])
     ];
 
+    // Exact ordinary HookGen IL-event breadth selected from the Stage 25G
+    // Space Trip graph. VortexHelper's current compiler caches both event
+    // delegates in nested <>O types and registers them from entity-local
+    // Hook/Unhook methods rather than the module Load/Unload body. The real
+    // distributed methods remain the only host-side transformation authority.
+    private static readonly FrozenIlTransformPlan[] VortexHelperPlans =
+    [
+        new(
+            "VortexHelper:Player.NormalUpdate:Player_FrictionNormalUpdate",
+            VortexHelperName, "Code/bin/VortexHelper.dll", VortexHelperDllSha256,
+            "IL.Celeste.Player", "NormalUpdate",
+            "System.Int32 Celeste.Player::NormalUpdate()",
+            "System.Int32 Celeste.Player::NormalUpdate()",
+            "Celeste.Mod.VortexHelper.Entities.FloorBooster+Hooks", "Player_FrictionNormalUpdate",
+            true, 0,
+            "c38137044853b6ec5f8d42c364743bd82982a79314fe493a5070ef028e0f6e4b",
+            "9f34b6f8ce802587df35fea0cd211a72f1de4446e0bf692e938bfdcc93401991",
+            "c75c39af18902072eefb40b5fe349a108bfdbb77eb011e2f2d2002fffb4f862e",
+            ["GetPlayerFriction"], []),
+        new(
+            "VortexHelper:Player.WallJumpCheck:Player_WallJumpCheck",
+            VortexHelperName, "Code/bin/VortexHelper.dll", VortexHelperDllSha256,
+            "IL.Celeste.Player", "WallJumpCheck",
+            "System.Boolean Celeste.Player::WallJumpCheck(System.Int32)",
+            "System.Boolean Celeste.Player::WallJumpCheck(System.Int32)",
+            "Celeste.Mod.VortexHelper.Entities.PurpleBooster+Hooks", "Player_WallJumpCheck",
+            true, 0,
+            "7c87ba1ac56a612e7487dfc598e2d4b2f7d81817bd0d97fe1ec1e0d329128cf0",
+            "6749ff2746b4d742c2a10ba54d3ff344ffc09c0ca4a3b30dbdf33a6dc6c8162b",
+            "1cc8f904f6f72282372628b0ad40350e637bf9048f704a743023ad17adf2e05e",
+            [], ["Celeste.Mod.VortexHelper.Entities.PurpleBooster+Hooks+<>c::<Player_WallJumpCheck>b__3_1"])
+    ];
+
     internal static IReadOnlyList<FrozenIlTransformPlan> Resolve(ModInput input, EverestYamlEntry metadata)
     {
         if (metadata.Name == FixtureName && metadata.Version == FixtureVersion &&
@@ -110,6 +151,20 @@ internal static class StaticIlFreeze
                 throw new InvalidDataException("registered DisposableTheo metadata drifted");
             ValidateRegistrations(dll, DisposableTheoPlans, "Celeste.Mod.DisposableTheo.DisposableTheoModule");
             return DisposableTheoPlans;
+        }
+        if (metadata.Name == VortexHelperName && metadata.Version == VortexHelperVersion &&
+            input.SourceSha256 == VortexHelperSourceSha256 && metadata.DLL == "Code/bin/VortexHelper.dll")
+        {
+            string dll = Path.Combine(input.StagingRoot, "Code", "bin", "VortexHelper.dll");
+            if (Hashing.FileSha256(dll) != VortexHelperDllSha256)
+                throw new InvalidDataException("registered VortexHelper DLL hash mismatch");
+            if (metadata.Dependencies.Count != 1 || metadata.Dependencies[0].Name != "EverestCore" ||
+                metadata.Dependencies[0].Version != "1.4465.0" || metadata.OptionalDependencies.Count != 1 ||
+                metadata.OptionalDependencies[0].Name != "GravityHelper" ||
+                metadata.OptionalDependencies[0].Version != "1.2.10")
+                throw new InvalidDataException("registered VortexHelper metadata drifted");
+            ValidateRegistrations(dll, VortexHelperPlans, VortexHelperName);
+            return VortexHelperPlans;
         }
         return [];
     }
@@ -144,14 +199,21 @@ internal static class StaticIlFreeze
         }
         foreach (FrozenIlTransformPlan plan in plans)
         {
-            string manipulator = plan.ManipulatorType + "::" + plan.ManipulatorMethod;
+            string cecilManipulatorType = plan.ManipulatorType.Replace('+', '/');
+            string manipulator = cecilManipulatorType + "::" + plan.ManipulatorMethod;
+            string addContainer = module == VortexHelperName
+                ? "System.Void " + cecilManipulatorType + "::Hook()"
+                : "System.Void " + module + "::Load()";
+            string removeContainer = module == VortexHelperName
+                ? "System.Void " + cecilManipulatorType + "::Unhook()"
+                : "System.Void " + module + "::Unload()";
             if (found.Count(item => item.Operation == "add" && item.EventType == plan.EventType &&
                     item.EventName == plan.EventName && item.Manipulator == manipulator &&
-                    item.Containing == "System.Void " + module + "::Load()") != 1 ||
+                    item.Containing == addContainer) != 1 ||
                 found.Count(item => item.Operation == "remove" && item.EventType == plan.EventType &&
                     item.EventName == plan.EventName && item.Manipulator == manipulator &&
-                    item.Containing == "System.Void " + module + "::Unload()") != 1)
-                throw new InvalidDataException("frozen-IL Load/Unload registration contract drifted: " + plan.PlanId);
+                    item.Containing == removeContainer) != 1)
+                throw new InvalidDataException("frozen-IL lifecycle registration contract drifted: " + plan.PlanId);
         }
         if (found.Count != plans.Count * 2)
             throw new InvalidDataException("registered fixture contains an unreviewed IL event subscription");
@@ -165,12 +227,17 @@ internal static class StaticIlFreeze
     {
         if (plans.Count == 0) return;
         if (plans.Any(plan => plan.Owner != assembly.Name.Name) ||
-            assembly.Name.Name is not (FixtureName or DisposableTheoName))
+            assembly.Name.Name is not (FixtureName or DisposableTheoName or VortexHelperName))
             throw new InvalidDataException("frozen-IL device rewrite received an unregistered assembly");
 
         if (assembly.Name.Name == DisposableTheoName)
         {
             RewriteDisposableTheo(assembly, plans);
+            return;
+        }
+        if (assembly.Name.Name == VortexHelperName)
+        {
+            RewriteVortexHelper(assembly, plans);
             return;
         }
 
@@ -375,6 +442,80 @@ internal static class StaticIlFreeze
                                                referenceName + ":" + string.Join(',', residual));
             assembly.MainModule.AssemblyReferences.Remove(reference);
         }
+    }
+
+    private static void RewriteVortexHelper(AssemblyDefinition assembly,
+        IReadOnlyList<FrozenIlTransformPlan> plans)
+    {
+        TypeDefinition floor = assembly.MainModule.Types.SelectMany(AllTypes).Single(type =>
+            type.FullName == "Celeste.Mod.VortexHelper.Entities.FloorBooster/Hooks");
+        TypeDefinition purple = assembly.MainModule.Types.SelectMany(AllTypes).Single(type =>
+            type.FullName == "Celeste.Mod.VortexHelper.Entities.PurpleBooster/Hooks");
+        RewriteLifecycleMethod(floor.Methods.Single(method => method.Name == "Hook"), "add_", 1, 3);
+        RewriteLifecycleMethod(floor.Methods.Single(method => method.Name == "Unhook"), "remove_", 1, 3);
+        RewriteLifecycleMethod(purple.Methods.Single(method => method.Name == "Hook"), "add_", 1, 1);
+        RewriteLifecycleMethod(purple.Methods.Single(method => method.Name == "Unhook"), "remove_", 1, 1);
+
+        foreach (FrozenIlTransformPlan plan in plans)
+        {
+            TypeDefinition owner = assembly.MainModule.Types.SelectMany(AllTypes).Single(type =>
+                type.FullName == plan.ManipulatorType.Replace('+', '/'));
+            owner.Methods.Remove(owner.Methods.Single(method => method.Name == plan.ManipulatorMethod));
+        }
+
+        HashSet<string> runtimeTargets = plans.SelectMany(plan => plan.ExpectedDelegateTargets)
+            .Select(value => value[(value.LastIndexOf("::", StringComparison.Ordinal) + 2)..])
+            .ToHashSet(StringComparer.Ordinal);
+        foreach (TypeDefinition compilerType in new[] { floor, purple }.SelectMany(type => type.NestedTypes)
+                     .Where(type => type.Name is "<>c" or "<>O").ToArray())
+        {
+            foreach (MethodDefinition method in compilerType.Methods.Where(method =>
+                         MethodUsesHostIl(method) ||
+                         (method.Name.StartsWith("<Player_", StringComparison.Ordinal) &&
+                          !runtimeTargets.Contains(method.Name))).ToArray())
+                compilerType.Methods.Remove(method);
+            foreach (FieldDefinition field in compilerType.Fields.Where(field =>
+                         field.FieldType.Scope?.Name is "MonoMod.Utils" or "Mono.Cecil" ||
+                         field.FieldType.FullName.Contains("Mono.Cecil", StringComparison.Ordinal) ||
+                         field.FieldType.FullName.Contains("MonoMod.Cil", StringComparison.Ordinal)).ToArray())
+                compilerType.Fields.Remove(field);
+            if (compilerType.Methods.Any(method => runtimeTargets.Contains(method.Name)))
+            {
+                MakePublic(compilerType);
+                foreach (FieldDefinition field in compilerType.Fields.Where(field => field.Name == "<>9"))
+                {
+                    field.IsPublic = true;
+                    field.IsPrivate = false;
+                }
+                foreach (MethodDefinition method in compilerType.Methods.Where(method =>
+                             runtimeTargets.Contains(method.Name)))
+                {
+                    method.IsPublic = true;
+                    method.IsPrivate = false;
+                }
+            }
+        }
+        foreach (string name in plans.SelectMany(plan => plan.InjectedMethods).Distinct(StringComparer.Ordinal))
+        {
+            MethodDefinition method = assembly.MainModule.Types.SelectMany(AllTypes).SelectMany(type => type.Methods)
+                .Single(candidate => candidate.Name == name);
+            method.IsPublic = true;
+            method.IsPrivate = false;
+            MakePublic(method.DeclaringType);
+        }
+
+        AssemblyNameReference? cecil = assembly.MainModule.AssemblyReferences.SingleOrDefault(value =>
+            value.Name == "Mono.Cecil");
+        if (cecil != null)
+        {
+            string[] residual = ActiveReferenceIdentities(assembly.MainModule, "Mono.Cecil").ToArray();
+            if (residual.Length != 0)
+                throw new InvalidDataException("frozen-IL host reference survived VortexHelper rewrite: " +
+                                               string.Join(',', residual));
+            assembly.MainModule.AssemblyReferences.Remove(cecil);
+        }
+        // MonoMod.Utils intentionally remains blocked by VortexHelper's separate
+        // live DynamicData usage. Stage 25H-C does not broaden into that class.
     }
 
     private static IEnumerable<string> ActiveReferenceIdentities(ModuleDefinition module, string assemblyName)

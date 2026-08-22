@@ -234,6 +234,8 @@ from becoming an on-device failure or JIT fallback.
 | [Trailine](https://gamebanana.com/mods/349341) | 1.1.0; ZIP `c6cd0464…711`; source `4f12442b…3fb` | **DEFERRED_DETOUR_CONFIG** | A version-gated historical block uses `DetourContext.After = *`. It is dead for the pinned Everest version but is not silently eliminated by the production transformer. |
 | [Extended Variant Mode](https://github.com/maddie480/ExtendedVariantMode) | source audit `fa9a25c3…cc3` | **UNSUPPORTED_LUA** | Real NLua dependency; Lua is not present in the device product. |
 | [SmoothCeleste](https://github.com/bybrooklyn/SmoothCeleste) | source audit `b4169752…f5a` | **UNSUPPORTED_NATIVE** | Runtime native-library loading and platform P/Invoke are outside the fixed native closure. |
+| [VortexHelper](https://github.com/CommunalHelper/VortexHelper) | 1.2.19; ZIP `b6280fe2…4db2`; DLL `f5a32f02…f73` | **PARTIAL — STATIC_IL_EVENT_FREEZE** | Its two exact entity-local HookGen IL events are source-free, deterministic, and frozen using existing static/compiler-singleton lowering. The complete helper remains deferred for live `DynamicData`, uncatalogued `On.*`, API/content breadth, and optional integration surface. |
+| Space Trip | 1.0.0; ZIP `b08d42f8…2fdc` | **DEFERRED_CONFIGURED_AND_NON_IL** | VortexHelper's two ordinary IL blockers are eliminated by Stage 25H-C, but LunaticHelper configured ordering, custom audio, `DynamicData`, and ordinary helper breadth remain. No multi-helper support is claimed. |
 
 The full Stage 25F-A ten-mod durability audit is in
 [`apple-everest/module-durability-audit-stage25f.json`](../apple-everest/module-durability-audit-stage25f.json).
@@ -255,3 +257,6 @@ outside the bounded shapes, module
 SaveData/Session outside the bounded default-YAML class, and custom mod audio all
 fail closed or remain explicitly deferred. Strawberry Jam has not been
 downloaded, built, or tested.
+
+The full 18-graph census and explicit distance table are tracked in
+[`apple-everest/graph-il-closure-audit-stage25hc.json`](../apple-everest/graph-il-closure-audit-stage25hc.json).

@@ -1,0 +1,200 @@
+{
+  "schemaVersion": 1,
+  "stage": "25H-C",
+  "status": "YELLOW",
+  "classification": "STATIC_IL_EVENT_FREEZE_BREADTH_PROVEN_GRAPH_STILL_BLOCKED",
+  "baseline": {
+    "integrationCommit": "8f9fbf64aadc4ff8853132cc35bf9e2e77378df8",
+    "everestCommit": "4bbde91b8dbaaddef2ceec75ca0cd6d59b3b8d00",
+    "monoModCommit": "dfc30a1506d37fb88a2c2be004f525205f46a24c",
+    "managedDetourTargetCount": 57,
+    "frozenPlanSchema": 2,
+    "stage25hbSharedClosure": "51bc59ca40c9b0ea2962958ab53bca92b0aa43fa39aee7c3c15512305938e98f",
+    "stage25hbModInteropPlan": "9e755781f2d107d37bec45bd9fe4b551a28e9ddf8919f91f11d878c1dd041318"
+  },
+  "reacquisition": {
+    "requestedExactGraphs": 18,
+    "reacquiredExactGraphs": 18,
+    "verifiedPackages": 44,
+    "inaccessibleHistoricalReleases": [],
+    "archiveTraversalRejected": true,
+    "originalPackagesModified": false
+  },
+  "binaryInventory": {
+    "helperDllsInspected": 26,
+    "hookGenIlRegistrationOperations": 720,
+    "hookGenIlAdditions": 360,
+    "directIlHookConstructionSites": 126,
+    "configuredHookRelatedSites": 91,
+    "emitDelegateSites": 471,
+    "highPriorityGraphUnion": {
+      "hookGenIlRegistrationOperations": 270,
+      "directIlHookConstructionSites": 53,
+      "configuredHookRelatedSites": 50,
+      "emitDelegateSites": 226,
+      "emitDelegateTaxonomy": {
+        "A_STATIC_METHOD": 161,
+        "B_COMPILER_STATELESS_SINGLETON": 52,
+        "C_IMMUTABLE_PRIMITIVE_STRING_ENUM_CAPTURE": 0,
+        "D_IMMUTABLE_VALUE_STRUCT_CAPTURE": 0,
+        "E_MODULE_SINGLETON_CAPTURE": 4,
+        "F_STATIC_CONFIGURATION_CAPTURE": 0,
+        "G_MUTABLE_RUNTIME_OBJECT_CAPTURE": 0,
+        "H_TRANSIENT_MANIPULATOR_LOCAL_CAPTURE": 2,
+        "I_REFLECTION_OR_RUNTIME_SELECTED_TARGET": 0,
+        "J_OTHER_OR_UNKNOWN": 7
+      }
+    },
+    "directIlHookPolicy": "Every construction, target expression, manipulator expression, config site and observed Apply/Undo/Dispose call was inventoried. None was admitted by Stage 25H-C; static direct ILHook remains a separate deferred class.",
+    "configuredHookPolicy": "DetourConfig and DetourContext priority/Before/After sites remain a separate deferred ordering class and were not treated as ordinary events."
+  },
+  "selection": {
+    "path": "A",
+    "majorCompatibilityClass": "STATIC_IL_EVENT_FREEZE",
+    "newArchitectureClass": false,
+    "selectedGraph": "Space Trip",
+    "closestOverallGraph": "LittleEpic's Precision Challenge",
+    "reason": "Ordinary HookGen IL events dominate the reusable, statically representable high-priority surface (213 of 226 EmitDelegate sites are already-accepted static or compiler-singleton forms). VortexHelper supplies two exact modern entity-local registrations in a Stage 25G graph with zero unknown selected-site captures, no direct ILHook, and a source-free distributed DLL. This safely broadens the existing architecture, although Space Trip remains blocked by configured ordering and unrelated non-IL mechanisms.",
+    "exactGraphsContainingOrdinaryIlEventBreadth": 15,
+    "exactGraphsMateriallyAdvanced": ["Space Trip"],
+    "exactGraphsWithNoRemainingIlBlocker": [],
+    "exactGraphsWithZeroOverallBlockers": []
+  },
+  "selectedFixture": {
+    "name": "VortexHelper",
+    "version": "1.2.19",
+    "graph": "Space Trip",
+    "publicZipUrl": "https://gamebanana.com/mmdl/1368600",
+    "zipSha256": "b6280fe2e3c05d355c32a51049854137c41be72d24ec4aec9d997cc7c4394db2",
+    "logicalSourceSha256": "c071d33bb1cc4f0387ea204834e212bd020f3143aea68c9f4e56b9bfa35def1b",
+    "dllPath": "Code/bin/VortexHelper.dll",
+    "dllSha256": "f5a32f02c2699dcdf41bb1af808ead631491571c3d259429761953693bd37f73",
+    "sourceCommit": "b37b67b9365d769ba0fd19a67a1327260988fd6e",
+    "license": "MIT",
+    "licenseSha256": "051f92453f04ec0a8a9dff60882264ca949ea8e86de5f6aa96e04acdee90d359",
+    "distributedDllAuthoritative": true,
+    "sourceRequiredAtBuildTime": false,
+    "metadata": {
+      "dependencies": ["EverestCore@1.4465.0"],
+      "optionalDependencies": ["GravityHelper@1.2.10"]
+    },
+    "selectedEmitDelegateTaxonomy": {
+      "A_STATIC_METHOD": 1,
+      "B_COMPILER_STATELESS_SINGLETON": 2,
+      "unknown": 0
+    },
+    "runtimeLifecycle": "The two event registrations are installed by exact entity-local Hook methods and removed by matching Unhook methods. The installed-build frozen profile is immutable-active; the exact IL add/remove call sites and host-only manipulator methods are removed before device AOT while ordinary On.* registrations are reconstructed unchanged.",
+    "config": null,
+    "directIlHook": false
+  },
+  "productionPlan": {
+    "schemaVersion": 2,
+    "worker": "apple-everest-static-il-worker-v2",
+    "planSha256": "96726af5fa21c129d1b1bd39746a1f6f903be38e2b53b20b79275eb05d5a3261",
+    "transforms": [
+      {
+        "id": "VortexHelper:Player.NormalUpdate:Player_FrictionNormalUpdate",
+        "mechanism": "HookGen IL event",
+        "registration": "FloorBooster.Hooks.Hook/Unhook",
+        "target": "System.Int32 Celeste.Player::NormalUpdate()",
+        "manipulator": "Celeste.Mod.VortexHelper.Entities.FloorBooster+Hooks::Player_FrictionNormalUpdate",
+        "registrationOrdinal": 0,
+        "beforeSha256": "c38137044853b6ec5f8d42c364743bd82982a79314fe493a5070ef028e0f6e4b",
+        "afterSha256": "9f34b6f8ce802587df35fea0cd211a72f1de4446e0bf692e938bfdcc93401991",
+        "diffSha256": "c75c39af18902072eefb40b5fe349a108bfdbb77eb011e2f2d2002fffb4f862e",
+        "lowering": "static GetPlayerFriction call",
+        "finalForbiddenReferences": []
+      },
+      {
+        "id": "VortexHelper:Player.WallJumpCheck:Player_WallJumpCheck",
+        "mechanism": "HookGen IL event",
+        "registration": "PurpleBooster.Hooks.Hook/Unhook",
+        "target": "System.Boolean Celeste.Player::WallJumpCheck(System.Int32)",
+        "manipulator": "Celeste.Mod.VortexHelper.Entities.PurpleBooster+Hooks::Player_WallJumpCheck",
+        "registrationOrdinal": 0,
+        "beforeSha256": "7c87ba1ac56a612e7487dfc598e2d4b2f7d81817bd0d97fe1ec1e0d329128cf0",
+        "afterSha256": "6749ff2746b4d742c2a10ba54d3ff344ffc09c0ca4a3b30dbdf33a6dc6c8162b",
+        "diffSha256": "1cc8f904f6f72282372628b0ad40350e637bf9048f704a743023ad17adf2e05e",
+        "lowering": "compiler-generated stateless singleton delegate",
+        "finalForbiddenReferences": []
+      }
+    ],
+    "threeRunDeterminism": {
+      "normalUpdateOutputSha256": "1c649a54c053100cc0ddd12888ffdf042b69ffbf53932ab67d66f8bde17d2ca6",
+      "normalUpdateManifestSha256": "55616d1bc22ee8d985a1f0fcc88f5ff9faee3eaf9116af88180ddee98b993d99",
+      "wallJumpCheckOutputSha256": "3a387526cdec914c5bfcb4f4c84e50fade6895c4f01c3b149c7d7c595efa39e0",
+      "wallJumpCheckManifestSha256": "d852c44e6e5e48ce289ba7cb5659eb7dae0ebc815a25972eadfbc4c27e7d992f",
+      "independentRuns": 3,
+      "allIdentical": true
+    },
+    "deviceRewriteEvidence": {
+      "independentRuns": 2,
+      "outputSha256": "641532a1d3d32a4c412ef816eb4541072d28bf942bd7bdd610fa300ac493cd17",
+      "monoCecilReferenceRemoved": true,
+      "retainedOrdinaryOnRegistrations": 8,
+      "remainingAssemblyReferences": [
+        "System.Runtime",
+        "Celeste",
+        "FNA",
+        "MonoMod.Utils",
+        "MMHOOK_Celeste",
+        "System.Collections",
+        "System.Linq"
+      ],
+      "monoModUtilsDisposition": "Retained honestly because separate live DynamicData usage remains a product blocker."
+    },
+    "withoutSelectedHelper": "No plan is emitted and the exact canonical target bodies remain unchanged.",
+    "aotRoots": "Selected static method and surviving compiler-singleton target are made public through the existing exact frozen-plan closure rooting boundary.",
+    "deviceRuntime": "No Cecil, MonoMod.Cil, ILContext, ILCursor, ILHook backend, DynamicMethod, Reflection.Emit, or DynamicReferenceManager is introduced by either frozen target."
+  },
+  "graphs": [
+    {"graph":"NightClimb","packageGraph":["NightClimb@0.0.1","ContortHelper@1.5.5","MaxHelpingHand@1.40.9"],"helpers":["ContortHelper","MaxHelpingHand"],"ilMechanisms":["ordinary HookGen IL events","direct ILHook","configured hooks"],"emitDelegate":"MaxHelpingHand: 105 sites; static/singleton-dominant with classified exceptions","directIlHook":"34 construction sites in MaxHelpingHand","config":"41 related sites in MaxHelpingHand","nonIlBlockers":["broad On.* and public API surface","custom triggers/backdrops"],"distance":{"majorIlClasses":3,"minorIlRegistrations":78,"majorNonIlClasses":1,"minorApiHookContent":"high","physical":"high"},"selected":false,"postStatus":"BLOCKED"},
+    {"graph":"obby","packageGraph":["obby@1.0.0","AchievementHelper@1.0.5","SorbetHelper@1.9.2","MaxHelpingHand@1.40.9"],"helpers":["AchievementHelper","SorbetHelper","MaxHelpingHand"],"ilMechanisms":["ordinary HookGen IL events","direct ILHook","configured hooks"],"emitDelegate":"134 sites across SorbetHelper/MaxHelpingHand","directIlHook":"36 construction sites","config":"41 related sites","nonIlBlockers":["broad helper API/content","settings and custom entities"],"distance":{"majorIlClasses":3,"minorIlRegistrations":90,"majorNonIlClasses":1,"minorApiHookContent":"high","physical":"high"},"selected":false,"postStatus":"BLOCKED"},
+    {"graph":"MountBaker","packageGraph":["MountBaker@1.0.0","MoreDasheline@1.7.1","MaxHelpingHand@1.40.9","DJMapHelper@1.13.4"],"helpers":["MoreDasheline","MaxHelpingHand","DJMapHelper"],"ilMechanisms":["ordinary HookGen IL events","direct ILHook","configured hooks"],"emitDelegate":"108 classified sites in audited DLLs","directIlHook":"34 construction sites","config":"41 related sites","nonIlBlockers":["broad On.*","custom entities/triggers and API surface"],"distance":{"majorIlClasses":3,"minorIlRegistrations":83,"majorNonIlClasses":1,"minorApiHookContent":"high","physical":"high"},"selected":false,"postStatus":"BLOCKED"},
+    {"graph":"void","packageGraph":["void@0.0.1","BrokemiaHelper@1.8.5","ChronoHelper@1.3.3","MaxHelpingHand@1.40.9"],"helpers":["BrokemiaHelper","ChronoHelper","MaxHelpingHand"],"ilMechanisms":["ordinary HookGen IL events","direct ILHook","configured hooks"],"emitDelegate":"105 sites in MaxHelpingHand","directIlHook":"34 construction sites","config":"43 related sites including BrokemiaHelper","nonIlBlockers":["broad API/content and On.*"],"distance":{"majorIlClasses":3,"minorIlRegistrations":78,"majorNonIlClasses":1,"minorApiHookContent":"high","physical":"high"},"selected":false,"postStatus":"BLOCKED"},
+    {"graph":"Astraeus","packageGraph":["Astraeus@1.0.0","OutbackHelper@1.7.3","MaxHelpingHand@1.40.9","PandorasBox@1.0.49"],"helpers":["OutbackHelper","MaxHelpingHand","PandorasBox"],"ilMechanisms":["ordinary HookGen IL events","direct ILHook","configured hooks"],"emitDelegate":"110 sites in MaxHelpingHand/PandorasBox","directIlHook":"34 construction sites","config":"41 related sites","nonIlBlockers":["large public API surface","custom entities/triggers/backdrops"],"distance":{"majorIlClasses":3,"minorIlRegistrations":87,"majorNonIlClasses":1,"minorApiHookContent":"high","physical":"high"},"selected":false,"postStatus":"BLOCKED"},
+    {"graph":"LittleEpic's Precision Challenge","packageGraph":["LittleEpic's Precision Challenge@1.0.0","ChronoHelper@1.3.3","DJMapHelper@1.13.4"],"helpers":["ChronoHelper","DJMapHelper"],"ilMechanisms":["five ordinary HookGen IL additions on Player.OnCollideH, Player.OnCollideV and FlingBird.Awake"],"emitDelegate":"3/3 A_STATIC_METHOD; unknown=0","directIlHook":"none","config":"none","nonIlBlockers":["DJMapHelper ordinary On.* target/API breadth","custom entity/trigger content registration"],"distance":{"majorIlClasses":1,"minorIlRegistrations":5,"majorNonIlClasses":0,"minorApiHookContent":"medium","physical":"medium"},"selected":false,"postStatus":"CLOSEST_OVERALL_BUT_NOT_EXACT_REGISTERED"},
+    {"graph":"Wholesome Theo Gameplay","packageGraph":["Wholesome Theo Gameplay@0.0.1","ExtendedVariantMode@0.50.5","DJMapHelper@1.13.4"],"helpers":["ExtendedVariantMode","DJMapHelper"],"ilMechanisms":["ordinary HookGen IL events","direct ILHook","configured hooks"],"emitDelegate":"154 sites","directIlHook":"42 construction sites","config":"34 related sites","nonIlBlockers":["variant framework breadth","custom entities/triggers"],"distance":{"majorIlClasses":3,"minorIlRegistrations":148,"majorNonIlClasses":1,"minorApiHookContent":"high","physical":"high"},"selected":false,"postStatus":"BLOCKED"},
+    {"graph":"QLetterAurora","packageGraph":["QLetterAurora@1.0.1","CpopHelper@1.3.0","CaeruleaHelper@1.11.1","MaxHelpingHand@1.40.9","LuckyHelper@0.32.4"],"helpers":["CpopHelper","CaeruleaHelper","MaxHelpingHand","LuckyHelper"],"ilMechanisms":["ordinary HookGen IL events","direct ILHook","configured hooks"],"emitDelegate":"171 sites","directIlHook":"43 construction sites","config":"41 related sites","nonIlBlockers":["broad On.* and API surface","custom entities/triggers/backdrops","settings"],"distance":{"majorIlClasses":3,"minorIlRegistrations":107,"majorNonIlClasses":1,"minorApiHookContent":"high","physical":"high"},"selected":false,"postStatus":"BLOCKED"},
+    {"graph":"TeraBlast","packageGraph":["TeraBlast@1.0.1","TeraHelper@1.0.4","MaxHelpingHand@1.40.9"],"helpers":["TeraHelper","MaxHelpingHand"],"ilMechanisms":["ordinary HookGen IL events","direct ILHook","configured hooks"],"emitDelegate":"132 sites","directIlHook":"42 construction sites","config":"41 related sites","nonIlBlockers":["broad On.* and API surface","custom entities/triggers/content"],"distance":{"majorIlClasses":3,"minorIlRegistrations":90,"majorNonIlClasses":1,"minorApiHookContent":"high","physical":"high"},"selected":false,"postStatus":"BLOCKED"},
+    {"graph":"GLACEIR","packageGraph":["GLACEIR@1.0.0.0","BrokemiaHelper@1.8.5","ContortHelper@1.5.5","DBBHelper@1.1.2"],"helpers":["BrokemiaHelper","ContortHelper","DBBHelper"],"ilMechanisms":["ordinary HookGen IL event"],"emitDelegate":"10 A/B-class sites in DBBHelper","directIlHook":"none in audited helper DLLs","config":"2 BrokemiaHelper sites","nonIlBlockers":["custom FMOD content","helper API/content breadth"],"distance":{"majorIlClasses":2,"minorIlRegistrations":1,"majorNonIlClasses":1,"minorApiHookContent":"medium","physical":"high"},"selected":false,"postStatus":"BLOCKED_CUSTOM_AUDIO_AND_CONFIG"},
+    {"graph":"The Fall","packageGraph":["The Fall@1.0.0","LunaticHelper@1.1.1","DJMapHelper@1.13.4"],"helpers":["LunaticHelper","DJMapHelper"],"ilMechanisms":["ordinary HookGen IL events","configured ordering"],"emitDelegate":"3/3 A_STATIC_METHOD in DJMapHelper","directIlHook":"none","config":"LunaticHelper DetourContext After={*} around On.Player.ctor","nonIlBlockers":["custom map audio","ordinary helper content/API breadth"],"distance":{"majorIlClasses":2,"minorIlRegistrations":5,"majorNonIlClasses":1,"minorApiHookContent":"medium","physical":"high"},"selected":false,"postStatus":"BLOCKED"},
+    {"graph":"Lightning Strike","packageGraph":["Lightning Strike@0.0.1","AdventureHelper@1.6.0","BrokemiaHelper@1.8.5"],"helpers":["AdventureHelper","BrokemiaHelper"],"ilMechanisms":["configured helper hooks"],"emitDelegate":"none in audited BrokemiaHelper DLL","directIlHook":"none in audited BrokemiaHelper DLL","config":"2 BrokemiaHelper sites","nonIlBlockers":["AdventureHelper API/content breadth","custom entities/triggers"],"distance":{"majorIlClasses":1,"minorIlRegistrations":0,"majorNonIlClasses":1,"minorApiHookContent":"medium","physical":"medium"},"selected":false,"postStatus":"BLOCKED"},
+    {"graph":"Coffee Pot Crystal Heaven","packageGraph":["Coffee_Pot's Birthday Special - Crystal Heaven@1.0.0","CrystallineHelper@1.17.2","SafeRespawnCrumble@1.2.1"],"helpers":["CrystallineHelper","SafeRespawnCrumble"],"ilMechanisms":["ordinary HookGen IL events","direct/configured ILHook"],"emitDelegate":"9 sites in CrystallineHelper","directIlHook":"2 construction sites","config":"5 related sites","nonIlBlockers":["custom entities/triggers and API breadth"],"distance":{"majorIlClasses":3,"minorIlRegistrations":6,"majorNonIlClasses":0,"minorApiHookContent":"medium","physical":"medium"},"selected":false,"postStatus":"BLOCKED"},
+    {"graph":"StupidLava","packageGraph":["StupidLava@0.0.1","BounceHelper@1.14.0","CrystallineHelper@1.17.2"],"helpers":["BounceHelper","CrystallineHelper"],"ilMechanisms":["ordinary HookGen IL events","direct/configured ILHook"],"emitDelegate":"12 sites","directIlHook":"2 construction sites","config":"5 related sites","nonIlBlockers":["custom entities/triggers and API breadth"],"distance":{"majorIlClasses":3,"minorIlRegistrations":8,"majorNonIlClasses":0,"minorApiHookContent":"medium","physical":"medium"},"selected":false,"postStatus":"BLOCKED"},
+    {"graph":"Blue Ice","packageGraph":["Blue Ice@1.0.2","ShroomHelper@1.2.10","CrystallineHelper@1.17.2"],"helpers":["ShroomHelper","CrystallineHelper"],"ilMechanisms":["ordinary HookGen IL events","direct/configured ILHook"],"emitDelegate":"9 sites in CrystallineHelper","directIlHook":"2 construction sites","config":"5 related sites","nonIlBlockers":["ShroomHelper DynamicData","five ShroomHelper HookGen gaps","custom entities/triggers"],"distance":{"majorIlClasses":3,"minorIlRegistrations":6,"majorNonIlClasses":1,"minorApiHookContent":"medium","physical":"medium"},"selected":false,"postStatus":"BLOCKED"},
+    {"graph":"sillymap1","packageGraph":["sillymap1@0.0.1","GravityHelper@1.2.28","ShroomHelper@1.2.10"],"helpers":["GravityHelper","ShroomHelper"],"ilMechanisms":["ordinary HookGen IL events","direct ILHook","configured hooks"],"emitDelegate":"60 sites in GravityHelper","directIlHook":"29 construction sites","config":"7 related sites","nonIlBlockers":["DynamicData","broad gravity runtime/API surface","custom entities/triggers"],"distance":{"majorIlClasses":3,"minorIlRegistrations":61,"majorNonIlClasses":1,"minorApiHookContent":"high","physical":"high"},"selected":false,"postStatus":"BLOCKED"},
+    {"graph":"Space Trip","packageGraph":["Space Trip@1.0.0","VortexHelper@1.2.19","LunaticHelper@1.1.1"],"helpers":["VortexHelper","LunaticHelper"],"ilMechanismsBefore":["two ordinary VortexHelper HookGen IL events","LunaticHelper configured ordering"],"ilMechanismsAfter":["LunaticHelper configured ordering"],"emitDelegate":"VortexHelper 3/3 classified: A=1, B=2, unknown=0","directIlHook":"none","config":"LunaticHelper DetourContext After={*} around On.Player.ctor","nonIlBlockers":["VortexHelper DynamicData/DynData","12 uncatalogued VortexHelper On.* targets","optional GravityHelper ModInterop surface","custom FMOD bank","custom entity/content/API breadth"],"distanceBefore":{"majorIlClasses":2,"minorIlRegistrations":2,"majorNonIlClasses":2,"minorApiHookContent":"high","physical":"high"},"distanceAfter":{"majorIlClasses":1,"minorIlRegistrations":0,"majorNonIlClasses":2,"minorApiHookContent":"high","physical":"high"},"selected":true,"postStatus":"MATERIALLY_ADVANCED_BUT_CONFIG_AND_NON_IL_BLOCKED"},
+    {"graph":"8bb1b","packageGraph":["8bb1b@1.0.1","FlaglinesAndSuch@1.6.80","BounceHelper@1.14.0","CrystallineHelper@1.17.2"],"helpers":["FlaglinesAndSuch","BounceHelper","CrystallineHelper"],"ilMechanisms":["ordinary HookGen IL events","direct/configured ILHook"],"emitDelegate":"12 audited sites across BounceHelper/CrystallineHelper","directIlHook":"2 construction sites","config":"5 related sites","nonIlBlockers":["FlaglinesAndSuch API/content breadth","custom entities/triggers"],"distance":{"majorIlClasses":3,"minorIlRegistrations":8,"majorNonIlClasses":1,"minorApiHookContent":"medium","physical":"high"},"selected":false,"postStatus":"BLOCKED"}
+  ],
+  "productGate": {
+    "selectedHelperUnclassifiedBlockers": 0,
+    "selectedGraphUnclassifiedBlockers": 0,
+    "selectedGraphOverallBlockers": 6,
+    "fullMapBuildAllowed": false,
+    "reason": "The graph is precisely classified but not zero-overall. Stage 25H-C intentionally did not implement configured ordering, DynamicData, broad On/API/content, or custom FMOD as additional major classes.",
+    "sharedClosureSha256": null,
+    "iosProduct": "NOT_BUILT_PRE_AOT_GATE",
+    "tvosProduct": "NOT_BUILT_PRE_AOT_GATE",
+    "physicalIphone": "NOT_RUN_PRE_AOT_GATE",
+    "physicalIpad": "NOT_RUN_PRE_AOT_GATE",
+    "physicalAppleTv": "NOT_RUN_PRE_AOT_GATE"
+  },
+  "unchangedLocks": {
+    "dashToggleFrozenDll": "79d06fd9428e33613b81f089693651f03c6445e0a6f22368902bb3fcb49e904f",
+    "vanillaIosTree": "2f5d6fffaa151530f48deac7ff402c2c6d475b20eeef5579f1db784d57da2357",
+    "canonicalContent": "30a1c147d1a3ab0aa45762094e393ed7fd69951dd66e5af063447641e0699c46",
+    "canonicalRaw": "db7b722159fbdef8625c81608165aea162957dce956fcd5b16eeceaa1089a273",
+    "canonicalPatched": "0c6515adadf58251ab2da66c6c61a1f61bd19b85f5dcdd4f1280552af650a4b5",
+    "canonicalStage6": "1a981bc5994261775c1fea497cd042780fdbbcb24b7390a2f4db6aab1be747d9",
+    "iosNative": "9fb302d221180e39f270ea5ebf48e18433b67bd0a40943c042a227fe0f8ad6a2",
+    "tvosNative": "6286e0545b32e9c56732955d4cf816ed8f5dc0d816ab610dd9fe1752090a01fc"
+  },
+  "nextStageRecommendation": {
+    "nextIsStage25G2": false,
+    "singleHighestMeasuredMechanism": "STATIC_DIRECT_ILHOOK_FREEZE feasibility",
+    "evidence": "Direct ILHook is the largest still-distinct construction class in the deeply audited graph union (53 sites), narrowly ahead of configured-hook related sites (50). Selection must next be narrowed by exact target/lifetime eligibility; custom audio remains a separate blocker for GLACEIR, The Fall and Space Trip.",
+    "manualDownloadRequired": false,
+    "strawberryJam": "premature"
+  }
+}

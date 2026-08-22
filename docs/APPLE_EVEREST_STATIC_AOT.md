@@ -542,6 +542,34 @@ remains an isolated slot `-1` debug lane: it is deliberately nonpersistent and
 Save and Quit remains suppressed. General Everest LevelSet/custom-map
 progression is separate future work.
 
+## Graph-driven ordinary IL-event breadth
+
+Stage 25H-C re-audited all 18 exact Stage 25G IL-primary graphs from freshly
+downloaded, hash-verified public releases before choosing another mechanism.
+The selected path is still the existing `STATIC_IL_EVENT_FREEZE` class—not a
+new runtime architecture—because ordinary HookGen IL events have the broadest
+safe graph payoff and 213 of the 226 relevant `EmitDelegate` sites are already
+covered by the accepted static-method or compiler-singleton lowering classes.
+
+VortexHelper 1.2.19, from the exact Space Trip graph, is the first registered
+fixture whose two IL subscriptions live in entity-local `Hook`/`Unhook`
+methods instead of an Everest module's `Load`/`Unload`. The Mac validates the
+exact nested registration sites, runs the two distributed manipulators, and
+freezes `Player.NormalUpdate` and `Player.WallJumpCheck`. The device rewrite
+then reconstructs the neighbouring ordinary `On.*` registrations, removes
+only the exact IL-event subscriptions and host-only manipulator code, and roots
+the surviving static method/compiler singleton. Source remains audit evidence;
+the public release DLL is authoritative and sufficient for the transform.
+
+This is deliberately fail-closed. An extra IL subscription, changed metadata,
+changed DLL, changed baseline/after/diff hash, direct `ILHook`, capture outside
+the accepted classes, or forbidden final reference rejects the helper. The
+installed profile remains immutable-active and does not claim live unpatching.
+Space Trip is not yet product-compatible: LunaticHelper configured ordering,
+VortexHelper `DynamicData`, uncatalogued ordinary hooks/API/content, and custom
+audio remain separate blockers. No product was built merely to discover those
+already classified failures.
+
 The deferred IL rung uses the ordinary GoldenTrainer 1.5.4 release. Its DLL
 contains `IL.Celeste.SummitCheckpoint.Update` plus a direct `ILHook` on
 `Player.orig_Die`; the host analyzer now identifies both from CLI metadata.
