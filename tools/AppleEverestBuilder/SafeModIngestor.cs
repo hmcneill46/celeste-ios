@@ -165,5 +165,8 @@ internal static class SafeModIngestor
     }
 
     private static bool IsIdentifier(string value) =>
-        value.Length is > 0 and <= 128 && value.All(ch => char.IsAsciiLetterOrDigit(ch) || ch is '_' or '-' or '.');
+        value.Length is > 0 and <= 128 && char.IsAsciiLetterOrDigit(value[0]) &&
+        char.IsAsciiLetterOrDigit(value[^1]) &&
+        value.All(ch => char.IsAsciiLetterOrDigit(ch) || ch is '_' or '-' or '.' or ' ' or '\'') &&
+        !value.Contains("  ", StringComparison.Ordinal);
 }

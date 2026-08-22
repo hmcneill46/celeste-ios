@@ -138,6 +138,65 @@ internal static class StaticIlFreeze
             [], ["Celeste.Mod.VortexHelper.Entities.PurpleBooster+Hooks+<>c::<Player_WallJumpCheck>b__3_1"])
     ];
 
+    // Exact DJMapHelper 1.13.4 ordinary HookGen IL surface selected by the
+    // LittleEpic graph. The real distributed manipulators execute on the Mac;
+    // only their fingerprinted target bodies and reviewed static delegate
+    // calls enter the Apple products. Horizontal and vertical collision each
+    // preserve the distributed Feather-then-Theo registration sequence.
+    private static readonly FrozenIlTransformPlan[] DJMapHelperPlans =
+    [
+        new("DJMapHelper:player-h-feather", StaticAotCompatibility.DJName,
+            StaticAotCompatibility.DJDllPath, StaticAotCompatibility.DJDllSha256,
+            "IL.Celeste.Player", "OnCollideH",
+            "System.Void Celeste.Player::OnCollideH(Celeste.CollisionData)",
+            "System.Void Celeste.Player::OnCollideH(Celeste.CollisionData)",
+            "Celeste.Mod.DJMapHelper.Entities.FeatherBarrier", "AddCollideCheck", true, 0,
+            "71468bceff7398edb3f4a093087b6bcedf0bc9476a10e09ff9be65574f22f2b9",
+            "f0659cb0f07350663fbf5ac9ab68cf4d53b2674db66c1422568d5b50f2246ee4",
+            "4d9b78648d0a72da8127cd9f2410c66673eaf7db4c5d3400209de1d7dd8992e6", [],
+            Repeat("Celeste.Mod.DJMapHelper.Entities.FeatherBarrier::CheckCollide", 10)),
+        new("DJMapHelper:player-h-theo", StaticAotCompatibility.DJName,
+            StaticAotCompatibility.DJDllPath, StaticAotCompatibility.DJDllSha256,
+            "IL.Celeste.Player", "OnCollideH",
+            "System.Void Celeste.Player::OnCollideH(Celeste.CollisionData)",
+            "System.Void Celeste.Player::OnCollideH(Celeste.CollisionData)",
+            "Celeste.Mod.DJMapHelper.Entities.TheoCrystalBarrier", "AddCollideCheck", true, 1,
+            "f0659cb0f07350663fbf5ac9ab68cf4d53b2674db66c1422568d5b50f2246ee4",
+            "a86a9eff25145c269bd65955eebbb4dbd63f2d0d9e33160365cacc15239748a3",
+            "17dc28cf86b319fd781fc8c6f8a1f4b1f4e0dcd97ce75f27be2bbc5ba6b14327", [],
+            Repeat("Celeste.Mod.DJMapHelper.Entities.TheoCrystalBarrier::CheckCollide", 10)),
+        new("DJMapHelper:player-v-feather", StaticAotCompatibility.DJName,
+            StaticAotCompatibility.DJDllPath, StaticAotCompatibility.DJDllSha256,
+            "IL.Celeste.Player", "OnCollideV",
+            "System.Void Celeste.Player::OnCollideV(Celeste.CollisionData)",
+            "System.Void Celeste.Player::OnCollideV(Celeste.CollisionData)",
+            "Celeste.Mod.DJMapHelper.Entities.FeatherBarrier", "AddCollideCheck", true, 0,
+            "40e6847041906b2c83a493f5477a19c24d2bb8d2cbce4c40780c67df40866271",
+            "d07b75bd9c0e47ef8d27b3bdf3a9feb04a03414ca4b9d70760b6318d3b84fb50",
+            "cc5f9e0b1744e1f32ec2508776aa6b0a441a466a8399873fc33f9d51b3ae4d6f", [],
+            Repeat("Celeste.Mod.DJMapHelper.Entities.FeatherBarrier::CheckCollide", 15)),
+        new("DJMapHelper:player-v-theo", StaticAotCompatibility.DJName,
+            StaticAotCompatibility.DJDllPath, StaticAotCompatibility.DJDllSha256,
+            "IL.Celeste.Player", "OnCollideV",
+            "System.Void Celeste.Player::OnCollideV(Celeste.CollisionData)",
+            "System.Void Celeste.Player::OnCollideV(Celeste.CollisionData)",
+            "Celeste.Mod.DJMapHelper.Entities.TheoCrystalBarrier", "AddCollideCheck", true, 1,
+            "d07b75bd9c0e47ef8d27b3bdf3a9feb04a03414ca4b9d70760b6318d3b84fb50",
+            "0dd3e5e5322fc56809670a4273eb164165f682926dad364634a872ad754147e1",
+            "b44772e4195ca2e9f5b0b08e8705a4a766504d6f70574051691970405ae9bb1f", [],
+            Repeat("Celeste.Mod.DJMapHelper.Entities.TheoCrystalBarrier::CheckCollide", 15)),
+        new("DJMapHelper:fling-awake", StaticAotCompatibility.DJName,
+            StaticAotCompatibility.DJDllPath, StaticAotCompatibility.DJDllSha256,
+            "IL.Celeste.FlingBird", "Awake",
+            "System.Void Celeste.FlingBird::Awake(Monocle.Scene)",
+            "System.Void Celeste.FlingBird::Awake(Monocle.Scene)",
+            "Celeste.Mod.DJMapHelper.Entities.FlingBirdReversed", "ModFlingBirdAwake", true, 0,
+            "1e0337d08e443cba4876899b602bbe31d9af5f1c5c9f0d13b04e03794cd2c55c",
+            "1423bb5b7cba3820c9ad3f67fdef7377e59fc0c28487a8c0abb8ad09298c1d92",
+            "a8c1cc2d2a19c9020938368478998d5dadae76f64270913c0dfe0d2038f3bb10", [],
+            ["Celeste.Mod.DJMapHelper.Entities.FlingBirdReversed::RemoveFlingBirdReversedFrom"])
+    ];
+
     private static readonly FrozenIlTransformPlan[] CaeruleaPlans =
     [
         new("CaeruleaHelper:BackdropRenderer.Render:ModifyBackdropRenderer", CaeruleaName, "bin/CaeruleaHelper.dll", CaeruleaDllSha256,
@@ -246,8 +305,24 @@ internal static class StaticIlFreeze
             ValidateCaeruleaRegistrations(dll);
             return CaeruleaPlans;
         }
+        if (metadata.Name == StaticAotCompatibility.DJName &&
+            metadata.Version == StaticAotCompatibility.DJVersion &&
+            input.SourceSha256 == StaticAotCompatibility.DJSourceSha256 &&
+            metadata.DLL == StaticAotCompatibility.DJDllPath)
+        {
+            string dll = Path.Combine(input.StagingRoot, StaticAotCompatibility.DJDllPath);
+            if (Hashing.FileSha256(dll) != StaticAotCompatibility.DJDllSha256)
+                throw new InvalidDataException("registered DJMapHelper frozen-IL DLL hash mismatch");
+            if (metadata.Dependencies.Count != 1 || metadata.Dependencies[0].Name != "Everest" ||
+                metadata.Dependencies[0].Version != "1.1963.0" || metadata.OptionalDependencies.Count != 0)
+                throw new InvalidDataException("registered DJMapHelper frozen-IL metadata drifted");
+            ValidateDJMapHelperRegistrations(dll);
+            return DJMapHelperPlans;
+        }
         return [];
     }
+
+    private static string[] Repeat(string value, int count) => Enumerable.Repeat(value, count).ToArray();
 
     private static void ValidateRegistrations(string dll, IReadOnlyList<FrozenIlTransformPlan> plans, string module)
     {
@@ -366,13 +441,59 @@ internal static class StaticIlFreeze
             throw new InvalidDataException("CaeruleaHelper direct ILHook storage/apply contract drifted");
     }
 
+    private static void ValidateDJMapHelperRegistrations(string dll)
+    {
+        using AssemblyDefinition assembly = AssemblyDefinition.ReadAssembly(dll,
+            new ReaderParameters { ReadSymbols = false });
+        List<(string Operation, string EventType, string EventName, string Manipulator)> found = [];
+        foreach (MethodDefinition method in assembly.MainModule.Types.SelectMany(AllTypes)
+                     .SelectMany(type => type.Methods).Where(method => method.HasBody))
+        {
+            Instruction[] body = method.Body.Instructions.ToArray();
+            for (int index = 0; index < body.Length; index++)
+            {
+                if (body[index].Operand is not MethodReference called ||
+                    !called.DeclaringType.FullName.StartsWith("IL.", StringComparison.Ordinal) ||
+                    !(called.Name.StartsWith("add_", StringComparison.Ordinal) ||
+                      called.Name.StartsWith("remove_", StringComparison.Ordinal))) continue;
+                MethodReference? manipulator = body.Take(index).Reverse().Take(20)
+                    .Where(instruction => instruction.OpCode == OpCodes.Ldftn)
+                    .Select(instruction => instruction.Operand).OfType<MethodReference>().FirstOrDefault();
+                if (manipulator == null || !manipulator.Resolve().IsStatic)
+                    throw new InvalidDataException("DJMapHelper frozen-IL registration is not a static ldftn delegate");
+                found.Add((called.Name.StartsWith("add_", StringComparison.Ordinal) ? "add" : "remove",
+                    called.DeclaringType.FullName, called.Name[(called.Name[0] == 'a' ? 4 : 7)..],
+                    manipulator.DeclaringType.FullName.Replace('/', '+') + "::" + manipulator.Name));
+            }
+        }
+        foreach (FrozenIlTransformPlan plan in DJMapHelperPlans)
+        {
+            string manipulator = plan.ManipulatorType + "::" + plan.ManipulatorMethod;
+            if (found.Count(item => item.Operation == "add" && item.EventType == plan.EventType &&
+                    item.EventName == plan.EventName && item.Manipulator == manipulator) != 1 ||
+                found.Count(item => item.Operation == "remove" && item.EventType == plan.EventType &&
+                    item.EventName == plan.EventName && item.Manipulator == manipulator) != 1)
+                throw new InvalidDataException("DJMapHelper frozen-IL lifecycle contract drifted: " + plan.PlanId);
+        }
+        if (found.Count != DJMapHelperPlans.Length * 2 || assembly.MainModule.GetTypeReferences().Any(type =>
+                type.FullName == "MonoMod.RuntimeDetour.ILHook"))
+            throw new InvalidDataException("DJMapHelper contains an unreviewed IL lifecycle operation");
+    }
+
     internal static void RewriteDeviceAssembly(AssemblyDefinition assembly,
         IReadOnlyList<FrozenIlTransformPlan> plans)
     {
         if (plans.Count == 0) return;
         if (plans.Any(plan => plan.Owner != assembly.Name.Name) ||
-            assembly.Name.Name is not (FixtureName or DisposableTheoName or VortexHelperName or CaeruleaName))
+            assembly.Name.Name is not (FixtureName or DisposableTheoName or VortexHelperName or CaeruleaName or
+                StaticAotCompatibility.DJName))
             throw new InvalidDataException("frozen-IL device rewrite received an unregistered assembly");
+
+        if (assembly.Name.Name == StaticAotCompatibility.DJName)
+        {
+            RewriteDJMapHelper(assembly, plans);
+            return;
+        }
 
         if (assembly.Name.Name == CaeruleaName)
         {
@@ -784,6 +905,87 @@ internal static class StaticIlFreeze
         }
     }
 
+    private static void RewriteDJMapHelper(AssemblyDefinition assembly,
+        IReadOnlyList<FrozenIlTransformPlan> plans)
+    {
+        if (plans.Count != 5 || plans.Any(plan => plan.Mechanism != "HOOKGEN_IL_EVENT"))
+            throw new InvalidDataException("DJMapHelper complete frozen-IL census drifted");
+
+        int removedEvents = 0;
+        foreach (MethodDefinition method in assembly.MainModule.Types.SelectMany(AllTypes)
+                     .SelectMany(type => type.Methods).Where(method => method.HasBody))
+        {
+            Instruction[] body = method.Body.Instructions.ToArray();
+            foreach (int index in Enumerable.Range(0, body.Length).Where(index =>
+                         body[index].Operand is MethodReference called &&
+                         called.DeclaringType.FullName.StartsWith("IL.", StringComparison.Ordinal) &&
+                         (called.Name.StartsWith("add_", StringComparison.Ordinal) ||
+                          called.Name.StartsWith("remove_", StringComparison.Ordinal))))
+            {
+                int lower = Math.Max(0, index - 20);
+                int start = Enumerable.Range(lower, index - lower)
+                    .Where(candidate => body[candidate].OpCode == OpCodes.Ldnull ||
+                                        body[candidate].OpCode == OpCodes.Ldsfld)
+                    .LastOrDefault(-1);
+                if (start < 0 || !body.Skip(start).Take(index - start).Any(value => value.OpCode == OpCodes.Ldftn))
+                    throw new InvalidDataException("DJMapHelper IL event removal shape drifted: " + method.FullName);
+                for (int cursor = start; cursor <= index; cursor++)
+                {
+                    body[cursor].OpCode = OpCodes.Nop;
+                    body[cursor].Operand = null;
+                }
+                removedEvents++;
+            }
+        }
+        if (removedEvents != plans.Count * 2)
+            throw new InvalidDataException("DJMapHelper frozen event removal count drifted: " + removedEvents);
+
+        foreach (FrozenIlTransformPlan plan in plans.GroupBy(plan =>
+                     plan.ManipulatorType + "\0" + plan.ManipulatorMethod, StringComparer.Ordinal)
+                     .Select(group => group.First()))
+        {
+            TypeDefinition owner = assembly.MainModule.Types.SelectMany(AllTypes).Single(type =>
+                type.FullName == plan.ManipulatorType.Replace('+', '/'));
+            owner.Methods.Remove(owner.Methods.Single(method => method.Name == plan.ManipulatorMethod));
+        }
+
+        HashSet<string> runtimeTargets = plans.SelectMany(plan => plan.ExpectedDelegateTargets)
+            .ToHashSet(StringComparer.Ordinal);
+        foreach (TypeDefinition type in assembly.MainModule.Types.SelectMany(AllTypes).ToArray())
+        {
+            foreach (MethodDefinition method in type.Methods.Where(MethodUsesDJHostIl).ToArray())
+                type.Methods.Remove(method);
+            foreach (FieldDefinition field in type.Fields.Where(field =>
+                         field.FieldType.Scope?.Name == "Mono.Cecil" ||
+                         field.FieldType.FullName.StartsWith("MonoMod.Cil.", StringComparison.Ordinal) ||
+                         field.FieldType.FullName.StartsWith("Mono.Cecil.", StringComparison.Ordinal)).ToArray())
+                type.Fields.Remove(field);
+            foreach (MethodDefinition method in type.Methods.Where(method =>
+                         runtimeTargets.Contains(type.FullName.Replace('/', '+') + "::" + method.Name)))
+            {
+                method.IsPublic = true;
+                method.IsPrivate = false;
+                MakePublic(type);
+            }
+        }
+        foreach (TypeDefinition type in assembly.MainModule.Types.SelectMany(AllTypes).ToArray()
+                     .Where(type => type.Name.StartsWith("<>", StringComparison.Ordinal) && TypeUsesDJHostIl(type)))
+        {
+            if (type.DeclaringType == null) assembly.MainModule.Types.Remove(type);
+            else type.DeclaringType.NestedTypes.Remove(type);
+        }
+
+        AssemblyNameReference? cecil = assembly.MainModule.AssemblyReferences.SingleOrDefault(reference =>
+            reference.Name == "Mono.Cecil");
+        if (cecil != null)
+        {
+            string[] residual = ActiveReferenceIdentities(assembly.MainModule, "Mono.Cecil").ToArray();
+            if (residual.Length != 0)
+                throw new InvalidDataException("DJMapHelper host IL reference survived: " + string.Join(',', residual));
+            assembly.MainModule.AssemblyReferences.Remove(cecil);
+        }
+    }
+
     private static void RewriteAsReturn(MethodDefinition method)
     {
         method.Body.Instructions.Clear();
@@ -963,6 +1165,24 @@ internal static class StaticIlFreeze
          method.Parameters.Any(parameter => parameter.ParameterType.Scope?.Name is "MonoMod.Utils" or "Mono.Cecil") ||
          method.Body.Instructions.Select(instruction => instruction.Operand).OfType<MemberReference>()
              .Any(reference => reference.DeclaringType?.Scope?.Name is "MonoMod.Utils" or "Mono.Cecil"));
+
+    private static bool MethodUsesDJHostIl(MethodDefinition method) => method.HasBody &&
+        (DJHostIlType(method.ReturnType) || method.Parameters.Any(parameter => DJHostIlType(parameter.ParameterType)) ||
+         method.Body.Variables.Any(variable => DJHostIlType(variable.VariableType)) ||
+         method.Body.ExceptionHandlers.Any(handler => DJHostIlType(handler.CatchType)) ||
+         method.Body.Instructions.Select(instruction => instruction.Operand).OfType<MemberReference>()
+             .Any(reference => DJHostIlType(reference.DeclaringType) ||
+                 reference is MethodReference called &&
+                 (DJHostIlType(called.ReturnType) || called.Parameters.Any(parameter => DJHostIlType(parameter.ParameterType))) ||
+                 reference is FieldReference field && DJHostIlType(field.FieldType)));
+
+    private static bool DJHostIlType(TypeReference? type) => type != null &&
+        (type.GetElementType().Scope?.Name == "Mono.Cecil" ||
+         type.FullName.StartsWith("Mono.Cecil.", StringComparison.Ordinal) ||
+         type.FullName.StartsWith("MonoMod.Cil.", StringComparison.Ordinal));
+
+    private static bool TypeUsesDJHostIl(TypeDefinition type) =>
+        type.Fields.Any(field => DJHostIlType(field.FieldType)) || type.Methods.Any(MethodUsesDJHostIl);
 
     private static bool TypeUsesHostIl(TypeDefinition type) =>
         type.Fields.Any(field => field.FieldType.Scope?.Name is "MonoMod.Utils" or "Mono.Cecil" ||

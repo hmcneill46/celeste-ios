@@ -168,6 +168,15 @@ try
     }
     Pass(SafeModIngestor.Ingest(zipPath, NewDirectory("stage-safe-zip"), 0).Metadata[0].Name == "ZipSafe", "safe ZIP");
 
+    string customAudio = NewDirectory("custom-audio");
+    Text(customAudio, "everest.yaml", "- Name: CustomAudio\n  Version: 1.0.0\n");
+    Text(customAudio, "Audio/custom.bank", "not-a-real-bank");
+    ModInput customAudioInput = SafeModIngestor.Ingest(customAudio, NewDirectory("stage-custom-audio"), 0);
+    Pass(CompatibilityAnalyzer.Audit(customAudioInput, customAudioInput.Metadata[0]).Classification ==
+         CompatibilityClass.CUSTOM_AUDIO_UNSUPPORTED, "custom FMOD bank audit is explicit");
+    Throws(() => CompatibilityAnalyzer.Analyze(customAudioInput, customAudioInput.Metadata[0]),
+        "CUSTOM_AUDIO_UNSUPPORTED", "custom FMOD bank fails closed before AOT");
+
     string traversal = Path.Combine(temporary, "traversal.zip");
     using (ZipArchive zip = ZipFile.Open(traversal, ZipArchiveMode.Create)) zip.CreateEntry("../escape.txt");
     Throws(() => SafeModIngestor.Ingest(traversal, NewDirectory("stage-traversal"), 0), "unsafe", "ZIP traversal");
@@ -814,10 +823,10 @@ try
     {
         JsonElement targets = targetCatalog.RootElement.GetProperty("targets");
         Pass(targetCatalog.RootElement.GetProperty("schemaVersion").GetInt32() == 2 &&
-             targets.GetArrayLength() == 69,
+             targets.GetArrayLength() == 102,
             "signature-driven managed-detour target catalog v2");
         string[] ids = targets.EnumerateArray().Select(target => target.GetProperty("id").GetString()!).ToArray();
-        Pass(ids.Distinct(StringComparer.Ordinal).Count() == 69 &&
+        Pass(ids.Distinct(StringComparer.Ordinal).Count() == 102 &&
              ids.Contains("celeste-commands-cmd-ow-complete", StringComparer.Ordinal) &&
              ids.Contains("celeste-oui-chapter-select-enter", StringComparer.Ordinal) &&
              ids.Contains("celeste-area-mode-stats-clone", StringComparer.Ordinal) &&
@@ -826,8 +835,13 @@ try
              ids.Contains("monocle-entity-added", StringComparer.Ordinal) &&
              ids.Contains("celeste-player-super-jump", StringComparer.Ordinal) &&
              ids.Contains("celeste-player-super-wall-jump-angle-check", StringComparer.Ordinal) &&
-             ids.Contains("celeste-star-jump-block-open", StringComparer.Ordinal),
-            "B2/H-D target catalog covers exact high-arity, IEnumerator, reference-return, inherited and property-getter target shapes");
+             ids.Contains("celeste-star-jump-block-open", StringComparer.Ordinal) &&
+             ids.Contains("celeste-player-dash-end", StringComparer.Ordinal) &&
+             ids.Contains("celeste-level-loader-loading-thread", StringComparer.Ordinal) &&
+             ids.Contains("celeste-crystal-static-spinner-removed", StringComparer.Ordinal) &&
+             ids.Contains("celeste-player-star-fly-return-to-normal-hitbox", StringComparer.Ordinal) &&
+             ids.Contains("celeste-theo-crystal-update", StringComparer.Ordinal),
+            "B2/I-A target catalog covers exact high-arity, IEnumerator, constructor, inherited and helper graph target shapes");
     }
     ManagedDetourTarget SyntheticTarget(string id, string eventName, bool isStatic, string returnType,
         params (string Type, string Name)[] parameters) => new()
@@ -1190,7 +1204,7 @@ try
          staticIlFreeze.Contains("frozen-IL On lifecycle contract drifted", StringComparison.Ordinal),
         "Load and Unload rewrites fail closed");
     Pass(staticIlFreeze.Contains("On.Celeste.CassetteBlock", StringComparison.Ordinal) == false &&
-         ManagedDetourCatalog.Targets.Count == 69,
+         ManagedDetourCatalog.Targets.Count == 102,
         "ordinary same-target On hooks remain catalog-driven");
     Pass(ManagedDetourCatalog.Targets.Any(target => target.Id == "celeste-crystal-static-spinner-create-sprites"),
         "same-target CrystalStaticSpinner On target registered");

@@ -747,6 +747,706 @@
       "hookNamespace": "On.Celeste", "hookType": "Player", "eventName": "get_SuperWallJumpAngleCheck", "origDelegate": "orig_get_SuperWallJumpAngleCheck", "hookDelegate": "hook_get_SuperWallJumpAngleCheck",
       "isStatic": false, "receiverType": "global::Celeste.Player", "returnType": "bool", "parameters": [],
       "directAliases": ["Celeste.Player::get_SuperWallJumpAngleCheck"]
+    },
+    {
+      "id": "celeste-player-dash-end",
+      "sourceFile": "Celeste/Player.cs",
+      "sourceDeclaration": "private void DashEnd()",
+      "originalDeclaration": "private void AppleEverestOriginal_DashEnd()",
+      "originalAlias": "AppleEverestOriginal_DashEnd",
+      "hookNamespace": "On.Celeste",
+      "hookType": "Player",
+      "eventName": "DashEnd",
+      "origDelegate": "orig_DashEnd",
+      "hookDelegate": "hook_DashEnd",
+      "isStatic": false,
+      "receiverType": "global::Celeste.Player",
+      "returnType": "void",
+      "parameters": []
+    },
+    {
+      "id": "celeste-map-data-reload",
+      "sourceFile": "Celeste/MapData.cs",
+      "sourceDeclaration": "public void Reload()",
+      "originalDeclaration": "private void AppleEverestOriginal_Reload()",
+      "originalAlias": "AppleEverestOriginal_Reload",
+      "hookNamespace": "On.Celeste",
+      "hookType": "MapData",
+      "eventName": "Reload",
+      "origDelegate": "orig_Reload",
+      "hookDelegate": "hook_Reload",
+      "isStatic": false,
+      "receiverType": "global::Celeste.MapData",
+      "returnType": "void",
+      "parameters": []
+    },
+    {
+      "id": "celeste-spikes-ctor-entity-data-vector2-directions",
+      "sourceFile": "Celeste/Spikes.cs",
+      "sourceDeclaration": "public Spikes(EntityData data, Vector2 offset, Directions dir)\n\t\t: this(data.Position + offset, GetSize(data, dir), dir, data.Attr(\"type\", \"default\"))",
+      "originalDeclaration": "private void AppleEverestOriginal_ctor_EntityData_Vector2_Directions(EntityData data, Vector2 offset, Directions dir)",
+      "originalAlias": "AppleEverestOriginal_ctor_EntityData_Vector2_Directions",
+      "hookNamespace": "On.Celeste",
+      "hookType": "Spikes",
+      "eventName": "ctor_EntityData_Vector2_Directions",
+      "origDelegate": "orig_ctor_EntityData_Vector2_Directions",
+      "hookDelegate": "hook_ctor_EntityData_Vector2_Directions",
+      "isStatic": false,
+      "receiverType": "global::Celeste.Spikes",
+      "returnType": "void",
+      "parameters": [
+        {
+          "type": "global::Celeste.EntityData",
+          "name": "data"
+        },
+        {
+          "type": "global::Microsoft.Xna.Framework.Vector2",
+          "name": "offset"
+        },
+        {
+          "type": "global::Celeste.Spikes.Directions",
+          "name": "dir"
+        }
+      ]
+    },
+    {
+      "id": "celeste-spring-ctor-entity-data-vector2-orientations",
+      "sourceFile": "Celeste/Spring.cs",
+      "sourceDeclaration": "public Spring(EntityData data, Vector2 offset, Orientations orientation)\n\t\t: this(data.Position + offset, orientation, data.Bool(\"playerCanUse\", defaultValue: true))",
+      "originalDeclaration": "private void AppleEverestOriginal_ctor_EntityData_Vector2_Orientations(EntityData data, Vector2 offset, Orientations orientation)",
+      "originalAlias": "AppleEverestOriginal_ctor_EntityData_Vector2_Orientations",
+      "hookNamespace": "On.Celeste",
+      "hookType": "Spring",
+      "eventName": "ctor_EntityData_Vector2_Orientations",
+      "origDelegate": "orig_ctor_EntityData_Vector2_Orientations",
+      "hookDelegate": "hook_ctor_EntityData_Vector2_Orientations",
+      "isStatic": false,
+      "receiverType": "global::Celeste.Spring",
+      "returnType": "void",
+      "parameters": [
+        {
+          "type": "global::Celeste.EntityData",
+          "name": "data"
+        },
+        {
+          "type": "global::Microsoft.Xna.Framework.Vector2",
+          "name": "offset"
+        },
+        {
+          "type": "global::Celeste.Spring.Orientations",
+          "name": "orientation"
+        }
+      ]
+    },
+    {
+      "id": "celeste-dash-block-break-vector2-vector2-bool-bool",
+      "sourceFile": "Celeste/DashBlock.cs",
+      "sourceDeclaration": "public void Break(Vector2 from, Vector2 direction, bool playSound = true, bool playDebrisSound = true)",
+      "originalDeclaration": "private void AppleEverestOriginal_Break_Vector2_Vector2_bool_bool(Vector2 from, Vector2 direction, bool playSound, bool playDebrisSound)",
+      "originalAlias": "AppleEverestOriginal_Break_Vector2_Vector2_bool_bool",
+      "hookNamespace": "On.Celeste",
+      "hookType": "DashBlock",
+      "eventName": "Break_Vector2_Vector2_bool_bool",
+      "origDelegate": "orig_Break_Vector2_Vector2_bool_bool",
+      "hookDelegate": "hook_Break_Vector2_Vector2_bool_bool",
+      "isStatic": false,
+      "receiverType": "global::Celeste.DashBlock",
+      "returnType": "void",
+      "parameters": [
+        {
+          "type": "global::Microsoft.Xna.Framework.Vector2",
+          "name": "from"
+        },
+        {
+          "type": "global::Microsoft.Xna.Framework.Vector2",
+          "name": "direction"
+        },
+        {
+          "type": "bool",
+          "name": "playSound",
+          "default": "true"
+        },
+        {
+          "type": "bool",
+          "name": "playDebrisSound",
+          "default": "true"
+        }
+      ]
+    },
+    {
+      "id": "celeste-level-enforce-bounds",
+      "sourceFile": "Celeste/Level.cs",
+      "sourceDeclaration": "public void EnforceBounds(Player player)",
+      "originalDeclaration": "private void AppleEverestOriginal_EnforceBounds(Player player)",
+      "originalAlias": "AppleEverestOriginal_EnforceBounds",
+      "hookNamespace": "On.Celeste",
+      "hookType": "Level",
+      "eventName": "EnforceBounds",
+      "origDelegate": "orig_EnforceBounds",
+      "hookDelegate": "hook_EnforceBounds",
+      "isStatic": false,
+      "receiverType": "global::Celeste.Level",
+      "returnType": "void",
+      "parameters": [
+        {
+          "type": "global::Celeste.Player",
+          "name": "player"
+        }
+      ]
+    },
+    {
+      "id": "celeste-solid-move-v-exact",
+      "sourceFile": "Celeste/Solid.cs",
+      "sourceDeclaration": "public override void MoveVExact(int move)",
+      "originalDeclaration": "private void AppleEverestOriginal_MoveVExact(int move)",
+      "originalAlias": "AppleEverestOriginal_MoveVExact",
+      "hookNamespace": "On.Celeste",
+      "hookType": "Solid",
+      "eventName": "MoveVExact",
+      "origDelegate": "orig_MoveVExact",
+      "hookDelegate": "hook_MoveVExact",
+      "isStatic": false,
+      "receiverType": "global::Celeste.Solid",
+      "returnType": "void",
+      "parameters": [
+        {
+          "type": "int",
+          "name": "move"
+        }
+      ]
+    },
+    {
+      "id": "celeste-solid-move-h-exact",
+      "sourceFile": "Celeste/Solid.cs",
+      "sourceDeclaration": "public override void MoveHExact(int move)",
+      "originalDeclaration": "private void AppleEverestOriginal_MoveHExact(int move)",
+      "originalAlias": "AppleEverestOriginal_MoveHExact",
+      "hookNamespace": "On.Celeste",
+      "hookType": "Solid",
+      "eventName": "MoveHExact",
+      "origDelegate": "orig_MoveHExact",
+      "hookDelegate": "hook_MoveHExact",
+      "isStatic": false,
+      "receiverType": "global::Celeste.Solid",
+      "returnType": "void",
+      "parameters": [
+        {
+          "type": "int",
+          "name": "move"
+        }
+      ]
+    },
+    {
+      "id": "celeste-actor-move-v-exact",
+      "sourceFile": "Celeste/Actor.cs",
+      "sourceDeclaration": "public bool MoveVExact(int moveV, Collision onCollide = null, Solid pusher = null)",
+      "originalDeclaration": "private bool AppleEverestOriginal_MoveVExact(int moveV, Collision onCollide, Solid pusher)",
+      "originalAlias": "AppleEverestOriginal_MoveVExact",
+      "hookNamespace": "On.Celeste",
+      "hookType": "Actor",
+      "eventName": "MoveVExact",
+      "origDelegate": "orig_MoveVExact",
+      "hookDelegate": "hook_MoveVExact",
+      "isStatic": false,
+      "receiverType": "global::Celeste.Actor",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "type": "int",
+          "name": "moveV"
+        },
+        {
+          "type": "global::Celeste.Collision",
+          "name": "onCollide",
+          "default": "null"
+        },
+        {
+          "type": "global::Celeste.Solid",
+          "name": "pusher",
+          "default": "null"
+        }
+      ]
+    },
+    {
+      "id": "celeste-actor-move-h-exact",
+      "sourceFile": "Celeste/Actor.cs",
+      "sourceDeclaration": "public bool MoveHExact(int moveH, Collision onCollide = null, Solid pusher = null)",
+      "originalDeclaration": "private bool AppleEverestOriginal_MoveHExact(int moveH, Collision onCollide, Solid pusher)",
+      "originalAlias": "AppleEverestOriginal_MoveHExact",
+      "hookNamespace": "On.Celeste",
+      "hookType": "Actor",
+      "eventName": "MoveHExact",
+      "origDelegate": "orig_MoveHExact",
+      "hookDelegate": "hook_MoveHExact",
+      "isStatic": false,
+      "receiverType": "global::Celeste.Actor",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "type": "int",
+          "name": "moveH"
+        },
+        {
+          "type": "global::Celeste.Collision",
+          "name": "onCollide",
+          "default": "null"
+        },
+        {
+          "type": "global::Celeste.Solid",
+          "name": "pusher",
+          "default": "null"
+        }
+      ]
+    },
+    {
+      "id": "celeste-level-loader-loading-thread",
+      "sourceFile": "Celeste/LevelLoader.cs",
+      "sourceDeclaration": "private void LoadingThread()",
+      "originalDeclaration": "private void AppleEverestOriginal_LoadingThread()",
+      "originalAlias": "AppleEverestOriginal_LoadingThread",
+      "hookNamespace": "On.Celeste",
+      "hookType": "LevelLoader",
+      "eventName": "LoadingThread",
+      "origDelegate": "orig_LoadingThread",
+      "hookDelegate": "hook_LoadingThread",
+      "isStatic": false,
+      "receiverType": "global::Celeste.LevelLoader",
+      "returnType": "void",
+      "parameters": []
+    },
+    {
+      "id": "celeste-final-boss-on-player",
+      "sourceFile": "Celeste/FinalBoss.cs",
+      "sourceDeclaration": "public void OnPlayer(Player player)",
+      "originalDeclaration": "private void AppleEverestOriginal_OnPlayer(Player player)",
+      "originalAlias": "AppleEverestOriginal_OnPlayer",
+      "hookNamespace": "On.Celeste",
+      "hookType": "FinalBoss",
+      "eventName": "OnPlayer",
+      "origDelegate": "orig_OnPlayer",
+      "hookDelegate": "hook_OnPlayer",
+      "isStatic": false,
+      "receiverType": "global::Celeste.FinalBoss",
+      "returnType": "void",
+      "parameters": [
+        {
+          "type": "global::Celeste.Player",
+          "name": "player"
+        }
+      ]
+    },
+    {
+      "id": "celeste-crystal-static-spinner-ctor-entity-data-vector2-crystal-color",
+      "sourceFile": "Celeste/CrystalStaticSpinner.cs",
+      "sourceDeclaration": "public CrystalStaticSpinner(EntityData data, Vector2 offset, CrystalColor color)\n\t\t: this(data.Position + offset, data.Bool(\"attachToSolid\"), color)",
+      "originalDeclaration": "private void AppleEverestOriginal_ctor_EntityData_Vector2_CrystalColor(EntityData data, Vector2 offset, CrystalColor color)",
+      "originalAlias": "AppleEverestOriginal_ctor_EntityData_Vector2_CrystalColor",
+      "hookNamespace": "On.Celeste",
+      "hookType": "CrystalStaticSpinner",
+      "eventName": "ctor_EntityData_Vector2_CrystalColor",
+      "origDelegate": "orig_ctor_EntityData_Vector2_CrystalColor",
+      "hookDelegate": "hook_ctor_EntityData_Vector2_CrystalColor",
+      "isStatic": false,
+      "receiverType": "global::Celeste.CrystalStaticSpinner",
+      "returnType": "void",
+      "parameters": [
+        {
+          "type": "global::Celeste.EntityData",
+          "name": "data"
+        },
+        {
+          "type": "global::Microsoft.Xna.Framework.Vector2",
+          "name": "offset"
+        },
+        {
+          "type": "global::Celeste.CrystalColor",
+          "name": "color"
+        }
+      ]
+    },
+    {
+      "id": "celeste-crystal-static-spinner-removed",
+      "sourceFile": "Celeste/CrystalStaticSpinner.cs",
+      "sourceDeclaration": "public override void Removed(Scene scene)",
+      "originalDeclaration": "private void AppleEverestOriginal_Removed(Scene scene)",
+      "originalAlias": "AppleEverestOriginal_Removed",
+      "hookNamespace": "On.Celeste",
+      "hookType": "CrystalStaticSpinner",
+      "eventName": "Removed",
+      "origDelegate": "orig_Removed",
+      "hookDelegate": "hook_Removed",
+      "isStatic": false,
+      "receiverType": "global::Celeste.CrystalStaticSpinner",
+      "returnType": "void",
+      "parameters": [
+        {
+          "type": "global::Monocle.Scene",
+          "name": "scene"
+        }
+      ]
+    },
+    {
+      "id": "celeste-level-end",
+      "sourceFile": "Celeste/Level.cs",
+      "sourceDeclaration": "public override void End()",
+      "originalDeclaration": "private void AppleEverestOriginal_End()",
+      "originalAlias": "AppleEverestOriginal_End",
+      "hookNamespace": "On.Celeste",
+      "hookType": "Level",
+      "eventName": "End",
+      "origDelegate": "orig_End",
+      "hookDelegate": "hook_End",
+      "isStatic": false,
+      "receiverType": "global::Celeste.Level",
+      "returnType": "void",
+      "parameters": []
+    },
+    {
+      "id": "celeste-level-loader-ctor",
+      "sourceFile": "Celeste/LevelLoader.cs",
+      "sourceDeclaration": "public LevelLoader(Session session, Vector2? startPosition = null)",
+      "originalDeclaration": "private void AppleEverestOriginal_ctor(Session session, Vector2? startPosition)",
+      "originalAlias": "AppleEverestOriginal_ctor",
+      "hookNamespace": "On.Celeste",
+      "hookType": "LevelLoader",
+      "eventName": "ctor",
+      "origDelegate": "orig_ctor",
+      "hookDelegate": "hook_ctor",
+      "isStatic": false,
+      "receiverType": "global::Celeste.LevelLoader",
+      "returnType": "void",
+      "parameters": [
+        {
+          "type": "global::Celeste.Session",
+          "name": "session"
+        },
+        {
+          "type": "global::Microsoft.Xna.Framework.Vector2?",
+          "name": "startPosition",
+          "default": "null"
+        }
+      ]
+    },
+    {
+      "id": "celeste-player-climb-bounds-check",
+      "sourceFile": "Celeste/Player.cs",
+      "sourceDeclaration": "public bool ClimbBoundsCheck(int dir)",
+      "originalDeclaration": "private bool AppleEverestOriginal_ClimbBoundsCheck(int dir)",
+      "originalAlias": "AppleEverestOriginal_ClimbBoundsCheck",
+      "hookNamespace": "On.Celeste",
+      "hookType": "Player",
+      "eventName": "ClimbBoundsCheck",
+      "origDelegate": "orig_ClimbBoundsCheck",
+      "hookDelegate": "hook_ClimbBoundsCheck",
+      "isStatic": false,
+      "receiverType": "global::Celeste.Player",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "type": "int",
+          "name": "dir"
+        }
+      ]
+    },
+    {
+      "id": "celeste-player-climb-jump",
+      "sourceFile": "Celeste/Player.cs",
+      "sourceDeclaration": "private void ClimbJump()",
+      "originalDeclaration": "private void AppleEverestOriginal_ClimbJump()",
+      "originalAlias": "AppleEverestOriginal_ClimbJump",
+      "hookNamespace": "On.Celeste",
+      "hookType": "Player",
+      "eventName": "ClimbJump",
+      "origDelegate": "orig_ClimbJump",
+      "hookDelegate": "hook_ClimbJump",
+      "isStatic": false,
+      "receiverType": "global::Celeste.Player",
+      "returnType": "void",
+      "parameters": []
+    },
+    {
+      "id": "celeste-heart-gem-collect",
+      "sourceFile": "Celeste/HeartGem.cs",
+      "sourceDeclaration": "private void Collect(Player player)",
+      "originalDeclaration": "private void AppleEverestOriginal_Collect(Player player)",
+      "originalAlias": "AppleEverestOriginal_Collect",
+      "hookNamespace": "On.Celeste",
+      "hookType": "HeartGem",
+      "eventName": "Collect",
+      "origDelegate": "orig_Collect",
+      "hookDelegate": "hook_Collect",
+      "isStatic": false,
+      "receiverType": "global::Celeste.HeartGem",
+      "returnType": "void",
+      "parameters": [
+        {
+          "type": "global::Celeste.Player",
+          "name": "player"
+        }
+      ]
+    },
+    {
+      "id": "celeste-player-reflection-fall-coroutine",
+      "sourceFile": "Celeste/Player.cs",
+      "sourceDeclaration": "private IEnumerator ReflectionFallCoroutine()",
+      "originalDeclaration": "private IEnumerator AppleEverestOriginal_ReflectionFallCoroutine()",
+      "originalAlias": "AppleEverestOriginal_ReflectionFallCoroutine",
+      "hookNamespace": "On.Celeste",
+      "hookType": "Player",
+      "eventName": "ReflectionFallCoroutine",
+      "origDelegate": "orig_ReflectionFallCoroutine",
+      "hookDelegate": "hook_ReflectionFallCoroutine",
+      "isStatic": false,
+      "receiverType": "global::Celeste.Player",
+      "returnType": "global::System.Collections.IEnumerator",
+      "parameters": []
+    },
+    {
+      "id": "celeste-player-ctor",
+      "sourceFile": "Celeste/Player.cs",
+      "sourceDeclaration": "public Player(Vector2 position, PlayerSpriteMode spriteMode)\n\t\t: base(new Vector2((int)position.X, (int)position.Y))",
+      "originalDeclaration": "private void AppleEverestOriginal_ctor(Vector2 position, PlayerSpriteMode spriteMode)",
+      "originalAlias": "AppleEverestOriginal_ctor",
+      "hookNamespace": "On.Celeste",
+      "hookType": "Player",
+      "eventName": "ctor",
+      "origDelegate": "orig_ctor",
+      "hookDelegate": "hook_ctor",
+      "isStatic": false,
+      "receiverType": "global::Celeste.Player",
+      "returnType": "void",
+      "parameters": [
+        {
+          "type": "global::Microsoft.Xna.Framework.Vector2",
+          "name": "position"
+        },
+        {
+          "type": "global::Celeste.PlayerSpriteMode",
+          "name": "spriteMode"
+        }
+      ]
+    },
+    {
+      "id": "celeste-fly-feather-on-player",
+      "sourceFile": "Celeste/FlyFeather.cs",
+      "sourceDeclaration": "private void OnPlayer(Player player)",
+      "originalDeclaration": "private void AppleEverestOriginal_OnPlayer(Player player)",
+      "originalAlias": "AppleEverestOriginal_OnPlayer",
+      "hookNamespace": "On.Celeste",
+      "hookType": "FlyFeather",
+      "eventName": "OnPlayer",
+      "origDelegate": "orig_OnPlayer",
+      "hookDelegate": "hook_OnPlayer",
+      "isStatic": false,
+      "receiverType": "global::Celeste.FlyFeather",
+      "returnType": "void",
+      "parameters": [
+        {
+          "type": "global::Celeste.Player",
+          "name": "player"
+        }
+      ]
+    },
+    {
+      "id": "celeste-fly-feather-respawn",
+      "sourceFile": "Celeste/FlyFeather.cs",
+      "sourceDeclaration": "private void Respawn()",
+      "originalDeclaration": "private void AppleEverestOriginal_Respawn()",
+      "originalAlias": "AppleEverestOriginal_Respawn",
+      "hookNamespace": "On.Celeste",
+      "hookType": "FlyFeather",
+      "eventName": "Respawn",
+      "origDelegate": "orig_Respawn",
+      "hookDelegate": "hook_Respawn",
+      "isStatic": false,
+      "receiverType": "global::Celeste.FlyFeather",
+      "returnType": "void",
+      "parameters": []
+    },
+    {
+      "id": "celeste-player-use-refill",
+      "sourceFile": "Celeste/Player.cs",
+      "sourceDeclaration": "public bool UseRefill(bool twoDashes)",
+      "originalDeclaration": "private bool AppleEverestOriginal_UseRefill(bool twoDashes)",
+      "originalAlias": "AppleEverestOriginal_UseRefill",
+      "hookNamespace": "On.Celeste",
+      "hookType": "Player",
+      "eventName": "UseRefill",
+      "origDelegate": "orig_UseRefill",
+      "hookDelegate": "hook_UseRefill",
+      "isStatic": false,
+      "receiverType": "global::Celeste.Player",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "type": "bool",
+          "name": "twoDashes"
+        }
+      ]
+    },
+    {
+      "id": "celeste-player-wind-move",
+      "sourceFile": "Celeste/Player.cs",
+      "sourceDeclaration": "private void WindMove(Vector2 move)",
+      "originalDeclaration": "private void AppleEverestOriginal_WindMove(Vector2 move)",
+      "originalAlias": "AppleEverestOriginal_WindMove",
+      "hookNamespace": "On.Celeste",
+      "hookType": "Player",
+      "eventName": "WindMove",
+      "origDelegate": "orig_WindMove",
+      "hookDelegate": "hook_WindMove",
+      "isStatic": false,
+      "receiverType": "global::Celeste.Player",
+      "returnType": "void",
+      "parameters": [
+        {
+          "type": "global::Microsoft.Xna.Framework.Vector2",
+          "name": "move"
+        }
+      ]
+    },
+    {
+      "id": "celeste-player-star-fly-return-to-normal-hitbox",
+      "sourceFile": "Celeste/Player.cs",
+      "sourceDeclaration": "private void StarFlyReturnToNormalHitbox()",
+      "originalDeclaration": "private void AppleEverestOriginal_StarFlyReturnToNormalHitbox()",
+      "originalAlias": "AppleEverestOriginal_StarFlyReturnToNormalHitbox",
+      "hookNamespace": "On.Celeste",
+      "hookType": "Player",
+      "eventName": "StarFlyReturnToNormalHitbox",
+      "origDelegate": "orig_StarFlyReturnToNormalHitbox",
+      "hookDelegate": "hook_StarFlyReturnToNormalHitbox",
+      "isStatic": false,
+      "receiverType": "global::Celeste.Player",
+      "returnType": "void",
+      "parameters": []
+    },
+    {
+      "id": "celeste-final-boss-trigger-falling-blocks",
+      "sourceFile": "Celeste/FinalBoss.cs",
+      "sourceDeclaration": "private void TriggerFallingBlocks(float leftOfX)",
+      "originalDeclaration": "private void AppleEverestOriginal_TriggerFallingBlocks(float leftOfX)",
+      "originalAlias": "AppleEverestOriginal_TriggerFallingBlocks",
+      "hookNamespace": "On.Celeste",
+      "hookType": "FinalBoss",
+      "eventName": "TriggerFallingBlocks",
+      "origDelegate": "orig_TriggerFallingBlocks",
+      "hookDelegate": "hook_TriggerFallingBlocks",
+      "isStatic": false,
+      "receiverType": "global::Celeste.FinalBoss",
+      "returnType": "void",
+      "parameters": [
+        {
+          "type": "float",
+          "name": "leftOfX"
+        }
+      ]
+    },
+    {
+      "id": "celeste-player-finish-fling-bird",
+      "sourceFile": "Celeste/Player.cs",
+      "sourceDeclaration": "public void FinishFlingBird()",
+      "originalDeclaration": "private void AppleEverestOriginal_FinishFlingBird()",
+      "originalAlias": "AppleEverestOriginal_FinishFlingBird",
+      "hookNamespace": "On.Celeste",
+      "hookType": "Player",
+      "eventName": "FinishFlingBird",
+      "origDelegate": "orig_FinishFlingBird",
+      "hookDelegate": "hook_FinishFlingBird",
+      "isStatic": false,
+      "receiverType": "global::Celeste.Player",
+      "returnType": "void",
+      "parameters": []
+    },
+    {
+      "id": "celeste-spring-on-collide",
+      "sourceFile": "Celeste/Spring.cs",
+      "sourceDeclaration": "private void OnCollide(Player player)",
+      "originalDeclaration": "private void AppleEverestOriginal_OnCollide(Player player)",
+      "originalAlias": "AppleEverestOriginal_OnCollide",
+      "hookNamespace": "On.Celeste",
+      "hookType": "Spring",
+      "eventName": "OnCollide",
+      "origDelegate": "orig_OnCollide",
+      "hookDelegate": "hook_OnCollide",
+      "isStatic": false,
+      "receiverType": "global::Celeste.Spring",
+      "returnType": "void",
+      "parameters": [
+        {
+          "type": "global::Celeste.Player",
+          "name": "player"
+        }
+      ]
+    },
+    {
+      "id": "celeste-theo-crystal-update",
+      "sourceFile": "Celeste/TheoCrystal.cs",
+      "sourceDeclaration": "public override void Update()",
+      "originalDeclaration": "private void AppleEverestOriginal_Update()",
+      "originalAlias": "AppleEverestOriginal_Update",
+      "hookNamespace": "On.Celeste",
+      "hookType": "TheoCrystal",
+      "eventName": "Update",
+      "origDelegate": "orig_Update",
+      "hookDelegate": "hook_Update",
+      "isStatic": false,
+      "receiverType": "global::Celeste.TheoCrystal",
+      "returnType": "void",
+      "parameters": []
+    },
+    {
+      "id": "celeste-player-pickup",
+      "sourceFile": "Celeste/Player.cs",
+      "sourceDeclaration": "private bool Pickup(Holdable pickup)",
+      "originalDeclaration": "private bool AppleEverestOriginal_Pickup(Holdable pickup)",
+      "originalAlias": "AppleEverestOriginal_Pickup",
+      "hookNamespace": "On.Celeste",
+      "hookType": "Player",
+      "eventName": "Pickup",
+      "origDelegate": "orig_Pickup",
+      "hookDelegate": "hook_Pickup",
+      "isStatic": false,
+      "receiverType": "global::Celeste.Player",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "type": "global::Celeste.Holdable",
+          "name": "pickup"
+        }
+      ]
+    },
+    {
+      "id": "celeste-player-refill-stamina",
+      "sourceFile": "Celeste/Player.cs",
+      "sourceDeclaration": "public void RefillStamina()",
+      "originalDeclaration": "private void AppleEverestOriginal_RefillStamina()",
+      "originalAlias": "AppleEverestOriginal_RefillStamina",
+      "hookNamespace": "On.Celeste",
+      "hookType": "Player",
+      "eventName": "RefillStamina",
+      "origDelegate": "orig_RefillStamina",
+      "hookDelegate": "hook_RefillStamina",
+      "isStatic": false,
+      "receiverType": "global::Celeste.Player",
+      "returnType": "void",
+      "parameters": []
+    },
+    {
+      "id": "celeste-player-intro-jump-coroutine",
+      "sourceFile": "Celeste/Player.cs",
+      "sourceDeclaration": "private IEnumerator IntroJumpCoroutine()",
+      "originalDeclaration": "private IEnumerator AppleEverestOriginal_IntroJumpCoroutine()",
+      "originalAlias": "AppleEverestOriginal_IntroJumpCoroutine",
+      "hookNamespace": "On.Celeste",
+      "hookType": "Player",
+      "eventName": "IntroJumpCoroutine",
+      "origDelegate": "orig_IntroJumpCoroutine",
+      "hookDelegate": "hook_IntroJumpCoroutine",
+      "isStatic": false,
+      "receiverType": "global::Celeste.Player",
+      "returnType": "global::System.Collections.IEnumerator",
+      "parameters": []
     }
   ]
 }

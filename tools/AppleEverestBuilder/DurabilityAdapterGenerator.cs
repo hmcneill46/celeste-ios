@@ -108,7 +108,7 @@ internal static class DurabilityAdapterGenerator
         {
             if (depth > MaximumGraphDepth) Fail("property graph is too deep");
             string key = Key(type);
-            if (Primitive(type) || Collection(type) || Nullable(type) || Vector(type) || Enum(type))
+            if (Primitive(type) || Collection(type) || Nullable(type) || Vector(type) || Color(type) || Enum(type))
             {
                 EnsureChildren(type, depth);
                 return;
@@ -244,6 +244,15 @@ internal static class DurabilityAdapterGenerator
                     .Append(indent).Append("AppleEverestModuleYaml.WriteSingle(writer, ").Append(value).AppendLine(".Y);")
                     .Append(indent).AppendLine("writer.WriteEndObject();");
             }
+            else if (Color(type))
+            {
+                output.Append(indent).AppendLine("writer.WriteStartObject();")
+                    .Append(indent).Append("writer.WriteNumber(\"R\", ").Append(value).AppendLine(".R);")
+                    .Append(indent).Append("writer.WriteNumber(\"G\", ").Append(value).AppendLine(".G);")
+                    .Append(indent).Append("writer.WriteNumber(\"B\", ").Append(value).AppendLine(".B);")
+                    .Append(indent).Append("writer.WriteNumber(\"A\", ").Append(value).AppendLine(".A);")
+                    .Append(indent).AppendLine("writer.WriteEndObject();");
+            }
             else output.Append(indent).Append(Method(type)).Append("(writer, ").Append(value).AppendLine(");");
         }
 
@@ -279,6 +288,8 @@ internal static class DurabilityAdapterGenerator
             if (Enum(type)) return EnumRead(type, value);
             if (Vector(type))
                 return $"new global::Microsoft.Xna.Framework.Vector2(AppleEverestModuleYaml.Single({value}.GetProperty(\"X\")), AppleEverestModuleYaml.Single({value}.GetProperty(\"Y\")))";
+            if (Color(type))
+                return $"new global::Microsoft.Xna.Framework.Color((byte)AppleEverestModuleYaml.UInt32({value}.GetProperty(\"R\")), (byte)AppleEverestModuleYaml.UInt32({value}.GetProperty(\"G\")), (byte)AppleEverestModuleYaml.UInt32({value}.GetProperty(\"B\")), (byte)AppleEverestModuleYaml.UInt32({value}.GetProperty(\"A\")))";
             return Method(type) + "(" + value + ")";
         }
 
@@ -362,6 +373,7 @@ internal static class DurabilityAdapterGenerator
             "System.Int32" or "System.UInt32" or "System.Int64" or "System.UInt64";
         private bool Enum(TypeReference type) => localTypes.TryGetValue(Normalize(type.FullName), out TypeDefinition? value) && value.IsEnum;
         private static bool Vector(TypeReference type) => Normalize(type.FullName) == "Microsoft.Xna.Framework.Vector2";
+        private static bool Color(TypeReference type) => Normalize(type.FullName) == "Microsoft.Xna.Framework.Color";
         private static bool Collection(TypeReference type) => type is ArrayType || type is GenericInstanceType generic &&
             (IsList(generic) || IsDictionary(generic));
         private static bool Nullable(TypeReference type) => type is GenericInstanceType generic && IsNullable(generic);

@@ -137,6 +137,7 @@ internal enum CompatibilityClass
     STATIC_IL_EVENT_FREEZE,
     STATIC_IL_EVENT_SEQUENCE,
     STATIC_DIRECT_ILHOOK_FREEZE,
+    HASH_LOCKED_STATIC_AOT_COMPATIBILITY,
     MODINTEROP_DEFERRED,
     ON_HOOK_DEFERRED,
     IL_HOOK_DEFERRED,
@@ -145,6 +146,7 @@ internal enum CompatibilityClass
     DYNAMIC_DETOUR_DEFERRED,
     DETOUR_CONFIG_DEFERRED,
     DYNAMIC_CODE_UNSUPPORTED,
+    CUSTOM_AUDIO_UNSUPPORTED,
     NATIVE_UNSUPPORTED,
     LUA_UNSUPPORTED,
     PLATFORM_UNSUPPORTED
@@ -256,4 +258,8 @@ internal sealed class ResolvedMod
     public required IReadOnlyList<DirectManagedHookPlan> DirectManagedHooks { get; init; }
     public required IReadOnlyList<ModInteropRegistrationPlan> ModInteropRegistrations { get; init; }
     public required IReadOnlyList<FrozenIlTransformPlan> FrozenIlTransforms { get; init; }
+    public StaticAotCompatibilityPlan? StaticAotCompatibility { get; init; }
 }
+
+internal sealed record StaticAotCompatibilityPlan(string Id, string Owner, string Version,
+    string SourceSha256, string DllPath, string DllSha256, bool AllowNonPublicCustomFactories);

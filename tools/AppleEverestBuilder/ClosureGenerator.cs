@@ -128,6 +128,10 @@ internal static class ClosureGenerator
         StaticAssetGeneration staticAssets = StaticAssetGenerator.Generate(codeModules, stagedContent, content);
         File.WriteAllText(Path.Combine(managed, "GeneratedAppleEverestStaticAssets.cs"), staticAssets.Source, new UTF8Encoding(false));
         File.WriteAllText(Path.Combine(managed, "GeneratedAppleEverestAotRoots.cs"), RootsSource(codeModules), new UTF8Encoding(false));
+        string staticAotSource = StaticAotCompatibility.GeneratedSource(ordered);
+        if (staticAotSource.Length != 0)
+            File.WriteAllText(Path.Combine(managed, "GeneratedAppleEverestStaticAotCompatibility.cs"),
+                staticAotSource, new UTF8Encoding(false));
         IReadOnlyList<ManagedDetourTarget> detourTargets = ManagedDetourCatalog.Targets;
         IReadOnlyList<DirectManagedHookPlan> directPlans = ordered.SelectMany(mod => mod.DirectManagedHooks).ToArray();
         IReadOnlyDictionary<string, ManagedDetourTarget> detourTargetsById = detourTargets.ToDictionary(target => target.Id, StringComparer.Ordinal);
@@ -233,6 +237,7 @@ internal static class ClosureGenerator
                     }
                     : null,
                 mechanisms = mod.Mechanisms,
+                staticAotCompatibility = mod.StaticAotCompatibility?.Id,
                 modInteropRegistrations = mod.ModInteropRegistrations.Select(registration => registration.RegisteredType).ToArray(),
                 frozenIlTransforms = mod.FrozenIlTransforms.Select(plan => plan.PlanId).ToArray(),
                 managedFiles = mod.ManagedFiles,
@@ -383,6 +388,8 @@ internal static class ClosureGenerator
         AppleApiSurface.Apply(managedRoot);
         PreparePinnedEverestManagedTargets(managedRoot);
         ManagedDetourGenerator.RewriteTargets(managedRoot, ManagedDetourCatalog.Targets);
+        if (File.Exists(Path.Combine(destination, "GeneratedAppleEverestStaticAotCompatibility.cs")))
+            StaticAotCompatibility.PatchGameSources(managedRoot);
         PatchLevel(Path.Combine(managedRoot, "Celeste", "Level.cs"));
         PatchPlayerEvents(Path.Combine(managedRoot, "Celeste", "Player.cs"));
         PatchGameplayLoading(Path.Combine(managedRoot, "Celeste", "Level.cs"));
@@ -448,10 +455,22 @@ internal static class ClosureGenerator
             candidates.Add((relative, Hashing.FileSha256(source)));
         }
         Dictionary<string, string> packagedByIdentity = new(StringComparer.Ordinal);
+        string declaredSource = Path.Combine(mod.Input.StagingRoot,
+            declared.Replace('/', Path.DirectorySeparatorChar));
+        using AssemblyDefinition declaredAssembly = AssemblyDefinition.ReadAssembly(declaredSource,
+            new ReaderParameters { ReadSymbols = false });
+        string declaredIdentity = declaredAssembly.Name.Name;
         foreach ((string identity, List<(string Path, string Sha)> candidates) in packagedCandidates)
         {
             if (candidates.Select(candidate => candidate.Sha).Distinct(StringComparer.Ordinal).Count() != 1)
+            {
+                if (identity == declaredIdentity && candidates.Any(candidate => candidate.Path == declared))
+                {
+                    packagedByIdentity.Add(identity, declared);
+                    continue;
+                }
                 throw new InvalidDataException($"conflicting managed dependency identity in {mod.Metadata.Name}: {identity}");
+            }
             packagedByIdentity.Add(identity, candidates.Any(candidate => candidate.Path == declared)
                 ? declared
                 : candidates.OrderBy(candidate => candidate.Path.Count(character => character == '/'))
@@ -486,7 +505,8 @@ internal static class ClosureGenerator
                 source, destination,
                 module ? mod.DirectManagedHooks : Array.Empty<DirectManagedHookPlan>(),
                 module ? mod.ModInteropRegistrations : Array.Empty<ModInteropRegistrationPlan>(),
-                module ? mod.FrozenIlTransforms : Array.Empty<FrozenIlTransformPlan>());
+                module ? mod.FrozenIlTransforms : Array.Empty<FrozenIlTransformPlan>(),
+                module ? mod.StaticAotCompatibility : null);
             frozenAssemblies.Add(new FrozenAssemblyRecord(mod.Metadata.Name, assemblyName, fileName, original, frozen));
         }
     }
@@ -1059,6 +1079,8 @@ internal static class ClosureGenerator
             foreach (string type in declaration.CustomBackdropFactories.Select(value => value.Type).Distinct(StringComparer.Ordinal))
                 result.Append("        _ = typeof(global::").Append(type).AppendLine(");");
         }
+        if (modules.Any(item => item.Mod.StaticAotCompatibility != null))
+            result.AppendLine("        global::Celeste.Mod.AppleEverestStaticFieldAccess.RootReviewedReflectionMembers();");
         result.AppendLine("        _ = typeof(global::Celeste.Mod.Entities.CustomCoreMessage);");
         return result.AppendLine("    }").AppendLine("}").ToString();
     }

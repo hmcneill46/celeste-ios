@@ -35,6 +35,7 @@ internal static class CompatibilityAnalyzer
     private static ResolvedMod AnalyzeCore(ModInput input, EverestYamlEntry metadata, bool rejectUnsupported)
     {
         IReadOnlyList<FrozenIlTransformPlan> frozenIl = StaticIlFreeze.Resolve(input, metadata);
+        StaticAotCompatibilityPlan? staticAot = StaticAotCompatibility.Resolve(input, metadata);
         List<string> managed = input.Files.Where(file => IsManaged(file.Path)).Select(file => file.Path).ToList();
         List<string> content = input.Files.Where(file => IsContent(file.Path)).Select(file => file.Path).ToList();
         SortedSet<string> mechanisms = new(StringComparer.Ordinal);
@@ -43,17 +44,32 @@ internal static class CompatibilityAnalyzer
             ? CompatibilityClass.CONTENT_ONLY
             : CompatibilityClass.STATIC_MODULE;
 
+        // Mod-supplied FMOD banks require a separate deterministic bank-loading
+        // architecture.  Treat their mere presence as a product boundary: an
+        // otherwise compatible helper must not silently ship a partial feature
+        // set whose custom events can never be resolved on Apple devices.
+        foreach (string bank in input.Files.Where(file =>
+                     file.Path.EndsWith(".bank", StringComparison.OrdinalIgnoreCase))
+                 .Select(file => file.Path))
+            Record("custom-fmod-bank:" + bank, CompatibilityClass.CUSTOM_AUDIO_UNSUPPORTED);
+
         AppleStaticDeclaration? declaration = null;
         string? declaredAssembly = null;
         SortedSet<string> managedDetourTargets = new(StringComparer.Ordinal);
         List<DirectManagedHookPlan> directManagedHooks = [];
         List<ModInteropRegistrationPlan> modInteropRegistrations = [];
         string? normalizedDeclaredEntry = metadata.DLL?.Replace('\\', '/');
+        bool declaredBinaryModule = normalizedDeclaredEntry?.EndsWith(".dll", StringComparison.OrdinalIgnoreCase) == true;
         foreach (string relative in managed)
         {
             string path = Path.Combine(input.StagingRoot, relative.Replace('/', Path.DirectorySeparatorChar));
             if (relative.EndsWith(".cs", StringComparison.OrdinalIgnoreCase))
             {
+                if (declaredBinaryModule)
+                {
+                    mechanisms.Add(relative + ":ignored-incidental-managed-source");
+                    continue;
+                }
                 string source = File.ReadAllText(path, new UTF8Encoding(false, true));
                 foreach ((string needle, CompatibilityClass detected) in SourceRules)
                     if (source.Contains(needle, StringComparison.Ordinal)) Record($"{relative}:{needle}", detected);
@@ -63,12 +79,18 @@ internal static class CompatibilityAnalyzer
             }
             else if (relative.EndsWith(".dll", StringComparison.OrdinalIgnoreCase))
             {
+                if (declaredBinaryModule && !string.Equals(relative, normalizedDeclaredEntry, StringComparison.Ordinal))
+                {
+                    mechanisms.Add(relative + ":ignored-nonauthoritative-managed-assembly");
+                    continue;
+                }
                 List<ModInteropRegistrationPlan> assemblyModInterop = [];
                 AnalyzeAssembly(path, metadata.Name, managedDetourTargets, directManagedHooks, assemblyModInterop,
                     (mechanism, detected) => Record($"{relative}:{mechanism}", detected), rejectUnsupported,
                     frozenIl.Count > 0 && string.Equals(relative, normalizedDeclaredEntry, StringComparison.Ordinal),
                     frozenIl.Any(plan => plan.Mechanism == "DIRECT_ILHOOK") &&
-                    string.Equals(relative, normalizedDeclaredEntry, StringComparison.Ordinal));
+                    string.Equals(relative, normalizedDeclaredEntry, StringComparison.Ordinal),
+                    string.Equals(relative, normalizedDeclaredEntry, StringComparison.Ordinal) ? staticAot : null);
                 if (assemblyModInterop.Count > 0 && !string.Equals(relative, normalizedDeclaredEntry, StringComparison.Ordinal))
                 {
                     Record($"{relative}:DEFERRED_UNLINKED_MODINTEROP_ASSEMBLY", CompatibilityClass.MODINTEROP_DEFERRED);
@@ -94,7 +116,8 @@ internal static class CompatibilityAnalyzer
                 declaredAssembly = normalized;
                 declaration = AssemblyFreezer.InspectDeclaration(Path.Combine(input.StagingRoot,
                     normalized.Replace('/', Path.DirectorySeparatorChar)), metadata.Name,
-                    allowNonPublicCustomFactories: frozenIl.Count > 0);
+                    allowNonPublicCustomFactories: frozenIl.Count > 0 ||
+                    staticAot?.AllowNonPublicCustomFactories == true);
             }
             else
             {
@@ -113,9 +136,14 @@ internal static class CompatibilityAnalyzer
                     ? CompatibilityClass.STATIC_IL_EVENT_SEQUENCE
                     : CompatibilityClass.STATIC_IL_EVENT_FREEZE);
 
+        if (staticAot != null)
+            Record("hash-locked-static-aot-compatibility:" + staticAot.Id,
+                CompatibilityClass.HASH_LOCKED_STATIC_AOT_COMPATIBILITY);
+
         if (rejectUnsupported && classification is (CompatibilityClass.MODINTEROP_DEFERRED or CompatibilityClass.ON_HOOK_DEFERRED or CompatibilityClass.IL_HOOK_DEFERRED or CompatibilityClass.DIRECT_HOOK_DEFERRED or
             CompatibilityClass.DYNAMIC_TARGET_DEFERRED or CompatibilityClass.DYNAMIC_DETOUR_DEFERRED or CompatibilityClass.DETOUR_CONFIG_DEFERRED or
-            CompatibilityClass.DYNAMIC_CODE_UNSUPPORTED or CompatibilityClass.NATIVE_UNSUPPORTED or
+            CompatibilityClass.DYNAMIC_CODE_UNSUPPORTED or CompatibilityClass.CUSTOM_AUDIO_UNSUPPORTED or
+            CompatibilityClass.NATIVE_UNSUPPORTED or
             CompatibilityClass.LUA_UNSUPPORTED or CompatibilityClass.PLATFORM_UNSUPPORTED))
             throw new InvalidDataException($"{metadata.Name} rejected before AOT: {classification}; mechanisms={string.Join(',', mechanisms)}");
 
@@ -132,7 +160,8 @@ internal static class CompatibilityAnalyzer
             ManagedDetourTargets = managedDetourTargets,
             DirectManagedHooks = directManagedHooks,
             ModInteropRegistrations = modInteropRegistrations,
-            FrozenIlTransforms = frozenIl
+            FrozenIlTransforms = frozenIl,
+            StaticAotCompatibility = staticAot
         };
 
         void Record(string mechanism, CompatibilityClass detected)
@@ -179,7 +208,8 @@ internal static class CompatibilityAnalyzer
         Action<string, CompatibilityClass> record,
         bool rejectUnsupported,
         bool registeredStaticIl,
-        bool registeredDirectIl)
+        bool registeredDirectIl,
+        StaticAotCompatibilityPlan? staticAot)
     {
         try
         {
@@ -200,6 +230,7 @@ internal static class CompatibilityAnalyzer
                 type.Namespace != "MonoMod.ModInterop" &&
                 !(registeredStaticIl && type.FullName.StartsWith("MonoMod.Cil.", StringComparison.Ordinal)) &&
                 !(registeredDirectIl && type.FullName == "MonoMod.Utils.Extensions") &&
+                !StaticAotCompatibility.AllowsMonoModType(staticAot, type.FullName) &&
                 type.FullName != "System.Runtime.CompilerServices.IgnoresAccessChecksToAttribute").ToArray();
             if (residualMonoModUtils.Length != 0)
                 record("DEFERRED_MONOMOD_UTILS_SURFACE:" + string.Join(',', residualMonoModUtils
@@ -273,7 +304,9 @@ internal static class CompatibilityAnalyzer
                     }
                     if (full.Contains("Assembly::Load", StringComparison.Ordinal) || full.Contains("AssemblyLoadContext", StringComparison.Ordinal) ||
                         full.Contains("DynamicMethod", StringComparison.Ordinal) || full.Contains("System.Reflection.Emit", StringComparison.Ordinal))
-                        record(full, CompatibilityClass.DYNAMIC_CODE_UNSUPPORTED);
+                        record(full, StaticAotCompatibility.AllowsDynamicMethod(staticAot)
+                            ? CompatibilityClass.HASH_LOCKED_STATIC_AOT_COMPATIBILITY
+                            : CompatibilityClass.DYNAMIC_CODE_UNSUPPORTED);
                     else if (full.Contains("NativeDetour", StringComparison.Ordinal)) record(full, CompatibilityClass.NATIVE_UNSUPPORTED);
                     else if (full.Contains("ILHook", StringComparison.Ordinal)) record(full, registeredDirectIl
                         ? CompatibilityClass.STATIC_DIRECT_ILHOOK_FREEZE
@@ -492,17 +525,19 @@ internal static class CompatibilityAnalyzer
             CompatibilityClass.STATIC_IL_EVENT_FREEZE => 7,
             CompatibilityClass.STATIC_IL_EVENT_SEQUENCE => 8,
             CompatibilityClass.STATIC_DIRECT_ILHOOK_FREEZE => 9,
-            CompatibilityClass.MODINTEROP_DEFERRED => 10,
-            CompatibilityClass.ON_HOOK_DEFERRED => 11,
-            CompatibilityClass.IL_HOOK_DEFERRED => 12,
-            CompatibilityClass.DIRECT_HOOK_DEFERRED => 13,
-            CompatibilityClass.DYNAMIC_TARGET_DEFERRED => 14,
-            CompatibilityClass.DYNAMIC_DETOUR_DEFERRED => 15,
-            CompatibilityClass.DETOUR_CONFIG_DEFERRED => 16,
-            CompatibilityClass.DYNAMIC_CODE_UNSUPPORTED => 17,
-            CompatibilityClass.NATIVE_UNSUPPORTED => 18,
-            CompatibilityClass.LUA_UNSUPPORTED => 19,
-            CompatibilityClass.PLATFORM_UNSUPPORTED => 20,
+            CompatibilityClass.HASH_LOCKED_STATIC_AOT_COMPATIBILITY => 10,
+            CompatibilityClass.MODINTEROP_DEFERRED => 11,
+            CompatibilityClass.ON_HOOK_DEFERRED => 12,
+            CompatibilityClass.IL_HOOK_DEFERRED => 13,
+            CompatibilityClass.DIRECT_HOOK_DEFERRED => 14,
+            CompatibilityClass.DYNAMIC_TARGET_DEFERRED => 15,
+            CompatibilityClass.DYNAMIC_DETOUR_DEFERRED => 16,
+            CompatibilityClass.DETOUR_CONFIG_DEFERRED => 17,
+            CompatibilityClass.DYNAMIC_CODE_UNSUPPORTED => 18,
+            CompatibilityClass.CUSTOM_AUDIO_UNSUPPORTED => 19,
+            CompatibilityClass.NATIVE_UNSUPPORTED => 20,
+            CompatibilityClass.LUA_UNSUPPORTED => 21,
+            CompatibilityClass.PLATFORM_UNSUPPORTED => 22,
             _ => 99
         };
         return Rank(detected) > Rank(current) ? detected : current;

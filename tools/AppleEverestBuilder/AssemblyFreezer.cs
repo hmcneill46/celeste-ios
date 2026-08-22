@@ -80,11 +80,13 @@ internal static class AssemblyFreezer
         string destination,
         IReadOnlyList<DirectManagedHookPlan> directHooks,
         IReadOnlyList<ModInteropRegistrationPlan> modInteropRegistrations,
-        IReadOnlyList<FrozenIlTransformPlan>? frozenIlTransforms = null)
+        IReadOnlyList<FrozenIlTransformPlan>? frozenIlTransforms = null,
+        StaticAotCompatibilityPlan? staticAotCompatibility = null)
     {
         using AssemblyDefinition assembly = AssemblyDefinition.ReadAssembly(source, new ReaderParameters { ReadSymbols = false });
         frozenIlTransforms ??= [];
         StaticIlFreeze.RewriteDeviceAssembly(assembly, frozenIlTransforms);
+        StaticAotCompatibility.RewriteDeviceAssembly(assembly, staticAotCompatibility);
         string assemblyName = assembly.Name.Name;
         if (string.IsNullOrWhiteSpace(assemblyName) || assemblyName.Length > 255 ||
             assemblyName.Any(character => char.IsControl(character) || character is ';' or '<' or '>' or '"' or '\''))
@@ -119,12 +121,20 @@ internal static class AssemblyFreezer
                     throw new InvalidDataException("ModInterop facade requires a Celeste assembly reference");
                 type.Scope = celeste;
             }
-            TypeReference[] residual = assembly.MainModule.GetTypeReferences()
-                .Where(type => ReferenceEquals(type.Scope, monoModUtils) &&
-                               type.FullName != "System.Runtime.CompilerServices.IgnoresAccessChecksToAttribute").ToArray();
+            foreach (TypeReference type in assembly.MainModule.GetTypeReferences().Where(type =>
+                         ReferenceEquals(type.Scope, monoModUtils) &&
+                         StaticAotCompatibility.AllowsMonoModType(staticAotCompatibility, type.FullName)))
+            {
+                if (celeste == null)
+                    throw new InvalidDataException("static-AOT MonoMod facade requires a Celeste assembly reference");
+                type.Scope = celeste;
+            }
+            string[] residual = ActiveAssemblyReferenceTypes(assembly.MainModule, monoModUtils.Name)
+                .Where(type => type != "System.Runtime.CompilerServices.IgnoresAccessChecksToAttribute")
+                .Distinct(StringComparer.Ordinal).Order(StringComparer.Ordinal).ToArray();
             if (residual.Length != 0)
                 throw new InvalidDataException("DEFERRED_MONOMOD_UTILS_SURFACE:" + string.Join(',',
-                    residual.Select(type => type.FullName).Distinct(StringComparer.Ordinal).Order(StringComparer.Ordinal).Take(12)));
+                    residual.Take(12)));
             assembly.MainModule.AssemblyReferences.Remove(monoModUtils);
         }
 
@@ -217,9 +227,34 @@ internal static class AssemblyFreezer
             MakePublic(type);
         }
         InstrumentModInteropExports(assembly, celeste, modInteropRegistrations);
+        ImportForeignDefinitionOperands(assembly.MainModule);
         Directory.CreateDirectory(Path.GetDirectoryName(destination)!);
         assembly.Write(destination, new WriterParameters { WriteSymbols = false });
         return (assemblyName, Hashing.FileSha256(source), Hashing.FileSha256(destination));
+    }
+
+    private static void ImportForeignDefinitionOperands(ModuleDefinition module)
+    {
+        foreach (MethodDefinition method in module.Types.SelectMany(AllTypes).SelectMany(type => type.Methods)
+                     .Where(method => method.HasBody))
+        foreach (Instruction instruction in method.Body.Instructions)
+        {
+            try
+            {
+                instruction.Operand = instruction.Operand switch
+                {
+                    MethodDefinition definition when definition.Module != module => module.ImportReference(definition),
+                    FieldDefinition definition when definition.Module != module => module.ImportReference(definition),
+                    TypeDefinition definition when definition.Module != module => module.ImportReference(definition),
+                    _ => instruction.Operand
+                };
+            }
+            catch (Exception exception)
+            {
+                throw new InvalidDataException("foreign definition import failed in " + method.FullName +
+                    " at " + instruction.Offset + ": " + instruction.Operand, exception);
+            }
+        }
     }
 
     private static void MakePublic(TypeDefinition type)
@@ -602,6 +637,73 @@ internal static class AssemblyFreezer
         yield return root;
         foreach (TypeDefinition nested in root.NestedTypes.SelectMany(AllTypes)) yield return nested;
     }
+
+    // Cecil retains harmless orphan TypeRef rows after the exact host-only IL
+    // scaffolding has been removed. Gate the device closure on references that
+    // are still reachable from live metadata/IL rather than those stale rows.
+    private static IEnumerable<string> ActiveAssemblyReferenceTypes(ModuleDefinition module, string assemblyName)
+    {
+        foreach (TypeDefinition type in module.Types.SelectMany(AllTypes))
+        {
+            foreach (TypeReference reference in SignatureTypes(type.BaseType))
+                if (UsesAssembly(reference, assemblyName)) yield return reference.FullName;
+            foreach (InterfaceImplementation implementation in type.Interfaces)
+            foreach (TypeReference reference in SignatureTypes(implementation.InterfaceType))
+                if (UsesAssembly(reference, assemblyName)) yield return reference.FullName;
+            foreach (FieldDefinition field in type.Fields)
+            foreach (TypeReference reference in SignatureTypes(field.FieldType))
+                if (UsesAssembly(reference, assemblyName)) yield return reference.FullName;
+            foreach (PropertyDefinition property in type.Properties)
+            foreach (TypeReference reference in SignatureTypes(property.PropertyType)
+                         .Concat(property.Parameters.SelectMany(parameter => SignatureTypes(parameter.ParameterType))))
+                if (UsesAssembly(reference, assemblyName)) yield return reference.FullName;
+            foreach (EventDefinition @event in type.Events)
+            foreach (TypeReference reference in SignatureTypes(@event.EventType))
+                if (UsesAssembly(reference, assemblyName)) yield return reference.FullName;
+            foreach (MethodDefinition method in type.Methods)
+            {
+                IEnumerable<TypeReference> signature = SignatureTypes(method.ReturnType)
+                    .Concat(method.Parameters.SelectMany(parameter => SignatureTypes(parameter.ParameterType)))
+                    .Concat(method.GenericParameters.SelectMany(parameter => parameter.Constraints)
+                        .SelectMany(constraint => SignatureTypes(constraint.ConstraintType)));
+                foreach (TypeReference reference in signature)
+                    if (UsesAssembly(reference, assemblyName)) yield return reference.FullName;
+                if (!method.HasBody) continue;
+                foreach (TypeReference reference in method.Body.Variables
+                             .SelectMany(variable => SignatureTypes(variable.VariableType))
+                             .Concat(method.Body.ExceptionHandlers.SelectMany(handler => SignatureTypes(handler.CatchType))))
+                    if (UsesAssembly(reference, assemblyName)) yield return reference.FullName;
+                foreach (MemberReference member in method.Body.Instructions.Select(instruction => instruction.Operand)
+                             .OfType<MemberReference>())
+                {
+                    IEnumerable<TypeReference> referenced = SignatureTypes(member.DeclaringType);
+                    if (member is MethodReference called)
+                        referenced = referenced.Concat(SignatureTypes(called.ReturnType))
+                            .Concat(called.Parameters.SelectMany(parameter => SignatureTypes(parameter.ParameterType)));
+                    else if (member is FieldReference accessed)
+                        referenced = referenced.Concat(SignatureTypes(accessed.FieldType));
+                    else if (member is TypeReference operandType)
+                        referenced = referenced.Concat(SignatureTypes(operandType));
+                    foreach (TypeReference reference in referenced)
+                        if (UsesAssembly(reference, assemblyName)) yield return reference.FullName;
+                }
+            }
+        }
+    }
+
+    private static IEnumerable<TypeReference> SignatureTypes(TypeReference? type)
+    {
+        if (type == null) yield break;
+        yield return type;
+        if (type is GenericInstanceType generic)
+            foreach (TypeReference argument in generic.GenericArguments.SelectMany(SignatureTypes)) yield return argument;
+        if (type is TypeSpecification specification)
+            foreach (TypeReference element in SignatureTypes(specification.ElementType)) yield return element;
+    }
+
+    private static bool UsesAssembly(TypeReference type, string assemblyName) =>
+        type.GetElementType().Scope is AssemblyNameReference reference &&
+        string.Equals(reference.Name, assemblyName, StringComparison.Ordinal);
 
     private static void Validate(AppleStaticDeclaration declaration, string mod)
     {

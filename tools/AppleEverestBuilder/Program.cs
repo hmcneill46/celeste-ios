@@ -35,6 +35,8 @@ internal static class Program
         catch (Exception exception)
         {
             Console.Error.WriteLine($"error: {exception.Message}");
+            if (Environment.GetEnvironmentVariable("APPLE_EVEREST_DIAGNOSTIC_STACK") == "1")
+                Console.Error.WriteLine(exception);
             return 1;
         }
     }
@@ -88,7 +90,7 @@ internal static class Program
                                 CompatibilityClass.NORMAL_EVENT or CompatibilityClass.ON_HOOK_SUPPORTED or CompatibilityClass.DIRECT_HOOK_SUPPORTED or
                                 CompatibilityClass.MIXED_MANAGED_DETOURS_SUPPORTED or CompatibilityClass.MODINTEROP_STATIC_SUPPORTED or
                                 CompatibilityClass.STATIC_IL_EVENT_FREEZE or CompatibilityClass.STATIC_IL_EVENT_SEQUENCE or
-                                CompatibilityClass.STATIC_DIRECT_ILHOOK_FREEZE
+                                CompatibilityClass.STATIC_DIRECT_ILHOOK_FREEZE or CompatibilityClass.HASH_LOCKED_STATIC_AOT_COMPATIBILITY
                                 ? "candidate" : "deferred"
                         });
                     }
