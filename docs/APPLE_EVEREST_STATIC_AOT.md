@@ -214,10 +214,59 @@ detour wraps `Player.Die`.
 
 Dynamic target selection, dynamically chosen detour delegates, property
 targets not present in the catalog, unsupported `DetourConfig`/context use,
-finalizer-dependent lifetime, `ILHook`, and `IL.*` remain explicit fail-closed
-classes. The small data-only `DetourConfig` implementation is exercised by the
+finalizer-dependent lifetime, and unregistered `ILHook`/`IL.*` remain explicit
+fail-closed classes. The small data-only `DetourConfig` implementation is exercised by the
 project's conformance canaries; third-party configuration surfaces remain
 deferred until an exact distributed input is accepted.
+
+## Build-time frozen HookGen IL
+
+Desktop HookGen `IL.*` normally constructs an `ILHook` and rewrites a live
+method. Stage 25H-A introduces a different, bounded Apple mechanism:
+
+```text
+exact release ZIP + precompiled DLL
+  -> discover exact IL event add/remove registrations
+  -> require exact normalized target-body SHA-256
+  -> isolated Mac host invokes the real pinned manipulator
+  -> validate and hash normalized final IL and semantic diff
+  -> remove device IL subscriptions and host-only manipulator infrastructure
+  -> root injected ordinary methods
+  -> full trim + full AOT for the shared iOS/tvOS closure
+```
+
+The initial `STATIC_IL_EVENT_FREEZE` class accepts only one reviewed static
+HookGen manipulator per target. The dedicated host worker receives explicit
+hash-pinned assemblies, target and manipulator identities, and output paths.
+It uses pinned MonoMod commit `dfc30a1506d37fb88a2c2be004f525205f46a24c`
+and fails before mutation if the target fingerprint differs. A throwing
+manipulator, failed cursor match, malformed branch/exception region, changed
+after/diff hash, unresolved member, or final reference to Cecil, `MonoMod.Cil`,
+`ILHook`, Reflection.Emit, DynamicMethod, or assembly loading fails the build.
+In particular, no `DynamicReferenceManager` cell survives.
+
+The selected Dash Toggle Helper 1.1.0 release uses noncapturing
+`EmitDelegate`. Pinned MonoMod resolves those delegates while building into
+ordinary direct calls to statically rooted methods in the frozen mod DLL; no
+dynamic-reference cell is present in final device IL. This is not a generic
+promise for `EmitDelegate`: captured closures and dynamic references remain
+deferred.
+
+Transform order is shared and platform-neutral. The reviewed managed-detour
+rewrite first creates the canonical typed `On.*` wrapper/original boundary;
+the IL worker then freezes the manipulator into the underlying original body.
+Consequently a same-target `On.*` hook's `orig` delegate observes the
+IL-modified implementation, as pinned desktop behavior requires. iOS and tvOS
+consume one identical pre-platform closure and do not apply platform-specific
+IL patches.
+
+The original `IL.* +=` and `IL.* -=` callsites do not create or remove device
+hooks. The module is immutable-active for that installed build. Runtime unload
+or live disable is unsupported; removing the mod means rebuilding and
+reinstalling a closure which omits it, at which point the exact baseline
+method remains untouched. Multiple manipulators on one target, direct
+`new ILHook(...)`, configured IL ordering, dynamic targets, and runtime unapply
+are later compatibility classes.
 
 ## Current real-ZIP evidence
 
@@ -492,7 +541,7 @@ Everest services, and unexpected executable content.
 
 This foundation does **not** promise arbitrary Everest mods, runtime mod
 installation, runtime enable/disable of code outside the prebuilt registry,
-IL hooks on-device, arbitrary direct detours, Lua, native mods, content hot reload,
+unregistered IL hooks, any IL hook on-device, arbitrary direct detours, Lua, native mods, content hot reload,
 Everest networking/updating, dependency downloading, general mod
 settings shapes, module SaveData/Session outside the exact bounded default-YAML
 class, the complete Everest virtual-content API, or

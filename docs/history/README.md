@@ -61,6 +61,7 @@ support matrix, and limitations are in [project status](../STATUS.md).
 43. [Stage 25F-B — bounded static MonoMod ModInterop compatibility](stages/APPLE_EVEREST_MODINTEROP_STAGE25FB_REPORT.md)
 44. [Stage 25F-B2 — real ModInterop pair and bounded HookGen completion](stages/APPLE_EVEREST_MODINTEROP_STAGE25FB2_REPORT.md)
 45. [Stage 25G — real multi-helper map composition audit](stages/APPLE_EVEREST_MULTI_HELPER_STAGE25G_REPORT.md)
+46. [Stage 25H-A — deterministic build-time HookGen IL freeze](stages/APPLE_EVEREST_STATIC_IL_STAGE25H_REPORT.md)
 
 Diagnostic-only stages whose evidence was intentionally kept in ignored local
 build directories are not reconstructed here. The index covers every tracked
