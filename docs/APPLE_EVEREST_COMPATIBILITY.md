@@ -94,6 +94,24 @@ five same-target groups. QLetterAurora is materially advanced by its one
 CaeruleaHelper site, but still has 42 other direct sites plus configured and
 ordinary breadth; no complete real map is newly unlocked.
 
+## LittleEpic graph completion status
+
+[LittleEpic's Precision Challenge](https://gamebanana.com/mods/530248) 1.0.0
+really uses both of its direct code helpers: room 1 contains
+`DJMapHelper/maxDashesTrigger`, and room 5 contains
+`ChronoHelper/CustomTimeSwitchGates`. Stage 25I-A source-freezes DJMapHelper
+1.13.4's five ordinary `IL.*` registrations and closes its exact HookGen and
+static factory surface. Three independent DJ-only closures are identical.
+
+The complete map remains **CUSTOM_AUDIO_UNSUPPORTED**, not production
+supported. ChronoHelper 1.3.3 ships `Audio/ExpertContestHelper.bank`, and
+reachable helper entities refer to its events. Apple Everest does not yet have
+a bounded custom-FMOD bank loader, so the analyser rejects the package before
+AOT even though the particular timed gate used by this map references only
+base-game sounds. This prevents an apparently successful but incomplete helper
+from entering the product. The next bounded compatibility class is deterministic
+custom-bank registration/lifecycle, not a relaxation of the audio gate.
+
 ## Multi-helper map graph audit
 
 Stage 25G screened 53 real map packages, deeply audited 24 plausible composed

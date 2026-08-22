@@ -1,0 +1,349 @@
+{
+  "schemaVersion": 1,
+  "stage": "25I-A",
+  "status": "YELLOW",
+  "classification": "CUSTOM_AUDIO_UNSUPPORTED",
+  "baseline": {
+    "integrationCommit": "236d5fc957fb02d283a29ae4f55ef9753be042c2",
+    "featureBranch": "feature/apple-everest-littleepic-map",
+    "everestCommit": "4bbde91b8dbaaddef2ceec75ca0cd6d59b3b8d00",
+    "monoModCommit": "dfc30a1506d37fb88a2c2be004f525205f46a24c",
+    "managedDetourCatalogBefore": 69,
+    "managedDetourCatalogAfter": 102
+  },
+  "root": {
+    "name": "LittleEpic's Precision Challenge",
+    "version": "1.0.0",
+    "gameBananaModId": 530248,
+    "downloadUrl": "https://gamebanana.com/mmdl/1243114",
+    "zipSha256": "ca57d295f446affdd8eb9b56ffe58f98cc652e9ec242ff07b224877d0067b384",
+    "sourceLogicalSha256": "a691ed075d73eab6085d7526ac5ffea52c6f1db8daf64a9da095cb51f8ed6053",
+    "license": "CC BY-NC-ND 4.0 (GameBanana package metadata)",
+    "author": "LittleEpic",
+    "fileCount": 3,
+    "expandedBytes": 13708,
+    "map": {
+      "path": "Maps/LittleEpic/precisionchallenge/precisionchallenge.bin",
+      "originalSha256": "6de18b4280df15493a9f1b0eac2b547118757cf276795146bdbf299e9c371475",
+      "originalBytes": 13352,
+      "sid": "LittleEpic/precisionchallenge/precisionchallenge",
+      "levelSet": "LittleEpic",
+      "roomCount": 8,
+      "rooms": ["1", "2", "3", "4", "5", "6", "7", "heart"],
+      "startingRoom": "1"
+    }
+  },
+  "dependencyGraph": {
+    "declaredDirect": [
+      { "name": "ChronoHelper", "minimumVersion": "1.1.9" },
+      { "name": "DJMapHelper", "minimumVersion": "1.11.1" },
+      { "name": "Everest", "minimumVersion": "1.0.0" }
+    ],
+    "resolvedLoadOrder": [
+      "Everest stable-1.6458.0",
+      "ChronoHelper 1.3.3",
+      "DJMapHelper 1.13.4",
+      "LittleEpic's Precision Challenge 1.0.0"
+    ],
+    "directCodeHelpers": ["ChronoHelper", "DJMapHelper"],
+    "transitiveCodeHelpers": []
+  },
+  "helpers": [
+    {
+      "name": "ChronoHelper",
+      "version": "1.3.3",
+      "relationship": "direct",
+      "downloadUrl": "https://gamebanana.com/mmdl/1778580",
+      "gameBananaModId": 351933,
+      "zipSha256": "af46039437fbed52e72941d07e0d9ce6657dacc838516459f7e9e995fea07a18",
+      "sourceLogicalSha256": "3ada281adf3affd433bcd02eb9966abab662bf5ab23714095460f4de7eaff5f6",
+      "fileCount": 331,
+      "expandedBytes": 1273757,
+      "authoritativeDllPath": "bin/Debug/net452/ChronoHelper.dll",
+      "authoritativeDllSha256": "214b26a5d7e3f17e93d3c388a3a6066dd137f9ce09b6203a4e1a482ba342a2dc",
+      "license": "CC BY-NC-ND 4.0 (GameBanana package metadata)",
+      "author": "ricky06",
+      "publicSource": null,
+      "sourceRequiredForProduction": false,
+      "classification": "CUSTOM_AUDIO_UNSUPPORTED",
+      "actualMapUsage": {
+        "id": "ChronoHelper/CustomTimeSwitchGates",
+        "kind": "entity",
+        "room": "5",
+        "count": 1,
+        "attributes": { "moveTime": 17 },
+        "factoryType": "Celeste.Mod.ChronoHelper.Entities.CustomTimeSwitchGates",
+        "factorySignature": "EntityData,Vector2"
+      }
+    },
+    {
+      "name": "DJMapHelper",
+      "version": "1.13.4",
+      "relationship": "direct",
+      "downloadUrl": "https://gamebanana.com/mmdl/1036311",
+      "gameBananaModId": 53646,
+      "zipSha256": "95ab02d657213031b70c3079738b21be399e567ca8a32b1fe8e8effc0778eedb",
+      "sourceLogicalSha256": "bdfe229e6bc24e0addea3983b5f209a6d420a3d9924e3bafa609ee6ce4c2aa95",
+      "fileCount": 398,
+      "expandedBytes": 556701,
+      "authoritativeDllPath": "DJMapHelper.dll",
+      "authoritativeDllSha256": "0d73202b5e16f26a4c8a286dd6ad600c1601d1904d8f72d909f8acb8469ee446",
+      "license": "CC BY-NC-ND 4.0 (GameBanana package metadata; source repository has no separate LICENSE file)",
+      "author": "DemoJameson",
+      "publicSource": {
+        "url": "https://github.com/DemoJameson/Celeste.DJMapHelper",
+        "tag": "v1.13.4",
+        "commit": "693fbea3405090517ad66217b809673ff2725206"
+      },
+      "sourceRequiredForProduction": false,
+      "classification": "HASH_LOCKED_STATIC_AOT_COMPATIBILITY",
+      "actualMapUsage": {
+        "id": "DJMapHelper/maxDashesTrigger",
+        "kind": "trigger",
+        "room": "1",
+        "count": 1,
+        "attributes": { "dashes": "Zero", "width": 48, "height": 32 },
+        "factoryType": "Celeste.Mod.DJMapHelper.Triggers.MaxDashesTrigger",
+        "factorySignature": "EntityData,Vector2"
+      }
+    }
+  ],
+  "djMapHelperIlFreeze": {
+    "registrationCount": 5,
+    "targetBodyCount": 3,
+    "directIlHookCount": 0,
+    "configuredIlHookCount": 0,
+    "emitDelegateSites": 51,
+    "allEmitDelegatesStaticNonCapturing": true,
+    "realDistributedManipulatorsExecutedOnMac": true,
+    "allTargetsFingerprintProtected": true,
+    "planSha256": "5791ac3b27f500d8ae9f2cc72669b09aa7e490d17b33b992a2b55d0a8728b457",
+    "transforms": [
+      {
+        "planId": "DJMapHelper:player-h-feather",
+        "event": "IL.Celeste.Player.OnCollideH",
+        "target": "System.Void Celeste.Player::OnCollideH(Celeste.CollisionData)",
+        "manipulator": "Celeste.Mod.DJMapHelper.Entities.FeatherBarrier.AddCollideCheck",
+        "emitDelegateSites": 10,
+        "beforeSha256": "71468bceff7398edb3f4a093087b6bcedf0bc9476a10e09ff9be65574f22f2b9",
+        "afterSha256": "f0659cb0f07350663fbf5ac9ab68cf4d53b2674db66c1422568d5b50f2246ee4",
+        "diffSha256": "4d9b78648d0a72da8127cd9f2410c66673eaf7db4c5d3400209de1d7dd8992e6"
+      },
+      {
+        "planId": "DJMapHelper:player-h-theo",
+        "event": "IL.Celeste.Player.OnCollideH",
+        "target": "System.Void Celeste.Player::OnCollideH(Celeste.CollisionData)",
+        "manipulator": "Celeste.Mod.DJMapHelper.Entities.TheoCrystalBarrier.AddCollideCheck",
+        "emitDelegateSites": 10,
+        "beforeSha256": "f0659cb0f07350663fbf5ac9ab68cf4d53b2674db66c1422568d5b50f2246ee4",
+        "afterSha256": "a86a9eff25145c269bd65955eebbb4dbd63f2d0d9e33160365cacc15239748a3",
+        "diffSha256": "17dc28cf86b319fd781fc8c6f8a1f4b1f4e0dcd97ce75f27be2bbc5ba6b14327"
+      },
+      {
+        "planId": "DJMapHelper:player-v-feather",
+        "event": "IL.Celeste.Player.OnCollideV",
+        "target": "System.Void Celeste.Player::OnCollideV(Celeste.CollisionData)",
+        "manipulator": "Celeste.Mod.DJMapHelper.Entities.FeatherBarrier.AddCollideCheck",
+        "emitDelegateSites": 15,
+        "beforeSha256": "40e6847041906b2c83a493f5477a19c24d2bb8d2cbce4c40780c67df40866271",
+        "afterSha256": "d07b75bd9c0e47ef8d27b3bdf3a9feb04a03414ca4b9d70760b6318d3b84fb50",
+        "diffSha256": "cc5f9e0b1744e1f32ec2508776aa6b0a441a466a8399873fc33f9d51b3ae4d6f"
+      },
+      {
+        "planId": "DJMapHelper:player-v-theo",
+        "event": "IL.Celeste.Player.OnCollideV",
+        "target": "System.Void Celeste.Player::OnCollideV(Celeste.CollisionData)",
+        "manipulator": "Celeste.Mod.DJMapHelper.Entities.TheoCrystalBarrier.AddCollideCheck",
+        "emitDelegateSites": 15,
+        "beforeSha256": "d07b75bd9c0e47ef8d27b3bdf3a9feb04a03414ca4b9d70760b6318d3b84fb50",
+        "afterSha256": "0dd3e5e5322fc56809670a4273eb164165f682926dad364634a872ad754147e1",
+        "diffSha256": "b44772e4195ca2e9f5b0b08e8705a4a766504d6f70574051691970405ae9bb1f"
+      },
+      {
+        "planId": "DJMapHelper:fling-awake",
+        "event": "IL.Celeste.FlingBird.Awake",
+        "target": "System.Void Celeste.FlingBird::Awake(Monocle.Scene)",
+        "manipulator": "Celeste.Mod.DJMapHelper.Entities.FlingBirdReversed.ModFlingBirdAwake",
+        "emitDelegateSites": 1,
+        "beforeSha256": "1e0337d08e443cba4876899b602bbe31d9af5f1c5c9f0d13b04e03794cd2c55c",
+        "afterSha256": "1423bb5b7cba3820c9ad3f67fdef7377e59fc0c28487a8c0abb8ad09298c1d92",
+        "diffSha256": "a8c1cc2d2a19c9020938368478998d5dadae76f64270913c0dfe0d2038f3bb10"
+      }
+    ],
+    "threeRunDeterminism": {
+      "independentRuns": 3,
+      "allIdentical": true,
+      "sharedClosureSha256": "82418da0c90fe543ee4da4c9c7af58b372f96a2a11b4dda0e0c5dbb0bdf77639",
+      "manifestSha256": "879983c9b2b09056748b6a5e925d05600ad13c690072ad9d6d4e42b8e8f2ff6c",
+      "scope": "DJMapHelper-only; not the blocked complete LittleEpic graph"
+    },
+    "omissionRestoresCanonicalTargets": true
+  },
+  "ordinaryManagedDetours": {
+    "chronoHelperTargetCount": 15,
+    "djMapHelperTargetCount": 26,
+    "newDescriptorCount": 33,
+    "catalogBefore": 69,
+    "catalogAfter": 102,
+    "descriptorsAreExactSignatureDriven": true,
+    "newDescriptorIds": [
+      "celeste-player-dash-end",
+      "celeste-map-data-reload",
+      "celeste-spikes-ctor-entity-data-vector2-directions",
+      "celeste-spring-ctor-entity-data-vector2-orientations",
+      "celeste-dash-block-break-vector2-vector2-bool-bool",
+      "celeste-level-enforce-bounds",
+      "celeste-solid-move-v-exact",
+      "celeste-solid-move-h-exact",
+      "celeste-actor-move-v-exact",
+      "celeste-actor-move-h-exact",
+      "celeste-level-loader-loading-thread",
+      "celeste-final-boss-on-player",
+      "celeste-crystal-static-spinner-ctor-entity-data-vector2-crystal-color",
+      "celeste-crystal-static-spinner-removed",
+      "celeste-level-end",
+      "celeste-level-loader-ctor",
+      "celeste-player-climb-bounds-check",
+      "celeste-player-climb-jump",
+      "celeste-heart-gem-collect",
+      "celeste-player-reflection-fall-coroutine",
+      "celeste-player-ctor",
+      "celeste-fly-feather-on-player",
+      "celeste-fly-feather-respawn",
+      "celeste-player-use-refill",
+      "celeste-player-wind-move",
+      "celeste-player-star-fly-return-to-normal-hitbox",
+      "celeste-final-boss-trigger-falling-blocks",
+      "celeste-player-finish-fling-bird",
+      "celeste-spring-on-collide",
+      "celeste-theo-crystal-update",
+      "celeste-player-pickup",
+      "celeste-player-refill-stamina",
+      "celeste-player-intro-jump-coroutine"
+    ]
+  },
+  "reviewedApi": {
+    "existingAppleApiSurfaceBefore": 30,
+    "existingAppleApiSurfaceAfter": 30,
+    "existingAppleApiSurfaceSha256": "d594dea86e944b468819818773f2177312445bbebe022bcbc7ea1ff779c8652c",
+    "stageSpecificExactMemberPromotions": 27,
+    "broadPublicize": false,
+    "stageSpecificMembers": [
+      "Strawberry.rotateWiggler", "Strawberry.flyingAway", "Strawberry.flapSpeed", "Strawberry.Winged",
+      "LightningRenderer.list", "DashBlock.canDash", "Player.dashCooldownTimer", "Player.boostTarget",
+      "Player.starFlyColor", "Player.starFlyTimer", "Player.beforeDashSpeed", "Player.varJumpSpeed",
+      "Player.flingBird", "Player.forceMoveX", "Player.boostRed", "FlyFeather.shielded",
+      "FinalBoss.normalHair", "FinalBoss.nodes", "FinalBoss.patternIndex", "FinalBoss.attackCoroutine",
+      "Refill.sprite", "Refill.flash", "CrystalStaticSpinner.color", "Strawberry.collected",
+      "Spring.sprite", "Solid.riders", "Spring.BounceAnimate"
+    ]
+  },
+  "registries": {
+    "allFactoriesStatic": true,
+    "deviceUsesGetTypes": false,
+    "deviceUsesActivator": false,
+    "chronoHelperFactoryCount": 30,
+    "djMapHelperFactoryCount": 28,
+    "actualMapEntities": [
+      {
+        "id": "ChronoHelper/CustomTimeSwitchGates",
+        "provider": "ChronoHelper",
+        "factoryType": "Celeste.Mod.ChronoHelper.Entities.CustomTimeSwitchGates",
+        "signature": "EntityData,Vector2",
+        "room": "5",
+        "occurrences": 1
+      }
+    ],
+    "actualMapTriggers": [
+      {
+        "id": "DJMapHelper/maxDashesTrigger",
+        "provider": "DJMapHelper",
+        "factoryType": "Celeste.Mod.DJMapHelper.Triggers.MaxDashesTrigger",
+        "signature": "EntityData,Vector2",
+        "room": "1",
+        "occurrences": 1
+      }
+    ],
+    "actualMapBackdrops": []
+  },
+  "content": {
+    "deterministicOrder": ["ChronoHelper", "DJMapHelper", "LittleEpic's Precision Challenge"],
+    "collisions": [],
+    "chronoHelper": { "files": 280, "types": { "ase": 1, "bank": 1, "png": 276, "txt": 1, "xml": 1 } },
+    "djMapHelper": { "files": 337, "types": { "png": 173, "txt": 1, "xml": 1, "yaml": 162 } },
+    "root": { "files": 2, "types": { "bin": 1, "txt": 1 } },
+    "diagnosticMergedFileCount": 619,
+    "acceptedCompleteGraphContentHash": null
+  },
+  "mechanismCensus": {
+    "dynamicData": "LIVE_EXACT_BOUNDED_LOWERING_PROTOTYPED",
+    "directIlHookCount": 0,
+    "configuredIlHookCount": 0,
+    "modInteropRequired": false,
+    "moduleSettingsRequired": false,
+    "moduleSaveDataRequired": false,
+    "moduleSession": [
+      "ChronoHelperSessionModule: default typed YAML path",
+      "Celeste.Mod.DJMapHelper.DJMapHelperSession: default typed YAML path"
+    ],
+    "reachableLua": false,
+    "nativeOrPInvoke": false,
+    "customAudio": {
+      "bankPath": "Audio/ExpertContestHelper.bank",
+      "bankSha256": "2607c358e66f4bce4e81fa3748eaffe1205dcfb57010be2e90ce40fabeb8d3ec",
+      "guidsPath": "Audio/ExpertContestHelper.guids.txt",
+      "guidsSha256": "db7f44d7ee1d79eb5efe734e595a6fb99937fd78e5cf9af91b0db6cabc4272a6",
+      "events": ["event:/ricky06/EC2023/horn", "event:/ricky06/zip_mover 2"],
+      "bank": "bank:/ExpertContestHelper",
+      "reachableHelperTypes": ["ExplodingPinata", "EntityConveyor"],
+      "actualMapEntityUsesBaseGameEventsOnly": true,
+      "acceptedAppleCustomBankLoaderExists": false
+    }
+  },
+  "preAotDecision": {
+    "unclassifiedBlockers": 0,
+    "unsupportedRequiredBlockers": 1,
+    "result": "BLOCKED",
+    "diagnostic": "CUSTOM_AUDIO_UNSUPPORTED: ChronoHelper 1.3.3 contains a custom FMOD bank and reachable helper features that reference it; the accepted shared Apple runtime has no deterministic custom mod-bank loader.",
+    "fullBuildAllowed": false,
+    "smallestFollowUp": "A bounded custom-FMOD bank registration/loading/unloading architecture for exact statically selected mod banks, followed by a complete graph rebuild and physical acceptance."
+  },
+  "productionResult": {
+    "sourceFreeCompleteGraph": false,
+    "acceptedSharedClosureSha256": null,
+    "managedLogicalSha256": null,
+    "contentLogicalSha256": null,
+    "registrySha256": null,
+    "hookTransformSha256": null,
+    "frozenPlanSha256": null,
+    "iosIpa": null,
+    "tvosIpa": null,
+    "fullTrim": "NOT_RUN_PRE_AOT_CUSTOM_AUDIO_GATE",
+    "fullAot": "NOT_RUN_PRE_AOT_CUSTOM_AUDIO_GATE",
+    "useInterpreter": "NOT_RUN_PRE_AOT_CUSTOM_AUDIO_GATE",
+    "jit": "NOT_RUN_PRE_AOT_CUSTOM_AUDIO_GATE",
+    "iphone": "NOT_RUN_PRE_AOT_CUSTOM_AUDIO_GATE",
+    "ipadOs15": "NOT_RUN_PRE_AOT_CUSTOM_AUDIO_GATE",
+    "appleTv": "NOT_RUN_PRE_AOT_CUSTOM_AUDIO_GATE",
+    "customMapProgression": "NONPERSISTENT_DEBUG_LANE",
+    "saveAndQuit": "SUPPRESSED_IN_CUSTOM_MAP_DEBUG_LANE"
+  },
+  "unchangedLocks": {
+    "canonicalContent": "30a1c147d1a3ab0aa45762094e393ed7fd69951dd66e5af063447641e0699c46",
+    "canonicalRaw": "db7b722159fbdef8625c81608165aea162957dce956fcd5b16eeceaa1089a273",
+    "canonicalPatched": "0c6515adadf58251ab2da66c6c61a1f61bd19b85f5dcdd4f1280552af650a4b5",
+    "canonicalStage6": "1a981bc5994261775c1fea497cd042780fdbbcb24b7390a2f4db6aab1be747d9",
+    "iosNative": "9fb302d221180e39f270ea5ebf48e18433b67bd0a40943c042a227fe0f8ad6a2",
+    "tvosNative": "6286e0545b32e9c56732955d4cf816ed8f5dc0d816ab610dd9fe1752090a01fc"
+  },
+  "releaseRefs": {
+    "iosRecovery": "27e16b4724d94d3991b99c4795f680fcb0e5830c",
+    "tvosRc1": "ee52b0868df091746f134d95d4f020f94f23d4fb",
+    "tvosRc2": "641e86e4ed164cdf93f602ce2f11436449654d6e",
+    "rc3ReleaseBranch": "c8134c8ca7924cf12f48527e714b5242c6024927",
+    "rc3Tag": "absent"
+  },
+  "githubActionsMinutesUsed": 0,
+  "integrationReady": false,
+  "firstRealMultiCodeHelperMapGreen": false
+}

@@ -119,6 +119,16 @@ pre-AOT YELLOW rather than a stripped map or a misleading product build. The
 runtime module set for any accepted installed build remains immutable: helper
 ZIPs, DLLs, scripts, and registries cannot be added or replaced on-device.
 
+Stage 25I-A applies the same rule to LittleEpic's Precision Challenge 1.0.0.
+Its exact DJMapHelper 1.13.4 release can be lowered deterministically, including
+five real `IL.*` registrations and bounded reflection/`DynData` access. Its
+other direct helper, ChronoHelper 1.3.3, contains a custom FMOD bank, however.
+The current Apple runtime has no deterministic mod-bank registration/lifecycle
+service, so the complete graph is classified `CUSTOM_AUDIO_UNSUPPORTED` before
+AOT. The bank is neither ignored nor mounted inertly, and no partial helper
+product is emitted. This remains a separate architecture boundary from the
+ordinary seven-bank Celeste FMOD runtime.
+
 ## One shared Apple closure
 
 The tool emits one deterministic closure, not separate iOS and tvOS mod forks.
