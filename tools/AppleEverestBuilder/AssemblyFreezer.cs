@@ -42,6 +42,14 @@ internal static class AssemblyFreezer
             .Where(type => type.CustomAttributes.Any(attribute => attribute.AttributeType.FullName == "Celeste.Mod.Backdrops.CustomBackdropAttribute"))
             .OrderBy(type => type.FullName, StringComparer.Ordinal)
             .ToArray();
+        TypeDefinition[] pooledTypes = assembly.MainModule.Types.SelectMany(AllTypes)
+            .Where(type => type.CustomAttributes.Any(attribute => attribute.AttributeType.FullName == "Monocle.Pooled"))
+            // The generated shared registry is deliberately reflection-free and can therefore
+            // construct only types exposed by the exact external assembly. Private nested pools
+            // remain owned by their declaring module and are not silently made public.
+            .Where(IsPubliclyConstructiblePooledType)
+            .OrderBy(type => type.FullName, StringComparer.Ordinal)
+            .ToArray();
         (AppleSettingProperty[] settings, string[] omittedSettings) = InspectSettings(settingsDefinition);
         (AppleCustomEntityFactory[] customEntityFactories,
             AppleOmittedCustomEntityFactory[] omittedCustomEntityFactories) = InspectCustomEntities(customTypes,
@@ -58,6 +66,7 @@ internal static class AssemblyFreezer
                                    property.SetMethod is { IsPublic: true })
                 .Select(property => property.Name).OrderBy(value => value, StringComparer.Ordinal).ToArray() ?? [],
             TrackedEntityTypes = customTypes.Select(type => type.FullName.Replace('/', '.')).ToArray(),
+            PooledEntityTypes = pooledTypes.Select(type => type.FullName.Replace('/', '.')).ToArray(),
             CustomEntityFactories = customEntityFactories,
             OmittedCustomEntityFactories = omittedCustomEntityFactories,
             CustomBackdropFactories = backdropTypes.SelectMany(CustomBackdropFactories)
@@ -701,9 +710,17 @@ internal static class AssemblyFreezer
             foreach (TypeReference element in SignatureTypes(specification.ElementType)) yield return element;
     }
 
-    private static bool UsesAssembly(TypeReference type, string assemblyName) =>
-        type.GetElementType().Scope is AssemblyNameReference reference &&
-        string.Equals(reference.Name, assemblyName, StringComparison.Ordinal);
+    private static bool UsesAssembly(TypeReference type, string assemblyName)
+    {
+        TypeReference element = type.GetElementType();
+        // A generic parameter belongs to its declaring type or method, not an
+        // external assembly. Cecil's Scope accessor also assumes that owner is
+        // still attached; exact rewrites may intentionally remove the owning
+        // generic factory before this live-metadata census runs.
+        if (element is GenericParameter) return false;
+        return element.Scope is AssemblyNameReference reference &&
+               string.Equals(reference.Name, assemblyName, StringComparison.Ordinal);
+    }
 
     private static void Validate(AppleStaticDeclaration declaration, string mod)
     {
@@ -719,6 +736,8 @@ internal static class AssemblyFreezer
             throw new InvalidDataException($"invalid button-binding factory declaration for {mod}");
         if (declaration.TrackedEntityTypes.Length > 256 || declaration.TrackedEntityTypes.Any(type => !TypeName(type)))
             throw new InvalidDataException($"invalid tracked entity declaration for {mod}");
+        if (declaration.PooledEntityTypes.Length > 256 || declaration.PooledEntityTypes.Any(type => !TypeName(type)))
+            throw new InvalidDataException($"invalid pooled entity declaration for {mod}");
         if (declaration.CustomEntityFactories.Length > 512 || declaration.CustomEntityFactories.Any(factory =>
                 factory.Id.Length is < 1 or > 192 || !TypeName(factory.Type) ||
                 factory.Kind is not ("entity" or "trigger") ||
@@ -745,6 +764,17 @@ internal static class AssemblyFreezer
             throw new InvalidDataException($"invalid settings property declaration for {mod}");
         if (declaration.OmittedSettingsProperties.Length > 128 || declaration.OmittedSettingsProperties.Any(value => value.Length is < 1 or > 256))
             throw new InvalidDataException($"invalid omitted settings declaration for {mod}");
+    }
+
+    private static bool IsPubliclyConstructiblePooledType(TypeDefinition type)
+    {
+        for (TypeDefinition? current = type; current != null; current = current.DeclaringType)
+        {
+            if (current.DeclaringType == null ? !current.IsPublic : !current.IsNestedPublic)
+                return false;
+        }
+        return !type.IsAbstract && type.Methods.Any(method => method.IsConstructor && !method.IsStatic &&
+            method.IsPublic && method.Parameters.Count == 0);
     }
 
     private static bool TypeName(string value) => value.Length is > 0 and < 256 &&

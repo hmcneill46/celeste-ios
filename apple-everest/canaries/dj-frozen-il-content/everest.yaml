@@ -1,0 +1,5 @@
+- Name: AppleEverestDJFrozenIlContentCanary
+  Version: 1.0.0
+  Dependencies:
+    - Name: DJMapHelper
+      Version: 1.13.4

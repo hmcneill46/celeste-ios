@@ -109,7 +109,8 @@ usage back to the owning helper; a declaration in `everest.yaml` alone is not
 evidence that a helper participates. The complete transitive graph must have
 zero unclassified blockers before an expensive product build starts. Missing
 or wrong-version dependencies, cycles, conflicting IDs, unsupported hooks,
-active IL, Lua/native code, custom audio, and unknown content fail before AOT.
+active unsupported IL, Lua/native code, unrecognized custom audio, and unknown
+content fail before AOT.
 
 Stage 25G applied that policy to 53 real maps and 24 deep graphs. Noctambule
 was the strongest small graph, with two genuine helper triggers and no active
@@ -119,15 +120,24 @@ pre-AOT YELLOW rather than a stripped map or a misleading product build. The
 runtime module set for any accepted installed build remains immutable: helper
 ZIPs, DLLs, scripts, and registries cannot be added or replaced on-device.
 
-Stage 25I-A applies the same rule to LittleEpic's Precision Challenge 1.0.0.
-Its exact DJMapHelper 1.13.4 release can be lowered deterministically, including
-five real `IL.*` registrations and bounded reflection/`DynData` access. Its
-other direct helper, ChronoHelper 1.3.3, contains a custom FMOD bank, however.
-The current Apple runtime has no deterministic mod-bank registration/lifecycle
-service, so the complete graph is classified `CUSTOM_AUDIO_UNSUPPORTED` before
-AOT. The bank is neither ignored nor mounted inertly, and no partial helper
-product is emitted. This remains a separate architecture boundary from the
-ordinary seven-bank Celeste FMOD runtime.
+Stage 25I-B closes the one Stage 25I-A blocker previously classified as
+`CUSTOM_AUDIO_UNSUPPORTED` for the exact
+LittleEpic's Precision Challenge 1.0.0 graph. Its pinned ChronoHelper 1.3.3
+archive contributes one hash-locked ordinary FMOD bank and three Mac-parsed
+GUID records. The generated closure stages that bank at one fixed bundle path,
+loads it after Celeste's seven base banks through `loadBankFile` on the existing
+single Studio system, and augments normal event lookup with the two exact
+generated event GUIDs. There is no runtime bank/GUID/mod-directory scan and no
+second FMOD system.
+
+Custom audio is a closed compatibility class, `STATIC_CUSTOM_FMOD_BANK`, not a
+general mod-audio loader. Unknown banks, missing/malformed GUID tables, changed
+bytes, master/strings banks, collisions, and unreviewed packages still fail on
+the Mac before AOT. Generated lifecycle state makes repeated initialization
+idempotent, keeps handles scoped to the owning FMOD system, invalidates the
+registry before system teardown, and reloads exactly once only if the system
+identity changes. Bank bytes and the canonical audio manifest both contribute
+to the shared closure identity.
 
 ## One shared Apple closure
 

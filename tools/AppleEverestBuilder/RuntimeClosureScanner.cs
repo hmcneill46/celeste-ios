@@ -102,7 +102,7 @@ internal static class RuntimeClosureScanner
             }
         }
         foreach (MemberReference member in source.MainModule.GetMemberReferences()
-                     .Where(member => ScopeName(member.DeclaringType) == targetName))
+                     .Where(member => ScopeName(member.DeclaringType) == targetName && !ArrayIntrinsic(member)))
         {
             try
             {
@@ -192,6 +192,13 @@ internal static class RuntimeClosureScanner
         _ => string.Empty
     };
 
+    // ECMA-335 represents multidimensional array construction and element
+    // access as pseudo member references on the array TypeSpec. They are CLR
+    // intrinsics, not members that must exist on the element type's assembly.
+    private static bool ArrayIntrinsic(MemberReference member) =>
+        member is MethodReference method && method.DeclaringType is ArrayType &&
+        method.Name is ".ctor" or "Get" or "Set" or "Address";
+
     private static bool ExternalAccess(MethodDefinition method) =>
         method.IsPublic || method.IsFamily || method.IsFamilyOrAssembly;
 
@@ -227,7 +234,8 @@ internal static class RuntimeClosureScanner
     private static bool AllowedStaticFacadeType(AssemblyDefinition assembly, TypeDefinition type) =>
         assembly.Name.Name == "Celeste" &&
         (type.Namespace == "MonoMod.RuntimeDetour" && type.Name is "Hook" or "DetourConfig" ||
-         type.Namespace == "MonoMod.ModInterop" && type.Name is "ModInteropManager" or "ModExportNameAttribute" or "ModImportNameAttribute");
+         type.Namespace == "MonoMod.ModInterop" && type.Name is "ModInteropManager" or "ModExportNameAttribute" or "ModImportNameAttribute" ||
+         type.Namespace == "MonoMod.Utils" && type.Name is "DynData`1" or "GetDelegate`2");
 
     private static bool AllowedEmbeddedCompilerMarker(TypeDefinition type) =>
         type.FullName == "Microsoft.CodeAnalysis.EmbeddedAttribute" &&
@@ -243,6 +251,17 @@ internal static class RuntimeClosureScanner
             {
                 "ModInteropManager" => method.Name == "ModInterop",
                 "ModExportNameAttribute" or "ModImportNameAttribute" => method.Name is ".ctor" or "get_Name",
+                _ => false
+            };
+        if (method.DeclaringType.Namespace == "MonoMod.Utils")
+            return method.DeclaringType.Name switch
+            {
+                // These are the exact, source-generated static-AOT facades in
+                // Celeste.dll. They perform no reflection or runtime member
+                // discovery; unknown field names fail closed in the bounded
+                // AppleEverestStaticFieldAccess switch.
+                "DynData`1" => method.Name is ".ctor" or "get_Data" or "get_Item" or "set_Item" or "Get" or "Set",
+                "GetDelegate`2" => method.Name is ".ctor" or "Invoke",
                 _ => false
             };
         if (method.DeclaringType.Namespace != "MonoMod.RuntimeDetour") return false;

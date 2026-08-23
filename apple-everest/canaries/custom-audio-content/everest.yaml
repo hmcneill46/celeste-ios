@@ -1,0 +1,5 @@
+- Name: AppleEverestCustomAudioCanary
+  Version: 1.0.0
+  Dependencies:
+    - Name: ChronoHelper
+      Version: 1.3.3

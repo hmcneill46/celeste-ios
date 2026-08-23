@@ -91,6 +91,7 @@ internal static class Program
                                 CompatibilityClass.MIXED_MANAGED_DETOURS_SUPPORTED or CompatibilityClass.MODINTEROP_STATIC_SUPPORTED or
                                 CompatibilityClass.STATIC_IL_EVENT_FREEZE or CompatibilityClass.STATIC_IL_EVENT_SEQUENCE or
                                 CompatibilityClass.STATIC_DIRECT_ILHOOK_FREEZE or CompatibilityClass.HASH_LOCKED_STATIC_AOT_COMPATIBILITY
+                                or CompatibilityClass.STATIC_CUSTOM_FMOD_BANK
                                 ? "candidate" : "deferred"
                         });
                     }

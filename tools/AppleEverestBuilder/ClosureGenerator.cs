@@ -32,6 +32,7 @@ internal static class ClosureGenerator
         List<(ResolvedMod Mod, AppleStaticDeclaration Declaration)> codeModules = [];
         List<ContentMountRecord> stagedContent = [];
         List<FrozenAssemblyRecord> frozenAssemblies = [];
+        List<(CustomAudioBankPlan Plan, int Ordinal)> customAudioBanks = [];
         IReadOnlyList<FrozenIlTransformPlan> frozenIlTransforms = ComposeFrozenIlTransforms(ordered);
         int sourceIndex = 0;
         for (int modOrder = 0; modOrder < ordered.Count; modOrder++)
@@ -70,7 +71,23 @@ internal static class ClosureGenerator
                 stagedContent.Add(new ContentMountRecord(mod.Metadata.Name, modOrder, relative, logical,
                     Hashing.FileSha256(Path.Combine(content, logical.Replace('/', Path.DirectorySeparatorChar)))));
             }
+            foreach (CustomAudioBankPlan bank in mod.CustomAudioBanks.OrderBy(value => value.SourcePath, StringComparer.Ordinal))
+                customAudioBanks.Add((bank, customAudioBanks.Count));
         }
+
+        CustomAudioManifest.ValidateGraph(customAudioBanks);
+        foreach ((CustomAudioBankPlan bank, _) in customAudioBanks)
+        {
+            ContentMountRecord[] mounts = stagedContent.Where(mount => mount.Owner == bank.Owner &&
+                mount.SourcePath == bank.SourcePath && mount.LogicalPath == bank.StagedPath).ToArray();
+            if (mounts.Length != 1 || mounts[0].Sha256 != bank.BankSha256)
+                throw new InvalidDataException($"custom FMOD bank was not staged exactly once: {bank.Owner}/{bank.SourcePath}");
+        }
+        string customAudioText = CustomAudioManifest.CanonicalManifest(customAudioBanks);
+        string customAudioManifestSha256 = Hashing.BytesSha256(Encoding.UTF8.GetBytes(customAudioText));
+        string customBankLogicalSet = CustomAudioManifest.LogicalSet(customAudioBanks);
+        string customBankLogicalSetSha256 = Hashing.BytesSha256(Encoding.UTF8.GetBytes(customBankLogicalSet));
+        File.WriteAllText(Path.Combine(outputRoot, "custom-audio-manifest.txt"), customAudioText, new UTF8Encoding(false));
 
         AppleCustomEntityFactory[] customFactories = codeModules.SelectMany(item => item.Declaration.CustomEntityFactories).ToArray();
         AppleCustomBackdropFactory[] backdropFactories = codeModules.SelectMany(item => item.Declaration.CustomBackdropFactories).ToArray();
@@ -125,6 +142,8 @@ internal static class ClosureGenerator
             RegistrySource(profile, codeModules, ordered, durabilityAdapters, durabilityClosureSha256), new UTF8Encoding(false));
         File.WriteAllText(Path.Combine(managed, "GeneratedAppleEverestGameplayRegistry.cs"), GameplayRegistrySource(codeModules), new UTF8Encoding(false));
         File.WriteAllText(Path.Combine(managed, "GeneratedAppleEverestContentManifest.cs"), ContentManifestSource(ordered, stagedContent), new UTF8Encoding(false));
+        File.WriteAllText(Path.Combine(managed, "GeneratedAppleEverestCustomAudioManifest.cs"),
+            CustomAudioManifestSource(customAudioBanks, customAudioManifestSha256), new UTF8Encoding(false));
         StaticAssetGeneration staticAssets = StaticAssetGenerator.Generate(codeModules, stagedContent, content);
         File.WriteAllText(Path.Combine(managed, "GeneratedAppleEverestStaticAssets.cs"), staticAssets.Source, new UTF8Encoding(false));
         File.WriteAllText(Path.Combine(managed, "GeneratedAppleEverestAotRoots.cs"), RootsSource(codeModules), new UTF8Encoding(false));
@@ -156,8 +175,16 @@ internal static class ClosureGenerator
             TargetPatchContract + "\nAppleApiSurface:" + apiSurfaceHash));
         string managedHash = Hashing.LogicalHash(managedInventory);
         string contentHash = Hashing.LogicalHash(contentInventory);
+        string frozenAssemblyLogicalSha256 = Hashing.BytesSha256(Encoding.UTF8.GetBytes(string.Join("\n",
+            frozenAssemblies.OrderBy(value => value.AssemblyName, StringComparer.Ordinal)
+                .Select(value => string.Join("\0", value.Owner, value.AssemblyName, value.FileName,
+                    value.OriginalSha256, value.FrozenSha256)))));
         string sharedClosureHash = Hashing.BytesSha256(Encoding.UTF8.GetBytes(
-            $"{ProductPolicy.TransformerVersion}\nmanaged:{managedHash}\ncontent:{contentHash}\napi-surface:{apiSurfaceHash}\nstatic-il:{frozenIlPlanSha256}\n"));
+            $"{ProductPolicy.TransformerVersion}\nmanaged:{managedHash}\ncontent:{contentHash}\n" +
+            $"assemblies:{frozenAssemblyLogicalSha256}\nregistry:{registryHash}\nhooks:{hookTransformHash}\n" +
+            $"api-surface:{apiSurfaceHash}\nstatic-il:{frozenIlPlanSha256}\n" +
+            $"custom-audio:{customAudioManifestSha256}\ncustom-banks:{customBankLogicalSetSha256}\n" +
+            $"mod-interop:{modInterop.PlanSha256}\n"));
         object manifest = new
         {
             schemaVersion = 1,
@@ -183,6 +210,31 @@ internal static class ClosureGenerator
             frozenIlSchema = frozenIlTransforms.Count == 0 ? 0 : StaticIlFreeze.SchemaVersionFor(frozenIlTransforms),
             frozenIlWorker = frozenIlTransforms.Count == 0 ? "absent" : StaticIlFreeze.WorkerVersionFor(frozenIlTransforms),
             frozenIlPlanSha256,
+            frozenAssemblyLogicalSha256,
+            customAudioSchema = CustomAudioManifest.Schema,
+            customAudioManifestSha256,
+            customBankLogicalSetSha256,
+            customAudioBankCount = customAudioBanks.Count,
+            customAudioEventCount = customAudioBanks.Sum(item => item.Plan.Guids.Count(value => value.Kind == "event")),
+            customAudioLoadPolicy = CustomAudioManifest.LoadPolicy,
+            customAudioSampleDataPolicy = CustomAudioManifest.SampleDataPolicy,
+            customAudioLifecyclePolicy = CustomAudioManifest.LifecyclePolicy,
+            customAudioBanks = customAudioBanks.Select(item => new
+            {
+                owner = item.Plan.Owner,
+                version = item.Plan.Version,
+                sourceArchiveSha256 = item.Plan.SourceArchiveSha256,
+                sourcePath = item.Plan.SourcePath,
+                bankSha256 = item.Plan.BankSha256,
+                guidSourcePath = item.Plan.GuidSourcePath,
+                guidSha256 = item.Plan.GuidSha256,
+                loadOrdinal = item.Ordinal,
+                bankId = item.Plan.BankId,
+                bankPath = item.Plan.BankPath,
+                stagedPath = item.Plan.StagedPath,
+                guids = item.Plan.Guids.Select(value => new { value.Id, value.Path, value.Kind }).ToArray(),
+                collisions = 0
+            }).ToArray(),
             frozenIlTransformCount = frozenIlTransforms.Count,
             frozenIlTransforms = frozenIlTransforms.Select(plan => new
             {
@@ -240,6 +292,7 @@ internal static class ClosureGenerator
                 staticAotCompatibility = mod.StaticAotCompatibility?.Id,
                 modInteropRegistrations = mod.ModInteropRegistrations.Select(registration => registration.RegisteredType).ToArray(),
                 frozenIlTransforms = mod.FrozenIlTransforms.Select(plan => plan.PlanId).ToArray(),
+                customAudioBanks = mod.CustomAudioBanks.Select(bank => bank.BankPath).ToArray(),
                 managedFiles = mod.ManagedFiles,
                 contentFiles = mod.ContentFiles
             }).ToArray(),
@@ -391,11 +444,14 @@ internal static class ClosureGenerator
         if (File.Exists(Path.Combine(destination, "GeneratedAppleEverestStaticAotCompatibility.cs")))
             StaticAotCompatibility.PatchGameSources(managedRoot);
         PatchLevel(Path.Combine(managedRoot, "Celeste", "Level.cs"));
+        PatchLevelDataRoomNames(Path.Combine(managedRoot, "Celeste", "LevelData.cs"));
         PatchPlayerEvents(Path.Combine(managedRoot, "Celeste", "Player.cs"));
         PatchGameplayLoading(Path.Combine(managedRoot, "Celeste", "Level.cs"));
         PatchBackdropLoading(Path.Combine(managedRoot, "Celeste", "MapData.cs"));
         PatchStartup(Path.Combine(managedRoot, "Celeste", "Celeste.cs"));
         PatchContentReady(Path.Combine(managedRoot, "Celeste", "GameLoader.cs"));
+        PatchCustomAudio(Path.Combine(managedRoot, "Celeste", "GameLoader.cs"),
+            Path.Combine(managedRoot, "Celeste", "Audio.cs"));
         PatchMenu(Path.Combine(managedRoot, "Celeste", "MenuOptions.cs"));
         PatchNonPersistentSaveQuit(Path.Combine(managedRoot, "Celeste", "Level.cs"));
         PatchNonPersistentSave(Path.Combine(managedRoot, "Celeste", "UserIO.cs"));
@@ -403,6 +459,7 @@ internal static class ClosureGenerator
         PatchPinnedEverestCompatibility(managedRoot);
         PatchModuleDurability(managedRoot);
         PatchTracker(Path.Combine(managedRoot, "Monocle", "Tracker.cs"));
+        PatchPooler(Path.Combine(managedRoot, "Monocle", "Pooler.cs"));
         PatchProject(Path.Combine(managedRoot, "Celeste.Modern.csproj"), closureRoot);
     }
 
@@ -410,9 +467,11 @@ internal static class ClosureGenerator
     {
         "ManagedDetourCatalog:typed-static-dispatch:v4",
         "Level.LoadLevel:ordinary-event:v1",
+        "LevelData:pre-1.2.5-optional-lvl-prefix:v1",
         "Player.Update:ordinary-after-update-event:v1",
         "Celeste.Run:static-registry-startup:v1",
         "GameLoader:content-ready:v1",
+        "GameLoader+Audio:static-custom-fmod-existing-system:v1",
         "MenuOptions:diagnostic-panel:v1",
         "Tracker.Initialize:typed-gameplay-registry:v1",
         "Level.LoadLevel:typed-custom-factory-registry:v1",
@@ -583,6 +642,10 @@ internal static class ClosureGenerator
         "\t\tCalc.PopRandom();\n\t}\n\n\tpublic void UnloadLevel()",
         "\t\tCalc.PopRandom();\n\t\tglobal::Celeste.Mod.Everest.Events.Level.RaiseOnLoadLevel(this, playerIntro, isFromLoader);\n\t}\n\n\tpublic void UnloadLevel()");
 
+    private static void PatchLevelDataRoomNames(string path) => ReplaceOnce(path,
+        "\t\t\tcase \"name\":\n\t\t\t\tName = attribute.Value.ToString().Substring(4);\n\t\t\t\tbreak;",
+        "\t\t\tcase \"name\":\n\t\t\t\tstring appleEverestRoomName = attribute.Value.ToString();\n\t\t\t\tName = appleEverestRoomName.StartsWith(\"lvl_\", StringComparison.Ordinal) ? appleEverestRoomName.Substring(4) : appleEverestRoomName;\n\t\t\t\tbreak;");
+
     private static void PatchPlayerEvents(string path)
     {
         ReplaceOnce(path,
@@ -620,6 +683,28 @@ internal static class ClosureGenerator
     private static void PatchContentReady(string path) => ReplaceOnce(path,
         "\t\tAreaData.Load();",
         "\t\tAreaData.Load();\n\t\tglobal::Celeste.Mod.AppleEverestStaticRuntime.ContentReady();");
+
+    private static void PatchCustomAudio(string gameLoader, string audio)
+    {
+        ReplaceOnce(gameLoader,
+            "\t\tAudio.Stage5BAllBanksLoaded();",
+            "\t\tAudio.Stage5BAllBanksLoaded();\n\t\tAudio.AppleEverestLoadCustomBanks();");
+        ReplaceOneOf(audio,
+            ["\tpublic static void Stage5BAllBanksLoaded() => AppleAudioDiagnostics.AllBanksLoaded(system);",
+             "\tpublic static void Stage5BAllBanksLoaded() => TvOSStage5BAudioBridge.AllBanksLoaded(system);"],
+            needle => needle + "\n\n\tinternal static void AppleEverestLoadCustomBanks() => global::Celeste.Mod.AppleEverestCustomAudioRuntime.Load(system);");
+        ReplaceOneOf(audio,
+            ["\t\t\tAppleAudioDiagnostics.ShutdownEntered(\"Celeste.Audio.Unload\");\n\t\t\tCheckFmod(system.unloadAll(), \"FMOD_Studio_System_UnloadAll\");",
+             "\t\t\tTvOSStage5BAudioBridge.ShutdownEntered(\"Celeste.Audio.Unload\");\n\t\t\tCheckFmod(system.unloadAll(), \"FMOD_Studio_System_UnloadAll\");"],
+            needle => needle.Replace("\n\t\t\tCheckFmod", "\n\t\t\tglobal::Celeste.Mod.AppleEverestCustomAudioRuntime.BeforeSystemUnload(system);\n\t\t\tCheckFmod", StringComparison.Ordinal));
+        ReplaceOnce(audio,
+            "\t\t\tRESULT @event = system.getEvent(path, out value);",
+            "\t\t\tRESULT @event = system.getEvent(path, out value);\n\t\t\tif (@event == RESULT.ERR_EVENT_NOTFOUND && global::Celeste.Mod.AppleEverestCustomAudioRuntime.TryGetEventDescription(system, path, out value)) @event = RESULT.OK;");
+        ReplaceOneOf(audio,
+            ["\t\t\tAppleAudioDiagnostics.RegisterEvent(instance, path, \"event\");",
+             "\t\t\tTvOSStage5BAudioBridge.RegisterEvent(instance, path, \"event\");"],
+            needle => needle + "\n\t\t\tglobal::Celeste.Mod.AppleEverestCustomAudioRuntime.RecordEventRequest(path, instance);");
+    }
 
     private static void PatchMenu(string path) => ReplaceOnce(path,
         "\t\tmenu.Add(new TextMenu.SubHeader(Dialog.Clean(\"options_gameplay\")));",
@@ -782,6 +867,16 @@ internal static class ClosureGenerator
         "\t\t}\n\t}\n\n\tprivate static List<Type> GetSubclasses(Type type)",
         "\t\t}\n\t\tglobal::Celeste.Mod.GeneratedAppleEverestGameplayRegistry.RegisterTrackerTypes();\n\t}\n\n\tprivate static List<Type> GetSubclasses(Type type)");
 
+    private static void PatchPooler(string path)
+    {
+        ReplaceOnce(path,
+            "\t\t}\n\t}\n\n\tpublic T Create<T>() where T : Entity, new()",
+            "\t\t}\n\t\tglobal::Celeste.Mod.GeneratedAppleEverestGameplayRegistry.RegisterPooledTypes(this);\n\t}\n\n\tpublic T Create<T>() where T : Entity, new()");
+        ReplaceOnce(path,
+            "\t\tthrow new InvalidOperationException(\"Missing AOT pooled factory for: \" + type.FullName);",
+            "\t\tif (global::Celeste.Mod.GeneratedAppleEverestGameplayRegistry.TryCreatePooled(type, out Entity appleEverestEntity)) return appleEverestEntity;\n\t\tthrow new InvalidOperationException(\"Missing AOT pooled factory for: \" + type.FullName);");
+    }
+
     private static void PatchProject(string path, string closureRoot)
     {
         ReplaceOnce(path, "<DefineConstants>$(DefineConstants);", "<DefineConstants>$(DefineConstants);EVEREST_APPLE_STATIC_AOT;");
@@ -807,6 +902,19 @@ internal static class ClosureGenerator
         if (first < 0 || text.IndexOf(needle, first + needle.Length, StringComparison.Ordinal) >= 0)
             throw new InvalidDataException($"locked target must occur exactly once: {Path.GetFileName(path)}");
         File.WriteAllText(path, text[..first] + replacement + text[(first + needle.Length)..], new UTF8Encoding(false));
+    }
+
+    private static void ReplaceOneOf(string path, IReadOnlyList<string> alternatives,
+        Func<string, string> replacement)
+    {
+        string text = File.ReadAllText(path);
+        string[] matches = alternatives.Where(needle => text.IndexOf(needle, StringComparison.Ordinal) >= 0).ToArray();
+        if (matches.Length != 1 || text.IndexOf(matches[0], text.IndexOf(matches[0], StringComparison.Ordinal) + matches[0].Length,
+                StringComparison.Ordinal) >= 0)
+            throw new InvalidDataException($"one locked platform target must occur exactly once: {Path.GetFileName(path)}");
+        string needle = matches[0];
+        int first = text.IndexOf(needle, StringComparison.Ordinal);
+        File.WriteAllText(path, text[..first] + replacement(needle) + text[(first + needle.Length)..], new UTF8Encoding(false));
     }
 
     private static void ValidateOnce(string path, string needle)
@@ -952,10 +1060,40 @@ internal static class ClosureGenerator
         }
     }
 
+    private static string CustomAudioManifestSource(
+        IReadOnlyList<(CustomAudioBankPlan Plan, int Ordinal)> banks, string manifestSha256)
+    {
+        StringBuilder result = new("using System;\n\nnamespace Celeste.Mod;\n\ninternal static class GeneratedAppleEverestCustomAudioManifest\n{\n");
+        result.Append("    internal const string Schema = \"").Append(CustomAudioManifest.Schema).AppendLine("\";")
+            .Append("    internal const string ManifestSha256 = \"").Append(manifestSha256).AppendLine("\";")
+            .AppendLine("    internal static readonly AppleEverestCustomBankDescriptor[] Banks =")
+            .AppendLine("    {");
+        foreach ((CustomAudioBankPlan bank, int ordinal) in banks.OrderBy(item => item.Ordinal))
+        {
+            result.Append("        new AppleEverestCustomBankDescriptor(\"").Append(Escape(bank.Owner)).Append("\", \"")
+                .Append(Escape(bank.Version)).Append("\", ").Append(ordinal).Append(", \"")
+                .Append(Escape(bank.StagedPath)).Append("\", \"").Append(bank.BankSha256).Append("\", new Guid(\"")
+                .Append(bank.BankId.ToString("D")).Append("\"), \"").Append(Escape(bank.BankPath))
+                .AppendLine("\", new AppleEverestCustomAudioGuidDescriptor[]")
+                .AppendLine("        {");
+            foreach (CustomAudioGuidRecord guid in bank.Guids)
+                result.Append("            new AppleEverestCustomAudioGuidDescriptor(new Guid(\"")
+                    .Append(guid.Id.ToString("D")).Append("\"), \"").Append(Escape(guid.Path)).Append("\", \"")
+                    .Append(Escape(guid.Kind)).AppendLine("\"),");
+            result.AppendLine("        }),");
+        }
+        return result.AppendLine("    };").AppendLine("}").ToString();
+    }
+
     private static string GameplayRegistrySource(IReadOnlyList<(ResolvedMod Mod, AppleStaticDeclaration Declaration)> modules)
     {
         string[] entities = modules
             .SelectMany(item => item.Declaration.TrackedEntityTypes)
+            .Distinct(StringComparer.Ordinal)
+            .OrderBy(value => value, StringComparer.Ordinal)
+            .ToArray();
+        string[] pooled = modules
+            .SelectMany(item => item.Declaration.PooledEntityTypes)
             .Distinct(StringComparer.Ordinal)
             .OrderBy(value => value, StringComparer.Ordinal)
             .ToArray();
@@ -981,6 +1119,12 @@ internal static class ClosureGenerator
             .AppendLine("        typeof(global::Celeste.Trigger),")
             .AppendLine("    };")
             .AppendLine()
+            .AppendLine("    private static readonly Type[] PooledEntities =")
+            .AppendLine("    {");
+        foreach (string type in pooled)
+            result.Append("        typeof(global::").Append(type).AppendLine("),");
+        result.AppendLine("    };")
+            .AppendLine()
             .AppendLine("    internal static void RegisterTrackerTypes()")
             .AppendLine("    {")
             .AppendLine("        foreach (Type type in TrackedEntities)")
@@ -994,6 +1138,25 @@ internal static class ClosureGenerator
             .AppendLine("            Tracker.TrackedEntityTypes.Add(type, trackedAs);")
             .AppendLine("            Tracker.StoredEntityTypes.Add(type);")
             .AppendLine("        }")
+            .AppendLine("    }")
+            .AppendLine()
+            .AppendLine("    internal static void RegisterPooledTypes(Pooler pooler)")
+            .AppendLine("    {")
+            .AppendLine("        foreach (Type type in PooledEntities)")
+            .AppendLine("        {")
+            .AppendLine("            if (pooler.Pools.ContainsKey(type))")
+            .AppendLine("                throw new InvalidOperationException($\"duplicate Apple Everest pooled entity registration: {type.FullName}\");")
+            .AppendLine("            pooler.Pools.Add(type, new Queue<Entity>());")
+            .AppendLine("        }")
+            .AppendLine("    }")
+            .AppendLine()
+            .AppendLine("    internal static bool TryCreatePooled(Type type, out Entity entity)")
+            .AppendLine("    {");
+        foreach (string type in pooled)
+            result.Append("        if (type == typeof(global::").Append(type).Append(")) { entity = new global::")
+                .Append(type).AppendLine("(); return true; }");
+        result.AppendLine("        entity = null;")
+            .AppendLine("        return false;")
             .AppendLine("    }")
             .AppendLine()
             .AppendLine("    internal static bool TryCreateEntity(string id, global::Celeste.EntityData data, global::Microsoft.Xna.Framework.Vector2 offset, global::Celeste.EntityID entityId, out Entity entity)")
@@ -1075,6 +1238,8 @@ internal static class ClosureGenerator
             foreach (string? type in new[] { declaration.SettingsType, declaration.SaveDataType, declaration.SessionType })
                 if (type != null) result.Append("        _ = typeof(global::").Append(type).AppendLine(");");
             foreach (string type in declaration.TrackedEntityTypes)
+                result.Append("        _ = typeof(global::").Append(type).AppendLine(");");
+            foreach (string type in declaration.PooledEntityTypes)
                 result.Append("        _ = typeof(global::").Append(type).AppendLine(");");
             foreach (string type in declaration.CustomBackdropFactories.Select(value => value.Type).Distinct(StringComparer.Ordinal))
                 result.Append("        _ = typeof(global::").Append(type).AppendLine(");");
@@ -1183,6 +1348,10 @@ internal static class ClosureGenerator
             throw new InvalidDataException($"too many tracked entity types for {mod}");
         foreach (string type in declaration.TrackedEntityTypes)
             if (!TypeName(type)) throw new InvalidDataException($"invalid tracked entity type for {mod}");
+        if (declaration.PooledEntityTypes.Length > 256)
+            throw new InvalidDataException($"too many pooled entity types for {mod}");
+        foreach (string type in declaration.PooledEntityTypes)
+            if (!TypeName(type)) throw new InvalidDataException($"invalid pooled entity type for {mod}");
         if (declaration.CustomEntityFactories.Length > 512 || declaration.CustomEntityFactories.Any(factory =>
                 factory.Id.Length is < 1 or > 192 || !TypeName(factory.Type) || factory.Kind is not ("entity" or "trigger") ||
                 factory.Constructor is not ("entity-data-vector2" or "entity-data-vector2-entity-id" or "entity-id-entity-data-vector2")))

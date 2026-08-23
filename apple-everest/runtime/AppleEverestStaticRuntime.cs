@@ -284,6 +284,11 @@ public static class AppleEverestStaticRuntime
 
     public static void LaunchModMap(string path)
     {
+        LaunchModMapRoom(path, null);
+    }
+
+    public static void LaunchModMapRoom(string path, string room)
+    {
         if (string.IsNullOrWhiteSpace(path)) return;
         bool createdDebugSave = BeginNonPersistentModSession();
         Input.MenuConfirm.ConsumePress();
@@ -300,8 +305,17 @@ public static class AppleEverestStaticRuntime
         AreaData.Areas[0].Mode[0] = mod;
         mod.MapData = new MapData(new AreaKey(0));
         Session session = new(new AreaKey(0));
+        if (!string.IsNullOrEmpty(room))
+        {
+            if (!mod.MapData.Levels.Any(level => level.Name == room))
+                throw new InvalidOperationException("static mod acceptance room is absent: " + room);
+            session.Level = room;
+            session.FirstLevel = false;
+            session.StartedFromBeginning = false;
+            session.RespawnPoint = null;
+        }
         Engine.Scene = new LevelLoader(session) { PlayerIntroTypeOverride = Player.IntroTypes.None };
-        Log($"content-map=launch path={path} debug-save-created={createdDebugSave.ToString().ToLowerInvariant()}");
+        Log($"content-map=launch path={path} room={(room ?? session.Level)} debug-save-created={createdDebugSave.ToString().ToLowerInvariant()}");
     }
 
     private static bool BeginNonPersistentModSession()
@@ -714,6 +728,9 @@ internal static class AppleEverestLab
             string label = Path.GetFileName(selectedMap);
             menu.Add(new TextMenu.Button("Play Static Mod Map: " + label)
                 .Pressed(() => AppleEverestStaticRuntime.LaunchModMap(selectedMap)));
+            if (selectedMap == "LittleEpic/precisionchallenge/precisionchallenge")
+                menu.Add(new TextMenu.Button("Play LittleEpic Room 5 (Acceptance)")
+                    .Pressed(() => AppleEverestStaticRuntime.LaunchModMapRoom(selectedMap, "5")));
         }
         foreach (EverestModule module in AppleEverestStaticRuntime.Modules)
         {

@@ -99,18 +99,21 @@ ordinary breadth; no complete real map is newly unlocked.
 [LittleEpic's Precision Challenge](https://gamebanana.com/mods/530248) 1.0.0
 really uses both of its direct code helpers: room 1 contains
 `DJMapHelper/maxDashesTrigger`, and room 5 contains
-`ChronoHelper/CustomTimeSwitchGates`. Stage 25I-A source-freezes DJMapHelper
-1.13.4's five ordinary `IL.*` registrations and closes its exact HookGen and
-static factory surface. Three independent DJ-only closures are identical.
+`ChronoHelper/CustomTimeSwitchGates`. Stage 25I-B retains DJMapHelper 1.13.4's
+five source-frozen ordinary `IL.*` registrations and exact HookGen/static
+factory surface, then adds the bounded `STATIC_CUSTOM_FMOD_BANK` class required
+by ChronoHelper 1.3.3. Its exact `ExpertContestHelper.bank` and GUID table are
+validated on the Mac, staged once, and loaded through the existing Celeste
+Studio system. The two custom events resolve through the normal audio path; no
+runtime discovery, second audio system, new native library, or FMOD upgrade is
+introduced.
 
-The complete map remains **CUSTOM_AUDIO_UNSUPPORTED**, not production
-supported. ChronoHelper 1.3.3 ships `Audio/ExpertContestHelper.bank`, and
-reachable helper entities refer to its events. Apple Everest does not yet have
-a bounded custom-FMOD bank loader, so the analyser rejects the package before
-AOT even though the particular timed gate used by this map references only
-base-game sounds. This prevents an apparently successful but incomplete helper
-from entering the product. The next bounded compatibility class is deterministic
-custom-bank registration/lifecycle, not a relaxation of the audio gate.
+The exact LittleEpic graph is therefore a supported static Apple Everest
+closure, not a claim of arbitrary ChronoHelper, DJMapHelper, or custom FMOD bank
+compatibility. Different package hashes, unknown GUID tables, other bank
+classes, or different helper versions remain rejected. Custom-map LevelSet
+progression is still the nonpersistent acceptance lane, so Save and Quit stays
+disabled there until a later progression stage.
 
 ## Multi-helper map graph audit
 
@@ -297,10 +300,12 @@ unsupported RuntimeDetour members/configuration,
 NativeDetour, native/P/Invoke additions, Lua, dynamic assembly loading,
 Reflection.Emit, desktop process/file-watcher behavior, unregistered helper
 ecosystems, dynamic/open-generic or custom runtime ModInterop systems, settings
-outside the bounded shapes, module
-SaveData/Session outside the bounded default-YAML class, and custom mod audio all
-fail closed or remain explicitly deferred. Strawberry Jam has not been
-downloaded, built, or tested.
+outside the bounded shapes, and module SaveData/Session outside the bounded
+default-YAML class fail closed or remain explicitly deferred. Custom audio is
+supported only through the exact `STATIC_CUSTOM_FMOD_BANK` class described
+above; dynamic bank discovery, custom master/strings replacement, native FMOD
+plugins, programmer-sound callbacks, and arbitrary hot unload/reload remain
+deferred. Strawberry Jam has not been downloaded, built, or tested.
 
 The full 18-graph census and explicit distance table are tracked in
 [`apple-everest/graph-il-closure-audit-stage25hc.json`](../apple-everest/graph-il-closure-audit-stage25hc.json).

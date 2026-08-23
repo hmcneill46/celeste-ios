@@ -982,6 +982,21 @@ internal static class StaticIlFreeze
             string[] residual = ActiveReferenceIdentities(assembly.MainModule, "Mono.Cecil").ToArray();
             if (residual.Length != 0)
                 throw new InvalidDataException("DJMapHelper host IL reference survived: " + string.Join(',', residual));
+            // Cecil retains an otherwise-unreachable TypeRef row for Instruction after the
+            // five host-only manipulators are removed. Removing its AssemblyRef without
+            // repairing that orphan serializes a null scope which Apple's full trimmer
+            // rejects while sweeping metadata. ActiveReferenceIdentities proved that no
+            // executable signature or body can observe these rows, so normalize the orphan
+            // metadata itself to System.Object before removing the host-only dependency.
+            foreach (TypeReference type in assembly.MainModule.GetTypeReferences()
+                         .Where(type => type.GetElementType().Scope?.Name == cecil.Name))
+            {
+                TypeReference orphan = type.GetElementType();
+                orphan.Namespace = assembly.MainModule.TypeSystem.Object.Namespace;
+                orphan.Name = assembly.MainModule.TypeSystem.Object.Name;
+                orphan.Scope = assembly.MainModule.TypeSystem.Object.Scope;
+                orphan.IsValueType = false;
+            }
             assembly.MainModule.AssemblyReferences.Remove(cecil);
         }
     }

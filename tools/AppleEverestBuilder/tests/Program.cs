@@ -177,6 +177,78 @@ try
     Throws(() => CompatibilityAnalyzer.Analyze(customAudioInput, customAudioInput.Metadata[0]),
         "CUSTOM_AUDIO_UNSUPPORTED", "custom FMOD bank fails closed before AOT");
 
+    const string hornGuid = "{33eab85e-7e13-417e-ab3b-a0b7c8caa6b2} event:/ricky06/EC2023/horn";
+    const string moverGuid = "{22f6b410-423f-4c15-a6b5-0523b16ab5fd} event:/ricky06/zip_mover 2";
+    const string bankGuid = "{f12a5c05-a79b-4ed0-bea9-81a1d2ecb986} bank:/ExpertContestHelper";
+    IReadOnlyList<CustomAudioGuidRecord> exactGuids = CustomAudioManifest.ParseGuidTable(
+        Encoding.UTF8.GetBytes(hornGuid + "\n" + moverGuid + "\n" + bankGuid + "\n"));
+    Pass(exactGuids.Count == 3 && exactGuids.Count(record => record.Kind == "event") == 2 &&
+         exactGuids.Single(record => record.Kind == "bank").Id == CustomAudioManifest.ExpectedBankId,
+        "custom FMOD GUID table parses completely");
+    Pass(exactGuids.Any(record => record.Path == "event:/ricky06/EC2023/horn") &&
+         exactGuids.Any(record => record.Path == "event:/ricky06/zip_mover 2"),
+        "custom FMOD event paths are exact");
+    Throws(() => CustomAudioManifest.ParseGuidTable(Encoding.UTF8.GetBytes("malformed\n")),
+        "malformed", "malformed custom FMOD GUID rejected");
+    Throws(() => CustomAudioManifest.ParseGuidTable(Encoding.UTF8.GetBytes(hornGuid + "\n" + hornGuid + "\n")),
+        "duplicate", "duplicate custom FMOD GUID rejected");
+    Throws(() => CustomAudioManifest.ParseGuidTable(Encoding.UTF8.GetBytes(
+        hornGuid + "\n{43eab85e-7e13-417e-ab3b-a0b7c8caa6b2} event:/ricky06/EC2023/horn\n")),
+        "collision", "duplicate custom FMOD event path rejected");
+    Throws(() => CustomAudioManifest.ParseGuidTable(Encoding.UTF8.GetBytes(
+        "{43eab85e-7e13-417e-ab3b-a0b7c8caa6b2} parameter:/unsupported\n")),
+        "unsupported", "unsupported custom FMOD GUID class rejected");
+    CustomAudioBankPlan exactBank = new("ChronoHelper", "1.3.3", CustomAudioManifest.ChronoArchiveSha256,
+        CustomAudioManifest.BankSourcePath, CustomAudioManifest.BankSha256, CustomAudioManifest.GuidSourcePath,
+        CustomAudioManifest.GuidSha256, CustomAudioManifest.ExpectedBankId, CustomAudioManifest.ExpectedBankPath,
+        "AppleEverest/Mods/ChronoHelper/Audio/ExpertContestHelper.bank", exactGuids);
+    string manifestA = CustomAudioManifest.CanonicalManifest([(exactBank, 0)]);
+    string manifestB = CustomAudioManifest.CanonicalManifest([(exactBank, 0)]);
+    Pass(manifestA == manifestB && manifestA.Contains(CustomAudioManifest.BankSha256, StringComparison.Ordinal) &&
+         manifestA.Contains("event:/ricky06/EC2023/horn", StringComparison.Ordinal),
+        "custom FMOD manifest is deterministic and hash complete");
+    Pass(CustomAudioManifest.LogicalSet([(exactBank, 0)]).Contains(CustomAudioManifest.BankSha256, StringComparison.Ordinal),
+        "custom FMOD bank bytes participate in closure identity");
+    CustomAudioBankPlan conflictingBank = exactBank with
+    {
+        StagedPath = "AppleEverest/Mods/Other/Audio/different.bank",
+        BankPath = "bank:/Different",
+        BankSha256 = new string('f', 64)
+    };
+    Throws(() => CustomAudioManifest.ValidateGraph([(exactBank, 0), (conflictingBank, 1)]),
+        "bank identity collision", "incompatible custom FMOD bank identity rejected");
+    CustomAudioBankPlan conflictingGuid = exactBank with
+    {
+        StagedPath = "AppleEverest/Mods/Other/Audio/other.bank",
+        BankId = Guid.NewGuid(),
+        BankPath = "bank:/Other",
+        Guids = [new CustomAudioGuidRecord(exactGuids[0].Id, "event:/other", "event")]
+    };
+    Throws(() => CustomAudioManifest.ValidateGraph([(exactBank, 0), (conflictingGuid, 1)]),
+        "GUID collision", "cross-module custom FMOD GUID collision rejected");
+    Pass(CustomAudioManifest.Schema == "apple-everest-custom-audio-v1" &&
+         CustomAudioManifest.LoadPolicy.EndsWith("loadBankFile", StringComparison.Ordinal),
+        "custom FMOD compatibility policy is locked");
+    AppleEverestCustomAudioLifecycle audioLifecycle = new();
+    object studioSystemA = new();
+    object studioSystemB = new();
+    Pass(audioLifecycle.BeginLoad(studioSystemA, 1), "custom FMOD lifecycle initializes once");
+    audioLifecycle.CompleteLoad(studioSystemA, 1);
+    Pass(!audioLifecycle.BeginLoad(studioSystemA, 1) && audioLifecycle.LoadedBankCount == 1,
+        "custom FMOD lifecycle duplicate initialize is idempotent");
+    audioLifecycle.SoftReload(studioSystemA);
+    Pass(audioLifecycle.State == AppleEverestCustomBankState.Loaded,
+        "custom FMOD lifecycle survives soft reload without duplicate state");
+    Throws(() => audioLifecycle.BeginLoad(studioSystemB, 1), "live Studio System",
+        "custom FMOD lifecycle rejects a second Studio System");
+    Pass(audioLifecycle.BeforeSystemUnload(studioSystemA) == 1 &&
+         audioLifecycle.State == AppleEverestCustomBankState.Unloaded,
+        "custom FMOD lifecycle shuts down once");
+    Pass(audioLifecycle.BeginLoad(studioSystemB, 1), "custom FMOD lifecycle reinitializes after shutdown");
+    audioLifecycle.FailLoad(studioSystemB);
+    Pass(audioLifecycle.State == AppleEverestCustomBankState.NotLoaded && audioLifecycle.LoadedBankCount == 0,
+        "custom FMOD lifecycle failed load leaves no duplicate state");
+
     string traversal = Path.Combine(temporary, "traversal.zip");
     using (ZipArchive zip = ZipFile.Open(traversal, ZipArchiveMode.Create)) zip.CreateEntry("../escape.txt");
     Throws(() => SafeModIngestor.Ingest(traversal, NewDirectory("stage-traversal"), 0), "unsafe", "ZIP traversal");
@@ -363,6 +435,22 @@ try
         CustomType("CustomTrigger", "Trigger", ["fixture/trigger"], [entityData, vector2, entityId]);
         CustomType("CustomIdFirst", "Entity", ["fixture/idFirst"], [entityId, entityData, vector2]);
 
+        void PooledType(string typeName, TypeAttributes visibility)
+        {
+            TypeDefinition type = new("Fixture", typeName, visibility | TypeAttributes.Sealed,
+                new TypeReference("Celeste", "Entity", module, celeste));
+            MethodDefinition constructor = new(".ctor", MethodAttributes.Public | MethodAttributes.SpecialName |
+                MethodAttributes.RTSpecialName, module.TypeSystem.Void);
+            constructor.Body.Instructions.Add(Instruction.Create(OpCodes.Ret));
+            type.Methods.Add(constructor);
+            TypeReference pooledAttribute = new("Monocle", "Pooled", module, celeste);
+            MethodReference pooledConstructor = new(".ctor", module.TypeSystem.Void, pooledAttribute) { HasThis = true };
+            type.CustomAttributes.Add(new CustomAttribute(pooledConstructor));
+            module.Types.Add(type);
+        }
+        PooledType("PublicDebris", TypeAttributes.Public);
+        PooledType("PrivateDebris", TypeAttributes.NotPublic);
+
         TypeReference element = new("Celeste", "BinaryPacker/Element", module, celeste);
         TypeReference backdrop = new("Celeste", "Backdrop", module, celeste);
         TypeDefinition customBackdrop = new("Fixture", "CustomBackdrop", TypeAttributes.Public | TypeAttributes.Sealed, backdrop);
@@ -521,6 +609,8 @@ try
          gameplayDeclaration.CustomBackdropFactories[0].Factory == "static-method" &&
          gameplayDeclaration.CustomBackdropFactories[0].Method == "Build",
         "Cecil custom backdrop discovery and static factory selection");
+    Pass(gameplayDeclaration.PooledEntityTypes.SequenceEqual(["Fixture.PublicDebris"]),
+        "public parameterless pooled entities are discovered while inaccessible pools remain module-owned");
     Pass(gameplayDeclaration.SettingsProperties.Length == 3 &&
          gameplayDeclaration.SettingsProperties.Any(value => value.Name == "Enabled" && value.Kind == "bool") &&
          gameplayDeclaration.SettingsProperties.Any(value => value.Name == "DisplayMode" && value.Kind == "enum" &&
@@ -650,13 +740,24 @@ try
             HasThis = false
         };
         probe.Body.Instructions.Add(Instruction.Create(OpCodes.Call, targetMethod));
+        ArrayType targetGrid = new(targetType, 2);
+        MethodReference targetGridConstructor = new(".ctor", assembly.MainModule.TypeSystem.Void, targetGrid)
+        {
+            HasThis = true
+        };
+        targetGridConstructor.Parameters.Add(new ParameterDefinition(assembly.MainModule.TypeSystem.Int32));
+        targetGridConstructor.Parameters.Add(new ParameterDefinition(assembly.MainModule.TypeSystem.Int32));
+        probe.Body.Instructions.Add(Instruction.Create(OpCodes.Ldc_I4_1));
+        probe.Body.Instructions.Add(Instruction.Create(OpCodes.Ldc_I4_1));
+        probe.Body.Instructions.Add(Instruction.Create(OpCodes.Newobj, targetGridConstructor));
+        probe.Body.Instructions.Add(Instruction.Create(OpCodes.Pop));
         probe.Body.Instructions.Add(Instruction.Create(OpCodes.Ret));
         consumer.Methods.Add(probe);
         assembly.MainModule.Types.Add(consumer);
         assembly.Write(apiConsumer);
     }
     RuntimeClosureScanner.VerifyReferencedApi(apiConsumer, goodApi);
-    Pass(true, "external assembly API closure accepts the complete target contract");
+    Pass(true, "external assembly API closure accepts the complete target contract and CLR array intrinsics");
     Throws(() => RuntimeClosureScanner.VerifyReferencedApi(apiConsumer, badApi), "absent from the linked TargetApi contract",
         "external assembly API closure rejects a missing target method before device AOT");
     Throws(() => RuntimeClosureScanner.VerifyReferencedApi(apiConsumer, inaccessibleApi), "inaccessible-method",
@@ -912,6 +1013,13 @@ try
     Pass(directEvidenceSource.Contains("RecordDirectHookInvocation(\"fixture:direct-evidence\")", StringComparison.Ordinal),
         "generated direct adapter records one bounded device invocation proof");
     string staticRuntime = File.ReadAllText(Path.Combine(repository, "apple-everest/runtime/AppleEverestStaticRuntime.cs"));
+    string customAudioRuntime = File.ReadAllText(Path.Combine(repository,
+        "apple-everest/runtime/AppleEverestCustomAudioRuntime.cs"));
+    Pass(customAudioRuntime.Contains("identity=guid-manifest", StringComparison.Ordinal) &&
+         customAudioRuntime.Contains("getEventByID", StringComparison.Ordinal) &&
+         !customAudioRuntime.Contains("bank.getPath", StringComparison.Ordinal),
+        "stringless custom bank identity is validated by the exact GUID manifest, not reverse path lookup");
+    string areaKeyApi = File.ReadAllText(Path.Combine(repository, "apple-everest/runtime/EverestAreaKeyStaticApi.cs"));
     Pass(staticRuntime.Contains("SaveData.InitializeDebugMode(loadExisting: false)", StringComparison.Ordinal) &&
          staticRuntime.Contains("saveDataBeforeModSession = SaveData.Instance", StringComparison.Ordinal) &&
          staticRuntime.Contains("SaveData.Instance = saveDataBeforeModSession", StringComparison.Ordinal),
@@ -932,9 +1040,21 @@ try
              "Celeste.Mod.AppleEverestCanaryBanner", "canary tracked entity is explicitly declared");
     }
     string closureGenerator = File.ReadAllText(Path.Combine(repository, "tools/AppleEverestBuilder/ClosureGenerator.cs"));
+    string assemblyFreezer = File.ReadAllText(Path.Combine(repository, "tools/AppleEverestBuilder/AssemblyFreezer.cs"));
+    Pass(assemblyFreezer.Contains("if (element is GenericParameter) return false;", StringComparison.Ordinal),
+        "live assembly-reference census handles detached rewritten generic parameters deterministically");
     Pass(closureGenerator.Contains("GeneratedAppleEverestGameplayRegistry", StringComparison.Ordinal) &&
          closureGenerator.Contains("RegisterTrackerTypes", StringComparison.Ordinal),
         "typed static gameplay registry is generated and installed into Tracker initialization");
+    Pass(closureGenerator.Contains("RegisterPooledTypes", StringComparison.Ordinal) &&
+         closureGenerator.Contains("TryCreatePooled", StringComparison.Ordinal) &&
+         closureGenerator.Contains("new Queue<Entity>()", StringComparison.Ordinal) &&
+         closureGenerator.Contains("PatchPooler", StringComparison.Ordinal),
+        "external public pooled entities receive deterministic registration and typed AOT factories");
+    Pass(closureGenerator.Contains("PatchLevelDataRoomNames", StringComparison.Ordinal) &&
+         closureGenerator.Contains("pre-1.2.5-optional-lvl-prefix", StringComparison.Ordinal) &&
+         closureGenerator.Contains("appleEverestRoomName.StartsWith", StringComparison.Ordinal),
+        "pre-1.2.5 Everest maps retain exact bytes while optional lvl_ room prefixes normalize safely");
     Pass(closureGenerator.Contains("InheritedTrackedEntityTypes", StringComparison.Ordinal) &&
          closureGenerator.Contains("typeof(global::Celeste.Trigger)", StringComparison.Ordinal) &&
          closureGenerator.Contains("inheritedBase.IsAssignableFrom(type)", StringComparison.Ordinal) &&
@@ -957,6 +1077,36 @@ try
          staticRuntime.Contains("Play Static Mod Map:", StringComparison.Ordinal) &&
          staticRuntime.Contains("LaunchModMap(selectedMap)", StringComparison.Ordinal),
         "all staged maps are exposed through the generic static map launcher");
+    Pass(staticRuntime.Contains("Play LittleEpic Room 5 (Acceptance)", StringComparison.Ordinal) &&
+         staticRuntime.Contains("LaunchModMapRoom(selectedMap, \"5\")", StringComparison.Ordinal) &&
+         staticRuntime.Contains("static mod acceptance room is absent", StringComparison.Ordinal),
+        "unchanged LittleEpic room 5 has a bounded ordinary-session acceptance route");
+    Pass(areaKeyApi.Contains("public static string GetLevelSet(this AreaKey area) => \"Celeste\";", StringComparison.Ordinal),
+        "bounded canonical AreaKey level-set compatibility is present");
+    string staticCompatibility = File.ReadAllText(Path.Combine(repository,
+        "tools/AppleEverestBuilder/StaticAotCompatibility.cs"));
+    Pass(staticCompatibility.Contains("foreach (TypeReference argument in call.GenericArguments)", StringComparison.Ordinal) &&
+         staticCompatibility.Contains("delegateType.GenericArguments.Add", StringComparison.Ordinal),
+        "DJ exact delegate rewrite closes factory generic arguments before device IL is emitted");
+    Pass(staticCompatibility.Contains("PatchPinnedEverestHelperAbi", StringComparison.Ordinal) &&
+         staticCompatibility.Contains("public DashListener(Action<Vector2> onDash)", StringComparison.Ordinal) &&
+         staticCompatibility.Contains("public Action<Vector2> SpeedSetter", StringComparison.Ordinal) &&
+         staticCompatibility.Contains("public Texture2D Texture_Safe", StringComparison.Ordinal) &&
+         staticCompatibility.Contains("TryGetCustomDebris(out string path, char tiletype)", StringComparison.Ordinal),
+        "exact ChronoHelper Everest ABI is reproduced as ordinary static Apple source");
+    Pass(staticCompatibility.Contains("RewriteChronoNamespacedContentPath", StringComparison.Ordinal) &&
+         staticCompatibility.Contains("Graphics/ChronoHelper/CustomSprites.xml", StringComparison.Ordinal) &&
+         staticCompatibility.Contains("AppleEverest/Mods/ChronoHelper/Graphics/ChronoHelper/CustomSprites.xml",
+             StringComparison.Ordinal) &&
+         staticCompatibility.Contains("sourcePaths.Length != 1", StringComparison.Ordinal),
+        "exact ChronoHelper sprite-bank load is pinned to its namespaced static Apple content");
+    Pass(staticCompatibility.Contains("RewriteDJNamespacedContentPath", StringComparison.Ordinal) &&
+         staticCompatibility.Contains("Graphics/DJMapHelperSprites.xml", StringComparison.Ordinal) &&
+         staticCompatibility.Contains("AppleEverest/Mods/DJMapHelper/Graphics/DJMapHelperSprites.xml",
+             StringComparison.Ordinal) &&
+         staticCompatibility.Contains("DJMapHelper sprite-bank content path census drifted",
+             StringComparison.Ordinal),
+        "exact DJMapHelper sprite-bank load is pinned to its namespaced static Apple content");
     Pass(closureGenerator.Contains("AppleEverestAtlasMountDescriptor", StringComparison.Ordinal) &&
          closureGenerator.Contains("Graphics/Atlases/Gameplay/", StringComparison.Ordinal) &&
          closureGenerator.Contains("Graphics/Atlases/Gui/", StringComparison.Ordinal) &&
@@ -1026,8 +1176,13 @@ try
     string closureScanner = File.ReadAllText(Path.Combine(repository, "tools/AppleEverestBuilder/RuntimeClosureScanner.cs"));
     Pass(closureScanner.Contains("AllowedStaticFacadeType", StringComparison.Ordinal) &&
          closureScanner.Contains("AllowedStaticFacadeCall", StringComparison.Ordinal) &&
-         closureScanner.Contains("type.Name is \"Hook\" or \"DetourConfig\"", StringComparison.Ordinal),
-        "post-link scanner permits only the exact data-only RuntimeDetour facade types");
+         closureScanner.Contains("type.Name is \"Hook\" or \"DetourConfig\"", StringComparison.Ordinal) &&
+         closureScanner.Contains("type.Name is \"DynData`1\" or \"GetDelegate`2\"", StringComparison.Ordinal) &&
+         closureScanner.Contains("\"DynData`1\" => method.Name is \".ctor\" or \"get_Data\" or \"get_Item\" or \"set_Item\" or \"Get\" or \"Set\"", StringComparison.Ordinal),
+        "post-link scanner permits only the exact reviewed static-AOT facade types and members");
+    Pass(closureScanner.Contains("method.DeclaringType is ArrayType", StringComparison.Ordinal) &&
+         closureScanner.Contains("method.Name is \".ctor\" or \"Get\" or \"Set\" or \"Address\"", StringComparison.Ordinal),
+        "post-link API verifier distinguishes CLR multidimensional-array intrinsics from target APIs");
     Pass(!Directory.EnumerateFiles(Path.Combine(repository, "apple-everest/runtime"), "*.cs").Select(File.ReadAllText)
         .Any(text => text.Contains("DynamicInvoke", StringComparison.Ordinal) || text.Contains("Assembly.Load", StringComparison.Ordinal) ||
                      text.Contains("DynamicMethod", StringComparison.Ordinal) || text.Contains("Reflection.Emit", StringComparison.Ordinal) ||
@@ -1041,7 +1196,7 @@ try
          testClosureViolations[0].Contains("System.Diagnostics.Process::Start", StringComparison.Ordinal),
         "linked-runtime scanner isolates the intentional desktop static-plan test host spawn");
 
-    Pass(ProductPolicy.TransformerVersion == "apple-everest-static-v9", "real-ZIP transformer version");
+    Pass(ProductPolicy.TransformerVersion == "apple-everest-static-v10", "real-ZIP transformer version");
     Pass(File.Exists(Path.Combine(repository, "tools/AppleEverestBuilder/AssemblyFreezer.cs")),
         "binary-first assembly freezer exists");
     string models = File.ReadAllText(Path.Combine(repository, "tools/AppleEverestBuilder/Models.cs"));
@@ -1181,6 +1336,14 @@ try
         "unexpected additional manipulator rejected");
     Pass(staticIlFreeze.Contains("registered fixture unexpectedly uses direct ILHook", StringComparison.Ordinal),
         "direct ILHook remains rejected");
+    Pass(staticIlFreeze.Contains("otherwise-unreachable TypeRef row for Instruction", StringComparison.Ordinal) &&
+         staticIlFreeze.Contains("orphan.Name = assembly.MainModule.TypeSystem.Object.Name", StringComparison.Ordinal) &&
+         staticIlFreeze.Contains("orphan.Scope = assembly.MainModule.TypeSystem.Object.Scope", StringComparison.Ordinal),
+        "DJMapHelper host-only orphan TypeRef is normalized away before the Mono.Cecil AssemblyRef is removed");
+    Pass(closureGenerator.Contains("frozenAssemblyLogicalSha256", StringComparison.Ordinal) &&
+         closureGenerator.Contains("assemblies:{frozenAssemblyLogicalSha256}", StringComparison.Ordinal) &&
+         closureGenerator.Contains("custom-audio:{customAudioManifestSha256}", StringComparison.Ordinal),
+        "complete closure identity transitively locks frozen DLL bytes and static custom audio");
     Pass(staticIlFreeze.Contains("CaeruleaHelper direct ILHook constructor contract drifted", StringComparison.Ordinal) &&
          staticIlFreeze.Contains("CaeruleaHelper direct ILHook lifetime contract drifted", StringComparison.Ordinal) &&
          staticIlFreeze.Contains("MODULE_IMMUTABLE_ACTIVE", StringComparison.Ordinal),
@@ -1247,6 +1410,30 @@ try
          buildScript.Contains("MonoMod.Core.dll", StringComparison.Ordinal) &&
          buildScript.Contains("MonoMod.Iced.dll", StringComparison.Ordinal),
         "pinned direct manipulator receives only the exact host-side detour dependency closure");
+    Pass(buildScript.Contains("djmaphelper_littleepic_fixture_sha=\"95ab02d657213031b70c3079738b21be399e567ca8a32b1fe8e8effc0778eedb\"",
+             StringComparison.Ordinal) &&
+         buildScript.Contains("MODS+=(\"$REPO_ROOT/apple-everest/canaries/dj-frozen-il-content\")",
+             StringComparison.Ordinal),
+        "exact LittleEpic DJMapHelper fixture mounts the project-owned frozen-IL behavior room");
+    string djFrozenIlContent = Path.Combine(repository,
+        "apple-everest/canaries/dj-frozen-il-content/Content/Maps/AppleEverest/DJFrozenIl.xml");
+    Pass(File.Exists(djFrozenIlContent) &&
+         File.ReadAllText(djFrozenIlContent).Contains("DJMapHelper/featherBarrier", StringComparison.Ordinal) &&
+         File.ReadAllText(djFrozenIlContent).Contains("DJMapHelper/colorfulFlyFeather", StringComparison.Ordinal),
+        "project-owned DJ behavior room pairs the real colored feather with the real frozen-IL barrier");
+    string compiledDjFrozenIlMap = Path.Combine(NewDirectory("dj-frozen-il-map"), "Content");
+    string djFrozenIlLogical = ContentCompiler.Stage(djFrozenIlContent,
+        "Content/Maps/AppleEverest/DJFrozenIl.xml", compiledDjFrozenIlMap);
+    IReadOnlyList<(string Kind, string Id)> djFrozenIlIds = ContentCompiler.InspectGameplayIds(
+        Path.Combine(compiledDjFrozenIlMap, djFrozenIlLogical.Replace('/', Path.DirectorySeparatorChar)));
+    Pass(djFrozenIlIds.Contains(("entity", "DJMapHelper/colorfulFlyFeather")) &&
+         djFrozenIlIds.Contains(("entity", "DJMapHelper/featherBarrier")),
+        "DJ frozen-IL canary compiles to the exact registered real helper entity IDs");
+    Pass(!Directory.EnumerateFiles(Path.Combine(repository,
+                 "apple-everest/canaries/dj-frozen-il-content"), "*", SearchOption.AllDirectories)
+            .Any(path => path.EndsWith(".dll", StringComparison.OrdinalIgnoreCase) ||
+                         path.EndsWith(".zip", StringComparison.OrdinalIgnoreCase)),
+        "tracked DJ frozen-IL canary is data-only and redistributes no third-party code");
     Pass(buildScript.Contains("static_il_fixture_sha=\"677e8fbd067340d7b3133cc908e4ecafc0f5deab2c38b7eeb79a62eb5f61d523\"",
              StringComparison.Ordinal) &&
          buildScript.Contains("MODS+=(\"$REPO_ROOT/apple-everest/canaries/static-il-content\")",

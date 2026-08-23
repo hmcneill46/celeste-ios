@@ -17,6 +17,7 @@
     <Compile Include="../../../apple-everest/runtime/AppleEverestModuleSnapshotCodec.cs" Link="AppleEverestModuleSnapshotCodec.cs" />
     <Compile Include="../../../apple-everest/runtime/AppleEverestModuleCompression.cs" Link="AppleEverestModuleCompression.cs" />
     <Compile Include="../../../apple-everest/runtime/AppleEverestModuleReplicaAuthority.cs" Link="AppleEverestModuleReplicaAuthority.cs" />
+    <Compile Include="../../../apple-everest/runtime/AppleEverestCustomAudioLifecycle.cs" Link="AppleEverestCustomAudioLifecycle.cs" />
     <Compile Remove="HookSemantics/**/*.cs" />
   </ItemGroup>
 </Project>

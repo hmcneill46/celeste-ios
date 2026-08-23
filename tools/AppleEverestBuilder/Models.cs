@@ -9,7 +9,7 @@ internal static class ProductPolicy
     public const long MaxSingleFileBytes = 64L * 1024 * 1024;
     public const int MaxPathDepth = 24;
     public const int MaxYamlBytes = 1024 * 1024;
-    public const string TransformerVersion = "apple-everest-static-v9";
+    public const string TransformerVersion = "apple-everest-static-v10";
     public const string CanonicalClass = "celeste-1.4.0.0-a";
 }
 
@@ -73,6 +73,7 @@ internal sealed class AppleStaticDeclaration
     public string? SessionType { get; set; }
     public string[] ButtonBindingProperties { get; set; } = [];
     public string[] TrackedEntityTypes { get; set; } = [];
+    public string[] PooledEntityTypes { get; set; } = [];
     public AppleCustomEntityFactory[] CustomEntityFactories { get; set; } = [];
     public AppleOmittedCustomEntityFactory[] OmittedCustomEntityFactories { get; set; } = [];
     public AppleCustomBackdropFactory[] CustomBackdropFactories { get; set; } = [];
@@ -138,6 +139,7 @@ internal enum CompatibilityClass
     STATIC_IL_EVENT_SEQUENCE,
     STATIC_DIRECT_ILHOOK_FREEZE,
     HASH_LOCKED_STATIC_AOT_COMPATIBILITY,
+    STATIC_CUSTOM_FMOD_BANK,
     MODINTEROP_DEFERRED,
     ON_HOOK_DEFERRED,
     IL_HOOK_DEFERRED,
@@ -155,6 +157,19 @@ internal enum CompatibilityClass
 internal sealed record FileRecord(string Path, long Bytes, string Sha256);
 internal sealed record ContentMountRecord(string Owner, int Order, string SourcePath, string LogicalPath, string Sha256);
 internal sealed record FrozenAssemblyRecord(string Owner, string AssemblyName, string FileName, string OriginalSha256, string FrozenSha256);
+internal sealed record CustomAudioGuidRecord(Guid Id, string Path, string Kind);
+internal sealed record CustomAudioBankPlan(
+    string Owner,
+    string Version,
+    string SourceArchiveSha256,
+    string SourcePath,
+    string BankSha256,
+    string GuidSourcePath,
+    string GuidSha256,
+    Guid BankId,
+    string BankPath,
+    string StagedPath,
+    IReadOnlyList<CustomAudioGuidRecord> Guids);
 
 internal sealed class ManagedDetourTargetCatalog
 {
@@ -259,6 +274,7 @@ internal sealed class ResolvedMod
     public required IReadOnlyList<ModInteropRegistrationPlan> ModInteropRegistrations { get; init; }
     public required IReadOnlyList<FrozenIlTransformPlan> FrozenIlTransforms { get; init; }
     public StaticAotCompatibilityPlan? StaticAotCompatibility { get; init; }
+    public IReadOnlyList<CustomAudioBankPlan> CustomAudioBanks { get; init; } = [];
 }
 
 internal sealed record StaticAotCompatibilityPlan(string Id, string Owner, string Version,

@@ -142,9 +142,13 @@ fi
 static_il_fixture_sha="677e8fbd067340d7b3133cc908e4ecafc0f5deab2c38b7eeb79a62eb5f61d523"
 static_il_compose_fixture_sha="df291c0175df46682791fb6373c47eb557c47483eca3db96895eba9b5bbe85b5"
 static_direct_ilhook_fixture_sha="6a0649518d49cd0d17b84da3be53929cdd602d89d922e2d3ab87c524345e3807"
+chrono_custom_audio_fixture_sha="af46039437fbed52e72941d07e0d9ce6657dacc838516459f7e9e995fea07a18"
+djmaphelper_littleepic_fixture_sha="95ab02d657213031b70c3079738b21be399e567ca8a32b1fe8e8effc0778eedb"
 include_static_il_canary=0
 include_static_il_compose_canary=0
 include_static_direct_ilhook_canary=0
+include_custom_audio_canary=0
+include_dj_frozen_il_canary=0
 for mod in "${MODS[@]}"; do
   if [[ -f "$mod" && "$(shasum -a 256 "$mod" | awk '{print $1}')" == "$static_il_fixture_sha" ]]; then
     include_static_il_canary=1
@@ -155,6 +159,12 @@ for mod in "${MODS[@]}"; do
   if [[ -f "$mod" && "$(shasum -a 256 "$mod" | awk '{print $1}')" == "$static_direct_ilhook_fixture_sha" ]]; then
     include_static_direct_ilhook_canary=1
   fi
+  if [[ -f "$mod" && "$(shasum -a 256 "$mod" | awk '{print $1}')" == "$chrono_custom_audio_fixture_sha" ]]; then
+    include_custom_audio_canary=1
+  fi
+  if [[ -f "$mod" && "$(shasum -a 256 "$mod" | awk '{print $1}')" == "$djmaphelper_littleepic_fixture_sha" ]]; then
+    include_dj_frozen_il_canary=1
+  fi
 done
 if ((include_static_il_canary)); then
   MODS+=("$REPO_ROOT/apple-everest/canaries/static-il-content")
@@ -164,6 +174,12 @@ if ((include_static_il_compose_canary)); then
 fi
 if ((include_static_direct_ilhook_canary)); then
   MODS+=("$REPO_ROOT/apple-everest/canaries/static-direct-ilhook-content")
+fi
+if ((include_custom_audio_canary)); then
+  MODS+=("$REPO_ROOT/apple-everest/canaries/custom-audio-content")
+fi
+if ((include_dj_frozen_il_canary)); then
+  MODS+=("$REPO_ROOT/apple-everest/canaries/dj-frozen-il-content")
 fi
 mod_args=()
 for mod in "${MODS[@]}"; do mod_args+=(--mod "$mod"); done

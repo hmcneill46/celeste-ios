@@ -36,6 +36,7 @@ internal static class CompatibilityAnalyzer
     {
         IReadOnlyList<FrozenIlTransformPlan> frozenIl = StaticIlFreeze.Resolve(input, metadata);
         StaticAotCompatibilityPlan? staticAot = StaticAotCompatibility.Resolve(input, metadata);
+        IReadOnlyList<CustomAudioBankPlan> customAudio = CustomAudioManifest.Resolve(input, metadata);
         List<string> managed = input.Files.Where(file => IsManaged(file.Path)).Select(file => file.Path).ToList();
         List<string> content = input.Files.Where(file => IsContent(file.Path)).Select(file => file.Path).ToList();
         SortedSet<string> mechanisms = new(StringComparer.Ordinal);
@@ -51,7 +52,9 @@ internal static class CompatibilityAnalyzer
         foreach (string bank in input.Files.Where(file =>
                      file.Path.EndsWith(".bank", StringComparison.OrdinalIgnoreCase))
                  .Select(file => file.Path))
-            Record("custom-fmod-bank:" + bank, CompatibilityClass.CUSTOM_AUDIO_UNSUPPORTED);
+            Record("custom-fmod-bank:" + bank, customAudio.Any(plan => plan.SourcePath == bank)
+                ? CompatibilityClass.STATIC_CUSTOM_FMOD_BANK
+                : CompatibilityClass.CUSTOM_AUDIO_UNSUPPORTED);
 
         AppleStaticDeclaration? declaration = null;
         string? declaredAssembly = null;
@@ -161,7 +164,8 @@ internal static class CompatibilityAnalyzer
             DirectManagedHooks = directManagedHooks,
             ModInteropRegistrations = modInteropRegistrations,
             FrozenIlTransforms = frozenIl,
-            StaticAotCompatibility = staticAot
+            StaticAotCompatibility = staticAot,
+            CustomAudioBanks = customAudio
         };
 
         void Record(string mechanism, CompatibilityClass detected)
@@ -526,18 +530,19 @@ internal static class CompatibilityAnalyzer
             CompatibilityClass.STATIC_IL_EVENT_SEQUENCE => 8,
             CompatibilityClass.STATIC_DIRECT_ILHOOK_FREEZE => 9,
             CompatibilityClass.HASH_LOCKED_STATIC_AOT_COMPATIBILITY => 10,
-            CompatibilityClass.MODINTEROP_DEFERRED => 11,
-            CompatibilityClass.ON_HOOK_DEFERRED => 12,
-            CompatibilityClass.IL_HOOK_DEFERRED => 13,
-            CompatibilityClass.DIRECT_HOOK_DEFERRED => 14,
-            CompatibilityClass.DYNAMIC_TARGET_DEFERRED => 15,
-            CompatibilityClass.DYNAMIC_DETOUR_DEFERRED => 16,
-            CompatibilityClass.DETOUR_CONFIG_DEFERRED => 17,
-            CompatibilityClass.DYNAMIC_CODE_UNSUPPORTED => 18,
-            CompatibilityClass.CUSTOM_AUDIO_UNSUPPORTED => 19,
-            CompatibilityClass.NATIVE_UNSUPPORTED => 20,
-            CompatibilityClass.LUA_UNSUPPORTED => 21,
-            CompatibilityClass.PLATFORM_UNSUPPORTED => 22,
+            CompatibilityClass.STATIC_CUSTOM_FMOD_BANK => 11,
+            CompatibilityClass.MODINTEROP_DEFERRED => 12,
+            CompatibilityClass.ON_HOOK_DEFERRED => 13,
+            CompatibilityClass.IL_HOOK_DEFERRED => 14,
+            CompatibilityClass.DIRECT_HOOK_DEFERRED => 15,
+            CompatibilityClass.DYNAMIC_TARGET_DEFERRED => 16,
+            CompatibilityClass.DYNAMIC_DETOUR_DEFERRED => 17,
+            CompatibilityClass.DETOUR_CONFIG_DEFERRED => 18,
+            CompatibilityClass.DYNAMIC_CODE_UNSUPPORTED => 19,
+            CompatibilityClass.CUSTOM_AUDIO_UNSUPPORTED => 20,
+            CompatibilityClass.NATIVE_UNSUPPORTED => 21,
+            CompatibilityClass.LUA_UNSUPPORTED => 22,
+            CompatibilityClass.PLATFORM_UNSUPPORTED => 23,
             _ => 99
         };
         return Rank(detected) > Rank(current) ? detected : current;
