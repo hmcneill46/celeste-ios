@@ -95,6 +95,7 @@ public static class AppleEverestStaticRuntime
         contentReady = true;
         MountStaticAtlases();
         MountStaticModContent();
+        AppleEverestProgressionRuntime.RegisterAreas();
         if (GeneratedAppleEverestContentManifest.Has("AppleEverest/Dialog/Canary.txt")) LoadCanaryDialog();
         LoadStaticDialogFragments();
         if (GeneratedAppleEverestContentManifest.Has("AppleEverest/Canary/precedence.txt")) VerifyContentPrecedence();
@@ -726,7 +727,13 @@ internal static class AppleEverestLab
         {
             string selectedMap = mapPath;
             string label = Path.GetFileName(selectedMap);
-            menu.Add(new TextMenu.Button("Play Static Mod Map: " + label)
+            if (AppleEverestProgressionRuntime.TryDescriptor(selectedMap, out AppleEverestMapProgressionDescriptor persistentMap))
+            {
+                string selectedSid = persistentMap.Sid;
+                menu.Add(new TextMenu.Button("Play Persistent Mod Map: " + label)
+                    .Pressed(() => AppleEverestProgressionRuntime.LaunchPersistent(selectedSid)));
+            }
+            menu.Add(new TextMenu.Button("Play Static Mod Map (Debug): " + label)
                 .Pressed(() => AppleEverestStaticRuntime.LaunchModMap(selectedMap)));
             if (selectedMap == "LittleEpic/precisionchallenge/precisionchallenge")
                 menu.Add(new TextMenu.Button("Play LittleEpic Room 5 (Acceptance)")

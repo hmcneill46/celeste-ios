@@ -88,6 +88,7 @@ try
 {
     passed += ModInteropTests.Run(repository, temporary);
     passed += ModuleDurabilityTests.Run(repository, temporary);
+    passed += LevelSetProgressionTests.Run(repository, temporary);
 
     EverestVersion required = EverestVersion.Parse("1.2.3.4");
     Pass(EverestVersion.Satisfies(required, EverestVersion.Parse("1.2.3.4")), "exact version");
@@ -1074,15 +1075,17 @@ try
     Pass(tagsApi.Contains("readonly BitTag SubHUD = Tags.HUD", StringComparison.Ordinal),
         "static Apple SubHUD facade retains the helper's high-resolution coordinate space");
     Pass(closureGenerator.Contains("internal static readonly string[] MapPaths", StringComparison.Ordinal) &&
-         staticRuntime.Contains("Play Static Mod Map:", StringComparison.Ordinal) &&
+         staticRuntime.Contains("Play Persistent Mod Map:", StringComparison.Ordinal) &&
+         staticRuntime.Contains("AppleEverestProgressionRuntime.LaunchPersistent(selectedSid)", StringComparison.Ordinal) &&
+         staticRuntime.Contains("Play Static Mod Map (Debug):", StringComparison.Ordinal) &&
          staticRuntime.Contains("LaunchModMap(selectedMap)", StringComparison.Ordinal),
-        "all staged maps are exposed through the generic static map launcher");
+        "all staged maps have distinct persistent and explicitly nonpersistent launch routes");
     Pass(staticRuntime.Contains("Play LittleEpic Room 5 (Acceptance)", StringComparison.Ordinal) &&
          staticRuntime.Contains("LaunchModMapRoom(selectedMap, \"5\")", StringComparison.Ordinal) &&
          staticRuntime.Contains("static mod acceptance room is absent", StringComparison.Ordinal),
         "unchanged LittleEpic room 5 has a bounded ordinary-session acceptance route");
-    Pass(areaKeyApi.Contains("public static string GetLevelSet(this AreaKey area) => \"Celeste\";", StringComparison.Ordinal),
-        "bounded canonical AreaKey level-set compatibility is present");
+    Pass(areaKeyApi.Contains("public static string GetLevelSet(this AreaKey area) => area.LevelSet;", StringComparison.Ordinal),
+        "AreaKey level-set compatibility preserves registered custom LevelSets");
     string staticCompatibility = File.ReadAllText(Path.Combine(repository,
         "tools/AppleEverestBuilder/StaticAotCompatibility.cs"));
     Pass(staticCompatibility.Contains("foreach (TypeReference argument in call.GenericArguments)", StringComparison.Ordinal) &&
@@ -1196,7 +1199,7 @@ try
          testClosureViolations[0].Contains("System.Diagnostics.Process::Start", StringComparison.Ordinal),
         "linked-runtime scanner isolates the intentional desktop static-plan test host spawn");
 
-    Pass(ProductPolicy.TransformerVersion == "apple-everest-static-v10", "real-ZIP transformer version");
+    Pass(ProductPolicy.TransformerVersion == "apple-everest-static-v11", "real-ZIP transformer version");
     Pass(File.Exists(Path.Combine(repository, "tools/AppleEverestBuilder/AssemblyFreezer.cs")),
         "binary-first assembly freezer exists");
     string models = File.ReadAllText(Path.Combine(repository, "tools/AppleEverestBuilder/Models.cs"));

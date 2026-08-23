@@ -1,0 +1,236 @@
+{
+  "schemaVersion": 1,
+  "stage": "25J-A",
+  "status": "PASS_GREEN_IOS_IPADOS_TVOS_PHYSICAL_PENDING",
+  "classification": "BOUNDED_STATIC_LEVELSET_PROGRESSION",
+  "baseline": {
+    "startingCommit": "57d55c7b9e15c5fa84847d2879f774f30025a96a",
+    "lastAllThreePhysicalGreenSha": "57d55c7b9e15c5fa84847d2879f774f30025a96a",
+    "featureBranch": "feature/apple-everest-levelset-progression",
+    "everestCommit": "4bbde91b8dbaaddef2ceec75ca0cd6d59b3b8d00",
+    "monoModCommit": "dfc30a1506d37fb88a2c2be004f525205f46a24c"
+  },
+  "travelHardware": {
+    "iphone": "AVAILABLE_IPHONE_12_PRO_MAX_IOS_26",
+    "ipad": "AVAILABLE_IPAD_MINI_4_IPADOS_15_8_8",
+    "appleTv": "TVOS_PHYSICAL_PENDING_HARDWARE_UNAVAILABLE"
+  },
+  "pinnedEverestSemantics": {
+    "source": "stable-1.6458.0 pinned source audit",
+    "persistentAreaProgression": [
+      "AreaStats.Cassette",
+      "AreaModeStats.TotalStrawberries",
+      "AreaModeStats.Completed",
+      "AreaModeStats.SingleRunCompleted",
+      "AreaModeStats.FullClear",
+      "AreaModeStats.Deaths",
+      "AreaModeStats.TimePlayed",
+      "AreaModeStats.BestTime",
+      "AreaModeStats.BestFullClearTime",
+      "AreaModeStats.BestDashes",
+      "AreaModeStats.BestDeaths",
+      "AreaModeStats.HeartGem",
+      "AreaModeStats.Strawberries",
+      "AreaModeStats.Checkpoints"
+    ],
+    "resumableSession": [
+      "SID and mode",
+      "room and respawn point",
+      "start checkpoint",
+      "time and death/dash counters",
+      "in-area and first-level state",
+      "cassette, heart, dreaming and golden state",
+      "color grade, lighting, bloom, dark-room and core mode",
+      "inventory",
+      "music and ambience state/parameters",
+      "flags, level flags, strawberries, do-not-load IDs, keys and counters",
+      "summit gems, C-side unlock, furthest-seen level and best-time flag",
+      "OldStats baseline"
+    ],
+    "separateModuleState": [
+      "EverestModuleSaveData",
+      "EverestModuleSession"
+    ],
+    "desktopLevelSetModel": "custom AreaStats are grouped by stable SID/LevelSet; module persistence remains a separate failure domain"
+  },
+  "littleEpic": {
+    "rootPackage": "LittleEpic's Precision Challenge 1.0.0",
+    "zipSha256": "ca57d295f446affdd8eb9b56ffe58f98cc652e9ec242ff07b224877d0067b384",
+    "sid": "LittleEpic/precisionchallenge/precisionchallenge",
+    "levelSet": "LittleEpic",
+    "mapPath": "Maps/LittleEpic/precisionchallenge/precisionchallenge.bin",
+    "mapSha256": "6de18b4280df15493a9f1b0eac2b547118757cf276795146bdbf299e9c371475",
+    "rooms": ["1", "2", "3", "4", "5", "6", "7", "heart"],
+    "berries": 0,
+    "heartGems": 1,
+    "cassettes": 0,
+    "persistentCheckpointObjects": 0,
+    "completionRepresentation": "AreaModeStats completion/full-clear fields plus the heart entity",
+    "physicalProgressionSignal": "room transition, deaths, elapsed time and resumable Session; the map has no early berry/cassette/checkpoint object",
+    "room1Mechanic": "DJMapHelper/maxDashesTrigger dashes=Zero",
+    "room5Mechanic": "ChronoHelper/CustomTimeSwitchGates moveTime=17"
+  },
+  "architecture": {
+    "selected": "HYBRID_VANILLA_BYTES_PLUS_TYPED_PROGRESSION_SIDECAR",
+    "vanillaSaveXmlModified": false,
+    "reason": "preserves byte-compatible vanilla slots while projecting closed custom AreaStats and Session objects before custom gameplay",
+    "alternativesRejected": {
+      "extendedVanillaXml": "unnecessary risk to accepted vanilla serializers and portability",
+      "unprojectedSidecar": "would not provide the runtime AreaStats/Session objects expected by Celeste and Everest"
+    },
+    "runtimeDiscovery": false,
+    "reflectionSerializer": false,
+    "multipleMaps": true,
+    "multipleLevelSets": true,
+    "debugLane": "retained separately as Play Static Mod Map (Debug) and remains nonpersistent",
+    "persistentLane": "Play Persistent Mod Map requires numbered slot 0-2 and enables safe Save and Quit"
+  },
+  "identityAndLineage": {
+    "progressionCompatibilityIdentity": "SHA-256 of canonical SID, LevelSet, source map SHA-256 and ordered room set",
+    "runtimeAreaIndexPersistent": false,
+    "sameMapRebuildOrResign": "retained",
+    "sameSidChangedMap": "quarantined until an explicit compatible migration exists",
+    "removedMap": "ignored but retained for exact compatible readdition",
+    "numberedSaveOwner": "slot 0-2 plus 256-bit random lineage and exact serialized vanilla-base SHA-256",
+    "normalVanillaSave": "new sidecar generation advances to the new base SHA while preserving lineage",
+    "slotDelete": "both progression replicas and both Stage 25F module replicas are deleted after vanilla delete succeeds",
+    "slotRecreate": "fresh lineage; deleted progression cannot resurrect",
+    "importOrReplacement": "a different vanilla base SHA cannot select old progression and starts a new lineage on first custom save",
+    "byteIdenticalReplacement": "semantically identical base remains the same lineage because no observable save identity changed",
+    "staleCrossSlotAttachment": false,
+    "previousGoodRestore": "an exact older vanilla base deliberately selects its matching older valid progression generation"
+  },
+  "ordering": {
+    "load": [
+      "deserialize vanilla numbered save",
+      "select newest valid matching progression A/B generation",
+      "project custom AreaStats and custom map Session",
+      "activate Stage 25F module SaveData and module Session",
+      "load Level"
+    ],
+    "save": [
+      "capture one consistent vanilla/custom/module state",
+      "commit vanilla save bytes",
+      "commit and read-back progression generation",
+      "commit Stage 25F module generation"
+    ],
+    "vanillaFailure": "discard pending progression and module writes",
+    "progressionFailure": "report overall save failure; leave vanilla usable and prior progression replicas isolated",
+    "rapidSavePolicy": "existing bounded UserIO one-follow-up coalescing; no background service"
+  },
+  "storage": {
+    "codec": "AEVPSV1 typed little-endian binary plus SHA-256",
+    "codecSchemaVersion": 1,
+    "ios": {
+      "directory": "Library/Application Support/Celeste/Everest/Progression/<slot>",
+      "replicas": ["levelset-state-v1.a.snapshot", "levelset-state-v1.b.snapshot"],
+      "write": "NSData atomic replacement",
+      "documentsVisible": false
+    },
+    "tvos": {
+      "keyPattern": "CelesteAppleEverest.Slot<0-2>.Progression.<A|B>.v1",
+      "replicasPerSlot": 2,
+      "compression": "bounded deflate envelope AEVPZV1 with logical and envelope SHA-256",
+      "maximumReplicaBytes": 126976,
+      "maximumAllSlotsAbBytes": 761856
+    },
+    "bounds": {
+      "maximumLogicalBytes": 1048576,
+      "maximumAreas": 128,
+      "maximumModesPerArea": 3,
+      "maximumCollectionItems": 16384,
+      "maximumUtf8StringBytes": 4096,
+      "unknownSchema": "reject",
+      "malformedOrOversized": "isolate custom progression and continue with vanilla save"
+    },
+    "observed": {
+      "fixtureRawBytes": 1029,
+      "fixtureTvosCompressedBytes": 437,
+      "stressRawBytes": 164147,
+      "stressTvosCompressedBytes": 5324,
+      "stressMaps": 64,
+      "stressLevelSets": 2
+    }
+  },
+  "recovery": {
+    "replicaValidation": "A and B independently validate schema, slot, digest, bounds, base hash and installed map identities",
+    "selection": "highest valid generation matching the exact current vanilla base",
+    "tornNewest": "falls back to previous valid matching generation",
+    "bothCorrupt": "custom progression defaults empty; vanilla and module state remain usable",
+    "softReload": "cold re-selection rehydrates AreaStats/Session without relying on process-global authority state"
+  },
+  "closure": {
+    "independentRuns": 3,
+    "allIdentical": true,
+    "transformerVersion": "apple-everest-static-v11",
+    "compatibilityManifestSha256": "48dc3df7886f1a32fe49d4cdecde2c692a95c7ec4aac345de522466408cdb7b0",
+    "progressionManifestSha256": "a8cddafb90f3698b821c34ecc8d3bb8d6674b03860436bfec27d902429f7ebac",
+    "generatedSchemaSourceSha256": "460c46df4863a16e8f8c7e88bb0f7413e415da46731c158bc09624af2d65d9b2",
+    "managedLogicalSha256": "31bd37ee46719b5bd8c9913184a184d66971b889bcc9e0bcd3a55b20febdae04",
+    "contentLogicalSha256": "f2b3d04ab37d4ce7a260777544939f5835307c9d92e127dab137535fadccd9e3",
+    "sharedSha256": "f1345b601246a67e1d6bae9fdfc1c0d789540c945fc3308d720dab7fbb3f2d11",
+    "sourceFree": true,
+    "onePrePlatformClosure": true
+  },
+  "products": {
+    "ios": {
+      "signedIpaBytes": 884176257,
+      "signedIpaSha256": "33cee3f7e71c69ec64b0183042e17dbc79a2cb09ce5c68abea6d96504e9bb756"
+    },
+    "tvos": {
+      "unsignedIpaBytes": 898121634,
+      "unsignedIpaSha256": "6f407f575b94e763cc9bcebf665d7959b8e921efadb612485c540c4ef7317cb5"
+    },
+    "release": true,
+    "fullTrim": true,
+    "fullAot": true,
+    "useInterpreter": false,
+    "jit": false
+  },
+  "physical": {
+    "iphone": "PASS_IPHONE_12_PRO_MAX_IOS_26_PERSISTENT_LITTLEEPIC_COLD_RESUME_AND_REGRESSIONS",
+    "ipadOs15": "PASS_IPAD_MINI_4_IPADOS_15_8_8_SAME_UNIVERSAL_IPA_PERSISTENT_LITTLEEPIC_COLD_RESUME_AND_REGRESSIONS",
+    "appleTv": "TVOS_PHYSICAL_PENDING_HARDWARE_UNAVAILABLE",
+    "futureAppleTvCatchUp": [
+      "launch and FNA3D Metal",
+      "seven base FMOD banks and ExpertContestHelper custom bank",
+      "LittleEpic rooms 1 and 5",
+      "DJ frozen IL",
+      "persistent progression and Save and Quit",
+      "cold resume",
+      "slot isolation and delete/recreate",
+      "Save Manager and soft reload",
+      "controller and pause",
+      "Home/reopen and cold relaunch"
+    ]
+  },
+  "regressions": {
+    "appleEverestBuilder": "PASS_370",
+    "stage25jaVerifier": "PASS_101",
+    "stage25ibContract": "PASS_75_HISTORICAL_CONTRACT_CHECKS_AT_ACCEPTED_COMMIT",
+    "stage25hd": "PASS_CURRENT_BUILDER_AND_DIRECT_IL_COMPOSITION",
+    "stage25hc": "PASS_CURRENT_BUILDER_AND_GRAPH_IL_CLOSURE",
+    "stage25hb": "PASS_CURRENT_BUILDER_AND_COMPOSED_FROZEN_IL",
+    "stage25ha": "PASS_CURRENT_BUILDER_AND_PINNED_MONOMOD_FREEZE",
+    "stage25fb2": "PASS_REAL_MODINTEROP_AND_HOOKGEN_REFERENCE",
+    "stage25fa": "PASS_MODULE_DURABILITY_ISOLATION",
+    "stage25eAnd25d": "PASS_MODULE_ECOSYSTEM_AND_MANAGED_DETOURS",
+    "vanilla": "PASS_56_INPUT_PROFILES_AND_UNCHANGED_PUBLIC_BUILDERS",
+    "repositoryDocsPrivacy": "PASS"
+  },
+  "locks": {
+    "customBank": "2607c358e66f4bce4e81fa3748eaffe1205dcfb57010be2e90ce40fabeb8d3ec",
+    "customAudioManifest": "0a7ca20a24239f4829ab5af7002004309d38d89ac5bffbfefff6a49b278c8841",
+    "djIlPlan": "5791ac3b27f500d8ae9f2cc72669b09aa7e490d17b33b992a2b55d0a8728b457",
+    "canonicalContent": "30a1c147d1a3ab0aa45762094e393ed7fd69951dd66e5af063447641e0699c46",
+    "canonicalRaw": "db7b722159fbdef8625c81608165aea162957dce956fcd5b16eeceaa1089a273",
+    "canonicalPatched": "0c6515adadf58251ab2da66c6c61a1f61bd19b85f5dcdd4f1280552af650a4b5",
+    "stage6AudioTree": "1a981bc5994261775c1fea497cd042780fdbbcb24b7390a2f4db6aab1be747d9",
+    "iosNative": "9fb302d221180e39f270ea5ebf48e18433b67bd0a40943c042a227fe0f8ad6a2",
+    "tvosNative": "6286e0545b32e9c56732955d4cf816ed8f5dc0d816ab610dd9fe1752090a01fc",
+    "vanillaIosGeneratedSource": "2f5d6fffaa151530f48deac7ff402c2c6d475b20eeef5579f1db784d57da2357"
+  },
+  "githubActionsMinutesUsed": 0,
+  "developmentIntegrationReady": true,
+  "allPlatformReleaseEligible": false
+}

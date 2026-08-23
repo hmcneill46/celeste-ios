@@ -9,5 +9,5 @@ namespace Celeste;
 /// </summary>
 public static class AreaKeyExt
 {
-    public static string GetLevelSet(this AreaKey area) => "Celeste";
+    public static string GetLevelSet(this AreaKey area) => area.LevelSet;
 }

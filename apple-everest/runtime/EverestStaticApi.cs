@@ -303,6 +303,37 @@ internal sealed class AppleEverestModuleDescriptor
     }
 }
 
+internal sealed class AppleEverestMapProgressionDescriptor
+{
+    public string Path { get; }
+    public string Sid { get; }
+    public string LevelSet { get; }
+    public string MapSha256 { get; }
+    public string CompatibilityId { get; }
+    public string[] Rooms { get; }
+    public int Strawberries { get; }
+    public bool Heart { get; }
+    public bool Cassette { get; }
+    public string[] Checkpoints { get; }
+    public int RuntimeAreaId { get; internal set; } = -1;
+
+    public AppleEverestMapProgressionDescriptor(string path, string sid, string levelSet,
+        string mapSha256, string compatibilityId, string[] rooms, int strawberries,
+        bool heart, bool cassette, string[] checkpoints)
+    {
+        Path = path;
+        Sid = sid;
+        LevelSet = levelSet;
+        MapSha256 = mapSha256;
+        CompatibilityId = compatibilityId;
+        Rooms = rooms;
+        Strawberries = strawberries;
+        Heart = heart;
+        Cassette = cassette;
+        Checkpoints = checkpoints;
+    }
+}
+
 internal sealed class AppleEverestModuleDurabilityAdapter
 {
     public string Schema { get; }

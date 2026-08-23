@@ -221,8 +221,11 @@ internal static class ModuleDurabilityTests
              closure.Contains("appleEverestQueuedSettings |= settings", StringComparison.Ordinal) &&
              !closure.Contains("Queue<Tuple<bool, bool>>", StringComparison.Ordinal),
             "repeated save requests coalesce into one bounded latest-state follow-up");
-        Pass(closure.Contains("PreloadSlot(i, UserIO.Serialize(saveData))", StringComparison.Ordinal) &&
-             closure.Contains("ActivateSlot(slot, UserIO.Serialize(Instance))", StringComparison.Ordinal) &&
+        Pass(closure.Contains("byte[] appleEverestBaseSave = global::Celeste.Mod.AppleEverestProgressionPersistence.SerializeVanillaBase(saveData)", StringComparison.Ordinal) &&
+             closure.Contains("AppleEverestProgressionPersistence.PreloadSlot(i, appleEverestBaseSave)", StringComparison.Ordinal) &&
+             closure.Contains("AppleEverestModulePersistence.PreloadSlot(i, appleEverestBaseSave)", StringComparison.Ordinal) &&
+             closure.Contains("AppleEverestProgressionPersistence.ActivateSlot(slot, appleEverestBaseSave)", StringComparison.Ordinal) &&
+             closure.Contains("AppleEverestModulePersistence.ActivateSlot(slot, appleEverestBaseSave)", StringComparison.Ordinal) &&
              closure.Contains("ResetSessionForNewVanillaSession", StringComparison.Ordinal),
             "file-select, continuation and new-session lifecycle are distinct");
         Pass(closure.Contains("DeleteSlot(slot)", StringComparison.Ordinal) &&

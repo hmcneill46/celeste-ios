@@ -67,6 +67,7 @@ support matrix, and limitations are in [project status](../STATUS.md).
 49. [Stage 25H-D — bounded static direct ILHook freeze](stages/APPLE_EVEREST_DIRECT_ILHOOK_STAGE25HD_REPORT.md)
 50. [Stage 25I-A — LittleEpic graph completion and custom-audio boundary](stages/APPLE_EVEREST_LITTLEEPIC_STAGE25IA_REPORT.md)
 51. [Stage 25I-B — bounded custom FMOD and first real multi-helper map](stages/APPLE_EVEREST_CUSTOM_FMOD_LITTLEEPIC_STAGE25IB_REPORT.md)
+52. [Stage 25J-A — durable custom-map and LevelSet progression](stages/APPLE_EVEREST_LEVELSET_PROGRESSION_STAGE25JA_REPORT.md)
 
 Diagnostic-only stages whose evidence was intentionally kept in ignored local
 build directories are not reconstructed here. The index covers every tracked

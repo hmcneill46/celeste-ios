@@ -7,6 +7,43 @@ namespace AppleEverestBuilder;
 
 internal static class ContentCompiler
 {
+    internal static MapProgressionRecord InspectProgression(string path, string logicalPath, string sha256)
+    {
+        if (!logicalPath.StartsWith("Maps/", StringComparison.Ordinal) ||
+            !logicalPath.EndsWith(".bin", StringComparison.Ordinal))
+            throw new InvalidDataException("progression inspection requires a mounted map");
+        string mapPath = logicalPath["Maps/".Length..^4];
+        string levelSet = mapPath.Split('/', 2)[0];
+        using FileStream stream = File.OpenRead(path);
+        using BinaryReader reader = new(stream, Encoding.UTF8, leaveOpen: false);
+        if (reader.ReadString() != "CELESTE MAP") throw new InvalidDataException("map binary has an invalid Celeste header");
+        _ = reader.ReadString();
+        int count = reader.ReadInt16();
+        if (count is < 1 or > 8192) throw new InvalidDataException("map string table is invalid");
+        string[] table = new string[count];
+        for (int index = 0; index < count; index++) table[index] = reader.ReadString();
+        List<string> rooms = [];
+        List<string> entities = [];
+        List<string> triggers = [];
+        List<string> checkpoints = [];
+        int elements = 0;
+        ReadProgressionElement(reader, table, null, 0, ref elements, rooms, entities, triggers, checkpoints);
+        if (stream.Position != stream.Length) throw new InvalidDataException("map binary contains trailing bytes");
+        string[] entitySet = entities.Distinct(StringComparer.Ordinal).OrderBy(value => value, StringComparer.Ordinal).ToArray();
+        string[] triggerSet = triggers.Distinct(StringComparer.Ordinal).OrderBy(value => value, StringComparer.Ordinal).ToArray();
+        int berries = entities.Count(value => value is "strawberry" or "goldenBerry");
+        bool heart = entities.Any(value => value is "blackGem" or "heartGem");
+        bool cassette = entities.Contains("cassette", StringComparer.Ordinal);
+        string compatibility = Hashing.BytesSha256(Encoding.UTF8.GetBytes(
+            "apple-everest-progression-map-v1\n" + mapPath + "\n" + sha256 + "\n" +
+            string.Join("\n", rooms.OrderBy(value => value, StringComparer.Ordinal))));
+        return new(mapPath, mapPath, levelSet, sha256, compatibility,
+            rooms.Distinct(StringComparer.Ordinal).OrderBy(value => value, StringComparer.Ordinal).ToArray(),
+            berries, heart, cassette,
+            checkpoints.Distinct(StringComparer.Ordinal).OrderBy(value => value, StringComparer.Ordinal).ToArray(),
+            entitySet, triggerSet);
+    }
+
     internal static IReadOnlyList<(string Kind, string Id)> InspectGameplayIds(string path)
     {
         using FileStream stream = File.OpenRead(path);
@@ -220,6 +257,53 @@ internal static class ContentCompiler
         int children = reader.ReadInt16();
         if (children < 0) throw new InvalidDataException("map child count is invalid");
         for (int index = 0; index < children; index++) ReadElement(reader, table, name, depth + 1, ref elements, result);
+    }
+
+    private static void ReadProgressionElement(BinaryReader reader, string[] table, string? parent, int depth,
+        ref int elements, List<string> rooms, List<string> entities, List<string> triggers, List<string> checkpoints)
+    {
+        if (depth > 128 || ++elements > 100000) throw new InvalidDataException("map element bounds exceeded");
+        string name = Lookup(table, reader.ReadInt16());
+        Dictionary<string, object> attributes = new(StringComparer.Ordinal);
+        int attributeCount = reader.ReadByte();
+        for (int index = 0; index < attributeCount; index++)
+        {
+            string key = Lookup(table, reader.ReadInt16());
+            byte type = reader.ReadByte();
+            object value = type switch
+            {
+                0 => reader.ReadBoolean(),
+                1 => reader.ReadByte(),
+                2 => reader.ReadInt16(),
+                3 => reader.ReadInt32(),
+                4 => reader.ReadSingle(),
+                5 => Lookup(table, reader.ReadInt16()),
+                6 => reader.ReadString(),
+                7 => reader.ReadBytes(CheckedRleLength(reader)),
+                _ => throw new InvalidDataException("map value type is invalid")
+            };
+            attributes[key] = value;
+        }
+        if (parent == "levels" && name == "level" && attributes.TryGetValue("name", out object? room) && room is string roomName)
+            rooms.Add(roomName);
+        if (parent == "entities") entities.Add(name);
+        if (parent == "triggers")
+        {
+            triggers.Add(name);
+            if (name == "changeRespawnTrigger" && attributes.TryGetValue("target", out object? checkpoint) && checkpoint is string checkpointName)
+                checkpoints.Add(checkpointName);
+        }
+        int children = reader.ReadInt16();
+        if (children < 0) throw new InvalidDataException("map child count is invalid");
+        for (int index = 0; index < children; index++)
+            ReadProgressionElement(reader, table, name, depth + 1, ref elements, rooms, entities, triggers, checkpoints);
+
+        static int CheckedRleLength(BinaryReader input)
+        {
+            int length = input.ReadInt16();
+            if (length < 0) throw new InvalidDataException("map RLE value is invalid");
+            return length;
+        }
     }
 
     private static string Lookup(string[] table, short index) => index >= 0 && index < table.Length

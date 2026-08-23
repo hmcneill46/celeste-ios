@@ -69,7 +69,8 @@ internal static class ClosureGenerator
                 string stagedPath = NormalizeContentPath(mod.Metadata.Name, relative);
                 string logical = ContentCompiler.Stage(source, stagedPath, content);
                 stagedContent.Add(new ContentMountRecord(mod.Metadata.Name, modOrder, relative, logical,
-                    Hashing.FileSha256(Path.Combine(content, logical.Replace('/', Path.DirectorySeparatorChar)))));
+                    Hashing.FileSha256(Path.Combine(content, logical.Replace('/', Path.DirectorySeparatorChar))),
+                    Hashing.FileSha256(source)));
             }
             foreach (CustomAudioBankPlan bank in mod.CustomAudioBanks.OrderBy(value => value.SourcePath, StringComparer.Ordinal))
                 customAudioBanks.Add((bank, customAudioBanks.Count));
@@ -142,6 +143,18 @@ internal static class ClosureGenerator
             RegistrySource(profile, codeModules, ordered, durabilityAdapters, durabilityClosureSha256), new UTF8Encoding(false));
         File.WriteAllText(Path.Combine(managed, "GeneratedAppleEverestGameplayRegistry.cs"), GameplayRegistrySource(codeModules), new UTF8Encoding(false));
         File.WriteAllText(Path.Combine(managed, "GeneratedAppleEverestContentManifest.cs"), ContentManifestSource(ordered, stagedContent), new UTF8Encoding(false));
+        MapProgressionRecord[] progressionMaps = stagedContent
+            .Where(value => value.LogicalPath.StartsWith("Maps/", StringComparison.Ordinal) &&
+                            value.LogicalPath.EndsWith(".bin", StringComparison.Ordinal))
+            .Select(value => ContentCompiler.InspectProgression(
+                Path.Combine(content, value.LogicalPath.Replace('/', Path.DirectorySeparatorChar)),
+                value.LogicalPath, value.SourceSha256))
+            .OrderBy(value => value.Sid, StringComparer.Ordinal).ToArray();
+        string progressionManifestSource = ProgressionManifestSource(progressionMaps);
+        File.WriteAllText(Path.Combine(managed, "GeneratedAppleEverestProgressionManifest.cs"),
+            progressionManifestSource, new UTF8Encoding(false));
+        File.WriteAllText(Path.Combine(outputRoot, "levelset-progression-manifest.txt"),
+            ProgressionManifestText(progressionMaps), new UTF8Encoding(false));
         File.WriteAllText(Path.Combine(managed, "GeneratedAppleEverestCustomAudioManifest.cs"),
             CustomAudioManifestSource(customAudioBanks, customAudioManifestSha256), new UTF8Encoding(false));
         StaticAssetGeneration staticAssets = StaticAssetGenerator.Generate(codeModules, stagedContent, content);
@@ -184,7 +197,8 @@ internal static class ClosureGenerator
             $"assemblies:{frozenAssemblyLogicalSha256}\nregistry:{registryHash}\nhooks:{hookTransformHash}\n" +
             $"api-surface:{apiSurfaceHash}\nstatic-il:{frozenIlPlanSha256}\n" +
             $"custom-audio:{customAudioManifestSha256}\ncustom-banks:{customBankLogicalSetSha256}\n" +
-            $"mod-interop:{modInterop.PlanSha256}\n"));
+            $"mod-interop:{modInterop.PlanSha256}\n" +
+            $"progression:{Hashing.BytesSha256(Encoding.UTF8.GetBytes(progressionManifestSource))}\n"));
         object manifest = new
         {
             schemaVersion = 1,
@@ -265,6 +279,12 @@ internal static class ClosureGenerator
             moduleDurabilityTvOSLogicalMaximumBytes = 512 * 1024,
             moduleDurabilityTvOSReplicaMaximumBytes = 126976,
             moduleDurabilityTvOSTotalMaximumBytes = 6 * 126976,
+            levelSetProgressionSchema = ProductPolicy.LevelSetProgressionSchemaVersion,
+            levelSetProgressionFormat = "typed-sidecar-projection-lineage-ab-v1",
+            levelSetProgressionManifestSha256 = Hashing.BytesSha256(Encoding.UTF8.GetBytes(ProgressionManifestText(progressionMaps))),
+            levelSetProgressionMapCount = progressionMaps.Length,
+            levelSetProgressionCompatibilityPolicy = "sid-plus-original-map-sha256-v1",
+            levelSetProgressionSessionPolicy = "bounded-resumable-session-v1",
             interpreter = false,
             selectedMods = ordered.Select((mod, index) => new
             {
@@ -458,6 +478,7 @@ internal static class ClosureGenerator
         PatchNonPersistentOverworldReturn(Path.Combine(managedRoot, "Celeste", "OverworldLoader.cs"));
         PatchPinnedEverestCompatibility(managedRoot);
         PatchModuleDurability(managedRoot);
+        PatchLevelSetProgression(managedRoot);
         PatchTracker(Path.Combine(managedRoot, "Monocle", "Tracker.cs"));
         PatchPooler(Path.Combine(managedRoot, "Monocle", "Pooler.cs"));
         PatchProject(Path.Combine(managedRoot, "Celeste.Modern.csproj"), closureRoot);
@@ -485,6 +506,7 @@ internal static class ClosureGenerator
         "UserIO.SaveHandler:nonpersistent-mod-session-filter:v1",
         "OverworldLoader.Begin:nonpersistent-mod-session-restore:v1",
         "PinnedEverestABI:ConditionHelper+AchievementHelper-reviewed-members:v2",
+        "LevelSetProgression:typed-sidecar-projection-lineage-ab:v1",
         "PinnedEverestABI:DeathMarkers-reviewed-members:v1",
         "PinnedEverestABI:CaeruleaHelper-reviewed-members:v1",
         "HookGen+RuntimeDetour.Hook:shared-data-only-backend:v1",
@@ -738,7 +760,7 @@ internal static class ClosureGenerator
         string areaKey = Path.Combine(managedRoot, "Celeste", "AreaKey.cs");
         ReplaceOnce(areaKey,
             "\tpublic int ChapterIndex\n\t{",
-            "\tpublic string SID\n\t{\n\t\tget\n\t\t{\n\t\t\tif (AreaData.Areas == null || ID < 0 || ID >= AreaData.Areas.Count) return null;\n\t\t\tAreaData data = AreaData.Areas[ID];\n\t\t\tstring path = data?.Mode != null && data.Mode.Length > 0 ? data.Mode[0]?.Path : null;\n\t\t\treturn string.IsNullOrEmpty(path) ? data?.Name : \"Celeste/\" + path;\n\t\t}\n\t}\n\n\tpublic int ChapterIndex\n\t{");
+            "\tpublic string SID\n\t{\n\t\tget\n\t\t{\n\t\t\tstring appleEverestSid = global::Celeste.Mod.AppleEverestProgressionRuntime.Sid(this);\n\t\t\tif (appleEverestSid != null) return appleEverestSid;\n\t\t\tif (AreaData.Areas == null || ID < 0 || ID >= AreaData.Areas.Count) return null;\n\t\t\tAreaData data = AreaData.Areas[ID];\n\t\t\tstring path = data?.Mode != null && data.Mode.Length > 0 ? data.Mode[0]?.Path : null;\n\t\t\treturn string.IsNullOrEmpty(path) ? data?.Name : \"Celeste/\" + path;\n\t\t}\n\t}\n\n\tpublic int ChapterIndex\n\t{");
 
         ReplaceOnce(areaKey,
             "\tpublic int ChapterIndex\n\t{",
@@ -773,10 +795,13 @@ internal static class ClosureGenerator
             "public sealed class LevelSetStats\n{\n" +
             "\tprivate readonly SaveData saveData;\n\n" +
             "\tinternal LevelSetStats(SaveData saveData) { this.saveData = saveData; }\n\n" +
-            "\tpublic int TotalStrawberries => saveData?.TotalStrawberries ?? 0;\n" +
-            "\tpublic int TotalGoldenStrawberries => saveData?.TotalGoldenStrawberries ?? 0;\n" +
-            "\tpublic int TotalHeartGems => saveData?.TotalHeartGems ?? 0;\n" +
-            "\tpublic int TotalCassettes => saveData?.TotalCassettes ?? 0;\n" +
+            "\tprivate string LevelSet => saveData?.LastArea_Safe.LevelSet ?? \"Celeste\";\n" +
+            "\tpublic int TotalStrawberries => LevelSet == \"Celeste\" ? saveData?.TotalStrawberries ?? 0 : global::Celeste.Mod.AppleEverestProgressionRuntime.TotalStrawberries(LevelSet, saveData);\n" +
+            "\tpublic int TotalGoldenStrawberries => LevelSet == \"Celeste\" ? saveData?.TotalGoldenStrawberries ?? 0 : 0;\n" +
+            "\tpublic int TotalHeartGems => LevelSet == \"Celeste\" ? saveData?.TotalHeartGems ?? 0 : global::Celeste.Mod.AppleEverestProgressionRuntime.TotalHearts(LevelSet, saveData);\n" +
+            "\tpublic int TotalCassettes => LevelSet == \"Celeste\" ? saveData?.TotalCassettes ?? 0 : global::Celeste.Mod.AppleEverestProgressionRuntime.TotalCassettes(LevelSet, saveData);\n" +
+            "\tpublic long TotalTime => LevelSet == \"Celeste\" ? saveData?.Time ?? 0 : global::Celeste.Mod.AppleEverestProgressionRuntime.TotalTime(LevelSet, saveData);\n" +
+            "\tpublic int TotalDeaths => LevelSet == \"Celeste\" ? saveData?.TotalDeaths ?? 0 : global::Celeste.Mod.AppleEverestProgressionRuntime.TotalDeaths(LevelSet, saveData);\n" +
             "}\n", new UTF8Encoding(false));
 
         // Desktop Everest publicizes Engine.scene. The accepted DLL contains a
@@ -833,21 +858,21 @@ internal static class ClosureGenerator
             "\tpublic static void SaveHandler(bool file, bool settings)\n\t{\n\t\tfile = global::Celeste.Mod.AppleEverestStaticRuntime.FilterVanillaFileSave(file);\n\t\tif (!file && !settings)\n\t\t{\n\t\t\treturn;\n\t\t}\n\t\tif (Saving)\n\t\t{\n\t\t\tappleEverestSaveQueued = true;\n\t\t\tappleEverestQueuedFile |= file;\n\t\t\tappleEverestQueuedSettings |= settings;\n\t\t\treturn;\n\t\t}\n\t\tif (!Saving)");
         ReplaceOnce(userIo,
             "\t\t\t\tsavingFileData = Serialize(SaveData.Instance);",
-            "\t\t\t\tsavingFileData = Serialize(SaveData.Instance);\n\t\t\t\tglobal::Celeste.Mod.AppleEverestModulePersistence.CaptureSave(SaveData.Instance.FileSlot, savingFileData);");
+            "\t\t\t\tsavingFileData = global::Celeste.Mod.AppleEverestProgressionPersistence.SerializeVanillaBase(SaveData.Instance);\n\t\t\t\tglobal::Celeste.Mod.AppleEverestProgressionPersistence.CaptureSave(SaveData.Instance.FileSlot, savingFileData);\n\t\t\t\tglobal::Celeste.Mod.AppleEverestModulePersistence.CaptureSave(SaveData.Instance.FileSlot, savingFileData);");
         ReplaceOnce(userIo,
             "\t\tSaving = false;\n\t\tCeleste.SaveRoutine = null;",
             "\t\tSaving = false;\n\t\tCeleste.SaveRoutine = null;\n\t\tif (appleEverestSaveQueued)\n\t\t{\n\t\t\tbool nextFile = appleEverestQueuedFile;\n\t\t\tbool nextSettings = appleEverestQueuedSettings;\n\t\t\tappleEverestSaveQueued = false;\n\t\t\tappleEverestQueuedFile = false;\n\t\t\tappleEverestQueuedSettings = false;\n\t\t\tSaveHandler(nextFile, nextSettings);\n\t\t}");
         ReplaceOnce(userIo,
             "\t\t\t\tSavingResult &= Save<SaveData>(SaveData.GetFilename(), savingFileData);",
-            "\t\t\t\tSavingResult &= Save<SaveData>(SaveData.GetFilename(), savingFileData);\n\t\t\t\tif (SavingResult) SavingResult &= global::Celeste.Mod.AppleEverestModulePersistence.CommitCapturedSave();\n\t\t\t\telse global::Celeste.Mod.AppleEverestModulePersistence.DiscardCapturedSave();");
+            "\t\t\t\tSavingResult &= Save<SaveData>(SaveData.GetFilename(), savingFileData);\n\t\t\t\tif (SavingResult) SavingResult &= global::Celeste.Mod.AppleEverestProgressionPersistence.CommitCapturedSave();\n\t\t\t\telse global::Celeste.Mod.AppleEverestProgressionPersistence.DiscardCapturedSave();\n\t\t\t\tif (SavingResult) SavingResult &= global::Celeste.Mod.AppleEverestModulePersistence.CommitCapturedSave();\n\t\t\t\telse global::Celeste.Mod.AppleEverestModulePersistence.DiscardCapturedSave();");
 
         string saveData = Path.Combine(managedRoot, "Celeste", "SaveData.cs");
         ReplaceOnce(saveData,
             "\t\tInstance.FileSlot = slot;\n\t\tInstance.AfterInitialize();",
-            "\t\tInstance.FileSlot = slot;\n\t\tInstance.AfterInitialize();\n\t\tglobal::Celeste.Mod.AppleEverestModulePersistence.ActivateSlot(slot, UserIO.Serialize(Instance));");
+            "\t\tInstance.FileSlot = slot;\n\t\tInstance.AfterInitialize();\n\t\tbyte[] appleEverestBaseSave = global::Celeste.Mod.AppleEverestProgressionPersistence.SerializeVanillaBase(Instance);\n\t\tglobal::Celeste.Mod.AppleEverestProgressionPersistence.ActivateSlot(slot, appleEverestBaseSave);\n\t\tglobal::Celeste.Mod.AppleEverestModulePersistence.ActivateSlot(slot, appleEverestBaseSave);");
         ReplaceOnce(saveData,
             "\tpublic static bool TryDelete(int slot)\n\t{\n\t\treturn UserIO.Delete(GetFilename(slot));\n\t}",
-            "\tpublic static bool TryDelete(int slot)\n\t{\n\t\tbool vanilla = UserIO.Delete(GetFilename(slot));\n\t\treturn vanilla && global::Celeste.Mod.AppleEverestModulePersistence.DeleteSlot(slot);\n\t}");
+            "\tpublic static bool TryDelete(int slot)\n\t{\n\t\tbool vanilla = UserIO.Delete(GetFilename(slot));\n\t\tbool progression = vanilla && global::Celeste.Mod.AppleEverestProgressionPersistence.DeleteSlot(slot);\n\t\tbool modules = vanilla && global::Celeste.Mod.AppleEverestModulePersistence.DeleteSlot(slot);\n\t\treturn vanilla && progression && modules;\n\t}");
         ReplaceOnce(saveData,
             "\tprivate void AppleEverestOriginal_StartSession(Session session)\n\t{\n\t\tLastArea = session.Area;\n\t\tLastArea_Safe = LastArea;\n\t\tCurrentSession = session;",
             "\tprivate void AppleEverestOriginal_StartSession(Session session)\n\t{\n\t\tSession appleEverestPreviousSession = CurrentSession;\n\t\tLastArea = session.Area;\n\t\tLastArea_Safe = LastArea;\n\t\tCurrentSession = session;\n\t\tif (!object.ReferenceEquals(appleEverestPreviousSession, session))\n\t\t\tglobal::Celeste.Mod.AppleEverestModulePersistence.ResetSessionForNewVanillaSession(FileSlot);");
@@ -855,12 +880,44 @@ internal static class ClosureGenerator
         string fileSelect = Path.Combine(managedRoot, "Celeste", "OuiFileSelect.cs");
         ReplaceOnce(fileSelect,
             "\t\t\t\t\t\tsaveData.AfterInitialize();\n\t\t\t\t\t\touiFileSelectSlot = new OuiFileSelectSlot(i, this, saveData);",
-            "\t\t\t\t\t\tsaveData.AfterInitialize();\n\t\t\t\t\t\tglobal::Celeste.Mod.AppleEverestModulePersistence.PreloadSlot(i, UserIO.Serialize(saveData));\n\t\t\t\t\t\touiFileSelectSlot = new OuiFileSelectSlot(i, this, saveData);");
+            "\t\t\t\t\t\tsaveData.AfterInitialize();\n\t\t\t\t\t\tbyte[] appleEverestBaseSave = global::Celeste.Mod.AppleEverestProgressionPersistence.SerializeVanillaBase(saveData);\n\t\t\t\t\t\tglobal::Celeste.Mod.AppleEverestProgressionPersistence.PreloadSlot(i, appleEverestBaseSave);\n\t\t\t\t\t\tglobal::Celeste.Mod.AppleEverestModulePersistence.PreloadSlot(i, appleEverestBaseSave);\n\t\t\t\t\t\touiFileSelectSlot = new OuiFileSelectSlot(i, this, saveData);");
 
         string fileSelectSlot = Path.Combine(managedRoot, "Celeste", "OuiFileSelectSlot.cs");
         ReplaceOnce(fileSelectSlot,
             "\tpublic void CreateButtons()\n\t{\n\t\tbuttons.Clear();",
             "\tpublic void CreateButtons()\n\t{\n\t\tif (SaveData != null) global::Celeste.Mod.AppleEverestModulePersistence.ActivateSaveData(FileSlot, UserIO.Serialize(SaveData));\n\t\tbuttons.Clear();");
+    }
+
+    private static void PatchLevelSetProgression(string managedRoot)
+    {
+        string saveData = Path.Combine(managedRoot, "Celeste", "SaveData.cs");
+        ReplaceOnce(saveData,
+            "\t\twhile (Areas.Count < AreaData.Areas.Count)\n\t\t{\n\t\t\tAreas.Add(new AreaStats(Areas.Count));\n\t\t}\n\t\twhile (Areas.Count > AreaData.Areas.Count)",
+            "\t\tint appleEverestVanillaAreaCount = global::Celeste.Mod.AppleEverestProgressionRuntime.VanillaAreaCount > 0 ? global::Celeste.Mod.AppleEverestProgressionRuntime.VanillaAreaCount : AreaData.Areas.Count;\n" +
+            "\t\twhile (Areas.Count < appleEverestVanillaAreaCount)\n\t\t{\n\t\t\tAreas.Add(new AreaStats(Areas.Count));\n\t\t}\n\t\twhile (Areas.Count > appleEverestVanillaAreaCount)");
+        ReplaceOnce(saveData,
+            "\tpublic int MaxArea\n\t{\n\t\tget\n\t\t{\n\t\t\tif (Celeste.PlayMode == Celeste.PlayModes.Event)\n\t\t\t{\n\t\t\t\treturn 2;\n\t\t\t}\n\t\t\treturn AreaData.Areas.Count - 1;\n\t\t}\n\t}\n\n\tpublic int MaxAssistArea => AreaData.Areas.Count - 1;",
+            "\tpublic int MaxArea\n\t{\n\t\tget\n\t\t{\n\t\t\tif (Celeste.PlayMode == Celeste.PlayModes.Event)\n\t\t\t{\n\t\t\t\treturn 2;\n\t\t\t}\n\t\t\treturn global::Celeste.Mod.AppleEverestProgressionRuntime.VanillaMaximumArea;\n\t\t}\n\t}\n\n\tpublic int MaxAssistArea => global::Celeste.Mod.AppleEverestProgressionRuntime.VanillaMaximumArea;");
+        ReplaceOnce(saveData,
+            "\tprivate void AppleEverestOriginal_AddDeath(AreaKey area)\n\t{\n\t\tTotalDeaths++;",
+            "\tprivate void AppleEverestOriginal_AddDeath(AreaKey area)\n\t{\n\t\tif (global::Celeste.Mod.AppleEverestProgressionRuntime.IsCustom(area))\n\t\t{\n\t\t\tAreas[area.ID].Modes[(int)area.Mode].Deaths++;\n\t\t\treturn;\n\t\t}\n\t\tTotalDeaths++;");
+        ReplaceOnce(saveData,
+            "\t\tAreaModeStats areaModeStats = Areas[area.ID].Modes[(int)area.Mode];\n\t\tif (!areaModeStats.Strawberries.Contains(strawberry))",
+            "\t\tAreaModeStats areaModeStats = Areas[area.ID].Modes[(int)area.Mode];\n\t\tif (global::Celeste.Mod.AppleEverestProgressionRuntime.IsCustom(area))\n\t\t{\n\t\t\tif (areaModeStats.Strawberries.Add(strawberry)) areaModeStats.TotalStrawberries++;\n\t\t\treturn;\n\t\t}\n\t\tif (!areaModeStats.Strawberries.Contains(strawberry))");
+        ReplaceOnce(saveData,
+            "\tpublic void AddTime(AreaKey area, long time)\n\t{\n\t\tTime += time;\n\t\tAreas[area.ID].Modes[(int)area.Mode].TimePlayed += time;\n\t}",
+            "\tpublic void AddTime(AreaKey area, long time)\n\t{\n\t\tif (!global::Celeste.Mod.AppleEverestProgressionRuntime.IsCustom(area)) Time += time;\n\t\tAreas[area.ID].Modes[(int)area.Mode].TimePlayed += time;\n\t}");
+        ReplaceOnce(saveData,
+            "\tprivate void AppleEverestOriginal_RegisterCassette(AreaKey area)\n\t{\n\t\tAreas[area.ID].Cassette = true;\n\t\tAchievements.Register(Achievement.CASS);",
+            "\tprivate void AppleEverestOriginal_RegisterCassette(AreaKey area)\n\t{\n\t\tAreas[area.ID].Cassette = true;\n\t\tif (global::Celeste.Mod.AppleEverestProgressionRuntime.IsCustom(area)) return;\n\t\tAchievements.Register(Achievement.CASS);");
+        ReplaceOnce(saveData,
+            "\t\t\tforeach (AreaStats area in Areas)\n\t\t\t{\n\t\t\t\tfor (int i = 0; i < area.Modes.Length; i++)",
+            "\t\t\tfor (int appleEverestAreaIndex = 0; appleEverestAreaIndex < global::Celeste.Mod.AppleEverestProgressionRuntime.VanillaAreaCount && appleEverestAreaIndex < Areas.Count; appleEverestAreaIndex++)\n\t\t\t{\n\t\t\t\tAreaStats area = Areas[appleEverestAreaIndex];\n\t\t\t\tfor (int i = 0; i < area.Modes.Length; i++)");
+
+        string levelExit = Path.Combine(managedRoot, "Celeste", "LevelExit.cs");
+        ReplaceOnce(levelExit,
+            "\t\tthis.session = session;\n\t\tthis.mode = mode;\n\t\tthis.snow = snow;",
+            "\t\tthis.session = session;\n\t\tthis.mode = mode == Mode.Completed && global::Celeste.Mod.AppleEverestProgressionRuntime.IsCustom(session.Area) ? Mode.SaveAndQuit : mode;\n\t\tthis.snow = snow;");
     }
 
     private static void PatchTracker(string path) => ReplaceOnce(path,
@@ -1059,6 +1116,37 @@ internal static class ClosureGenerator
             return key.Length > 0;
         }
     }
+
+    private static string ProgressionManifestSource(IReadOnlyList<MapProgressionRecord> maps)
+    {
+        StringBuilder result = new("namespace Celeste.Mod;\n\ninternal static class GeneratedAppleEverestProgressionManifest\n{\n" +
+            $"    internal const int SchemaVersion = {ProductPolicy.LevelSetProgressionSchemaVersion};\n" +
+            "    internal static readonly AppleEverestMapProgressionDescriptor[] Maps =\n    {\n");
+        foreach (MapProgressionRecord map in maps)
+        {
+            result.Append("        new AppleEverestMapProgressionDescriptor(\"").Append(Escape(map.Path))
+                .Append("\", \"").Append(Escape(map.Sid)).Append("\", \"").Append(Escape(map.LevelSet))
+                .Append("\", \"").Append(Escape(map.MapSha256)).Append("\", \"")
+                .Append(Escape(map.CompatibilityId)).Append("\", ")
+                .Append(StringArray(map.Rooms)).Append(", ").Append(map.Strawberries).Append(", ")
+                .Append(map.Heart ? "true" : "false").Append(", ").Append(map.Cassette ? "true" : "false")
+                .Append(", ").Append(StringArray(map.Checkpoints)).AppendLine("),");
+        }
+        return result.AppendLine("    };").AppendLine("}").ToString();
+
+        static string StringArray(IEnumerable<string> values)
+        {
+            string[] items = values.ToArray();
+            return items.Length == 0 ? "System.Array.Empty<string>()" :
+                "new[] { " + string.Join(", ", items.Select(value => $"\"{Escape(value)}\"")) + " }";
+        }
+    }
+
+    private static string ProgressionManifestText(IEnumerable<MapProgressionRecord> maps) =>
+        "APPLE_EVEREST_LEVELSET_PROGRESSION_V1\n" + string.Join("\n", maps.Select(map => string.Join("\t",
+            map.Sid, map.LevelSet, map.MapSha256, map.CompatibilityId, map.Strawberries,
+            map.Heart ? "heart" : "no-heart", map.Cassette ? "cassette" : "no-cassette",
+            string.Join(",", map.Rooms), string.Join(",", map.Checkpoints)))) + "\n";
 
     private static string CustomAudioManifestSource(
         IReadOnlyList<(CustomAudioBankPlan Plan, int Ordinal)> banks, string manifestSha256)
