@@ -195,6 +195,10 @@ this travel stage.
   frozen-IL trigger passed on iPhone and iPad.
 - The 56 input-profile tests and unchanged public builder entry points passed.
 - Repository documentation/link/privacy checks passed.
+- A fresh recursive clone independently fetched the three exact public mod
+  releases, bootstrapped the pinned host toolchains, regenerated the production
+  five-input graph, and reproduced source-free closure
+  `f1345b601246a67e1d6bae9fdfc1c0d789540c945fc3308d720dab7fbb3f2d11`.
 - No third-party ZIP/DLL/map/bank, Celeste/FMOD data, save/progression payload,
   signing material, private path or device identifier is tracked.
 
@@ -303,7 +307,7 @@ trigger/helper breadth and storage-stress boundaries are discharged.
 59. Yes, canonical/native locks are unchanged.
 60. Yes, protected refs are untouched.
 61. Yes, zero Actions minutes were used.
-62. The final clean-clone reproduction result is recorded by the final verifier/acceptance handoff.
+62. Yes, a fresh recursive clone independently fetched the public graph and reproduced the exact source-free closure.
 63. Yes, J-A is development-integration-ready.
 64. No, J-A is not all-platform-release-ready.
 65. The exact final feature commit reported at handoff is the development fast-forward target.
