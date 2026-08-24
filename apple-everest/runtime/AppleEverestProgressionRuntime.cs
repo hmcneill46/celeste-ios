@@ -12,6 +12,7 @@ internal static class AppleEverestProgressionRuntime
 {
     private static readonly Dictionary<int, AppleEverestMapProgressionDescriptor> ByArea = new();
     private static readonly Dictionary<string, AppleEverestMapProgressionDescriptor> BySid = new(StringComparer.Ordinal);
+    private static readonly Dictionary<string, AppleEverestLevelSetProgressionDescriptor> ByLevelSet = new(StringComparer.Ordinal);
     private static AreaKey vanillaLastArea;
     internal static int VanillaAreaCount { get; private set; }
     internal static IReadOnlyDictionary<string, string> CompatibleMaps =>
@@ -20,6 +21,17 @@ internal static class AppleEverestProgressionRuntime
     internal static void RegisterAreas()
     {
         if (VanillaAreaCount != 0) return;
+        foreach (AppleEverestLevelSetProgressionDescriptor levelSet in GeneratedAppleEverestProgressionManifest.LevelSets)
+        {
+            if (string.IsNullOrEmpty(levelSet.LevelSet) || levelSet.Identity?.Length != 64 ||
+                !ByLevelSet.TryAdd(levelSet.LevelSet, levelSet))
+                throw new InvalidOperationException("invalid or duplicate static LevelSet: " + levelSet.LevelSet);
+            string[] expected = GeneratedAppleEverestProgressionManifest.Maps
+                .Where(map => map.LevelSet == levelSet.LevelSet).Select(map => map.Sid)
+                .OrderBy(value => value, StringComparer.Ordinal).ToArray();
+            if (!expected.SequenceEqual(levelSet.MapSids ?? Array.Empty<string>(), StringComparer.Ordinal))
+                throw new InvalidOperationException("static LevelSet membership mismatch: " + levelSet.LevelSet);
+        }
         VanillaAreaCount = AreaData.Areas.Count;
         AreaData source = AreaData.Areas[0];
         foreach (AppleEverestMapProgressionDescriptor descriptor in GeneratedAppleEverestProgressionManifest.Maps)
@@ -52,7 +64,7 @@ internal static class AppleEverestProgressionRuntime
             mode.MapData = new MapData(new AreaKey(id));
             ByArea.Add(id, descriptor); BySid.Add(descriptor.Sid, descriptor);
         }
-        AppleEverestStaticRuntime.Log($"levelset-registry=PASS vanilla={VanillaAreaCount} custom={ByArea.Count}");
+        AppleEverestStaticRuntime.Log($"levelset-registry=PASS vanilla={VanillaAreaCount} custom={ByArea.Count} levelsets={ByLevelSet.Count}");
     }
 
     internal static bool IsCustom(AreaKey area) => ByArea.ContainsKey(area.ID);
@@ -64,6 +76,13 @@ internal static class AppleEverestProgressionRuntime
         return false;
     }
     internal static string Sid(AreaKey area) => TryDescriptor(area.ID, out var descriptor) ? descriptor.Sid : null;
+    internal static string LevelSet(AreaKey area) => TryDescriptor(area.ID, out var descriptor) ? descriptor.LevelSet : null;
+    internal static bool TryLevelSet(string levelSet, out AppleEverestLevelSetProgressionDescriptor descriptor)
+    {
+        if (levelSet != null && ByLevelSet.TryGetValue(levelSet, out descriptor)) return true;
+        descriptor = null;
+        return false;
+    }
     internal static int VanillaMaximumArea => Math.Max(0, VanillaAreaCount - 1);
 
     internal static void RememberVanillaBoundary(SaveData save)
@@ -171,6 +190,10 @@ internal static class AppleEverestProgressionRuntime
     internal static int TotalCassettes(string levelSet, SaveData save) => Areas(levelSet, save).Count(value => value.Cassette);
     internal static long TotalTime(string levelSet, SaveData save) => Areas(levelSet, save).Sum(value => value.TotalTimePlayed);
     internal static int TotalDeaths(string levelSet, SaveData save) => Areas(levelSet, save).Sum(value => value.TotalDeaths);
+    internal static int TotalCompletions(string levelSet, SaveData save) => Areas(levelSet, save)
+        .Sum(value => value.Modes.Count(mode => mode?.Completed == true));
+    internal static int MaximumCompletions(string levelSet) => TryLevelSet(levelSet, out var descriptor)
+        ? descriptor.MaximumCompletions : 0;
 
     private static IEnumerable<AreaStats> Areas(string levelSet, SaveData save) =>
         GeneratedAppleEverestProgressionManifest.Maps.Where(map => map.LevelSet == levelSet && save.Areas.Count > map.RuntimeAreaId)

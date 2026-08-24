@@ -69,6 +69,7 @@ support matrix, and limitations are in [project status](../STATUS.md).
 51. [Stage 25I-B — bounded custom FMOD and first real multi-helper map](stages/APPLE_EVEREST_CUSTOM_FMOD_LITTLEEPIC_STAGE25IB_REPORT.md)
 52. [Stage 25J-A — durable custom-map and LevelSet progression](stages/APPLE_EVEREST_LEVELSET_PROGRESSION_STAGE25JA_REPORT.md)
 53. [Stage 25J-B — second real map and multi-map progression](stages/APPLE_EVEREST_SECOND_REAL_MAP_STAGE25JB_REPORT.md)
+54. [Stage 25J-C — first real multi-map LevelSet](stages/APPLE_EVEREST_REAL_LEVELSET_STAGE25JC_REPORT.md)
 
 Diagnostic-only stages whose evidence was intentionally kept in ignored local
 build directories are not reconstructed here. The index covers every tracked

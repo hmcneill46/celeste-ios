@@ -150,11 +150,15 @@ internal static class ClosureGenerator
                 Path.Combine(content, value.LogicalPath.Replace('/', Path.DirectorySeparatorChar)),
                 value.LogicalPath, value.SourceSha256))
             .OrderBy(value => value.Sid, StringComparer.Ordinal).ToArray();
-        string progressionManifestSource = ProgressionManifestSource(progressionMaps);
+        LevelSetProgressionRecord[] progressionLevelSets = LevelSetProgressionManifest.Create(progressionMaps);
+        string levelSetManifestText = LevelSetProgressionManifest.Text(progressionLevelSets);
+        string progressionManifestSource = ProgressionManifestSource(progressionMaps, progressionLevelSets);
         File.WriteAllText(Path.Combine(managed, "GeneratedAppleEverestProgressionManifest.cs"),
             progressionManifestSource, new UTF8Encoding(false));
         File.WriteAllText(Path.Combine(outputRoot, "levelset-progression-manifest.txt"),
             ProgressionManifestText(progressionMaps), new UTF8Encoding(false));
+        File.WriteAllText(Path.Combine(outputRoot, "levelset-manifest.txt"),
+            levelSetManifestText, new UTF8Encoding(false));
         File.WriteAllText(Path.Combine(managed, "GeneratedAppleEverestCustomAudioManifest.cs"),
             CustomAudioManifestSource(customAudioBanks, customAudioManifestSha256), new UTF8Encoding(false));
         StaticAssetGeneration staticAssets = StaticAssetGenerator.Generate(codeModules, stagedContent, content);
@@ -283,6 +287,10 @@ internal static class ClosureGenerator
             levelSetProgressionFormat = "typed-sidecar-projection-lineage-ab-v1",
             levelSetProgressionManifestSha256 = Hashing.BytesSha256(Encoding.UTF8.GetBytes(ProgressionManifestText(progressionMaps))),
             levelSetProgressionMapCount = progressionMaps.Length,
+            levelSetManifestSchema = 1,
+            levelSetManifestSha256 = Hashing.BytesSha256(Encoding.UTF8.GetBytes(levelSetManifestText)),
+            levelSetCount = progressionLevelSets.Length,
+            levelSetIdentityPolicy = "ordered-member-map-compatibility-identities-v1",
             levelSetProgressionCompatibilityPolicy = "sid-plus-original-map-sha256-v1",
             levelSetProgressionSessionPolicy = "bounded-resumable-session-v1",
             interpreter = false,
@@ -432,6 +440,8 @@ internal static class ClosureGenerator
         ValidateOnce(Path.Combine(managedRoot, "Celeste", "Level.cs"), "\t\t\tswitch (trigger.Name)\n\t\t\t{");
         ValidateOnce(Path.Combine(managedRoot, "Celeste", "MapData.cs"),
             "\t\tBackdrop backdrop = null;\n\t\tif (child.Name.Equals(\"parallax\", StringComparison.OrdinalIgnoreCase))");
+        ValidateOnce(Path.Combine(managedRoot, "Celeste", "MapData.cs"),
+            MapDataCompatibilityPatch.LookupTarget);
         ValidateOnce(Path.Combine(managedRoot, "Celeste", "Celeste.cs"), "\t\t\tceleste = new Celeste();");
         ValidateOnce(Path.Combine(managedRoot, "Celeste", "GameLoader.cs"), "\t\tAreaData.Load();");
         ValidateOnce(Path.Combine(managedRoot, "Celeste", "MenuOptions.cs"), "\t\tmenu.Add(new TextMenu.SubHeader(Dialog.Clean(\"options_gameplay\")));");
@@ -467,6 +477,7 @@ internal static class ClosureGenerator
         PatchLevelDataRoomNames(Path.Combine(managedRoot, "Celeste", "LevelData.cs"));
         PatchPlayerEvents(Path.Combine(managedRoot, "Celeste", "Player.cs"));
         PatchGameplayLoading(Path.Combine(managedRoot, "Celeste", "Level.cs"));
+        MapDataCompatibilityPatch.Apply(Path.Combine(managedRoot, "Celeste", "MapData.cs"));
         PatchBackdropLoading(Path.Combine(managedRoot, "Celeste", "MapData.cs"));
         PatchStartup(Path.Combine(managedRoot, "Celeste", "Celeste.cs"));
         PatchContentReady(Path.Combine(managedRoot, "Celeste", "GameLoader.cs"));
@@ -497,6 +508,7 @@ internal static class ClosureGenerator
         "Tracker.Initialize:typed-gameplay-registry:v1",
         "Level.LoadLevel:typed-custom-factory-registry:v1",
         "MapData.ParseBackdrop:everest-event-and-typed-custom-backdrop-registry:v2",
+        "MapData.Load:pinned-everest-normalize-and-grow-strawberry-tracker:v2",
         "ModuleSettings:typed-menu-and-platform-storage:v1",
         "ModuleSaveData+Session:typed-yaml-aggregate-ab:v1",
         "UserIO.SaveRoutine:coherent-module-snapshot:v1",
@@ -764,7 +776,7 @@ internal static class ClosureGenerator
 
         ReplaceOnce(areaKey,
             "\tpublic int ChapterIndex\n\t{",
-            "\tpublic string LevelSet\n\t{\n\t\tget\n\t\t{\n\t\t\tstring sid = SID;\n\t\t\tif (string.IsNullOrEmpty(sid)) return null;\n\t\t\tint slash = sid.IndexOf('/');\n\t\t\treturn slash > 0 ? sid.Substring(0, slash) : \"Celeste\";\n\t\t}\n\t}\n\n\tpublic int ChapterIndex\n\t{");
+            "\tpublic string LevelSet\n\t{\n\t\tget\n\t\t{\n\t\t\tstring appleEverestLevelSet = global::Celeste.Mod.AppleEverestProgressionRuntime.LevelSet(this);\n\t\t\tif (appleEverestLevelSet != null) return appleEverestLevelSet;\n\t\t\tstring sid = SID;\n\t\t\tif (string.IsNullOrEmpty(sid)) return null;\n\t\t\tint slash = sid.LastIndexOf('/');\n\t\t\treturn slash > 0 ? sid.Substring(0, slash) : \"Celeste\";\n\t\t}\n\t}\n\n\tpublic int ChapterIndex\n\t{");
 
         // ConditionHelper 1.0.0 is compiled against Everest's publicized
         // canonical-level-set ABI. Keep the ordinary serialized LastArea as
@@ -802,6 +814,8 @@ internal static class ClosureGenerator
             "\tpublic int TotalCassettes => LevelSet == \"Celeste\" ? saveData?.TotalCassettes ?? 0 : global::Celeste.Mod.AppleEverestProgressionRuntime.TotalCassettes(LevelSet, saveData);\n" +
             "\tpublic long TotalTime => LevelSet == \"Celeste\" ? saveData?.Time ?? 0 : global::Celeste.Mod.AppleEverestProgressionRuntime.TotalTime(LevelSet, saveData);\n" +
             "\tpublic int TotalDeaths => LevelSet == \"Celeste\" ? saveData?.TotalDeaths ?? 0 : global::Celeste.Mod.AppleEverestProgressionRuntime.TotalDeaths(LevelSet, saveData);\n" +
+            "\tpublic int TotalCompletions => LevelSet == \"Celeste\" ? saveData?.TotalCompletions ?? 0 : global::Celeste.Mod.AppleEverestProgressionRuntime.TotalCompletions(LevelSet, saveData);\n" +
+            "\tpublic int MaxCompletions => LevelSet == \"Celeste\" ? 8 : global::Celeste.Mod.AppleEverestProgressionRuntime.MaximumCompletions(LevelSet);\n" +
             "}\n", new UTF8Encoding(false));
 
         // Desktop Everest publicizes Engine.scene. The accepted DLL contains a
@@ -1117,7 +1131,9 @@ internal static class ClosureGenerator
         }
     }
 
-    private static string ProgressionManifestSource(IReadOnlyList<MapProgressionRecord> maps)
+    private static string ProgressionManifestSource(
+        IReadOnlyList<MapProgressionRecord> maps,
+        IReadOnlyList<LevelSetProgressionRecord> levelSets)
     {
         StringBuilder result = new("namespace Celeste.Mod;\n\ninternal static class GeneratedAppleEverestProgressionManifest\n{\n" +
             $"    internal const int SchemaVersion = {ProductPolicy.LevelSetProgressionSchemaVersion};\n" +
@@ -1130,8 +1146,19 @@ internal static class ClosureGenerator
                 .Append(Escape(map.CompatibilityId)).Append("\", ")
                 .Append(StringArray(map.Rooms)).Append(", ").Append(map.Strawberries).Append(", ")
                 .Append(map.Heart ? "true" : "false").Append(", ").Append(map.Cassette ? "true" : "false")
-                .Append(", ").Append(StringArray(map.Checkpoints)).AppendLine("),");
+                .Append(", ").Append(StringArray(map.Checkpoints)).Append(", ")
+                .Append(StringArray(map.AreaModes)).Append(", ")
+                .Append(map.CompletionAvailable ? "true" : "false").AppendLine("),");
         }
+        result.AppendLine("    };")
+            .AppendLine("    internal static readonly AppleEverestLevelSetProgressionDescriptor[] LevelSets =")
+            .AppendLine("    {");
+        foreach (LevelSetProgressionRecord levelSet in levelSets)
+            result.Append("        new AppleEverestLevelSetProgressionDescriptor(\"").Append(Escape(levelSet.LevelSet))
+                .Append("\", \"").Append(levelSet.Identity).Append("\", ").Append(StringArray(levelSet.MapSids))
+                .Append(", ").Append(levelSet.MaximumStrawberries).Append(", ").Append(levelSet.MaximumHearts)
+                .Append(", ").Append(levelSet.MaximumCassettes).Append(", ")
+                .Append(levelSet.MaximumCompletions).AppendLine("),");
         return result.AppendLine("    };").AppendLine("}").ToString();
 
         static string StringArray(IEnumerable<string> values)
@@ -1146,7 +1173,8 @@ internal static class ClosureGenerator
         "APPLE_EVEREST_LEVELSET_PROGRESSION_V1\n" + string.Join("\n", maps.Select(map => string.Join("\t",
             map.Sid, map.LevelSet, map.MapSha256, map.CompatibilityId, map.Strawberries,
             map.Heart ? "heart" : "no-heart", map.Cassette ? "cassette" : "no-cassette",
-            string.Join(",", map.Rooms), string.Join(",", map.Checkpoints)))) + "\n";
+            string.Join(",", map.Rooms), string.Join(",", map.Checkpoints),
+            string.Join(",", map.AreaModes), map.CompletionAvailable ? "completion" : "no-completion"))) + "\n";
 
     private static string CustomAudioManifestSource(
         IReadOnlyList<(CustomAudioBankPlan Plan, int Ordinal)> banks, string manifestSha256)

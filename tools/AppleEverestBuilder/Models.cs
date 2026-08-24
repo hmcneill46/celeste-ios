@@ -9,7 +9,7 @@ internal static class ProductPolicy
     public const long MaxSingleFileBytes = 64L * 1024 * 1024;
     public const int MaxPathDepth = 24;
     public const int MaxYamlBytes = 1024 * 1024;
-    public const string TransformerVersion = "apple-everest-static-v11";
+    public const string TransformerVersion = "apple-everest-static-v13";
     public const int LevelSetProgressionSchemaVersion = 1;
     public const string CanonicalClass = "celeste-1.4.0.0-a";
 }
@@ -170,7 +170,17 @@ internal sealed record MapProgressionRecord(
     bool Cassette,
     string[] Checkpoints,
     string[] ProgressionEntities,
-    string[] ProgressionTriggers);
+    string[] ProgressionTriggers,
+    string[] AreaModes,
+    bool CompletionAvailable);
+internal sealed record LevelSetProgressionRecord(
+    string LevelSet,
+    string Identity,
+    string[] MapSids,
+    int MaximumStrawberries,
+    int MaximumHearts,
+    int MaximumCassettes,
+    int MaximumCompletions);
 internal sealed record FrozenAssemblyRecord(string Owner, string AssemblyName, string FileName, string OriginalSha256, string FrozenSha256);
 internal sealed record CustomAudioGuidRecord(Guid Id, string Path, string Kind);
 internal sealed record CustomAudioBankPlan(

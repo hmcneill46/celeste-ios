@@ -315,11 +315,14 @@ internal sealed class AppleEverestMapProgressionDescriptor
     public bool Heart { get; }
     public bool Cassette { get; }
     public string[] Checkpoints { get; }
+    public string[] AreaModes { get; }
+    public bool CompletionAvailable { get; }
     public int RuntimeAreaId { get; internal set; } = -1;
 
     public AppleEverestMapProgressionDescriptor(string path, string sid, string levelSet,
         string mapSha256, string compatibilityId, string[] rooms, int strawberries,
-        bool heart, bool cassette, string[] checkpoints)
+        bool heart, bool cassette, string[] checkpoints, string[] areaModes,
+        bool completionAvailable)
     {
         Path = path;
         Sid = sid;
@@ -331,6 +334,32 @@ internal sealed class AppleEverestMapProgressionDescriptor
         Heart = heart;
         Cassette = cassette;
         Checkpoints = checkpoints;
+        AreaModes = areaModes;
+        CompletionAvailable = completionAvailable;
+    }
+}
+
+internal sealed class AppleEverestLevelSetProgressionDescriptor
+{
+    public string LevelSet { get; }
+    public string Identity { get; }
+    public string[] MapSids { get; }
+    public int MaximumStrawberries { get; }
+    public int MaximumHearts { get; }
+    public int MaximumCassettes { get; }
+    public int MaximumCompletions { get; }
+
+    public AppleEverestLevelSetProgressionDescriptor(string levelSet, string identity,
+        string[] mapSids, int maximumStrawberries, int maximumHearts,
+        int maximumCassettes, int maximumCompletions)
+    {
+        LevelSet = levelSet;
+        Identity = identity;
+        MapSids = mapSids;
+        MaximumStrawberries = maximumStrawberries;
+        MaximumHearts = maximumHearts;
+        MaximumCassettes = maximumCassettes;
+        MaximumCompletions = maximumCompletions;
     }
 }
 

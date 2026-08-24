@@ -13,7 +13,8 @@ internal static class ContentCompiler
             !logicalPath.EndsWith(".bin", StringComparison.Ordinal))
             throw new InvalidDataException("progression inspection requires a mounted map");
         string mapPath = logicalPath["Maps/".Length..^4];
-        string levelSet = mapPath.Split('/', 2)[0];
+        int finalSlash = mapPath.LastIndexOf('/');
+        string levelSet = finalSlash >= 0 ? mapPath[..finalSlash] : "";
         using FileStream stream = File.OpenRead(path);
         using BinaryReader reader = new(stream, Encoding.UTF8, leaveOpen: false);
         if (reader.ReadString() != "CELESTE MAP") throw new InvalidDataException("map binary has an invalid Celeste header");
@@ -41,7 +42,7 @@ internal static class ContentCompiler
             rooms.Distinct(StringComparer.Ordinal).OrderBy(value => value, StringComparer.Ordinal).ToArray(),
             berries, heart, cassette,
             checkpoints.Distinct(StringComparer.Ordinal).OrderBy(value => value, StringComparer.Ordinal).ToArray(),
-            entitySet, triggerSet);
+            entitySet, triggerSet, ["A"], true);
     }
 
     internal static IReadOnlyList<(string Kind, string Id)> InspectGameplayIds(string path)

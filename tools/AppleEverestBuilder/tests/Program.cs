@@ -1065,6 +1065,13 @@ try
          closureGenerator.Contains("pre-1.2.5-optional-lvl-prefix", StringComparison.Ordinal) &&
          closureGenerator.Contains("appleEverestRoomName.StartsWith", StringComparison.Ordinal),
         "pre-1.2.5 Everest maps retain exact bytes while optional lvl_ room prefixes normalize safely");
+    string mapDataCompatibility = File.ReadAllText(Path.Combine(repository,
+        "tools/AppleEverestBuilder/MapDataCompatibilityPatch.cs"));
+    Pass(closureGenerator.Contains("MapDataCompatibilityPatch.Apply", StringComparison.Ordinal) &&
+         closureGenerator.Contains("MapData.Load:pinned-everest-normalize-and-grow-strawberry-tracker:v2", StringComparison.Ordinal) &&
+         mapDataCompatibility.Contains("AppleEverestNormalizeAndGet", StringComparison.Ordinal) &&
+         mapDataCompatibility.Contains("Array.Copy", StringComparison.Ordinal),
+        "pinned Everest strawberry tracker normalization and growth are frozen as an exact generated-source transform");
     Pass(closureGenerator.Contains("InheritedTrackedEntityTypes", StringComparison.Ordinal) &&
          closureGenerator.Contains("typeof(global::Celeste.Trigger)", StringComparison.Ordinal) &&
          closureGenerator.Contains("inheritedBase.IsAssignableFrom(type)", StringComparison.Ordinal) &&
@@ -1084,7 +1091,8 @@ try
     Pass(tagsApi.Contains("readonly BitTag SubHUD = Tags.HUD", StringComparison.Ordinal),
         "static Apple SubHUD facade retains the helper's high-resolution coordinate space");
     Pass(closureGenerator.Contains("internal static readonly string[] MapPaths", StringComparison.Ordinal) &&
-         staticRuntime.Contains("Play Persistent Mod Map:", StringComparison.Ordinal) &&
+         staticRuntime.Contains("LEVELSET: ", StringComparison.Ordinal) &&
+         staticRuntime.Contains("Play Map: ", StringComparison.Ordinal) &&
          staticRuntime.Contains("AppleEverestProgressionRuntime.LaunchPersistent(selectedSid)", StringComparison.Ordinal) &&
          staticRuntime.Contains("Play Static Mod Map (Debug):", StringComparison.Ordinal) &&
          staticRuntime.Contains("LaunchModMap(selectedMap)", StringComparison.Ordinal),
@@ -1208,7 +1216,7 @@ try
          testClosureViolations[0].Contains("System.Diagnostics.Process::Start", StringComparison.Ordinal),
         "linked-runtime scanner isolates the intentional desktop static-plan test host spawn");
 
-    Pass(ProductPolicy.TransformerVersion == "apple-everest-static-v11", "real-ZIP transformer version");
+    Pass(ProductPolicy.TransformerVersion == "apple-everest-static-v13", "real-ZIP transformer version");
     Pass(File.Exists(Path.Combine(repository, "tools/AppleEverestBuilder/AssemblyFreezer.cs")),
         "binary-first assembly freezer exists");
     string models = File.ReadAllText(Path.Combine(repository, "tools/AppleEverestBuilder/Models.cs"));

@@ -1,6 +1,7 @@
 #nullable disable
 using System.Security.Cryptography;
 using System.Text;
+using AppleEverestBuilder;
 using Celeste.Mod;
 
 internal static class LevelSetProgressionTests
@@ -79,6 +80,34 @@ internal static class LevelSetProgressionTests
         AppleEverestProgressionSnapshot twoMapSnapshot = snapshot with { Generation = 9, Areas = [area, areaB], Session = session };
         byte[] twoMapEncoded = AppleEverestProgressionSnapshotCodec.Encode(twoMapSnapshot);
         byte[] twoMapCompressed = AppleEverestProgressionCompression.Encode(twoMapEncoded);
+        AppleEverestProgressionArea littleEpic = area with {
+            Sid = "LittleEpic/precisionchallenge/precisionchallenge", LevelSet = "LittleEpic/precisionchallenge",
+            CompatibilityId = "a341e6cbc2ff916c81b2717f24560b50bbb65b0a4326fb0ea31ed285841dc259"
+        };
+        AppleEverestProgressionArea fear = areaB with {
+            Sid = "BevWeb/FearoftheDark/FearoftheDark", LevelSet = "BevWeb/FearoftheDark",
+            CompatibilityId = "a7a63c0a036cda9dcbc16166afb06b1010ba714ef2b0f97b4054319dbf90ff5d"
+        };
+        AppleEverestProgressionArea torremolinosA = area with {
+            Sid = "Xoa/Torremolinos Speedbuild/1", LevelSet = "Xoa/Torremolinos Speedbuild",
+            CompatibilityId = "bb7febe30e78a2aad0f2b85709d624f37d63e9793dbbba89225d7193bc03c392"
+        };
+        AppleEverestProgressionArea torremolinosB = areaB with {
+            Sid = "Xoa/Torremolinos Speedbuild/2", LevelSet = "Xoa/Torremolinos Speedbuild",
+            CompatibilityId = "1166435f8b43fbd13843a84670733dc6f4bfb73e0095f8356b5457f87a6e3550"
+        };
+        AppleEverestProgressionSnapshot fourRealMapSnapshot = snapshot with {
+            Generation = 10, Areas = [littleEpic, fear, torremolinosA, torremolinosB], Session = null
+        };
+        byte[] fourRealMapEncoded = AppleEverestProgressionSnapshotCodec.Encode(fourRealMapSnapshot);
+        byte[] fourRealMapCompressed = AppleEverestProgressionCompression.Encode(fourRealMapEncoded);
+        Dictionary<string, string> fourRealMaps = fourRealMapSnapshot.Areas.ToDictionary(
+            value => value.Sid, value => value.CompatibilityId, StringComparer.Ordinal);
+        Pass(AppleEverestProgressionReplicaAuthority.SelectMatching(
+                 fourRealMapSnapshot, null, hashA, fourRealMaps)?.Areas.Length == 4,
+            "LittleEpic Fear and both same-LevelSet maps share one bounded snapshot");
+        Pass(fourRealMapCompressed.Length < AppleEverestProgressionCompression.MaximumReplicaBytes,
+            "four-real-map tvOS snapshot remains within one replica");
         Pass(AppleEverestProgressionReplicaAuthority.SelectMatching(snapshot, null, hashA, twoMaps)?.Areas.Length == 1,
             "old single-map sidecar remains valid after second map installation");
         Pass(AppleEverestProgressionReplicaAuthority.SelectMatching(twoMapSnapshot, null, hashA, twoMaps)?.Generation == 9,
@@ -112,6 +141,59 @@ internal static class LevelSetProgressionTests
         Pass(AppleEverestProgressionReplicaAuthority.SelectMatching(
                  twoMapSnapshot, null, hashA, changedSecond)?.Areas.Single(value => value.Sid == area.Sid).CompatibilityId == identity,
             "changed second map cannot hide independent exact first-map state");
+
+        MapProgressionRecord mapA = Map("Pack/MapA", "Pack", '1', identity, 2, true, false, true);
+        MapProgressionRecord mapB = Map("Pack/MapB", "Pack", '2', identityB, 3, false, true, true);
+        LevelSetProgressionRecord[] sameLevelSet = LevelSetProgressionManifest.Create([mapB, mapA]);
+        Pass(sameLevelSet.Length == 1 && sameLevelSet[0].LevelSet == "Pack" &&
+             sameLevelSet[0].MapSids.SequenceEqual(new[] { "Pack/MapA", "Pack/MapB" }, StringComparer.Ordinal),
+            "same-LevelSet members are explicit and deterministically ordered");
+        Pass(sameLevelSet[0].MaximumStrawberries == 5 && sameLevelSet[0].MaximumHearts == 1 &&
+             sameLevelSet[0].MaximumCassettes == 1 && sameLevelSet[0].MaximumCompletions == 2,
+            "same-LevelSet collectible and completion maxima aggregate once");
+        Pass(LevelSetProgressionManifest.Create([mapA, mapB])[0].Identity == sameLevelSet[0].Identity,
+            "runtime Area ordering cannot change LevelSet identity");
+        MapProgressionRecord unrelated = Map("Elsewhere/Map", "Elsewhere", '3', new string('e', 64), 9, true, true, true);
+        Pass(LevelSetProgressionManifest.Create([unrelated, mapB, mapA])
+                 .Single(value => value.LevelSet == "Pack").Identity == sameLevelSet[0].Identity,
+            "adding an unrelated LevelSet cannot invalidate existing identity");
+        MapProgressionRecord changedMapB = mapB with { MapSha256 = new string('4', 64), CompatibilityId = new string('f', 64) };
+        Pass(LevelSetProgressionManifest.Create([mapA, changedMapB])[0].Identity != sameLevelSet[0].Identity &&
+             mapA.CompatibilityId == identity,
+            "changing Map B changes its LevelSet aggregate but not Map A identity");
+        Pass(LevelSetProgressionManifest.Create([mapA, mapB])[0].Identity == sameLevelSet[0].Identity,
+            "exact Map B readdition restores the original LevelSet identity");
+        Pass(LevelSetProgressionManifest.Text(sameLevelSet).StartsWith("APPLE_EVEREST_LEVELSET_MANIFEST_V1\nPack\t", StringComparison.Ordinal),
+            "LevelSet manifest has a fixed schema and privacy-safe semantic identity");
+        bool duplicateLevelSetSid = false;
+        try { _ = LevelSetProgressionManifest.Create([mapA, mapA]); }
+        catch (InvalidDataException) { duplicateLevelSetSid = true; }
+        Pass(duplicateLevelSetSid, "duplicate map SID rejected by LevelSet authority");
+
+        string mapDataFixture =
+            "class MapData\n{\n\tvoid Load()\n\t{\n" + MapDataCompatibilityPatch.LookupTarget +
+            "\n\t\t\t\t{\n\t\t\t\t}\n\t}\n\n\tpublic int[] GetStrawberries(out int total)\n\t{\n\t\ttotal = 0;\n\t\treturn null;\n\t}\n}";
+        string patchedMapData = MapDataCompatibilityPatch.ApplySource(mapDataFixture);
+        Pass(patchedMapData.Contains(
+                 "AppleEverestNormalizeAndGet(ref ModeData.StrawberriesByCheckpoint, strawberry", StringComparison.Ordinal) &&
+             patchedMapData.Contains("EntityData[,] expanded = new EntityData[y + 10, x + 25]", StringComparison.Ordinal),
+            "MapData transform rewrites only the locked tracker block and emits bounded pinned-Everest normalization");
+        bool duplicateMapDataTarget = false;
+        try { _ = MapDataCompatibilityPatch.ApplySource(mapDataFixture + MapDataCompatibilityPatch.LookupTarget); }
+        catch (InvalidDataException) { duplicateMapDataTarget = true; }
+        Pass(duplicateMapDataTarget, "MapData transform fails closed on an ambiguous source shape");
+        string[,] tracker = new string[10, 25];
+        tracker[1, 2] = "preserved";
+        string[,] originalTracker = tracker;
+        var duplicateBerry = MapDataCompatibilityPatch.NormalizeAndGetForTest(ref tracker, 1, 2, 3);
+        Pass(duplicateBerry.Checkpoint == 1 && duplicateBerry.Order == 0 && duplicateBerry.Existing == null &&
+             ReferenceEquals(originalTracker, tracker), "duplicate explicit berry order is reassigned deterministically");
+        var automatic = MapDataCompatibilityPatch.NormalizeAndGetForTest(ref tracker, -1, -1, 0);
+        Pass(automatic.Checkpoint == 0 && automatic.Order == 0 && automatic.Existing == null,
+            "negative automatic berry metadata is normalized to the start checkpoint");
+        var grown = MapDataCompatibilityPatch.NormalizeAndGetForTest(ref tracker, 12, 30, 12);
+        Pass(grown.Existing == null && tracker.GetLength(0) == 22 && tracker.GetLength(1) == 55 &&
+             tracker[1, 2] == "preserved", "large valid tracker coordinates grow without losing existing entries");
         AppleEverestProgressionReplicaAuthority coldAuthority = new(store);
         Pass(coldAuthority.Load(0, hashB, maps).Selected?.Generation == 2,
             "cold initialization independently selects newest valid replica");
@@ -174,6 +256,8 @@ internal static class LevelSetProgressionTests
         Console.WriteLine($"PROGRESSION_FIXTURE_TVOS_COMPRESSED_BYTES={compressed.Length}");
         Console.WriteLine($"PROGRESSION_TWO_MAP_RAW_BYTES={twoMapEncoded.Length}");
         Console.WriteLine($"PROGRESSION_TWO_MAP_TVOS_COMPRESSED_BYTES={twoMapCompressed.Length}");
+        Console.WriteLine($"PROGRESSION_FOUR_REAL_MAP_RAW_BYTES={fourRealMapEncoded.Length}");
+        Console.WriteLine($"PROGRESSION_FOUR_REAL_MAP_TVOS_COMPRESSED_BYTES={fourRealMapCompressed.Length}");
         Console.WriteLine($"PROGRESSION_STRESS_RAW_BYTES={stress.Length}");
         Console.WriteLine($"PROGRESSION_STRESS_TVOS_COMPRESSED_BYTES={stressCompressed.Length}");
         Console.WriteLine($"PROGRESSION_TVOS_THREE_SLOT_AB_LIMIT_BYTES={AppleEverestProgressionCompression.MaximumTotalReplicaBytes}");
@@ -191,9 +275,10 @@ internal static class LevelSetProgressionTests
             "progression commits only after vanilla save success");
         Pass(closure.Contains("AppleEverestProgressionPersistence.DeleteSlot") &&
              closure.Contains("AppleEverestProgressionPersistence.PreloadSlot"), "delete and preload are wired to numbered slots");
-        Pass(runtime.Contains("Play Persistent Mod Map") == false &&
-             File.ReadAllText(Path.Combine(repository, "apple-everest/runtime/AppleEverestStaticRuntime.cs")).Contains("Play Persistent Mod Map"),
-            "persistent and explicit debug launch lanes remain separate");
+        string staticRuntime = File.ReadAllText(Path.Combine(repository, "apple-everest/runtime/AppleEverestStaticRuntime.cs"));
+        Pass(runtime.Contains("Play Map:") == false && staticRuntime.Contains("LEVELSET: ") &&
+             staticRuntime.Contains("Play Map: ") && staticRuntime.Contains("Play Static Mod Map (Debug):"),
+            "grouped persistent LevelSet selector and explicit debug lane remain separate");
         Pass(!persistence.Contains("Documents", StringComparison.Ordinal) && !runtime.Contains("reflection", StringComparison.OrdinalIgnoreCase),
             "no Documents storage or runtime reflection serializer");
         string modules = File.ReadAllText(Path.Combine(repository, "apple-everest/runtime/AppleEverestModulePersistence.cs"));
@@ -205,6 +290,11 @@ internal static class LevelSetProgressionTests
 
     private static AppleEverestProgressionMode EmptyMode() => new(0, false, false, false, 0, 0, 0, 0, 0, 0, false,
         Array.Empty<AppleEverestProgressionEntityId>(), Array.Empty<string>());
+
+    private static MapProgressionRecord Map(string sid, string levelSet, char source, string compatibility,
+        int berries, bool heart, bool cassette, bool completion) =>
+        new("Maps/" + sid + ".bin", sid, levelSet, new string(source, 64), compatibility,
+            ["1", "2"], berries, heart, cassette, ["2"], ["strawberry"], [], ["A"], completion);
 
     private enum Fault { None, Before, Truncate, After }
     private sealed class FakeStore : IAppleEverestProgressionReplicaStore

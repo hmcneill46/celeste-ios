@@ -723,16 +723,22 @@ internal static class AppleEverestLab
     public static void AddOptions(TextMenu menu)
     {
         menu.Add(new TextMenu.SubHeader("APPLE EVEREST STATIC LAB"));
+        foreach (AppleEverestLevelSetProgressionDescriptor levelSet in GeneratedAppleEverestProgressionManifest.LevelSets)
+        {
+            menu.Add(new TextMenu.SubHeader("LEVELSET: " + levelSet.LevelSet));
+            foreach (string mapSid in levelSet.MapSids)
+            {
+                string selectedSid = mapSid;
+                string label = Path.GetFileName(selectedSid);
+                menu.Add(new TextMenu.Button("Play Map: " + label)
+                    .Pressed(() => AppleEverestProgressionRuntime.LaunchPersistent(selectedSid)));
+            }
+        }
+        menu.Add(new TextMenu.SubHeader("STATIC DEBUG MAPS"));
         foreach (string mapPath in GeneratedAppleEverestContentManifest.MapPaths)
         {
             string selectedMap = mapPath;
             string label = Path.GetFileName(selectedMap);
-            if (AppleEverestProgressionRuntime.TryDescriptor(selectedMap, out AppleEverestMapProgressionDescriptor persistentMap))
-            {
-                string selectedSid = persistentMap.Sid;
-                menu.Add(new TextMenu.Button("Play Persistent Mod Map: " + label)
-                    .Pressed(() => AppleEverestProgressionRuntime.LaunchPersistent(selectedSid)));
-            }
             menu.Add(new TextMenu.Button("Play Static Mod Map (Debug): " + label)
                 .Pressed(() => AppleEverestStaticRuntime.LaunchModMap(selectedMap)));
             if (selectedMap == "LittleEpic/precisionchallenge/precisionchallenge")

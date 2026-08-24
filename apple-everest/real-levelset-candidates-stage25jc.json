@@ -1,0 +1,855 @@
+{
+  "schemaVersion": 1,
+  "stage": "25J-C",
+  "purpose": "bounded public ordinary multi-map same-LevelSet selection",
+  "sources": {
+    "everestUpdateIndex": {
+      "sha256": "7702cb2b10fcf7b6c5d9b54b30c223a4be7cbd4b4b22b31963267b9d8a7104ac",
+      "retrievedUtc": "2026-08-24T07:50:57Z"
+    },
+    "dependencyGraph": {
+      "sha256": "c15d6981133c394455c0a04ce8ad2dc6882590ac42b465bfa3613ea9f7843fee"
+    },
+    "searchDatabase": {
+      "sha256": "0673b2715db5e6f4e7d91beab3dd25a2f43f63fd90a65b38faf3ba6a8b0065b6"
+    },
+    "fileDatabase": {
+      "sha256": "845d5f21444e84f5a557bee2fdd63cbd548a83511ba3e016aa87cecb5dfde54b"
+    }
+  },
+  "screening": {
+    "credibleSameRootCorpusCount": 512,
+    "metadataCandidatesRecorded": 30,
+    "uniqueCandidatesIncludingDeepAudit": 34,
+    "ranking": "Prefer exact version, two maps, small download/room scope, no new helper or mechanism, practical independent progression and completion.",
+    "candidates": [
+      {
+        "name": "CelesteOfLevels",
+        "version": "NoVersion",
+        "gameBananaId": 150504,
+        "fileId": 385360,
+        "url": "https://gamebanana.com/mmdl/385360",
+        "pageUrl": "https://gamebanana.com/mods/150504",
+        "author": "MrScottyPieey",
+        "description": "",
+        "size": 5554,
+        "mapCount": 3,
+        "maps": [
+          "Maps/CelesteofLevels/cutscene.bin",
+          "Maps/CelesteofLevels/levelTEST.bin",
+          "Maps/CelesteofLevels/test.bin"
+        ],
+        "dependencies": [],
+        "root": "CelesteofLevels",
+        "category": "Maps/Standalone",
+        "rank": 1,
+        "decision": "screened-out-before-download",
+        "reason": "Weak unversioned metadata provenance; a smaller exact versioned public release supplied a stronger reproducible identity."
+      },
+      {
+        "name": "Counter",
+        "version": "1.0.1",
+        "gameBananaId": 429554,
+        "fileId": 950844,
+        "url": "https://gamebanana.com/mmdl/950844",
+        "pageUrl": "https://gamebanana.com/mods/429554",
+        "author": "Wojowu",
+        "description": "Counting with fish!",
+        "size": 6398,
+        "mapCount": 3,
+        "maps": [
+          "Maps/Wojowu/Counter/Binary-B.bin",
+          "Maps/Wojowu/Counter/Binary-C.bin",
+          "Maps/Wojowu/Counter/Binary.bin"
+        ],
+        "dependencies": [
+          "Everest"
+        ],
+        "root": "Wojowu",
+        "category": "Maps/Standalone",
+        "rank": 2,
+        "decision": "screened-out-before-download",
+        "reason": "More than two maps increases physical scope; the selected exact two-map package isolates the first same-LevelSet question more cleanly."
+      },
+      {
+        "name": "SAMMOD",
+        "version": "1.0.0",
+        "gameBananaId": 462755,
+        "fileId": 1437028,
+        "url": "https://gamebanana.com/mmdl/1437028",
+        "pageUrl": "https://gamebanana.com/mods/462755",
+        "author": "Sam27999",
+        "description": "my first map",
+        "size": 6711,
+        "mapCount": 2,
+        "maps": [
+          "Maps/SAM27999/Seek Help.bin",
+          "Maps/SAM27999/tutorial.bin"
+        ],
+        "dependencies": [
+          "Everest"
+        ],
+        "root": "SAM27999",
+        "category": "Maps/Standalone",
+        "rank": 3,
+        "decision": "screened-out-before-download",
+        "reason": "Larger or less bounded than the selected two-map/five-room-each package and offered no stronger required compatibility mechanism evidence."
+      },
+      {
+        "name": "TNTmaps1",
+        "version": "1.0.0",
+        "gameBananaId": 618376,
+        "fileId": 1516005,
+        "url": "https://gamebanana.com/mmdl/1516005",
+        "pageUrl": "https://gamebanana.com/mods/618376",
+        "author": "That1TNTguy",
+        "description": "TNT's first map. Have a crappy time!",
+        "size": 6841,
+        "mapCount": 2,
+        "maps": [
+          "Maps/That1TNTguy/TNTsCrappyClimb/CrappyClimb.bin",
+          "Maps/That1TNTguy/TNTsCrappyClimb/CrappyClimb_B.bin"
+        ],
+        "dependencies": [
+          "Everest"
+        ],
+        "root": "That1TNTguy",
+        "category": "Maps/Standalone",
+        "rank": 4,
+        "decision": "screened-out-before-download",
+        "reason": "Larger or less bounded than the selected two-map/five-room-each package and offered no stronger required compatibility mechanism evidence."
+      },
+      {
+        "name": "Climb on the walls",
+        "version": "1.0.0",
+        "gameBananaId": 389016,
+        "fileId": 829442,
+        "url": "https://gamebanana.com/mmdl/829442",
+        "pageUrl": "https://gamebanana.com/mods/389016",
+        "author": "Moonlight_birb",
+        "description": "Walls",
+        "size": 7627,
+        "mapCount": 2,
+        "maps": [
+          "Maps/Climb on the walls/1-Temple.bin",
+          "Maps/Climb on the walls/2-City.bin"
+        ],
+        "dependencies": [
+          "Everest"
+        ],
+        "root": "Climb on the walls",
+        "category": "Maps/Campaign",
+        "rank": 5,
+        "decision": "screened-out-before-download",
+        "reason": "Larger or less bounded than the selected two-map/five-room-each package and offered no stronger required compatibility mechanism evidence."
+      },
+      {
+        "name": "Torremolinos Speedbuild",
+        "version": "1.0.0",
+        "gameBananaId": 150598,
+        "fileId": 542952,
+        "url": "https://gamebanana.com/mmdl/542952",
+        "pageUrl": "https://gamebanana.com/mods/150598",
+        "author": "XoaOfficial",
+        "description": "Two short maps, made each in 1 hour!",
+        "size": 8314,
+        "mapCount": 2,
+        "maps": [
+          "Maps/Xoa/Torremolinos Speedbuild/1.bin",
+          "Maps/Xoa/Torremolinos Speedbuild/2.bin"
+        ],
+        "dependencies": [
+          "Everest"
+        ],
+        "root": "Xoa",
+        "category": "Maps/Standalone",
+        "rank": 6,
+        "decision": "selected-for-deep-audit-and-product",
+        "reason": "Smallest credible versioned ordinary two-map package with two five-room A-sides, no helper graph, no managed code, and useful heart/berry/completion evidence."
+      },
+      {
+        "name": "cornerjumpstarbelt",
+        "version": "1.0.0",
+        "gameBananaId": 316632,
+        "fileId": 908696,
+        "url": "https://gamebanana.com/mmdl/908696",
+        "pageUrl": "https://gamebanana.com/mods/316632",
+        "author": "senfinbrare",
+        "description": "warning: cornerjumps",
+        "size": 10223,
+        "mapCount": 3,
+        "maps": [
+          "Maps/Toneblock/cornerjumpstarbelt/cornerjumpstarbelt-B.bin",
+          "Maps/Toneblock/cornerjumpstarbelt/cornerjumpstarbelt-C.bin",
+          "Maps/Toneblock/cornerjumpstarbelt/cornerjumpstarbelt.bin"
+        ],
+        "dependencies": [
+          "Everest"
+        ],
+        "root": "Toneblock",
+        "category": "Maps/",
+        "rank": 7,
+        "decision": "screened-out-before-download",
+        "reason": "More than two maps increases physical scope; the selected exact two-map package isolates the first same-LevelSet question more cleanly."
+      },
+      {
+        "name": "KraskaskaChallenges",
+        "version": "1.1.1",
+        "gameBananaId": 362804,
+        "fileId": 761444,
+        "url": "https://gamebanana.com/mmdl/761444",
+        "pageUrl": "https://gamebanana.com/mods/362804",
+        "author": "kraskaska",
+        "description": "celeste + everest + ahorn + celestenet > super mario maker + nso",
+        "size": 10274,
+        "mapCount": 3,
+        "maps": [
+          "Maps/kraskaska/challenges/1-challenge.bin",
+          "Maps/kraskaska/challenges/2-challenge.bin",
+          "Maps/kraskaska/challenges/3-challenge.bin"
+        ],
+        "dependencies": [
+          "Everest"
+        ],
+        "root": "kraskaska",
+        "category": "Maps/",
+        "rank": 8,
+        "decision": "screened-out-before-download",
+        "reason": "More than two maps increases physical scope; the selected exact two-map package isolates the first same-LevelSet question more cleanly."
+      },
+      {
+        "name": "cookedleste",
+        "version": "0.0.1",
+        "gameBananaId": 595417,
+        "fileId": 1442246,
+        "url": "https://gamebanana.com/mmdl/1442246",
+        "pageUrl": "https://gamebanana.com/mods/595417",
+        "author": "celestedbread",
+        "description": "nvbzcxmncvmnzbxvmnzxvbcnzmnxbvmncbbvxmx",
+        "size": 10428,
+        "mapCount": 2,
+        "maps": [
+          "Maps/cookedbread/CookedLeste/1-1.bin",
+          "Maps/cookedbread/CookedLeste/grahargah.bin"
+        ],
+        "dependencies": [
+          "Everest"
+        ],
+        "root": "cookedbread",
+        "category": "Maps/",
+        "rank": 9,
+        "decision": "screened-out-before-download",
+        "reason": "Larger or less bounded than the selected two-map/five-room-each package and offered no stronger required compatibility mechanism evidence."
+      },
+      {
+        "name": "OatLearnsToMakeMaps",
+        "version": "1.0.0",
+        "gameBananaId": 573136,
+        "fileId": 1375146,
+        "url": "https://gamebanana.com/mmdl/1375146",
+        "pageUrl": "https://gamebanana.com/mods/573136",
+        "author": "WORDWOLF",
+        "description": "first 4 maps i made back in 2021",
+        "size": 11071,
+        "mapCount": 4,
+        "maps": [
+          "Maps/oat/learningtomap/1-testroom1.bin",
+          "Maps/oat/learningtomap/2-backup1smallrooms.bin",
+          "Maps/oat/learningtomap/3-amongus.bin",
+          "Maps/oat/learningtomap/4-thedome.bin"
+        ],
+        "dependencies": [
+          "Everest"
+        ],
+        "root": "oat",
+        "category": "Maps/Standalone",
+        "rank": 10,
+        "decision": "screened-out-before-download",
+        "reason": "More than two maps increases physical scope; the selected exact two-map package isolates the first same-LevelSet question more cleanly."
+      },
+      {
+        "name": "Pilo's A Sides",
+        "version": "0.0.3",
+        "gameBananaId": 634474,
+        "fileId": 1564965,
+        "url": "https://gamebanana.com/mmdl/1564965",
+        "pageUrl": "https://gamebanana.com/mods/634474",
+        "author": "Pilo The Silly",
+        "description": "Reimagined A Sides. But harder",
+        "size": 12629,
+        "mapCount": 2,
+        "maps": [
+          "Maps/Pilo/TheASides/ForsakenCity.bin",
+          "Maps/Pilo/TheASides/OldSite.bin"
+        ],
+        "dependencies": [
+          "Everest"
+        ],
+        "root": "Pilo",
+        "category": "Maps/Campaign",
+        "rank": 11,
+        "decision": "screened-out-before-download",
+        "reason": "Larger or less bounded than the selected two-map/five-room-each package and offered no stronger required compatibility mechanism evidence."
+      },
+      {
+        "name": "Buried City",
+        "version": "1.0.0",
+        "gameBananaId": 150371,
+        "fileId": 467403,
+        "url": "https://gamebanana.com/mmdl/467403",
+        "pageUrl": "https://gamebanana.com/mods/150371",
+        "author": "Samelgamedev",
+        "description": "A short and easy map about a buried city.",
+        "size": 16883,
+        "mapCount": 2,
+        "maps": [
+          "Maps/Buried City/BuriedCity-B.bin",
+          "Maps/Buried City/BuriedCity.bin"
+        ],
+        "dependencies": [
+          "Everest"
+        ],
+        "root": "Buried City",
+        "category": "Maps/Standalone",
+        "rank": 12,
+        "decision": "screened-out-before-download",
+        "reason": "Larger or less bounded than the selected two-map/five-room-each package and offered no stronger required compatibility mechanism evidence."
+      },
+      {
+        "name": "OCD",
+        "version": "1.0",
+        "gameBananaId": 449239,
+        "fileId": 999078,
+        "url": "https://gamebanana.com/mmdl/999078",
+        "pageUrl": "https://gamebanana.com/mods/449239",
+        "author": "Nanami Chiaki",
+        "description": "",
+        "size": 21527,
+        "mapCount": 3,
+        "maps": [
+          "Maps/d/0/4X-GoldenRidge.bin",
+          "Maps/d/0/5X-MirrorTemple.bin",
+          "Maps/d/0/6X-Reflection.bin"
+        ],
+        "dependencies": [],
+        "root": "d",
+        "category": "Maps/",
+        "rank": 13,
+        "decision": "screened-out-before-download",
+        "reason": "More than two maps increases physical scope; the selected exact two-map package isolates the first same-LevelSet question more cleanly."
+      },
+      {
+        "name": "Altered Sides C",
+        "version": "1.0.0",
+        "gameBananaId": 313777,
+        "fileId": 639757,
+        "url": "https://gamebanana.com/mmdl/639757",
+        "pageUrl": "https://gamebanana.com/mods/313777",
+        "author": "OuijaSpider",
+        "description": "C-Sides Buffed",
+        "size": 21746,
+        "mapCount": 3,
+        "maps": [
+          "Maps/OuijaSpider/CSides/Collapsed City.bin",
+          "Maps/OuijaSpider/CSides/ScatteredSiteC.bin",
+          "Maps/OuijaSpider/CSides/TRupturedResortC.bin"
+        ],
+        "dependencies": [
+          "Everest"
+        ],
+        "root": "OuijaSpider",
+        "category": "Maps/",
+        "rank": 14,
+        "decision": "screened-out-before-download",
+        "reason": "More than two maps increases physical scope; the selected exact two-map package isolates the first same-LevelSet question more cleanly."
+      },
+      {
+        "name": "7C_with_Cycles",
+        "version": "2.31.6",
+        "gameBananaId": 398728,
+        "fileId": 856975,
+        "url": "https://gamebanana.com/mmdl/856975",
+        "pageUrl": "https://gamebanana.com/mods/398728",
+        "author": "Nexutrosity",
+        "description": "An extremely difficult and dumb mod. Why would you play this?",
+        "size": 25119,
+        "mapCount": 2,
+        "maps": [
+          "Maps/Nexutrosity/7C_with_Cycles/7C with Cycles.bin",
+          "Maps/Nexutrosity/7C_with_Cycles/7Cycle B Side.bin"
+        ],
+        "dependencies": [
+          "AdventureHelper"
+        ],
+        "root": "Nexutrosity",
+        "category": "Maps/Standalone",
+        "rank": 15,
+        "decision": "screened-out-before-download",
+        "reason": "Adds helper/dependency breadth without improving the bounded same-LevelSet proof over the selected content-only package."
+      },
+      {
+        "name": "ATutorialForSomeone",
+        "version": "1.0.0",
+        "gameBananaId": 632150,
+        "fileId": 1556486,
+        "url": "https://gamebanana.com/mmdl/1556486",
+        "pageUrl": "https://gamebanana.com/mods/632150",
+        "author": "CORE Team",
+        "description": "Certified Blue Beginner Gameplay",
+        "size": 38517,
+        "mapCount": 2,
+        "maps": [
+          "Maps/l_sw/TheTutorialItself/1-The-B.bin",
+          "Maps/l_sw/TheTutorialItself/1-The.bin"
+        ],
+        "dependencies": [
+          "Everest"
+        ],
+        "root": "l_sw",
+        "category": "Maps/Standalone",
+        "rank": 16,
+        "decision": "screened-out-before-download",
+        "reason": "Larger or less bounded than the selected two-map/five-room-each package and offered no stronger required compatibility mechanism evidence."
+      },
+      {
+        "name": "WishVolo5bDropper",
+        "version": "5.5.5",
+        "gameBananaId": 498363,
+        "fileId": 1147738,
+        "url": "https://gamebanana.com/mmdl/1147738",
+        "pageUrl": "https://gamebanana.com/mods/498363",
+        "author": "wishvolo",
+        "description": "it's literally that one dropper room 100 times",
+        "size": 45944,
+        "mapCount": 2,
+        "maps": [
+          "Maps/wishvolo/TempleBDropper/1-temple.bin",
+          "Maps/wishvolo/TempleBDropper/2-elpmet.bin"
+        ],
+        "dependencies": [
+          "Everest"
+        ],
+        "root": "wishvolo",
+        "category": "Maps/Standalone",
+        "rank": 17,
+        "decision": "screened-out-before-download",
+        "reason": "Larger or less bounded than the selected two-map/five-room-each package and offered no stronger required compatibility mechanism evidence."
+      },
+      {
+        "name": "1a groundless",
+        "version": "0.0.2",
+        "gameBananaId": 679026,
+        "fileId": 1707684,
+        "url": "https://gamebanana.com/mmdl/1707684",
+        "pageUrl": "https://gamebanana.com/mods/679026",
+        "author": "player696103392",
+        "description": "",
+        "size": 46608,
+        "mapCount": 3,
+        "maps": [
+          "Maps/freya/groundless/1a.bin",
+          "Maps/freya/groundless/1b.bin",
+          "Maps/freya/groundless/1c.bin"
+        ],
+        "dependencies": [
+          "Everest"
+        ],
+        "root": "freya",
+        "category": "Maps/Standalone",
+        "rank": 18,
+        "decision": "screened-out-before-download",
+        "reason": "More than two maps increases physical scope; the selected exact two-map package isolates the first same-LevelSet question more cleanly."
+      },
+      {
+        "name": "downpour",
+        "version": "1.0.0",
+        "gameBananaId": 150617,
+        "fileId": 522199,
+        "url": "https://gamebanana.com/mmdl/522199",
+        "pageUrl": "https://gamebanana.com/mods/150617",
+        "author": "Paxtonnnn",
+        "description": "",
+        "size": 46849,
+        "mapCount": 2,
+        "maps": [
+          "Maps/paxtonnnn/downpour/1-Downpour.bin",
+          "Maps/paxtonnnn/downpour/1H-Downpour.bin"
+        ],
+        "dependencies": [
+          "Everest"
+        ],
+        "root": "paxtonnnn",
+        "category": "Maps/Campaign",
+        "rank": 19,
+        "decision": "screened-out-before-download",
+        "reason": "Larger or less bounded than the selected two-map/five-room-each package and offered no stronger required compatibility mechanism evidence."
+      },
+      {
+        "name": "forsakencity_remix",
+        "version": "1.1",
+        "gameBananaId": 150442,
+        "fileId": 410220,
+        "url": "https://gamebanana.com/mmdl/410220",
+        "pageUrl": "https://gamebanana.com/mods/150442",
+        "author": "deskilln",
+        "description": "",
+        "size": 49646,
+        "mapCount": 3,
+        "maps": [
+          "Maps/Deskilln/map/FCR-B.bin",
+          "Maps/Deskilln/map/FCR-C.bin",
+          "Maps/Deskilln/map/FCR.bin"
+        ],
+        "dependencies": [
+          "Everest"
+        ],
+        "root": "Deskilln",
+        "category": "Maps/Standalone",
+        "rank": 20,
+        "decision": "screened-out-before-download",
+        "reason": "More than two maps increases physical scope; the selected exact two-map package isolates the first same-LevelSet question more cleanly."
+      },
+      {
+        "name": "SealsSummit",
+        "version": "1.0.0",
+        "gameBananaId": 150550,
+        "fileId": 438464,
+        "url": "https://gamebanana.com/mmdl/438464",
+        "pageUrl": "https://gamebanana.com/mods/150550",
+        "author": "Strange Seal",
+        "description": "These maps are terrible!",
+        "size": 51287,
+        "mapCount": 2,
+        "maps": [
+          "Maps/strangeseal/seals_random_maps/seals-summit.bin",
+          "Maps/strangeseal/seals_random_maps/spike-city.bin"
+        ],
+        "dependencies": [
+          "Everest"
+        ],
+        "root": "strangeseal",
+        "category": "Maps/Standalone",
+        "rank": 21,
+        "decision": "screened-out-before-download",
+        "reason": "Larger or less bounded than the selected two-map/five-room-each package and offered no stronger required compatibility mechanism evidence."
+      },
+      {
+        "name": "IdeaZone",
+        "version": "2.0.0",
+        "gameBananaId": 597246,
+        "fileId": 1532551,
+        "url": "https://gamebanana.com/mmdl/1532551",
+        "pageUrl": "https://gamebanana.com/mods/597246",
+        "author": "CORE Team",
+        "description": "",
+        "size": 51451,
+        "mapCount": 2,
+        "maps": [
+          "Maps/skywagon/FieldOfIdeas/1-New_Level.bin",
+          "Maps/skywagon/FieldOfIdeas/2-Newer_Level.bin"
+        ],
+        "dependencies": [
+          "Everest"
+        ],
+        "root": "skywagon",
+        "category": "Maps/Standalone",
+        "rank": 22,
+        "decision": "screened-out-before-download",
+        "reason": "Larger or less bounded than the selected two-map/five-room-each package and offered no stronger required compatibility mechanism evidence."
+      },
+      {
+        "name": "farewell_copy",
+        "version": "1.0.0",
+        "gameBananaId": 476595,
+        "fileId": 1079670,
+        "url": "https://gamebanana.com/mmdl/1079670",
+        "pageUrl": "https://gamebanana.com/mods/476595",
+        "author": "poorlydrawncactus",
+        "description": "pls dont play this",
+        "size": 66340,
+        "mapCount": 4,
+        "maps": [
+          "Maps/poorlydrawncactus/cactusunreleasedmaps/Celestial Volcano.bin",
+          "Maps/poorlydrawncactus/cactusunreleasedmaps/emptymaptemplate.bin",
+          "Maps/poorlydrawncactus/cactusunreleasedmaps/farewellcopy.bin",
+          "Maps/poorlydrawncactus/cactusunreleasedmaps/toggletemple.bin"
+        ],
+        "dependencies": [
+          "Everest"
+        ],
+        "root": "poorlydrawncactus",
+        "category": "Maps/Campaign",
+        "rank": 23,
+        "decision": "screened-out-before-download",
+        "reason": "More than two maps increases physical scope; the selected exact two-map package isolates the first same-LevelSet question more cleanly."
+      },
+      {
+        "name": "walkeline_jail",
+        "version": "0.0.0",
+        "gameBananaId": 398370,
+        "fileId": 859420,
+        "url": "https://gamebanana.com/mmdl/859420",
+        "pageUrl": "https://gamebanana.com/mods/398370",
+        "author": "awesomecarlos/sapphire#4504",
+        "description": "fuck",
+        "size": 69863,
+        "mapCount": 3,
+        "maps": [
+          "Maps/Carlos/walkeline_jail/1-walkeline jail.bin",
+          "Maps/Carlos/walkeline_jail/2-walkeline lava.bin",
+          "Maps/Carlos/walkeline_jail/9-walkeline majorglitch.bin"
+        ],
+        "dependencies": [],
+        "root": "Carlos",
+        "category": "Maps/Standalone",
+        "rank": 24,
+        "decision": "screened-out-before-download",
+        "reason": "More than two maps increases physical scope; the selected exact two-map package isolates the first same-LevelSet question more cleanly."
+      },
+      {
+        "name": "cactus_unreleased_map_pack",
+        "version": "1.0.0",
+        "gameBananaId": 476595,
+        "fileId": 1091063,
+        "url": "https://gamebanana.com/mmdl/1091063",
+        "pageUrl": "https://gamebanana.com/mods/476595",
+        "author": "poorlydrawncactus",
+        "description": "pls dont play this",
+        "size": 82670,
+        "mapCount": 5,
+        "maps": [
+          "Maps/poorlydrawncactus/cactus_unreleased_map_pack/Celestial Volcano.bin",
+          "Maps/poorlydrawncactus/cactus_unreleased_map_pack/emptymaptemplate.bin",
+          "Maps/poorlydrawncactus/cactus_unreleased_map_pack/farewellcopy 10.00.09 PM.bin",
+          "Maps/poorlydrawncactus/cactus_unreleased_map_pack/spiketower.bin",
+          "Maps/poorlydrawncactus/cactus_unreleased_map_pack/toggletemple.bin"
+        ],
+        "dependencies": [
+          "Everest"
+        ],
+        "root": "poorlydrawncactus",
+        "category": "Maps/Campaign",
+        "rank": 25,
+        "decision": "screened-out-before-download",
+        "reason": "More than two maps increases physical scope; the selected exact two-map package isolates the first same-LevelSet question more cleanly."
+      },
+      {
+        "name": "dreamMatrix",
+        "version": "1.0.0",
+        "gameBananaId": 690085,
+        "fileId": 1740746,
+        "url": "https://gamebanana.com/mmdl/1740746",
+        "pageUrl": "https://gamebanana.com/mods/690085",
+        "author": "78ghands",
+        "description": "Dreamblock focused map",
+        "size": 127948,
+        "mapCount": 2,
+        "maps": [
+          "Maps/78ghands/dreamMatrix/dreamMatrix.bin",
+          "Maps/78ghands/dreamMatrix/dreamMatrixLDM.bin"
+        ],
+        "dependencies": [
+          "Everest"
+        ],
+        "root": "78ghands",
+        "category": "Maps/Standalone",
+        "rank": 26,
+        "decision": "screened-out-before-download",
+        "reason": "Larger or less bounded than the selected two-map/five-room-each package and offered no stronger required compatibility mechanism evidence."
+      },
+      {
+        "name": "vanillassat",
+        "version": "1.1.1",
+        "gameBananaId": 633970,
+        "fileId": 1673668,
+        "url": "https://gamebanana.com/mmdl/1673668",
+        "pageUrl": "https://gamebanana.com/mods/633970",
+        "author": "ssat",
+        "description": "",
+        "size": 140339,
+        "mapCount": 5,
+        "maps": [
+          "Maps/vanilla/sat/cp1.bin",
+          "Maps/vanilla/sat/cp2.bin",
+          "Maps/vanilla/sat/cp3.bin",
+          "Maps/vanilla/sat/cp4.bin",
+          "Maps/vanilla/sat/cp5.bin"
+        ],
+        "dependencies": [
+          "Everest"
+        ],
+        "root": "vanilla",
+        "category": "Maps/Standalone",
+        "rank": 27,
+        "decision": "screened-out-before-download",
+        "reason": "More than two maps increases physical scope; the selected exact two-map package isolates the first same-LevelSet question more cleanly."
+      },
+      {
+        "name": "Cog",
+        "version": "0.0.2",
+        "gameBananaId": 621616,
+        "fileId": 1698141,
+        "url": "https://gamebanana.com/mmdl/1698141",
+        "pageUrl": "https://gamebanana.com/mods/621616",
+        "author": "Floatingreed",
+        "description": "",
+        "size": 146280,
+        "mapCount": 3,
+        "maps": [
+          "Maps/Floatingreed/Cog Versions/2ccv.bin",
+          "Maps/Floatingreed/Cog Versions/3ccv.bin",
+          "Maps/Floatingreed/Cog Versions/4ccv.bin"
+        ],
+        "dependencies": [
+          "Everest"
+        ],
+        "root": "Floatingreed",
+        "category": "Maps/Standalone",
+        "rank": 28,
+        "decision": "screened-out-before-download",
+        "reason": "More than two maps increases physical scope; the selected exact two-map package isolates the first same-LevelSet question more cleanly."
+      },
+      {
+        "name": "Pico_8_Remake",
+        "version": "1.5",
+        "gameBananaId": 150535,
+        "fileId": 1647307,
+        "url": "https://gamebanana.com/mmdl/1647307",
+        "pageUrl": "https://gamebanana.com/mods/150535",
+        "author": "deskilln",
+        "description": "The original mountain in HD",
+        "size": 178342,
+        "mapCount": 2,
+        "maps": [
+          "Maps/Deskilln/map/Pico-8_remake-B.bin",
+          "Maps/Deskilln/map/Pico-8_remake.bin"
+        ],
+        "dependencies": [
+          "Everest"
+        ],
+        "root": "Deskilln",
+        "category": "Maps/Standalone",
+        "rank": 29,
+        "decision": "screened-out-before-download",
+        "reason": "Larger or less bounded than the selected two-map/five-room-each package and offered no stronger required compatibility mechanism evidence."
+      },
+      {
+        "name": "SleepyTricks",
+        "version": "0.4.5",
+        "gameBananaId": 522535,
+        "fileId": 1218778,
+        "url": "https://gamebanana.com/mmdl/1218778",
+        "pageUrl": "https://gamebanana.com/mods/522535",
+        "author": "SleepyNuigurumiAmalgamation",
+        "description": "Convinced to upload by a close friend.",
+        "size": 216183,
+        "mapCount": 2,
+        "maps": [
+          "Maps/SleepyNuigurumiFox/SleepyKaizo/1-SleepyTricks_True_Refinement.bin",
+          "Maps/SleepyNuigurumiFox/SleepyKaizo/2-GettingOverItWithSleepyNuigurumi 0001.bin"
+        ],
+        "dependencies": [
+          "Everest"
+        ],
+        "root": "SleepyNuigurumiFox",
+        "category": "Maps/",
+        "rank": 30,
+        "decision": "screened-out-before-download",
+        "reason": "Larger or less bounded than the selected two-map/five-room-each package and offered no stronger required compatibility mechanism evidence."
+      }
+    ]
+  },
+  "deepAudit": {
+    "count": 8,
+    "candidates": [
+      {
+        "name": "Torremolinos Speedbuild",
+        "version": "1.0.0",
+        "zipSha256": "90e4918cfe24a2075b52853d02614cf97c9ecd8c552c3da6f1360d8c5e3fcbec",
+        "classification": "CONTENT_ONLY",
+        "decision": "selected",
+        "reason": "Two short five-room maps in one real LevelSet; zero helper or mechanism expansion; strongest bounded physical proof."
+      },
+      {
+        "name": "this map is 5 rooms long",
+        "version": "0.0.1",
+        "zipSha256": "197bd45df5ec97684f66a102b882d2853bcbf21151b774bf0c8dc9cea3e30bda",
+        "classification": "CUSTOM_AUDIO_UNSUPPORTED",
+        "decision": "rejected",
+        "reason": "Contains an unrecognized Audio/yakaki5rooms.bank; correctly fails closed rather than broadening custom FMOD."
+      },
+      {
+        "name": "IdeaZone",
+        "version": "2.0.0",
+        "zipSha256": "be4d1ee39c5b6ebbc177ecfdf0c9e9bbaea9ef167a875f7564bce5b9b48755bd",
+        "classification": "CONTENT_ONLY",
+        "decision": "not-selected",
+        "reason": "Compatible but its 28- and 40-room maps impose much larger physical scope than needed."
+      },
+      {
+        "name": "TechCompendium",
+        "version": "0.4.0",
+        "zipSha256": "8887bfaa4da7a6779f555dd5e05fdfb4246438e9fc9625d65ef8a2214c820265",
+        "classification": "CONTENT_ONLY",
+        "decision": "not-selected",
+        "reason": "Compatible but its 34- and 28-room maps are unnecessarily large for the first same-LevelSet proof."
+      },
+      {
+        "name": "SealsSummit",
+        "version": "1.0.0",
+        "zipSha256": "0e9a2c9f2098340905daeefa2fdc4ae0cca4c2b564857373abe647917ecd20a0",
+        "classification": "CONTENT_ONLY",
+        "decision": "not-selected",
+        "reason": "Compatible and collectible-rich, but 37- and 38-room maps make physical completion disproportionate."
+      },
+      {
+        "name": "Pilo's A Sides",
+        "version": "0.0.3",
+        "zipSha256": "b4c9ad5e7a8834d0fe1dc30a36e58cdee85a14845c0ba4332982246ceb3b97d0",
+        "classification": "CONTENT_ONLY",
+        "decision": "not-selected",
+        "reason": "Compatible, but the one-room second map gives weaker independent-map progression evidence."
+      },
+      {
+        "name": "Climb on the walls",
+        "version": "1.0.0",
+        "zipSha256": "0b19a0b756e1d40e3483048020a883c4358b6aa67f07d019d403ceca13457f8d",
+        "classification": "CONTENT_ONLY",
+        "decision": "not-selected",
+        "reason": "Compatible, but two two-room maps are less representative than the selected two five-room maps."
+      },
+      {
+        "name": "Return To The Mountain",
+        "version": "1.0.0",
+        "zipSha256": "0c68ba13094d8de08427614a581d0cab7012bd8d2b58149cf727f472609c96bb",
+        "classification": "CONTENT_ONLY",
+        "decision": "not-selected",
+        "reason": "Compatible, but its 8- and 36-room asymmetry makes balanced A/B physical validation less practical."
+      }
+    ]
+  },
+  "selected": {
+    "name": "Torremolinos Speedbuild",
+    "version": "1.0.0",
+    "author": "XoaOfficial",
+    "gameBananaModId": 150598,
+    "gameBananaFileId": 542952,
+    "downloadUrl": "https://gamebanana.com/mmdl/542952",
+    "pageUrl": "https://gamebanana.com/mods/150598",
+    "zipSha256": "90e4918cfe24a2075b52853d02614cf97c9ecd8c552c3da6f1360d8c5e3fcbec",
+    "sourceLogicalSha256": "0d62cfc1481b4c24cd98d26f57a6003a656ff125c24cae3ae8902d9794b4efb5",
+    "license": "CC BY-NC-ND 4.0; ordinary unchanged download/install use",
+    "levelSet": "Xoa/Torremolinos Speedbuild",
+    "maps": [
+      "Xoa/Torremolinos Speedbuild/1",
+      "Xoa/Torremolinos Speedbuild/2"
+    ],
+    "dependencies": [
+      {
+        "name": "Everest",
+        "minimumVersion": "1.0.0"
+      }
+    ],
+    "selectionRationale": "An unchanged ordinary release containing exactly two short genuine maps in one pinned-Everest LevelSet, with no managed/helper/audio expansion."
+  }
+}
