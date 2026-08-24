@@ -147,6 +147,15 @@ try
     ResolvedMod quizGraph = Mod("QuizSample", "0.0.1", [("CpopHelper", "1.0.0"), ("Everest", "1.3761.0")]);
     Pass(EverestGraphResolver.Resolve([quizGraph, cpopGraph]).Select(mod => mod.Metadata.Name)
         .SequenceEqual(["CpopHelper", "QuizSample"]), "real map-to-helper dependency order");
+    ResolvedMod sharedDj = Mod("DJMapHelper", "1.13.4");
+    ResolvedMod littleEpicGraph = Mod("LittleEpic", dependencies: [("DJMapHelper", "1.13.4")]);
+    ResolvedMod spaceJamGraph = Mod("SpaceJam", dependencies: [("DJMapHelper", "1.8.23")]);
+    Pass(EverestGraphResolver.Resolve([spaceJamGraph, sharedDj, littleEpicGraph]).Select(mod => mod.Metadata.Name)
+        .SequenceEqual(["DJMapHelper", "LittleEpic", "SpaceJam"]),
+        "two real maps share one helper satisfying compatible minimums");
+    Throws(() => EverestGraphResolver.Resolve([spaceJamGraph, Mod("DJMapHelper", "1.8.23"),
+            Mod("DJMapHelper", "1.13.4"), littleEpicGraph]), "duplicate",
+        "two exact helper archives cannot win by input order");
     Throws(() => EverestGraphResolver.Resolve([quizGraph]), "missing dependency", "real map missing helper rejected");
     Throws(() => EverestGraphResolver.Resolve([quizGraph, Mod("CpopHelper", "0.9.0")]), "incompatible",
         "real map wrong helper version rejected");

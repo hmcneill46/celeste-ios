@@ -64,9 +64,12 @@ internal static class AppleEverestProgressionPersistence
                 !AppleEverestProgressionRuntime.HasMeaningfulState(SaveData.Instance, Slots[slot].Selected)) return;
             AppleEverestProgressionReplicaState state = Slots[slot];
             byte[] lineage = state.Selected?.Lineage?.ToArray() ?? RandomNumberGenerator.GetBytes(32);
+            AppleEverestProgressionSession session = AppleEverestProgressionRuntime.CaptureSession(SaveData.Instance);
+            if (session == null && state.Selected?.Session != null &&
+                !AppleEverestProgressionRuntime.CompatibleMaps.ContainsKey(state.Selected.Session.Sid))
+                session = state.Selected.Session;
             pending = Authority.Prepare(slot, state, AppleEverestProgressionSnapshotCodec.BaseHash(baseSave), lineage,
-                AppleEverestProgressionRuntime.CaptureAreas(SaveData.Instance),
-                AppleEverestProgressionRuntime.CaptureSession(SaveData.Instance));
+                AppleEverestProgressionRuntime.CaptureAreas(SaveData.Instance, state.Selected), session);
             AppleEverestStaticRuntime.Log($"levelset-progression=captured slot={slot} generation={pending.Snapshot.Generation} areas={pending.Snapshot.Areas.Length} bytes={pending.Encoded.Length}");
         }
     }

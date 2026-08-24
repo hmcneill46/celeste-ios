@@ -1,0 +1,218 @@
+{
+  "schemaVersion": 1,
+  "stage": "25J-B",
+  "baselineCommit": "55d5a3cdff88e707e38404be206a7046b5c149db",
+  "selectionPolicy": {
+    "distanceVectorOrder": [
+      "unsupportedMajorMechanisms",
+      "unsupportedMinorExactMechanisms",
+      "newHelperCount",
+      "helperGraphSize",
+      "newContentFactoryCount",
+      "customAudioClassCount",
+      "physicalComplexity"
+    ],
+    "hardPenalties": [
+      "lua",
+      "native-payload",
+      "configured-il",
+      "dynamic-il-lifetime",
+      "general-dynamicdata",
+      "custom-master-or-strings-audio"
+    ],
+    "positiveEvidence": [
+      "collectible-or-checkpoint",
+      "different-levelset",
+      "accepted-helper-reuse",
+      "modest-room-count",
+      "no-new-custom-audio"
+    ]
+  },
+  "existingCohort": {
+    "stage25gScreened": 53,
+    "stage25gDeepGraphsReevaluated": 24,
+    "stage25hcExactRootsReevaluated": 18,
+    "deepGraphRoots": [
+      "NightClimb",
+      "obby",
+      "MountBaker",
+      "void",
+      "Astraeus",
+      "LittleEpic's Precision Challenge",
+      "Wholesome Theo Gameplay",
+      "QLetterAurora",
+      "TeraBlast",
+      "Mineclimber",
+      "GLACEIR",
+      "The Fall",
+      "rainbowtest",
+      "Lightning Strike",
+      "Coffee Pot Crystal Heaven",
+      "StupidLava",
+      "FUNNIEST MAP NAME EVER",
+      "Blue Ice",
+      "Sciorda",
+      "sillymap1",
+      "Space Trip",
+      "8bb1b",
+      "Noctambule",
+      "UnfortunateWaveCave"
+    ],
+    "finding": "The current mechanism matrix removed several historical blockers, but no independent root in the existing deep cohort combined a zero-overall distance with the preferred 2-20-room progression profile as strongly as the supplemental selection."
+  },
+  "supplementalCohort": {
+    "screened": 34,
+    "source": "public Everest update metadata plus exact ordinary public archives",
+    "roots": [
+      { "name": "GetOut", "fileId": 412127, "rooms": 67, "helpers": ["DJMapHelper"] },
+      { "name": "AchingCavern", "fileId": 439216, "rooms": 20, "helpers": ["DJMapHelper"] },
+      { "name": "Inner_Depths", "fileId": 462110, "rooms": 60, "helpers": ["DJMapHelper"] },
+      { "name": "WaterTemple", "fileId": 479202, "rooms": 152, "helpers": ["DJMapHelper"] },
+      { "name": "Madeline in Wonderland", "fileId": 488966, "rooms": 19, "helpers": ["DJMapHelper"] },
+      { "name": "Madeline vs. Voter Supression", "fileId": 495996, "rooms": 10, "helpers": ["DJMapHelper"] },
+      { "name": "SpaceJam", "fileId": 517816, "rooms": 7, "helpers": ["DJMapHelper"] },
+      { "name": "groundedwallboost", "fileId": 522030, "rooms": 7, "helpers": ["DJMapHelper"] },
+      { "name": "ToTheMars", "fileId": 550279, "rooms": 87, "helpers": ["DJMapHelper"] },
+      { "name": "1b0d", "fileId": 562460, "rooms": 37, "helpers": ["DJMapHelper"] },
+      { "name": "CelesteArcade", "fileId": 577488, "rooms": 25, "helpers": ["DJMapHelper"] },
+      { "name": "TheWalkHome", "fileId": 761691, "rooms": 24, "helpers": ["DJMapHelper"] },
+      { "name": "UltraBhop", "fileId": 881286, "rooms": 1, "helpers": ["DJMapHelper"] },
+      { "name": "1-amber", "fileId": 917490, "rooms": 26, "helpers": ["DJMapHelper"] },
+      { "name": "Moon Boost Hell", "fileId": 921138, "rooms": 2, "helpers": ["DJMapHelper"] },
+      { "name": "2a Dashless", "fileId": 963164, "rooms": 45, "helpers": ["DJMapHelper"] },
+      { "name": "SummitFloorless", "fileId": 1040165, "rooms": 134, "helpers": ["DJMapHelper"] },
+      { "name": "FearoftheDark", "fileId": 1057184, "rooms": 14, "helpers": ["ChronoHelper"] },
+      { "name": "ChilledMountainFoot", "fileId": 1166308, "rooms": 8, "helpers": [] },
+      { "name": "LargeMaze", "fileId": 1199734, "rooms": 5, "helpers": [] },
+      { "name": "Ruined Castle", "fileId": 1227591, "rooms": 4, "helpers": ["DJMapHelper"] },
+      { "name": "LittleEpic's Precision Challenge", "fileId": 1243114, "rooms": 8, "helpers": ["ChronoHelper", "DJMapHelper"], "excluded": "accepted first map" },
+      { "name": "CelesteGoldenThing", "fileId": 1278476, "rooms": 4, "helpers": ["CelesteGoldenThing"] },
+      { "name": "433", "fileId": 1285738, "rooms": 1, "helpers": ["CpopHelper", "DJMapHelper"] },
+      { "name": "Akie's dashless", "fileId": 1382436, "rooms": 44, "helpers": ["CpopHelper"] },
+      { "name": "RainKit", "fileId": 1409003, "rooms": 0, "helpers": ["RainKit"] },
+      { "name": "Etselec", "fileId": 1457192, "rooms": 813, "helpers": ["EtselecHelper", "DJMapHelper"] },
+      { "name": "funnnnyyyyy", "fileId": 1493896, "rooms": 26, "helpers": ["DJMapHelper"], "rejected": "invalid Celeste map header" },
+      { "name": "KeyRooms", "fileId": 1509163, "rooms": 10, "helpers": ["ChronoHelper"] },
+      { "name": "CTSHelper", "fileId": 1548699, "rooms": 0, "helpers": ["CTSHelper"] },
+      { "name": "DoomCeleste", "fileId": 1604478, "rooms": 1, "helpers": ["DoomCeleste"] },
+      { "name": "DirtRoad", "fileId": 1662821, "rooms": 1, "helpers": ["DirtRoad"] },
+      { "name": "ShapeEchoAssets", "fileId": 1675928, "rooms": 0, "helpers": ["ShapeEchoAssets"] },
+      { "name": "membrane", "fileId": 1770453, "rooms": 21, "helpers": ["membrane"] }
+    ]
+  },
+  "deepAudit": {
+    "rootCount": 8,
+    "helperPackagesAlsoAudited": ["DJMapHelper 1.13.4", "ChronoHelper 1.3.3", "CpopHelper 1.3.0"],
+    "candidates": [
+      {
+        "name": "SpaceJam",
+        "version": "1.0.0",
+        "rooms": 7,
+        "levelSet": "Vesparx",
+        "actualHelperIds": [],
+        "progression": { "berries": 2, "heart": true, "cassette": false, "respawnTrigger": true },
+        "mechanisms": { "il": false, "directIlHook": false, "configuredHooks": false, "dynamicData": false, "customAudio": false, "lua": false, "native": false },
+        "distance": [0, 0, 0, 1, 0, 0, 1],
+        "decision": "runner-up; declared DJMapHelper is not referenced by a custom map ID"
+      },
+      {
+        "name": "FearoftheDark",
+        "version": "1.0.0",
+        "rooms": 14,
+        "levelSet": "BevWeb",
+        "actualHelperIds": ["ChronoHelper/PersistentFallingBlock"],
+        "progression": { "berries": 1, "heart": true, "cassette": false },
+        "mechanisms": { "customAudio": "accepted ChronoHelper bank", "lua": false, "native": false },
+        "distance": [0, 0, 0, 1, 1, 0, 2],
+        "decision": "selected; exercises an accepted helper factory plus checkpoint/collectible progression"
+      },
+      {
+        "name": "KeyRooms",
+        "version": "0.0.1",
+        "rooms": 10,
+        "levelSet": "Lvharryw",
+        "actualHelperIds": ["ChronoHelper/CustomTimeSwitchGates"],
+        "progression": { "berries": 3, "heart": true, "cassette": false },
+        "distance": [0, 0, 0, 1, 1, 0, 2],
+        "decision": "not selected; repeats LittleEpic's Chrono gate mechanism"
+      },
+      {
+        "name": "433",
+        "version": "1.0.0",
+        "rooms": 1,
+        "levelSet": "someguy",
+        "actualHelperIds": ["DJMapHelper/colorGradeTrigger"],
+        "progression": { "berries": 1, "heart": true, "cassette": false },
+        "distance": [0, 0, 0, 2, 0, 0, 1],
+        "decision": "not selected; one room gives weaker resume/switching evidence"
+      },
+      {
+        "name": "ChilledMountainFoot",
+        "version": "1.0.1",
+        "rooms": 8,
+        "levelSet": "LmaoLynx",
+        "actualHelperIds": [],
+        "progression": { "berries": 3, "heart": true, "cassette": false },
+        "distance": [0, 0, 0, 0, 0, 0, 1],
+        "decision": "not selected; content-only root adds no shared-helper composition evidence"
+      },
+      {
+        "name": "Madeline vs. Voter Supression",
+        "version": "1.2.0",
+        "rooms": 10,
+        "levelSet": "xxshrekfan2015xx",
+        "actualHelperIds": ["DJMapHelper/killBoxTrigger"],
+        "progression": { "berries": 3, "heart": false, "cassette": true },
+        "distance": [0, 0, 0, 1, 1, 0, 2],
+        "decision": "not selected; broader content/dialog physical scope"
+      },
+      {
+        "name": "AchingCavern",
+        "version": "1.0.0",
+        "rooms": 20,
+        "levelSet": "Pupqet",
+        "actualHelperIds": ["FactoryHelper/RustBerry", "DJMapHelper/maxDashesTrigger"],
+        "progression": { "berries": 5, "heart": true, "cassette": true },
+        "distance": [1, 1, 1, 2, 1, 0, 3],
+        "decision": "rejected; undeclared FactoryHelper content dependency"
+      },
+      {
+        "name": "funnnnyyyyy",
+        "version": "unknown",
+        "rooms": 26,
+        "levelSet": "unknown",
+        "actualHelperIds": [],
+        "progression": {},
+        "distance": [1, 1, 0, 1, 0, 0, 3],
+        "decision": "rejected; map binary has an invalid Celeste header"
+      }
+    ]
+  },
+  "selected": {
+    "name": "FearoftheDark",
+    "displayName": "Fear of the Dark",
+    "version": "1.0.0",
+    "gameBananaModId": 423072,
+    "gameBananaFileId": 1057184,
+    "url": "https://gamebanana.com/mmdl/1057184",
+    "page": "https://gamebanana.com/mods/423072",
+    "license": "CC BY-NC-ND 4.0; ordinary unmodified download/install use",
+    "zipSha256": "7071c67f93a29c0f25c87c366762437bbf60873e135c5ca34009c197f5b40e5b",
+    "mapPath": "Maps/BevWeb/FearoftheDark/FearoftheDark.bin",
+    "mapSha256": "5c29701520776fa03a3e2d8af798c23d80e188a91d6b3f65cac97ca81239de86",
+    "sid": "BevWeb/FearoftheDark/FearoftheDark",
+    "levelSet": "BevWeb",
+    "rooms": ["01a", "01b", "01c", "01d", "01e", "02a", "02b", "02c", "02d", "02e", "02f", "02g", "02h", "02i"],
+    "dependencies": [
+      { "name": "Everest", "minimumVersion": "1.2330.0" },
+      { "name": "ChronoHelper", "minimumVersion": "1.0.1", "resolvedVersion": "1.3.3" }
+    ],
+    "actualMapUse": {
+      "customEntities": ["ChronoHelper/PersistentFallingBlock"],
+      "customTriggers": [],
+      "customBackdrops": [],
+      "vanillaProgressionObjects": ["checkpoint", "golden strawberry", "heart gem", "change respawn trigger"]
+    },
+    "why": "It is the strongest zero-blocker evidence candidate: a 14-room independent LevelSet that genuinely uses an already accepted ChronoHelper factory and adds checkpoint, golden-berry, heart, Save-and-Quit, and cold-resume evidence without any new mechanism, helper, audio class, Lua, or native code."
+  }
+}

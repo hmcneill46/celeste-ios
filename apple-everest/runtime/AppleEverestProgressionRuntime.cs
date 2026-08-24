@@ -117,9 +117,11 @@ internal static class AppleEverestProgressionRuntime
         AppleEverestStaticRuntime.Log($"levelset-progression=projected slot={save.FileSlot} generation={snapshot?.Generation ?? 0} session={(save.CurrentSession != null && IsCustom(save.CurrentSession.Area)).ToString().ToLowerInvariant()}");
     }
 
-    internal static AppleEverestProgressionArea[] CaptureAreas(SaveData save) =>
-        GeneratedAppleEverestProgressionManifest.Maps.Select(descriptor => CaptureArea(descriptor,
-            save.Areas.Count > descriptor.RuntimeAreaId ? save.Areas[descriptor.RuntimeAreaId] : new AreaStats(descriptor.RuntimeAreaId))).ToArray();
+    internal static AppleEverestProgressionArea[] CaptureAreas(SaveData save, AppleEverestProgressionSnapshot selected) =>
+        AppleEverestProgressionReplicaAuthority.MergeInstalledAreas(
+            GeneratedAppleEverestProgressionManifest.Maps.Select(descriptor => CaptureArea(descriptor,
+                save.Areas.Count > descriptor.RuntimeAreaId ? save.Areas[descriptor.RuntimeAreaId] : new AreaStats(descriptor.RuntimeAreaId))),
+            selected, CompatibleMaps);
 
     internal static AppleEverestProgressionSession CaptureSession(SaveData save)
     {

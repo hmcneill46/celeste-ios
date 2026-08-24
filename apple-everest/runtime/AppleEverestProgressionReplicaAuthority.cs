@@ -76,11 +76,30 @@ internal sealed class AppleEverestProgressionReplicaAuthority
                 CryptographicOperations.FixedTimeEquals(item.BaseSaveSha256, baseHash) && Compatible(item, compatibleMaps))
             .OrderByDescending(item => item.Generation).FirstOrDefault();
 
+    // A snapshot is selected when at least one currently installed map has an
+    // exact identity match. Records for absent maps remain quarantined inside
+    // the validated snapshot; projection applies only exact installed records.
+    // This lets independently installed LevelSets survive removal/re-addition
+    // without allowing changed content at the same SID to consume old state.
     private static bool Compatible(AppleEverestProgressionSnapshot value, IReadOnlyDictionary<string, string> maps) =>
-        value.Areas.All(area => maps != null && maps.TryGetValue(area.Sid, out string identity) &&
-                                identity == area.CompatibilityId) &&
-        (value.Session == null || maps != null && maps.TryGetValue(value.Session.Sid, out string sessionIdentity) &&
-                                  sessionIdentity == value.Session.CompatibilityId);
+        maps != null && (value.Areas.Any(area => maps.TryGetValue(area.Sid, out string identity) &&
+                                                identity == area.CompatibilityId) ||
+                         value.Session != null && maps.TryGetValue(value.Session.Sid, out string sessionIdentity) &&
+                                                  sessionIdentity == value.Session.CompatibilityId);
+
+    internal static AppleEverestProgressionArea[] MergeInstalledAreas(
+        IEnumerable<AppleEverestProgressionArea> installed,
+        AppleEverestProgressionSnapshot selected,
+        IReadOnlyDictionary<string, string> compatibleMaps)
+    {
+        Dictionary<string, AppleEverestProgressionArea> merged = (installed ?? Array.Empty<AppleEverestProgressionArea>())
+            .ToDictionary(area => area.Sid, StringComparer.Ordinal);
+        if (selected?.Areas != null)
+            foreach (AppleEverestProgressionArea area in selected.Areas)
+                if (compatibleMaps != null && !compatibleMaps.ContainsKey(area.Sid) && !merged.ContainsKey(area.Sid))
+                    merged.Add(area.Sid, area);
+        return merged.Values.OrderBy(area => area.Sid, StringComparer.Ordinal).ToArray();
+    }
 
     private static AppleEverestProgressionSnapshot Decode(byte[] bytes, int slot) =>
         AppleEverestProgressionSnapshotCodec.TryDecode(bytes, slot, out AppleEverestProgressionSnapshot value) ? value : null;

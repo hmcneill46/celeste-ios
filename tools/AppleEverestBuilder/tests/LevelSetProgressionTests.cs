@@ -72,6 +72,46 @@ internal static class LevelSetProgressionTests
             "removed map is fail-closed and remains recoverable on readdition");
         Pass(authority.Load(0, hashB, maps).Selected?.Generation == 2,
             "exact map readdition restores retained snapshot");
+
+        string identityB = new string('c', 64);
+        AppleEverestProgressionArea areaB = area with { Sid = "Second/Map", LevelSet = "Second", CompatibilityId = identityB };
+        Dictionary<string, string> twoMaps = new(StringComparer.Ordinal) { [area.Sid] = identity, [areaB.Sid] = identityB };
+        AppleEverestProgressionSnapshot twoMapSnapshot = snapshot with { Generation = 9, Areas = [area, areaB], Session = session };
+        byte[] twoMapEncoded = AppleEverestProgressionSnapshotCodec.Encode(twoMapSnapshot);
+        byte[] twoMapCompressed = AppleEverestProgressionCompression.Encode(twoMapEncoded);
+        Pass(AppleEverestProgressionReplicaAuthority.SelectMatching(snapshot, null, hashA, twoMaps)?.Areas.Length == 1,
+            "old single-map sidecar remains valid after second map installation");
+        Pass(AppleEverestProgressionReplicaAuthority.SelectMatching(twoMapSnapshot, null, hashA, twoMaps)?.Generation == 9,
+            "two installed maps select one shared snapshot");
+        Pass(AppleEverestProgressionReplicaAuthority.SelectMatching(twoMapSnapshot, null,
+                 SHA256.HashData(Encoding.UTF8.GetBytes("two-map replacement")), twoMaps) == null,
+            "imported replacement base cannot inherit two-map progression");
+        Dictionary<string, string> firstMapOnly = new(StringComparer.Ordinal) { [area.Sid] = identity };
+        AppleEverestProgressionSnapshot firstSelected = AppleEverestProgressionReplicaAuthority.SelectMatching(
+            twoMapSnapshot, null, hashA, firstMapOnly);
+        Pass(firstSelected?.Generation == 9, "removing second map does not hide first map state");
+        AppleEverestProgressionArea refreshedA = area with { Modes = [mode with { Deaths = 11 }, EmptyMode(), EmptyMode()] };
+        AppleEverestProgressionArea[] absentMerged = AppleEverestProgressionReplicaAuthority.MergeInstalledAreas(
+            [refreshedA], firstSelected, firstMapOnly);
+        Pass(absentMerged.Length == 2 && absentMerged.Single(value => value.Sid == areaB.Sid).CompatibilityId == identityB &&
+             absentMerged.Single(value => value.Sid == area.Sid).Modes[0].Deaths == 11,
+            "absent second-map state stays quarantined while installed map advances");
+        Pass(AppleEverestProgressionReplicaAuthority.SelectMatching(
+                 twoMapSnapshot with { Areas = absentMerged }, null, hashA, twoMaps)?.Areas.Any(value => value.Sid == areaB.Sid) == true,
+            "exact second-map readdition restores its retained record");
+        Dictionary<string, string> changedSecond = new(StringComparer.Ordinal) {
+            [area.Sid] = identity, [areaB.Sid] = new string('d', 64)
+        };
+        AppleEverestProgressionArea changedAreaB = areaB with { CompatibilityId = changedSecond[areaB.Sid],
+            Modes = [mode with { Deaths = 1 }, EmptyMode(), EmptyMode()] };
+        AppleEverestProgressionArea[] changedMerged = AppleEverestProgressionReplicaAuthority.MergeInstalledAreas(
+            [refreshedA, changedAreaB], twoMapSnapshot, changedSecond);
+        Pass(changedMerged.Length == 2 && changedMerged.Single(value => value.Sid == areaB.Sid).CompatibilityId == changedSecond[areaB.Sid] &&
+             changedMerged.Single(value => value.Sid == areaB.Sid).Modes[0].Deaths == 1,
+            "same SID with changed content replaces rather than resurrects old state");
+        Pass(AppleEverestProgressionReplicaAuthority.SelectMatching(
+                 twoMapSnapshot, null, hashA, changedSecond)?.Areas.Single(value => value.Sid == area.Sid).CompatibilityId == identity,
+            "changed second map cannot hide independent exact first-map state");
         AppleEverestProgressionReplicaAuthority coldAuthority = new(store);
         Pass(coldAuthority.Load(0, hashB, maps).Selected?.Generation == 2,
             "cold initialization independently selects newest valid replica");
@@ -85,6 +125,12 @@ internal static class LevelSetProgressionTests
         authority.Delete(1);
         Pass(authority.Load(1, hashA, maps).Selected == null && authority.Load(0, hashB, maps).Selected != null,
             "delete removes only target slot and prevents recreation resurrection");
+        AppleEverestProgressionReplicaState slot2 = authority.Load(2, hashA, twoMaps);
+        Pass(authority.Commit(authority.Prepare(2, slot2, hashA, RandomNumberGenerator.GetBytes(32),
+                 [area, areaB], session), slot2, twoMaps), "two-map slot commit before delete");
+        authority.Delete(2);
+        Pass(authority.Load(2, hashA, twoMaps).Selected == null,
+            "delete removes both map records before slot recreation");
 
         FakeStore fault = new(); AppleEverestProgressionReplicaAuthority faultAuthority = new(fault);
         AppleEverestProgressionReplicaState faultState = faultAuthority.Load(0, hashA, maps);
@@ -126,6 +172,8 @@ internal static class LevelSetProgressionTests
             "stress fixture covers two explicit LevelSets");
         Console.WriteLine($"PROGRESSION_FIXTURE_RAW_BYTES={encoded.Length}");
         Console.WriteLine($"PROGRESSION_FIXTURE_TVOS_COMPRESSED_BYTES={compressed.Length}");
+        Console.WriteLine($"PROGRESSION_TWO_MAP_RAW_BYTES={twoMapEncoded.Length}");
+        Console.WriteLine($"PROGRESSION_TWO_MAP_TVOS_COMPRESSED_BYTES={twoMapCompressed.Length}");
         Console.WriteLine($"PROGRESSION_STRESS_RAW_BYTES={stress.Length}");
         Console.WriteLine($"PROGRESSION_STRESS_TVOS_COMPRESSED_BYTES={stressCompressed.Length}");
         Console.WriteLine($"PROGRESSION_TVOS_THREE_SLOT_AB_LIMIT_BYTES={AppleEverestProgressionCompression.MaximumTotalReplicaBytes}");
