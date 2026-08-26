@@ -89,6 +89,7 @@ try
     passed += ModInteropTests.Run(repository, temporary);
     passed += ModuleDurabilityTests.Run(repository, temporary);
     passed += LevelSetProgressionTests.Run(repository, temporary);
+    passed += CollabStaticTests.Run(repository, temporary);
 
     EverestVersion required = EverestVersion.Parse("1.2.3.4");
     Pass(EverestVersion.Satisfies(required, EverestVersion.Parse("1.2.3.4")), "exact version");
@@ -1108,6 +1109,10 @@ try
     Pass(staticCompatibility.Contains("foreach (TypeReference argument in call.GenericArguments)", StringComparison.Ordinal) &&
          staticCompatibility.Contains("delegateType.GenericArguments.Add", StringComparison.Ordinal),
         "DJ exact delegate rewrite closes factory generic arguments before device IL is emitted");
+    Pass(staticCompatibility.Contains("ConditionalWeakTable<object, ExtraData>.CreateValueCallback ExtraDataFactory", StringComparison.Ordinal) &&
+         staticCompatibility.Contains("Extras.GetValue(target, ExtraDataFactory)", StringComparison.Ordinal) &&
+         !staticCompatibility.Contains("GetOrCreateValue", StringComparison.Ordinal),
+        "static DynData storage uses an explicit AOT-compiled value factory instead of reflective generic construction");
     Pass(staticCompatibility.Contains("PatchPinnedEverestHelperAbi", StringComparison.Ordinal) &&
          staticCompatibility.Contains("public DashListener(Action<Vector2> onDash)", StringComparison.Ordinal) &&
          staticCompatibility.Contains("public Action<Vector2> SpeedSetter", StringComparison.Ordinal) &&
@@ -1216,7 +1221,7 @@ try
          testClosureViolations[0].Contains("System.Diagnostics.Process::Start", StringComparison.Ordinal),
         "linked-runtime scanner isolates the intentional desktop static-plan test host spawn");
 
-    Pass(ProductPolicy.TransformerVersion == "apple-everest-static-v13", "real-ZIP transformer version");
+    Pass(ProductPolicy.TransformerVersion == "apple-everest-static-v14", "real-ZIP transformer version");
     Pass(File.Exists(Path.Combine(repository, "tools/AppleEverestBuilder/AssemblyFreezer.cs")),
         "binary-first assembly freezer exists");
     string models = File.ReadAllText(Path.Combine(repository, "tools/AppleEverestBuilder/Models.cs"));

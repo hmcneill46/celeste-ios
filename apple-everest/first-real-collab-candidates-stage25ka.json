@@ -1,0 +1,80 @@
+{
+  "schemaVersion": 1,
+  "stage": "25K-A",
+  "purpose": "select the smallest credible ordinary public CollabUtils2 collab that proves one real lobby and multiple subordinate maps",
+  "screening": {
+    "metadataRecords": 429,
+    "credibleSmallCollabReleases": 47,
+    "ranking": "Prefer one lobby, two to five subordinate maps, small room/content scope, no prologue or gym, no Lua/native/configured IL/general DynamicData, and the least helper breadth that still proves CollabUtils2.",
+    "candidates": [
+      "603144/1466286 Chocolate Goop", "603144/1466742 Chocolate Goop", "603144/1467353 Chocolate Goop",
+      "627953/1541917 Verthday Collab", "386222/821487 1 Hour Alone Contest", "370683/781573 Mt. Rainier",
+      "150815/499951 Xolimono's Silly Things", "627953/1542656 Verthday Collab", "631391/1555144 BevWeek",
+      "631391/1555814 BevWeek", "631629/1554739 Flow Contest", "631629/1555219 Flow Contest",
+      "631629/1581698 Flow Contest", "631629/1555257 Flow Contest", "372434/786231 Music World",
+      "557598/1412079 Technical Difficulty", "557598/1338054 Technical Difficulty", "641923/1591581 2025 Secret Santa Collab",
+      "641923/1588209 2025 Secret Santa Collab", "150587/495448 Kayonara Collection", "150587/495295 Kayonara Collection",
+      "333375/1052128 World Map Helper", "150587/1086296 Kayonara Collection", "394655/844474 Error and Slimer Map Pack",
+      "150465/1144148 hennyburgr Mapping Competition Entries", "557598/1622481 Technical Difficulty", "150539/579629 Quinnigan's Notepad",
+      "386222/822073 1 Hour Alone Contest", "417385/910134 Heart Wars", "641923/1777358 2025 Secret Santa Collab",
+      "372434/787523 Music World", "644586/1596796 The Catacombs", "480723/1097442 Shorts Map Pack",
+      "398690/855942 Kai and Floofi Birthday Bash", "528008/1459936 Seishin", "493346/1131755 EvanKrusher948 Map Pack",
+      "631629/1630247 Flow Contest", "558178/1329746 PuggyPlayz Birthday Collab", "595878/1542064 Nirthday Collab 2025",
+      "635831/1568221 X The Everything Mapp", "631391/1563121 BevWeek", "696655/1762221 gemstonez birthday contest 2026",
+      "614385/1616872 Nature's Gift", "708235/1793702 Crispybag's Spring Collab Pack",
+      "696655/1785931 gemstonez birthday contest 2026", "384779/817712 Gravity Helper Mini Collab",
+      "698099/1766411 Ren Pinefur Birthday Collab"
+    ]
+  },
+  "deepAudit": {
+    "count": 18,
+    "distanceVector": [
+      "unsupported required mechanisms", "new major mechanisms", "lobby count deviation", "subordinate-map scope",
+      "helper graph breadth", "custom audio", "room/content size", "physical traversal cost"
+    ],
+    "candidates": [
+      {"name":"hennyburgr's Mapping Competition Entries","version":"1.1.0","zipSha256":"638ad7beac7a24600c7c0733acf12a645795bd8878fd5bc7c88e6e24b17dce39","lobbies":1,"subordinateMaps":2,"decision":"SELECTED","reason":"Exact smallest useful graph: one one-room lobby, two one-room maps, no managed payload, no FMOD bank, Lua, native payload, prologue, gym, configured IL, direct hooks, or ModInterop; every required helper use admits bounded hash-locked static semantics."},
+      {"name":"BevWeek","version":"historical day-2 package","zipSha256":"2cd40fdf4f1424bc4af89491cfb3a7a27402ded130ee6757ab203a9333351d55","lobbies":1,"subordinateMaps":2,"decision":"NOT_SELECTED","reason":"Small map count, but requires broader VivHelper, OutbackHelper and PandorasBox behavior than the selected graph."},
+      {"name":"2025 Secret Santa Collab","version":"historical small package","zipSha256":"d201681ebed283489f759e06b12a5a22ba7121bec2731be6aea4b77a06770cd2","lobbies":1,"subordinateMaps":2,"decision":"NOT_SELECTED","reason":"Small structure but requires rainbow/door/silver systems plus Strawberry Jam CommunalHelper and several broader helpers."},
+      {"name":"Chocolate Goop","version":"file 1467353","zipSha256":"9433616f2e8cfeb6ee9370d8d620d6cbc814ce07839fa620e896db9d0209e25e","lobbies":1,"subordinateMaps":3,"decision":"NOT_SELECTED","reason":"Large maps, custom audio and broad Gravity/Viv/Vortex/MaxHelpingHand behavior."},
+      {"name":"1 Hour Alone Contest","version":"1.0.0","zipSha256":"5703e3ee2590977c150bd32b7976726e7b41bdb0a61545f740ae2a0766e5b593","lobbies":1,"subordinateMaps":4,"decision":"NOT_SELECTED","reason":"Broader map and helper scope with mini-heart door, rainbow, silver and golden semantics."},
+      {"name":"1 Hour Alone Contest","version":"historical file 821487","zipSha256":"02d5387cfd87d14c26fdbefa8c8cbf4b4a914997529eacbee74c11ca8ba4b828","lobbies":1,"subordinateMaps":3,"decision":"NOT_SELECTED","reason":"Still needs broader CollabUtils2 berry/door semantics and CrystalBombDetonator."},
+      {"name":"Error and Slimer Map Pack","version":"1.0.0","zipSha256":"abc85b1e839c617b9b8440d128a3beb74259dabbaa7d16486e0b00704ffd633d","lobbies":1,"subordinateMaps":4,"decision":"NOT_SELECTED","reason":"Requires broad Gravity, Fancy, Communal, Frost, Shroom and helper-specific behavior."},
+      {"name":"The Kayonara Collection","version":"1.0.1","zipSha256":"a6c8a1d001926a9167c08dde3d221d72d5deea1c577fd329fb386ae74cd9d7fc","lobbies":1,"subordinateMaps":4,"decision":"NOT_SELECTED","reason":"Exercises speed/rainbow/silver/golden/door systems and a substantially broader helper closure."},
+      {"name":"Mt. Rainier","version":"1.0.0","zipSha256":"e3f06a53860c7ce5721b7f366ff483dfd4c96fcc9c6931bd9f80068cccdef6b4","lobbies":1,"subordinateMaps":3,"decision":"NOT_SELECTED","reason":"Requires AdventureHelper, BounceHelper and additional custom behaviors unrelated to first lobby proof."},
+      {"name":"Nature's Gift","version":"1.0.0","zipSha256":"daae24ee39a52986c81edd7c5f2ed8496c9c37bf7fd202425b236770b2388bed","lobbies":1,"subordinateMaps":5,"decision":"NOT_SELECTED","reason":"Larger physical scope and wider mini-heart/door/rainbow/silver/helper surface."},
+      {"name":"Xolimono's Silly Things","version":"1.0.0","zipSha256":"eb63f9c17fa92a6ab628a4362e233e677523e0af61e140f73dd2ae871c504dda","lobbies":1,"subordinateMaps":3,"decision":"NOT_SELECTED","reason":"Requires ExtendedVariantMode, FactoryHelper and more helper behavior."},
+      {"name":"Technical Difficulty","version":"1.0.9","zipSha256":"1dd858b20581dec049c7ec553065d629da9a15d5a7f1f910a36c52dce3227cac","lobbies":1,"subordinateMaps":4,"decision":"NOT_SELECTED","reason":"Large maps and broader Communal SJ, Vortex, Frost and ExtendedVariant behavior."},
+      {"name":"The Catacombs","version":"0.1.0","zipSha256":"d5e0481b2b4f77f2adbd06fb1f2baf514bbb6fa1bbaf0b5b01d29f9b241be0ac","lobbies":1,"subordinateMaps":4,"decision":"NOT_SELECTED","reason":"Requires Brokemia, Contort, ExtendedVariant and mini-heart-door completion behavior."},
+      {"name":"Verthday Collab","version":"file 1541917","zipSha256":"5a753e3454b4dd9488b2a0ac405352177e570146304a4771d2819f66d59d2eef","lobbies":1,"subordinateMaps":3,"decision":"NOT_SELECTED","reason":"Requires warp pedestal, rainbow, silver, door and numerous helper-specific mechanics."},
+      {"name":"Wollab 4","version":"2.0.0","zipSha256":"6ff49dfac6fdf555a15c4ba17d8cdc0c40adbcc5e65baee85c50b29b3ec98fdf","lobbies":1,"subordinateMaps":60,"decision":"NOT_SELECTED","reason":"Far outside the bounded first-collab scope: 61 maps and a very broad helper/content graph."},
+      {"name":"World Map Helper Test","version":"1.1.0","zipSha256":"37cbf2e797a736f00886ba8c85dfbfc61849d9cc796ad1674988d7e6b2fc6905","lobbies":1,"subordinateMaps":4,"decision":"NOT_SELECTED","reason":"Uses WorldMapHelper world-map semantics rather than ordinary CollabUtils2 lobby semantics."},
+      {"name":"CollabUtils2","version":"1.13.4","zipSha256":"4bcea8a9011edb8b7d27b433c47f1f4a871b8f7a4dd7f2bffac67bb99c7f6ad5","lobbies":0,"subordinateMaps":0,"decision":"DEPENDENCY_AUDIT","reason":"Pinned behavior source and exact static-semantic dependency, not a playable collab candidate."},
+      {"name":"BevWeek","version":"current 0.0.1","zipSha256":"7fa91389fea70bfe14b8bc9826181cbda4fa46ca3d344233da47cb6884f19cea","lobbies":1,"subordinateMaps":6,"decision":"NOT_SELECTED","reason":"Later package is larger and adds Adventure, Crystalline, Frost, MaxHelpingHand, StyleMask and Viv requirements."}
+    ]
+  },
+  "selected": {
+    "name": "hennyburgr's Mapping Competition Entries",
+    "internalName": "HennyburgrCompEntries",
+    "version": "1.1.0",
+    "author": "hennyburgr",
+    "page": "https://gamebanana.com/mods/150465",
+    "url": "https://gamebanana.com/mmdl/1144148",
+    "zipSha256": "638ad7beac7a24600c7c0733acf12a645795bd8878fd5bc7c88e6e24b17dce39",
+    "sourceLogicalSha256": "73785a6c562fcb16fc1738840483da0c35526c80344adee9fc0180baa49a4ed2",
+    "ordinaryUnmodifiedPublicRelease": true,
+    "license": "No explicit software/content license was declared inside the reviewed archive; provenance is the author's public GameBanana release, and no third-party bytes are redistributed by this repository.",
+    "collabId": "HennyburgrCompEntries",
+    "lobbySid": "HennyburgrCompEntries/0-Lobbies/lobby",
+    "subordinateMapSids": [
+      "HennyburgrCompEntries/1-Lobby/redboostercomp",
+      "HennyburgrCompEntries/1-Lobby/stationmovers"
+    ],
+    "prologueMaps": 0,
+    "gymMaps": 0,
+    "customFmodBanks": 0,
+    "luaFiles": 0,
+    "nativePayloads": 0,
+    "managedPayloads": 0
+  }
+}

@@ -206,6 +206,11 @@ prepare_platform() {
   cp -cR "$CLOSURE/content/." "$destination/content/"
   (cd /private/tmp && "$DOTNET8" run --project "$BUILDER_PROJECT" -- apply \
     --closure "$CLOSURE" --managed-root "$destination/managed")
+  if [[ "$platform" == tvos ]]; then
+    python3 "$SCRIPT_DIR/apply-apple-port-build-identity.py" \
+      --version-source "$REPO_ROOT/modern-ios/IOSPortVersion.props" \
+      --managed-root "$destination/managed" --platform tvos
+  fi
   touch "$destination/.apple-everest-derived-runtime"
 }
 

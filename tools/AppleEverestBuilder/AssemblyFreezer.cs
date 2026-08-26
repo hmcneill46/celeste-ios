@@ -429,17 +429,19 @@ internal static class AssemblyFreezer
             foreach (CustomAttribute attribute in type.CustomAttributes.Where(value =>
                          value.AttributeType.FullName == "Celeste.Mod.Entities.CustomEntityAttribute"))
             {
-                foreach (string id in AttributeStrings(attribute))
+                foreach (string full in AttributeStrings(attribute))
                 {
+                    string[] alias = full.Split('=', 2, StringSplitOptions.TrimEntries);
+                    string id = alias[0];
                     if (id.Length is < 1 or > 192 || id.Any(char.IsControl) || id.Contains('=') || id.Contains(','))
                         throw new InvalidDataException($"unsupported custom entity ID on {type.FullName}");
-                    if (constructor == null)
+                    if (alias.Length == 2 || constructor == null)
                     {
                         omitted.Add(new AppleOmittedCustomEntityFactory
                         {
                             Id = id,
                             Type = type.FullName.Replace('/', '.'),
-                            Reason = "runtime-only-constructor"
+                            Reason = alias.Length == 2 ? "static-method-factory" : "runtime-only-constructor"
                         });
                     }
                     else
@@ -518,9 +520,11 @@ internal static class AssemblyFreezer
         ];
         MethodDefinition[] constructors = type.Methods.Where(method => method.IsConstructor && !method.IsStatic && method.IsPublic &&
             supported.Contains(Signature(method), StringComparer.Ordinal)).ToArray();
-        if (constructors.Length == 0) return null;
-        if (constructors.Length != 1)
-            throw new InvalidDataException($"custom entity type has ambiguous supported constructors: {type.FullName}");
+        // An unused helper factory with no deterministic constructor is safe to
+        // omit. Closure generation still rejects the product if any mounted
+        // map actually references that ID, so ambiguity never becomes a
+        // runtime constructor guess.
+        if (constructors.Length != 1) return null;
         return Signature(constructors[0]) switch
         {
             "Celeste.EntityData,Microsoft.Xna.Framework.Vector2" => "entity-data-vector2",
@@ -748,7 +752,7 @@ internal static class AssemblyFreezer
             throw new InvalidDataException($"duplicate custom entity factory ID for {mod}");
         if (declaration.OmittedCustomEntityFactories.Length > 512 || declaration.OmittedCustomEntityFactories.Any(factory =>
                 factory.Id.Length is < 1 or > 192 || !TypeName(factory.Type) ||
-                factory.Reason != "runtime-only-constructor"))
+                factory.Reason is not ("runtime-only-constructor" or "static-method-factory")))
             throw new InvalidDataException($"invalid omitted custom entity factory declaration for {mod}");
         if (declaration.CustomBackdropFactories.Length > 256 || declaration.CustomBackdropFactories.Any(factory =>
                 factory.Id.Length is < 1 or > 192 || !TypeName(factory.Type) ||

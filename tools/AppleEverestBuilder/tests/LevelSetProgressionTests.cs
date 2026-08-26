@@ -23,13 +23,16 @@ internal static class LevelSetProgressionTests
             "event:/env/test", [new("layer0", 1)], ["flag-b", "flag-a"], ["room-c"], [new("room-a", 4)],
             [new("room-b", 9)], [new("room-c", 1)], [new("counter", 3)], [true, false], false, "room-c", true,
             false, [mode, EmptyMode(), EmptyMode()]);
-        AppleEverestProgressionSnapshot snapshot = new(0, 5, hashA, lineage, [area], session);
+        AppleEverestProgressionSession suspendedSession = session with { Level = "room-suspended", RespawnX = 42f };
+        AppleEverestProgressionSnapshot snapshot = new(0, 5, hashA, lineage, [area], session, [suspendedSession]);
         byte[] encoded = AppleEverestProgressionSnapshotCodec.Encode(snapshot);
         Pass(encoded.SequenceEqual(AppleEverestProgressionSnapshotCodec.Encode(snapshot)), "deterministic encoding");
         Pass(AppleEverestProgressionSnapshotCodec.TryDecode(encoded, 0, out AppleEverestProgressionSnapshot decoded) &&
              decoded.Generation == 5 && decoded.Areas[0].Modes[0].Deaths == 7 && decoded.Session.Level == "room-c" &&
-             decoded.Session.MusicParameters[0].Key == "progress" && decoded.Session.OldStatsModes[0].Deaths == 7,
-             "full AreaStats and Session baseline round trip");
+             decoded.Session.MusicParameters[0].Key == "progress" && decoded.Session.OldStatsModes[0].Deaths == 7 &&
+             decoded.SuspendedSessions.Length == 1 && decoded.SuspendedSessions[0].Level == "room-suspended" &&
+             decoded.SuspendedSessions[0].RespawnX == 42f,
+             "full AreaStats, active Session, and suspended collab Session round trip");
         Pass(!AppleEverestProgressionSnapshotCodec.TryDecode(encoded, 1, out _), "wrong slot rejected");
         Pass(!AppleEverestProgressionSnapshotCodec.TryDecode(encoded[..^1], 0, out _), "truncation rejected");
         byte[] wrongSchema = encoded.ToArray(); wrongSchema[0] ^= 1;
@@ -44,6 +47,10 @@ internal static class LevelSetProgressionTests
         try { _ = AppleEverestProgressionSnapshotCodec.Encode(snapshot with { Lineage = [1] }); }
         catch (InvalidDataException) { wrongLineage = true; }
         Pass(wrongLineage, "invalid lineage rejected");
+        bool duplicateSuspended = false;
+        try { _ = AppleEverestProgressionSnapshotCodec.Encode(snapshot with { SuspendedSessions = [suspendedSession, suspendedSession] }); }
+        catch (InvalidDataException) { duplicateSuspended = true; }
+        Pass(duplicateSuspended, "duplicate suspended session SID rejected");
 
         byte[] compressed = AppleEverestProgressionCompression.Encode(encoded);
         Pass(AppleEverestProgressionCompression.TryDecode(compressed, out byte[] logical) && logical.SequenceEqual(encoded),
@@ -58,9 +65,10 @@ internal static class LevelSetProgressionTests
         FakeStore store = new(); AppleEverestProgressionReplicaAuthority authority = new(store);
         AppleEverestProgressionReplicaState state = authority.Load(0, hashA, maps);
         Pass(state.Selected == null, "missing state defaults");
-        var first = authority.Prepare(0, state, hashA, lineage, [area], session);
+        var first = authority.Prepare(0, state, hashA, lineage, [area], session, [suspendedSession]);
         Pass(first.Replica == "A" && first.Snapshot.Generation == 1 && authority.Commit(first, state, maps), "first A commit");
-        Pass(authority.Load(0, hashA, maps).Selected?.Generation == 1, "matching base restores");
+        Pass(authority.Load(0, hashA, maps).Selected is { Generation: 1, SuspendedSessions.Length: 1 },
+            "matching base restores active and suspended sessions");
         var second = authority.Prepare(0, state, hashB, lineage, [area], session with { Level = "room-d" });
         Pass(second.Replica == "B" && authority.Commit(second, state, maps), "second B commit");
         Pass(authority.Load(0, hashB, maps).Selected?.Session.Level == "room-d", "newest matching state restores");
@@ -108,6 +116,32 @@ internal static class LevelSetProgressionTests
             "LittleEpic Fear and both same-LevelSet maps share one bounded snapshot");
         Pass(fourRealMapCompressed.Length < AppleEverestProgressionCompression.MaximumReplicaBytes,
             "four-real-map tvOS snapshot remains within one replica");
+        AppleEverestProgressionArea collabLobby = area with {
+            Sid = "HennyburgrCompEntries/0-Lobbies/lobby", LevelSet = "HennyburgrCompEntries/0-Lobbies",
+            CompatibilityId = "293cc93cdb340dd32eabcbaac4e96fb4504c57dac0b12334113f95e9712d012c"
+        };
+        AppleEverestProgressionArea collabMapA = areaB with {
+            Sid = "HennyburgrCompEntries/1-Lobby/redboostercomp", LevelSet = "HennyburgrCompEntries/1-Lobby",
+            CompatibilityId = "0a0a36f63a4294380c50ea94baee48191fddec96963f33f92685c80cd5cfb095"
+        };
+        AppleEverestProgressionArea collabMapB = area with {
+            Sid = "HennyburgrCompEntries/1-Lobby/stationmovers", LevelSet = "HennyburgrCompEntries/1-Lobby",
+            CompatibilityId = "419a5bae9425df172b32515079add4f89f0b1e81290d03f55f76cd6474bb077d"
+        };
+        AppleEverestProgressionSnapshot collabRealMapSnapshot = snapshot with {
+            Generation = 11,
+            Areas = [littleEpic, fear, torremolinosA, torremolinosB, collabLobby, collabMapA, collabMapB],
+            Session = null
+        };
+        byte[] collabRealMapEncoded = AppleEverestProgressionSnapshotCodec.Encode(collabRealMapSnapshot);
+        byte[] collabRealMapCompressed = AppleEverestProgressionCompression.Encode(collabRealMapEncoded);
+        Dictionary<string, string> collabRealMaps = collabRealMapSnapshot.Areas.ToDictionary(
+            value => value.Sid, value => value.CompatibilityId, StringComparer.Ordinal);
+        Pass(AppleEverestProgressionReplicaAuthority.SelectMatching(
+                 collabRealMapSnapshot, null, hashA, collabRealMaps)?.Areas.Length == 7,
+            "four prior maps plus real collab lobby and both subordinate maps share one bounded snapshot");
+        Pass(collabRealMapCompressed.Length < AppleEverestProgressionCompression.MaximumReplicaBytes,
+            "real collab cumulative tvOS snapshot remains within one replica");
         Pass(AppleEverestProgressionReplicaAuthority.SelectMatching(snapshot, null, hashA, twoMaps)?.Areas.Length == 1,
             "old single-map sidecar remains valid after second map installation");
         Pass(AppleEverestProgressionReplicaAuthority.SelectMatching(twoMapSnapshot, null, hashA, twoMaps)?.Generation == 9,
@@ -258,6 +292,9 @@ internal static class LevelSetProgressionTests
         Console.WriteLine($"PROGRESSION_TWO_MAP_TVOS_COMPRESSED_BYTES={twoMapCompressed.Length}");
         Console.WriteLine($"PROGRESSION_FOUR_REAL_MAP_RAW_BYTES={fourRealMapEncoded.Length}");
         Console.WriteLine($"PROGRESSION_FOUR_REAL_MAP_TVOS_COMPRESSED_BYTES={fourRealMapCompressed.Length}");
+        Console.WriteLine($"PROGRESSION_COLLAB_CUMULATIVE_RAW_BYTES={collabRealMapEncoded.Length}");
+        Console.WriteLine($"PROGRESSION_COLLAB_CUMULATIVE_TVOS_COMPRESSED_BYTES={collabRealMapCompressed.Length}");
+        Console.WriteLine($"PROGRESSION_COLLAB_REPLICA_PERCENT={collabRealMapCompressed.Length * 100.0 / AppleEverestProgressionCompression.MaximumReplicaBytes:F2}");
         Console.WriteLine($"PROGRESSION_STRESS_RAW_BYTES={stress.Length}");
         Console.WriteLine($"PROGRESSION_STRESS_TVOS_COMPRESSED_BYTES={stressCompressed.Length}");
         Console.WriteLine($"PROGRESSION_TVOS_THREE_SLOT_AB_LIMIT_BYTES={AppleEverestProgressionCompression.MaximumTotalReplicaBytes}");

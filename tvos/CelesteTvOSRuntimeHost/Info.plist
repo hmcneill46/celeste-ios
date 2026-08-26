@@ -6,10 +6,6 @@
   <string>Celeste</string>
   <key>CFBundleName</key>
   <string>Celeste</string>
-  <key>CFBundleShortVersionString</key>
-  <string>10.0</string>
-  <key>CFBundleVersion</key>
-  <string>1</string>
   <key>LSRequiresIPhoneOS</key>
   <true/>
   <key>MinimumOSVersion</key>

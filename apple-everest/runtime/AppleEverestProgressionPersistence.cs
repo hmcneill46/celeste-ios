@@ -1,5 +1,6 @@
 #nullable disable
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
@@ -16,6 +17,8 @@ internal static class AppleEverestProgressionPersistence
     private static readonly PlatformReplicaStore Store = new();
     private static readonly AppleEverestProgressionReplicaAuthority Authority = new(Store);
     private static readonly AppleEverestProgressionReplicaState[] Slots = { new(), new(), new() };
+    private static readonly Dictionary<string, AppleEverestProgressionSession>[] SuspendedSessions =
+        { new(StringComparer.Ordinal), new(StringComparer.Ordinal), new(StringComparer.Ordinal) };
     private static AppleEverestProgressionPreparedWrite pending;
 
     internal static byte[] SerializeVanillaBase(SaveData value) => AppleEverestProgressionRuntime.SerializeVanillaBase(value);
@@ -26,12 +29,20 @@ internal static class AppleEverestProgressionPersistence
         try
         {
             byte[] hash = AppleEverestProgressionSnapshotCodec.BaseHash(baseSave);
-            lock (Gate) Slots[slot] = Authority.Load(slot, hash, AppleEverestProgressionRuntime.CompatibleMaps);
+            lock (Gate)
+            {
+                Slots[slot] = Authority.Load(slot, hash, AppleEverestProgressionRuntime.CompatibleMaps);
+                RestoreSuspendedLocked(slot, Slots[slot].Selected);
+            }
             AppleEverestStaticRuntime.Log($"levelset-progression=preloaded slot={slot} generation={Slots[slot].Selected?.Generation ?? 0} base-match={(Slots[slot].Selected != null).ToString().ToLowerInvariant()}");
         }
         catch (Exception exception)
         {
-            lock (Gate) Slots[slot] = new() { BaseHash = AppleEverestProgressionSnapshotCodec.BaseHash(baseSave), Preloaded = true };
+            lock (Gate)
+            {
+                Slots[slot] = new() { BaseHash = AppleEverestProgressionSnapshotCodec.BaseHash(baseSave), Preloaded = true };
+                SuspendedSessions[slot].Clear();
+            }
             AppleEverestStaticRuntime.Log($"levelset-progression=preload-failed slot={slot} category={exception.GetType().Name} action=isolated-defaults");
         }
     }
@@ -49,7 +60,10 @@ internal static class AppleEverestProgressionPersistence
         {
             AppleEverestProgressionReplicaState state = Slots[slot];
             if (!state.Preloaded || state.BaseHash == null || !CryptographicOperations.FixedTimeEquals(state.BaseHash, hash))
+            {
                 Slots[slot] = state = Authority.Load(slot, hash, AppleEverestProgressionRuntime.CompatibleMaps);
+                RestoreSuspendedLocked(slot, state.Selected);
+            }
             selected = state.Selected;
         }
         AppleEverestProgressionRuntime.ApplySnapshot(SaveData.Instance, selected, includeSession);
@@ -65,12 +79,17 @@ internal static class AppleEverestProgressionPersistence
             AppleEverestProgressionReplicaState state = Slots[slot];
             byte[] lineage = state.Selected?.Lineage?.ToArray() ?? RandomNumberGenerator.GetBytes(32);
             AppleEverestProgressionSession session = AppleEverestProgressionRuntime.CaptureSession(SaveData.Instance);
+            AppleEverestProgressionSession[] suspended = CaptureSuspendedLocked(slot, state.Selected);
+            if (session != null && suspended.Any(value => value.Sid == session.Sid &&
+                                                          value.CompatibilityId == session.CompatibilityId))
+                session = null;
             if (session == null && state.Selected?.Session != null &&
-                !AppleEverestProgressionRuntime.CompatibleMaps.ContainsKey(state.Selected.Session.Sid))
+                !AppleEverestProgressionRuntime.CompatibleMaps.ContainsKey(state.Selected.Session.Sid) &&
+                !suspended.Any(value => value.Sid == state.Selected.Session.Sid))
                 session = state.Selected.Session;
             pending = Authority.Prepare(slot, state, AppleEverestProgressionSnapshotCodec.BaseHash(baseSave), lineage,
-                AppleEverestProgressionRuntime.CaptureAreas(SaveData.Instance, state.Selected), session);
-            AppleEverestStaticRuntime.Log($"levelset-progression=captured slot={slot} generation={pending.Snapshot.Generation} areas={pending.Snapshot.Areas.Length} bytes={pending.Encoded.Length}");
+                AppleEverestProgressionRuntime.CaptureAreas(SaveData.Instance, state.Selected), session, suspended);
+            AppleEverestStaticRuntime.Log($"levelset-progression=captured slot={slot} generation={pending.Snapshot.Generation} areas={pending.Snapshot.Areas.Length} suspended={suspended.Length} bytes={pending.Encoded.Length}");
         }
     }
 
@@ -96,13 +115,65 @@ internal static class AppleEverestProgressionPersistence
 
     internal static void DiscardCapturedSave() { lock (Gate) pending = null; }
 
+    internal static bool SuspendCurrentSession()
+    {
+        SaveData save = SaveData.Instance;
+        if (save == null || !Numbered(save.FileSlot)) return false;
+        AppleEverestProgressionSession session = AppleEverestProgressionRuntime.CaptureSession(save);
+        if (session == null) return false;
+        lock (Gate) SuspendedSessions[save.FileSlot][session.Sid] = session;
+        AppleEverestStaticRuntime.Log($"collab-session=suspended slot={save.FileSlot} sid={session.Sid} room={session.Level}");
+        return true;
+    }
+
+    internal static bool HasSuspendedSession(string sid)
+    {
+        SaveData save = SaveData.Instance;
+        if (save == null || !Numbered(save.FileSlot) || string.IsNullOrEmpty(sid)) return false;
+        lock (Gate) return SuspendedSessions[save.FileSlot].ContainsKey(sid);
+    }
+
+    internal static bool TryTakeSuspendedSession(string sid, out Session session)
+    {
+        session = null;
+        SaveData save = SaveData.Instance;
+        if (save == null || !Numbered(save.FileSlot) || string.IsNullOrEmpty(sid)) return false;
+        AppleEverestProgressionSession stored;
+        lock (Gate)
+        {
+            if (!SuspendedSessions[save.FileSlot].Remove(sid, out stored)) return false;
+        }
+        session = AppleEverestProgressionRuntime.RestoreSession(stored);
+        if (session != null)
+        {
+            AppleEverestStaticRuntime.Log($"collab-session=continued slot={save.FileSlot} sid={sid} room={session.Level}");
+            return true;
+        }
+        lock (Gate) SuspendedSessions[save.FileSlot][sid] = stored;
+        return false;
+    }
+
+    internal static void DiscardSuspendedSession(string sid)
+    {
+        SaveData save = SaveData.Instance;
+        if (save == null || !Numbered(save.FileSlot) || string.IsNullOrEmpty(sid)) return;
+        bool removed;
+        lock (Gate) removed = SuspendedSessions[save.FileSlot].Remove(sid);
+        if (removed) AppleEverestStaticRuntime.Log($"collab-session=discarded slot={save.FileSlot} sid={sid}");
+    }
+
     internal static bool DeleteSlot(int slot)
     {
         if (!Numbered(slot)) return true;
         try
         {
             Authority.Delete(slot);
-            lock (Gate) { Slots[slot] = new() { Preloaded = true }; if (pending?.Slot == slot) pending = null; }
+            lock (Gate)
+            {
+                Slots[slot] = new() { Preloaded = true };
+                SuspendedSessions[slot].Clear();
+                if (pending?.Slot == slot) pending = null;
+            }
             AppleEverestStaticRuntime.Log($"levelset-progression=deleted slot={slot}"); return true;
         }
         catch (Exception exception)
@@ -145,6 +216,27 @@ internal static class AppleEverestProgressionPersistence
     }
 
     private static string Key(int slot, string replica) => DefaultsPrefix + slot + ".Progression." + replica + ".v1";
+
+    private static void RestoreSuspendedLocked(int slot, AppleEverestProgressionSnapshot selected)
+    {
+        Dictionary<string, AppleEverestProgressionSession> target = SuspendedSessions[slot];
+        target.Clear();
+        foreach (AppleEverestProgressionSession session in selected?.SuspendedSessions ?? Array.Empty<AppleEverestProgressionSession>())
+            if (AppleEverestProgressionRuntime.CompatibleMaps.TryGetValue(session.Sid, out string identity) &&
+                identity == session.CompatibilityId)
+                target[session.Sid] = session;
+    }
+
+    private static AppleEverestProgressionSession[] CaptureSuspendedLocked(int slot, AppleEverestProgressionSnapshot selected)
+    {
+        Dictionary<string, AppleEverestProgressionSession> result = new(StringComparer.Ordinal);
+        foreach (AppleEverestProgressionSession session in selected?.SuspendedSessions ?? Array.Empty<AppleEverestProgressionSession>())
+            if (!AppleEverestProgressionRuntime.CompatibleMaps.ContainsKey(session.Sid))
+                result[session.Sid] = session;
+        foreach ((string sid, AppleEverestProgressionSession session) in SuspendedSessions[slot]) result[sid] = session;
+        return result.Values.OrderBy(value => value.Sid, StringComparer.Ordinal).ToArray();
+    }
+
     private static string FilePath(int slot, string replica, bool create)
     {
         string root = Environment.GetEnvironmentVariable("CELESTE_IOS_STORAGE_ROOT");

@@ -723,6 +723,12 @@ internal static class AppleEverestLab
     public static void AddOptions(TextMenu menu)
     {
         menu.Add(new TextMenu.SubHeader("APPLE EVEREST STATIC LAB"));
+        foreach (AppleEverestCollabDescriptor collab in GeneratedAppleEverestCollabManifest.Collabs)
+        {
+            AppleEverestCollabDescriptor selectedCollab = collab;
+            menu.Add(new TextMenu.Button("Play Real Collab Lobby: " + collab.DisplayName)
+                .Pressed(() => AppleEverestProgressionRuntime.LaunchPersistent(selectedCollab.LobbySid)));
+        }
         foreach (AppleEverestLevelSetProgressionDescriptor levelSet in GeneratedAppleEverestProgressionManifest.LevelSets)
         {
             menu.Add(new TextMenu.SubHeader("LEVELSET: " + levelSet.LevelSet));

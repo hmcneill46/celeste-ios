@@ -9,7 +9,7 @@ internal static class ProductPolicy
     public const long MaxSingleFileBytes = 64L * 1024 * 1024;
     public const int MaxPathDepth = 24;
     public const int MaxYamlBytes = 1024 * 1024;
-    public const string TransformerVersion = "apple-everest-static-v13";
+    public const string TransformerVersion = "apple-everest-static-v14";
     public const int LevelSetProgressionSchemaVersion = 1;
     public const string CanonicalClass = "celeste-1.4.0.0-a";
 }
@@ -140,6 +140,7 @@ internal enum CompatibilityClass
     STATIC_IL_EVENT_SEQUENCE,
     STATIC_DIRECT_ILHOOK_FREEZE,
     HASH_LOCKED_STATIC_AOT_COMPATIBILITY,
+    HASH_LOCKED_STATIC_SEMANTIC_LOWERING,
     STATIC_CUSTOM_FMOD_BANK,
     MODINTEROP_DEFERRED,
     ON_HOOK_DEFERRED,
@@ -172,7 +173,34 @@ internal sealed record MapProgressionRecord(
     string[] ProgressionEntities,
     string[] ProgressionTriggers,
     string[] AreaModes,
-    bool CompletionAvailable);
+    bool CompletionAvailable,
+    MapPresentationRecord? Presentation = null);
+internal sealed record MapPresentationRecord(
+    string Icon,
+    string TitleBaseColor,
+    string TitleAccentColor,
+    string TitleTextColor,
+    string IntroType,
+    bool Dreaming,
+    string ColorGrade,
+    string Wipe,
+    float DarknessAlpha,
+    float BloomBase,
+    float BloomStrength,
+    string Jumpthru,
+    string CoreMode,
+    string Inventory,
+    string Music,
+    string Ambience,
+    string StartLevel,
+    bool HeartIsEnd,
+    bool IgnoreLevelAudioLayerData)
+{
+    internal static readonly MapPresentationRecord EverestDefault = new(
+        "areas/null", "6c7c81", "2f344b", "ffffff", "WakeUp", false, "",
+        "Celeste.AngledWipe", 0.05f, 0f, 1f, "wood", "None", "Default",
+        "event:/music/lvl1/main", "event:/env/amb/00_prologue", "", false, false);
+}
 internal sealed record LevelSetProgressionRecord(
     string LevelSet,
     string Identity,
@@ -181,6 +209,50 @@ internal sealed record LevelSetProgressionRecord(
     int MaximumHearts,
     int MaximumCassettes,
     int MaximumCompletions);
+internal sealed record MapElementRecord(
+    string Kind,
+    string Id,
+    string Room,
+    float X,
+    float Y,
+    int Width,
+    int Height,
+    IReadOnlyDictionary<string, string> Attributes,
+    IReadOnlyList<(float X, float Y)> Nodes);
+internal sealed record CollabMapRecord(
+    string Sid,
+    string LobbySid,
+    string DisplayName,
+    string Author,
+    int Order,
+    string SourceMapSha256,
+    string MountedMapSha256,
+    string CompatibilityId,
+    string LevelSet,
+    string[] Rooms,
+    bool AllowSaving,
+    string ReturnMode,
+    string ReturnRoom,
+    float ReturnX,
+    float ReturnY);
+internal sealed record CollabDescriptorRecord(
+    string Id,
+    string DisplayName,
+    string Owner,
+    string Version,
+    string SourceLogicalSha256,
+    string ArchiveSha256,
+    string LobbySid,
+    string LobbyDisplayName,
+    string LobbySourceMapSha256,
+    string LobbyMountedMapSha256,
+    string LobbyCompatibilityId,
+    string LobbyLevelSet,
+    string[] LobbyRooms,
+    string JournalLevelSet,
+    bool JournalVanilla,
+    bool JournalShowOnlyDiscovered,
+    IReadOnlyList<CollabMapRecord> Maps);
 internal sealed record FrozenAssemblyRecord(string Owner, string AssemblyName, string FileName, string OriginalSha256, string FrozenSha256);
 internal sealed record CustomAudioGuidRecord(Guid Id, string Path, string Kind);
 internal sealed record CustomAudioBankPlan(
@@ -299,8 +371,20 @@ internal sealed class ResolvedMod
     public required IReadOnlyList<ModInteropRegistrationPlan> ModInteropRegistrations { get; init; }
     public required IReadOnlyList<FrozenIlTransformPlan> FrozenIlTransforms { get; init; }
     public StaticAotCompatibilityPlan? StaticAotCompatibility { get; init; }
+    public StaticSemanticLoweringPlan? StaticSemanticLowering { get; init; }
     public IReadOnlyList<CustomAudioBankPlan> CustomAudioBanks { get; init; } = [];
 }
 
 internal sealed record StaticAotCompatibilityPlan(string Id, string Owner, string Version,
     string SourceSha256, string DllPath, string DllSha256, bool AllowNonPublicCustomFactories);
+
+internal sealed record StaticSemanticFactory(string Kind, string Id, string RuntimeFactory);
+
+internal sealed record StaticSemanticLoweringPlan(
+    string Id,
+    string Owner,
+    string Version,
+    string SourceSha256,
+    string DllPath,
+    string DllSha256,
+    IReadOnlyList<StaticSemanticFactory> Factories);

@@ -39,26 +39,37 @@ internal static class AppleEverestProgressionRuntime
             if (BySid.ContainsKey(descriptor.Sid)) throw new InvalidOperationException("duplicate static map SID: " + descriptor.Sid);
             int id = AreaData.Areas.Count;
             descriptor.RuntimeAreaId = id;
+            AppleEverestMapPresentationDescriptor presentation = descriptor.Presentation;
             ModeProperties mode = new()
             {
                 Path = descriptor.Path,
                 Checkpoints = descriptor.Checkpoints.Select(value => new CheckpointData(value, value)).ToArray(),
-                Inventory = PlayerInventory.Default,
-                AudioState = source.Mode[0].AudioState.Clone(),
+                Inventory = Inventory(presentation.Inventory),
+                AudioState = new AudioState(presentation.Music, presentation.Ambience),
+                IgnoreLevelAudioLayerData = presentation.IgnoreLevelAudioLayerData,
                 TotalStrawberries = descriptor.Strawberries,
                 StartStrawberries = 0
             };
             AreaData area = new()
             {
-                ID = id, Name = descriptor.Sid, Icon = source.Icon, Interlude = false,
+                // Everest dialog keys normalise map SIDs so authored entries
+                // such as "Pack_1_Lobby_map" resolve through canonical
+                // AreaData/UI consumers instead of rendering "XXX".
+                ID = id, Name = DialogKey(descriptor.Sid),
+                Icon = presentation.Icon == "areas/null" ? source.Icon : presentation.Icon,
+                Interlude = false,
                 CanFullClear = descriptor.Heart, CompleteScreenName = null,
                 Mode = new ModeProperties[] { mode, null, null },
-                IntroType = Player.IntroTypes.None, Dreaming = false,
-                ColorGrade = source.ColorGrade, Wipe = source.Wipe,
-                DarknessAlpha = source.DarknessAlpha, BloomBase = source.BloomBase,
-                BloomStrength = source.BloomStrength, Jumpthru = source.Jumpthru,
+                TitleBaseColor = Calc.HexToColor(presentation.TitleBaseColor),
+                TitleAccentColor = Calc.HexToColor(presentation.TitleAccentColor),
+                TitleTextColor = Calc.HexToColor(presentation.TitleTextColor),
+                IntroType = IntroType(presentation.IntroType), Dreaming = presentation.Dreaming,
+                ColorGrade = string.IsNullOrEmpty(presentation.ColorGrade) ? null : presentation.ColorGrade,
+                Wipe = Wipe(presentation.Wipe),
+                DarknessAlpha = presentation.DarknessAlpha, BloomBase = presentation.BloomBase,
+                BloomStrength = presentation.BloomStrength, Jumpthru = presentation.Jumpthru,
                 Spike = source.Spike, CrumbleBlock = source.CrumbleBlock,
-                WoodPlatform = source.WoodPlatform, CoreMode = Session.CoreModes.None
+                WoodPlatform = source.WoodPlatform, CoreMode = CoreMode(presentation.CoreMode)
             };
             AreaData.Areas.Add(area);
             mode.MapData = new MapData(new AreaKey(id));
@@ -66,6 +77,56 @@ internal static class AppleEverestProgressionRuntime
         }
         AppleEverestStaticRuntime.Log($"levelset-registry=PASS vanilla={VanillaAreaCount} custom={ByArea.Count} levelsets={ByLevelSet.Count}");
     }
+
+    private static PlayerInventory Inventory(string value) => value switch
+    {
+        "CH6End" => PlayerInventory.CH6End,
+        "Core" => PlayerInventory.Core,
+        "OldSite" => PlayerInventory.OldSite,
+        "Prologue" => PlayerInventory.Prologue,
+        "TheSummit" => PlayerInventory.TheSummit,
+        "Farewell" => PlayerInventory.Farewell,
+        _ => PlayerInventory.Default
+    };
+
+    private static string DialogKey(string sid) => sid.Replace('/', '_').Replace('-', '_');
+
+    private static Player.IntroTypes IntroType(string value) => value switch
+    {
+        "Transition" => Player.IntroTypes.Transition,
+        "Respawn" => Player.IntroTypes.Respawn,
+        "WalkInRight" => Player.IntroTypes.WalkInRight,
+        "WalkInLeft" => Player.IntroTypes.WalkInLeft,
+        "Jump" => Player.IntroTypes.Jump,
+        "WakeUp" => Player.IntroTypes.WakeUp,
+        "Fall" => Player.IntroTypes.Fall,
+        "TempleMirrorVoid" => Player.IntroTypes.TempleMirrorVoid,
+        "ThinkForABit" => Player.IntroTypes.ThinkForABit,
+        _ => Player.IntroTypes.None
+    };
+
+    private static Session.CoreModes CoreMode(string value) => value switch
+    {
+        "Hot" => Session.CoreModes.Hot,
+        "Cold" => Session.CoreModes.Cold,
+        _ => Session.CoreModes.None
+    };
+
+    private static Action<Scene, bool, Action> Wipe(string value) => value switch
+    {
+        "Celeste.CurtainWipe" => (scene, wipeIn, done) => new CurtainWipe(scene, wipeIn, done),
+        "Celeste.DreamWipe" => (scene, wipeIn, done) => new DreamWipe(scene, wipeIn, done),
+        "Celeste.DropWipe" => (scene, wipeIn, done) => new DropWipe(scene, wipeIn, done),
+        "Celeste.FadeWipe" => (scene, wipeIn, done) => new FadeWipe(scene, wipeIn, done),
+        "Celeste.FallWipe" => (scene, wipeIn, done) => new FallWipe(scene, wipeIn, done),
+        "Celeste.HeartWipe" => (scene, wipeIn, done) => new HeartWipe(scene, wipeIn, done),
+        "Celeste.KeyDoorWipe" => (scene, wipeIn, done) => new KeyDoorWipe(scene, wipeIn, done),
+        "Celeste.MountainWipe" => (scene, wipeIn, done) => new MountainWipe(scene, wipeIn, done),
+        "Celeste.SpotlightWipe" => (scene, wipeIn, done) => new SpotlightWipe(scene, wipeIn, done),
+        "Celeste.StarfieldWipe" => (scene, wipeIn, done) => new StarfieldWipe(scene, wipeIn, done),
+        "Celeste.WindWipe" => (scene, wipeIn, done) => new WindWipe(scene, wipeIn, done),
+        _ => (scene, wipeIn, done) => new AngledWipe(scene, wipeIn, done)
+    };
 
     internal static bool IsCustom(AreaKey area) => ByArea.ContainsKey(area.ID);
     internal static bool TryDescriptor(int areaId, out AppleEverestMapProgressionDescriptor descriptor) => ByArea.TryGetValue(areaId, out descriptor);
@@ -162,6 +223,16 @@ internal static class AppleEverestProgressionRuntime
             value.OldStats?.Cassette ?? false, CaptureModes(value.OldStats ?? new AreaStats(descriptor.RuntimeAreaId)));
     }
 
+    internal static Session RestoreSession(AppleEverestProgressionSession value)
+    {
+        if (value == null || SaveData.Instance == null ||
+            !TryDescriptor(value.Sid, out AppleEverestMapProgressionDescriptor descriptor) ||
+            descriptor.CompatibilityId != value.CompatibilityId ||
+            SaveData.Instance.Areas.Count <= descriptor.RuntimeAreaId)
+            return null;
+        return RestoreSession(value, descriptor, SaveData.Instance.Areas[descriptor.RuntimeAreaId]);
+    }
+
     internal static bool HasMeaningfulState(SaveData save, AppleEverestProgressionSnapshot selected) =>
         selected != null || save?.CurrentSession != null && IsCustom(save.CurrentSession.Area) ||
         save != null && GeneratedAppleEverestProgressionManifest.Maps.Any(map =>
@@ -183,6 +254,28 @@ internal static class AppleEverestProgressionRuntime
         }
         Engine.Scene = new LevelLoader(session) { PlayerIntroTypeOverride = Player.IntroTypes.None };
         AppleEverestStaticRuntime.Log($"levelset-map=launch sid={descriptor.Sid} slot={SaveData.Instance.FileSlot} room={session.Level} persistent=true");
+    }
+
+    internal static void LaunchPersistentAt(string sid, string room, Vector2 spawn)
+    {
+        if (SaveData.Instance == null || SaveData.Instance.FileSlot is < 0 or > 2 ||
+            !TryDescriptor(sid, out AppleEverestMapProgressionDescriptor descriptor) ||
+            room == null || !descriptor.Rooms.Contains(room, StringComparer.Ordinal))
+        {
+            AppleEverestStaticRuntime.ShowStatus("SELECT A NUMBERED SAVE FIRST");
+            return;
+        }
+        Input.MenuConfirm.ConsumePress(); Input.Jump.ConsumePress();
+        Session session = new(new AreaKey(descriptor.RuntimeAreaId))
+        {
+            Level = room,
+            RespawnPoint = spawn,
+            StartedFromBeginning = true,
+            FirstLevel = true
+        };
+        SaveData.Instance.StartSession(session);
+        Engine.Scene = new LevelLoader(session) { PlayerIntroTypeOverride = Player.IntroTypes.None };
+        AppleEverestStaticRuntime.Log($"levelset-map=launch-at sid={descriptor.Sid} slot={SaveData.Instance.FileSlot} room={room} persistent=true");
     }
 
     internal static int TotalStrawberries(string levelSet, SaveData save) => Areas(levelSet, save).Sum(value => value.TotalStrawberries);

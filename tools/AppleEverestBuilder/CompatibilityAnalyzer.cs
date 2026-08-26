@@ -34,14 +34,20 @@ internal static class CompatibilityAnalyzer
 
     private static ResolvedMod AnalyzeCore(ModInput input, EverestYamlEntry metadata, bool rejectUnsupported)
     {
-        IReadOnlyList<FrozenIlTransformPlan> frozenIl = StaticIlFreeze.Resolve(input, metadata);
-        StaticAotCompatibilityPlan? staticAot = StaticAotCompatibility.Resolve(input, metadata);
-        IReadOnlyList<CustomAudioBankPlan> customAudio = CustomAudioManifest.Resolve(input, metadata);
-        List<string> managed = input.Files.Where(file => IsManaged(file.Path)).Select(file => file.Path).ToList();
-        List<string> content = input.Files.Where(file => IsContent(file.Path)).Select(file => file.Path).ToList();
+        StaticSemanticLoweringPlan? semantic = StaticSemanticLowering.Resolve(input, metadata);
+        IReadOnlyList<FrozenIlTransformPlan> frozenIl = semantic == null ? StaticIlFreeze.Resolve(input, metadata) : [];
+        StaticAotCompatibilityPlan? staticAot = semantic == null ? StaticAotCompatibility.Resolve(input, metadata) : null;
+        IReadOnlyList<CustomAudioBankPlan> customAudio = semantic == null ? CustomAudioManifest.Resolve(input, metadata) : [];
+        List<string> managed = semantic == null
+            ? input.Files.Where(file => IsManaged(file.Path)).Select(file => file.Path).ToList()
+            : [];
+        List<string> content = input.Files.Where(file => IsContent(file.Path) &&
+            (semantic == null || StaticSemanticLowering.IncludeContent(file.Path))).Select(file => file.Path).ToList();
         SortedSet<string> mechanisms = new(StringComparer.Ordinal);
         bool hookGenRegistration = false;
-        CompatibilityClass classification = string.IsNullOrWhiteSpace(metadata.DLL)
+        CompatibilityClass classification = semantic != null
+            ? CompatibilityClass.HASH_LOCKED_STATIC_SEMANTIC_LOWERING
+            : string.IsNullOrWhiteSpace(metadata.DLL)
             ? CompatibilityClass.CONTENT_ONLY
             : CompatibilityClass.STATIC_MODULE;
 
@@ -49,7 +55,7 @@ internal static class CompatibilityAnalyzer
         // architecture.  Treat their mere presence as a product boundary: an
         // otherwise compatible helper must not silently ship a partial feature
         // set whose custom events can never be resolved on Apple devices.
-        foreach (string bank in input.Files.Where(file =>
+        foreach (string bank in (semantic == null ? input.Files : Array.Empty<FileRecord>()).Where(file =>
                      file.Path.EndsWith(".bank", StringComparison.OrdinalIgnoreCase))
                  .Select(file => file.Path))
             Record("custom-fmod-bank:" + bank, customAudio.Any(plan => plan.SourcePath == bank)
@@ -114,7 +120,11 @@ internal static class CompatibilityAnalyzer
             string normalized = metadata.DLL!.Replace('\\', '/');
             if (!input.Files.Any(file => string.Equals(file.Path, normalized, StringComparison.Ordinal)))
                 throw new InvalidDataException($"declared DLL/source entry is missing for {metadata.Name}: {metadata.DLL}");
-            if (normalized.EndsWith(".dll", StringComparison.OrdinalIgnoreCase))
+            if (semantic != null)
+            {
+                mechanisms.Add("hash-locked-static-semantic-lowering:" + semantic.Id);
+            }
+            else if (normalized.EndsWith(".dll", StringComparison.OrdinalIgnoreCase))
             {
                 declaredAssembly = normalized;
                 declaration = AssemblyFreezer.InspectDeclaration(Path.Combine(input.StagingRoot,
@@ -165,6 +175,7 @@ internal static class CompatibilityAnalyzer
             ModInteropRegistrations = modInteropRegistrations,
             FrozenIlTransforms = frozenIl,
             StaticAotCompatibility = staticAot,
+            StaticSemanticLowering = semantic,
             CustomAudioBanks = customAudio
         };
 
@@ -530,19 +541,20 @@ internal static class CompatibilityAnalyzer
             CompatibilityClass.STATIC_IL_EVENT_SEQUENCE => 8,
             CompatibilityClass.STATIC_DIRECT_ILHOOK_FREEZE => 9,
             CompatibilityClass.HASH_LOCKED_STATIC_AOT_COMPATIBILITY => 10,
-            CompatibilityClass.STATIC_CUSTOM_FMOD_BANK => 11,
-            CompatibilityClass.MODINTEROP_DEFERRED => 12,
-            CompatibilityClass.ON_HOOK_DEFERRED => 13,
-            CompatibilityClass.IL_HOOK_DEFERRED => 14,
-            CompatibilityClass.DIRECT_HOOK_DEFERRED => 15,
-            CompatibilityClass.DYNAMIC_TARGET_DEFERRED => 16,
-            CompatibilityClass.DYNAMIC_DETOUR_DEFERRED => 17,
-            CompatibilityClass.DETOUR_CONFIG_DEFERRED => 18,
-            CompatibilityClass.DYNAMIC_CODE_UNSUPPORTED => 19,
-            CompatibilityClass.CUSTOM_AUDIO_UNSUPPORTED => 20,
-            CompatibilityClass.NATIVE_UNSUPPORTED => 21,
-            CompatibilityClass.LUA_UNSUPPORTED => 22,
-            CompatibilityClass.PLATFORM_UNSUPPORTED => 23,
+            CompatibilityClass.HASH_LOCKED_STATIC_SEMANTIC_LOWERING => 11,
+            CompatibilityClass.STATIC_CUSTOM_FMOD_BANK => 12,
+            CompatibilityClass.MODINTEROP_DEFERRED => 13,
+            CompatibilityClass.ON_HOOK_DEFERRED => 14,
+            CompatibilityClass.IL_HOOK_DEFERRED => 15,
+            CompatibilityClass.DIRECT_HOOK_DEFERRED => 16,
+            CompatibilityClass.DYNAMIC_TARGET_DEFERRED => 17,
+            CompatibilityClass.DYNAMIC_DETOUR_DEFERRED => 18,
+            CompatibilityClass.DETOUR_CONFIG_DEFERRED => 19,
+            CompatibilityClass.DYNAMIC_CODE_UNSUPPORTED => 20,
+            CompatibilityClass.CUSTOM_AUDIO_UNSUPPORTED => 21,
+            CompatibilityClass.NATIVE_UNSUPPORTED => 22,
+            CompatibilityClass.LUA_UNSUPPORTED => 23,
+            CompatibilityClass.PLATFORM_UNSUPPORTED => 24,
             _ => 99
         };
         return Rank(detected) > Rank(current) ? detected : current;

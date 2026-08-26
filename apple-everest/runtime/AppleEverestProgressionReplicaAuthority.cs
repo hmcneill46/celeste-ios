@@ -45,10 +45,11 @@ internal sealed class AppleEverestProgressionReplicaAuthority
     }
 
     internal AppleEverestProgressionPreparedWrite Prepare(int slot, AppleEverestProgressionReplicaState state,
-        byte[] baseHash, byte[] lineage, AppleEverestProgressionArea[] areas, AppleEverestProgressionSession session)
+        byte[] baseHash, byte[] lineage, AppleEverestProgressionArea[] areas, AppleEverestProgressionSession session,
+        AppleEverestProgressionSession[] suspendedSessions = null)
     {
         long generation = Math.Max(state?.GenerationA ?? 0, state?.GenerationB ?? 0) + 1;
-        AppleEverestProgressionSnapshot snapshot = new(slot, generation, baseHash, lineage, areas, session);
+        AppleEverestProgressionSnapshot snapshot = new(slot, generation, baseHash, lineage, areas, session, suspendedSessions);
         string replica = (state?.GenerationA ?? 0) <= (state?.GenerationB ?? 0) ? "A" : "B";
         return new(slot, replica, AppleEverestProgressionSnapshotCodec.Encode(snapshot), snapshot);
     }
@@ -85,7 +86,10 @@ internal sealed class AppleEverestProgressionReplicaAuthority
         maps != null && (value.Areas.Any(area => maps.TryGetValue(area.Sid, out string identity) &&
                                                 identity == area.CompatibilityId) ||
                          value.Session != null && maps.TryGetValue(value.Session.Sid, out string sessionIdentity) &&
-                                                  sessionIdentity == value.Session.CompatibilityId);
+                                                  sessionIdentity == value.Session.CompatibilityId ||
+                         (value.SuspendedSessions ?? Array.Empty<AppleEverestProgressionSession>()).Any(session =>
+                             maps.TryGetValue(session.Sid, out string suspendedIdentity) &&
+                             suspendedIdentity == session.CompatibilityId));
 
     internal static AppleEverestProgressionArea[] MergeInstalledAreas(
         IEnumerable<AppleEverestProgressionArea> installed,

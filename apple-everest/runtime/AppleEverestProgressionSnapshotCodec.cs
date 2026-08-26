@@ -44,7 +44,8 @@ internal sealed record AppleEverestProgressionCounter(string Key, int Value);
 
 internal sealed record AppleEverestProgressionSnapshot(
     int Slot, long Generation, byte[] BaseSaveSha256, byte[] Lineage,
-    AppleEverestProgressionArea[] Areas, AppleEverestProgressionSession Session);
+    AppleEverestProgressionArea[] Areas, AppleEverestProgressionSession Session,
+    AppleEverestProgressionSession[] SuspendedSessions = null);
 
 internal static class AppleEverestProgressionSnapshotCodec
 {
@@ -65,7 +66,7 @@ internal static class AppleEverestProgressionSnapshotCodec
         using (BinaryWriter writer = new(body, new UTF8Encoding(false, true), leaveOpen: true))
         {
             writer.Write(Magic);
-            writer.Write(1);
+            writer.Write(2);
             writer.Write(value.Slot);
             writer.Write(value.Generation);
             writer.Write(value.BaseSaveSha256);
@@ -75,6 +76,10 @@ internal static class AppleEverestProgressionSnapshotCodec
                 WriteArea(writer, area);
             writer.Write(value.Session != null);
             if (value.Session != null) WriteSession(writer, value.Session);
+            AppleEverestProgressionSession[] suspended = (value.SuspendedSessions ?? Array.Empty<AppleEverestProgressionSession>())
+                .OrderBy(item => item.Sid, StringComparer.Ordinal).ToArray();
+            writer.Write(suspended.Length);
+            foreach (AppleEverestProgressionSession session in suspended) WriteSession(writer, session);
         }
         byte[] unsigned = body.ToArray();
         byte[] digest = SHA256.HashData(unsigned);
@@ -95,8 +100,10 @@ internal static class AppleEverestProgressionSnapshotCodec
         {
             using MemoryStream stream = new(data, 0, bodyLength, writable: false);
             using BinaryReader reader = new(stream, new UTF8Encoding(false, true), leaveOpen: false);
-            if (!reader.ReadBytes(Magic.Length).SequenceEqual(Magic) || reader.ReadInt32() != 1 || reader.ReadInt32() != slot)
+            if (!reader.ReadBytes(Magic.Length).SequenceEqual(Magic))
                 return false;
+            int schema = reader.ReadInt32();
+            if (schema is not (1 or 2) || reader.ReadInt32() != slot) return false;
             long generation = reader.ReadInt64();
             byte[] baseHash = reader.ReadBytes(HashBytes);
             byte[] lineage = reader.ReadBytes(HashBytes);
@@ -111,8 +118,23 @@ internal static class AppleEverestProgressionSnapshotCodec
                 if (!identities.Add(areas[index].Sid)) return false;
             }
             AppleEverestProgressionSession session = reader.ReadBoolean() ? ReadSession(reader) : null;
+            AppleEverestProgressionSession[] suspended = Array.Empty<AppleEverestProgressionSession>();
+            if (schema >= 2)
+            {
+                int suspendedCount = reader.ReadInt32();
+                if (suspendedCount is < 0 or > MaximumAreas)
+                    throw new InvalidDataException("invalid suspended session count");
+                suspended = new AppleEverestProgressionSession[suspendedCount];
+                HashSet<string> suspendedSids = new(StringComparer.Ordinal);
+                for (int index = 0; index < suspendedCount; index++)
+                {
+                    suspended[index] = ReadSession(reader);
+                    if (!suspendedSids.Add(suspended[index].Sid))
+                        throw new InvalidDataException("duplicate suspended session SID");
+                }
+            }
             if (stream.Position != stream.Length) return false;
-            value = new(slot, generation, baseHash, lineage, areas, session);
+            value = new(slot, generation, baseHash, lineage, areas, session, suspended);
             Validate(value);
             return true;
         }
@@ -261,8 +283,18 @@ internal static class AppleEverestProgressionSnapshotCodec
             if (string.IsNullOrEmpty(area.Sid) || string.IsNullOrEmpty(area.LevelSet) || string.IsNullOrEmpty(area.CompatibilityId) ||
                 area.Modes == null || area.Modes.Length is < 1 or > MaximumModes)
                 throw new InvalidDataException("invalid Apple Everest progression area");
-        if (value.Session != null && (value.Session.OldStatsModes == null ||
-            value.Session.OldStatsModes.Length is < 1 or > MaximumModes))
+        ValidateSession(value.Session);
+        AppleEverestProgressionSession[] suspended = value.SuspendedSessions ?? Array.Empty<AppleEverestProgressionSession>();
+        if (suspended.Length > MaximumAreas ||
+            suspended.Select(item => item.Sid).Distinct(StringComparer.Ordinal).Count() != suspended.Length)
+            throw new InvalidDataException("invalid suspended Apple Everest progression sessions");
+        foreach (AppleEverestProgressionSession session in suspended) ValidateSession(session);
+    }
+
+    private static void ValidateSession(AppleEverestProgressionSession value)
+    {
+        if (value != null && (string.IsNullOrEmpty(value.Sid) || string.IsNullOrEmpty(value.CompatibilityId) ||
+            value.OldStatsModes == null || value.OldStatsModes.Length is < 1 or > MaximumModes))
             throw new InvalidDataException("invalid Apple Everest progression session baseline");
     }
 }

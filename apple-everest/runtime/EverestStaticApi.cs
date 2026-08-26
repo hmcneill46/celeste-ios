@@ -50,6 +50,41 @@ public abstract class EverestModuleSession
     public int Index { get; set; }
 }
 
+internal sealed record AppleEverestCollabMapDescriptor(
+    string Sid,
+    string LobbySid,
+    string DisplayName,
+    string Author,
+    int Order,
+    string SourceMapSha256,
+    string MountedMapSha256,
+    string CompatibilityId,
+    string LevelSet,
+    string[] Rooms,
+    bool AllowSaving,
+    string ReturnMode,
+    string ReturnRoom,
+    float ReturnX,
+    float ReturnY);
+internal sealed record AppleEverestCollabDescriptor(
+    string Id,
+    string DisplayName,
+    string Owner,
+    string Version,
+    string SourceLogicalSha256,
+    string ArchiveSha256,
+    string LobbySid,
+    string LobbyDisplayName,
+    string LobbySourceMapSha256,
+    string LobbyMountedMapSha256,
+    string LobbyCompatibilityId,
+    string LobbyLevelSet,
+    string[] LobbyRooms,
+    string JournalLevelSet,
+    bool JournalVanilla,
+    bool JournalShowOnlyDiscovered,
+    AppleEverestCollabMapDescriptor[] Maps);
+
 // Bounded settings ABI needed by supported precompiled modules. The normal
 // Everest loader initializes these bindings reflectively; the static closure
 // generator emits equivalent typed construction for every declared property.
@@ -317,12 +352,13 @@ internal sealed class AppleEverestMapProgressionDescriptor
     public string[] Checkpoints { get; }
     public string[] AreaModes { get; }
     public bool CompletionAvailable { get; }
+    public AppleEverestMapPresentationDescriptor Presentation { get; }
     public int RuntimeAreaId { get; internal set; } = -1;
 
     public AppleEverestMapProgressionDescriptor(string path, string sid, string levelSet,
         string mapSha256, string compatibilityId, string[] rooms, int strawberries,
         bool heart, bool cassette, string[] checkpoints, string[] areaModes,
-        bool completionAvailable)
+        bool completionAvailable, AppleEverestMapPresentationDescriptor presentation = null)
     {
         Path = path;
         Sid = sid;
@@ -336,6 +372,49 @@ internal sealed class AppleEverestMapProgressionDescriptor
         Checkpoints = checkpoints;
         AreaModes = areaModes;
         CompletionAvailable = completionAvailable;
+        Presentation = presentation ?? AppleEverestMapPresentationDescriptor.EverestDefault;
+    }
+}
+
+internal sealed class AppleEverestMapPresentationDescriptor
+{
+    internal static readonly AppleEverestMapPresentationDescriptor EverestDefault = new(
+        "areas/null", "6c7c81", "2f344b", "ffffff", "WakeUp", false, "",
+        "Celeste.AngledWipe", 0.05f, 0f, 1f, "wood", "None", "Default",
+        "event:/music/lvl1/main", "event:/env/amb/00_prologue", "", false, false);
+
+    public string Icon { get; }
+    public string TitleBaseColor { get; }
+    public string TitleAccentColor { get; }
+    public string TitleTextColor { get; }
+    public string IntroType { get; }
+    public bool Dreaming { get; }
+    public string ColorGrade { get; }
+    public string Wipe { get; }
+    public float DarknessAlpha { get; }
+    public float BloomBase { get; }
+    public float BloomStrength { get; }
+    public string Jumpthru { get; }
+    public string CoreMode { get; }
+    public string Inventory { get; }
+    public string Music { get; }
+    public string Ambience { get; }
+    public string StartLevel { get; }
+    public bool HeartIsEnd { get; }
+    public bool IgnoreLevelAudioLayerData { get; }
+
+    public AppleEverestMapPresentationDescriptor(string icon, string titleBaseColor, string titleAccentColor,
+        string titleTextColor, string introType, bool dreaming, string colorGrade, string wipe,
+        float darknessAlpha, float bloomBase, float bloomStrength, string jumpthru, string coreMode,
+        string inventory, string music, string ambience, string startLevel, bool heartIsEnd,
+        bool ignoreLevelAudioLayerData)
+    {
+        Icon = icon; TitleBaseColor = titleBaseColor; TitleAccentColor = titleAccentColor;
+        TitleTextColor = titleTextColor; IntroType = introType; Dreaming = dreaming;
+        ColorGrade = colorGrade; Wipe = wipe; DarknessAlpha = darknessAlpha; BloomBase = bloomBase;
+        BloomStrength = bloomStrength; Jumpthru = jumpthru; CoreMode = coreMode; Inventory = inventory;
+        Music = music; Ambience = ambience; StartLevel = startLevel; HeartIsEnd = heartIsEnd;
+        IgnoreLevelAudioLayerData = ignoreLevelAudioLayerData;
     }
 }
 

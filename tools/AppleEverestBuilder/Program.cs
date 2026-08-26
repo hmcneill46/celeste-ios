@@ -53,11 +53,14 @@ internal static class Program
             for (int index = 0; index < modPaths.Count; index++)
             {
                 string source = Path.GetFullPath(modPaths[index]);
+                ModInput? input = null;
+                EverestYamlEntry? currentMetadata = null;
                 try
                 {
-                    ModInput input = SafeModIngestor.Ingest(source, staging, index);
+                    input = SafeModIngestor.Ingest(source, staging, index);
                     foreach (EverestYamlEntry metadata in input.Metadata)
                     {
+                        currentMetadata = metadata;
                         ResolvedMod mod = CompatibilityAnalyzer.Audit(input, metadata);
                         auditedMods.Add(mod);
                         results.Add(new
@@ -90,7 +93,8 @@ internal static class Program
                                 CompatibilityClass.NORMAL_EVENT or CompatibilityClass.ON_HOOK_SUPPORTED or CompatibilityClass.DIRECT_HOOK_SUPPORTED or
                                 CompatibilityClass.MIXED_MANAGED_DETOURS_SUPPORTED or CompatibilityClass.MODINTEROP_STATIC_SUPPORTED or
                                 CompatibilityClass.STATIC_IL_EVENT_FREEZE or CompatibilityClass.STATIC_IL_EVENT_SEQUENCE or
-                                CompatibilityClass.STATIC_DIRECT_ILHOOK_FREEZE or CompatibilityClass.HASH_LOCKED_STATIC_AOT_COMPATIBILITY
+                                CompatibilityClass.STATIC_DIRECT_ILHOOK_FREEZE or CompatibilityClass.HASH_LOCKED_STATIC_AOT_COMPATIBILITY or
+                                CompatibilityClass.HASH_LOCKED_STATIC_SEMANTIC_LOWERING
                                 or CompatibilityClass.STATIC_CUSTOM_FMOD_BANK
                                 ? "candidate" : "deferred"
                         });
@@ -98,7 +102,17 @@ internal static class Program
                 }
                 catch (Exception exception)
                 {
-                    results.Add(new { input = Path.GetFileName(source), status = "rejected", reason = exception.Message });
+                    results.Add(new
+                    {
+                        input = Path.GetFileName(source),
+                        archiveSha256 = File.Exists(source) ? Hashing.FileSha256(source) : null,
+                        sourceLogicalSha256 = input?.SourceSha256,
+                        name = currentMetadata?.Name,
+                        version = currentMetadata?.Version,
+                        declaredDll = currentMetadata?.DLL,
+                        status = "rejected",
+                        reason = exception.Message
+                    });
                 }
             }
         }

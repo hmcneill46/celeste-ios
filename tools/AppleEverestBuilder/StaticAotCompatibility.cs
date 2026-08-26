@@ -329,6 +329,8 @@ namespace Celeste.Mod
     {
         private sealed class ExtraData { internal readonly Dictionary<string, object> Values = new(StringComparer.Ordinal); }
         private static readonly ConditionalWeakTable<object, ExtraData> Extras = new();
+        private static readonly ConditionalWeakTable<object, ExtraData>.CreateValueCallback ExtraDataFactory =
+            static _ => new ExtraData();
 
         public static object Get(object target, string key) => (target, key) switch
         {
@@ -353,12 +355,12 @@ namespace Celeste.Mod
                 case (global::Celeste.Strawberry item, "flyingAway"): item.flyingAway = (bool)value; return;
                 case (global::Celeste.Player item, "dashCooldownTimer"): item.dashCooldownTimer = (float)value; return;
                 case (global::Celeste.Player item, "boostTarget"): item.boostTarget = (Vector2)value; return;
-                default: Extras.GetOrCreateValue(target).Values[key] = value; return;
+                default: Extras.GetValue(target, ExtraDataFactory).Values[key] = value; return;
             }
         }
 
         public static Dictionary<string, object> Data(object target) =>
-            Extras.GetOrCreateValue(target).Values;
+            Extras.GetValue(target, ExtraDataFactory).Values;
 
         public static float PlayerStarFlyTimer(global::Celeste.Player value) => value.starFlyTimer;
         public static Color PlayerStarFlyColor(global::Celeste.Player value) => value.starFlyColor;

@@ -27,13 +27,15 @@ internal static class ContentCompiler
         List<string> entities = [];
         List<string> triggers = [];
         List<string> checkpoints = [];
+        MapPresentationBuilder presentation = new();
         int elements = 0;
-        ReadProgressionElement(reader, table, null, 0, ref elements, rooms, entities, triggers, checkpoints);
+        ReadProgressionElement(reader, table, null, 0, ref elements, rooms, entities, triggers, checkpoints,
+            presentation);
         if (stream.Position != stream.Length) throw new InvalidDataException("map binary contains trailing bytes");
         string[] entitySet = entities.Distinct(StringComparer.Ordinal).OrderBy(value => value, StringComparer.Ordinal).ToArray();
         string[] triggerSet = triggers.Distinct(StringComparer.Ordinal).OrderBy(value => value, StringComparer.Ordinal).ToArray();
         int berries = entities.Count(value => value is "strawberry" or "goldenBerry");
-        bool heart = entities.Any(value => value is "blackGem" or "heartGem");
+        bool heart = entities.Any(value => value is "blackGem" or "heartGem" or "CollabUtils2/MiniHeart");
         bool cassette = entities.Contains("cassette", StringComparer.Ordinal);
         string compatibility = Hashing.BytesSha256(Encoding.UTF8.GetBytes(
             "apple-everest-progression-map-v1\n" + mapPath + "\n" + sha256 + "\n" +
@@ -42,7 +44,8 @@ internal static class ContentCompiler
             rooms.Distinct(StringComparer.Ordinal).OrderBy(value => value, StringComparer.Ordinal).ToArray(),
             berries, heart, cassette,
             checkpoints.Distinct(StringComparer.Ordinal).OrderBy(value => value, StringComparer.Ordinal).ToArray(),
-            entitySet, triggerSet, ["A"], true);
+            entitySet, triggerSet, ["A"], !mapPath.Contains("/0-Lobbies/", StringComparison.Ordinal),
+            presentation.Build());
     }
 
     internal static IReadOnlyList<(string Kind, string Id)> InspectGameplayIds(string path)
@@ -68,6 +71,30 @@ internal static class ContentCompiler
             if (stream.Position != stream.Length) throw new InvalidDataException("map binary contains trailing bytes");
             return result.Distinct().OrderBy(value => value.Kind, StringComparer.Ordinal)
                 .ThenBy(value => value.Id, StringComparer.Ordinal).ToArray();
+        }
+        catch (EndOfStreamException exception)
+        {
+            throw new InvalidDataException("map binary body is truncated", exception);
+        }
+    }
+
+    internal static IReadOnlyList<MapElementRecord> InspectElements(string path)
+    {
+        using FileStream stream = File.OpenRead(path);
+        using BinaryReader reader = new(stream, Encoding.UTF8, leaveOpen: false);
+        try
+        {
+            if (reader.ReadString() != "CELESTE MAP") throw new InvalidDataException("map binary has an invalid Celeste header");
+            _ = reader.ReadString();
+            int count = reader.ReadInt16();
+            if (count is < 1 or > 8192) throw new InvalidDataException("map string table is invalid");
+            string[] table = new string[count];
+            for (int index = 0; index < count; index++) table[index] = reader.ReadString();
+            List<MapElementRecord> result = [];
+            int elements = 0;
+            ReadDetailedElement(reader, table, null, "", 0, ref elements, result);
+            if (stream.Position != stream.Length) throw new InvalidDataException("map binary contains trailing bytes");
+            return result;
         }
         catch (EndOfStreamException exception)
         {
@@ -261,7 +288,8 @@ internal static class ContentCompiler
     }
 
     private static void ReadProgressionElement(BinaryReader reader, string[] table, string? parent, int depth,
-        ref int elements, List<string> rooms, List<string> entities, List<string> triggers, List<string> checkpoints)
+        ref int elements, List<string> rooms, List<string> entities, List<string> triggers, List<string> checkpoints,
+        MapPresentationBuilder presentation)
     {
         if (depth > 128 || ++elements > 100000) throw new InvalidDataException("map element bounds exceeded");
         string name = Lookup(table, reader.ReadInt16());
@@ -287,6 +315,9 @@ internal static class ContentCompiler
         }
         if (parent == "levels" && name == "level" && attributes.TryGetValue("name", out object? room) && room is string roomName)
             rooms.Add(roomName);
+        if (parent == "Map" && name == "meta") presentation.ApplyArea(attributes);
+        else if (parent == "meta" && name == "mode") presentation.ApplyMode(attributes);
+        else if (parent == "mode" && name == "audiostate") presentation.ApplyAudio(attributes);
         if (parent == "entities") entities.Add(name);
         if (parent == "triggers")
         {
@@ -297,7 +328,8 @@ internal static class ContentCompiler
         int children = reader.ReadInt16();
         if (children < 0) throw new InvalidDataException("map child count is invalid");
         for (int index = 0; index < children; index++)
-            ReadProgressionElement(reader, table, name, depth + 1, ref elements, rooms, entities, triggers, checkpoints);
+            ReadProgressionElement(reader, table, name, depth + 1, ref elements, rooms, entities, triggers, checkpoints,
+                presentation);
 
         static int CheckedRleLength(BinaryReader input)
         {
@@ -306,6 +338,217 @@ internal static class ContentCompiler
             return length;
         }
     }
+
+    private sealed class MapPresentationBuilder
+    {
+        private MapPresentationRecord value = MapPresentationRecord.EverestDefault;
+
+        internal void ApplyArea(IReadOnlyDictionary<string, object> attributes)
+        {
+            value = value with
+            {
+                Icon = Text(attributes, "Icon", value.Icon),
+                TitleBaseColor = ColorText(attributes, "TitleBaseColor", value.TitleBaseColor),
+                TitleAccentColor = ColorText(attributes, "TitleAccentColor", value.TitleAccentColor),
+                TitleTextColor = ColorText(attributes, "TitleTextColor", value.TitleTextColor),
+                IntroType = Choice(attributes, "IntroType", value.IntroType,
+                    "Transition", "Respawn", "WalkInRight", "WalkInLeft", "Jump", "WakeUp", "Fall",
+                    "TempleMirrorVoid", "None", "ThinkForABit"),
+                Dreaming = Boolean(attributes, "Dreaming", value.Dreaming),
+                ColorGrade = Text(attributes, "ColorGrade", value.ColorGrade),
+                Wipe = Wipe(attributes, value.Wipe),
+                DarknessAlpha = Number(attributes, "DarknessAlpha", value.DarknessAlpha, 0f, 1f),
+                BloomBase = Number(attributes, "BloomBase", value.BloomBase, 0f, 8f),
+                BloomStrength = Number(attributes, "BloomStrength", value.BloomStrength, 0f, 8f),
+                Jumpthru = Text(attributes, "Jumpthru", value.Jumpthru),
+                CoreMode = Choice(attributes, "CoreMode", value.CoreMode, "None", "Hot", "Cold")
+            };
+        }
+
+        internal void ApplyMode(IReadOnlyDictionary<string, object> attributes)
+        {
+            value = value with
+            {
+                Inventory = Choice(attributes, "Inventory", value.Inventory,
+                    "Default", "CH6End", "Core", "OldSite", "Prologue", "TheSummit", "Farewell"),
+                StartLevel = Text(attributes, "StartLevel", value.StartLevel),
+                HeartIsEnd = Boolean(attributes, "HeartIsEnd", value.HeartIsEnd),
+                IgnoreLevelAudioLayerData = Boolean(attributes, "IgnoreLevelAudioLayerData",
+                    value.IgnoreLevelAudioLayerData)
+            };
+        }
+
+        internal void ApplyAudio(IReadOnlyDictionary<string, object> attributes)
+        {
+            value = value with
+            {
+                Music = Text(attributes, "Music", value.Music),
+                Ambience = Text(attributes, "Ambience", value.Ambience)
+            };
+        }
+
+        internal MapPresentationRecord Build() => value;
+
+        private static string Text(IReadOnlyDictionary<string, object> attributes, string key, string fallback)
+        {
+            if (!attributes.TryGetValue(key, out object? raw)) return fallback;
+            string text = Convert.ToString(raw, System.Globalization.CultureInfo.InvariantCulture) ?? "";
+            if (text.Length > 1024) throw new InvalidDataException("map presentation text is too long: " + key);
+            return text;
+        }
+
+        private static string ColorText(IReadOnlyDictionary<string, object> attributes, string key, string fallback)
+        {
+            string text = Text(attributes, key, fallback);
+            if (text.Length != 6 || !text.All(Uri.IsHexDigit))
+                throw new InvalidDataException("map presentation color is invalid: " + key);
+            return text.ToLowerInvariant();
+        }
+
+        private static string Choice(IReadOnlyDictionary<string, object> attributes, string key, string fallback,
+            params string[] choices)
+        {
+            string text = Text(attributes, key, fallback);
+            string? selected = choices.FirstOrDefault(choice => choice.Equals(text, StringComparison.OrdinalIgnoreCase));
+            return selected ?? throw new InvalidDataException("map presentation value is unsupported: " + key);
+        }
+
+        private static bool Boolean(IReadOnlyDictionary<string, object> attributes, string key, bool fallback) =>
+            attributes.TryGetValue(key, out object? raw) && raw is bool value ? value : fallback;
+
+        private static float Number(IReadOnlyDictionary<string, object> attributes, string key, float fallback,
+            float minimum, float maximum)
+        {
+            if (!attributes.TryGetValue(key, out object? raw)) return fallback;
+            float number = Convert.ToSingle(raw, System.Globalization.CultureInfo.InvariantCulture);
+            if (!float.IsFinite(number) || number < minimum || number > maximum)
+                throw new InvalidDataException("map presentation number is out of range: " + key);
+            return number;
+        }
+
+        private static string Wipe(IReadOnlyDictionary<string, object> attributes, string fallback)
+        {
+            string text = Text(attributes, "Wipe", fallback);
+            string[] supported =
+            [
+                "Celeste.AngledWipe", "Celeste.CurtainWipe", "Celeste.DreamWipe", "Celeste.DropWipe",
+                "Celeste.FadeWipe", "Celeste.FallWipe", "Celeste.HeartWipe", "Celeste.KeyDoorWipe",
+                "Celeste.MountainWipe", "Celeste.SpotlightWipe", "Celeste.StarfieldWipe", "Celeste.WindWipe"
+            ];
+            return supported.Contains(text, StringComparer.Ordinal)
+                ? text
+                : throw new InvalidDataException("map presentation wipe is unsupported");
+        }
+    }
+
+    private static void ReadDetailedElement(BinaryReader reader, string[] table, string? parent, string room,
+        int depth, ref int elements, List<MapElementRecord> result)
+    {
+        if (depth > 128 || ++elements > 100000) throw new InvalidDataException("map element bounds exceeded");
+        string name = Lookup(table, reader.ReadInt16());
+        Dictionary<string, string> attributes = new(StringComparer.Ordinal);
+        int count = reader.ReadByte();
+        for (int index = 0; index < count; index++)
+        {
+            string key = Lookup(table, reader.ReadInt16());
+            byte type = reader.ReadByte();
+            object value = type switch
+            {
+                0 => reader.ReadBoolean(),
+                1 => reader.ReadByte(),
+                2 => reader.ReadInt16(),
+                3 => reader.ReadInt32(),
+                4 => reader.ReadSingle(),
+                5 => Lookup(table, reader.ReadInt16()),
+                6 => reader.ReadString(),
+                7 => reader.ReadBytes(CheckedRleLength(reader)),
+                _ => throw new InvalidDataException("map value type is invalid")
+            };
+            attributes[key] = value switch
+            {
+                float number => number.ToString("R", System.Globalization.CultureInfo.InvariantCulture),
+                byte[] bytes => Convert.ToHexString(bytes),
+                _ => Convert.ToString(value, System.Globalization.CultureInfo.InvariantCulture) ?? ""
+            };
+        }
+        string currentRoom = parent == "levels" && name == "level" && attributes.TryGetValue("name", out string? roomName)
+            ? roomName.StartsWith("lvl_", StringComparison.Ordinal) ? roomName[4..] : roomName
+            : room;
+        int children = reader.ReadInt16();
+        if (children < 0) throw new InvalidDataException("map child count is invalid");
+        List<(float X, float Y)> nodes = [];
+        for (int index = 0; index < children; index++)
+        {
+            long before = reader.BaseStream.Position;
+            // Parse every child normally; node coordinates are also collected
+            // as ordinary immutable map data and never interpreted on device.
+            string childName = PeekElementName(reader, table);
+            reader.BaseStream.Position = before;
+            if (childName == "node")
+            {
+                Dictionary<string, string> nodeAttributes = ReadLeafElement(reader, table, depth + 1, ref elements);
+                if (TryFloat(nodeAttributes, "x", out float x) && TryFloat(nodeAttributes, "y", out float y)) nodes.Add((x, y));
+            }
+            else
+            {
+                ReadDetailedElement(reader, table, name, currentRoom, depth + 1, ref elements, result);
+            }
+        }
+        string? kind = parent == "entities" ? "entity" : parent == "triggers" ? "trigger" : null;
+        if (kind != null)
+        {
+            _ = TryFloat(attributes, "x", out float x);
+            _ = TryFloat(attributes, "y", out float y);
+            _ = int.TryParse(attributes.GetValueOrDefault("width", "0"), out int width);
+            _ = int.TryParse(attributes.GetValueOrDefault("height", "0"), out int height);
+            result.Add(new(kind, name, room, x, y, width, height, attributes, nodes));
+        }
+
+        static int CheckedRleLength(BinaryReader input)
+        {
+            int length = input.ReadInt16();
+            if (length < 0) throw new InvalidDataException("map RLE value is invalid");
+            return length;
+        }
+    }
+
+    private static string PeekElementName(BinaryReader reader, string[] table) => Lookup(table, reader.ReadInt16());
+
+    private static Dictionary<string, string> ReadLeafElement(BinaryReader reader, string[] table, int depth, ref int elements)
+    {
+        if (depth > 128 || ++elements > 100000) throw new InvalidDataException("map element bounds exceeded");
+        _ = Lookup(table, reader.ReadInt16());
+        Dictionary<string, string> result = new(StringComparer.Ordinal);
+        int count = reader.ReadByte();
+        for (int index = 0; index < count; index++)
+        {
+            string key = Lookup(table, reader.ReadInt16());
+            byte type = reader.ReadByte();
+            object value = type switch
+            {
+                0 => reader.ReadBoolean(), 1 => reader.ReadByte(), 2 => reader.ReadInt16(), 3 => reader.ReadInt32(),
+                4 => reader.ReadSingle(), 5 => Lookup(table, reader.ReadInt16()), 6 => reader.ReadString(),
+                7 => reader.ReadBytes(CheckedLength(reader)),
+                _ => throw new InvalidDataException("map value type is invalid")
+            };
+            result[key] = value is float number
+                ? number.ToString("R", System.Globalization.CultureInfo.InvariantCulture)
+                : Convert.ToString(value, System.Globalization.CultureInfo.InvariantCulture) ?? "";
+        }
+        if (reader.ReadInt16() != 0) throw new InvalidDataException("map node unexpectedly contains children");
+        return result;
+
+        static int CheckedLength(BinaryReader input)
+        {
+            int length = input.ReadInt16();
+            if (length < 0) throw new InvalidDataException("map RLE value is invalid");
+            return length;
+        }
+    }
+
+    private static bool TryFloat(IReadOnlyDictionary<string, string> values, string key, out float value) =>
+        float.TryParse(values.GetValueOrDefault(key, "0"), System.Globalization.NumberStyles.Float,
+            System.Globalization.CultureInfo.InvariantCulture, out value);
 
     private static string Lookup(string[] table, short index) => index >= 0 && index < table.Length
         ? table[index]

@@ -10,7 +10,10 @@ internal static class ClosureGenerator
     private static readonly JsonSerializerOptions Json = new() { PropertyNameCaseInsensitive = true };
     private static readonly (string Kind, string Id, string Owner)[] CoreGameplayFactories =
     {
-        ("entity", "everest/coreMessage", "EverestCore")
+        ("entity", "everest/coreMessage", "EverestCore"),
+        ("trigger", "everest/changeInventoryTrigger", "EverestCore"),
+        ("trigger", "everest/flagTrigger", "EverestCore"),
+        ("trigger", "everest/smoothCameraOffsetTrigger", "EverestCore")
     };
 
     public static void Generate(
@@ -38,7 +41,7 @@ internal static class ClosureGenerator
         for (int modOrder = 0; modOrder < ordered.Count; modOrder++)
         {
             ResolvedMod mod = ordered[modOrder];
-            if (!string.IsNullOrWhiteSpace(mod.Metadata.DLL))
+            if (!string.IsNullOrWhiteSpace(mod.Metadata.DLL) && mod.StaticSemanticLowering == null)
             {
                 AppleStaticDeclaration declaration = mod.Declaration
                     ?? throw new InvalidDataException($"{mod.Metadata.Name} has no closed module declaration");
@@ -105,6 +108,9 @@ internal static class ClosureGenerator
                     { Id = factory.Id, Kind = factory.Kind, Owner = item.Mod.Metadata.Name })
                 .Concat(item.Declaration.CustomBackdropFactories.Select(factory => new
                     { Id = factory.Id, Kind = "backdrop", Owner = item.Mod.Metadata.Name })))
+            .Concat(ordered.Where(mod => mod.StaticSemanticLowering != null).SelectMany(mod =>
+                mod.StaticSemanticLowering!.Factories.Select(factory => new
+                    { factory.Id, factory.Kind, Owner = mod.Metadata.Name })))
             .Concat(CoreGameplayFactories.Select(factory => new
                 { factory.Id, factory.Kind, factory.Owner }))
             .ToDictionary(value => value.Kind + "\0" + value.Id, StringComparer.Ordinal);
@@ -125,6 +131,13 @@ internal static class ClosureGenerator
         if (unsupportedMapFactories.Length > 0)
             throw new InvalidDataException("map references runtime-only custom entities without a static map factory: " +
                                            string.Join(",", unsupportedMapFactories));
+        string[] unresolvedNamespacedFactories = mapGameplayIds.Where(value => value.id.Contains('/') &&
+                !factoryOwners.ContainsKey(value.kind + "\0" + value.id))
+            .Select(value => value.map + ":" + value.kind + ":" + value.id)
+            .Distinct(StringComparer.Ordinal).OrderBy(value => value, StringComparer.Ordinal).ToArray();
+        if (unresolvedNamespacedFactories.Length > 0)
+            throw new InvalidDataException("map references namespaced gameplay factories without an exact static implementation: " +
+                                           string.Join(",", unresolvedNamespacedFactories));
         var resolvedMapFactories = mapGameplayIds.Where(value => factoryOwners.ContainsKey(value.kind + "\0" + value.id))
             .Select(value => new { value.map, value.kind, value.id,
                 owner = factoryOwners[value.kind + "\0" + value.id].Owner })
@@ -141,7 +154,8 @@ internal static class ClosureGenerator
             durabilitySource, new UTF8Encoding(false));
         File.WriteAllText(Path.Combine(managed, "GeneratedAppleEverestModuleRegistry.cs"),
             RegistrySource(profile, codeModules, ordered, durabilityAdapters, durabilityClosureSha256), new UTF8Encoding(false));
-        File.WriteAllText(Path.Combine(managed, "GeneratedAppleEverestGameplayRegistry.cs"), GameplayRegistrySource(codeModules), new UTF8Encoding(false));
+        File.WriteAllText(Path.Combine(managed, "GeneratedAppleEverestGameplayRegistry.cs"),
+            GameplayRegistrySource(codeModules, ordered), new UTF8Encoding(false));
         File.WriteAllText(Path.Combine(managed, "GeneratedAppleEverestContentManifest.cs"), ContentManifestSource(ordered, stagedContent), new UTF8Encoding(false));
         MapProgressionRecord[] progressionMaps = stagedContent
             .Where(value => value.LogicalPath.StartsWith("Maps/", StringComparison.Ordinal) &&
@@ -150,6 +164,11 @@ internal static class ClosureGenerator
                 Path.Combine(content, value.LogicalPath.Replace('/', Path.DirectorySeparatorChar)),
                 value.LogicalPath, value.SourceSha256))
             .OrderBy(value => value.Sid, StringComparer.Ordinal).ToArray();
+        CollabGeneration collab = CollabManifestGenerator.Generate(ordered, stagedContent, content, progressionMaps);
+        File.WriteAllText(Path.Combine(managed, "GeneratedAppleEverestCollabManifest.cs"),
+            collab.Source, new UTF8Encoding(false));
+        File.WriteAllText(Path.Combine(outputRoot, "collab-manifest.txt"),
+            collab.ManifestText, new UTF8Encoding(false));
         LevelSetProgressionRecord[] progressionLevelSets = LevelSetProgressionManifest.Create(progressionMaps);
         string levelSetManifestText = LevelSetProgressionManifest.Text(progressionLevelSets);
         string progressionManifestSource = ProgressionManifestSource(progressionMaps, progressionLevelSets);
@@ -202,7 +221,8 @@ internal static class ClosureGenerator
             $"api-surface:{apiSurfaceHash}\nstatic-il:{frozenIlPlanSha256}\n" +
             $"custom-audio:{customAudioManifestSha256}\ncustom-banks:{customBankLogicalSetSha256}\n" +
             $"mod-interop:{modInterop.PlanSha256}\n" +
-            $"progression:{Hashing.BytesSha256(Encoding.UTF8.GetBytes(progressionManifestSource))}\n"));
+            $"progression:{Hashing.BytesSha256(Encoding.UTF8.GetBytes(progressionManifestSource))}\n" +
+            $"collab:{collab.Sha256}\n"));
         object manifest = new
         {
             schemaVersion = 1,
@@ -284,6 +304,10 @@ internal static class ClosureGenerator
             moduleDurabilityTvOSReplicaMaximumBytes = 126976,
             moduleDurabilityTvOSTotalMaximumBytes = 6 * 126976,
             levelSetProgressionSchema = ProductPolicy.LevelSetProgressionSchemaVersion,
+            collabSchema = 1,
+            collabManifestSha256 = collab.Sha256,
+            collabCount = collab.Collabs.Count,
+            collabMapCount = collab.Collabs.Sum(value => value.Maps.Count),
             levelSetProgressionFormat = "typed-sidecar-projection-lineage-ab-v1",
             levelSetProgressionManifestSha256 = Hashing.BytesSha256(Encoding.UTF8.GetBytes(ProgressionManifestText(progressionMaps))),
             levelSetProgressionMapCount = progressionMaps.Length,
@@ -477,6 +501,8 @@ internal static class ClosureGenerator
         PatchLevelDataRoomNames(Path.Combine(managedRoot, "Celeste", "LevelData.cs"));
         PatchPlayerEvents(Path.Combine(managedRoot, "Celeste", "Player.cs"));
         PatchGameplayLoading(Path.Combine(managedRoot, "Celeste", "Level.cs"));
+        PatchAuthoredSpinnerColours(Path.Combine(managedRoot, "Celeste", "Level.cs"),
+            Path.Combine(managedRoot, "Celeste", "CrystalStaticSpinner.cs"));
         MapDataCompatibilityPatch.Apply(Path.Combine(managedRoot, "Celeste", "MapData.cs"));
         PatchBackdropLoading(Path.Combine(managedRoot, "Celeste", "MapData.cs"));
         PatchStartup(Path.Combine(managedRoot, "Celeste", "Celeste.cs"));
@@ -484,6 +510,10 @@ internal static class ClosureGenerator
         PatchCustomAudio(Path.Combine(managedRoot, "Celeste", "GameLoader.cs"),
             Path.Combine(managedRoot, "Celeste", "Audio.cs"));
         PatchMenu(Path.Combine(managedRoot, "Celeste", "MenuOptions.cs"));
+        PatchCollabPauseMenu(Path.Combine(managedRoot, "Celeste", "Level.cs"));
+        PatchCollabOverworldUi(Path.Combine(managedRoot, "Celeste", "Overworld.cs"),
+            Path.Combine(managedRoot, "Celeste", "OuiChapterPanel.cs"),
+            Path.Combine(managedRoot, "Celeste", "OuiJournal.cs"));
         PatchNonPersistentSaveQuit(Path.Combine(managedRoot, "Celeste", "Level.cs"));
         PatchNonPersistentSave(Path.Combine(managedRoot, "Celeste", "UserIO.cs"));
         PatchNonPersistentOverworldReturn(Path.Combine(managedRoot, "Celeste", "OverworldLoader.cs"));
@@ -501,6 +531,7 @@ internal static class ClosureGenerator
         "Level.LoadLevel:ordinary-event:v1",
         "LevelData:pre-1.2.5-optional-lvl-prefix:v1",
         "Player.Update:ordinary-after-update-event:v1",
+        "Player.Update:max-helping-hand-camera-catchup-divisor:v1",
         "Celeste.Run:static-registry-startup:v1",
         "GameLoader:content-ready:v1",
         "GameLoader+Audio:static-custom-fmod-existing-system:v1",
@@ -519,6 +550,7 @@ internal static class ClosureGenerator
         "OverworldLoader.Begin:nonpersistent-mod-session-restore:v1",
         "PinnedEverestABI:ConditionHelper+AchievementHelper-reviewed-members:v2",
         "LevelSetProgression:typed-sidecar-projection-lineage-ab:v1",
+        "CollabUtils2:real-ingame-overworld-ui-and-routing:v3",
         "PinnedEverestABI:DeathMarkers-reviewed-members:v1",
         "PinnedEverestABI:CaeruleaHelper-reviewed-members:v1",
         "HookGen+RuntimeDetour.Hook:shared-data-only-backend:v1",
@@ -674,7 +706,7 @@ internal static class ClosureGenerator
 
     private static void PatchLevel(string path) => ReplaceOnce(path,
         "\t\tCalc.PopRandom();\n\t}\n\n\tpublic void UnloadLevel()",
-        "\t\tCalc.PopRandom();\n\t\tglobal::Celeste.Mod.Everest.Events.Level.RaiseOnLoadLevel(this, playerIntro, isFromLoader);\n\t}\n\n\tpublic void UnloadLevel()");
+        "\t\tCalc.PopRandom();\n\t\tglobal::Celeste.Mod.Everest.Events.Level.RaiseOnLoadLevel(this, playerIntro, isFromLoader);\n\t\tglobal::Celeste.Mod.AppleEverestCollabRuntime.OnLevelLoaded(this);\n\t}\n\n\tpublic void UnloadLevel()");
 
     private static void PatchLevelDataRoomNames(string path) => ReplaceOnce(path,
         "\t\t\tcase \"name\":\n\t\t\t\tName = attribute.Value.ToString().Substring(4);\n\t\t\t\tbreak;",
@@ -682,6 +714,11 @@ internal static class ClosureGenerator
 
     private static void PatchPlayerEvents(string path)
     {
+        ReplaceOnce(path,
+            "\t\t\t\tfloat num = ((StateMachine.State == 20) ? 8f : 1f);\n\t\t\t\tlevel.Camera.Position = position + (cameraTarget - position) * (1f - (float)Math.Pow(0.01f / num, Engine.DeltaTime));",
+            "\t\t\t\tfloat num = ((StateMachine.State == 20) ? 8f : 1f);\n" +
+            "\t\t\t\tnum = global::Celeste.Mod.AppleEverestCameraCatchupRuntime.ResolveDivisor(num, this);\n" +
+            "\t\t\t\tlevel.Camera.Position = position + (cameraTarget - position) * (1f - (float)Math.Pow(0.01f / num, Engine.DeltaTime));");
         ReplaceOnce(path,
             "\t\t\t\tif (component2.Check(this) && Dead)\n\t\t\t\t{\n\t\t\t\t\tbase.Collider = collider;\n\t\t\t\t\treturn;\n\t\t\t\t}",
             "\t\t\t\tif (component2.Check(this) && Dead)\n\t\t\t\t{\n\t\t\t\t\tbase.Collider = collider;\n\t\t\t\t\tglobal::Celeste.Mod.Everest.Events.Player.RaiseOnAfterUpdate(this);\n\t\t\t\t\treturn;\n\t\t\t\t}");
@@ -698,6 +735,26 @@ internal static class ClosureGenerator
         ReplaceOnce(path,
             "\t\t\tswitch (trigger.Name)\n\t\t\t{",
             "\t\t\tif (global::Celeste.Mod.GeneratedAppleEverestGameplayRegistry.TryCreateTrigger(trigger.Name, trigger, vector, entityID3, out Entity appleEverestTrigger))\n\t\t\t{\n\t\t\t\tAdd(appleEverestTrigger);\n\t\t\t\tcontinue;\n\t\t\t}\n\t\t\tswitch (trigger.Name)\n\t\t\t{");
+    }
+
+    private static void PatchAuthoredSpinnerColours(string levelPath, string spinnerPath)
+    {
+        ReplaceOnce(levelPath,
+            "\t\t\t\tAdd(new CrystalStaticSpinner(entity3, vector, color));",
+            "\t\t\t\tif (global::Celeste.Mod.AppleEverestProgressionRuntime.IsCustom(Session.Area))\n" +
+            "\t\t\t\t{\n" +
+            "\t\t\t\t\tcolor = global::Celeste.Mod.AppleEverestSemanticFactories.ResolveSpinnerColor(entity3, color);\n" +
+            "\t\t\t\t}\n" +
+            "\t\t\t\tAdd(new CrystalStaticSpinner(entity3, vector, color));");
+        ReplaceOnce(spinnerPath,
+            "\tpublic override void Awake(Scene scene)\n\t{\n\t\tbase.Awake(scene);",
+            "\tpublic override void Awake(Scene scene)\n\t{\n" +
+            "\t\tbase.Awake(scene);\n" +
+            "\t\tif ((int)color == -1)\n" +
+            "\t\t{\n" +
+            "\t\t\tAdd(new CoreModeListener(this));\n" +
+            "\t\t\tcolor = ((scene as Level).CoreMode == Session.CoreModes.Cold) ? CrystalColor.Blue : CrystalColor.Red;\n" +
+            "\t\t}");
     }
 
     private static void PatchBackdropLoading(string path) => ReplaceOnce(path,
@@ -747,6 +804,61 @@ internal static class ClosureGenerator
     private static void PatchNonPersistentSaveQuit(string path) => ReplaceOnce(path,
         "\t\t\tif (SaveQuitDisabled || (player != null && player.StateMachine.State == 18))",
         "\t\t\tif (SaveQuitDisabled || global::Celeste.Mod.AppleEverestStaticRuntime.NonPersistentModSession || (player != null && player.StateMachine.State == 18))");
+
+    private static void PatchCollabPauseMenu(string path) => ReplaceOnce(path,
+        "\t\tif (!minimal && Celeste.PlayMode != Celeste.PlayModes.Event)\n\t\t{",
+        "\t\tglobal::Celeste.Mod.AppleEverestCollabRuntime.AddPauseMenuItem(this, menu);\n\t\tif (!minimal && Celeste.PlayMode != Celeste.PlayModes.Event)\n\t\t{");
+
+    private static void PatchCollabOverworldUi(string overworldPath, string chapterPanelPath, string journalPath)
+    {
+        ReplaceOnce(overworldPath,
+            "\t\tOui[] menus = new Oui[10]\n\t\t{\n" +
+            "\t\t\tnew OuiAssistMode(), new OuiChapterPanel(), new OuiChapterSelect(), new OuiCredits(),\n" +
+            "\t\t\tnew OuiFileNaming(), new OuiFileSelect(), new OuiJournal(), new OuiMainMenu(),\n" +
+            "\t\t\tnew OuiOptions(), new OuiTitleScreen()\n\t\t};",
+            "\t\tOui[] menus = new Oui[12]\n\t\t{\n" +
+            "\t\t\tnew OuiAssistMode(), new OuiChapterPanel(), new OuiChapterSelect(), new OuiCredits(),\n" +
+            "\t\t\tnew OuiFileNaming(), new OuiFileSelect(), new OuiJournal(), new OuiMainMenu(),\n" +
+            "\t\t\tnew OuiOptions(), new OuiTitleScreen(),\n" +
+            "\t\t\tnew global::Celeste.Mod.AppleEverestOuiEnterChapterPanel(),\n" +
+            "\t\t\tnew global::Celeste.Mod.AppleEverestOuiEnterJournal()\n\t\t};");
+        ReplaceOnce(chapterPanelPath,
+            "\tprivate class Option",
+            "\tpublic class Option");
+        ReplaceOnce(chapterPanelPath,
+            "\tprivate int option\n",
+            "\tinternal int option\n");
+        ReplaceOnce(chapterPanelPath,
+            "\tprivate List<Option> checkpoints = new List<Option>();",
+            "\tinternal List<Option> checkpoints = new List<Option>();");
+        ReplaceOnce(chapterPanelPath,
+            "\t\tchapter = Dialog.Get(\"area_chapter\").Replace(\"{x}\", Area.ChapterIndex.ToString().PadLeft(2));",
+            "\t\tchapter = Dialog.Get(\"area_chapter\").Replace(\"{x}\", Area.ChapterIndex.ToString().PadLeft(2));\n" +
+            "\t\tchapter = global::Celeste.Mod.AppleEverestCollabRuntime.ChapterSubtitle(Area, chapter);");
+        ReplaceOnce(chapterPanelPath,
+            "\tpublic void Start(string checkpoint = null)\n\t{\n\t\tFocused = false;",
+            "\tpublic void Start(string checkpoint = null)\n\t{\n" +
+            "\t\tif (global::Celeste.Mod.AppleEverestCollabRuntime.TryStartChapterPanel(this, checkpoint)) return;\n" +
+            "\t\tFocused = false;");
+        ReplaceOnce(chapterPanelPath,
+            "\t\t\t\tif (!SaveData.Instance.FoundAnyCheckpoints(Area))",
+            "\t\t\t\tif (!global::Celeste.Mod.AppleEverestCollabRuntime.NeedsChapterCheckpointPage(this) && !SaveData.Instance.FoundAnyCheckpoints(Area))");
+        ReplaceOnce(chapterPanelPath,
+            "\t\t\telse\n\t\t\t{\n\t\t\t\toption = 0;\n\t\t\t}\n\t\t\tfor (int j = 0; j < options.Count; j++)",
+            "\t\t\telse\n\t\t\t{\n\t\t\t\toption = 0;\n\t\t\t}\n" +
+            "\t\t\tglobal::Celeste.Mod.AppleEverestCollabRuntime.ConfigureChapterCheckpoints(this);\n" +
+            "\t\t\tfor (int j = 0; j < options.Count; j++)");
+        ReplaceOnce(chapterPanelPath,
+            "\t\t\t\tDrawCheckpoint(center, options[num], num);",
+            "\t\t\t\tif (global::Celeste.Mod.AppleEverestCollabRuntime.ShouldDrawVanillaCheckpoint(this))\n" +
+            "\t\t\t\t{\n" +
+            "\t\t\t\t\tDrawCheckpoint(center, options[num], num);\n" +
+            "\t\t\t\t}");
+        ReplaceOnce(journalPath,
+            "\t\tint num = 0;\n\t\tforeach (OuiJournalPage page in Pages)",
+            "\t\tglobal::Celeste.Mod.AppleEverestCollabRuntime.ConfigureJournalPages(this);\n" +
+            "\t\tint num = 0;\n\t\tforeach (OuiJournalPage page in Pages)");
+    }
 
     private static void PatchNonPersistentSave(string path) => ReplaceOnce(path,
         "\tpublic static void SaveHandler(bool file, bool settings)\n\t{\n\t\tif (!Saving)",
@@ -1148,7 +1260,8 @@ internal static class ClosureGenerator
                 .Append(map.Heart ? "true" : "false").Append(", ").Append(map.Cassette ? "true" : "false")
                 .Append(", ").Append(StringArray(map.Checkpoints)).Append(", ")
                 .Append(StringArray(map.AreaModes)).Append(", ")
-                .Append(map.CompletionAvailable ? "true" : "false").AppendLine("),");
+                .Append(map.CompletionAvailable ? "true" : "false").Append(", ")
+                .Append(Presentation(map.Presentation ?? MapPresentationRecord.EverestDefault)).AppendLine("),");
         }
         result.AppendLine("    };")
             .AppendLine("    internal static readonly AppleEverestLevelSetProgressionDescriptor[] LevelSets =")
@@ -1167,6 +1280,21 @@ internal static class ClosureGenerator
             return items.Length == 0 ? "System.Array.Empty<string>()" :
                 "new[] { " + string.Join(", ", items.Select(value => $"\"{Escape(value)}\"")) + " }";
         }
+
+        static string Presentation(MapPresentationRecord value)
+        {
+            string Text(string text) => "\"" + Escape(text) + "\"";
+            string Float(float number) => number.ToString("R", System.Globalization.CultureInfo.InvariantCulture) + "f";
+            string Bool(bool state) => state ? "true" : "false";
+            return "new AppleEverestMapPresentationDescriptor(" + string.Join(", ", new[]
+            {
+                Text(value.Icon), Text(value.TitleBaseColor), Text(value.TitleAccentColor), Text(value.TitleTextColor),
+                Text(value.IntroType), Bool(value.Dreaming), Text(value.ColorGrade), Text(value.Wipe),
+                Float(value.DarknessAlpha), Float(value.BloomBase), Float(value.BloomStrength), Text(value.Jumpthru),
+                Text(value.CoreMode), Text(value.Inventory), Text(value.Music), Text(value.Ambience),
+                Text(value.StartLevel), Bool(value.HeartIsEnd), Bool(value.IgnoreLevelAudioLayerData)
+            }) + ")";
+        }
     }
 
     private static string ProgressionManifestText(IEnumerable<MapProgressionRecord> maps) =>
@@ -1174,7 +1302,20 @@ internal static class ClosureGenerator
             map.Sid, map.LevelSet, map.MapSha256, map.CompatibilityId, map.Strawberries,
             map.Heart ? "heart" : "no-heart", map.Cassette ? "cassette" : "no-cassette",
             string.Join(",", map.Rooms), string.Join(",", map.Checkpoints),
-            string.Join(",", map.AreaModes), map.CompletionAvailable ? "completion" : "no-completion"))) + "\n";
+            string.Join(",", map.AreaModes), map.CompletionAvailable ? "completion" : "no-completion",
+            PresentationText(map.Presentation ?? MapPresentationRecord.EverestDefault)))) + "\n";
+
+    private static string PresentationText(MapPresentationRecord value) => string.Join("|", new[]
+    {
+        value.Icon, value.TitleBaseColor, value.TitleAccentColor, value.TitleTextColor, value.IntroType,
+        value.Dreaming ? "dreaming" : "awake", value.ColorGrade, value.Wipe,
+        value.DarknessAlpha.ToString("R", System.Globalization.CultureInfo.InvariantCulture),
+        value.BloomBase.ToString("R", System.Globalization.CultureInfo.InvariantCulture),
+        value.BloomStrength.ToString("R", System.Globalization.CultureInfo.InvariantCulture), value.Jumpthru,
+        value.CoreMode, value.Inventory, value.Music, value.Ambience, value.StartLevel,
+        value.HeartIsEnd ? "heart-end" : "heart-normal",
+        value.IgnoreLevelAudioLayerData ? "ignore-audio-layers" : "level-audio-layers"
+    });
 
     private static string CustomAudioManifestSource(
         IReadOnlyList<(CustomAudioBankPlan Plan, int Ordinal)> banks, string manifestSha256)
@@ -1201,7 +1342,8 @@ internal static class ClosureGenerator
         return result.AppendLine("    };").AppendLine("}").ToString();
     }
 
-    private static string GameplayRegistrySource(IReadOnlyList<(ResolvedMod Mod, AppleStaticDeclaration Declaration)> modules)
+    private static string GameplayRegistrySource(IReadOnlyList<(ResolvedMod Mod, AppleStaticDeclaration Declaration)> modules,
+        IReadOnlyList<ResolvedMod> ordered)
     {
         string[] entities = modules
             .SelectMany(item => item.Declaration.TrackedEntityTypes)
@@ -1282,6 +1424,9 @@ internal static class ClosureGenerator
         foreach ((ResolvedMod mod, AppleStaticDeclaration declaration) in modules)
             foreach (AppleCustomEntityFactory factory in declaration.CustomEntityFactories.Where(value => value.Kind == "entity"))
                 AppendFactoryCase(result, mod.Metadata.Name, factory);
+        foreach (ResolvedMod mod in ordered.Where(value => value.StaticSemanticLowering != null))
+            foreach (StaticSemanticFactory factory in mod.StaticSemanticLowering!.Factories.Where(value => value.Kind == "entity"))
+                AppendSemanticFactoryCase(result, mod.Metadata.Name, factory);
         result.AppendLine("            case \"everest/coreMessage\":")
             .AppendLine("                entity = new global::Celeste.Mod.Entities.CustomCoreMessage(data, offset);")
             .AppendLine("                AppleEverestStaticRuntime.RecordCustomFactoryUse(\"EverestCore\", \"everest/coreMessage\", \"entity\");")
@@ -1298,6 +1443,15 @@ internal static class ClosureGenerator
         foreach ((ResolvedMod mod, AppleStaticDeclaration declaration) in modules)
             foreach (AppleCustomEntityFactory factory in declaration.CustomEntityFactories.Where(value => value.Kind == "trigger"))
                 AppendFactoryCase(result, mod.Metadata.Name, factory);
+        foreach (ResolvedMod mod in ordered.Where(value => value.StaticSemanticLowering != null))
+            foreach (StaticSemanticFactory factory in mod.StaticSemanticLowering!.Factories.Where(value => value.Kind == "trigger"))
+                AppendSemanticFactoryCase(result, mod.Metadata.Name, factory);
+        result.AppendLine("            case \"everest/changeInventoryTrigger\":")
+            .AppendLine("            case \"everest/flagTrigger\":")
+            .AppendLine("            case \"everest/smoothCameraOffsetTrigger\":")
+            .AppendLine("                entity = AppleEverestSemanticFactories.CreateTrigger(id, data, offset, entityId);")
+            .AppendLine("                AppleEverestStaticRuntime.RecordCustomFactoryUse(\"EverestCore\", id, \"trigger\");")
+            .AppendLine("                return true;");
         result.AppendLine("        }")
             .AppendLine("        entity = null;")
             .AppendLine("        return false;")
@@ -1340,6 +1494,17 @@ internal static class ClosureGenerator
         };
         result.Append("            case \"").Append(Escape(factory.Id)).AppendLine("\":")
             .Append("                entity = new global::").Append(factory.Type).Append('(').Append(arguments).AppendLine(");")
+            .Append("                AppleEverestStaticRuntime.RecordCustomFactoryUse(\"").Append(Escape(owner)).Append("\", \"")
+            .Append(Escape(factory.Id)).Append("\", \"").Append(factory.Kind).AppendLine("\");")
+            .AppendLine("                return true;");
+    }
+
+    private static void AppendSemanticFactoryCase(StringBuilder result, string owner, StaticSemanticFactory factory)
+    {
+        result.Append("            case \"").Append(Escape(factory.Id)).AppendLine("\":")
+            .Append("                entity = AppleEverestSemanticFactories.Create")
+            .Append(factory.Kind == "entity" ? "Entity" : "Trigger")
+            .AppendLine("(id, data, offset, entityId);")
             .Append("                AppleEverestStaticRuntime.RecordCustomFactoryUse(\"").Append(Escape(owner)).Append("\", \"")
             .Append(Escape(factory.Id)).Append("\", \"").Append(factory.Kind).AppendLine("\");")
             .AppendLine("                return true;");
