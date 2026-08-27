@@ -19,7 +19,7 @@ RC2 = "641e86e4ed164cdf93f602ce2f11436449654d6e"
 RC3 = "c8134c8ca7924cf12f48527e714b5242c6024927"
 TVOS_PENDING = "TVOS_PHYSICAL_PENDING_HARDWARE_UNAVAILABLE"
 PORT_VERSION = "0.1.1"
-PORT_BUILD = "17"
+PORT_BUILD = "23"
 
 COLLAB_ZIP = "638ad7beac7a24600c7c0733acf12a645795bd8878fd5bc7c88e6e24b17dce39"
 COLLAB_SOURCE = "73785a6c562fcb16fc1738840483da0c35526c80344adee9fc0180baa49a4ed2"
@@ -33,14 +33,14 @@ MAP_B_SOURCE = "f9afb1908a4d7e47ba29b778fab4e924147c2bae3a84686c0e81b76b5105ebc3
 MAP_B_STAGED = "ab358aa423948180698d6d5c10166031f36f94062335ed7f9a8d9f8385488dbc"
 MAP_B_COMPAT = "419a5bae9425df172b32515079add4f89f0b1e81290d03f55f76cd6474bb077d"
 
-SHARED = "ccf4f6db802c935071d019b46fbb77d3be49445f4bb590d4e9a1872c9a4b0660"
-MANAGED = "35d9ccb691ce1a0134bdf7df963661ce43ed31e8f6a7a0c8eedcacc7fe1607e4"
+SHARED = "4a78b0a7c5340ae175be134bf972e2061f9a562eae957401dc5379835be3fd3a"
+MANAGED = "a540cd812341be657b59fc4ba13c950c23615d86915bfc6b0ffe2c880bf3ee44"
 CONTENT_TREE = "0947c2e4156c02ba2bbdf37681b202378ad52432b9dabcd9dadb71a945977947"
 REGISTRY = "d7ff46c8ff66d0e5928723494ac65f4b08bfb23c110b621caeb30c2261b65ad1"
 HOOKS = "590af232c6c7209c9295f3f166478ad44c5bf559da22c72c01e45585fabf66f7"
 API = "d594dea86e944b468819818773f2177312445bbebe022bcbc7ea1ff779c8652c"
-PROGRESSION = "55796d3e95a64959f8ddd58e2cf001c06f0b8207f4d37118b60a96aa9d2d7072"
-LEVELSET = "c9ecdcc99221ff03926d282dada049505bd416f66bc1464fa2847d24c36771ba"
+PROGRESSION = "b6ad5f5ef9c97ded6f27d9ce2be0ec75c876662ad6195b3e53213fbb8688fc85"
+LEVELSET = "26cc1df0e07a0a3a061c5391e3a8f85edc0f347269730b239983d5a37fe336bc"
 COLLAB = "6925d8780b6427a67ef5438bef8315b80d4707506b5ebe7e61f9fe3c81f928a0"
 AUDIO = "0a7ca20a24239f4829ab5af7002004309d38d89ac5bffbfefff6a49b278c8841"
 BANK_SET = "c927c0779c1dbbb5b43bd1a5daa5c2eb5e1c9d00b7e81eab87e70aa0a46eb8d7"
@@ -199,6 +199,8 @@ def main() -> int:
     c.require([m["sid"] for m in maps] == ["HennyburgrCompEntries/1-Lobby/redboostercomp",
               "HennyburgrCompEntries/1-Lobby/stationmovers"] and
               [m["rooms"] for m in maps] == [["hennyburgr_1"], ["hennyburgr_01"]], "map SIDs/rooms")
+    c.require([m["authoredStrawberries"] for m in maps] == [1, 0],
+              "exact subordinate-map authored strawberry totals")
     c.require(all(m["levelSet"] == "HennyburgrCompEntries/1-Lobby" and
                   m["allowSaving"] and m["returnToLobbyMode"] == "SetReturnToHere" for m in maps),
               "both maps genuinely wired to the lobby")
@@ -378,7 +380,7 @@ def main() -> int:
     clean = audit["cleanCloneReproduction"]
     c.require(clean == {"recursive": True, "ignoredFixturesCopied": False,
               "publicReleasesReacquired": 13, "exactClosureReproduced": True,
-              "builderDeterministicTests": 443, "stageVerifierChecks": 108,
+              "builderDeterministicTests": 452, "stageVerifierChecks": 111,
               "privacyPassed": True, "cleanStatus": True},
               "fresh recursive clean-clone reproduction recorded")
     c.require(audit["githubActionsMinutesUsed"] == 0 and audit["developmentIntegrationReady"] and
@@ -420,6 +422,21 @@ def main() -> int:
                   "supplied exact collab/map identities")
         c.require("saving\tSetReturnToHere" in collab_text and collab_text.count("\nmap\t") == 2,
                   "supplied two bounded map routes")
+        progression_rows = {
+            fields[0]: fields
+            for line in (closure / "levelset-progression-manifest.txt").read_text().splitlines()[1:]
+            if len(fields := line.split("\t")) >= 5
+        }
+        c.require(progression_rows["HennyburgrCompEntries/1-Lobby/redboostercomp"][4] == "1" and
+                  progression_rows["HennyburgrCompEntries/1-Lobby/stationmovers"][4] == "0",
+                  "supplied exact subordinate-map authored strawberry totals")
+        levelset_rows = {
+            fields[0]: fields
+            for line in (closure / "levelset-manifest.txt").read_text().splitlines()[1:]
+            if len(fields := line.split("\t")) >= 4
+        }
+        c.require(levelset_rows["HennyburgrCompEntries/1-Lobby"][3] == "1",
+                  "supplied collab LevelSet authored strawberry total")
 
     if args.ios_ipa:
         verify_ipa(c, args.ios_ipa.resolve(), "ios", audit)

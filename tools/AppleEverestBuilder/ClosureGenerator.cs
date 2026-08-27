@@ -157,12 +157,18 @@ internal static class ClosureGenerator
         File.WriteAllText(Path.Combine(managed, "GeneratedAppleEverestGameplayRegistry.cs"),
             GameplayRegistrySource(codeModules, ordered), new UTF8Encoding(false));
         File.WriteAllText(Path.Combine(managed, "GeneratedAppleEverestContentManifest.cs"), ContentManifestSource(ordered, stagedContent), new UTF8Encoding(false));
+        HashSet<string> staticallyLoweredStrawberryEntities = ordered
+            .Where(mod => mod.StaticSemanticLowering != null)
+            .SelectMany(mod => mod.StaticSemanticLowering!.Factories)
+            .Where(StaticSemanticLowering.CountsAsStrawberry)
+            .Select(factory => factory.Id)
+            .ToHashSet(StringComparer.Ordinal);
         MapProgressionRecord[] progressionMaps = stagedContent
             .Where(value => value.LogicalPath.StartsWith("Maps/", StringComparison.Ordinal) &&
                             value.LogicalPath.EndsWith(".bin", StringComparison.Ordinal))
             .Select(value => ContentCompiler.InspectProgression(
                 Path.Combine(content, value.LogicalPath.Replace('/', Path.DirectorySeparatorChar)),
-                value.LogicalPath, value.SourceSha256))
+                value.LogicalPath, value.SourceSha256, staticallyLoweredStrawberryEntities))
             .OrderBy(value => value.Sid, StringComparer.Ordinal).ToArray();
         CollabGeneration collab = CollabManifestGenerator.Generate(ordered, stagedContent, content, progressionMaps);
         File.WriteAllText(Path.Combine(managed, "GeneratedAppleEverestCollabManifest.cs"),
@@ -513,6 +519,7 @@ internal static class ClosureGenerator
         PatchCollabPauseMenu(Path.Combine(managedRoot, "Celeste", "Level.cs"));
         PatchCollabOverworldUi(Path.Combine(managedRoot, "Celeste", "Overworld.cs"),
             Path.Combine(managedRoot, "Celeste", "OuiChapterPanel.cs"),
+            Path.Combine(managedRoot, "Celeste", "OuiChapterSelect.cs"),
             Path.Combine(managedRoot, "Celeste", "OuiJournal.cs"));
         PatchNonPersistentSaveQuit(Path.Combine(managedRoot, "Celeste", "Level.cs"));
         PatchNonPersistentSave(Path.Combine(managedRoot, "Celeste", "UserIO.cs"));
@@ -809,7 +816,8 @@ internal static class ClosureGenerator
         "\t\tif (!minimal && Celeste.PlayMode != Celeste.PlayModes.Event)\n\t\t{",
         "\t\tglobal::Celeste.Mod.AppleEverestCollabRuntime.AddPauseMenuItem(this, menu);\n\t\tif (!minimal && Celeste.PlayMode != Celeste.PlayModes.Event)\n\t\t{");
 
-    private static void PatchCollabOverworldUi(string overworldPath, string chapterPanelPath, string journalPath)
+    private static void PatchCollabOverworldUi(
+        string overworldPath, string chapterPanelPath, string chapterSelectPath, string journalPath)
     {
         ReplaceOnce(overworldPath,
             "\t\tOui[] menus = new Oui[10]\n\t\t{\n" +
@@ -829,12 +837,39 @@ internal static class ClosureGenerator
             "\tprivate int option\n",
             "\tinternal int option\n");
         ReplaceOnce(chapterPanelPath,
+            "\tprivate bool selectingMode = true;",
+            "\tinternal bool selectingMode = true;");
+        ReplaceOnce(chapterPanelPath,
             "\tprivate List<Option> checkpoints = new List<Option>();",
             "\tinternal List<Option> checkpoints = new List<Option>();");
         ReplaceOnce(chapterPanelPath,
             "\t\tchapter = Dialog.Get(\"area_chapter\").Replace(\"{x}\", Area.ChapterIndex.ToString().PadLeft(2));",
             "\t\tchapter = Dialog.Get(\"area_chapter\").Replace(\"{x}\", Area.ChapterIndex.ToString().PadLeft(2));\n" +
             "\t\tchapter = global::Celeste.Mod.AppleEverestCollabRuntime.ChapterSubtitle(Area, chapter);");
+        ReplaceOnce(chapterPanelPath,
+            "\t\tcontentOffset = new Vector2(440f, 120f);\n\t\tinitialized = true;",
+            "\t\tcontentOffset = new Vector2(440f, 120f);\n\t\tinitialized = true;\n" +
+            "\t\tglobal::Celeste.Mod.AppleEverestCollabRuntime.ConfigureChapterPanel(this);");
+        ReplaceOnce(chapterPanelPath,
+            "\t\tint toHeight = (selectingMode ? 730 : GetModeHeight());",
+            "\t\tint toHeight = (selectingMode ? 730 : GetModeHeight());\n" +
+            "\t\ttoHeight = global::Celeste.Mod.AppleEverestCollabRuntime.ChapterSwapHeight(this, toHeight);");
+        ReplaceOnce(chapterPanelPath,
+            "\t\tif (!Data.Interlude && ((areaModeStats.Deaths > 0 && Area.Mode != 0) || areaModeStats.Completed || areaModeStats.HeartGem))",
+            "\t\tif (!Data.Interlude && ((areaModeStats.Deaths > 0 && (Area.Mode != 0 || global::Celeste.Mod.AppleEverestCollabRuntime.ShouldShowChapterDeaths(this))) || areaModeStats.Completed || areaModeStats.HeartGem))");
+        ReplaceOnce(chapterPanelPath,
+            "\t\tdeaths.Visible = areaModeStats.Deaths > 0 && (Area.Mode != 0 || RealStats.Modes[(int)Area.Mode].Completed) && !AreaData.Get(Area).Interlude;",
+            "\t\tdeaths.Visible = areaModeStats.Deaths > 0 && (global::Celeste.Mod.AppleEverestCollabRuntime.ShouldShowChapterDeaths(this) || Area.Mode != 0 || RealStats.Modes[(int)Area.Mode].Completed) && !AreaData.Get(Area).Interlude;");
+        ReplaceOnce(chapterPanelPath,
+            "Position + IconOffset + new Vector2(-100f, -2f)",
+            "Position + IconOffset + new Vector2(-100f, global::Celeste.Mod.AppleEverestCollabRuntime.ChapterAuthorOffset(this, -2f))");
+        ReplaceOnce(chapterPanelPath,
+            "Position + IconOffset + new Vector2(-100f, -18f)",
+            "Position + IconOffset + new Vector2(-100f, global::Celeste.Mod.AppleEverestCollabRuntime.ChapterTitleOffset(this, -18f))");
+        ReplaceOnce(chapterSelectPath,
+            "\tpublic void AdvanceToNext()",
+            "\tinternal OuiChapterSelectIcon AppleEverestIcon(int area) => area >= 0 && area < icons.Count ? icons[area] : null;\n\n" +
+            "\tpublic void AdvanceToNext()");
         ReplaceOnce(chapterPanelPath,
             "\tpublic void Start(string checkpoint = null)\n\t{\n\t\tFocused = false;",
             "\tpublic void Start(string checkpoint = null)\n\t{\n" +
@@ -1216,6 +1251,7 @@ internal static class ClosureGenerator
         {
             const string gameplay = "Graphics/Atlases/Gameplay/";
             const string gui = "Graphics/Atlases/Gui/";
+            const string journal = "Graphics/Atlases/Journal/";
             string prefix;
             if (sourcePath.StartsWith(gameplay, StringComparison.Ordinal))
             {
@@ -1226,6 +1262,11 @@ internal static class ClosureGenerator
             {
                 atlas = "Gui";
                 prefix = gui;
+            }
+            else if (sourcePath.StartsWith(journal, StringComparison.Ordinal))
+            {
+                atlas = "Journal";
+                prefix = journal;
             }
             else
             {

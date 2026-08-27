@@ -183,9 +183,39 @@ newest-replica corruption fallback all passed.
 
 Mini-heart collection registers the map heart, saves and returns through the
 generated lobby authority. Completion flags and journal aggregation passed
-deterministic tests. Full physical completion/mini-heart collection was not a
-mandatory gate and is not claimed unless separately recorded below. No heart
-door or special berry behavior is required by this release.
+deterministic tests. Physical map completion, mini-heart collection and the
+package-authored full-screen return transition passed on iPhone. No heart door
+or special berry behavior is required by this release.
+
+## Reference-fidelity closure
+
+The final build was compared repeatedly with a native macOS Everest reference,
+not merely with the raw map geometry. The static lowering now preserves the
+observable selected-graph behavior that those comparisons exposed:
+
+- the lobby journal book, map rows, icons, totals and completion/death/time
+  columns;
+- package-style chapter cards, map/contest ordering, icons, Continue/Start
+  Over bookmarks and the postcard shown on a fresh Through the Walls run;
+- moving dream/station block presentation, track attachment, dash impact
+  feedback, grouped/attached spikes and ice walls, no-grab faces and no-dash
+  fields;
+- map lighting/backdrops and the Station Stratosphere heart presentation;
+- save-aware Return to Lobby and the package-authored completion wipe; and
+- the one authored `LunaticHelper/StrawberryWithReturn` in Through the Walls,
+  including `1/1` chapter-card and journal capacity after collection.
+
+The last item found a general registration-order defect: constructing vanilla
+`MapData` recalculated `AreaModeStats.TotalStrawberries` from vanilla berry
+types and overwrote the compiler-authored total. Build 23 restores the frozen
+authored total after `MapData` construction. A deterministic ordering test now
+guards all statically supported non-vanilla berry types, rather than special-
+casing this map at runtime.
+
+For repeat visual comparisons, the repository-root `Launch macOS Everest
+Reference.command` opens the already staged native Everest reference. It fails
+with a clear regeneration message if the ignored reference staging directory
+has been cleaned; it contains no machine-specific absolute path.
 
 ## Determinism and products
 
@@ -193,14 +223,14 @@ Three independently generated complete closures were identical:
 
 | Boundary | Accepted value |
 |---|---|
-| Shared closure | `ccf4f6db802c935071d019b46fbb77d3be49445f4bb590d4e9a1872c9a4b0660` |
-| Managed tree | 46 files; `35d9ccb691ce1a0134bdf7df963661ce43ed31e8f6a7a0c8eedcacc7fe1607e4` |
+| Shared closure | `4a78b0a7c5340ae175be134bf972e2061f9a562eae957401dc5379835be3fd3a` |
+| Managed tree | 46 files; `a540cd812341be657b59fc4ba13c950c23615d86915bfc6b0ffe2c880bf3ee44` |
 | Content tree | 4,461 files; `0947c2e4156c02ba2bbdf37681b202378ad52432b9dabcd9dadb71a945977947` |
 | Registry | `d7ff46c8ff66d0e5928723494ac65f4b08bfb23c110b621caeb30c2261b65ad1` |
 | Hook transform | `590af232c6c7209c9295f3f166478ad44c5bf559da22c72c01e45585fabf66f7` |
 | API surface | 30 members; `d594dea86e944b468819818773f2177312445bbebe022bcbc7ea1ff779c8652c` |
-| Progression manifest | `55796d3e95a64959f8ddd58e2cf001c06f0b8207f4d37118b60a96aa9d2d7072` |
-| LevelSet manifest | `c9ecdcc99221ff03926d282dada049505bd416f66bc1464fa2847d24c36771ba` |
+| Progression manifest | `b6ad5f5ef9c97ded6f27d9ce2be0ec75c876662ad6195b3e53213fbb8688fc85` |
+| LevelSet manifest | `26cc1df0e07a0a3a061c5391e3a8f85edc0f347269730b239983d5a37fe336bc` |
 | Collab manifest | `6925d8780b6427a67ef5438bef8315b80d4707506b5ebe7e61f9fe3c81f928a0` |
 | Custom audio / bank set | `0a7ca20a24239f4829ab5af7002004309d38d89ac5bffbfefff6a49b278c8841` / `c927c0779c1dbbb5b43bd1a5daa5c2eb5e1c9d00b7e81eab87e70aa0a46eb8d7` |
 | Frozen IL plan | five transforms; `5791ac3b27f500d8ae9f2cc72669b09aa7e490d17b33b992a2b55d0a8728b457` |
@@ -215,8 +245,8 @@ the same semantic version and build-number form as iPhone/iPad.
 
 | Product | Bytes | SHA-256 | Result |
 |---|---:|---|---|
-| Signed universal iOS/iPadOS IPA | 892,308,308 | `ff96e06ca1f50e1e014d99baea2a2051a272c0776c2fbeabd3d89a6a7a7a412b` | version 0.1.1 (build 17); iOS 15 minimum; `UIDeviceFamily [1,2]`; native iPad presentation; development signed |
-| Signing-ready unsigned tvOS IPA | 906,029,218 | `ebdad25cdbab2ff44d010645b489c44bece69f46ec9a6fb4fc21d37642f1f1e1` | version 0.1.1 (build 17); tvOS 16 minimum; package/static acceptance; physical pending |
+| Signed universal iOS/iPadOS IPA | 892,323,033 | `875ee97246ef1a7f3a27fe9442b9214375a0f776669a96a27fec6f94d45eca54` | version 0.1.1 (build 23); iOS 15 minimum; `UIDeviceFamily [1,2]`; native iPad presentation; development signed |
+| Signing-ready unsigned tvOS IPA | 906,037,252 | `13bca5b8298c6dc09bf2396220bf2e478f5075d4d1c509b3ca4cffaf372c8191` | version 0.1.1 (build 23); tvOS 16 minimum; package/static acceptance; physical pending |
 
 Package verification found the exact lobby and two maps once in each product,
 excluded all statically lowered helper DLLs and excluded Mono.Cecil, MonoMod
@@ -224,8 +254,10 @@ runtime transformation machinery and the host IL worker.
 
 ## Physical acceptance
 
-- iPhone 12 Pro Max: **PASS** on the exact signed build-17 IPA.
-- iPad mini 4 / iPadOS 15.8.8, exact same universal IPA: **PASS**.
+- iPhone 12 Pro Max: **PASS** on the exact signed build-23 IPA.
+- iPad mini 4 / iPadOS 15.8.8: **PASS** on the complete build-17 matrix;
+  build 23 is the same universal iPhone/iPad product and its final bounded
+  strawberry-capacity delta passed static closure/package regression coverage.
 - Apple TV: `TVOS_PHYSICAL_PENDING_HARDWARE_UNAVAILABLE`.
 
 Both physical devices passed lobby load, journal and chapter panels, launching
@@ -239,7 +271,7 @@ checks. That evidence does not substitute for hardware acceptance.
 
 ## Regression, locks and privacy
 
-The builder suite passed 443 deterministic tests, including the current shared
+The builder suite passed 452 deterministic tests, including the current shared
 contracts for H-D/H-C/H-B/H-A, F-B2/F-A, 25E, 25D and vanilla paths. Earlier
 verifiers that intentionally lock smaller historical closures remain unchanged
 and accepted at their historical commits. The Chrono bank identity and DJ
@@ -262,7 +294,7 @@ source, saves, snapshots, IPAs, signing values, device IDs or credentials.
 
 A fresh recursive clone of the exact feature commit copied no ignored fixture,
 independently reacquired all 13 public releases, regenerated the same
-`ccf4f6db…` closure, passed all 443 builder tests and 108 stage checks, passed
+`4a78b0a7…` closure, passed all 452 builder tests and 111 stage checks, passed
 the privacy scan, and finished with clean Git/submodule status.
 
 ## Apple TV catch-up and next stage
@@ -287,3 +319,101 @@ The evidence recommends **Stage 25K-B — second real collab and broader
 CollabUtils2 completion features**, selecting the smallest graph that exercises
 a mini-heart door and special-berry/completion aggregation without introducing
 another unrelated major runtime mechanism.
+
+## Direct acceptance answers
+
+1. hennyburgr's Mapping Competition Entries 1.1.0 (`burgr king`) was selected.
+2. It was the smallest credible ordinary collab proving one lobby, two real maps, real helper composition and return/progression without another major mechanism.
+3. 429 public metadata records were screened; 47 credible small-collab releases remained.
+4. 18 candidates were deeply audited.
+5. Yes; the input is the author's ordinary unchanged public ZIP.
+6. `638ad7beac7a24600c7c0733acf12a645795bd8878fd5bc7c88e6e24b17dce39`.
+7. CollabUtils2 1.13.4.
+8. `ce7d646252a2fc51f1f513071d97eaa1acedf7ddb0871276c688914e37319f60`.
+9. `HennyburgrCompEntries`.
+10. One lobby.
+11. `HennyburgrCompEntries/0-Lobbies/lobby`.
+12. Two subordinate maps.
+13. Map A is `HennyburgrCompEntries/1-Lobby/redboostercomp`; source/staged hashes are `072634ac7290cb765db958c9fca345c7a14d877cf57154dd16ad7322a222c8aa` / `02674e201dd7cb1b20067eedd88c8241e275de6e9f2b96dd1d970870088502f8`.
+14. Map B is `HennyburgrCompEntries/1-Lobby/stationmovers`; source/staged hashes are `f9afb1908a4d7e47ba29b778fab4e924147c2bae3a84686c0e81b76b5105ebc3` / `ab358aa423948180698d6d5c10166031f36f94062335ed7f9a8d9f8385488dbc`.
+15. Yes; both are frozen members of the lobby's subordinate LevelSet and both chapter panels target their exact SIDs.
+16. No; the device runtime performs no mod-content scan.
+17. Yes; `CollabUtils2CollabID.txt` is consumed and frozen at build time.
+18. Yes, zero unclassified blockers.
+19. Yes, zero unsupported-required blockers.
+20. No new major mechanism was required.
+21. No new HookGen target; the catalog remains unchanged.
+22. The final managed-detour/HookGen catalog count is 102.
+23. No new ordinary IL manipulation; the five prior frozen transforms remain unchanged.
+24. No direct device ILHook.
+25. No configured hooks.
+26. No general DynamicData.
+27. Zero ModInterop registrations/imports for this graph.
+28. No Lua.
+29. No native or P/Invoke payload.
+30. No new audio; the prior Chrono bank remains the only custom bank.
+31. Yes, selected custom gameplay is static-factory-only.
+32. Yes; `GetTypes`, `Activator.CreateInstance` and runtime assembly loading are absent from the device path.
+33. Yes, the real lobby physically loaded.
+34. Yes, it physically launched Through the Walls.
+35. Yes, it physically launched Station Stratosphere.
+36. Yes, Return to Lobby worked from Through the Walls.
+37. Yes, Return to Lobby worked from Station Stratosphere.
+38. Yes, Map A Save and Quit/persistence worked.
+39. Yes, Map A cold resume worked.
+40. Yes, Map B Save and Quit/persistence worked.
+41. Yes, Map B cold resume worked.
+42. Yes, Map A and B state remained isolated.
+43. Yes, existing LittleEpic state survived.
+44. Yes, existing Fear of the Dark state survived.
+45. Yes, Torremolinos map 1 state survived.
+46. Yes, Torremolinos map 2 state survived.
+47. Yes, per-map and derived lobby completion flags are correct.
+48. Yes, MiniHeart is required by both subordinate maps.
+49. Yes, required mini-heart completion/return behavior passed.
+50. No heart door is required by this selected release.
+51. No silver berry is required.
+52. No rainbow berry is required.
+53. No speed berry is required.
+54. Yes, the real lobby journal is required and passed.
+55. Yes, two real `ChapterPanelTrigger` records are required.
+56. Yes, both chapter panels physically passed, including Continue/Start Over routing.
+57. Yes, AEVPSV1 remains schema version 1.
+58. No new collab-specific durable schema was added.
+59. Existing SID + original-map-SHA typed records already isolate lobby/map state; lobby flags derive from durable map heart state.
+60. The cumulative representative progression snapshot is 3,189 raw bytes.
+61. Its tvOS representation is 984 bytes, 0.77% of one replica cap.
+62. Yes, slot isolation passed.
+63. Yes, delete/recreate passed.
+64. Yes, imported/replaced-save isolation passed.
+65. Yes, newest-replica corruption fallback passed.
+66. Yes, three complete independent closure builds were byte-for-byte identical.
+67. `4a78b0a7c5340ae175be134bf972e2061f9a562eae957401dc5379835be3fd3a`.
+68. Yes; iPhone 12 Pro Max passed the exact signed build-23 product.
+69. Yes; iPadOS 15.8.8 passed the complete build-17 matrix, with build 23's bounded shared-closure delta covered statically in the same universal product.
+70. Yes; `UIDeviceFamily [1,2]` was verified in the exact build-23 IPA.
+71. Yes, native iPad presentation is retained.
+72. No; Apple TV hardware was unavailable for the final K-A product.
+73. `TVOS_PHYSICAL_PENDING_HARDWARE_UNAVAILABLE`.
+74. Yes, the build-23 tvOS Release product was built.
+75. Yes, both products are fully trimmed and full AOT.
+76. Yes, `UseInterpreter=false`.
+77. Yes, JIT is absent.
+78. Yes, tvOS static collab/progression/package tests passed.
+79. Yes, the prior Chrono custom-audio regression remains green and its bank lock is unchanged.
+80. Yes, the DJ five-transform frozen-IL plan remains unchanged and green.
+81. H-D/H-C/H-B/H-A current shared contracts and historical acceptance remain intact; H-C retains its intentional fail-closed YELLOW classification.
+82. F-B2/F-A/25E/25D current shared contracts and historical acceptance remain intact.
+83. Yes, vanilla iOS/tvOS paths and forbidden-surface scans remain green.
+84. Yes, all canonical, native, Chrono-bank and DJ-plan locks are unchanged.
+85. Yes, protected integration/release refs are unchanged.
+86. Yes, zero GitHub Actions minutes were used.
+87. Yes, the exact final feature commit was reproduced from a fresh recursive clone with 13 independently reacquired public releases and clean status.
+88. Yes, development integration-ready.
+89. No, not all-platform release-ready until physical Apple TV catch-up passes.
+90. The exact fast-forward feature SHA is reported at handoff after the final commit is created.
+91. Apple TV catch-up adds the real lobby/journal, both chapter-panel launches and returns, both maps' persistence/cold resume, isolated progression, completion/heart/journal aggregation, authored berry capacity and focused helper-fidelity behavior.
+92. Yes, a somewhat harder second collab is now rational.
+93. No; configured IL is not automatically the highest-value mechanism unless the next selected graph makes it the dominant blocker.
+94. Strawberry Jam is materially closer because lobby routing, ownership, completion and journal semantics now work, but its graph breadth, doors/berries/UI, multi-bank audio and configured-IL/storage scale remain substantial.
+95. **Stage 25K-B — second real collab and broader CollabUtils2 completion features**, choosing the smallest graph that adds a mini-heart door plus special-berry/completion aggregation without an unrelated major runtime mechanism.

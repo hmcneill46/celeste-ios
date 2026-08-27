@@ -1135,8 +1135,9 @@ try
     Pass(closureGenerator.Contains("AppleEverestAtlasMountDescriptor", StringComparison.Ordinal) &&
          closureGenerator.Contains("Graphics/Atlases/Gameplay/", StringComparison.Ordinal) &&
          closureGenerator.Contains("Graphics/Atlases/Gui/", StringComparison.Ordinal) &&
+         closureGenerator.Contains("Graphics/Atlases/Journal/", StringComparison.Ordinal) &&
          closureGenerator.Contains("ThenBy(value => value.SourcePath", StringComparison.Ordinal),
-        "ordinary release PNGs generate dependency-ordered gameplay and GUI atlas mounts");
+        "ordinary release PNGs generate dependency-ordered gameplay, GUI, and journal atlas mounts");
     Pass(closureGenerator.Contains("PatchNonPersistentSave(Path.Combine(managedRoot, \"Celeste\", \"UserIO.cs\"))", StringComparison.Ordinal) &&
          closureGenerator.Contains("FilterVanillaFileSave(file)", StringComparison.Ordinal) &&
          closureGenerator.Contains("PatchNonPersistentOverworldReturn", StringComparison.Ordinal) &&
@@ -1145,8 +1146,9 @@ try
     Pass(staticRuntime.Contains("MountStaticAtlases();", StringComparison.Ordinal) &&
          staticRuntime.Contains("VirtualContent.CreateTexture(descriptor.LogicalPath)", StringComparison.Ordinal) &&
          staticRuntime.Contains("atlas[descriptor.Key] = mounted", StringComparison.Ordinal) &&
+         staticRuntime.Contains("atlas = MTN.Journal", StringComparison.Ordinal) &&
          staticRuntime.Contains("content-atlas=PASS", StringComparison.Ordinal),
-        "static atlas mounts enter the live Celeste atlas without filesystem or type discovery");
+        "static atlas mounts enter the live Celeste gameplay, GUI, and journal atlases without filesystem or type discovery");
     Pass(closureGenerator.Contains("typeof(global::", StringComparison.Ordinal),
         "generated AOT roots use namespace-unambiguous global type references");
     Pass(closureGenerator.Contains("AppleEverestExternalAssemblyRoots.props", StringComparison.Ordinal) &&

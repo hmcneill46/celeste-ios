@@ -42,7 +42,7 @@ internal static class AppleEverestSemanticFactories
         "MaxHelpingHand/FlagTouchSwitch" => new TouchSwitch(data, offset),
         "FancyTileEntities/FancyFakeWall" => new AppleEverestFancyFakeWall(entityId, data, offset),
         "FrostHelper/NoDashArea" => new AppleEverestNoDashArea(data, offset),
-        "ShroomHelper/AttachedIceWall" => new IceBlock(data.Position + offset + new Vector2(data.Bool("left") ? -8 : 0, 0), 8, data.Height),
+        "ShroomHelper/AttachedIceWall" => new AppleEverestAttachedIceWall(data, offset),
         "ShroomHelper/CrumbleBlockOnTouch" => new AppleEverestCrumbleBlockOnTouch(data, offset, entityId),
         _ => throw new InvalidOperationException("unregistered static semantic entity: " + id)
     };
@@ -70,6 +70,76 @@ internal static class AppleEverestSemanticFactories
         "everest/smoothCameraOffsetTrigger" => new AppleEverestSmoothCameraOffsetTrigger(data, offset),
         _ => throw new InvalidOperationException("unregistered static semantic trigger: " + id)
     };
+}
+
+/// <summary>
+/// Frozen ShroomHelper AttachedIceWall semantics.  This is a two-pixel climb
+/// blocker carried by its neighbouring Solid; a vanilla IceBlock is a full
+/// core-mode hazard and cannot represent either its collision or attachment.
+/// </summary>
+internal sealed class AppleEverestAttachedIceWall : Entity
+{
+    private readonly StaticMover staticMover;
+    private readonly ClimbBlocker climbBlocker;
+    private readonly List<Sprite> tiles = new();
+    private Vector2 imageOffset;
+
+    internal AppleEverestAttachedIceWall(EntityData data, Vector2 offset)
+        : base(data.Position + offset)
+    {
+        bool left = data.Bool("left", true);
+        int spriteOffset = data.Int("spriteOffset", 0);
+        float height = data.Height;
+        Tag = (int)Tags.TransitionUpdate;
+        Depth = 1999;
+        Collider = left ? new Hitbox(2f, height) : new Hitbox(2f, height, 6f);
+
+        Add(staticMover = new StaticMover
+        {
+            OnShake = amount => imageOffset += amount,
+            OnAttach = platform => Depth = platform.Depth + 1,
+            SolidChecker = solid => CollideCheck(solid,
+                Position + (left ? -Vector2.UnitX : Vector2.UnitX)),
+            OnEnable = () => Visible = Collidable = true,
+            OnDisable = () => Visible = Collidable = false
+        });
+        Add(climbBlocker = new ClimbBlocker(edge: false));
+
+        int tileCount = Math.Max(1, (int)Math.Ceiling(height / 8f));
+        for (int index = 0; index < tileCount; index++)
+        {
+            string spriteId = index == 0 ? "WallBoosterTop"
+                : index == tileCount - 1 ? "WallBoosterBottom" : "WallBoosterMid";
+            Sprite sprite = GFX.SpriteBank.Create(spriteId);
+            sprite.FlipX = !left;
+            sprite.Position = new Vector2(left ? -spriteOffset : 4 + spriteOffset, index * 8f);
+            tiles.Add(sprite);
+            Add(sprite);
+        }
+    }
+
+    public override void Added(Scene scene)
+    {
+        base.Added(scene);
+        // ShroomHelper intentionally waits until the entity belongs to the
+        // room before enabling both the climb blocker and the ice animation.
+        // Doing this in the constructor leaves the visual present but can
+        // leave the carried no-grab strip inactive on static-mover attach.
+        climbBlocker.Blocking = true;
+        foreach (Sprite tile in tiles) tile.Play("ice");
+    }
+
+    public override void Update()
+    {
+        if (Scene is not Level level || !level.Transitioning) base.Update();
+    }
+
+    public override void Render()
+    {
+        Position += imageOffset;
+        base.Render();
+        Position -= imageOffset;
+    }
 }
 
 /// <summary>
@@ -413,9 +483,12 @@ internal sealed class AppleEverestStationBlock : Solid
     private Vector2 movementStart;
     private Vector2 target;
     private float movementProgress;
+    private float movementDelay;
     private int arrowFrame;
     private bool attached;
     private bool moving;
+    private Vector2 impactScale = Vector2.One;
+    private Vector2 hitOffset;
 
     internal AppleEverestStationBlock(EntityData data, Vector2 offset)
         : base(data.Position + offset, data.Width, data.Height, safe: true)
@@ -517,7 +590,16 @@ internal sealed class AppleEverestStationBlock : Solid
     public override void Update()
     {
         base.Update();
+        impactScale.X = Calc.Approach(impactScale.X, 1f, 4f * Engine.DeltaTime);
+        impactScale.Y = Calc.Approach(impactScale.Y, 1f, 4f * Engine.DeltaTime);
+        hitOffset.X = Calc.Approach(hitOffset.X, 0f, 15f * Engine.DeltaTime);
+        hitOffset.Y = Calc.Approach(hitOffset.Y, 0f, 15f * Engine.DeltaTime);
         if (!moving) return;
+        if (movementDelay > 0f)
+        {
+            movementDelay -= Engine.DeltaTime;
+            return;
+        }
         float nextProgress = movementProgress + speedFactor * 2f * Engine.DeltaTime;
         movementProgress = Calc.Approach(movementProgress, 1f,
             speedFactor * 2f * Engine.DeltaTime);
@@ -540,6 +622,7 @@ internal sealed class AppleEverestStationBlock : Solid
     private DashCollisionResults OnDashed(Player player, Vector2 direction)
     {
         if (!attached || moving) return DashCollisionResults.NormalCollision;
+        ReactToDashImpact(direction);
         Vector2 requested = reverseControls ? direction : -direction;
         Vector2 center = Center;
         AppleEverestStationTrack selected = null;
@@ -570,10 +653,21 @@ internal sealed class AppleEverestStationBlock : Solid
         movementProgress = 0f;
         target = selectedTarget - new Vector2(Width / 2f, Height / 2f);
         SetArrowToward(center, selectedTarget);
+        movementDelay = 0.2f;
         Safe = false;
         moving = true;
         Audio.Play("event:/game/03_resort/forcefield_bump", Center);
         return DashCollisionResults.NormalCollision;
+    }
+
+    private void ReactToDashImpact(Vector2 direction)
+    {
+        impactScale = new Vector2(
+            1f + Math.Abs(direction.Y) * 0.35f - Math.Abs(direction.X) * 0.35f,
+            1f + Math.Abs(direction.X) * 0.35f - Math.Abs(direction.Y) * 0.35f);
+        hitOffset = direction * 5f;
+        StartShaking(0.2f);
+        Input.Rumble(RumbleStrength.Medium, RumbleLength.Short);
     }
 
     private void SetArrowAtNode(Vector2 node)
@@ -606,8 +700,12 @@ internal sealed class AppleEverestStationBlock : Solid
         Vector2 shake = Shake;
         for (int x = 0; x < blockTiles.GetLength(0); x++)
             for (int y = 0; y < blockTiles.GetLength(1); y++)
-                blockTiles[x, y].DrawCentered(Position + shake + new Vector2(x * 8 + 4, y * 8 + 4));
-        arrowFrames[arrowFrame].DrawCentered(Center + shake);
+            {
+                Vector2 tileCenter = Position + new Vector2(x * 8 + 4, y * 8 + 4);
+                Vector2 visualCenter = Center + (tileCenter - Center) * impactScale + hitOffset + shake;
+                blockTiles[x, y].DrawCentered(visualCenter, Color.White, impactScale);
+            }
+        arrowFrames[arrowFrame].DrawCentered(Center + shake + hitOffset, Color.White, impactScale);
     }
 }
 

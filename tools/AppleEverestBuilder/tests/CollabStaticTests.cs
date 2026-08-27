@@ -28,6 +28,13 @@ internal static class CollabStaticTests
              !StaticSemanticLowering.IncludeContent("Audio/Helper.guids.txt") &&
              !StaticSemanticLowering.IncludeContent("everest.yaml"),
             "static semantic lowering excludes executable/audio/metadata payloads");
+        Pass(StaticSemanticLowering.CountsAsStrawberry(
+                 new StaticSemanticFactory("entity", "Fixture/ReturningBerry", "strawberry-with-return")) &&
+             !StaticSemanticLowering.CountsAsStrawberry(
+                 new StaticSemanticFactory("entity", "Fixture/Block", "dream-move-block")) &&
+             !StaticSemanticLowering.CountsAsStrawberry(
+                 new StaticSemanticFactory("trigger", "Fixture/Trigger", "strawberry-with-return")),
+            "progression collectible classification follows the resolved static runtime semantic");
 
         string root = Path.Combine(temporary, "collab-static");
         string staged = Path.Combine(root, "staged");
@@ -74,6 +81,23 @@ internal static class CollabStaticTests
             File.Copy(compiledLobby, expectedLobby, overwrite: true);
         MapProgressionRecord inspectedLobby = ContentCompiler.InspectProgression(expectedLobby, lobbyPath,
             new string('2', 64));
+        string berryXml = Path.Combine(root, "berry.xml");
+        File.WriteAllText(berryXml,
+            "<Map><levels><level name=\"berry-room\" x=\"0\" y=\"0\" width=\"320\" height=\"180\">" +
+            "<entities><player id=\"1\" x=\"16\" y=\"16\" />" +
+            "<appleEverestEntity name=\"Fixture/ReturningBerry\" id=\"2\" x=\"160\" y=\"90\" /></entities>" +
+            "<triggers /><solids /><bg /></level></levels><Filler /><Style><Backgrounds /><Foregrounds /></Style></Map>",
+            new UTF8Encoding(false));
+        string berryLogical = ContentCompiler.Stage(berryXml,
+            "Content/Maps/FixtureCollab/1-Lobby/berry.xml", content);
+        string berryPath = Path.Combine(content, berryLogical.Replace('/', Path.DirectorySeparatorChar));
+        MapProgressionRecord unresolvedBerry = ContentCompiler.InspectProgression(berryPath,
+            "Maps/FixtureCollab/1-Lobby/berry.bin", new string('7', 64));
+        MapProgressionRecord resolvedBerry = ContentCompiler.InspectProgression(berryPath,
+            "Maps/FixtureCollab/1-Lobby/berry.bin", new string('7', 64),
+            new HashSet<string>(["Fixture/ReturningBerry"], StringComparer.Ordinal));
+        Pass(unresolvedBerry.Strawberries == 0 && resolvedBerry.Strawberries == 1,
+            "only an exact resolved static strawberry lowering contributes to authored map totals");
         MapPresentationRecord presentation = inspectedLobby.Presentation!;
         Pass(presentation.Icon == "areas/temple" && presentation.TitleBaseColor == "6c7c81" &&
              presentation.TitleAccentColor == "2f344b" && presentation.TitleTextColor == "ffffff" &&
@@ -178,8 +202,23 @@ internal static class CollabStaticTests
              runtime.Contains("ShouldDrawVanillaCheckpoint", StringComparison.Ordinal),
             "save-and-return exposes authentic Start Over and Continue bookmarks without routing synthetic options through vanilla checkpoint indexing");
         Pass(runtime.Contains("CompleteMapAndReturn", StringComparison.Ordinal) &&
-             runtime.Contains("RegisterHeartGem", StringComparison.Ordinal),
-            "mini-heart completion persists before lobby return");
+             runtime.Contains("RegisterHeartGem", StringComparison.Ordinal) &&
+             runtime.Contains("level.TimerStopped = true", StringComparison.Ordinal) &&
+             runtime.Contains("level.DoScreenWipe(false, () => ReturnNow(level), false)", StringComparison.Ordinal) &&
+             !runtime.Contains("level.Paused = true;\n        level.PauseLock = true;\n        UserIO.SaveHandler(file: true, settings: false);\n        level.Add(new AppleEverestCollabTransition(() => ReturnNow(level)))", StringComparison.Ordinal),
+            "mini-heart completion persists and runs the map-authored wipe before lobby return");
+        Pass(runtime.Contains("CollabUtils2/miniheart/\" + spriteName + \"/", StringComparison.Ordinal) &&
+             runtime.Contains("AnimationFrames", StringComparison.Ordinal) &&
+             runtime.Contains("case \"intermediate\"", StringComparison.Ordinal) &&
+             runtime.Contains("case \"expert\"", StringComparison.Ordinal) &&
+             runtime.Contains("Color.Orange", StringComparison.Ordinal),
+            "mini-hearts use the package-authored tier sprites, animation, and palette instead of a generic blue heart");
+        Pass(runtime.Contains("level.FormationBackdrop.Display = true", StringComparison.Ordinal) &&
+             runtime.Contains("for (float time = 0f; time < 2f; time += Engine.RawDeltaTime)", StringComparison.Ordinal) &&
+             runtime.Contains("Engine.TimeRate = Calc.Approach", StringComparison.Ordinal) &&
+             runtime.Contains("level.Frozen = true", StringComparison.Ordinal) &&
+             runtime.Contains("CompleteMapAndReturn(level)", StringComparison.Ordinal),
+            "mini-heart collection preserves the bounded CollabUtils formation and closing sequence before lobby return");
         Pass(factories.Contains("AppleEverestDreamMoveBlockController", StringComparison.Ordinal) &&
              factories.Contains("AppleEverestStationBlock", StringComparison.Ordinal) &&
              factories.Contains("OnDashCollide = OnDashed", StringComparison.Ordinal),
@@ -219,6 +258,25 @@ internal static class CollabStaticTests
              factories.Contains("return DashCollisionResults.NormalCollision", StringComparison.Ordinal) &&
              !factories.Contains("return DashCollisionResults.Rebound", StringComparison.Ordinal),
             "StationBlock transports riders and attached geometry with canonical lift speed without camera-whipping rebound");
+        Pass(factories.Contains("movementDelay = 0.2f", StringComparison.Ordinal) &&
+             factories.Contains("ReactToDashImpact(direction)", StringComparison.Ordinal) &&
+             factories.IndexOf("ReactToDashImpact(direction)", StringComparison.Ordinal) <
+                 factories.IndexOf("if (selected == null)", StringComparison.Ordinal) &&
+             factories.Contains("hitOffset = direction * 5f", StringComparison.Ordinal) &&
+             factories.Contains("StartShaking(0.2f)", StringComparison.Ordinal) &&
+             factories.Contains("Math.Abs(direction.Y) * 0.35f", StringComparison.Ordinal) &&
+             factories.Contains("Calc.Approach(impactScale.X, 1f, 4f * Engine.DeltaTime)", StringComparison.Ordinal) &&
+             factories.Contains("DrawCentered(visualCenter, Color.White, impactScale)", StringComparison.Ordinal),
+            "StationBlock dash impact preserves CommunalHelper's squash, offset, shake, hold, and recovery animation even when the requested track direction is blocked");
+        Pass(factories.Contains("class AppleEverestAttachedIceWall", StringComparison.Ordinal) &&
+             factories.Contains("new ClimbBlocker(edge: false)", StringComparison.Ordinal) &&
+             factories.Contains("climbBlocker.Blocking = true", StringComparison.Ordinal) &&
+             factories.Contains("public override void Added(Scene scene)", StringComparison.Ordinal) &&
+             factories.Contains("SolidChecker = solid => CollideCheck", StringComparison.Ordinal) &&
+             factories.Contains("GFX.SpriteBank.Create(spriteId)", StringComparison.Ordinal) &&
+             factories.Contains("foreach (Sprite tile in tiles) tile.Play(\"ice\")", StringComparison.Ordinal) &&
+             !factories.Contains("AttachedIceWall\" => new IceBlock", StringComparison.Ordinal),
+            "Shroom attached ice walls activate after room attachment as visible two-pixel climb blockers carried and shaken by their neighbouring solids");
         Pass(factories.Contains("class AppleEverestCameraCatchupRuntime", StringComparison.Ordinal) &&
              factories.Contains("ResolveDivisor(float original, Player player)", StringComparison.Ordinal) &&
              factories.Contains("SessionStates.GetValue(session, static _ => new SessionState()).Speed = speed", StringComparison.Ordinal) &&
@@ -277,6 +335,24 @@ internal static class CollabStaticTests
              closureGenerator.Contains("new global::Celeste.Mod.AppleEverestOuiEnterChapterPanel()", StringComparison.Ordinal) &&
              closureGenerator.Contains("new global::Celeste.Mod.AppleEverestOuiEnterJournal()", StringComparison.Ordinal),
             "canonical overworld UI has the bounded routing hooks and explicit static helper-Oui registry");
+        Pass(closureGenerator.Contains("ConfigureChapterPanel(this)", StringComparison.Ordinal) &&
+             closureGenerator.Contains("ChapterSwapHeight(this, toHeight)", StringComparison.Ordinal) &&
+             closureGenerator.Contains("ShouldShowChapterDeaths(this)", StringComparison.Ordinal) &&
+             closureGenerator.Contains("ChapterAuthorOffset(this, -2f)", StringComparison.Ordinal) &&
+             closureGenerator.Contains("ChapterTitleOffset(this, -18f)", StringComparison.Ordinal) &&
+             closureGenerator.Contains("AppleEverestIcon(int area)", StringComparison.Ordinal) &&
+             runtime.Contains("icon.Position = panel.Position + panel.IconOffset", StringComparison.Ordinal) &&
+             runtime.Contains("panel.selectingMode ? 300 : fallback", StringComparison.Ordinal),
+            "forced collab chapter panels preserve the selected map icon, title-author order, compact bookmark height, and normal-mode death count");
+        Pass(runtime.Contains("class IconCellFromGui", StringComparison.Ordinal) &&
+             runtime.Contains("new IconCellFromGui(area.Icon, 60f, 50f)", StringComparison.Ordinal) &&
+             runtime.Contains("CollabUtils2MinDeaths/\" + levelSet", StringComparison.Ordinal) &&
+             runtime.Contains("MTN.Journal.Has(\"CollabUtils2MinDeaths/SpringCollab2020/1-Beginner\")", StringComparison.Ordinal) &&
+             runtime.Contains("string speedBerryTexture = MTN.Journal.Has", StringComparison.Ordinal) &&
+             runtime.Contains("CollabUtils2/speed_berry_pbs_heading", StringComparison.Ordinal) &&
+             runtime.Contains("Dialog.Clean(\"journal_totals\")", StringComparison.Ordinal) &&
+             runtime.Contains("mode.BestTime", StringComparison.Ordinal),
+            "collab journal preserves per-map badges, minimum-death check, flag/best-time column, and totals row");
         Pass(progressionRuntime.Contains("presentation.DarknessAlpha", StringComparison.Ordinal) &&
              progressionRuntime.Contains("new AudioState(presentation.Music, presentation.Ambience)", StringComparison.Ordinal) &&
              progressionRuntime.Contains("Celeste.DropWipe", StringComparison.Ordinal) &&

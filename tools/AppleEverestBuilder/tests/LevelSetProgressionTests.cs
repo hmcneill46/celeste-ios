@@ -306,6 +306,10 @@ internal static class LevelSetProgressionTests
              persistence.Contains("Everest/Progression") && persistence.Contains(".Progression."), "shared model has narrow platform stores");
         Pass(runtime.Contains("SerializeVanillaBase") && runtime.Contains("save.Areas.RemoveRange") &&
              runtime.Contains("GeneratedAppleEverestProgressionManifest.Maps"), "vanilla serializer boundary strips projected state");
+        int mapLoad = runtime.IndexOf("mode.MapData = new MapData(new AreaKey(id));", StringComparison.Ordinal);
+        int authoredTotalRestore = runtime.IndexOf("mode.TotalStrawberries = descriptor.Strawberries;", StringComparison.Ordinal);
+        Pass(mapLoad >= 0 && authoredTotalRestore > mapLoad,
+            "compiler-authoritative authored berry totals survive the vanilla-only MapData scan");
         Pass(closure.Contains("AppleEverestProgressionPersistence.CaptureSave") &&
              closure.Contains("AppleEverestProgressionPersistence.CommitCapturedSave") &&
              closure.IndexOf("Save<SaveData>", StringComparison.Ordinal) < closure.IndexOf("AppleEverestProgressionPersistence.CommitCapturedSave", StringComparison.Ordinal),

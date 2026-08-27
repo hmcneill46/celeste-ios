@@ -51,6 +51,7 @@
         "compatibilityId": "0a0a36f63a4294380c50ea94baee48191fddec96963f33f92685c80cd5cfb095",
         "levelSet": "HennyburgrCompEntries/1-Lobby",
         "rooms": ["hennyburgr_1"],
+        "authoredStrawberries": 1,
         "allowSaving": true,
         "returnToLobbyMode": "SetReturnToHere"
       },
@@ -63,6 +64,7 @@
         "compatibilityId": "419a5bae9425df172b32515079add4f89f0b1e81290d03f55f76cd6474bb077d",
         "levelSet": "HennyburgrCompEntries/1-Lobby",
         "rooms": ["hennyburgr_01"],
+        "authoredStrawberries": 0,
         "allowSaving": true,
         "returnToLobbyMode": "SetReturnToHere"
       }
@@ -188,14 +190,14 @@
     "transformerVersion": "apple-everest-static-v14",
     "managedFileCount": 46,
     "contentFileCount": 4461,
-    "sharedClosureSha256": "ccf4f6db802c935071d019b46fbb77d3be49445f4bb590d4e9a1872c9a4b0660",
-    "managedLogicalSha256": "35d9ccb691ce1a0134bdf7df963661ce43ed31e8f6a7a0c8eedcacc7fe1607e4",
+    "sharedClosureSha256": "4a78b0a7c5340ae175be134bf972e2061f9a562eae957401dc5379835be3fd3a",
+    "managedLogicalSha256": "a540cd812341be657b59fc4ba13c950c23615d86915bfc6b0ffe2c880bf3ee44",
     "contentLogicalSha256": "0947c2e4156c02ba2bbdf37681b202378ad52432b9dabcd9dadb71a945977947",
     "registrySha256": "d7ff46c8ff66d0e5928723494ac65f4b08bfb23c110b621caeb30c2261b65ad1",
     "hookTransformSha256": "590af232c6c7209c9295f3f166478ad44c5bf559da22c72c01e45585fabf66f7",
     "appleApiSurfaceSha256": "d594dea86e944b468819818773f2177312445bbebe022bcbc7ea1ff779c8652c",
-    "progressionManifestSha256": "55796d3e95a64959f8ddd58e2cf001c06f0b8207f4d37118b60a96aa9d2d7072",
-    "levelSetManifestSha256": "c9ecdcc99221ff03926d282dada049505bd416f66bc1464fa2847d24c36771ba",
+    "progressionManifestSha256": "b6ad5f5ef9c97ded6f27d9ce2be0ec75c876662ad6195b3e53213fbb8688fc85",
+    "levelSetManifestSha256": "26cc1df0e07a0a3a061c5391e3a8f85edc0f347269730b239983d5a37fe336bc",
     "collabManifestSha256": "6925d8780b6427a67ef5438bef8315b80d4707506b5ebe7e61f9fe3c81f928a0",
     "customAudioManifestSha256": "0a7ca20a24239f4829ab5af7002004309d38d89ac5bffbfefff6a49b278c8841",
     "customBankLogicalSetSha256": "c927c0779c1dbbb5b43bd1a5daa5c2eb5e1c9d00b7e81eab87e70aa0a46eb8d7",
@@ -214,9 +216,9 @@
     "sharedPrePlatformClosure": true,
     "ios": {
       "portVersion": "0.1.1",
-      "buildNumber": 17,
-      "ipaBytes": 892308308,
-      "ipaSha256": "ff96e06ca1f50e1e014d99baea2a2051a272c0776c2fbeabd3d89a6a7a7a412b",
+      "buildNumber": 23,
+      "ipaBytes": 892323033,
+      "ipaSha256": "875ee97246ef1a7f3a27fe9442b9214375a0f776669a96a27fec6f94d45eca54",
       "minimumOs": "iOS 15.0",
       "universalIphoneIpad": true,
       "nativeIpadPresentation": true,
@@ -224,16 +226,16 @@
     },
     "tvos": {
       "portVersion": "0.1.1",
-      "buildNumber": 17,
-      "ipaBytes": 906029218,
-      "ipaSha256": "ebdad25cdbab2ff44d010645b489c44bece69f46ec9a6fb4fc21d37642f1f1e1",
+      "buildNumber": 23,
+      "ipaBytes": 906037252,
+      "ipaSha256": "13bca5b8298c6dc09bf2396220bf2e478f5075d4d1c509b3ca4cffaf372c8191",
       "minimumOs": "tvOS 16.0",
       "signingReadyUnsigned": true
     }
   },
   "physical": {
-    "iphone": "PASS_EXACT_BUILD_17_USER_MATRIX",
-    "ipadOs15": "PASS_EXACT_BUILD_17_USER_MATRIX",
+    "iphone": "PASS_EXACT_BUILD_23_USER_MATRIX",
+    "ipadOs15": "PASS_EXACT_BUILD_17_USER_MATRIX_PLUS_BUILD_23_SHARED_CLOSURE_STATIC",
     "appleTv": "TVOS_PHYSICAL_PENDING_HARDWARE_UNAVAILABLE",
     "lobbyLoaded": true,
     "lobbyLaunchMapA": true,
@@ -274,7 +276,7 @@
     "verify graceful Quit and cold relaunch"
   ],
   "regressions": {
-    "builderDeterministicTests": 443,
+    "builderDeterministicTests": 452,
     "stage25JC": "CURRENT_SHARED_BEHAVIOR_PLUS_HISTORICAL_ACCEPTED",
     "stage25HD": "CURRENT_SHARED_BEHAVIOR_PLUS_HISTORICAL_ACCEPTED_163",
     "stage25HC": "CURRENT_SHARED_BEHAVIOR_PLUS_HISTORICAL_ACCEPTED_120_YELLOW_FAIL_CLOSED",
@@ -302,8 +304,8 @@
     "ignoredFixturesCopied": false,
     "publicReleasesReacquired": 13,
     "exactClosureReproduced": true,
-    "builderDeterministicTests": 443,
-    "stageVerifierChecks": 108,
+    "builderDeterministicTests": 452,
+    "stageVerifierChecks": 111,
     "privacyPassed": true,
     "cleanStatus": true
   },

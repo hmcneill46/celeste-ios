@@ -118,6 +118,7 @@ public static class AppleEverestStaticRuntime
     {
         int game = 0;
         int gui = 0;
+        int journal = 0;
         foreach (AppleEverestAtlasMountDescriptor descriptor in GeneratedAppleEverestContentManifest.AtlasMounts)
         {
             Atlas atlas;
@@ -130,6 +131,11 @@ public static class AppleEverestStaticRuntime
             {
                 atlas = GFX.Gui;
                 gui++;
+            }
+            else if (descriptor.Atlas == "Journal")
+            {
+                atlas = MTN.Journal;
+                journal++;
             }
             else
             {
@@ -145,7 +151,7 @@ public static class AppleEverestStaticRuntime
             atlas.Sources.Add(texture);
             atlas[descriptor.Key] = mounted;
         }
-        Log($"content-atlas=PASS gameplay={game} gui={gui} precedence=dependency-order");
+        Log($"content-atlas=PASS gameplay={game} gui={gui} journal={journal} precedence=dependency-order");
     }
 
     private static void MountStaticModContent()

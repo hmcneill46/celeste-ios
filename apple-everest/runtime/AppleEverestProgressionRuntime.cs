@@ -73,6 +73,12 @@ internal static class AppleEverestProgressionRuntime
             };
             AreaData.Areas.Add(area);
             mode.MapData = new MapData(new AreaKey(id));
+            // Pinned Celeste's MapData loader only classifies vanilla-named
+            // strawberries. Static helper berries are lowered to the same
+            // runtime collectible but retain their authored map entity name,
+            // so Load() resets this field to its incomplete vanilla scan.
+            // The closure manifest is the compiler-verified authority.
+            mode.TotalStrawberries = descriptor.Strawberries;
             ByArea.Add(id, descriptor); BySid.Add(descriptor.Sid, descriptor);
         }
         AppleEverestStaticRuntime.Log($"levelset-registry=PASS vanilla={VanillaAreaCount} custom={ByArea.Count} levelsets={ByLevelSet.Count}");

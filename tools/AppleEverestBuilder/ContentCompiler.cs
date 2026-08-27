@@ -7,7 +7,8 @@ namespace AppleEverestBuilder;
 
 internal static class ContentCompiler
 {
-    internal static MapProgressionRecord InspectProgression(string path, string logicalPath, string sha256)
+    internal static MapProgressionRecord InspectProgression(string path, string logicalPath, string sha256,
+        IReadOnlySet<string>? staticallyLoweredStrawberryEntities = null)
     {
         if (!logicalPath.StartsWith("Maps/", StringComparison.Ordinal) ||
             !logicalPath.EndsWith(".bin", StringComparison.Ordinal))
@@ -34,7 +35,8 @@ internal static class ContentCompiler
         if (stream.Position != stream.Length) throw new InvalidDataException("map binary contains trailing bytes");
         string[] entitySet = entities.Distinct(StringComparer.Ordinal).OrderBy(value => value, StringComparer.Ordinal).ToArray();
         string[] triggerSet = triggers.Distinct(StringComparer.Ordinal).OrderBy(value => value, StringComparer.Ordinal).ToArray();
-        int berries = entities.Count(value => value is "strawberry" or "goldenBerry");
+        int berries = entities.Count(value => value is "strawberry" or "goldenBerry" ||
+            staticallyLoweredStrawberryEntities?.Contains(value) == true);
         bool heart = entities.Any(value => value is "blackGem" or "heartGem" or "CollabUtils2/MiniHeart");
         bool cassette = entities.Contains("cassette", StringComparer.Ordinal);
         string compatibility = Hashing.BytesSha256(Encoding.UTF8.GetBytes(

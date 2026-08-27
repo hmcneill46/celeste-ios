@@ -89,4 +89,11 @@ internal static class StaticSemanticLowering
         !path.EndsWith(".guids.txt", StringComparison.OrdinalIgnoreCase) &&
         !path.Equals("everest.yaml", StringComparison.OrdinalIgnoreCase) &&
         !path.Equals("everest.yml", StringComparison.OrdinalIgnoreCase);
+
+    // Progression metadata must describe the statically lowered runtime entity,
+    // not merely the custom ID stored in the source map. Keep this classification
+    // semantic so future exact/hash-approved strawberry lowerings participate
+    // without adding map- or helper-specific progression exceptions.
+    internal static bool CountsAsStrawberry(StaticSemanticFactory factory) =>
+        factory.Kind == "entity" && factory.RuntimeFactory is "strawberry" or "strawberry-with-return";
 }

@@ -61,6 +61,42 @@ internal static class AppleEverestCollabRuntime
             ? map.Author : fallback;
     }
 
+    private static bool IsForcedChapterPanel(OuiChapterPanel panel) =>
+        overworldWrapper != null && forcedMapSid != null && panel?.Overworld == overworldWrapper.WrappedScene;
+
+    internal static void ConfigureChapterPanel(OuiChapterPanel panel)
+    {
+        if (!IsForcedChapterPanel(panel)) return;
+        OuiChapterSelect select = panel.Overworld.GetUI<OuiChapterSelect>();
+        OuiChapterSelectIcon icon = select?.AppleEverestIcon(panel.Area.ID);
+        if (icon == null) return;
+        icon.SnapToSelected();
+        icon.Add(new Coroutine(UpdateChapterIcon(panel, icon)));
+    }
+
+    private static IEnumerator UpdateChapterIcon(OuiChapterPanel panel, OuiChapterSelectIcon icon)
+    {
+        Overworld overworld = overworldWrapper?.WrappedScene;
+        if (overworld == null) yield break;
+        while (overworld.Current == panel || overworld.Last == panel || overworld.Next == panel)
+        {
+            icon.Position = panel.Position + panel.IconOffset;
+            yield return null;
+        }
+    }
+
+    internal static float ChapterAuthorOffset(OuiChapterPanel panel, float fallback) =>
+        IsForcedChapterPanel(panel) ? 43f : fallback;
+
+    internal static float ChapterTitleOffset(OuiChapterPanel panel, float fallback) =>
+        IsForcedChapterPanel(panel) ? -49f : fallback;
+
+    internal static int ChapterSwapHeight(OuiChapterPanel panel, int fallback) =>
+        IsForcedChapterPanel(panel) && panel.selectingMode ? 300 : fallback;
+
+    internal static bool ShouldShowChapterDeaths(OuiChapterPanel panel) =>
+        IsForcedChapterPanel(panel);
+
     internal static bool NeedsChapterCheckpointPage(OuiChapterPanel panel) =>
         overworldWrapper != null && forcedMapSid != null && panel?.Overworld == overworldWrapper.WrappedScene &&
         AppleEverestProgressionPersistence.HasSuspendedSession(forcedMapSid);
@@ -144,11 +180,17 @@ internal static class AppleEverestCollabRuntime
         if (!IsSubordinate(level.Session.Area)) return;
         level.Session.HeartGem = true;
         SaveData.Instance?.RegisterHeartGem(level.Session.Area);
+        level.TimerStopped = true;
         level.RegisterAreaComplete();
-        level.Paused = true;
         level.PauseLock = true;
         UserIO.SaveHandler(file: true, settings: false);
-        level.Add(new AppleEverestCollabTransition(() => ReturnNow(level)));
+        // Match CollabUtils2's ReturnToLobbyHelper: wait for the durable save,
+        // then let Level select the current map's authored wipe.  Returning
+        // directly skipped Station Stratosphere's black AngledWipe entirely.
+        // Do not pause the Level here; ScreenWipe is designed to advance while
+        // the mini-heart sequence keeps gameplay frozen.
+        level.Add(new AppleEverestCollabTransition(() =>
+            level.DoScreenWipe(false, () => ReturnNow(level), false)));
     }
 
     private static void OpenReturnToLobbyConfirmMenu(Level level, int returnIndex)
@@ -500,20 +542,67 @@ internal sealed class AppleEverestOuiEnterJournal : Oui
 
 internal sealed class AppleEverestCollabJournalProgress : OuiJournalPage
 {
+    private sealed class IconCellFromGui : Cell
+    {
+        private readonly string icon;
+        private readonly float width;
+        private readonly float height;
+
+        internal IconCellFromGui(string icon, float width, float height)
+        {
+            this.icon = !string.IsNullOrEmpty(icon) && GFX.Gui.Has(icon) ? icon : "areas/null";
+            this.width = width;
+            this.height = height;
+        }
+
+        public override float Width() => width;
+
+        public override void Render(Vector2 center, float columnWidth)
+        {
+            MTexture texture = GFX.Gui[icon];
+            texture.DrawCentered(center, Color.White,
+                Math.Min(width / texture.Width, height / texture.Height));
+        }
+    }
+
     private readonly Table table;
 
     internal AppleEverestCollabJournalProgress(OuiJournal journal, string levelSet) : base(journal)
     {
         PageTexture = "page";
-        string minimumDeathsIcon = MTN.Journal.Has("CollabUtils2MinDeaths/SpringCollab2020/1-Beginner")
-            ? "CollabUtils2MinDeaths/SpringCollab2020/1-Beginner" : "skullblue";
+        string skullTexture = MTN.Journal.Has("CollabUtils2Skulls/" + levelSet)
+            ? "CollabUtils2Skulls/" + levelSet : "skullblue";
+        string minimumDeathsTexture = MTN.Journal.Has("CollabUtils2MinDeaths/" + levelSet)
+            ? "CollabUtils2MinDeaths/" + levelSet
+            : MTN.Journal.Has("CollabUtils2MinDeaths/SpringCollab2020/1-Beginner")
+                ? "CollabUtils2MinDeaths/SpringCollab2020/1-Beginner"
+                : skullTexture;
+        string heartTexture = MTN.Journal.Has("CollabUtils2Hearts/" + levelSet)
+            ? "CollabUtils2Hearts/" + levelSet : "heartgem0";
+        string speedBerryTexture = MTN.Journal.Has("CollabUtils2/speed_berry_pbs_heading")
+            ? "CollabUtils2/speed_berry_pbs_heading" : "time";
+
         table = new Table()
-            .AddColumn(new TextCell(Dialog.Clean("journal_progress"), new Vector2(0f, 0.5f), 1f, Color.Black * 0.7f, 560f, true))
-            .AddColumn(new IconCell("heartgem0", 90f))
-            .AddColumn(new IconCell("strawberry", 120f))
-            .AddColumn(new IconCell("skullblue", 100f))
-            .AddColumn(new IconCell(minimumDeathsIcon, 100f))
-            .AddColumn(new IconCell("time", 220f));
+            .AddColumn(new TextCell(Dialog.Clean("journal_progress"), new Vector2(0f, 0.5f),
+                1f, Color.Black * 0.7f, 360f))
+            .AddColumn(new EmptyCell(0f))
+            .AddColumn(new EmptyCell(64f))
+            .AddColumn(new EmptyCell(0f))
+            .AddColumn(new EmptyCell(64f))
+            .AddColumn(new IconCell("strawberry", 150f))
+            .AddColumn(new IconCell(skullTexture, 100f))
+            .AddColumn(new IconCell(minimumDeathsTexture, 100f))
+            .AddColumn(new IconCell("time", 220f))
+            .AddColumn(new IconCell(speedBerryTexture, 220f))
+            .AddColumn(new EmptyCell(30f));
+
+        int totalStrawberries = 0;
+        int totalDeaths = 0;
+        int totalBestDeaths = 0;
+        long totalTime = 0L;
+        long totalBestTime = 0L;
+        bool allBestDeathsPresent = true;
+        bool allBestTimesPresent = true;
 
         foreach (AppleEverestCollabMapDescriptor map in GeneratedAppleEverestCollabManifest.Collabs
                      .SelectMany(collab => collab.Maps).Where(map => map.LevelSet == levelSet)
@@ -523,21 +612,70 @@ internal sealed class AppleEverestCollabJournalProgress : OuiJournalPage
                 SaveData.Instance.Areas.Count <= descriptor.RuntimeAreaId) continue;
             AreaStats stats = SaveData.Instance.Areas[descriptor.RuntimeAreaId];
             AreaModeStats mode = stats.Modes[0];
-            string berries = AreaData.Areas[descriptor.RuntimeAreaId].Mode[0].TotalStrawberries > 0
-                ? stats.TotalStrawberries + (mode.Completed ? "/" + AreaData.Areas[descriptor.RuntimeAreaId].Mode[0].TotalStrawberries : "")
+            AreaData area = AreaData.Areas[descriptor.RuntimeAreaId];
+            string berries = area.Mode[0].TotalStrawberries > 0 || stats.TotalStrawberries > 0
+                ? stats.TotalStrawberries + (mode.Completed ? "/" + area.Mode[0].TotalStrawberries : "")
                 : "-";
-            table.AddRow()
-                .Add(new TextCell(map.DisplayName, new Vector2(1f, 0.5f), 0.6f, TextColor, 560f, true))
-                .Add(new IconCell(mode.HeartGem ? "heartgem0" : "dot"))
+
+            string levelHeartTexture = MTN.Journal.Has("CollabUtils2LevelHearts/" + map.Sid)
+                ? "CollabUtils2LevelHearts/" + map.Sid : heartTexture;
+            Row row = table.AddRow()
+                .Add(new TextCell(map.DisplayName, new Vector2(1f, 0.5f), 0.6f, TextColor))
+                .Add(null)
+                .Add(new IconCellFromGui(area.Icon, 60f, 50f))
+                .Add(null)
+                .Add(new IconCell(mode.HeartGem ? levelHeartTexture : "dot"))
                 .Add(new TextCell(berries, TextJustify, 0.5f, TextColor))
-                .Add(new TextCell(Dialog.Deaths(mode.Deaths), TextJustify, 0.5f, TextColor))
-                .Add(mode.SingleRunCompleted
-                    ? new TextCell(Dialog.Deaths(mode.BestDeaths), TextJustify, 0.5f, TextColor)
-                    : new IconCell("dot"))
-                .Add(mode.TimePlayed > 0
-                    ? new TextCell(Dialog.Time(mode.TimePlayed), TextJustify, 0.5f, TextColor)
+                .Add(stats.TotalTimePlayed > 0
+                    ? new TextCell(Dialog.Deaths(mode.Deaths), TextJustify, 0.5f, TextColor)
                     : new IconCell("dot"));
+
+            if (mode.SingleRunCompleted)
+            {
+                row.Add(new TextCell(Dialog.Deaths(mode.BestDeaths), TextJustify, 0.5f, TextColor));
+                totalBestDeaths += mode.BestDeaths;
+            }
+            else
+            {
+                row.Add(new IconCell("dot"));
+                allBestDeathsPresent = false;
+            }
+
+            row.Add(stats.TotalTimePlayed > 0
+                    ? new TextCell(Dialog.Time(stats.TotalTimePlayed), TextJustify, 0.5f, TextColor)
+                    : new IconCell("dot"));
+            if (mode.BestTime > 0L)
+            {
+                row.Add(new TextCell(Dialog.Time(mode.BestTime), TextJustify, 0.5f, TextColor)).Add(null);
+                totalBestTime += mode.BestTime;
+            }
+            else
+            {
+                row.Add(new IconCell("dot")).Add(null);
+                allBestTimesPresent = false;
+            }
+
+            totalStrawberries += stats.TotalStrawberries;
+            totalDeaths += mode.Deaths;
+            totalTime += stats.TotalTimePlayed;
         }
+
+        table.AddRow();
+        table.AddRow()
+            .Add(new TextCell(Dialog.Clean("journal_totals"), new Vector2(1f, 0.5f), 0.7f, TextColor))
+            .Add(null)
+            .Add(null)
+            .Add(null)
+            .Add(null)
+            .Add(new TextCell(totalStrawberries.ToString(), TextJustify, 0.6f, TextColor))
+            .Add(new TextCell(Dialog.Deaths(totalDeaths), TextJustify, 0.6f, TextColor))
+            .Add(new TextCell(allBestDeathsPresent ? Dialog.Deaths(totalBestDeaths) : "-",
+                TextJustify, 0.6f, TextColor))
+            .Add(new TextCell(Dialog.Time(totalTime), TextJustify, 0.6f, TextColor))
+            .Add(new TextCell(allBestTimesPresent ? Dialog.Time(totalBestTime) : "-",
+                TextJustify, 0.6f, TextColor))
+            .Add(null);
+        table.AddRow();
     }
 
     public override void Redraw(VirtualRenderTarget buffer)
@@ -551,35 +689,207 @@ internal sealed class AppleEverestCollabJournalProgress : OuiJournalPage
 
 internal sealed class AppleEverestMiniHeart : Entity
 {
-    private readonly Sprite sprite;
+    private static readonly int[] AnimationFrames =
+        { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13 };
+
+    private Sprite sprite;
+    private Sprite white;
     private readonly bool requireDash;
     private readonly bool refillDash;
+    private readonly bool noGhostSprite;
+    private readonly bool flash;
+    private readonly string spriteName;
+    private Wiggler scaleWiggler;
+    private Wiggler moveWiggler;
+    private Vector2 moveWiggleDirection;
+    private BloomPoint bloom;
+    private VertexLight light;
+    private ParticleType shineParticle;
+    private Coroutine collectRoutine;
+    private float bounceSfxDelay;
     private bool collected;
+
     internal AppleEverestMiniHeart(EntityData data, Vector2 offset) : base(data.Position + offset)
     {
         Depth = -100;
         Collider = new Hitbox(12f, 12f, -6f, -6f);
         requireDash = data.Bool("requireDashToBreak", true);
         refillDash = data.Bool("refillDash", true);
-        Add(sprite = GFX.SpriteBank.Create("heartgem0"));
-        sprite.Play("spin");
+        noGhostSprite = data.Bool("noGhostSprite", false);
+        flash = data.Bool("flash", true);
+        spriteName = data.Attr("sprite", "beginner");
+        Add(scaleWiggler = Wiggler.Create(0.5f, 4f,
+            value => sprite.Scale = Vector2.One * (1f + value * 0.3f)));
+        moveWiggler = Wiggler.Create(0.8f, 2f);
+        moveWiggler.StartZero = true;
+        Add(moveWiggler);
         Add(new PlayerCollider(OnPlayer));
-        Add(new BloomPoint(0.75f, 16f));
-        Add(new VertexLight(Color.Aqua, 1f, 32, 64));
     }
+
+    public override void Added(Scene scene)
+    {
+        base.Added(scene);
+        Level level = scene as Level;
+        bool collectedBefore = level != null && SaveData.Instance != null &&
+            SaveData.Instance.Areas.Count > level.Session.Area.ID &&
+            SaveData.Instance.Areas[level.Session.Area.ID].Modes[(int)level.Session.Area.Mode].HeartGem;
+        string path = "CollabUtils2/miniheart/" + spriteName + "/";
+        if (collectedBefore && !noGhostSprite)
+            path = GFX.Game.Has(path + "ghost00") ? path + "ghost" : "CollabUtils2/miniheart/ghost/ghost";
+        Add(sprite = new Sprite(GFX.Game, path));
+        sprite.AddLoop("idle", "", 0.1f, AnimationFrames);
+        sprite.Play("idle");
+        sprite.CenterOrigin();
+        sprite.OnLoop = animation =>
+        {
+            if (!Visible) return;
+            Audio.Play("event:/game/general/crystalheart_pulse", Position);
+            scaleWiggler.Start();
+            (Scene as Level)?.Displacement.AddBurst(Position + sprite.Position, 0.35f, 4f, 24f, 0.25f);
+        };
+
+        Color heartColor;
+        switch (spriteName)
+        {
+            case "intermediate":
+                heartColor = Color.Red;
+                shineParticle = HeartGem.P_RedShine;
+                break;
+            case "advanced":
+                heartColor = Color.Gold;
+                shineParticle = HeartGem.P_GoldShine;
+                break;
+            case "expert":
+                heartColor = Color.Orange;
+                shineParticle = new ParticleType(HeartGem.P_BlueShine) { Color = Color.Orange };
+                break;
+            case "grandmaster":
+                heartColor = Color.DarkViolet;
+                shineParticle = new ParticleType(HeartGem.P_BlueShine) { Color = Color.DarkViolet };
+                break;
+            default:
+                heartColor = Color.Aqua;
+                shineParticle = HeartGem.P_BlueShine;
+                break;
+        }
+        if (collectedBefore && !noGhostSprite)
+        {
+            heartColor = Color.White * 0.8f;
+            shineParticle = new ParticleType(HeartGem.P_BlueShine) { Color = Calc.HexToColor("7589FF") };
+        }
+        Add(light = new VertexLight(Color.Lerp(heartColor, Color.White, 0.5f), 1f, 32, 64));
+        Add(bloom = new BloomPoint(0.75f, 16f));
+    }
+
+    public override void Update()
+    {
+        base.Update();
+        bounceSfxDelay -= Engine.DeltaTime;
+        if (sprite != null)
+            sprite.Position = moveWiggleDirection * moveWiggler.Value * -8f;
+        if (white != null && sprite != null)
+        {
+            white.Position = sprite.Position;
+            white.Scale = sprite.Scale;
+            white.SetAnimationFrame(sprite.CurrentAnimationFrame);
+        }
+        if (Visible && shineParticle != null && Scene.OnInterval(0.1f))
+            SceneAs<Level>().Particles.Emit(shineParticle, 1, Center + sprite.Position, Vector2.One * 4f);
+    }
+
     private void OnPlayer(Player player)
     {
         if (collected || Scene is not Level level) return;
         if (requireDash && !player.DashAttacking)
         {
+            int dashCount = player.Dashes;
             player.PointBounce(Center);
-            Audio.Play("event:/game/general/crystalheart_bounce", Position);
+            if (!refillDash) player.Dashes = dashCount;
+            moveWiggleDirection = (Center - player.Center).SafeNormalize(Vector2.UnitY);
+            moveWiggler.Start();
+            scaleWiggler.Start();
+            Input.Rumble(RumbleStrength.Medium, RumbleLength.Medium);
+            if (bounceSfxDelay <= 0f)
+            {
+                Audio.Play("event:/game/general/crystalheart_bounce", Position);
+                bounceSfxDelay = 0.1f;
+            }
             return;
         }
         collected = true;
         Collidable = false;
         if (refillDash) player.RefillDash();
-        Audio.Play("event:/game/general/crystalheart_blue_get", Position);
+        Add(collectRoutine = new Coroutine(Collect(player, level)));
+    }
+
+    private IEnumerator Collect(Player player, Level level)
+    {
+        level.CanRetry = false;
+        Audio.SetMusic(null);
+        Audio.SetAmbience(null);
+        Audio.BusStopAll("bus:/gameplay_sfx", immediate: true);
+        string collectSfx = spriteName == "intermediate"
+            ? "event:/game/general/crystalheart_red_get"
+            : spriteName is "advanced" or "expert" or "grandmaster"
+                ? "event:/game/general/crystalheart_gold_get"
+                : "event:/game/general/crystalheart_blue_get";
+        SoundEmitter.Play(collectSfx, this);
+
+        Add(white = new Sprite(GFX.Game, "CollabUtils2/miniheart/white/white"));
+        white.AddLoop("idle", "", 0.1f, AnimationFrames);
+        white.Play("idle");
+        white.CenterOrigin();
+        Depth = Depths.FormationSequences;
+        yield return null;
+        Celeste.Freeze(0.2f);
+        yield return null;
+        Engine.TimeRate = 0.5f;
+        player.Depth = Depths.FormationSequences;
+        for (int index = 0; index < 10; index++) Scene.Add(new AbsorbOrb(Position));
+        level.Shake();
+        Input.Rumble(RumbleStrength.Strong, RumbleLength.Medium);
+        if (flash) level.Flash(Color.White);
+        light.Alpha = bloom.Alpha = 0f;
+        level.FormationBackdrop.Display = true;
+        level.FormationBackdrop.Alpha = 1f;
+        Visible = false;
+        for (float time = 0f; time < 2f; time += Engine.RawDeltaTime)
+        {
+            Engine.TimeRate = Calc.Approach(Engine.TimeRate, 0f, Engine.RawDeltaTime * 0.25f);
+            yield return null;
+        }
+        Depth = 0;
+        Depth = Depths.FormationSequences;
+        yield return null;
+        if (player.Dead)
+        {
+            RestoreCollectionState(level);
+            yield break;
+        }
+        Engine.TimeRate = 1f;
+        Tag = (int)Tags.FrozenUpdate;
+        level.Frozen = true;
         AppleEverestCollabRuntime.CompleteMapAndReturn(level);
+    }
+
+    private static void RestoreCollectionState(Level level)
+    {
+        Engine.TimeRate = 1f;
+        if (level == null) return;
+        level.Frozen = false;
+        level.CanRetry = true;
+        level.FormationBackdrop.Display = false;
+    }
+
+    public override void Removed(Scene scene)
+    {
+        RestoreCollectionState(scene as Level);
+        base.Removed(scene);
+    }
+
+    public override void SceneEnd(Scene scene)
+    {
+        RestoreCollectionState(scene as Level);
+        base.SceneEnd(scene);
     }
 }
