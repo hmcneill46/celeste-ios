@@ -19,6 +19,8 @@ internal static class Program
                 case "build": Build(One(options, "--profile"), One(options, "--repo-root"), One(options, "--upstream"), One(options, "--output"), Many(options, "--mod")); break;
                 case "audit": Audit(Many(options, "--mod"), One(options, "--output")); break;
                 case "inspect-map": InspectMap(One(options, "--map"), One(options, "--output")); break;
+                case "census-dll": AssemblyMechanismCensus.Write(
+                    One(options, "--dll"), One(options, "--output")); break;
                 case "apply": ClosureGenerator.Apply(One(options, "--closure"), One(options, "--managed-root")); break;
                 case "scan-runtime": RuntimeClosureScanner.Verify(One(options, "--assembly")); break;
                 case "verify-preserved-assembly": RuntimeClosureScanner.VerifyPreserved(
@@ -255,5 +257,5 @@ internal static class Program
 
     private static void Run(string command, params string[] args) { _ = Capture(command, args); }
 
-    private static void Help() => Console.WriteLine("AppleEverestBuilder acquire|audit|inspect-map|build|apply|scan-runtime|verify-preserved-assembly|verify-referenced-api|verify-aot-object|verify-profile (closed static-AOT Apple product)");
+    private static void Help() => Console.WriteLine("AppleEverestBuilder acquire|audit|inspect-map|census-dll|build|apply|scan-runtime|verify-preserved-assembly|verify-referenced-api|verify-aot-object|verify-profile (closed static-AOT Apple product)");
 }

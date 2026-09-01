@@ -6,6 +6,13 @@ using Celeste.Mod;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
 
+if (args.Length == 3 && args[0] == "--stage25kc-progression")
+{
+    ProgressionScaleAudit.Write(args[1], args[2]);
+    Console.WriteLine("PASS: Stage 25K-C progression scale audit");
+    return;
+}
+
 int passed = 0;
 string repository = Path.GetFullPath(args.Length == 1 ? args[0] : Path.Combine(AppContext.BaseDirectory, "../../../../"));
 string temporary = Path.Combine(Path.GetTempPath(), "apple-everest-stage25b-tests-" + Guid.NewGuid().ToString("N"));
