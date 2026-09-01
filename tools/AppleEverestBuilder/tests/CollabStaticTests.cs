@@ -51,10 +51,13 @@ internal static class CollabStaticTests
         string lobbyXml = Path.Combine(root, "lobby.xml");
         File.WriteAllText(lobbyXml,
             "<Map><levels><level name=\"room\" x=\"0\" y=\"0\" width=\"320\" height=\"180\">" +
-            "<entities><player id=\"1\" x=\"160\" y=\"96\" /></entities><triggers>" +
+            "<entities><player id=\"1\" x=\"160\" y=\"96\" />" +
+            "<appleEverestEntity name=\"CollabUtils2/MiniHeartDoor\" id=\"6\" x=\"128\" y=\"64\" width=\"40\" height=\"56\" requires=\"2\" levelSet=\"FixtureCollab/1-Lobby\" color=\"advanced\" />" +
+            "<appleEverestEntity name=\"CollabUtils2/RainbowBerry\" id=\"7\" x=\"160\" y=\"48\" levelSet=\"FixtureCollab/1-Lobby\" /></entities><triggers>" +
             "<appleEverestTrigger name=\"CollabUtils2/ChapterPanelTrigger\" id=\"2\" x=\"16\" y=\"64\" width=\"24\" height=\"32\" map=\"FixtureCollab/1-Lobby/a\" allowSaving=\"true\" returnToLobbyMode=\"SetReturnToHere\" />" +
-            "<appleEverestTrigger name=\"CollabUtils2/ChapterPanelTrigger\" id=\"3\" x=\"280\" y=\"64\" width=\"24\" height=\"32\" map=\"FixtureCollab/1-Lobby/b\" allowSaving=\"true\" returnToLobbyMode=\"SetReturnToHere\" />" +
+            "<appleEverestTrigger name=\"CollabUtils2/ChapterPanelTrigger\" id=\"3\" x=\"280\" y=\"64\" width=\"24\" height=\"32\" map=\"FixtureCollab/1-Lobby/b\" returnToLobbyMode=\"SetReturnToHere\" />" +
             "<appleEverestTrigger name=\"CollabUtils2/JournalTrigger\" id=\"4\" x=\"148\" y=\"128\" width=\"24\" height=\"32\" levelset=\"FixtureCollab/1-Lobby\" vanillaJournal=\"false\" showOnlyDiscovered=\"false\" />" +
+            "<appleEverestTrigger name=\"CollabUtils2/JournalTrigger\" id=\"5\" x=\"148\" y=\"16\" width=\"24\" height=\"32\" levelset=\"FixtureCollab/1-Lobby\" vanillaJournal=\"false\" showOnlyDiscovered=\"false\" />" +
             "</triggers><solids /><bg /></level></levels><Filler /><Style><Backgrounds /><Foregrounds /></Style>" +
             "<meta Icon=\"areas/temple\" TitleBaseColor=\"6C7C81\" TitleAccentColor=\"2F344B\" " +
             "TitleTextColor=\"FFFFFF\" IntroType=\"WakeUp\" Dreaming=\"false\" ColorGrade=\"none\" " +
@@ -68,6 +71,22 @@ internal static class CollabStaticTests
         string lobbyPath = "Maps/FixtureCollab/0-Lobbies/lobby.bin";
         string mapAPath = "Maps/FixtureCollab/1-Lobby/a.bin";
         string mapBPath = "Maps/FixtureCollab/1-Lobby/b.bin";
+        string mapAXml = Path.Combine(root, "map-a.xml");
+        string mapBXml = Path.Combine(root, "map-b.xml");
+        File.WriteAllText(mapAXml,
+            "<Map><levels><level name=\"a-room\" x=\"0\" y=\"0\" width=\"320\" height=\"180\"><entities>" +
+            "<player id=\"1\" x=\"16\" y=\"16\" /><appleEverestEntity name=\"CollabUtils2/MiniHeart\" id=\"2\" x=\"280\" y=\"80\" />" +
+            "<appleEverestEntity name=\"CollabUtils2/SilverBerry\" id=\"3\" x=\"40\" y=\"40\" />" +
+            "<appleEverestEntity name=\"CollabUtils2/SpeedBerry\" id=\"4\" x=\"64\" y=\"40\" goldTime=\"5\" silverTime=\"10\" bronzeTime=\"15\" />" +
+            "</entities><triggers /><solids /><bg /></level></levels><Filler /><Style><Backgrounds /><Foregrounds /></Style></Map>",
+            new UTF8Encoding(false));
+        File.WriteAllText(mapBXml,
+            "<Map><levels><level name=\"b-room\" x=\"0\" y=\"0\" width=\"320\" height=\"180\"><entities>" +
+            "<player id=\"1\" x=\"16\" y=\"16\" /><appleEverestEntity name=\"CollabUtils2/MiniHeart\" id=\"2\" x=\"280\" y=\"80\" />" +
+            "</entities><triggers /><solids /><bg /></level></levels><Filler /><Style><Backgrounds /><Foregrounds /></Style></Map>",
+            new UTF8Encoding(false));
+        _ = ContentCompiler.Stage(mapAXml, "Content/" + mapAPath[..^4] + ".xml", content);
+        _ = ContentCompiler.Stage(mapBXml, "Content/" + mapBPath[..^4] + ".xml", content);
         ContentMountRecord[] mounts =
         [
             new("FixturePackage", 0, lobbyPath, lobbyPath, new string('1', 64), new string('2', 64)),
@@ -85,12 +104,17 @@ internal static class CollabStaticTests
         File.WriteAllText(berryXml,
             "<Map><levels><level name=\"berry-room\" x=\"0\" y=\"0\" width=\"320\" height=\"180\">" +
             "<entities><player id=\"1\" x=\"16\" y=\"16\" />" +
+            "<checkpoint id=\"3\" x=\"32\" y=\"16\" checkpointID=\"4\" />" +
             "<appleEverestEntity name=\"Fixture/ReturningBerry\" id=\"2\" x=\"160\" y=\"90\" /></entities>" +
-            "<triggers /><solids /><bg /></level></levels><Filler /><Style><Backgrounds /><Foregrounds /></Style></Map>",
+            "<triggers /><solids /><bg /></level></levels><Filler /><Style><Backgrounds /><Foregrounds /></Style>" +
+            "<meta Icon=\"areas/temple\" IntroType=\"WakeUp\" Wipe=\"Celeste.DropWipe\" /></Map>",
             new UTF8Encoding(false));
         string berryLogical = ContentCompiler.Stage(berryXml,
             "Content/Maps/FixtureCollab/1-Lobby/berry.xml", content);
         string berryPath = Path.Combine(content, berryLogical.Replace('/', Path.DirectorySeparatorChar));
+        File.WriteAllText(Path.ChangeExtension(berryPath, ".meta.yaml"),
+            "Icon: areas/farewell\nIntroType: WalkInRight\nWipe: Celeste.Starfield\n",
+            new UTF8Encoding(false));
         MapProgressionRecord unresolvedBerry = ContentCompiler.InspectProgression(berryPath,
             "Maps/FixtureCollab/1-Lobby/berry.bin", new string('7', 64));
         MapProgressionRecord resolvedBerry = ContentCompiler.InspectProgression(berryPath,
@@ -98,6 +122,12 @@ internal static class CollabStaticTests
             new HashSet<string>(["Fixture/ReturningBerry"], StringComparer.Ordinal));
         Pass(unresolvedBerry.Strawberries == 0 && resolvedBerry.Strawberries == 1,
             "only an exact resolved static strawberry lowering contributes to authored map totals");
+        Pass(resolvedBerry.Checkpoints.SequenceEqual(new[] { "berry-room" }),
+            "authored checkpoint entities become deterministic chapter checkpoint levels");
+        Pass(resolvedBerry.Presentation?.Icon == "areas/temple" &&
+             resolvedBerry.Presentation.IntroType == "WakeUp" &&
+             resolvedBerry.Presentation.Wipe == "Celeste.DropWipe",
+            "embedded map metadata overrides the earlier sidecar just as it does during Everest MapData loading");
         MapPresentationRecord presentation = inspectedLobby.Presentation!;
         Pass(presentation.Icon == "areas/temple" && presentation.TitleBaseColor == "6c7c81" &&
              presentation.TitleAccentColor == "2f344b" && presentation.TitleTextColor == "ffffff" &&
@@ -144,12 +174,24 @@ internal static class CollabStaticTests
         Pass(collab.Maps[0].DisplayName == "Map A" && collab.Maps[0].Author == "Author A" &&
              collab.Maps[1].DisplayName == "Map B" && collab.Maps[1].Author == "Author B",
             "dialog-backed map titles and authors are frozen");
-        Pass(collab.Maps.All(value => value.AllowSaving && value.ReturnMode == "SetReturnToHere" &&
-             value.ReturnRoom == "room" && value.ReturnX == 160f && value.ReturnY == 96f),
-            "package-defined save/return authority is frozen");
+        Pass(collab.Maps[0].AllowSaving && !collab.Maps[1].AllowSaving &&
+             collab.Maps.All(value => value.ReturnMode == "SetReturnToHere" &&
+                 value.ReturnRoom == "room" && value.ReturnX == 160f && value.ReturnY == 96f),
+            "package-defined save/return authority preserves EntityData's false default");
         Pass(collab.JournalLevelSet == "FixtureCollab/1-Lobby" && !collab.JournalVanilla &&
-             !collab.JournalShowOnlyDiscovered, "exact journal semantics frozen");
-        Pass(generation.ManifestText.StartsWith("APPLE_EVEREST_STATIC_COLLAB_V1\n", StringComparison.Ordinal) &&
+             !collab.JournalShowOnlyDiscovered, "multiple ordinary journal stations with identical semantics are frozen once");
+        Pass(collab.MiniHeartDoors.Count == 1 && collab.MiniHeartDoors[0].Requires == 2 &&
+             collab.MiniHeartDoors[0].ContributingMapSids.SequenceEqual(new[] {
+                 "FixtureCollab/1-Lobby/a", "FixtureCollab/1-Lobby/b" }),
+            "mini-heart door threshold and every contributing map are frozen from authored binaries");
+        Pass(collab.LobbySpecialBerries.Count == 1 &&
+             collab.LobbySpecialBerries[0].EntityType == "CollabUtils2/RainbowBerry" &&
+             collab.LobbySpecialBerries[0].SemanticClass == "REQUIRED_BY_GRAPH" &&
+             collab.Maps[0].MiniHeartCount == 1 && collab.Maps[1].MiniHeartCount == 1 &&
+             collab.Maps[0].SpecialBerries.Select(value => value.EntityType).SequenceEqual(new[] {
+                 "CollabUtils2/SilverBerry", "CollabUtils2/SpeedBerry" }),
+            "typed special-berry graph and durability inputs are frozen without device discovery");
+        Pass(generation.ManifestText.StartsWith("APPLE_EVEREST_STATIC_COLLAB_V2\n", StringComparison.Ordinal) &&
              generation.ManifestText.Contains("map\tFixtureCollab\t0\tFixtureCollab/1-Lobby/a\tMap A\tAuthor A", StringComparison.Ordinal),
             "versioned deterministic collab manifest emitted");
         Pass(generation.Source.Contains("GeneratedAppleEverestCollabManifest", StringComparison.Ordinal) &&
@@ -158,9 +200,15 @@ internal static class CollabStaticTests
 
         string runtime = File.ReadAllText(Path.Combine(repository, "apple-everest/runtime/AppleEverestCollabRuntime.cs"));
         string factories = File.ReadAllText(Path.Combine(repository, "apple-everest/runtime/AppleEverestSemanticFactories.cs"));
+        string closureGenerator = File.ReadAllText(Path.Combine(repository,
+            "tools/AppleEverestBuilder/ClosureGenerator.cs"));
         Pass(runtime.Contains("CollabUtils2_MapCompleted_", StringComparison.Ordinal) &&
              runtime.Contains("HeartGem == true", StringComparison.Ordinal),
             "completion flags derive from durable per-map heart state");
+        Pass(runtime.Contains("!IsHeartSide(map.Sid)", StringComparison.Ordinal) &&
+             runtime.Contains("OrderBy(map => map.Sid, StringComparer.Ordinal)", StringComparison.Ordinal) &&
+             runtime.Contains("EndsWith(\"/ZZ-HeartSide\", StringComparison.Ordinal)", StringComparison.Ordinal),
+            "ordinary collab journals exclude separately gated heart sides and use authored SID order");
         Pass(runtime.Contains("collabutils2_returntolobby", StringComparison.Ordinal) &&
              runtime.Contains("LaunchPersistentAt", StringComparison.Ordinal),
             "subordinate pause route uses generated return authority");
@@ -168,9 +216,15 @@ internal static class CollabStaticTests
              runtime.Contains("collabutils2_returntolobby_confirm_save", StringComparison.Ordinal) &&
              runtime.Contains("collabutils2_returntolobby_confirm_donotsave", StringComparison.Ordinal) &&
              runtime.Contains("collabutils2_returntolobby_confirm_cancel", StringComparison.Ordinal) &&
+             runtime.Contains("menu_return_continue", StringComparison.Ordinal) &&
+             runtime.Contains("menu_return_cancel", StringComparison.Ordinal) &&
              runtime.Contains("ReturnToLobby(level, menu, save: true)", StringComparison.Ordinal) &&
              runtime.Contains("ReturnToLobby(level, menu, save: false)", StringComparison.Ordinal),
-            "return-to-lobby exposes the package-authored save, do-not-save, and cancel choices");
+            "return-to-lobby exposes both save-enabled and compact no-save confirmation choices");
+        Pass(runtime.Contains("if (allowSaving)", StringComparison.Ordinal) &&
+             runtime.Contains("OpenReturnToLobbyConfirmMenu(level, returnIndex, map.AllowSaving)", StringComparison.Ordinal) &&
+             !runtime.Contains("else\n            {\n                level.Paused = true;\n                level.PauseLock = true;\n                level.Add(new AppleEverestCollabTransition(() => ReturnNow(level)));", StringComparison.Ordinal),
+            "every chapter panel confirms return while its authored saving policy selects the menu shape");
         Pass(runtime.Contains("level.Pause(returnIndex, minimal: false)", StringComparison.Ordinal) &&
              runtime.Contains("SaveData.Instance?.AddDeath(level.Session.Area)", StringComparison.Ordinal),
             "return-to-lobby cancel restores pause selection and save follows vanilla death semantics");
@@ -201,6 +255,20 @@ internal static class CollabStaticTests
              runtime.Contains("panel.option = 1", StringComparison.Ordinal) &&
              runtime.Contains("ShouldDrawVanillaCheckpoint", StringComparison.Ordinal),
             "save-and-return exposes authentic Start Over and Continue bookmarks without routing synthetic options through vanilla checkpoint indexing");
+        Pass(runtime.Contains("UsesSyntheticBookmarks", StringComparison.Ordinal) &&
+             runtime.Contains("descriptor.Checkpoints.Length == 0", StringComparison.Ordinal) &&
+             runtime.Contains("CheckpointPreviewName", StringComparison.Ordinal) &&
+             runtime.Contains("MTN.Checkpoints.Has(key)", StringComparison.Ordinal) &&
+             !runtime.Contains("session.Level = descriptor.Presentation.StartLevel", StringComparison.Ordinal) &&
+             closureGenerator.Contains("AppleEverestProgressionRuntime.StartLevel(Area)", StringComparison.Ordinal) &&
+             closureGenerator.Contains("return GetAt(Vector2.Zero) ?? Levels.FirstOrDefault()", StringComparison.Ordinal),
+            "authored checkpoint maps retain their full-height named photo list and resolve metadata start rooms before Session initialization");
+        Pass(runtime.Contains("ResolveSessionCheckpoint(checkpoint)", StringComparison.Ordinal) &&
+             runtime.Contains("return string.IsNullOrEmpty(checkpoint) ? null : checkpoint", StringComparison.Ordinal) &&
+             !runtime.Contains("descriptor?.Presentation?.StartLevel", StringComparison.Ordinal) &&
+             runtime.Contains("new Session(new AreaKey(descriptor.RuntimeAreaId), sessionCheckpoint)", StringComparison.Ordinal) &&
+             runtime.Contains("checkpoint={session.StartCheckpoint ?? \"<none>\"} beginning={session.StartedFromBeginning}", StringComparison.Ordinal),
+            "collab Start preserves beginning semantics and the effective authored intro while named photos remain explicit checkpoints");
         Pass(runtime.Contains("CompleteMapAndReturn", StringComparison.Ordinal) &&
              runtime.Contains("RegisterHeartGem", StringComparison.Ordinal) &&
              runtime.Contains("level.TimerStopped = true", StringComparison.Ordinal) &&
@@ -273,7 +341,7 @@ internal static class CollabStaticTests
              factories.Contains("climbBlocker.Blocking = true", StringComparison.Ordinal) &&
              factories.Contains("public override void Added(Scene scene)", StringComparison.Ordinal) &&
              factories.Contains("SolidChecker = solid => CollideCheck", StringComparison.Ordinal) &&
-             factories.Contains("GFX.SpriteBank.Create(spriteId)", StringComparison.Ordinal) &&
+             factories.Contains("AppleEverestStaticRuntime.CreateStaticModSprite(spriteId)", StringComparison.Ordinal) &&
              factories.Contains("foreach (Sprite tile in tiles) tile.Play(\"ice\")", StringComparison.Ordinal) &&
              !factories.Contains("AttachedIceWall\" => new IceBlock", StringComparison.Ordinal),
             "Shroom attached ice walls activate after room attachment as visible two-pixel climb blockers carried and shaken by their neighbouring solids");
@@ -304,8 +372,6 @@ internal static class CollabStaticTests
              factories.Contains("texture.DrawCentered(block.Center, Color.White)", StringComparison.Ordinal) &&
              !factories.Contains("public override void Render()\n    {\n        if (Entity is DreamBlock block)", StringComparison.Ordinal),
             "DreamMoveBlock preserves its authored arrow through a companion entity because canonical Render bypasses components");
-        string closureGenerator = File.ReadAllText(Path.Combine(repository,
-            "tools/AppleEverestBuilder/ClosureGenerator.cs"));
         Pass(factories.Contains("ResolveSpinnerColor(EntityData data, CrystalColor fallback)", StringComparison.Ordinal) &&
              factories.Contains("authored.Equals(\"Red\", StringComparison.OrdinalIgnoreCase)", StringComparison.Ordinal) &&
              factories.Contains("return (CrystalColor)(-1)", StringComparison.Ordinal) &&
@@ -313,8 +379,25 @@ internal static class CollabStaticTests
              closureGenerator.Contains("AppleEverestSemanticFactories.ResolveSpinnerColor(entity3, color)", StringComparison.Ordinal) &&
              closureGenerator.Contains("if ((int)color == -1)", StringComparison.Ordinal),
             "custom maps retain bounded authored spinner palettes including Everest core-mode semantics");
+        Pass(closureGenerator.Contains("PatchAuthoredSpinnerVariants(Path.Combine(managedRoot, \"Celeste\", \"Level.cs\"))", StringComparison.Ordinal) &&
+             closureGenerator.Split("Session.Area.ID == 10 || entity3.Bool(\\\"star\\\")", StringSplitOptions.None).Length == 3 &&
+             closureGenerator.Split("Session.Level.StartsWith(\\\"d-\\\")) || entity3.Bool(\\\"dust\\\")", StringSplitOptions.None).Length == 3 &&
+             closureGenerator.Contains("Add(new DustRotateSpinner(entity3, vector))", StringComparison.Ordinal) &&
+             closureGenerator.Contains("Add(new DustTrackSpinner(entity3, vector))", StringComparison.Ordinal),
+            "moving and circular vanilla spinner loaders retain Everest-authored star/dust variants while false values fall through to canonical blades");
         string progressionRuntime = File.ReadAllText(Path.Combine(repository,
             "apple-everest/runtime/AppleEverestProgressionRuntime.cs"));
+        string secondCollabRuntime = File.ReadAllText(Path.Combine(repository,
+            "apple-everest/runtime/AppleEverestSecondCollabRuntime.cs"));
+        string staticRuntime = File.ReadAllText(Path.Combine(repository,
+            "apple-everest/runtime/AppleEverestStaticRuntime.cs"));
+        Pass(closureGenerator.Contains("IsSpriteBankXml(contentRoot, mount)", StringComparison.Ordinal) &&
+             closureGenerator.Contains("AppleEverestSpriteBankDescriptor", StringComparison.Ordinal) &&
+             staticRuntime.Contains("MountStaticSpriteBanks();", StringComparison.Ordinal) &&
+             staticRuntime.Contains("CreateStaticModSpriteOn", StringComparison.Ordinal) &&
+             secondCollabRuntime.Contains("CreateStaticModSpriteOn(sprite, spriteId)", StringComparison.Ordinal) &&
+             secondCollabRuntime.Contains("CreateStaticModSprite(\"CollabUtils2_holoRainbowBerry\")", StringComparison.Ordinal),
+            "all build-time identified mod SpriteBank XMLs feed deterministic static custom-sprite lookup");
         string sceneWrapper = File.ReadAllText(Path.Combine(repository,
             "apple-everest/runtime/AppleEverestSceneWrappingEntity.cs"));
         Pass(runtime.Contains("new TalkComponent", StringComparison.Ordinal) &&
@@ -342,8 +425,14 @@ internal static class CollabStaticTests
              closureGenerator.Contains("ChapterTitleOffset(this, -18f)", StringComparison.Ordinal) &&
              closureGenerator.Contains("AppleEverestIcon(int area)", StringComparison.Ordinal) &&
              runtime.Contains("icon.Position = panel.Position + panel.IconOffset", StringComparison.Ordinal) &&
-             runtime.Contains("panel.selectingMode ? 300 : fallback", StringComparison.Ordinal),
-            "forced collab chapter panels preserve the selected map icon, title-author order, compact bookmark height, and normal-mode death count");
+             runtime.Contains("panel.selectingMode && UsesSyntheticBookmarks(forcedMapSid) ? 300 : fallback",
+                 StringComparison.Ordinal),
+            "forced collab chapter panels preserve the selected map icon, title-author order, authored height or compact synthetic-bookmark height, and normal-mode death count");
+        Pass(closureGenerator.Contains("Graphics/Atlases/Checkpoints/", StringComparison.Ordinal) &&
+             closureGenerator.Contains("atlas = \"Checkpoints\"", StringComparison.Ordinal) &&
+             closureGenerator.Contains("CheckpointPreviewName(area, level)", StringComparison.Ordinal) &&
+             staticRuntime.Contains("atlas = MTN.Checkpoints", StringComparison.Ordinal),
+            "authored checkpoint polaroids are mounted and resolved by custom SID, mode, and checkpoint level");
         Pass(runtime.Contains("class IconCellFromGui", StringComparison.Ordinal) &&
              runtime.Contains("new IconCellFromGui(area.Icon, 60f, 50f)", StringComparison.Ordinal) &&
              runtime.Contains("CollabUtils2MinDeaths/\" + levelSet", StringComparison.Ordinal) &&
@@ -361,9 +450,47 @@ internal static class CollabStaticTests
         Pass(progressionRuntime.Contains("Name = DialogKey(descriptor.Sid)", StringComparison.Ordinal) &&
              progressionRuntime.Contains("sid.Replace('/', '_').Replace('-', '_')", StringComparison.Ordinal),
             "custom AreaData names use Everest's generic SID-to-dialog-key normalisation");
+        Pass(progressionRuntime.Contains("new CheckpointData(value, DialogKey(descriptor.Sid) + \"_\" + value)",
+                StringComparison.Ordinal),
+            "authored checkpoint labels resolve through Everest's canonical SID-plus-room dialog key");
         Pass(progressionRuntime.Contains("presentation.Icon == \"areas/null\" ? source.Icon : presentation.Icon",
                 StringComparison.Ordinal),
             "canonical chapter select receives a valid vanilla fallback for Everest's no-custom-icon sentinel");
+        Pass(factories.Contains("CollabUtils2/MiniHeartDoor", StringComparison.Ordinal) &&
+             factories.Contains("CollabUtils2/RainbowBerry", StringComparison.Ordinal) &&
+             factories.Contains("CollabUtils2/SilverBerry", StringComparison.Ordinal) &&
+             factories.Contains("CollabUtils2/SpeedBerry", StringComparison.Ordinal) &&
+             factories.Contains("MaxHelpingHand/SecretBerry", StringComparison.Ordinal) &&
+             factories.Contains("EeveeHelper/FlagToggleModifier", StringComparison.Ordinal) &&
+             factories.Contains("LunaticHelper/StrawberryGate", StringComparison.Ordinal),
+            "second-collab entities are dispatched through the exact static semantic registry");
+        Pass(factories.Contains("CollabUtils2/MiniHeartDoorUnlockCutsceneTrigger", StringComparison.Ordinal) &&
+             factories.Contains("CollabUtils2/RainbowBerryUnlockCutsceneTrigger", StringComparison.Ordinal) &&
+             factories.Contains("CollabUtils2/SpeedBerryCollectTrigger", StringComparison.Ordinal) &&
+             factories.Contains("everest/coreModeTrigger", StringComparison.Ordinal) &&
+             factories.Contains("everest/crystalShatterTrigger", StringComparison.Ordinal),
+            "second-collab and ordinary Everest triggers are dispatched without helper discovery");
+        Pass(secondCollabRuntime.Contains("class AppleEverestMiniHeartDoor : HeartGemDoor", StringComparison.Ordinal) &&
+             secondCollabRuntime.Contains("class AppleEverestRainbowBerry : Strawberry", StringComparison.Ordinal) &&
+             secondCollabRuntime.Contains("class AppleEverestSpeedBerry : Strawberry", StringComparison.Ordinal) &&
+             secondCollabRuntime.Contains("class AppleEverestFlagToggleModifier : Entity", StringComparison.Ordinal) &&
+             secondCollabRuntime.Contains("class AppleEverestStrawberryGate : Solid", StringComparison.Ordinal) &&
+             !secondCollabRuntime.Contains("Assembly.Load", StringComparison.Ordinal) &&
+             !secondCollabRuntime.Contains("System.Reflection", StringComparison.Ordinal),
+            "second-collab gameplay is repository-owned, typed, and contains no device-side code discovery");
+        Pass(staticRuntime.Contains("EVEREST / PORT OPTIONS", StringComparison.Ordinal) &&
+             staticRuntime.Contains("private static void OpenOptions(TextMenu parent)", StringComparison.Ordinal) &&
+             staticRuntime.Contains("private static void PopulateOptions(TextMenu menu)", StringComparison.Ordinal) &&
+             staticRuntime.Contains("CFBundleShortVersionString", StringComparison.Ordinal) &&
+             staticRuntime.Contains("parent.Focused = true", StringComparison.Ordinal),
+            "Everest diagnostics, modules, launches, and port identity live in one reversible Options submenu");
+        Pass(closureGenerator.Contains("PatchSecondCollabSemantics", StringComparison.Ordinal) &&
+             closureGenerator.Contains("SecondRealCollab:source-lowered-heart-door-and-special-berries:v1", StringComparison.Ordinal) &&
+             closureGenerator.Contains("ConfigureHeartDoor(this, TopSolid, BotSolid", StringComparison.Ordinal) &&
+             closureGenerator.Contains("ConfigureStrawberry(this, sprite, bloom, light)", StringComparison.Ordinal) &&
+             progressionRuntime.Contains("CountsAsOrdinaryStrawberry", StringComparison.Ordinal) &&
+             progressionRuntime.Contains("CollabUtils2/SilverBerry", StringComparison.Ordinal),
+            "vanilla hosts are deterministically source-lowered for heart doors and special-berry progression");
         Pass(!runtime.Contains("Assembly.Load", StringComparison.Ordinal) &&
              !runtime.Contains("Everest.Content.Mods", StringComparison.Ordinal) &&
              !runtime.Contains("Directory.", StringComparison.Ordinal),

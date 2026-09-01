@@ -1,0 +1,94 @@
+{
+  "schemaVersion": 1,
+  "stage": "25K-B",
+  "purpose": "select a second ordinary public CollabUtils2 collab that broadens static Apple compatibility beyond the Stage 25K-A two-map proof without adding device-side managed discovery",
+  "sources": {
+    "everestUpdateYaml": {
+      "path": ".build/apple-everest/stage25kb/metadata/everest_update.yaml",
+      "sha256": "d4825d6d7f69ae656b613efbfaf3cedac01b03d1fbbd16e04797a685bc865eb8",
+      "records": 6097
+    },
+    "dependencyGraphYaml": {
+      "path": ".build/apple-everest/stage25kb/metadata/mod_dependency_graph.yaml",
+      "sha256": "e3287c3da5ac4d1a076dca838c7aad6f194ddc88ad898622ec5a1f25c42ae121"
+    },
+    "gameBananaOfficialApiRecords": 151
+  },
+  "screening": {
+    "directCollabUtils2Dependents": 1317,
+    "broadCandidatesUnder150MiB": 279,
+    "strongCandidates": 151,
+    "collabSizedCandidatesWithTwoToNineMaps": 35,
+    "ranking": "Prefer one ordinary CollabUtils2 lobby, two to eight subordinate maps, a meaningful mini-heart-door or special-berry completion path, no native or Lua payload, no custom FMOD bank, no configured IL, and the smallest helper surface that materially extends Stage 25K-A.",
+    "reviewedCandidates": [
+      "1603215 springcollabautumn 1.2.0", "583908 TobyaaaStationComp 1.1.0", "1342255 C-Side Collab My Submission 0.0.1", "1523576 Lyla_RuBirthday 1.1.0", "1787524 AstralContestNarrowCity 0.0.1",
+      "889216 DoubleBirthday 1.0.0", "1144148 HennyburgrCompEntries 1.1.0", "1342745 COLLAB_spring_tobyaaa 1.0.4", "1167030 ShrimpContest2004 1.0.0", "1308208 CollabLobbyUI 1.0.9",
+      "1602258 Test AI Contest 1 2.1.1", "1721068 RemixContestAndytampans 0.0.1", "1610012 RAMduckShortWeek 1.0.1", "1312764 CrispybagSpringCollab 0.0.1", "1176660 BeginnerContest2021_AliceQuasar 1.0.0",
+      "1436159 RAMduckLongWeek 1.0.0", "1620176 DaxaroodleBirthday2025Andy 0.1.5", "1474048 DestroCompactSides 1.2.0", "1664438 Complete the Outlandish and Random Expedition 1.0.0", "1131755 EvanKrusher948MapPack 1.0.0",
+      "1086296 Kayonara Collection 1.0.1", "1031330 7collab 1.2.1", "1155716 MediocreCollab2022 1.2.1", "1542656 VerthdayCollab 1.0.1", "1340394 spring collab 0.0.1",
+      "1384669 2024_BooreokjamCollab 1.0.0", "1576457 SecretIngredientContest 1.0.7", "1372733 bigRoomCollab 1.0.1", "1319342 SimonJauntContest 1.0.0", "1655882 ZestContest 0.0.1",
+      "1214662 QueesleAmityCollab 0.1.1", "1345099 CranberryCollab 0.0.1", "741166 xolis fox week 1.0.0", "1343799 SimpleComplex 1.0.0", "884830 citycontest22 1.0.0",
+      "1449048 Tear's Wacky Week 0.0.1", "1796931 CanvasContest 1.0.12", "617628 teamworkcontest_pythontemple 1.0.1", "1319283 NyanContest3 0.0.1", "882794 Nexus Compound 1.0.0",
+      "1525965 LylaCityContest2022 1.1.0", "1259581 CrossoverCollabAprilDemo 1.0.5", "1604514 idiotcismbirthday 0.0.1", "1229746 zucchinicontestbuthecomestomyhouseandKILLSmeirl 1.0.6", "1707996 Nirthday Collab 2026 0.0.1",
+      "1499128 Breeze Contest 0.0.1", "1340675 CoolBread Spring Collab 1.0", "1243407 FriendCollab 1.1.1", "1469441 Hearse_MusicTranslationContest 1.0.1", "1347302 crosscontest24 0.0.1",
+      "638810 ComplexB 1.0.1", "1140237 AdvancedCollab 1.0.0", "1493525 VanillaContest2023 1.0.6", "933478 GuestRoomCollab 1.0.0", "1795678 10flips LowscopeContest 0.0.2",
+      "1435831 ThCollabThing 1.0.1", "1673659 Mad Incompetence 1.0.0", "1239877 resverie story contest 1.0.0", "1493099 Flexwell (Completed Edition) 2.0.0", "1723331 Curio Contest 0.0.1"
+    ]
+  },
+  "deepAudit": {
+    "count": 20,
+    "generatedArtifact": ".build/apple-everest/stage25kb/deep-audit/audit.json",
+    "distanceVector": [
+      "unsupported required mechanisms", "new major mechanisms", "lobby and subordinate-map fit", "helper graph breadth", "custom audio", "content size", "physical traversal cost"
+    ],
+    "candidates": [
+      {"name":"2025TriggersOnlyContest","version":"0.0.1","zipSha256":"38de1e4aeac766c42daac169ff1a25ce894febd8a033d78725275e1751b0962b","classification":"CUSTOM_AUDIO_UNSUPPORTED","dependencies":21,"contentFiles":14,"decision":"DEFERRED"},
+      {"name":"BevWeek","version":"0.0.1","zipSha256":"7fa91389fea70bfe14b8bc9826181cbda4fa46ca3d344233da47cb6884f19cea","classification":"CUSTOM_AUDIO_UNSUPPORTED","dependencies":14,"contentFiles":108,"decision":"DEFERRED"},
+      {"name":"CrispybagsSpringCollabPack","version":"1.0.3","zipSha256":"ff29a0a3955c7fbcdad37a1f98556f62e0b09560b5f5832f9d9d811edf784ac6","classification":"CUSTOM_AUDIO_UNSUPPORTED","dependencies":16,"contentFiles":86,"decision":"DEFERRED"},
+      {"name":"CrossoverCollabAprilDemo","version":"1.0.5","zipSha256":"9e2c09ca1110c771274d3706ff477ca11bd1d752ec901f54070db88df2f31ed8","classification":"CUSTOM_AUDIO_UNSUPPORTED","dependencies":9,"contentFiles":233,"decision":"DEFERRED"},
+      {"name":"DoubleBirthday","version":"1.0.0","zipSha256":"1dfb324d8dec09bf78dddb414c7239630e47a5d5df652a1ce1c48a63f8e08750","classification":"CONTENT_ONLY","dependencies":8,"contentFiles":3,"decision":"NOT_SELECTED","reason":"Too small to broaden the required CollabUtils2 completion surface."},
+      {"name":"EvanKrusher948MapPack","version":"1.0.0","zipSha256":"05e51b96adefebc0651645c639d9cb70376c8113b39b25a6bce5c987477b53cd","classification":"CONTENT_ONLY","dependencies":18,"contentFiles":63,"decision":"NOT_SELECTED"},
+      {"name":"FlowContest","version":"1.0.4","zipSha256":"9b3f6ad62f797534bfa89a1130e87c21d4221072c5a2218feca934be8daed4de","classification":"CUSTOM_AUDIO_UNSUPPORTED","dependencies":29,"contentFiles":388,"decision":"DEFERRED"},
+      {"name":"GayWeek","version":"0.0.1","zipSha256":"0f9b6ca051014a267544b9803dee5f5789a984559a5f427974c095bad398eaa8","classification":"CONTENT_ONLY","dependencies":20,"contentFiles":30,"decision":"NOT_SELECTED"},
+      {"name":"GravityHelperMiniCollab","version":"1.0.2","zipSha256":"0aaa89a4cb3b279c68e9bb18d23de5ac33f597f1b9a3e382f875b18294315c4c","classification":"CUSTOM_AUDIO_UNSUPPORTED","dependencies":26,"contentFiles":317,"decision":"DEFERRED"},
+      {"name":"GuestRoomCollab","version":"1.0.0","zipSha256":"0e8f3664da267b0b1a72d3592b89b7d8e256b711d5709695e737aa4143de309a","classification":"CUSTOM_AUDIO_UNSUPPORTED","dependencies":26,"contentFiles":96,"decision":"DEFERRED"},
+      {"name":"HennyburgrCompEntries","version":"1.1.0","zipSha256":"638ad7beac7a24600c7c0733acf12a645795bd8878fd5bc7c88e6e24b17dce39","classification":"CONTENT_ONLY","dependencies":8,"contentFiles":6,"decision":"K_A_CONTROL"},
+      {"name":"Kayonara Collection","version":"1.0.1","zipSha256":"a6c8a1d001926a9167c08dde3d221d72d5deea1c577fd329fb386ae74cd9d7fc","classification":"CONTENT_ONLY","dependencies":6,"contentFiles":279,"decision":"SELECTED","reason":"One lobby and four maps; mini-heart door, silver, speed, rainbow, golden and secret berries; no managed, Lua, native or custom-audio payload."},
+      {"name":"Musicworldcontest","version":"1.0.2","zipSha256":"802fa2fc4206a06a3a15d49d497fbb9caf9255d1d53805f1580e4ece11fb494b","classification":"CUSTOM_AUDIO_UNSUPPORTED","dependencies":12,"contentFiles":64,"decision":"DEFERRED"},
+      {"name":"NirthdayCollab2025","version":"1.0.1","zipSha256":"dd1164e9f7136741322091e6ce3dade069eca945d5b710996f356e47a0b8418f","classification":"CUSTOM_AUDIO_UNSUPPORTED","dependencies":43,"contentFiles":159,"decision":"DEFERRED"},
+      {"name":"QueesleAmityCollab","version":"0.1.1","zipSha256":"6db6e2f11311889d38d4c083ae596aa207f37f36f58159bddc2a46f6393e38e3","classification":"CUSTOM_AUDIO_UNSUPPORTED","dependencies":25,"contentFiles":85,"decision":"DEFERRED"},
+      {"name":"SecretSantaCollab2025","version":"1.9.0","zipSha256":"3c0c7779fcb0628c52fcc5133157ed4f5b6458cc06a4d51ea8dd2b010400f8ca","classification":"CUSTOM_AUDIO_UNSUPPORTED","dependencies":10,"contentFiles":166,"decision":"DEFERRED"},
+      {"name":"ShortsMapPack","version":"0.0.1","zipSha256":"affc4c9670f64ee27791e895eacb0b056c128cb943db5ec8ac2767a5369bbf66","classification":"CUSTOM_AUDIO_UNSUPPORTED","dependencies":13,"contentFiles":89,"decision":"DEFERRED"},
+      {"name":"SummitBadelineWWeek","version":"1.7.0","zipSha256":"d3cc347a19e59906feda3ece39c2f8fa1d40b8a5b778c73afc3a4d8d0c02cb24","classification":"CUSTOM_AUDIO_UNSUPPORTED","dependencies":24,"contentFiles":54,"decision":"DEFERRED"},
+      {"name":"VerthdayCollab","version":"1.0.1","zipSha256":"f5e87e59bd71c41568f25213c332fb8d0df1a4b776244fedc6a430ed87a7d1b5","classification":"CONTENT_ONLY","dependencies":24,"contentFiles":147,"decision":"NOT_SELECTED"},
+      {"name":"springcollabautumn","version":"1.2.0","zipSha256":"a46c07114aaacaf4f60926b1636e0e066a5adb647e733317dcbc82b438c21125","classification":"CONTENT_ONLY","dependencies":4,"contentFiles":7,"decision":"NOT_SELECTED","reason":"Smaller, but does not provide the required broader completion-feature proof."}
+    ]
+  },
+  "selected": {
+    "name": "Kayonara Collection",
+    "internalName": "KayonaraCollection",
+    "version": "1.0.1",
+    "author": "Kayonara team",
+    "page": "https://gamebanana.com/mods/150587",
+    "url": "https://gamebanana.com/mmdl/1086296",
+    "zipSha256": "a6c8a1d001926a9167c08dde3d221d72d5deea1c577fd329fb386ae74cd9d7fc",
+    "sourceLogicalSha256": "20ae5ad7342562c19f725feb20a2587db8253a73a1de0adadfbbbffebd528fc0",
+    "ordinaryUnmodifiedPublicRelease": true,
+    "license": "No explicit software/content license was declared inside the reviewed archive; provenance is the public GameBanana release, and this repository does not redistribute its third-party bytes.",
+    "collabId": "KayonaraCollection",
+    "lobbySid": "KayonaraCollection/0-Lobbies/1-Collection",
+    "subordinateMapSids": [
+      "KayonaraCollection/1-Collection/1-Kayonara",
+      "KayonaraCollection/1-Collection/2-KayonaraBSide",
+      "KayonaraCollection/1-Collection/3-KayonaraCSide",
+      "KayonaraCollection/1-Collection/ZZ-HeartSide"
+    ],
+    "prologueMaps": 0,
+    "gymMaps": 0,
+    "customFmodBanks": 0,
+    "luaFiles": 0,
+    "nativePayloads": 0,
+    "managedPayloads": 0,
+    "selectionFeatures": ["mini-heart door", "silver berry", "speed berry", "rainbow berry", "golden berry respawn point", "secret berry", "flag-toggle modifier"]
+  }
+}

@@ -1069,15 +1069,21 @@ try
     string mapDataCompatibility = File.ReadAllText(Path.Combine(repository,
         "tools/AppleEverestBuilder/MapDataCompatibilityPatch.cs"));
     Pass(closureGenerator.Contains("MapDataCompatibilityPatch.Apply", StringComparison.Ordinal) &&
-         closureGenerator.Contains("MapData.Load:pinned-everest-normalize-and-grow-strawberry-tracker:v2", StringComparison.Ordinal) &&
+         closureGenerator.Contains("MapData.Load:pinned-everest-checkpoint-attribution-and-grow-strawberry-tracker:v3", StringComparison.Ordinal) &&
          mapDataCompatibility.Contains("AppleEverestNormalizeAndGet", StringComparison.Ordinal) &&
+         mapDataCompatibility.Contains("AppleEverestCheckpointForLevel", StringComparison.Ordinal) &&
          mapDataCompatibility.Contains("Array.Copy", StringComparison.Ordinal),
-        "pinned Everest strawberry tracker normalization and growth are frozen as an exact generated-source transform");
+        "pinned Everest strawberry checkpoint attribution and tracker growth are frozen as an exact generated-source transform");
     Pass(closureGenerator.Contains("InheritedTrackedEntityTypes", StringComparison.Ordinal) &&
          closureGenerator.Contains("typeof(global::Celeste.Trigger)", StringComparison.Ordinal) &&
          closureGenerator.Contains("inheritedBase.IsAssignableFrom(type)", StringComparison.Ordinal) &&
          closureGenerator.Contains("Tracker.TrackedEntityTypes.Add(type, trackedAs)", StringComparison.Ordinal),
         "external custom entities preserve canonical inherited Monocle tracker buckets");
+    string secondCollabRuntime = File.ReadAllText(Path.Combine(repository,
+        "apple-everest/runtime/AppleEverestSecondCollabRuntime.cs"));
+    Pass(secondCollabRuntime.Contains("[Tracked(false)]\ninternal sealed class AppleEverestSpeedBerryCollectTrigger", StringComparison.Ordinal) &&
+         !closureGenerator.Contains("builtInTrackedEntities", StringComparison.Ordinal),
+        "repository-owned speed-berry trigger uses Monocle's canonical concrete tracking without duplicate generated registration");
     Pass(closureGenerator.Contains("TryCreateEntity", StringComparison.Ordinal) &&
          closureGenerator.Contains("TryCreateTrigger", StringComparison.Ordinal) &&
          closureGenerator.Contains("TryCreateBackdrop", StringComparison.Ordinal) &&
@@ -1138,13 +1144,20 @@ try
          closureGenerator.Contains("Graphics/Atlases/Journal/", StringComparison.Ordinal) &&
          closureGenerator.Contains("ThenBy(value => value.SourcePath", StringComparison.Ordinal),
         "ordinary release PNGs generate dependency-ordered gameplay, GUI, and journal atlas mounts");
+    Pass(closureGenerator.Contains("PatchDeferredAtlasTextureLoading(managedRoot)", StringComparison.Ordinal) &&
+         closureGenerator.Contains("CreateDeferredTexture", StringComparison.Ordinal) &&
+         closureGenerator.Contains("ReadDeferredPngDimensions", StringComparison.Ordinal) &&
+         closureGenerator.Contains("texture?.EnsureLoaded()", StringComparison.Ordinal) &&
+         closureGenerator.Contains("IOSStorageHooks.OpenBundleFile", StringComparison.Ordinal) &&
+         closureGenerator.Contains("TvOSStage6PersistenceHooks.OpenBundleFile", StringComparison.Ordinal),
+        "static loose atlases preserve keys and dimensions while deferring PNG decode until first use");
     Pass(closureGenerator.Contains("PatchNonPersistentSave(Path.Combine(managedRoot, \"Celeste\", \"UserIO.cs\"))", StringComparison.Ordinal) &&
          closureGenerator.Contains("FilterVanillaFileSave(file)", StringComparison.Ordinal) &&
          closureGenerator.Contains("PatchNonPersistentOverworldReturn", StringComparison.Ordinal) &&
          closureGenerator.Contains("StartMode = global::Celeste.Mod.AppleEverestStaticRuntime.CompleteNonPersistentModSession(StartMode);", StringComparison.Ordinal),
         "locked generated-source transforms keep debug SaveData out of durable storage and normalize its overworld return");
     Pass(staticRuntime.Contains("MountStaticAtlases();", StringComparison.Ordinal) &&
-         staticRuntime.Contains("VirtualContent.CreateTexture(descriptor.LogicalPath)", StringComparison.Ordinal) &&
+         staticRuntime.Contains("VirtualContent.CreateDeferredTexture(descriptor.LogicalPath)", StringComparison.Ordinal) &&
          staticRuntime.Contains("atlas[descriptor.Key] = mounted", StringComparison.Ordinal) &&
          staticRuntime.Contains("atlas = MTN.Journal", StringComparison.Ordinal) &&
          staticRuntime.Contains("content-atlas=PASS", StringComparison.Ordinal),
@@ -1223,7 +1236,7 @@ try
          testClosureViolations[0].Contains("System.Diagnostics.Process::Start", StringComparison.Ordinal),
         "linked-runtime scanner isolates the intentional desktop static-plan test host spawn");
 
-    Pass(ProductPolicy.TransformerVersion == "apple-everest-static-v14", "real-ZIP transformer version");
+    Pass(ProductPolicy.TransformerVersion == "apple-everest-static-v17", "real-ZIP transformer version");
     Pass(File.Exists(Path.Combine(repository, "tools/AppleEverestBuilder/AssemblyFreezer.cs")),
         "binary-first assembly freezer exists");
     string models = File.ReadAllText(Path.Combine(repository, "tools/AppleEverestBuilder/Models.cs"));

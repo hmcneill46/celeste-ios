@@ -9,7 +9,7 @@ internal static class ProductPolicy
     public const long MaxSingleFileBytes = 64L * 1024 * 1024;
     public const int MaxPathDepth = 24;
     public const int MaxYamlBytes = 1024 * 1024;
-    public const string TransformerVersion = "apple-everest-static-v14";
+    public const string TransformerVersion = "apple-everest-static-v17";
     public const int LevelSetProgressionSchemaVersion = 1;
     public const string CanonicalClass = "celeste-1.4.0.0-a";
 }
@@ -234,7 +234,41 @@ internal sealed record CollabMapRecord(
     string ReturnMode,
     string ReturnRoom,
     float ReturnX,
-    float ReturnY);
+    float ReturnY,
+    int AuthoredStrawberries,
+    bool AuthoredHeart,
+    bool CompletionAvailable,
+    int MiniHeartCount,
+    IReadOnlyList<CollabSpecialBerryRecord> SpecialBerries);
+internal sealed record CollabMiniHeartDoorRecord(
+    int EntityId,
+    string Room,
+    float X,
+    float Y,
+    int Width,
+    int Height,
+    int Requires,
+    string LevelSet,
+    string DoorId,
+    string Color,
+    string[] ContributingMapSids);
+internal sealed record CollabSpecialBerryRecord(
+    string EntityType,
+    string SemanticClass,
+    string Durability,
+    int EntityId,
+    string Room,
+    float X,
+    float Y,
+    string LevelSet,
+    string Maps,
+    int Requires,
+    bool AlwaysSpawn,
+    bool CountTowardsTotal,
+    float GoldTime,
+    float SilverTime,
+    float BronzeTime,
+    string Sprite);
 internal sealed record CollabDescriptorRecord(
     string Id,
     string DisplayName,
@@ -252,6 +286,8 @@ internal sealed record CollabDescriptorRecord(
     string JournalLevelSet,
     bool JournalVanilla,
     bool JournalShowOnlyDiscovered,
+    IReadOnlyList<CollabMiniHeartDoorRecord> MiniHeartDoors,
+    IReadOnlyList<CollabSpecialBerryRecord> LobbySpecialBerries,
     IReadOnlyList<CollabMapRecord> Maps);
 internal sealed record FrozenAssemblyRecord(string Owner, string AssemblyName, string FileName, string OriginalSha256, string FrozenSha256);
 internal sealed record CustomAudioGuidRecord(Guid Id, string Path, string Kind);

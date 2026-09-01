@@ -32,14 +32,22 @@ internal static class AppleEverestSemanticFactories
     internal static Entity CreateEntity(string id, EntityData data, Vector2 offset, EntityID entityId) => id switch
     {
         "CollabUtils2/MiniHeart" => new AppleEverestMiniHeart(data, offset),
+        "CollabUtils2/GoldenBerryPlayerRespawnPoint" => new AppleEverestGoldenBerryPlayerRespawnPoint(),
+        "CollabUtils2/MiniHeartDoor" => new AppleEverestMiniHeartDoor(data, offset, entityId),
+        "CollabUtils2/RainbowBerry" => new AppleEverestRainbowBerry(data, offset, entityId),
+        "CollabUtils2/SilverBerry" => new AppleEverestSilverBerry(data, offset, entityId),
+        "CollabUtils2/SpeedBerry" => new AppleEverestSpeedBerry(data, offset, entityId),
         "CommunalHelper/DreamMoveBlock" => CreateDreamMoveBlock(data, offset),
         "CommunalHelper/StationBlock" => new AppleEverestStationBlock(data, offset),
         "CommunalHelper/StationBlockTrack" => new AppleEverestStationTrack(data, offset),
         "LunaticHelper/StrawberryWithReturn" => new Strawberry(data, offset, entityId),
+        "LunaticHelper/StrawberryGate" => new AppleEverestStrawberryGate(data, offset),
         "MaxHelpingHand/GroupedTriggerSpikesUp" => new AppleEverestGroupedTriggerSpikesUp(data, offset),
         "MaxHelpingHand/CustomSummitCheckpoint" => new SummitCheckpoint(data, offset),
         "MaxHelpingHand/FlagSwitchGate" => new SwitchGate(data, offset),
         "MaxHelpingHand/FlagTouchSwitch" => new TouchSwitch(data, offset),
+        "MaxHelpingHand/SecretBerry" => new AppleEverestSecretBerry(data, offset, entityId),
+        "EeveeHelper/FlagToggleModifier" => new AppleEverestFlagToggleModifier(data, offset),
         "FancyTileEntities/FancyFakeWall" => new AppleEverestFancyFakeWall(entityId, data, offset),
         "FrostHelper/NoDashArea" => new AppleEverestNoDashArea(data, offset),
         "ShroomHelper/AttachedIceWall" => new AppleEverestAttachedIceWall(data, offset),
@@ -64,8 +72,13 @@ internal static class AppleEverestSemanticFactories
     {
         "CollabUtils2/ChapterPanelTrigger" => new AppleEverestChapterPanelTrigger(data, offset),
         "CollabUtils2/JournalTrigger" => new AppleEverestJournalTrigger(data, offset),
+        "CollabUtils2/MiniHeartDoorUnlockCutsceneTrigger" => new AppleEverestMiniHeartDoorUnlockTrigger(data, offset),
+        "CollabUtils2/RainbowBerryUnlockCutsceneTrigger" => new AppleEverestRainbowBerryUnlockTrigger(data, offset),
+        "CollabUtils2/SpeedBerryCollectTrigger" => new AppleEverestSpeedBerryCollectTrigger(data, offset),
         "MaxHelpingHand/CameraCatchupSpeedTrigger" => new AppleEverestCameraCatchupTrigger(data, offset),
         "everest/changeInventoryTrigger" => new AppleEverestChangeInventoryTrigger(data, offset),
+        "everest/coreModeTrigger" => new AppleEverestCoreModeTrigger(data, offset),
+        "everest/crystalShatterTrigger" => new AppleEverestCrystalShatterTrigger(data, offset),
         "everest/flagTrigger" => new AppleEverestFlagTrigger(data, offset),
         "everest/smoothCameraOffsetTrigger" => new AppleEverestSmoothCameraOffsetTrigger(data, offset),
         _ => throw new InvalidOperationException("unregistered static semantic trigger: " + id)
@@ -110,7 +123,7 @@ internal sealed class AppleEverestAttachedIceWall : Entity
         {
             string spriteId = index == 0 ? "WallBoosterTop"
                 : index == tileCount - 1 ? "WallBoosterBottom" : "WallBoosterMid";
-            Sprite sprite = GFX.SpriteBank.Create(spriteId);
+            Sprite sprite = AppleEverestStaticRuntime.CreateStaticModSprite(spriteId);
             sprite.FlipX = !left;
             sprite.Position = new Vector2(left ? -spriteOffset : 4 + spriteOffset, index * 8f);
             tiles.Add(sprite);
@@ -921,6 +934,92 @@ internal sealed class AppleEverestChangeInventoryTrigger : Trigger
 {
     internal AppleEverestChangeInventoryTrigger(EntityData data, Vector2 offset) : base(data, offset) { }
     public override void OnEnter(Player player) { base.OnEnter(player); SceneAs<Level>().Session.Inventory = PlayerInventory.TheSummit; }
+}
+
+/// <summary>
+/// Static equivalent of Everest's built-in core-mode trigger.  This is an
+/// Everest map-data alias rather than a helper factory, so it is part of the
+/// closed core registry and never requires an Everest runtime assembly.
+/// </summary>
+internal sealed class AppleEverestCoreModeTrigger : Trigger
+{
+    private enum Modes { None, Hot, Cold, Toggle }
+
+    private readonly Modes mode;
+    private readonly bool playEffects;
+
+    internal AppleEverestCoreModeTrigger(EntityData data, Vector2 offset) : base(data, offset)
+    {
+        _ = Enum.TryParse(data.Attr("mode", "None"), ignoreCase: true, out mode);
+        playEffects = data.Bool("playEffects", true);
+    }
+
+    public override void OnEnter(Player player)
+    {
+        base.OnEnter(player);
+        if (Scene is not Level level)
+            return;
+
+        Session.CoreModes next = mode switch
+        {
+            Modes.Hot => Session.CoreModes.Hot,
+            Modes.Cold => Session.CoreModes.Cold,
+            Modes.Toggle when level.CoreMode == Session.CoreModes.Hot => Session.CoreModes.Cold,
+            Modes.Toggle when level.CoreMode == Session.CoreModes.Cold => Session.CoreModes.Hot,
+            _ => Session.CoreModes.None
+        };
+        if (level.CoreMode == next)
+            return;
+
+        level.CoreMode = next;
+        if (playEffects)
+        {
+            Input.Rumble(RumbleStrength.Medium, RumbleLength.Medium);
+            level.Flash(Color.White * 0.15f, drawPlayerOver: true);
+            Celeste.Freeze(0.05f);
+        }
+    }
+}
+
+/// <summary>
+/// Static equivalent of Everest's built-in crystal-shatter trigger.  Kayonara
+/// uses the modern Contained/All mode attribute; the legacy boolean spelling
+/// is retained because it is still part of Everest's ordinary-map contract.
+/// </summary>
+internal sealed class AppleEverestCrystalShatterTrigger : Trigger
+{
+    private enum Modes { Contained, All }
+    private readonly Modes mode;
+
+    internal AppleEverestCrystalShatterTrigger(EntityData data, Vector2 offset) : base(data, offset)
+    {
+        if (data.Has("mode"))
+            _ = Enum.TryParse(data.Attr("mode", "Contained"), ignoreCase: true, out mode);
+        else
+            mode = data.Bool("destroyEveryCrystal", false) ? Modes.All : Modes.Contained;
+    }
+
+    public override void OnEnter(Player player)
+    {
+        base.OnEnter(player);
+        if (Scene == null)
+            return;
+
+        List<Entity> spinners = Scene.Tracker.GetEntities<CrystalStaticSpinner>();
+        if (mode == Modes.All && spinners.Count != 0)
+            Audio.Play("event:/game/06_reflection/boss_spikes_burst");
+        foreach (Entity entity in spinners)
+        {
+            if (entity is not CrystalStaticSpinner spinner)
+                continue;
+            bool wasCollidable = spinner.Collidable;
+            spinner.Collidable = true;
+            if (mode == Modes.All || CollideCheck(spinner))
+                spinner.Destroy();
+            spinner.Collidable = wasCollidable;
+        }
+        RemoveSelf();
+    }
 }
 
 internal sealed class AppleEverestFlagTrigger : Trigger

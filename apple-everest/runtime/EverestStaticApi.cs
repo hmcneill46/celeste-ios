@@ -65,7 +65,41 @@ internal sealed record AppleEverestCollabMapDescriptor(
     string ReturnMode,
     string ReturnRoom,
     float ReturnX,
-    float ReturnY);
+    float ReturnY,
+    int AuthoredStrawberries,
+    bool AuthoredHeart,
+    bool CompletionAvailable,
+    int MiniHeartCount,
+    AppleEverestCollabSpecialBerryDescriptor[] SpecialBerries);
+internal sealed record AppleEverestCollabMiniHeartDoorDescriptor(
+    int EntityId,
+    string Room,
+    float X,
+    float Y,
+    int Width,
+    int Height,
+    int Requires,
+    string LevelSet,
+    string DoorId,
+    string Color,
+    string[] ContributingMapSids);
+internal sealed record AppleEverestCollabSpecialBerryDescriptor(
+    string EntityType,
+    string SemanticClass,
+    string Durability,
+    int EntityId,
+    string Room,
+    float X,
+    float Y,
+    string LevelSet,
+    string Maps,
+    int Requires,
+    bool AlwaysSpawn,
+    bool CountTowardsTotal,
+    float GoldTime,
+    float SilverTime,
+    float BronzeTime,
+    string Sprite);
 internal sealed record AppleEverestCollabDescriptor(
     string Id,
     string DisplayName,
@@ -83,6 +117,8 @@ internal sealed record AppleEverestCollabDescriptor(
     string JournalLevelSet,
     bool JournalVanilla,
     bool JournalShowOnlyDiscovered,
+    AppleEverestCollabMiniHeartDoorDescriptor[] MiniHeartDoors,
+    AppleEverestCollabSpecialBerryDescriptor[] LobbySpecialBerries,
     AppleEverestCollabMapDescriptor[] Maps);
 
 // Bounded settings ABI needed by supported precompiled modules. The normal
@@ -547,6 +583,18 @@ internal sealed class AppleEverestModContentDescriptor
     {
         Name = name;
         Version = version;
+    }
+}
+
+internal sealed class AppleEverestSpriteBankDescriptor
+{
+    internal string Owner { get; }
+    internal string LogicalPath { get; }
+
+    internal AppleEverestSpriteBankDescriptor(string owner, string logicalPath)
+    {
+        Owner = owner;
+        LogicalPath = logicalPath;
     }
 }
 

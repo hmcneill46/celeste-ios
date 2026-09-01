@@ -8,6 +8,12 @@ internal sealed record CollabGeneration(string Source, string ManifestText,
 
 internal static class CollabManifestGenerator
 {
+    private static readonly HashSet<string> SpecialBerryIds = new(StringComparer.Ordinal)
+    {
+        "CollabUtils2/SilverBerry", "CollabUtils2/SpeedBerry", "CollabUtils2/RainbowBerry",
+        "MaxHelpingHand/SecretBerry", "goldenBerry"
+    };
+
     internal static CollabGeneration Generate(IReadOnlyList<ResolvedMod> mods,
         IReadOnlyList<ContentMountRecord> content, string contentRoot, IReadOnlyList<MapProgressionRecord> maps)
     {
@@ -51,14 +57,19 @@ internal static class CollabManifestGenerator
 
             MapElementRecord[] journals = elements.Where(item =>
                 item.Kind == "trigger" && item.Id == "CollabUtils2/JournalTrigger").ToArray();
-            if (journals.Length != 1)
-                throw new InvalidDataException($"{mod.Metadata.Name} lobby must expose exactly one bounded CollabUtils2 journal");
-            MapElementRecord journal = journals[0];
-            string journalLevelSet = journal.Attributes.GetValueOrDefault("levelset", "");
+            if (journals.Length == 0)
+                throw new InvalidDataException($"{mod.Metadata.Name} lobby must expose at least one bounded CollabUtils2 journal");
             string commonLevelSet = subordinate.Select(map => map.LevelSet).Distinct(StringComparer.Ordinal).SingleOrDefault()
                 ?? throw new InvalidDataException($"{mod.Metadata.Name} subordinate maps do not share one lobby LevelSet");
-            if (journalLevelSet != commonLevelSet)
+            if (journals.Any(item => item.Attributes.GetValueOrDefault("levelset", "") != commonLevelSet))
                 throw new InvalidDataException($"{mod.Metadata.Name} lobby journal does not target its subordinate LevelSet");
+            bool[] journalVanilla = journals.Select(item => ParseBool(item.Attributes, "vanillaJournal", false)).Distinct().ToArray();
+            bool[] journalDiscovered = journals.Select(item => ParseBool(item.Attributes, "showOnlyDiscovered", false)).Distinct().ToArray();
+            if (journalVanilla.Length != 1 || journalDiscovered.Length != 1)
+                throw new InvalidDataException($"{mod.Metadata.Name} lobby journals disagree on bounded presentation semantics");
+            MapElementRecord journal = journals.OrderBy(item => item.Room, StringComparer.Ordinal)
+                .ThenBy(item => item.X).ThenBy(item => item.Y).First();
+            string journalLevelSet = commonLevelSet;
 
             MapElementRecord[] players = elements.Where(item => item.Kind == "entity" && item.Id == "player").ToArray();
             CollabMapRecord[] mapRecords = panels.OrderBy(panel => panel.X).Select((panel, index) =>
@@ -67,19 +78,65 @@ internal static class CollabManifestGenerator
                 MapProgressionRecord map = subordinate.Single(value => value.Sid == sid);
                 ContentMountRecord mount = mounts.Single(item => item.LogicalPath == "Maps/" + sid + ".bin");
                 MapElementRecord[] roomPlayers = players.Where(value => value.Room == panel.Room).ToArray();
-                if (roomPlayers.Length != 1)
-                    throw new InvalidDataException($"{mod.Metadata.Name} chapter panel requires one unambiguous lobby return spawn in room {panel.Room}");
-                MapElementRecord player = roomPlayers[0];
-                bool allowSaving = ParseBool(panel.Attributes, "allowSaving", true);
+                if (roomPlayers.Length == 0)
+                    throw new InvalidDataException($"{mod.Metadata.Name} chapter panel has no lobby return spawn in room {panel.Room}");
+                // CollabUtils2 records Level.GetSpawnPoint(player.Position) when the panel is
+                // opened.  At build time the player can only be inside the authored trigger,
+                // so use its centre and require the nearest room spawn to be unambiguous.
+                // This generalises the former one-spawn assumption without baking in a
+                // particular lobby or panel layout.
+                double centerX = panel.X + panel.Width / 2d;
+                double centerY = panel.Y + panel.Height / 2d;
+                var rankedPlayers = roomPlayers.Select(value => new
+                    {
+                        Player = value,
+                        Distance = Math.Pow(value.X - centerX, 2d) + Math.Pow(value.Y - centerY, 2d)
+                    })
+                    .OrderBy(value => value.Distance)
+                    .ThenBy(value => value.Player.X)
+                    .ThenBy(value => value.Player.Y)
+                    .ToArray();
+                if (rankedPlayers.Length > 1 && rankedPlayers[0].Distance == rankedPlayers[1].Distance)
+                    throw new InvalidDataException($"{mod.Metadata.Name} chapter panel has ambiguous nearest lobby return spawns in room {panel.Room}");
+                MapElementRecord player = rankedPlayers[0].Player;
+                // EntityData.Bool() defaults an absent field to false.  Older
+                // collabs such as Kayonara predate the editor-side true
+                // default and intentionally omit this attribute.
+                bool allowSaving = ParseBool(panel.Attributes, "allowSaving", false);
                 string returnMode = panel.Attributes.GetValueOrDefault("returnToLobbyMode", "SetReturnToHere");
-                if (!allowSaving || returnMode != "SetReturnToHere")
+                if (returnMode != "SetReturnToHere")
                     throw new InvalidDataException($"{mod.Metadata.Name} uses unsupported chapter-panel return semantics");
+                MapElementRecord[] mapElements = ContentCompiler.InspectElements(StagedPath(contentRoot, mount)).ToArray();
+                CollabSpecialBerryRecord[] specialBerries = SpecialBerries(mapElements, commonLevelSet);
+                int miniHeartCount = mapElements.Count(item =>
+                    item.Kind == "entity" && item.Id == "CollabUtils2/MiniHeart");
                 return new CollabMapRecord(
                     sid, lobby.Sid, Dialog(dialog, DialogKey(sid), DisplayName(sid)),
                     Dialog(dialog, DialogKey(sid) + "_author", "Unknown author"), index,
                     mount.SourceSha256, mount.Sha256, map.CompatibilityId, map.LevelSet, map.Rooms,
-                    allowSaving, returnMode, panel.Room, player.X, player.Y);
+                    allowSaving, returnMode, panel.Room, player.X, player.Y, map.Strawberries,
+                    map.Heart, map.CompletionAvailable, miniHeartCount, specialBerries);
             }).ToArray();
+
+            string[] contributingMaps = mapRecords.Where(map => map.MiniHeartCount > 0)
+                .Select(map => map.Sid).OrderBy(value => value, StringComparer.Ordinal).ToArray();
+            CollabMiniHeartDoorRecord[] doors = elements.Where(item =>
+                    item.Kind == "entity" && item.Id == "CollabUtils2/MiniHeartDoor")
+                .OrderBy(item => item.Room, StringComparer.Ordinal).ThenBy(item => item.Y).ThenBy(item => item.X)
+                .Select(item => new CollabMiniHeartDoorRecord(
+                    Int(item.Attributes, "id", 0, int.MaxValue), item.Room, item.X, item.Y,
+                    item.Width, item.Height, Int(item.Attributes, "requires", 0, 9999),
+                    item.Attributes.GetValueOrDefault("levelSet", commonLevelSet),
+                    item.Attributes.GetValueOrDefault("doorID", ""),
+                    item.Attributes.GetValueOrDefault("color", "18668F"), contributingMaps)).ToArray();
+            foreach (CollabMiniHeartDoorRecord door in doors)
+            {
+                if (door.LevelSet != commonLevelSet)
+                    throw new InvalidDataException($"{mod.Metadata.Name} mini-heart door targets an unrelated LevelSet");
+                if (door.Requires > contributingMaps.Length)
+                    throw new InvalidDataException($"{mod.Metadata.Name} mini-heart door threshold exceeds authored contributing maps");
+            }
+            CollabSpecialBerryRecord[] lobbySpecialBerries = SpecialBerries(elements, commonLevelSet);
 
             string archiveSha = File.Exists(mod.Input.SourcePath) ? Hashing.FileSha256(mod.Input.SourcePath) : "directory-input";
             collabs.Add(new CollabDescriptorRecord(
@@ -88,7 +145,7 @@ internal static class CollabManifestGenerator
                 Dialog(dialog, DialogKey(lobby.Sid), DisplayName(lobby.Sid)),
                 lobbyMount.SourceSha256, lobbyMount.Sha256, lobby.CompatibilityId, lobby.LevelSet, lobby.Rooms,
                 journalLevelSet, ParseBool(journal.Attributes, "vanillaJournal", false),
-                ParseBool(journal.Attributes, "showOnlyDiscovered", false), mapRecords));
+                ParseBool(journal.Attributes, "showOnlyDiscovered", false), doors, lobbySpecialBerries, mapRecords));
         }
 
         string manifest = Manifest(collabs);
@@ -97,7 +154,7 @@ internal static class CollabManifestGenerator
     }
 
     private static string Manifest(IEnumerable<CollabDescriptorRecord> collabs) =>
-        "APPLE_EVEREST_STATIC_COLLAB_V1\n" + string.Join("\n", collabs
+        "APPLE_EVEREST_STATIC_COLLAB_V2\n" + string.Join("\n", collabs
             .OrderBy(value => value.Id, StringComparer.Ordinal).SelectMany(collab =>
                 new[]
                 {
@@ -108,11 +165,71 @@ internal static class CollabManifestGenerator
                         collab.LobbyLevelSet, string.Join(',', collab.LobbyRooms), collab.JournalLevelSet,
                         collab.JournalVanilla ? "vanilla-journal" : "collab-journal",
                         collab.JournalShowOnlyDiscovered ? "discovered-only" : "all-maps")
-                }.Concat(collab.Maps.OrderBy(map => map.Order).Select(map => string.Join('\t',
+                }.Concat(collab.MiniHeartDoors.Select(door => string.Join('\t',
+                    "mini-heart-door", collab.Id, door.EntityId, door.Room, Invariant(door.X), Invariant(door.Y),
+                    door.Width, door.Height, door.Requires, door.LevelSet, door.DoorId, door.Color,
+                    string.Join(',', door.ContributingMapSids))))
+                .Concat(collab.LobbySpecialBerries.Select(berry => BerryManifest("lobby-special-berry", collab.Id, berry)))
+                .Concat(collab.Maps.OrderBy(map => map.Order).SelectMany(map => new[] { string.Join('\t',
                     "map", collab.Id, map.Order, map.Sid, map.DisplayName, map.Author,
                     map.SourceMapSha256, map.MountedMapSha256, map.CompatibilityId, map.LevelSet,
                     string.Join(',', map.Rooms), map.AllowSaving ? "saving" : "no-saving", map.ReturnMode,
-                    map.ReturnRoom, Invariant(map.ReturnX), Invariant(map.ReturnY)))))) + "\n";
+                    map.ReturnRoom, Invariant(map.ReturnX), Invariant(map.ReturnY), map.AuthoredStrawberries,
+                    map.AuthoredHeart ? "heart" : "no-heart", map.CompletionAvailable ? "completion" : "no-completion",
+                    map.MiniHeartCount) }.Concat(map.SpecialBerries.Select(berry =>
+                        BerryManifest("map-special-berry", collab.Id + "\t" + map.Sid, berry))))))) + "\n";
+
+    private static string BerryManifest(string kind, string owner, CollabSpecialBerryRecord berry) => string.Join('\t',
+        kind, owner, berry.EntityType, berry.SemanticClass, berry.Durability, berry.EntityId, berry.Room,
+        Invariant(berry.X), Invariant(berry.Y), berry.LevelSet, berry.Maps, berry.Requires,
+        berry.AlwaysSpawn, berry.CountTowardsTotal, Invariant(berry.GoldTime), Invariant(berry.SilverTime),
+        Invariant(berry.BronzeTime), berry.Sprite);
+
+    private static CollabSpecialBerryRecord[] SpecialBerries(IEnumerable<MapElementRecord> elements, string defaultLevelSet) =>
+        elements.Where(item => item.Kind == "entity" && SpecialBerryIds.Contains(item.Id))
+            .OrderBy(item => item.Room, StringComparer.Ordinal).ThenBy(item => item.Y).ThenBy(item => item.X)
+            .Select(item =>
+            {
+                string semanticClass = item.Id is "CollabUtils2/SilverBerry" or "CollabUtils2/RainbowBerry"
+                    ? "REQUIRED_BY_GRAPH" : "SUPPORTED_UNUSED";
+                string durability = item.Id switch
+                {
+                    "CollabUtils2/SilverBerry" => "completion-derived-run-local-golden",
+                    "CollabUtils2/SpeedBerry" => "completion-derived-run-local-timer",
+                    "CollabUtils2/RainbowBerry" => "silver-completion-derived",
+                    "MaxHelpingHand/SecretBerry" => "vanilla-strawberry-save-data-if-counted",
+                    "goldenBerry" => "vanilla-golden-run-local-until-completion",
+                    _ => throw new InvalidDataException("unclassified collab special berry")
+                };
+                return new CollabSpecialBerryRecord(item.Id, semanticClass, durability,
+                    Int(item.Attributes, "id", 0, int.MaxValue), item.Room, item.X, item.Y,
+                    item.Attributes.GetValueOrDefault("levelSet", defaultLevelSet),
+                    item.Attributes.GetValueOrDefault("maps", ""), Int(item.Attributes, "requires", -1, 9999),
+                    Bool(item.Attributes, "alwaysSpawn", false), Bool(item.Attributes, "countTowardsTotal", true),
+                    Float(item.Attributes, "goldTime", 0f, 86400f), Float(item.Attributes, "silverTime", 0f, 86400f),
+                    Float(item.Attributes, "bronzeTime", 0f, 86400f),
+                    item.Attributes.GetValueOrDefault("strawberrySprite", ""));
+            }).ToArray();
+
+    private static int Int(IReadOnlyDictionary<string, string> values, string key, int fallback, int maximum)
+    {
+        if (!values.TryGetValue(key, out string? raw)) return fallback;
+        return int.TryParse(raw, NumberStyles.Integer, CultureInfo.InvariantCulture, out int value) &&
+               value >= fallback && value <= maximum ? value
+            : throw new InvalidDataException($"invalid collab integer attribute: {key}");
+    }
+
+    private static float Float(IReadOnlyDictionary<string, string> values, string key, float fallback, float maximum)
+    {
+        if (!values.TryGetValue(key, out string? raw)) return fallback;
+        return float.TryParse(raw, NumberStyles.Float, CultureInfo.InvariantCulture, out float value) &&
+               float.IsFinite(value) && value >= 0f && value <= maximum ? value
+            : throw new InvalidDataException($"invalid collab number attribute: {key}");
+    }
+
+    private static bool Bool(IReadOnlyDictionary<string, string> values, string key, bool fallback) =>
+        !values.TryGetValue(key, out string? raw) ? fallback : bool.TryParse(raw, out bool value)
+            ? value : throw new InvalidDataException($"invalid collab boolean attribute: {key}");
 
     private static Dictionary<string, string> ReadDialog(ModInput input)
     {
@@ -175,6 +292,8 @@ internal static class CollabManifestGenerator
                 .Append(Escape(collab.LobbyLevelSet)).Append("\", ").Append(StringArray(collab.LobbyRooms)).Append(", \"")
                 .Append(Escape(collab.JournalLevelSet)).Append("\", ").Append(collab.JournalVanilla ? "true" : "false")
                 .Append(", ").Append(collab.JournalShowOnlyDiscovered ? "true" : "false")
+                .Append(", ").Append(DoorArray(collab.MiniHeartDoors))
+                .Append(", ").Append(BerryArray(collab.LobbySpecialBerries))
                 .Append(", new AppleEverestCollabMapDescriptor[] { ");
             foreach (CollabMapRecord map in collab.Maps.OrderBy(value => value.Order))
                 source.Append("new(\"").Append(Escape(map.Sid)).Append("\", \"").Append(Escape(map.LobbySid))
@@ -184,7 +303,10 @@ internal static class CollabManifestGenerator
                     .Append(Escape(map.LevelSet)).Append("\", ").Append(StringArray(map.Rooms)).Append(", ")
                     .Append(map.AllowSaving ? "true" : "false").Append(", \"").Append(Escape(map.ReturnMode)).Append("\", \"")
                     .Append(Escape(map.ReturnRoom)).Append("\", ").Append(Invariant(map.ReturnX)).Append("f, ")
-                    .Append(Invariant(map.ReturnY)).Append("f), ");
+                    .Append(Invariant(map.ReturnY)).Append("f, ").Append(map.AuthoredStrawberries).Append(", ")
+                    .Append(map.AuthoredHeart ? "true" : "false").Append(", ")
+                    .Append(map.CompletionAvailable ? "true" : "false").Append(", ").Append(map.MiniHeartCount)
+                    .Append(", ").Append(BerryArray(map.SpecialBerries)).Append("), ");
             source.AppendLine("}),");
         }
         return source.AppendLine("    };").AppendLine("}").ToString();
@@ -195,6 +317,31 @@ internal static class CollabManifestGenerator
         string[] items = values.ToArray();
         return items.Length == 0 ? "System.Array.Empty<string>()" :
             "new string[] { " + string.Join(", ", items.Select(value => "\"" + Escape(value) + "\"")) + " }";
+    }
+
+    private static string DoorArray(IEnumerable<CollabMiniHeartDoorRecord> values)
+    {
+        CollabMiniHeartDoorRecord[] items = values.ToArray();
+        if (items.Length == 0) return "System.Array.Empty<AppleEverestCollabMiniHeartDoorDescriptor>()";
+        return "new AppleEverestCollabMiniHeartDoorDescriptor[] { " + string.Join("", items.Select(value =>
+            "new(" + value.EntityId + ", \"" + Escape(value.Room) + "\", " + Invariant(value.X) + "f, " +
+            Invariant(value.Y) + "f, " + value.Width + ", " + value.Height + ", " + value.Requires + ", \"" +
+            Escape(value.LevelSet) + "\", \"" + Escape(value.DoorId) + "\", \"" + Escape(value.Color) + "\", " +
+            StringArray(value.ContributingMapSids) + "), ")) + "}";
+    }
+
+    private static string BerryArray(IEnumerable<CollabSpecialBerryRecord> values)
+    {
+        CollabSpecialBerryRecord[] items = values.ToArray();
+        if (items.Length == 0) return "System.Array.Empty<AppleEverestCollabSpecialBerryDescriptor>()";
+        return "new AppleEverestCollabSpecialBerryDescriptor[] { " + string.Join("", items.Select(value =>
+            "new(\"" + Escape(value.EntityType) + "\", \"" + Escape(value.SemanticClass) + "\", \"" +
+            Escape(value.Durability) + "\", " + value.EntityId + ", \"" + Escape(value.Room) + "\", " +
+            Invariant(value.X) + "f, " + Invariant(value.Y) + "f, \"" + Escape(value.LevelSet) + "\", \"" +
+            Escape(value.Maps) + "\", " + value.Requires + ", " + (value.AlwaysSpawn ? "true" : "false") +
+            ", " + (value.CountTowardsTotal ? "true" : "false") + ", " + Invariant(value.GoldTime) + "f, " +
+            Invariant(value.SilverTime) + "f, " + Invariant(value.BronzeTime) + "f, \"" + Escape(value.Sprite) +
+            "\"), ")) + "}";
     }
 
     private static string Escape(string value) => value.Replace("\\", "\\\\", StringComparison.Ordinal)

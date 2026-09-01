@@ -1,6 +1,7 @@
 using System.Text;
 using System.Text.Json;
 using System.Security;
+using System.Xml;
 using Mono.Cecil;
 
 namespace AppleEverestBuilder;
@@ -12,6 +13,8 @@ internal static class ClosureGenerator
     {
         ("entity", "everest/coreMessage", "EverestCore"),
         ("trigger", "everest/changeInventoryTrigger", "EverestCore"),
+        ("trigger", "everest/coreModeTrigger", "EverestCore"),
+        ("trigger", "everest/crystalShatterTrigger", "EverestCore"),
         ("trigger", "everest/flagTrigger", "EverestCore"),
         ("trigger", "everest/smoothCameraOffsetTrigger", "EverestCore")
     };
@@ -156,7 +159,8 @@ internal static class ClosureGenerator
             RegistrySource(profile, codeModules, ordered, durabilityAdapters, durabilityClosureSha256), new UTF8Encoding(false));
         File.WriteAllText(Path.Combine(managed, "GeneratedAppleEverestGameplayRegistry.cs"),
             GameplayRegistrySource(codeModules, ordered), new UTF8Encoding(false));
-        File.WriteAllText(Path.Combine(managed, "GeneratedAppleEverestContentManifest.cs"), ContentManifestSource(ordered, stagedContent), new UTF8Encoding(false));
+        File.WriteAllText(Path.Combine(managed, "GeneratedAppleEverestContentManifest.cs"),
+            ContentManifestSource(ordered, stagedContent, content), new UTF8Encoding(false));
         HashSet<string> staticallyLoweredStrawberryEntities = ordered
             .Where(mod => mod.StaticSemanticLowering != null)
             .SelectMany(mod => mod.StaticSemanticLowering!.Factories)
@@ -472,6 +476,8 @@ internal static class ClosureGenerator
             "\t\tBackdrop backdrop = null;\n\t\tif (child.Name.Equals(\"parallax\", StringComparison.OrdinalIgnoreCase))");
         ValidateOnce(Path.Combine(managedRoot, "Celeste", "MapData.cs"),
             MapDataCompatibilityPatch.LookupTarget);
+        ValidateOnce(Path.Combine(managedRoot, "Celeste", "MapData.cs"),
+            "\tpublic LevelData StartLevel()\n\t{\n\t\treturn GetAt(Vector2.Zero);\n\t}");
         ValidateOnce(Path.Combine(managedRoot, "Celeste", "Celeste.cs"), "\t\t\tceleste = new Celeste();");
         ValidateOnce(Path.Combine(managedRoot, "Celeste", "GameLoader.cs"), "\t\tAreaData.Load();");
         ValidateOnce(Path.Combine(managedRoot, "Celeste", "MenuOptions.cs"), "\t\tmenu.Add(new TextMenu.SubHeader(Dialog.Clean(\"options_gameplay\")));");
@@ -503,13 +509,16 @@ internal static class ClosureGenerator
         ManagedDetourGenerator.RewriteTargets(managedRoot, ManagedDetourCatalog.Targets);
         if (File.Exists(Path.Combine(destination, "GeneratedAppleEverestStaticAotCompatibility.cs")))
             StaticAotCompatibility.PatchGameSources(managedRoot);
+        PatchDeferredAtlasTextureLoading(managedRoot);
         PatchLevel(Path.Combine(managedRoot, "Celeste", "Level.cs"));
         PatchLevelDataRoomNames(Path.Combine(managedRoot, "Celeste", "LevelData.cs"));
         PatchPlayerEvents(Path.Combine(managedRoot, "Celeste", "Player.cs"));
         PatchGameplayLoading(Path.Combine(managedRoot, "Celeste", "Level.cs"));
+        PatchAuthoredSpinnerVariants(Path.Combine(managedRoot, "Celeste", "Level.cs"));
         PatchAuthoredSpinnerColours(Path.Combine(managedRoot, "Celeste", "Level.cs"),
             Path.Combine(managedRoot, "Celeste", "CrystalStaticSpinner.cs"));
         MapDataCompatibilityPatch.Apply(Path.Combine(managedRoot, "Celeste", "MapData.cs"));
+        PatchMetadataStartLevel(Path.Combine(managedRoot, "Celeste", "MapData.cs"));
         PatchBackdropLoading(Path.Combine(managedRoot, "Celeste", "MapData.cs"));
         PatchStartup(Path.Combine(managedRoot, "Celeste", "Celeste.cs"));
         PatchContentReady(Path.Combine(managedRoot, "Celeste", "GameLoader.cs"));
@@ -527,6 +536,9 @@ internal static class ClosureGenerator
         PatchPinnedEverestCompatibility(managedRoot);
         PatchModuleDurability(managedRoot);
         PatchLevelSetProgression(managedRoot);
+        PatchSecondCollabSemantics(
+            Path.Combine(managedRoot, "Celeste", "HeartGemDoor.cs"),
+            Path.Combine(managedRoot, "Celeste", "Strawberry.cs"));
         PatchTracker(Path.Combine(managedRoot, "Monocle", "Tracker.cs"));
         PatchPooler(Path.Combine(managedRoot, "Monocle", "Pooler.cs"));
         PatchProject(Path.Combine(managedRoot, "Celeste.Modern.csproj"), closureRoot);
@@ -542,11 +554,12 @@ internal static class ClosureGenerator
         "Celeste.Run:static-registry-startup:v1",
         "GameLoader:content-ready:v1",
         "GameLoader+Audio:static-custom-fmod-existing-system:v1",
-        "MenuOptions:diagnostic-panel:v1",
-        "Tracker.Initialize:typed-gameplay-registry:v1",
+        "MenuOptions:diagnostic-submenu:v2",
+        "Tracker.Initialize:typed-gameplay-registry:v3",
         "Level.LoadLevel:typed-custom-factory-registry:v1",
         "MapData.ParseBackdrop:everest-event-and-typed-custom-backdrop-registry:v2",
-        "MapData.Load:pinned-everest-normalize-and-grow-strawberry-tracker:v2",
+        "MapData.Load:pinned-everest-checkpoint-attribution-and-grow-strawberry-tracker:v3",
+        "MapData.StartLevel:pinned-everest-metadata-start-and-first-room-fallback:v1",
         "ModuleSettings:typed-menu-and-platform-storage:v1",
         "ModuleSaveData+Session:typed-yaml-aggregate-ab:v1",
         "UserIO.SaveRoutine:coherent-module-snapshot:v1",
@@ -557,6 +570,7 @@ internal static class ClosureGenerator
         "OverworldLoader.Begin:nonpersistent-mod-session-restore:v1",
         "PinnedEverestABI:ConditionHelper+AchievementHelper-reviewed-members:v2",
         "LevelSetProgression:typed-sidecar-projection-lineage-ab:v1",
+        "SecondRealCollab:source-lowered-heart-door-and-special-berries:v1",
         "CollabUtils2:real-ingame-overworld-ui-and-routing:v3",
         "PinnedEverestABI:DeathMarkers-reviewed-members:v1",
         "PinnedEverestABI:CaeruleaHelper-reviewed-members:v1",
@@ -744,6 +758,38 @@ internal static class ClosureGenerator
             "\t\t\tif (global::Celeste.Mod.GeneratedAppleEverestGameplayRegistry.TryCreateTrigger(trigger.Name, trigger, vector, entityID3, out Entity appleEverestTrigger))\n\t\t\t{\n\t\t\t\tAdd(appleEverestTrigger);\n\t\t\t\tcontinue;\n\t\t\t}\n\t\t\tswitch (trigger.Name)\n\t\t\t{");
     }
 
+    private static void PatchAuthoredSpinnerVariants(string path)
+    {
+        // Everest allows mod maps to select the otherwise chapter-bound star
+        // and dust visuals on both moving spinner families. Preserve the
+        // authored bool directly: false/missing values must keep Celeste's
+        // canonical chapter selection and ultimately use the blade variant.
+        ReplaceOnce(path,
+            "\t\t\tcase \"rotateSpinner\":\n" +
+            "\t\t\t\tif (Session.Area.ID == 10)\n",
+            "\t\t\tcase \"rotateSpinner\":\n" +
+            "\t\t\t\tif (Session.Area.ID == 10 || entity3.Bool(\"star\"))\n");
+        ReplaceOnce(path,
+            "\t\t\t\telse if (Session.Area.ID == 3 || (Session.Area.ID == 7 && Session.Level.StartsWith(\"d-\")))\n" +
+            "\t\t\t\t{\n" +
+            "\t\t\t\t\tAdd(new DustRotateSpinner(entity3, vector));",
+            "\t\t\t\telse if (Session.Area.ID == 3 || (Session.Area.ID == 7 && Session.Level.StartsWith(\"d-\")) || entity3.Bool(\"dust\"))\n" +
+            "\t\t\t\t{\n" +
+            "\t\t\t\t\tAdd(new DustRotateSpinner(entity3, vector));");
+        ReplaceOnce(path,
+            "\t\t\tcase \"trackSpinner\":\n" +
+            "\t\t\t\tif (Session.Area.ID == 10)\n",
+            "\t\t\tcase \"trackSpinner\":\n" +
+            "\t\t\t\tif (Session.Area.ID == 10 || entity3.Bool(\"star\"))\n");
+        ReplaceOnce(path,
+            "\t\t\t\telse if (Session.Area.ID == 3 || (Session.Area.ID == 7 && Session.Level.StartsWith(\"d-\")))\n" +
+            "\t\t\t\t{\n" +
+            "\t\t\t\t\tAdd(new DustTrackSpinner(entity3, vector));",
+            "\t\t\t\telse if (Session.Area.ID == 3 || (Session.Area.ID == 7 && Session.Level.StartsWith(\"d-\")) || entity3.Bool(\"dust\"))\n" +
+            "\t\t\t\t{\n" +
+            "\t\t\t\t\tAdd(new DustTrackSpinner(entity3, vector));");
+    }
+
     private static void PatchAuthoredSpinnerColours(string levelPath, string spinnerPath)
     {
         ReplaceOnce(levelPath,
@@ -764,6 +810,21 @@ internal static class ClosureGenerator
             "\t\t}");
     }
 
+    private static void PatchMetadataStartLevel(string path) => ReplaceOnce(path,
+        "\tpublic LevelData StartLevel()\n\t{\n\t\treturn GetAt(Vector2.Zero);\n\t}",
+        "\tpublic LevelData StartLevel()\n\t{\n" +
+        "\t\tstring appleEverestStartLevel = global::Celeste.Mod.AppleEverestProgressionRuntime.StartLevel(Area);\n" +
+        "\t\tif (!string.IsNullOrEmpty(appleEverestStartLevel))\n" +
+        "\t\t{\n" +
+        "\t\t\tLevelData appleEverestLevel = Levels.FirstOrDefault(level => level.Name == appleEverestStartLevel);\n" +
+        "\t\t\tif (appleEverestLevel != null)\n" +
+        "\t\t\t{\n" +
+        "\t\t\t\treturn appleEverestLevel;\n" +
+        "\t\t\t}\n" +
+        "\t\t}\n" +
+        "\t\treturn GetAt(Vector2.Zero) ?? Levels.FirstOrDefault();\n" +
+        "\t}");
+
     private static void PatchBackdropLoading(string path) => ReplaceOnce(path,
         "\t\tBackdrop backdrop = null;\n\t\tif (child.Name.Equals(\"parallax\", StringComparison.OrdinalIgnoreCase))",
         "\t\tBackdrop backdrop = global::Celeste.Mod.Everest.Events.Level.LoadBackdrop(this, child, above);\n\t\tif (backdrop != null)\n\t\t{\n\t\t}\n\t\telse if (global::Celeste.Mod.GeneratedAppleEverestGameplayRegistry.TryCreateBackdrop(child.Name, child, out backdrop))\n\t\t{\n\t\t}\n\t\telse if (child.Name.Equals(\"parallax\", StringComparison.OrdinalIgnoreCase))");
@@ -781,6 +842,102 @@ internal static class ClosureGenerator
     private static void PatchContentReady(string path) => ReplaceOnce(path,
         "\t\tAreaData.Load();",
         "\t\tAreaData.Load();\n\t\tglobal::Celeste.Mod.AppleEverestStaticRuntime.ContentReady();");
+
+    private static void PatchDeferredAtlasTextureLoading(string managedRoot)
+    {
+        string virtualTexture = Path.Combine(managedRoot, "Monocle", "VirtualTexture.cs");
+        string virtualTextureSource = File.ReadAllText(virtualTexture);
+        const string iosBundleLoader = "global::Celeste.IOSStorageHooks.OpenBundleFile";
+        const string tvosBundleLoader = "global::Celeste.TvOSStage6PersistenceHooks.OpenBundleFile";
+        string bundleLoader = virtualTextureSource.Contains(iosBundleLoader, StringComparison.Ordinal)
+            ? iosBundleLoader
+            : virtualTextureSource.Contains(tvosBundleLoader, StringComparison.Ordinal)
+                ? tvosBundleLoader
+                : throw new InvalidDataException(
+                    "VirtualTexture does not contain a reviewed Apple bundle-file loader");
+        ReplaceOnce(virtualTexture,
+            "\tprivate Color color;",
+            "\tprivate Color color;\n\n" +
+            "\tprivate readonly bool deferred;\n\n" +
+            "\tprivate bool forceReload;\n\n" +
+            "\tprivate bool restoreAfterReload;");
+        ReplaceOnce(virtualTexture,
+            "\tinternal VirtualTexture(string path)\n\t{\n\t\tbase.Name = (Path = path);\n\t\tReload();\n\t}",
+            "\tinternal VirtualTexture(string path)\n\t{\n\t\tbase.Name = (Path = path);\n\t\tReload();\n\t}\n\n" +
+            "\tinternal VirtualTexture(string path, bool deferred)\n\t{\n" +
+            "\t\tbase.Name = (Path = path);\n\t\tthis.deferred = deferred;\n" +
+            "\t\tif (!deferred)\n\t\t{\n\t\t\tReload();\n\t\t\treturn;\n\t\t}\n" +
+            "\t\tReadDeferredPngDimensions();\n\t}\n\n" +
+            "\tinternal void EnsureLoaded()\n\t{\n" +
+            "\t\tif (Texture != null && !Texture.IsDisposed) return;\n" +
+            "\t\tforceReload = true;\n\t\ttry\n\t\t{\n\t\t\tReload();\n\t\t}\n" +
+            "\t\tfinally\n\t\t{\n\t\t\tforceReload = false;\n\t\t}\n\t}\n\n" +
+            "\tprivate void ReadDeferredPngDimensions()\n\t{\n" +
+            "\t\tif (!string.Equals(System.IO.Path.GetExtension(Path), \".png\", StringComparison.OrdinalIgnoreCase))\n" +
+            "\t\t\tthrow new InvalidDataException(\"deferred textures must be PNG files: \" + Path);\n" +
+            "\t\tusing Stream stream = " + bundleLoader +
+            "(System.IO.Path.Combine(Engine.ContentDirectory, Path));\n" +
+            "\t\tbyte[] header = new byte[24];\n\t\tint offset = 0;\n" +
+            "\t\twhile (offset < header.Length)\n\t\t{\n" +
+            "\t\t\tint read = stream.Read(header, offset, header.Length - offset);\n" +
+            "\t\t\tif (read <= 0) throw new InvalidDataException(\"truncated deferred PNG: \" + Path);\n" +
+            "\t\t\toffset += read;\n\t\t}\n" +
+            "\t\tif (header[0] != 0x89 || header[1] != 0x50 || header[2] != 0x4E || header[3] != 0x47 ||\n" +
+            "\t\t\theader[12] != 0x49 || header[13] != 0x48 || header[14] != 0x44 || header[15] != 0x52)\n" +
+            "\t\t\tthrow new InvalidDataException(\"invalid deferred PNG header: \" + Path);\n" +
+            "\t\tbase.Width = (header[16] << 24) | (header[17] << 16) | (header[18] << 8) | header[19];\n" +
+            "\t\tbase.Height = (header[20] << 24) | (header[21] << 16) | (header[22] << 8) | header[23];\n" +
+            "\t\tif (base.Width <= 0 || base.Height <= 0) throw new InvalidDataException(\"invalid deferred PNG dimensions: \" + Path);\n" +
+            "\t}");
+        ReplaceOnce(virtualTexture,
+            "\tinternal override void Unload()\n\t{\n\t\tif (Texture != null && !Texture.IsDisposed)",
+            "\tinternal override void Unload()\n\t{\n" +
+            "\t\trestoreAfterReload = deferred && Texture != null && !Texture.IsDisposed;\n" +
+            "\t\tif (Texture != null && !Texture.IsDisposed)");
+        ReplaceOnce(virtualTexture,
+            "\tinternal unsafe override void Reload()\n\t{\n\t\tUnload();",
+            "\tinternal unsafe override void Reload()\n\t{\n" +
+            "\t\tif (deferred && !forceReload && !restoreAfterReload) return;\n" +
+            "\t\tUnload();\n\t\trestoreAfterReload = false;");
+
+        string virtualContent = Path.Combine(managedRoot, "Monocle", "VirtualContent.cs");
+        ReplaceOnce(virtualContent,
+            "\tpublic static VirtualTexture CreateTexture(string name, int width, int height, Color color)",
+            "\tpublic static VirtualTexture CreateDeferredTexture(string path)\n\t{\n" +
+            "\t\tVirtualTexture virtualTexture = new VirtualTexture(path, deferred: true);\n" +
+            "\t\tassets.Add(virtualTexture);\n\t\treturn virtualTexture;\n\t}\n\n" +
+            "\tpublic static VirtualTexture CreateTexture(string name, int width, int height, Color color)");
+
+        string mTexture = Path.Combine(managedRoot, "Monocle", "MTexture.cs");
+        ReplaceOnce(mTexture,
+            "\tpublic VirtualTexture Texture { get; private set; }",
+            "\tprivate VirtualTexture texture;\n\n" +
+            "\tpublic VirtualTexture Texture\n\t{\n" +
+            "\t\tget\n\t\t{\n\t\t\ttexture?.EnsureLoaded();\n\t\t\treturn texture;\n\t\t}\n" +
+            "\t\tprivate set => texture = value;\n\t}");
+        ReplaceOnce(mTexture,
+            "\t\tClipRect = new Rectangle(0, 0, Texture.Width, Texture.Height);",
+            "\t\tClipRect = new Rectangle(0, 0, this.texture.Width, this.texture.Height);");
+        ReplaceExactOccurrences(mTexture, "\t\tTexture = parent.Texture;", "\t\tTexture = parent.texture;", 2);
+        ReplaceOnce(mTexture,
+            "\t\tLeftUV = (float)ClipRect.Left / (float)Texture.Width;\n" +
+            "\t\tRightUV = (float)ClipRect.Right / (float)Texture.Width;\n" +
+            "\t\tTopUV = (float)ClipRect.Top / (float)Texture.Height;\n" +
+            "\t\tBottomUV = (float)ClipRect.Bottom / (float)Texture.Height;",
+            "\t\tLeftUV = (float)ClipRect.Left / (float)texture.Width;\n" +
+            "\t\tRightUV = (float)ClipRect.Right / (float)texture.Width;\n" +
+            "\t\tTopUV = (float)ClipRect.Top / (float)texture.Height;\n" +
+            "\t\tBottomUV = (float)ClipRect.Bottom / (float)texture.Height;");
+        ReplaceOnce(mTexture,
+            "\t\tTexture.Dispose();\n\t\tTexture = null;",
+            "\t\ttexture.Dispose();\n\t\ttexture = null;");
+        ReplaceOnce(mTexture, "\t\tapplyTo.Texture = Texture;", "\t\tapplyTo.texture = texture;");
+        ReplaceOnce(mTexture,
+            "\t\tif (Texture.Path != null)\n\t\t{\n\t\t\treturn Texture.Path;\n\t\t}\n" +
+            "\t\treturn \"Texture [\" + Texture.Width + \", \" + Texture.Height + \"]\";",
+            "\t\tif (texture.Path != null)\n\t\t{\n\t\t\treturn texture.Path;\n\t\t}\n" +
+            "\t\treturn \"Texture [\" + texture.Width + \", \" + texture.Height + \"]\";");
+    }
 
     private static void PatchCustomAudio(string gameLoader, string audio)
     {
@@ -875,6 +1032,9 @@ internal static class ClosureGenerator
             "\tpublic void Start(string checkpoint = null)\n\t{\n" +
             "\t\tif (global::Celeste.Mod.AppleEverestCollabRuntime.TryStartChapterPanel(this, checkpoint)) return;\n" +
             "\t\tFocused = false;");
+        ReplaceOnce(chapterPanelPath,
+            "\t\tstring checkpointPreviewName = GetCheckpointPreviewName(area, level);",
+            "\t\tstring checkpointPreviewName = global::Celeste.Mod.AppleEverestCollabRuntime.CheckpointPreviewName(area, level) ?? GetCheckpointPreviewName(area, level);");
         ReplaceOnce(chapterPanelPath,
             "\t\t\t\tif (!SaveData.Instance.FoundAnyCheckpoints(Area))",
             "\t\t\t\tif (!global::Celeste.Mod.AppleEverestCollabRuntime.NeedsChapterCheckpointPage(this) && !SaveData.Instance.FoundAnyCheckpoints(Area))");
@@ -1064,7 +1224,7 @@ internal static class ClosureGenerator
             "\tprivate void AppleEverestOriginal_AddDeath(AreaKey area)\n\t{\n\t\tif (global::Celeste.Mod.AppleEverestProgressionRuntime.IsCustom(area))\n\t\t{\n\t\t\tAreas[area.ID].Modes[(int)area.Mode].Deaths++;\n\t\t\treturn;\n\t\t}\n\t\tTotalDeaths++;");
         ReplaceOnce(saveData,
             "\t\tAreaModeStats areaModeStats = Areas[area.ID].Modes[(int)area.Mode];\n\t\tif (!areaModeStats.Strawberries.Contains(strawberry))",
-            "\t\tAreaModeStats areaModeStats = Areas[area.ID].Modes[(int)area.Mode];\n\t\tif (global::Celeste.Mod.AppleEverestProgressionRuntime.IsCustom(area))\n\t\t{\n\t\t\tif (areaModeStats.Strawberries.Add(strawberry)) areaModeStats.TotalStrawberries++;\n\t\t\treturn;\n\t\t}\n\t\tif (!areaModeStats.Strawberries.Contains(strawberry))");
+            "\t\tAreaModeStats areaModeStats = Areas[area.ID].Modes[(int)area.Mode];\n\t\tif (global::Celeste.Mod.AppleEverestProgressionRuntime.IsCustom(area))\n\t\t{\n\t\t\tif (areaModeStats.Strawberries.Add(strawberry) && global::Celeste.Mod.AppleEverestProgressionRuntime.CountsAsOrdinaryStrawberry(area, strawberry)) areaModeStats.TotalStrawberries++;\n\t\t\treturn;\n\t\t}\n\t\tif (!areaModeStats.Strawberries.Contains(strawberry))");
         ReplaceOnce(saveData,
             "\tpublic void AddTime(AreaKey area, long time)\n\t{\n\t\tTime += time;\n\t\tAreas[area.ID].Modes[(int)area.Mode].TimePlayed += time;\n\t}",
             "\tpublic void AddTime(AreaKey area, long time)\n\t{\n\t\tif (!global::Celeste.Mod.AppleEverestProgressionRuntime.IsCustom(area)) Time += time;\n\t\tAreas[area.ID].Modes[(int)area.Mode].TimePlayed += time;\n\t}");
@@ -1079,6 +1239,46 @@ internal static class ClosureGenerator
         ReplaceOnce(levelExit,
             "\t\tthis.session = session;\n\t\tthis.mode = mode;\n\t\tthis.snow = snow;",
             "\t\tthis.session = session;\n\t\tthis.mode = mode == Mode.Completed && global::Celeste.Mod.AppleEverestProgressionRuntime.IsCustom(session.Area) ? Mode.SaveAndQuit : mode;\n\t\tthis.snow = snow;");
+    }
+
+    private static void PatchSecondCollabSemantics(string heartDoor, string strawberry)
+    {
+        ReplaceOnce(heartDoor,
+            "\t\t\treturn SaveData.Instance.TotalHeartGems;",
+            "\t\t\treturn global::Celeste.Mod.AppleEverestSecondCollabRuntime.HeartGems(this, SaveData.Instance.TotalHeartGems);");
+        ReplaceOnce(heartDoor,
+            "\t\tif ((base.Scene as Level).Session.GetFlag(\"opened_heartgem_door_\" + Requires))",
+            "\t\tif ((base.Scene as Level).Session.GetFlag(global::Celeste.Mod.AppleEverestSecondCollabRuntime.DoorFlag(this, \"opened_heartgem_door_\" + Requires)))");
+        ReplaceOnce(heartDoor,
+            "\t\tlevel.Session.SetFlag(\"opened_heartgem_door_\" + Requires);",
+            "\t\tlevel.Session.SetFlag(global::Celeste.Mod.AppleEverestSecondCollabRuntime.DoorFlag(this, \"opened_heartgem_door_\" + Requires));");
+        ReplaceOnce(heartDoor,
+            "\t\telse\n\t\t{\n\t\t\tAdd(new Coroutine(Routine()));\n\t\t}\n\t}\n\n\tpublic override void Awake(Scene scene)",
+            "\t\telse\n\t\t{\n\t\t\tAdd(new Coroutine(Routine()));\n\t\t}\n" +
+            "\t\tglobal::Celeste.Mod.AppleEverestSecondCollabRuntime.ConfigureHeartDoor(this, TopSolid, BotSolid, openDistance, Opened);\n\t}\n\n\tpublic override void Awake(Scene scene)");
+        ReplaceOnce(heartDoor,
+            "\t\t\tif (entity3 != null && Math.Abs(entity3.X - base.Center.X) < 80f && entity3.X < base.X)",
+            "\t\t\tif (global::Celeste.Mod.AppleEverestSecondCollabRuntime.CanApproachDoor(this, entity3, entity3 != null && Math.Abs(entity3.X - base.Center.X) < 80f && entity3.X < base.X))");
+        ReplaceOnce(heartDoor,
+            "\t\t}\n\t}\n\n\tpublic void RenderBloom()",
+            "\t\t}\n\t\tglobal::Celeste.Mod.AppleEverestSecondCollabRuntime.ClampHeartDoor(this, TopSolid, BotSolid, Opened);\n\t}\n\n\tpublic void RenderBloom()");
+        ReplaceOnce(heartDoor,
+            "\t\tDraw.Rect(bounds, Calc.HexToColor(\"18668f\"));",
+            "\t\tDraw.Rect(bounds, global::Celeste.Mod.AppleEverestSecondCollabRuntime.HeartDoorColor(this, Calc.HexToColor(\"18668f\")));");
+
+        ReplaceOnce(strawberry,
+            "\t\tif ((scene as Level).Session.BloomBaseAdd > 0.1f)\n\t\t{\n\t\t\tbloom.Alpha *= 0.5f;\n\t\t}\n\t}",
+            "\t\tif ((scene as Level).Session.BloomBaseAdd > 0.1f)\n\t\t{\n\t\t\tbloom.Alpha *= 0.5f;\n\t\t}\n" +
+            "\t\tglobal::Celeste.Mod.AppleEverestSecondCollabRuntime.ConfigureStrawberry(this, sprite, bloom, light);\n\t}");
+        ReplaceOnce(strawberry,
+            "\tpublic override void Update()\n\t{\n\t\tif (WaitingOnSeeds)",
+            "\tpublic override void Update()\n\t{\n\t\tglobal::Celeste.Mod.AppleEverestSecondCollabRuntime.UpdateSpecialBerry(this);\n\t\tif (WaitingOnSeeds)");
+        ReplaceOnce(strawberry,
+            "\t\t\t\t\t\tif (player.CollideCheck<GoldBerryCollectTrigger>() || (base.Scene as Level).Completed)\n\t\t\t\t\t\t{\n\t\t\t\t\t\t\tflag = true;\n\t\t\t\t\t\t}",
+            "\t\t\t\t\t\tif (global::Celeste.Mod.AppleEverestSecondCollabRuntime.ShouldCollectGolden(this, player, player.CollideCheck<GoldBerryCollectTrigger>() || (base.Scene as Level).Completed))\n\t\t\t\t\t\t{\n\t\t\t\t\t\t\tflag = true;\n\t\t\t\t\t\t}");
+        ReplaceOnce(strawberry,
+            "\t\tif (Golden)\n\t\t{\n\t\t\t(base.Scene as Level).Session.GrabbedGolden = true;\n\t\t}",
+            "\t\tif (Golden && global::Celeste.Mod.AppleEverestSecondCollabRuntime.ShouldSetGrabbedGolden(this))\n\t\t{\n\t\t\t(base.Scene as Level).Session.GrabbedGolden = true;\n\t\t}");
     }
 
     private static void PatchTracker(string path) => ReplaceOnce(path,
@@ -1120,6 +1320,18 @@ internal static class ClosureGenerator
         if (first < 0 || text.IndexOf(needle, first + needle.Length, StringComparison.Ordinal) >= 0)
             throw new InvalidDataException($"locked target must occur exactly once: {Path.GetFileName(path)}");
         File.WriteAllText(path, text[..first] + replacement + text[(first + needle.Length)..], new UTF8Encoding(false));
+    }
+
+    private static void ReplaceExactOccurrences(string path, string needle, string replacement, int expected)
+    {
+        string text = File.ReadAllText(path);
+        int count = 0;
+        for (int offset = 0; (offset = text.IndexOf(needle, offset, StringComparison.Ordinal)) >= 0;
+             offset += needle.Length)
+            count++;
+        if (count != expected)
+            throw new InvalidDataException($"locked target must occur exactly {expected} times: {Path.GetFileName(path)}");
+        File.WriteAllText(path, text.Replace(needle, replacement, StringComparison.Ordinal), new UTF8Encoding(false));
     }
 
     private static void ReplaceOneOf(string path, IReadOnlyList<string> alternatives,
@@ -1190,7 +1402,8 @@ internal static class ClosureGenerator
         }
     }
 
-    private static string ContentManifestSource(IReadOnlyList<ResolvedMod> mods, IReadOnlyList<ContentMountRecord> staged)
+    private static string ContentManifestSource(IReadOnlyList<ResolvedMod> mods,
+        IReadOnlyList<ContentMountRecord> staged, string contentRoot)
     {
         StringBuilder result = new("namespace Celeste.Mod;\n\ninternal static class GeneratedAppleEverestContentManifest\n{\n    internal static readonly string[] Entries =\n    {\n");
         foreach (string item in staged.Select(value => value.LogicalPath).Distinct(StringComparer.Ordinal).OrderBy(value => value, StringComparer.Ordinal))
@@ -1223,6 +1436,16 @@ internal static class ClosureGenerator
                 .Append(", \"").Append(Escape(extension.TrimStart('.').ToLowerInvariant())).AppendLine("\"),");
         }
         result.AppendLine("    };")
+            .AppendLine("    internal static readonly AppleEverestSpriteBankDescriptor[] SpriteBanks =")
+            .AppendLine("    {");
+        foreach (ContentMountRecord mount in staged.OrderBy(value => value.Order)
+                     .ThenBy(value => value.SourcePath, StringComparer.Ordinal))
+        {
+            if (!IsSpriteBankXml(contentRoot, mount)) continue;
+            result.Append("        new AppleEverestSpriteBankDescriptor(\"").Append(Escape(mount.Owner))
+                .Append("\", \"").Append(Escape(mount.LogicalPath)).AppendLine("\"),");
+        }
+        result.AppendLine("    };")
             .AppendLine("    internal static readonly AppleEverestAtlasMountDescriptor[] AtlasMounts =")
             .AppendLine("    {");
         foreach (ContentMountRecord mount in staged.OrderBy(value => value.Order)
@@ -1252,6 +1475,7 @@ internal static class ClosureGenerator
             const string gameplay = "Graphics/Atlases/Gameplay/";
             const string gui = "Graphics/Atlases/Gui/";
             const string journal = "Graphics/Atlases/Journal/";
+            const string checkpoints = "Graphics/Atlases/Checkpoints/";
             string prefix;
             if (sourcePath.StartsWith(gameplay, StringComparison.Ordinal))
             {
@@ -1268,6 +1492,11 @@ internal static class ClosureGenerator
                 atlas = "Journal";
                 prefix = journal;
             }
+            else if (sourcePath.StartsWith(checkpoints, StringComparison.Ordinal))
+            {
+                atlas = "Checkpoints";
+                prefix = checkpoints;
+            }
             else
             {
                 atlas = "";
@@ -1281,6 +1510,31 @@ internal static class ClosureGenerator
             }
             key = sourcePath[prefix.Length..^4].Replace('\\', '/');
             return key.Length > 0;
+        }
+    }
+
+    private static bool IsSpriteBankXml(string contentRoot, ContentMountRecord mount)
+    {
+        if (!mount.SourcePath.EndsWith(".xml", StringComparison.OrdinalIgnoreCase)) return false;
+        string path = Path.Combine(contentRoot, mount.LogicalPath.Replace('/', Path.DirectorySeparatorChar));
+        try
+        {
+            using XmlReader reader = XmlReader.Create(path, new XmlReaderSettings
+            {
+                DtdProcessing = DtdProcessing.Prohibit,
+                IgnoreComments = true,
+                IgnoreWhitespace = true
+            });
+            while (reader.Read())
+                if (reader.NodeType == XmlNodeType.Element)
+                    return reader.LocalName == "Sprites";
+            return false;
+        }
+        catch (XmlException)
+        {
+            // Public mod packages can contain files with an .xml suffix that are
+            // opaque game payloads. They are content, but not sprite-bank XML.
+            return false;
         }
     }
 
@@ -1488,6 +1742,8 @@ internal static class ClosureGenerator
             foreach (StaticSemanticFactory factory in mod.StaticSemanticLowering!.Factories.Where(value => value.Kind == "trigger"))
                 AppendSemanticFactoryCase(result, mod.Metadata.Name, factory);
         result.AppendLine("            case \"everest/changeInventoryTrigger\":")
+            .AppendLine("            case \"everest/coreModeTrigger\":")
+            .AppendLine("            case \"everest/crystalShatterTrigger\":")
             .AppendLine("            case \"everest/flagTrigger\":")
             .AppendLine("            case \"everest/smoothCameraOffsetTrigger\":")
             .AppendLine("                entity = AppleEverestSemanticFactories.CreateTrigger(id, data, offset, entityId);")

@@ -14,12 +14,12 @@ internal static class MapDataCompatibilityPatch
 
     private const string Helper =
         "\t}\n\n" +
-        "\tprivate static EntityData AppleEverestNormalizeAndGet(ref EntityData[,] map, EntityData strawberry, int maximumCheckpoint, out int y, out int x)\n" +
+        "\tprivate static EntityData AppleEverestNormalizeAndGet(ref EntityData[,] map, EntityData strawberry, List<LevelData> levels, int maximumCheckpoint, out int y, out int x)\n" +
         "\t{\n" +
-        "\t\ty = strawberry.Int(\"checkpointID\", -1);\n" +
+        "\t\ty = strawberry.Int(\"checkpointIDParented\", strawberry.Int(\"checkpointID\", -1));\n" +
         "\t\tif (y < 0)\n" +
         "\t\t{\n" +
-        "\t\t\ty = 0;\n" +
+        "\t\t\ty = AppleEverestCheckpointForLevel(strawberry, levels);\n" +
         "\t\t}\n" +
         "\t\tif (y > maximumCheckpoint)\n" +
         "\t\t{\n" +
@@ -52,6 +52,26 @@ internal static class MapDataCompatibilityPatch
         "\t\tstrawberry.Values[\"order\"] = x;\n" +
         "\t\treturn map[y, x];\n" +
         "\t}\n\n" +
+        "\tprivate static int AppleEverestCheckpointForLevel(EntityData strawberry, List<LevelData> levels)\n" +
+        "\t{\n" +
+        "\t\tif (strawberry?.Level == null || levels == null)\n" +
+        "\t\t{\n" +
+        "\t\t\treturn 0;\n" +
+        "\t\t}\n" +
+        "\t\tint checkpoint = 0;\n" +
+        "\t\tforeach (LevelData level in levels)\n" +
+        "\t\t{\n" +
+        "\t\t\tif (level?.Entities != null)\n" +
+        "\t\t\t{\n" +
+        "\t\t\t\tforeach (EntityData entity in level.Entities)\n" +
+        "\t\t\t\t{\n" +
+        "\t\t\t\t\tif (entity?.Name == \"checkpoint\") checkpoint++;\n" +
+        "\t\t\t\t}\n" +
+        "\t\t\t}\n" +
+        "\t\t\tif (object.ReferenceEquals(level, strawberry.Level)) return checkpoint;\n" +
+        "\t\t}\n" +
+        "\t\treturn 0;\n" +
+        "\t}\n\n" +
         "\tprivate static void AppleEverestEnsureTracker(ref EntityData[,] map, int y, int x)\n" +
         "\t{\n" +
         "\t\tif (map.GetLength(0) <= y || map.GetLength(1) <= x)\n" +
@@ -80,7 +100,7 @@ internal static class MapDataCompatibilityPatch
         source = ReplaceExactlyOnce(source, LookupTarget,
             "\t\t\t\tint num7;\n" +
             "\t\t\t\tint num8;\n" +
-            "\t\t\t\tif (AppleEverestNormalizeAndGet(ref ModeData.StrawberriesByCheckpoint, strawberry, ModeData.Checkpoints?.Length ?? 0, out num7, out num8) == null)");
+            "\t\t\t\tif (AppleEverestNormalizeAndGet(ref ModeData.StrawberriesByCheckpoint, strawberry, Levels, ModeData.Checkpoints?.Length ?? 0, out num7, out num8) == null)");
         return ReplaceExactlyOnce(source, MethodBoundary, Helper);
     }
 
@@ -104,6 +124,18 @@ internal static class MapDataCompatibilityPatch
             }
         }
         return (checkpoint, order, map[checkpoint, order]);
+    }
+
+    internal static int CheckpointForRoomForTest(
+        IReadOnlyList<(string Room, int Checkpoints)> rooms, string strawberryRoom)
+    {
+        int checkpoint = 0;
+        foreach ((string room, int checkpoints) in rooms)
+        {
+            checkpoint += Math.Max(0, checkpoints);
+            if (room == strawberryRoom) return checkpoint;
+        }
+        return 0;
     }
 
     private static void EnsureForTest<T>(ref T?[,] map, int y, int x)

@@ -92,18 +92,25 @@ internal static class AppleEverestCollabRuntime
         IsForcedChapterPanel(panel) ? -49f : fallback;
 
     internal static int ChapterSwapHeight(OuiChapterPanel panel, int fallback) =>
-        IsForcedChapterPanel(panel) && panel.selectingMode ? 300 : fallback;
+        IsForcedChapterPanel(panel) && panel.selectingMode && UsesSyntheticBookmarks(forcedMapSid) ? 300 : fallback;
 
     internal static bool ShouldShowChapterDeaths(OuiChapterPanel panel) =>
         IsForcedChapterPanel(panel);
 
     internal static bool NeedsChapterCheckpointPage(OuiChapterPanel panel) =>
         overworldWrapper != null && forcedMapSid != null && panel?.Overworld == overworldWrapper.WrappedScene &&
+        UsesSyntheticBookmarks(forcedMapSid) &&
         AppleEverestProgressionPersistence.HasSuspendedSession(forcedMapSid);
+
+    private static bool UsesSyntheticBookmarks(string sid) =>
+        sid != null && Maps.TryGetValue(sid, out AppleEverestCollabMapDescriptor map) && map.AllowSaving &&
+        AppleEverestProgressionRuntime.TryDescriptor(sid, out AppleEverestMapProgressionDescriptor descriptor) &&
+        descriptor.Checkpoints.Length == 0;
 
     internal static void ConfigureChapterCheckpoints(OuiChapterPanel panel)
     {
         if (overworldWrapper == null || forcedMapSid == null || panel?.Overworld != overworldWrapper.WrappedScene ||
+            !UsesSyntheticBookmarks(forcedMapSid) ||
             !AppleEverestProgressionPersistence.HasSuspendedSession(forcedMapSid)) return;
         Color startColor = panel.checkpoints.FirstOrDefault()?.BgColor ?? Calc.HexToColor("eabe26");
         Color continueColor = panel.checkpoints.Skip(1).FirstOrDefault()?.BgColor ?? Calc.HexToColor("3c6180");
@@ -137,7 +144,22 @@ internal static class AppleEverestCollabRuntime
 
     internal static bool ShouldDrawVanillaCheckpoint(OuiChapterPanel panel) =>
         overworldWrapper == null || forcedMapSid == null || panel?.Overworld != overworldWrapper.WrappedScene ||
+        !UsesSyntheticBookmarks(forcedMapSid) ||
         !AppleEverestProgressionPersistence.HasSuspendedSession(forcedMapSid);
+
+    internal static string CheckpointPreviewName(AreaKey area, string level)
+    {
+        string sid = AppleEverestProgressionRuntime.Sid(area);
+        if (sid == null || !Maps.ContainsKey(sid)) return null;
+        string mode = area.Mode switch
+        {
+            AreaMode.BSide => "B",
+            AreaMode.CSide => "C",
+            _ => "A"
+        };
+        string key = sid + "/" + mode + "/" + (level ?? "start");
+        return MTN.Checkpoints.Has(key) ? key : null;
+    }
 
     internal static bool TryStartChapterPanel(OuiChapterPanel panel, string checkpoint)
     {
@@ -163,14 +185,15 @@ internal static class AppleEverestCollabRuntime
 
     internal static void AddPauseMenuItem(Level level, TextMenu menu)
     {
-        if (!IsSubordinate(level.Session.Area)) return;
+        string sid = AppleEverestProgressionRuntime.Sid(level.Session.Area);
+        if (sid == null || !Maps.TryGetValue(sid, out AppleEverestCollabMapDescriptor map)) return;
         TextMenu.Item item = null;
         menu.Add(item = new TextMenu.Button(Dialog.Clean("collabutils2_returntolobby")).Pressed(() =>
         {
             int returnIndex = menu.IndexOf(item);
             level.PauseMainMenuOpen = false;
             menu.RemoveSelf();
-            OpenReturnToLobbyConfirmMenu(level, returnIndex);
+            OpenReturnToLobbyConfirmMenu(level, returnIndex, map.AllowSaving);
         }));
         (item as TextMenu.Button).ConfirmSfx = "event:/ui/main/message_confirm";
     }
@@ -193,7 +216,7 @@ internal static class AppleEverestCollabRuntime
             level.DoScreenWipe(false, () => ReturnNow(level), false)));
     }
 
-    private static void OpenReturnToLobbyConfirmMenu(Level level, int returnIndex)
+    private static void OpenReturnToLobbyConfirmMenu(Level level, int returnIndex, bool allowSaving)
     {
         level.Paused = true;
         TextMenu menu = new()
@@ -202,15 +225,28 @@ internal static class AppleEverestCollabRuntime
             Position = new Vector2(Engine.Width / 2f, Engine.Height / 2f - 100f)
         };
         menu.Add(new TextMenu.Header(Dialog.Clean("collabutils2_returntolobby_confirm_title")));
-        menu.Add(new TextMenu.SubHeader(Dialog.Clean("collabutils2_returntolobby_confirm_note1")));
-        menu.Add(new TextMenu.SubHeader(Dialog.Clean("collabutils2_returntolobby_confirm_note2")));
-        menu.Add(new TextMenu.SubHeader(""));
-        menu.Add(new TextMenu.Button(Dialog.Clean("collabutils2_returntolobby_confirm_save"))
-            .Pressed(() => ReturnToLobby(level, menu, save: true)));
-        menu.Add(new TextMenu.Button(Dialog.Clean("collabutils2_returntolobby_confirm_donotsave"))
-            .Pressed(() => ReturnToLobby(level, menu, save: false)));
-        menu.Add(new TextMenu.Button(Dialog.Clean("collabutils2_returntolobby_confirm_cancel"))
-            .Pressed(() => menu.OnCancel()));
+        if (allowSaving)
+        {
+            menu.Add(new TextMenu.SubHeader(Dialog.Clean("collabutils2_returntolobby_confirm_note1")));
+            menu.Add(new TextMenu.SubHeader(Dialog.Clean("collabutils2_returntolobby_confirm_note2")));
+            menu.Add(new TextMenu.SubHeader(""));
+            menu.Add(new TextMenu.Button(Dialog.Clean("collabutils2_returntolobby_confirm_save"))
+                .Pressed(() => ReturnToLobby(level, menu, save: true)));
+            menu.Add(new TextMenu.Button(Dialog.Clean("collabutils2_returntolobby_confirm_donotsave"))
+                .Pressed(() => ReturnToLobby(level, menu, save: false)));
+            menu.Add(new TextMenu.Button(Dialog.Clean("collabutils2_returntolobby_confirm_cancel"))
+                .Pressed(() => menu.OnCancel()));
+        }
+        else
+        {
+            // CollabUtils2 deliberately reuses Celeste's compact Yes/Cancel
+            // return confirmation when the chapter-panel trigger disallows
+            // suspension. The no-save choice must still be explicit.
+            menu.Add(new TextMenu.Button(Dialog.Clean("menu_return_continue"))
+                .Pressed(() => ReturnToLobby(level, menu, save: false)));
+            menu.Add(new TextMenu.Button(Dialog.Clean("menu_return_cancel"))
+                .Pressed(() => menu.OnCancel()));
+        }
         menu.OnPause = menu.OnESC = () =>
         {
             menu.RemoveSelf();
@@ -243,7 +279,8 @@ internal static class AppleEverestCollabRuntime
             AppleEverestProgressionPersistence.SuspendCurrentSession();
             UserIO.SaveHandler(file: true, settings: false);
         }
-        level.Add(new AppleEverestCollabTransition(() => ReturnNow(level)));
+        level.Add(new AppleEverestCollabTransition(() =>
+            level.DoScreenWipe(false, () => ReturnNow(level), false)));
     }
 
     private static void ReturnNow(Level level)
@@ -316,8 +353,12 @@ internal static class AppleEverestCollabRuntime
             AppleEverestProgressionPersistence.TryTakeSuspendedSession(sid, out session);
         else
             AppleEverestProgressionPersistence.DiscardSuspendedSession(sid);
-        session ??= new Session(new AreaKey(descriptor.RuntimeAreaId), checkpoint == ContinueCheckpoint ? null : checkpoint);
-        AppleEverestStaticRuntime.Log($"collab-map=session-ready sid={sid} choice={(continueSession ? "continue" : "start-over")} room={session.Level}");
+        // MapData.StartLevel is patched to consult the immutable presentation
+        // descriptor, matching Everest before Session initializes its level,
+        // intro, inventory and restart semantics.
+        string sessionCheckpoint = ResolveSessionCheckpoint(checkpoint);
+        session ??= new Session(new AreaKey(descriptor.RuntimeAreaId), sessionCheckpoint);
+        AppleEverestStaticRuntime.Log($"collab-map=session-ready sid={sid} choice={(continueSession ? "continue" : "start-over")} room={session.Level} checkpoint={session.StartCheckpoint ?? "<none>"} beginning={session.StartedFromBeginning}");
         SaveData.Instance.StartSession(session);
         AppleEverestStaticRuntime.Log($"collab-map=session-started sid={sid} choice={(continueSession ? "continue" : "start-over")}");
         UserIO.SaveHandler(file: true, settings: false);
@@ -326,6 +367,17 @@ internal static class AppleEverestCollabRuntime
         AppleEverestStaticRuntime.Log($"collab-map=handoff sid={sid} choice={(continueSession ? "continue" : "start-over")} room={session.Level}");
         EnterSelectedMap(session, descriptor, continueSession);
         AppleEverestStaticRuntime.Log($"collab-map=launch sid={sid} choice={(continueSession ? "continue" : "start-over")} room={session.Level}");
+    }
+
+    private static string ResolveSessionCheckpoint(string checkpoint)
+    {
+        if (checkpoint == ContinueCheckpoint)
+            return null;
+        // A null Start selection is significant: Session marks the map as
+        // beginning normally, so LevelLoader runs the map's effective authored
+        // intro (for example WakeUp). Named chapter photos remain respawn-style
+        // checkpoint entries, exactly as on desktop Everest.
+        return string.IsNullOrEmpty(checkpoint) ? null : checkpoint;
     }
 
     private static void EnterSelectedMap(Session session, AppleEverestMapProgressionDescriptor descriptor,
@@ -605,16 +657,23 @@ internal sealed class AppleEverestCollabJournalProgress : OuiJournalPage
         bool allBestTimesPresent = true;
 
         foreach (AppleEverestCollabMapDescriptor map in GeneratedAppleEverestCollabManifest.Collabs
-                     .SelectMany(collab => collab.Maps).Where(map => map.LevelSet == levelSet)
-                     .OrderBy(map => map.Order))
+                     .SelectMany(collab => collab.Maps)
+                     .Where(map => map.LevelSet == levelSet && !IsHeartSide(map.Sid))
+                     .OrderBy(map => map.Sid, StringComparer.Ordinal))
         {
             if (!AppleEverestProgressionRuntime.TryDescriptor(map.Sid, out var descriptor) || SaveData.Instance == null ||
                 SaveData.Instance.Areas.Count <= descriptor.RuntimeAreaId) continue;
             AreaStats stats = SaveData.Instance.Areas[descriptor.RuntimeAreaId];
             AreaModeStats mode = stats.Modes[0];
             AreaData area = AreaData.Areas[descriptor.RuntimeAreaId];
-            string berries = area.Mode[0].TotalStrawberries > 0 || stats.TotalStrawberries > 0
-                ? stats.TotalStrawberries + (mode.Completed ? "/" + area.Mode[0].TotalStrawberries : "")
+            // Everest special berries deliberately participate in persistence
+            // without increasing a map's authored ordinary-strawberry total.
+            // Pinned Celeste increments TotalStrawberries for every Strawberry
+            // subclass, so cap the journal-facing value at the compiler-known
+            // ordinary total while the special EntityIDs remain durable.
+            int ordinaryBerries = Math.Min(stats.TotalStrawberries, area.Mode[0].TotalStrawberries);
+            string berries = area.Mode[0].TotalStrawberries > 0 || ordinaryBerries > 0
+                ? ordinaryBerries + (mode.Completed ? "/" + area.Mode[0].TotalStrawberries : "")
                 : "-";
 
             string levelHeartTexture = MTN.Journal.Has("CollabUtils2LevelHearts/" + map.Sid)
@@ -655,7 +714,7 @@ internal sealed class AppleEverestCollabJournalProgress : OuiJournalPage
                 allBestTimesPresent = false;
             }
 
-            totalStrawberries += stats.TotalStrawberries;
+            totalStrawberries += ordinaryBerries;
             totalDeaths += mode.Deaths;
             totalTime += stats.TotalTimePlayed;
         }
@@ -677,6 +736,12 @@ internal sealed class AppleEverestCollabJournalProgress : OuiJournalPage
             .Add(null);
         table.AddRow();
     }
+
+    // CollabUtils2's native lobby journal excludes the separately gated heart
+    // side using this exact SID convention. Chapter-panel spatial order is a
+    // lobby-navigation concern and must not determine journal row order.
+    private static bool IsHeartSide(string sid) =>
+        sid.EndsWith("/ZZ-HeartSide", StringComparison.Ordinal);
 
     public override void Redraw(VirtualRenderTarget buffer)
     {

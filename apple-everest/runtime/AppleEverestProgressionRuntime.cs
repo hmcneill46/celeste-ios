@@ -43,7 +43,8 @@ internal static class AppleEverestProgressionRuntime
             ModeProperties mode = new()
             {
                 Path = descriptor.Path,
-                Checkpoints = descriptor.Checkpoints.Select(value => new CheckpointData(value, value)).ToArray(),
+                Checkpoints = descriptor.Checkpoints.Select(value =>
+                    new CheckpointData(value, DialogKey(descriptor.Sid) + "_" + value)).ToArray(),
                 Inventory = Inventory(presentation.Inventory),
                 AudioState = new AudioState(presentation.Music, presentation.Ambience),
                 IgnoreLevelAudioLayerData = presentation.IgnoreLevelAudioLayerData,
@@ -144,6 +145,8 @@ internal static class AppleEverestProgressionRuntime
     }
     internal static string Sid(AreaKey area) => TryDescriptor(area.ID, out var descriptor) ? descriptor.Sid : null;
     internal static string LevelSet(AreaKey area) => TryDescriptor(area.ID, out var descriptor) ? descriptor.LevelSet : null;
+    internal static string StartLevel(AreaKey area) =>
+        TryDescriptor(area.ID, out var descriptor) ? descriptor.Presentation.StartLevel : null;
     internal static bool TryLevelSet(string levelSet, out AppleEverestLevelSetProgressionDescriptor descriptor)
     {
         if (levelSet != null && ByLevelSet.TryGetValue(levelSet, out descriptor)) return true;
@@ -285,7 +288,52 @@ internal static class AppleEverestProgressionRuntime
     }
 
     internal static int TotalStrawberries(string levelSet, SaveData save) => Areas(levelSet, save).Sum(value => value.TotalStrawberries);
+
+    // Everest special berries retain normal durable EntityIDs but are
+    // registered as untracked collectibles and therefore do not increase the
+    // authored ordinary-berry count. Resolve the distinction from the closed
+    // MapData graph; no runtime helper metadata or dynamic discovery is involved.
+    internal static bool CountsAsOrdinaryStrawberry(AreaKey area, EntityID id)
+    {
+        if (!IsCustom(area)) return true;
+        MapData map = AreaData.Get(area)?.Mode[(int)area.Mode]?.MapData;
+        LevelData room = map?.Levels?.FirstOrDefault(value => value.Name == id.Level);
+        EntityData entity = room?.Entities?.FirstOrDefault(value => value.ID == id.ID);
+        return entity?.Name is "strawberry" or "LunaticHelper/StrawberryWithReturn";
+    }
     internal static int TotalHearts(string levelSet, SaveData save) => Areas(levelSet, save).Sum(value => value.Modes.Count(mode => mode?.HeartGem == true));
+    internal static bool Completed(AreaKey area, SaveData save)
+    {
+        if (save == null || area.ID < 0 || area.ID >= save.Areas.Count) return false;
+        AreaStats stats = save.Areas[area.ID];
+        int mode = (int)area.Mode;
+        return mode >= 0 && mode < stats.Modes.Length && stats.Modes[mode]?.Completed == true;
+    }
+
+    internal static (int Collected, int Total) SilverBerries(string levelSet, SaveData save, string[] mapFilter = null)
+    {
+        if (save == null || string.IsNullOrEmpty(levelSet)) return (0, 0);
+        HashSet<string> filter = mapFilter == null || mapFilter.Length == 0
+            ? null : mapFilter.ToHashSet(StringComparer.Ordinal);
+        int collected = 0;
+        int total = 0;
+        foreach (AppleEverestMapProgressionDescriptor descriptor in GeneratedAppleEverestProgressionManifest.Maps
+                     .Where(value => value.LevelSet == levelSet && (filter == null || filter.Contains(value.Sid))))
+        {
+            AreaKey area = new(descriptor.RuntimeAreaId);
+            MapData map = AreaData.Get(area)?.Mode[0]?.MapData;
+            if (map == null) continue;
+            HashSet<EntityID> saved = save.Areas.Count > descriptor.RuntimeAreaId
+                ? save.Areas[descriptor.RuntimeAreaId].Modes[0].Strawberries : new HashSet<EntityID>();
+            foreach (LevelData room in map.Levels)
+                foreach (EntityData entity in room.Entities.Where(value => value.Name == "CollabUtils2/SilverBerry"))
+                {
+                    total++;
+                    if (saved.Contains(new EntityID(room.Name, entity.ID))) collected++;
+                }
+        }
+        return (collected, total);
+    }
     internal static int TotalCassettes(string levelSet, SaveData save) => Areas(levelSet, save).Count(value => value.Cassette);
     internal static long TotalTime(string levelSet, SaveData save) => Areas(levelSet, save).Sum(value => value.TotalTimePlayed);
     internal static int TotalDeaths(string levelSet, SaveData save) => Areas(levelSet, save).Sum(value => value.TotalDeaths);

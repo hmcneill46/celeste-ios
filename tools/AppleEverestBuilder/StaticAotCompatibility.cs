@@ -436,7 +436,7 @@ namespace Celeste.Mod
         Replace(Path.Combine(managedRoot, "Monocle", "VirtualTexture.cs"),
             "\tpublic Texture2D Texture;",
             "\tpublic Texture2D Texture;\n\n" +
-            "\tpublic Texture2D Texture_Safe\n\t{\n\t\tget => Texture;\n\t\tset => Texture = value;\n\t}");
+            "\tpublic Texture2D Texture_Safe\n\t{\n\t\tget { EnsureLoaded(); return Texture; }\n\t\tset => Texture = value;\n\t}");
 
         string autotiler = Path.Combine(managedRoot, "Celeste", "Autotiler.cs");
         Replace(autotiler,

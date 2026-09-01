@@ -18,6 +18,7 @@ internal static class Program
                 case "acquire": Acquire(One(options, "--profile"), One(options, "--output")); break;
                 case "build": Build(One(options, "--profile"), One(options, "--repo-root"), One(options, "--upstream"), One(options, "--output"), Many(options, "--mod")); break;
                 case "audit": Audit(Many(options, "--mod"), One(options, "--output")); break;
+                case "inspect-map": InspectMap(One(options, "--map"), One(options, "--output")); break;
                 case "apply": ClosureGenerator.Apply(One(options, "--closure"), One(options, "--managed-root")); break;
                 case "scan-runtime": RuntimeClosureScanner.Verify(One(options, "--assembly")); break;
                 case "verify-preserved-assembly": RuntimeClosureScanner.VerifyPreserved(
@@ -142,6 +143,31 @@ internal static class Program
         File.WriteAllText(output, JsonSerializer.Serialize(report, new JsonSerializerOptions { WriteIndented = true }) + "\n");
     }
 
+    private static void InspectMap(string map, string output)
+    {
+        string source = Path.GetFullPath(map);
+        if (!File.Exists(source)) throw new FileNotFoundException("map input does not exist", source);
+        MapElementRecord[] elements = ContentCompiler.InspectElements(source)
+            .OrderBy(value => value.Room, StringComparer.Ordinal)
+            .ThenBy(value => value.Kind, StringComparer.Ordinal)
+            .ThenBy(value => value.Id, StringComparer.Ordinal)
+            .ThenBy(value => value.Y)
+            .ThenBy(value => value.X)
+            .ToArray();
+        object report = new
+        {
+            schemaVersion = 1,
+            map = Path.GetFileName(source),
+            sha256 = Hashing.FileSha256(source),
+            elementCount = elements.Length,
+            elements
+        };
+        output = Path.GetFullPath(output);
+        Directory.CreateDirectory(Path.GetDirectoryName(output)!);
+        File.WriteAllText(output, JsonSerializer.Serialize(report,
+            new JsonSerializerOptions { WriteIndented = true }) + "\n");
+    }
+
     private static void Build(string profilePath, string repoRoot, string upstream, string output, IReadOnlyList<string> modPaths)
     {
         AppleEverestProfile profile = LoadProfile(profilePath);
@@ -229,5 +255,5 @@ internal static class Program
 
     private static void Run(string command, params string[] args) { _ = Capture(command, args); }
 
-    private static void Help() => Console.WriteLine("AppleEverestBuilder acquire|audit|build|apply|scan-runtime|verify-preserved-assembly|verify-referenced-api|verify-aot-object|verify-profile (closed static-AOT Apple product)");
+    private static void Help() => Console.WriteLine("AppleEverestBuilder acquire|audit|inspect-map|build|apply|scan-runtime|verify-preserved-assembly|verify-referenced-api|verify-aot-object|verify-profile (closed static-AOT Apple product)");
 }

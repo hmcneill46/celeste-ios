@@ -2,6 +2,7 @@ using System.IO.Compression;
 using System.Text;
 using System.Text.Json;
 using System.Xml;
+using YamlDotNet.RepresentationModel;
 
 namespace AppleEverestBuilder;
 
@@ -27,11 +28,16 @@ internal static class ContentCompiler
         List<string> rooms = [];
         List<string> entities = [];
         List<string> triggers = [];
-        List<string> checkpoints = [];
+        List<(int Order, string Level)> checkpoints = [];
         MapPresentationBuilder presentation = new();
+        // Everest first applies the adjacent .meta.yaml while AreaData is
+        // discovered, then applies the map binary's embedded <meta> during
+        // MapData.Load.  Preserve that order: embedded values are the final,
+        // effective presentation seen by Session and LevelLoader.
+        presentation.ApplySidecar(Path.ChangeExtension(path, ".meta.yaml"));
         int elements = 0;
-        ReadProgressionElement(reader, table, null, 0, ref elements, rooms, entities, triggers, checkpoints,
-            presentation);
+        ReadProgressionElement(reader, table, null, null, 0, ref elements, rooms, entities, triggers,
+            checkpoints, presentation);
         if (stream.Position != stream.Length) throw new InvalidDataException("map binary contains trailing bytes");
         string[] entitySet = entities.Distinct(StringComparer.Ordinal).OrderBy(value => value, StringComparer.Ordinal).ToArray();
         string[] triggerSet = triggers.Distinct(StringComparer.Ordinal).OrderBy(value => value, StringComparer.Ordinal).ToArray();
@@ -45,7 +51,10 @@ internal static class ContentCompiler
         return new(mapPath, mapPath, levelSet, sha256, compatibility,
             rooms.Distinct(StringComparer.Ordinal).OrderBy(value => value, StringComparer.Ordinal).ToArray(),
             berries, heart, cassette,
-            checkpoints.Distinct(StringComparer.Ordinal).OrderBy(value => value, StringComparer.Ordinal).ToArray(),
+            checkpoints.GroupBy(value => value.Level, StringComparer.Ordinal)
+                .Select(group => group.OrderBy(value => value.Order).First())
+                .OrderBy(value => value.Order).ThenBy(value => value.Level, StringComparer.Ordinal)
+                .Select(value => value.Level).ToArray(),
             entitySet, triggerSet, ["A"], !mapPath.Contains("/0-Lobbies/", StringComparison.Ordinal),
             presentation.Build());
     }
@@ -289,9 +298,9 @@ internal static class ContentCompiler
         for (int index = 0; index < children; index++) ReadElement(reader, table, name, depth + 1, ref elements, result);
     }
 
-    private static void ReadProgressionElement(BinaryReader reader, string[] table, string? parent, int depth,
-        ref int elements, List<string> rooms, List<string> entities, List<string> triggers, List<string> checkpoints,
-        MapPresentationBuilder presentation)
+    private static void ReadProgressionElement(BinaryReader reader, string[] table, string? parent,
+        string? currentRoom, int depth, ref int elements, List<string> rooms, List<string> entities,
+        List<string> triggers, List<(int Order, string Level)> checkpoints, MapPresentationBuilder presentation)
     {
         if (depth > 128 || ++elements > 100000) throw new InvalidDataException("map element bounds exceeded");
         string name = Lookup(table, reader.ReadInt16());
@@ -315,23 +324,37 @@ internal static class ContentCompiler
             };
             attributes[key] = value;
         }
+        string? childRoom = currentRoom;
         if (parent == "levels" && name == "level" && attributes.TryGetValue("name", out object? room) && room is string roomName)
+        {
             rooms.Add(roomName);
+            childRoom = roomName;
+        }
         if (parent == "Map" && name == "meta") presentation.ApplyArea(attributes);
         else if (parent == "meta" && name == "mode") presentation.ApplyMode(attributes);
         else if (parent == "mode" && name == "audiostate") presentation.ApplyAudio(attributes);
-        if (parent == "entities") entities.Add(name);
+        if (parent == "entities")
+        {
+            entities.Add(name);
+            if (name == "checkpoint" && currentRoom != null)
+            {
+                int order = attributes.TryGetValue("checkpointID", out object? checkpointId)
+                    ? Convert.ToInt32(checkpointId, System.Globalization.CultureInfo.InvariantCulture)
+                    : int.MaxValue;
+                checkpoints.Add((order, currentRoom));
+            }
+        }
         if (parent == "triggers")
         {
             triggers.Add(name);
             if (name == "changeRespawnTrigger" && attributes.TryGetValue("target", out object? checkpoint) && checkpoint is string checkpointName)
-                checkpoints.Add(checkpointName);
+                checkpoints.Add((int.MaxValue, checkpointName));
         }
         int children = reader.ReadInt16();
         if (children < 0) throw new InvalidDataException("map child count is invalid");
         for (int index = 0; index < children; index++)
-            ReadProgressionElement(reader, table, name, depth + 1, ref elements, rooms, entities, triggers, checkpoints,
-                presentation);
+            ReadProgressionElement(reader, table, name, childRoom, depth + 1, ref elements, rooms, entities,
+                triggers, checkpoints, presentation);
 
         static int CheckedRleLength(BinaryReader input)
         {
@@ -344,6 +367,32 @@ internal static class ContentCompiler
     private sealed class MapPresentationBuilder
     {
         private MapPresentationRecord value = MapPresentationRecord.EverestDefault;
+
+        internal void ApplySidecar(string path)
+        {
+            if (!File.Exists(path)) return;
+            FileInfo info = new(path);
+            if (info.Length <= 0 || info.Length > ProductPolicy.MaxYamlBytes)
+                throw new InvalidDataException("map metadata sidecar size is invalid");
+
+            YamlStream yaml = new();
+            using (StreamReader reader = new(path, new UTF8Encoding(false, true))) yaml.Load(reader);
+            if (yaml.Documents.Count != 1 || yaml.Documents[0].RootNode is not YamlMappingNode root)
+                throw new InvalidDataException("map metadata sidecar root is invalid");
+
+            Dictionary<string, object> attributes = new(StringComparer.Ordinal);
+            foreach ((YamlNode keyNode, YamlNode valueNode) in root.Children)
+            {
+                if (keyNode is not YamlScalarNode { Value: { } key } || valueNode is not YamlScalarNode scalar)
+                    continue;
+                string raw = scalar.Value ?? "";
+                attributes[key] = bool.TryParse(raw, out bool boolean) ? boolean
+                    : float.TryParse(raw, System.Globalization.NumberStyles.Float,
+                        System.Globalization.CultureInfo.InvariantCulture, out float number) ? number
+                    : raw;
+            }
+            ApplyArea(attributes);
+        }
 
         internal void ApplyArea(IReadOnlyDictionary<string, object> attributes)
         {
@@ -431,6 +480,8 @@ internal static class ContentCompiler
         private static string Wipe(IReadOnlyDictionary<string, object> attributes, string fallback)
         {
             string text = Text(attributes, "Wipe", fallback);
+            if (text.StartsWith("Celeste.", StringComparison.Ordinal) &&
+                !text.EndsWith("Wipe", StringComparison.Ordinal)) text += "Wipe";
             string[] supported =
             [
                 "Celeste.AngledWipe", "Celeste.CurtainWipe", "Celeste.DreamWipe", "Celeste.DropWipe",

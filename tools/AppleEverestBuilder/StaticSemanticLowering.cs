@@ -20,8 +20,24 @@ internal static class StaticSemanticLowering
             [
                 new("trigger", "CollabUtils2/ChapterPanelTrigger", "chapter-panel"),
                 new("trigger", "CollabUtils2/JournalTrigger", "journal"),
-                new("entity", "CollabUtils2/MiniHeart", "mini-heart")
+                new("entity", "CollabUtils2/MiniHeart", "mini-heart"),
+                new("entity", "CollabUtils2/GoldenBerryPlayerRespawnPoint", "golden-berry-respawn-point"),
+                new("entity", "CollabUtils2/MiniHeartDoor", "mini-heart-door"),
+                new("entity", "CollabUtils2/RainbowBerry", "rainbow-berry"),
+                new("entity", "CollabUtils2/SilverBerry", "silver-berry"),
+                new("entity", "CollabUtils2/SpeedBerry", "speed-berry"),
+                new("trigger", "CollabUtils2/MiniHeartDoorUnlockCutsceneTrigger", "mini-heart-door-unlock-trigger"),
+                new("trigger", "CollabUtils2/RainbowBerryUnlockCutsceneTrigger", "rainbow-berry-unlock-trigger"),
+                new("trigger", "CollabUtils2/SpeedBerryCollectTrigger", "speed-berry-collect-trigger")
             ]),
+        new("eeveehelper-1.12.5-kayonara-v1", "EeveeHelper", "1.12.5",
+            "355db1937a979a577b96c93cf639e812a20551e5b3f531a9e1565fda31dcaa86",
+            "Code/bin/EeveeHelper.dll", "1613b4f89a8dd119537052e6c85031e543ec65179e5c7ac7a431b283be9e8ad8",
+            [new("entity", "EeveeHelper/FlagToggleModifier", "flag-toggle-modifier")]),
+        new("xaphanhelper-1.0.79-kayonara-v1", "XaphanHelper", "1.0.79",
+            "530ea4bbad7ac5cd43be692297d6d743e0a81e789d3408f121448759df7643be",
+            "Code/bin/XaphanHelper.dll", "e408dc081cb79d89b3436724b74413a603189cb53e84af5844918df08717273c",
+            []),
         new("communalhelper-1.25.5-henny-v1", "CommunalHelper", "1.25.5",
             "c0637033de9d9d0e48883504cacb1006b3205a99f1310d2ecd04d2783f303205",
             "src/bin/Debug/net8.0/CommunalHelper.dll", "4011b959ed4e9cc4cb98bf43f6884ae81361fecc994787640553205029c94a8a",
@@ -38,12 +54,16 @@ internal static class StaticSemanticLowering
                 new("entity", "MaxHelpingHand/CustomSummitCheckpoint", "custom-summit-checkpoint"),
                 new("entity", "MaxHelpingHand/FlagSwitchGate", "flag-switch-gate"),
                 new("entity", "MaxHelpingHand/FlagTouchSwitch", "flag-touch-switch"),
+                new("entity", "MaxHelpingHand/SecretBerry", "secret-berry"),
                 new("trigger", "MaxHelpingHand/CameraCatchupSpeedTrigger", "camera-catchup-speed")
             ]),
         new("lunatichelper-1.1.1-henny-v1", "LunaticHelper", "1.1.1",
             "e7cef501937fc1bc07d1ff13e753fe920b4ccbbd4e4db4c0b2c4312de89fdd78",
             "LunaticHelper.dll", "fc08f00296551a6025c5e31422c6edd5e8136e6861459f44ffea909129c6a925",
-            [new("entity", "LunaticHelper/StrawberryWithReturn", "strawberry-with-return")]),
+            [
+                new("entity", "LunaticHelper/StrawberryWithReturn", "strawberry-with-return"),
+                new("entity", "LunaticHelper/StrawberryGate", "strawberry-gate")
+            ]),
         new("shroomhelper-1.2.10-henny-v1", "ShroomHelper", "1.2.10",
             "76fa23d9dfabb8203dc2eee8ca406bcb8407766f6385ef7c28dc439be0e40034",
             "Code/bin/ShroomHelper.dll", "2428be4659522324b4b426452b17a095a78b857048d6340a0c4720151c08fa1d",

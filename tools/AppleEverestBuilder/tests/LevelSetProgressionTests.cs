@@ -142,6 +142,50 @@ internal static class LevelSetProgressionTests
             "four prior maps plus real collab lobby and both subordinate maps share one bounded snapshot");
         Pass(collabRealMapCompressed.Length < AppleEverestProgressionCompression.MaximumReplicaBytes,
             "real collab cumulative tvOS snapshot remains within one replica");
+        AppleEverestProgressionArea secondCollabLobby = areaB with {
+            Sid = "KayonaraCollection/0-Lobbies/1-Collection", LevelSet = "KayonaraCollection/0-Lobbies",
+            CompatibilityId = "6eb259f725e0019e598de9834f06c32500ed44b5b6336e8491dd3d52b5a4a000"
+        };
+        AppleEverestProgressionArea secondCollabMapA = area with {
+            Sid = "KayonaraCollection/1-Collection/1-Kayonara", LevelSet = "KayonaraCollection/1-Collection",
+            CompatibilityId = "de750691136a599199cc7a3c719dc035ec39feedd25a126f7e059b08b65f2a18"
+        };
+        AppleEverestProgressionArea secondCollabMapB = areaB with {
+            Sid = "KayonaraCollection/1-Collection/2-KayonaraBSide", LevelSet = "KayonaraCollection/1-Collection",
+            CompatibilityId = "521ed182e849a0d2dfbdb78ca2486d1c5f94c71f0e116ab0272573963c64e678"
+        };
+        AppleEverestProgressionArea secondCollabMapC = area with {
+            Sid = "KayonaraCollection/1-Collection/3-KayonaraCSide", LevelSet = "KayonaraCollection/1-Collection",
+            CompatibilityId = "272796a8086125eb4daa451bd0901f32822d573ff21bae74183d157dbd2733d5"
+        };
+        AppleEverestProgressionArea secondCollabHeartSide = areaB with {
+            Sid = "KayonaraCollection/1-Collection/ZZ-HeartSide", LevelSet = "KayonaraCollection/1-Collection",
+            CompatibilityId = "b4450cf9da6f1a9d7543e7cd3bc408ca1c86fbfc4f2a9fe4631301acf2d86317"
+        };
+        AppleEverestProgressionSnapshot secondCollabSnapshot = snapshot with {
+            Generation = 12,
+            Areas = [littleEpic, fear, torremolinosA, torremolinosB, collabLobby, collabMapA, collabMapB,
+                secondCollabLobby, secondCollabMapA, secondCollabMapB, secondCollabMapC, secondCollabHeartSide],
+            Session = null
+        };
+        byte[] secondCollabEncoded = AppleEverestProgressionSnapshotCodec.Encode(secondCollabSnapshot);
+        byte[] secondCollabCompressed = AppleEverestProgressionCompression.Encode(secondCollabEncoded);
+        Dictionary<string, string> secondCollabMaps = secondCollabSnapshot.Areas.ToDictionary(
+            value => value.Sid, value => value.CompatibilityId, StringComparer.Ordinal);
+        Pass(AppleEverestProgressionReplicaAuthority.SelectMatching(
+                 secondCollabSnapshot, null, hashA, secondCollabMaps)?.Areas.Length == 12,
+            "four prior maps plus both real collab lobbies and all six subordinate maps share one bounded snapshot");
+        Pass(secondCollabCompressed.Length < AppleEverestProgressionCompression.MaximumReplicaBytes,
+            "second real collab cumulative tvOS snapshot remains within one replica");
+        Pass(AppleEverestProgressionReplicaAuthority.SelectMatching(
+                 collabRealMapSnapshot, null, hashA, secondCollabMaps)?.Areas.Length == 7,
+            "installing the second collab preserves every prior and first-collab progression record");
+        AppleEverestProgressionSnapshot firstCollabProjectionSource = AppleEverestProgressionReplicaAuthority.SelectMatching(
+            secondCollabSnapshot, null, hashA, collabRealMaps);
+        Pass(firstCollabProjectionSource != null && firstCollabProjectionSource.Areas.Count(value =>
+                 collabRealMaps.TryGetValue(value.Sid, out string compatible) &&
+                 compatible == value.CompatibilityId) == 7,
+            "removing the second collab quarantines it without contaminating first-collab progression");
         Pass(AppleEverestProgressionReplicaAuthority.SelectMatching(snapshot, null, hashA, twoMaps)?.Areas.Length == 1,
             "old single-map sidecar remains valid after second map installation");
         Pass(AppleEverestProgressionReplicaAuthority.SelectMatching(twoMapSnapshot, null, hashA, twoMaps)?.Generation == 9,
@@ -225,6 +269,11 @@ internal static class LevelSetProgressionTests
         var automatic = MapDataCompatibilityPatch.NormalizeAndGetForTest(ref tracker, -1, -1, 0);
         Pass(automatic.Checkpoint == 0 && automatic.Order == 0 && automatic.Existing == null,
             "negative automatic berry metadata is normalized to the start checkpoint");
+        Pass(MapDataCompatibilityPatch.CheckpointForRoomForTest(
+                 [("a0", 0), ("a1", 1), ("a1a", 0), ("a2", 1), ("a2a", 0)], "a2a") == 2 &&
+             MapDataCompatibilityPatch.CheckpointForRoomForTest(
+                 [("a0", 0), ("a1", 1), ("a1a", 0), ("a2", 1), ("a2a", 0)], "a0") == 0,
+            "automatic berry metadata inherits the current authored checkpoint across following rooms");
         var grown = MapDataCompatibilityPatch.NormalizeAndGetForTest(ref tracker, 12, 30, 12);
         Pass(grown.Existing == null && tracker.GetLength(0) == 22 && tracker.GetLength(1) == 55 &&
              tracker[1, 2] == "preserved", "large valid tracker coordinates grow without losing existing entries");
@@ -295,6 +344,9 @@ internal static class LevelSetProgressionTests
         Console.WriteLine($"PROGRESSION_COLLAB_CUMULATIVE_RAW_BYTES={collabRealMapEncoded.Length}");
         Console.WriteLine($"PROGRESSION_COLLAB_CUMULATIVE_TVOS_COMPRESSED_BYTES={collabRealMapCompressed.Length}");
         Console.WriteLine($"PROGRESSION_COLLAB_REPLICA_PERCENT={collabRealMapCompressed.Length * 100.0 / AppleEverestProgressionCompression.MaximumReplicaBytes:F2}");
+        Console.WriteLine($"PROGRESSION_SECOND_COLLAB_CUMULATIVE_RAW_BYTES={secondCollabEncoded.Length}");
+        Console.WriteLine($"PROGRESSION_SECOND_COLLAB_CUMULATIVE_TVOS_COMPRESSED_BYTES={secondCollabCompressed.Length}");
+        Console.WriteLine($"PROGRESSION_SECOND_COLLAB_REPLICA_PERCENT={secondCollabCompressed.Length * 100.0 / AppleEverestProgressionCompression.MaximumReplicaBytes:F2}");
         Console.WriteLine($"PROGRESSION_STRESS_RAW_BYTES={stress.Length}");
         Console.WriteLine($"PROGRESSION_STRESS_TVOS_COMPRESSED_BYTES={stressCompressed.Length}");
         Console.WriteLine($"PROGRESSION_TVOS_THREE_SLOT_AB_LIMIT_BYTES={AppleEverestProgressionCompression.MaximumTotalReplicaBytes}");

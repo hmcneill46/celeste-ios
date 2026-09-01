@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Xml;
 using Foundation;
 using Microsoft.Xna.Framework;
 using Monocle;
@@ -27,6 +28,8 @@ public static class AppleEverestStaticRuntime
     private static readonly HashSet<string> ObservedCustomFactories = new(StringComparer.Ordinal);
     private static readonly HashSet<string> ObservedModInteropRegistrations = new(StringComparer.Ordinal);
     private static readonly HashSet<string> ObservedModInteropExports = new(StringComparer.Ordinal);
+    private static readonly Dictionary<string, string> StaticSpriteOwners = new(StringComparer.OrdinalIgnoreCase);
+    private static SpriteBank StaticSpriteBank;
     private static bool started;
     private static bool startupCompleted;
     private static bool contentReady;
@@ -95,6 +98,7 @@ public static class AppleEverestStaticRuntime
         contentReady = true;
         MountStaticAtlases();
         MountStaticModContent();
+        MountStaticSpriteBanks();
         AppleEverestProgressionRuntime.RegisterAreas();
         if (GeneratedAppleEverestContentManifest.Has("AppleEverest/Dialog/Canary.txt")) LoadCanaryDialog();
         LoadStaticDialogFragments();
@@ -119,6 +123,7 @@ public static class AppleEverestStaticRuntime
         int game = 0;
         int gui = 0;
         int journal = 0;
+        int checkpoints = 0;
         foreach (AppleEverestAtlasMountDescriptor descriptor in GeneratedAppleEverestContentManifest.AtlasMounts)
         {
             Atlas atlas;
@@ -137,6 +142,11 @@ public static class AppleEverestStaticRuntime
                 atlas = MTN.Journal;
                 journal++;
             }
+            else if (descriptor.Atlas == "Checkpoints")
+            {
+                atlas = MTN.Checkpoints;
+                checkpoints++;
+            }
             else
             {
                 throw new InvalidOperationException($"unsupported static Everest atlas: {descriptor.Atlas}");
@@ -146,12 +156,16 @@ public static class AppleEverestStaticRuntime
             // deterministic content mount.  Register it under the ordinary
             // Everest atlas key before any module Initialize/LoadContent call.
             // Later dependency-order entries intentionally win duplicate keys.
-            VirtualTexture texture = VirtualContent.CreateTexture(descriptor.LogicalPath);
+            // The closure can contain thousands of ordinary loose PNGs from
+            // transitive helpers. Preserve every atlas key and its authored
+            // dimensions at startup, but decode the backing image only if
+            // gameplay or UI actually uses it.
+            VirtualTexture texture = VirtualContent.CreateDeferredTexture(descriptor.LogicalPath);
             MTexture mounted = new(texture) { AtlasPath = descriptor.Key };
             atlas.Sources.Add(texture);
             atlas[descriptor.Key] = mounted;
         }
-        Log($"content-atlas=PASS gameplay={game} gui={gui} journal={journal} precedence=dependency-order");
+        Log($"content-atlas=PASS gameplay={game} gui={gui} journal={journal} checkpoints={checkpoints} precedence=dependency-order");
     }
 
     private static void MountStaticModContent()
@@ -182,6 +196,58 @@ public static class AppleEverestStaticRuntime
             Everest.Content.Map[descriptor.PathVirtual] = asset;
         }
         Log($"content-assets=PASS owners={owners.Count} assets={GeneratedAppleEverestContentManifest.StaticAssets.Length} typed-yaml={GeneratedAppleEverestStaticAssets.FactoryCount}");
+    }
+
+    private static void MountStaticSpriteBanks()
+    {
+        XmlDocument composite = (XmlDocument)GFX.SpriteBank.XML.CloneNode(true);
+        XmlElement sprites = composite["Sprites"] ??
+            throw new InvalidDataException("vanilla sprite bank has no Sprites root");
+        StaticSpriteOwners.Clear();
+        foreach (AppleEverestSpriteBankDescriptor descriptor in GeneratedAppleEverestContentManifest.SpriteBanks)
+        {
+            XmlDocument mod = Calc.LoadContentXML(descriptor.LogicalPath);
+            XmlElement modSprites = mod["Sprites"] ??
+                throw new InvalidDataException($"static sprite bank has no Sprites root: {descriptor.LogicalPath}");
+            foreach (XmlElement source in modSprites.ChildNodes.OfType<XmlElement>())
+            {
+                XmlElement existing = sprites.ChildNodes.OfType<XmlElement>()
+                    .FirstOrDefault(value => string.Equals(value.Name, source.Name, StringComparison.OrdinalIgnoreCase));
+                XmlNode imported = composite.ImportNode(source, true);
+                if (existing == null) sprites.AppendChild(imported);
+                else sprites.ReplaceChild(imported, existing);
+                StaticSpriteOwners[source.Name] = descriptor.Owner;
+            }
+        }
+        // Construct once after dependency-ordered composition. This preserves
+        // ordinary Everest copy="player" inheritance and cross-bank overrides
+        // without runtime assembly discovery or filesystem scanning.
+        StaticSpriteBank = new SpriteBank(GFX.Game, composite);
+        Log($"content-sprite-banks=PASS banks={GeneratedAppleEverestContentManifest.SpriteBanks.Length} sprites={StaticSpriteOwners.Count} precedence=dependency-order");
+    }
+
+    internal static void CreateStaticModSpriteOn(Sprite sprite, string spriteId)
+    {
+        if (StaticSpriteBank != null && StaticSpriteBank.Has(spriteId))
+        {
+            StaticSpriteBank.CreateOn(sprite, spriteId);
+            StaticSpriteOwners.TryGetValue(spriteId, out string owner);
+            Log($"content-sprite=PASS id={spriteId} owner={owner ?? "vanilla"}");
+            return;
+        }
+        if (GFX.SpriteBank.Has(spriteId))
+        {
+            GFX.SpriteBank.CreateOn(sprite, spriteId);
+            return;
+        }
+        throw new InvalidDataException($"unresolved static Everest sprite id: {spriteId}");
+    }
+
+    internal static Sprite CreateStaticModSprite(string spriteId)
+    {
+        Sprite sprite = new(GFX.Game, "");
+        CreateStaticModSpriteOn(sprite, spriteId);
+        return sprite;
     }
 
     public static bool IsModuleEnabled(string name) =>
@@ -727,6 +793,38 @@ internal sealed class AppleEverestStatus : Entity
 internal static class AppleEverestLab
 {
     public static void AddOptions(TextMenu menu)
+    {
+        menu.Add(new TextMenu.Button("EVEREST / PORT OPTIONS").Pressed(() => OpenOptions(menu)));
+    }
+
+    private static void OpenOptions(TextMenu parent)
+    {
+        parent.Visible = false;
+        parent.Focused = false;
+        if (Engine.Scene is Overworld overworld) overworld.ShowConfirmUI = false;
+        TextMenu options = new();
+        options.Add(new TextMenu.Header("EVEREST / PORT OPTIONS"));
+        string version = NSBundle.MainBundle.ObjectForInfoDictionary("CFBundleShortVersionString")?.ToString() ?? "?";
+        string build = NSBundle.MainBundle.ObjectForInfoDictionary("CFBundleVersion")?.ToString() ?? "?";
+        options.Add(new TextMenu.SubHeader("PORT v" + version + "  •  BUILD " + build, false));
+        PopulateOptions(options);
+        options.OnClose = () =>
+        {
+            parent.Visible = true;
+            parent.Focused = true;
+            if (Engine.Scene is Overworld current) current.ShowConfirmUI = true;
+        };
+        options.OnESC = options.OnPause = options.OnCancel = () =>
+        {
+            Audio.Play("event:/ui/main/button_back");
+            options.Focused = false;
+            options.Close();
+        };
+        Engine.Scene.Add(options);
+        Engine.Scene.OnEndOfFrame += () => Engine.Scene.Entities.UpdateLists();
+    }
+
+    private static void PopulateOptions(TextMenu menu)
     {
         menu.Add(new TextMenu.SubHeader("APPLE EVEREST STATIC LAB"));
         foreach (AppleEverestCollabDescriptor collab in GeneratedAppleEverestCollabManifest.Collabs)

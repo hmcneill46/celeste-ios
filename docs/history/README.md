@@ -71,6 +71,7 @@ support matrix, and limitations are in [project status](../STATUS.md).
 53. [Stage 25J-B — second real map and multi-map progression](stages/APPLE_EVEREST_SECOND_REAL_MAP_STAGE25JB_REPORT.md)
 54. [Stage 25J-C — first real multi-map LevelSet](stages/APPLE_EVEREST_REAL_LEVELSET_STAGE25JC_REPORT.md)
 55. [Stage 25K-A — first real CollabUtils2 lobby/collab](stages/APPLE_EVEREST_FIRST_REAL_COLLAB_STAGE25KA_REPORT.md)
+56. [Stage 25K-B — second real collab and broader CollabUtils2 completion](stages/APPLE_EVEREST_SECOND_REAL_COLLAB_STAGE25KB_REPORT.md)
 
 Diagnostic-only stages whose evidence was intentionally kept in ignored local
 build directories are not reconstructed here. The index covers every tracked
