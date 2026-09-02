@@ -152,6 +152,86 @@ internal static class AssemblyMechanismCensus
             new JsonSerializerOptions { WriteIndented = true }) + "\n");
     }
 
+    /// <summary>
+    /// Deterministic metadata-only IL evidence for one exact containing method.
+    /// This intentionally does not resolve or execute the reviewed assembly.
+    /// </summary>
+    internal static void WriteMethodIl(string dllPath, string methodIdentity, string outputPath)
+    {
+        dllPath = Path.GetFullPath(dllPath);
+        using AssemblyDefinition assembly = AssemblyDefinition.ReadAssembly(dllPath,
+            new ReaderParameters { ReadingMode = ReadingMode.Deferred, ReadSymbols = false });
+        MethodDefinition[] matches = assembly.Modules.SelectMany(module => module.Types)
+            .SelectMany(Flatten).SelectMany(type => type.Methods)
+            .Where(method => method.FullName == methodIdentity).ToArray();
+        if (matches.Length != 1 || !matches[0].HasBody)
+            throw new InvalidDataException($"exact IL method match required: {methodIdentity} ({matches.Length})");
+        MethodDefinition selected = matches[0];
+        object report = new
+        {
+            schemaVersion = 1,
+            assembly = assembly.Name.Name,
+            assemblySha256 = Convert.ToHexString(SHA256.HashData(File.ReadAllBytes(dllPath))).ToLowerInvariant(),
+            method = selected.FullName,
+            instructions = selected.Body.Instructions.Select(instruction => new
+            {
+                offset = instruction.Offset,
+                opcode = instruction.OpCode.Name,
+                operand = FormatOperand(instruction.Operand)
+            }).ToArray()
+        };
+        outputPath = Path.GetFullPath(outputPath);
+        Directory.CreateDirectory(Path.GetDirectoryName(outputPath)!);
+        File.WriteAllText(outputPath, JsonSerializer.Serialize(report,
+            new JsonSerializerOptions { WriteIndented = true }) + "\n");
+    }
+
+    internal static void WriteConfiguredIl(string dllPath, string outputPath)
+    {
+        dllPath = Path.GetFullPath(dllPath);
+        using AssemblyDefinition assembly = AssemblyDefinition.ReadAssembly(dllPath,
+            new ReaderParameters { ReadingMode = ReadingMode.Deferred, ReadSymbols = false });
+        object[] methods = assembly.Modules.SelectMany(module => module.Types).SelectMany(Flatten)
+            .SelectMany(type => type.Methods).Where(method => method.HasBody && method.Body.Instructions.Any(
+                instruction => instruction.Operand is MethodReference target &&
+                    (target.DeclaringType.FullName.Contains("DetourConfig", StringComparison.Ordinal) ||
+                     target.DeclaringType.FullName.Contains("DetourContext", StringComparison.Ordinal))))
+            .OrderBy(method => method.FullName, StringComparer.Ordinal).Select(method => (object)new
+            {
+                method = method.FullName,
+                instructions = method.Body.Instructions.Select(instruction => new
+                {
+                    offset = instruction.Offset,
+                    opcode = instruction.OpCode.Name,
+                    operand = FormatOperand(instruction.Operand)
+                }).ToArray()
+            }).ToArray();
+        object report = new
+        {
+            schemaVersion = 1,
+            assembly = assembly.Name.Name,
+            assemblySha256 = Convert.ToHexString(SHA256.HashData(File.ReadAllBytes(dllPath))).ToLowerInvariant(),
+            methods
+        };
+        outputPath = Path.GetFullPath(outputPath);
+        Directory.CreateDirectory(Path.GetDirectoryName(outputPath)!);
+        File.WriteAllText(outputPath, JsonSerializer.Serialize(report,
+            new JsonSerializerOptions { WriteIndented = true }) + "\n");
+    }
+
+    private static string? FormatOperand(object? operand) => operand switch
+    {
+        null => null,
+        MethodReference method => method.FullName,
+        FieldReference field => field.FullName,
+        TypeReference type => type.FullName,
+        ParameterDefinition parameter => $"parameter:{parameter.Index}:{parameter.Name}",
+        VariableDefinition variable => $"variable:{variable.Index}:{variable.VariableType.FullName}",
+        Instruction instruction => $"IL_{instruction.Offset:x4}",
+        Instruction[] instructions => string.Join(",", instructions.Select(value => $"IL_{value.Offset:x4}")),
+        _ => Convert.ToString(operand, System.Globalization.CultureInfo.InvariantCulture)
+    };
+
     private static IEnumerable<TypeDefinition> Flatten(TypeDefinition type)
     {
         yield return type;

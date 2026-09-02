@@ -45,6 +45,20 @@ internal static class StaticAotCompatibility
             return new("djmaphelper-1.13.4-static-aot-v1", DJName, DJVersion,
                 DJSourceSha256, DJDllPath, DJDllSha256, false);
         }
+        if (metadata.Name == StaticConfiguredDetourCompatibility.LunaticName &&
+            metadata.Version == StaticConfiguredDetourCompatibility.LunaticVersion &&
+            input.SourceSha256 == StaticConfiguredDetourCompatibility.LunaticSourceSha256 &&
+            metadata.DLL == StaticConfiguredDetourCompatibility.LunaticDllPath)
+        {
+            Validate(metadata, input, StaticConfiguredDetourCompatibility.LunaticDllPath,
+                StaticConfiguredDetourCompatibility.LunaticDllSha256, "Everest", "1.1703.0");
+            return new("lunatichelper-1.1.1-configured-fixture-aot-v1",
+                StaticConfiguredDetourCompatibility.LunaticName,
+                StaticConfiguredDetourCompatibility.LunaticVersion,
+                StaticConfiguredDetourCompatibility.LunaticSourceSha256,
+                StaticConfiguredDetourCompatibility.LunaticDllPath,
+                StaticConfiguredDetourCompatibility.LunaticDllSha256, true);
+        }
         return null;
     }
 
@@ -76,7 +90,8 @@ internal static class StaticAotCompatibility
                          attribute.AttributeType.FullName == "Celeste.Mod.Entities.CustomEntityAttribute")))
             MakePublic(custom);
 
-        RewritePinnedEverestOptionalParameterAbi(assembly, plan);
+        if (plan.Owner is ChronoName or DJName)
+            RewritePinnedEverestOptionalParameterAbi(assembly, plan);
 
         if (plan.Owner == ChronoName)
             RewriteChronoNamespacedContentPath(assembly);
@@ -413,6 +428,20 @@ namespace Celeste.Mod
             "\tprivate void BounceAnimate()", "\tinternal void BounceAnimate()");
     }
 
+    internal static void PatchRuntimeRequiredGameSources(string managedRoot)
+    {
+        Replace(Path.Combine(managedRoot, "Celeste", "Player.cs"),
+            "\tprivate float dashCooldownTimer;", "\tinternal float dashCooldownTimer;");
+        Replace(Path.Combine(managedRoot, "Celeste", "Strawberry.cs"),
+            "\tprivate bool collected;", "\tinternal bool collected;");
+        Replace(Path.Combine(managedRoot, "Celeste", "Input.cs"),
+            "\tpublic static void Rumble(RumbleStrength strength, RumbleLength length, [CallerMemberName] string source = null)\n\t{",
+            "\t// Preserve the two-parameter binary ABI used by pinned desktop Everest helpers.\n" +
+            "\tpublic static void Rumble(RumbleStrength strength, RumbleLength length) =>\n" +
+            "\t\tRumble(strength, length, null);\n\n" +
+            "\tpublic static void Rumble(RumbleStrength strength, RumbleLength length, [CallerMemberName] string source = null)\n\t{");
+    }
+
     /// <summary>
     /// Reproduces the small, public Everest ABI surface used by the exact
     /// ChronoHelper binary. These are ordinary source members in the static
@@ -432,11 +461,6 @@ namespace Celeste.Mod
             "\tpublic Vector2 GetSpeed()\n\t{",
             "\tpublic void SetSpeed(Vector2 speed)\n\t{\n\t\tSpeedSetter?.Invoke(speed);\n\t}\n\n" +
             "\tpublic Vector2 GetSpeed()\n\t{");
-
-        Replace(Path.Combine(managedRoot, "Monocle", "VirtualTexture.cs"),
-            "\tpublic Texture2D Texture;",
-            "\tpublic Texture2D Texture;\n\n" +
-            "\tpublic Texture2D Texture_Safe\n\t{\n\t\tget { EnsureLoaded(); return Texture; }\n\t\tset => Texture = value;\n\t}");
 
         string autotiler = Path.Combine(managedRoot, "Celeste", "Autotiler.cs");
         Replace(autotiler,
@@ -458,7 +482,7 @@ namespace Celeste.Mod
     [
         ("LightningRenderer.cs", "List<Lightning> list = new List<Lightning>();"),
         ("DashBlock.cs", "bool canDash;"),
-        ("Player.cs", "float dashCooldownTimer;"), ("Player.cs", "Vector2 boostTarget;"),
+        ("Player.cs", "Vector2 boostTarget;"),
         ("Player.cs", "Color starFlyColor = Calc.HexToColor(\"ffd65c\");"), ("Player.cs", "float starFlyTimer;"),
         ("Player.cs", "Vector2 beforeDashSpeed;"), ("Player.cs", "float varJumpSpeed;"),
         ("Player.cs", "FlingBird flingBird;"), ("Player.cs", "int forceMoveX;"), ("Player.cs", "bool boostRed;"),
@@ -466,7 +490,7 @@ namespace Celeste.Mod
         ("FinalBoss.cs", "Vector2[] nodes;"), ("FinalBoss.cs", "int patternIndex;"),
         ("FinalBoss.cs", "Coroutine attackCoroutine;"), ("Refill.cs", "Sprite sprite;"),
         ("Refill.cs", "Sprite flash;"), ("CrystalStaticSpinner.cs", "CrystalColor color;"),
-        ("Strawberry.cs", "bool collected;"), ("Spring.cs", "Sprite sprite;")
+        ("Spring.cs", "Sprite sprite;")
     ];
 
     private static void Replace(string path, string before, string after)

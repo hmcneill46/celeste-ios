@@ -170,6 +170,19 @@ directB.Dispose();
 directA.Dispose();
 Check(DirectInvoke().Value == "1:False:True:O", "all direct and HookGen registrations removed");
 
+Runtime.CurrentOwner = "ConfiguredAfterAll";
+On.Celeste.Player.Die += eventHandler;
+Runtime.CurrentOwner = "OrdinaryAfterConfigured";
+using (MonoMod.RuntimeDetour.Hook ordinaryAfterConfigured = new("A"))
+{
+    Check(DirectInvoke().Value == "2:False:True:O:A:E",
+        "configured after-all hook remains outermost across later ordinary registration");
+    Check(Runtime.Trace.SequenceEqual(["event-before", "A-before", "original", "A-after", "event-after"]),
+        "mixed configured and ordinary dispatch uses fixed host ordinal");
+}
+Runtime.CurrentOwner = "ConfiguredAfterAll";
+On.Celeste.Player.Die -= eventHandler;
+
 static void HotPassThrough(On.Celeste.HotUpdateTarget.orig_Update orig, Celeste.HotUpdateTarget self) => orig(self);
 Celeste.HotUpdateTarget hotTarget = new();
 Runtime.CurrentOwner = "HotUpdate";
@@ -190,13 +203,11 @@ Check(!owned.IsValid && !owned.IsApplied && DirectInvoke().Value == "1:False:Tru
 
 Runtime.CurrentOwner = "Low";
 using (Celeste.Mod.IAppleEverestManagedHookRegistration low =
-       Celeste.Mod.GeneratedAppleEverestDirectHookRegistry.CreateConfiguredForTest(
-           "A", new MonoMod.RuntimeDetour.DetourConfig("low", priority: -10)))
+       Celeste.Mod.GeneratedAppleEverestDirectHookRegistry.CreateOrderedForTest("A", 1))
 {
     Runtime.CurrentOwner = "High";
     using Celeste.Mod.IAppleEverestManagedHookRegistration high =
-        Celeste.Mod.GeneratedAppleEverestDirectHookRegistry.CreateConfiguredForTest(
-            "B", new MonoMod.RuntimeDetour.DetourConfig("high", priority: 10));
+        Celeste.Mod.GeneratedAppleEverestDirectHookRegistry.CreateOrderedForTest("B", 2);
     Check(DirectInvoke().Value == "2:False:True:O:A:B", "configured priority return nesting");
     Check(Runtime.Trace.SequenceEqual(["B-before", "A-before", "original", "A-after", "B-after"]),
         "configured priority matches pinned desktop order");
@@ -204,34 +215,19 @@ using (Celeste.Mod.IAppleEverestManagedHookRegistration low =
 
 Runtime.CurrentOwner = "Before";
 using (Celeste.Mod.IAppleEverestManagedHookRegistration before =
-       Celeste.Mod.GeneratedAppleEverestDirectHookRegistry.CreateConfiguredForTest(
-           "A", new MonoMod.RuntimeDetour.DetourConfig("before", priority: -10, before: ["after"])))
+       Celeste.Mod.GeneratedAppleEverestDirectHookRegistry.CreateOrderedForTest("A", 2))
 {
     Runtime.CurrentOwner = "After";
     using Celeste.Mod.IAppleEverestManagedHookRegistration after =
-        Celeste.Mod.GeneratedAppleEverestDirectHookRegistry.CreateConfiguredForTest(
-            "B", new MonoMod.RuntimeDetour.DetourConfig("after", priority: 10));
+        Celeste.Mod.GeneratedAppleEverestDirectHookRegistry.CreateOrderedForTest("B", 1);
     _ = DirectInvoke();
     Check(Runtime.Trace.SequenceEqual(["A-before", "B-before", "original", "B-after", "A-after"]),
         "Before constraint overrides priority");
 }
 
-Runtime.CurrentOwner = "CycleA";
-using (Celeste.Mod.IAppleEverestManagedHookRegistration cycleA =
-       Celeste.Mod.GeneratedAppleEverestDirectHookRegistry.CreateConfiguredForTest(
-           "A", new MonoMod.RuntimeDetour.DetourConfig("cycle-a", before: ["cycle-b"])))
-{
-    Runtime.CurrentOwner = "CycleB";
-    using Celeste.Mod.IAppleEverestManagedHookRegistration cycleB =
-        Celeste.Mod.GeneratedAppleEverestDirectHookRegistry.CreateConfiguredForTest(
-            "B", new MonoMod.RuntimeDetour.DetourConfig("cycle-b", before: ["cycle-a"]));
-    bool cycleRejected = false;
-    try { _ = DirectInvoke(); }
-    catch (InvalidOperationException exception) when (exception.Message.Contains("cyclic", StringComparison.Ordinal))
-    {
-        cycleRejected = true;
-    }
-    Check(cycleRejected, "cyclic configured ordering fails closed");
-}
+Check(typeof(Celeste.Mod.AppleEverestManagedHook<>).GetProperties(
+          System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic |
+          System.Reflection.BindingFlags.Public).All(property => property.Name != "Config"),
+    "device hook list contains no runtime configuration graph");
 
 Console.WriteLine($"PASS: production typed HookGen semantics ({passed})");

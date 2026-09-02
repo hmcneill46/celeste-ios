@@ -94,6 +94,26 @@ five same-target groups. QLetterAurora is materially advanced by its one
 CaeruleaHelper site, but still has 42 other direct sites plus configured and
 ordinary breadth; no complete real map is newly unlocked.
 
+Stage 25K-D adds the narrower `STATIC_CONFIGURED_DETOUR_SEQUENCE` class.
+The Mac resolves immutable target-local `DetourConfig`/`DetourContext` graphs
+with repository-pinned MonoMod, including priority, `Before`, `After`, legacy
+wildcards, equal-order ties and the reversed IL-composition convention. The
+resolved ordinals and plan hash enter the target-neutral closure; the Apple
+runtime receives typed chains only, never RuntimeDetour, a live ILHook backend,
+or a serialized configuration graph. The exact Strawberry Jam audit census is
+30 statically eligible construction sites and nine rejected dynamic-lifetime
+Extended Variant Mode sites. LunaticHelper 1.1.1 is the ordinary distributed
+real fixture. This does not make Strawberry Jam or dynamic configuration
+supported.
+
+The same stage accepts one valid Celeste BinaryPacker root followed by at most
+2 MiB of opaque map appendix bytes. The complete original map remains
+unchanged and retains its full-file source/progression hash; malformed or
+truncated primary roots still reject. It also adds 103 exact managed-detour
+descriptors and 29 reviewed API members for the eight providers reachable from
+the audited Beginner slice. That breadth is slice-bounded and is not a broad
+helper publicizer or a whole-package compatibility claim.
+
 ## LittleEpic graph completion status
 
 [LittleEpic's Precision Challenge](https://gamebanana.com/mods/530248) 1.0.0

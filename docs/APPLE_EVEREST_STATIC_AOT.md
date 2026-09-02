@@ -590,6 +590,33 @@ VortexHelper `DynamicData`, uncatalogued ordinary hooks/API/content, and custom
 audio remain separate blockers. No product was built merely to discover those
 already classified failures.
 
+## Immutable configured ordering
+
+Stage 25K-D introduces `STATIC_CONFIGURED_DETOUR_SEQUENCE` for exact targets,
+exact hooks/manipulators, immutable known configurations, and installed-build
+immutable-active lifetimes. A repository-pinned MonoMod reference runner is
+the authority for priority, `Before`, `After`, wildcard, BeforeAll, AfterAll,
+tie, cycle, dependency, registration, managed-chain, and reversed IL ordering.
+A deterministic target-local graph rejects cycles, duplicate incompatible
+identities, drift, runtime selection, and gameplay-time Apply/Undo/Dispose.
+
+The Mac emits only the resolved typed ordinal/chain and frozen bodies. No
+RuntimeDetour assembly, `MonoMod.Cil`, live ILHook backend, host ordering
+worker, or runtime configuration graph enters an iOS, iPadOS, or tvOS product.
+The exact Stage 25K-C Strawberry Jam census reclassifies 30 of 39 construction
+sites as static; all nine Extended Variant Mode dynamic-lifetime sites remain
+rejected. LunaticHelper 1.1.1 proves an ordinary distributed HookGen `On.*`
+site whose legacy `After("*")` configuration is normalized and frozen. This
+is an exact accepted class, not arbitrary configured-detour support.
+
+Stage 25K-D also keeps map parsing fail-closed while matching desktop's
+one-root boundary: after one valid BinaryPacker root, up to 2 MiB of trailing
+bytes are recorded as an opaque appendix. The full source-file hash and
+progression identity remain unchanged. Finally, the exact Beginner-slice
+initialization audit expands the signature-locked managed-detour catalog by
+103 targets and adds 29 individually reviewed API members for eight providers;
+no broad publicizer is used.
+
 The deferred IL rung uses the ordinary GoldenTrainer 1.5.4 release. Its DLL
 contains `IL.Celeste.SummitCheckpoint.Update` plus a direct `ILHook` on
 `Player.orig_Die`; the host analyzer now identifies both from CLI metadata.

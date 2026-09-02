@@ -1,6 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using Microsoft.Xna.Framework.Input;
 using Monocle;
 
@@ -8,6 +11,8 @@ namespace Celeste.Mod;
 
 public abstract class EverestModule
 {
+    public EverestModule() { }
+
     // Keep the exact public virtual property ABI used by pinned desktop
     // Everest. Precompiled modules call these accessors directly.
     public virtual EverestModuleSettings _Settings { get; set; }
@@ -225,17 +230,80 @@ public static class Extensions
         this global::Celeste.TextMenu.Item option,
         global::Celeste.TextMenu containingMenu,
         string description) => option;
+
+    public static Type[] GetTypesSafe(this Assembly assembly)
+    {
+        try { return assembly.GetTypes(); }
+        catch (ReflectionTypeLoadException exception)
+        {
+            return exception.Types.Where(type => type != null).ToArray();
+        }
+    }
+
+    // Exact public Everest ABI used by the pinned LunaticHelper 1.1.1
+    // configured-ordering fixture. Keep the upstream conversion semantics;
+    // this is deliberately not a broad BinaryPacker facade.
+    public static int AttrInt(this global::Celeste.BinaryPacker.Element element,
+        string name, int defaultValue = 0)
+    {
+        if (element.Attributes == null ||
+            !element.Attributes.TryGetValue(name, out object value))
+            return defaultValue;
+        if (value is int integer)
+            return integer;
+        return int.Parse(value.ToString(), global::System.Globalization.CultureInfo.InvariantCulture);
+    }
 }
 
 public sealed class EverestModuleMetadata
 {
-    public string Name { get; internal set; }
-    public Version Version { get; internal set; }
+    private string versionString;
+    public string Name { get; set; }
+    public Version Version { get; set; } = new(1, 0);
+    public string VersionString
+    {
+        get => versionString ?? Version.ToString();
+        set
+        {
+            versionString = value;
+            int suffix = value.IndexOf('-', StringComparison.Ordinal);
+            Version = new Version(suffix < 0 ? value : value[..suffix]);
+        }
+    }
 }
 
 public static partial class Everest
 {
-    public static IReadOnlyList<EverestModule> Modules => AppleEverestStaticRuntime.Modules;
+    public static ReadOnlyCollection<EverestModule> Modules =>
+        AppleEverestStaticRuntime.Modules.ToList().AsReadOnly();
+    public static string PathEverest => AppContext.BaseDirectory;
+
+    public static class Loader
+    {
+        public static bool DependencyLoaded(EverestModuleMetadata dependency) =>
+            TryGetDependency(dependency, out _);
+
+        public static bool TryGetDependency(EverestModuleMetadata dependency, out EverestModule module)
+        {
+            module = Modules.FirstOrDefault(candidate =>
+                string.Equals(candidate.Metadata?.Name, dependency?.Name, StringComparison.Ordinal) &&
+                VersionSatisfiesDependency(dependency?.Version ?? new Version(0, 0),
+                    candidate.Metadata?.Version ?? new Version(0, 0)));
+            return module != null;
+        }
+
+        public static bool VersionSatisfiesDependency(Version requiredVersion, Version installedVersion)
+        {
+            if (installedVersion.Major == 0 && installedVersion.Minor == 0) return true;
+            if (installedVersion.Major != requiredVersion.Major ||
+                installedVersion.Minor < requiredVersion.Minor) return false;
+            if (installedVersion.Minor == requiredVersion.Minor && installedVersion.Build < requiredVersion.Build)
+                return false;
+            return installedVersion.Minor != requiredVersion.Minor ||
+                installedVersion.Build != requiredVersion.Build ||
+                installedVersion.Revision >= requiredVersion.Revision;
+        }
+    }
 
     // Preserve Everest's public binary contract. Mod DLLs refer to this as the
     // nested type Everest.Content and access Mods/Map as static fields.
@@ -245,6 +313,9 @@ public static partial class Everest
         public static readonly Dictionary<string, ModAsset> Map = new(StringComparer.Ordinal);
         public static event Action<ModAsset, ModAsset> OnUpdate;
 
+        public static bool TryGet(string path, out ModAsset asset, bool includeDirs = false) =>
+            Map.TryGetValue(path, out asset);
+
         internal static void RaiseUpdate(ModAsset oldAsset, ModAsset newAsset) => OnUpdate?.Invoke(oldAsset, newAsset);
     }
 
@@ -252,13 +323,50 @@ public static partial class Everest
     {
         public static partial class Player
         {
+            public static event Action<global::Celeste.Player> OnRegisterStates;
+            public static event Action<global::Celeste.Player> OnSpawn;
+            public static event Action<global::Celeste.Player> OnDie;
             public static event Action<global::Celeste.Player> OnAfterUpdate;
+            internal static void RaiseOnRegisterStates(global::Celeste.Player player) =>
+                OnRegisterStates?.Invoke(player);
+            internal static void RaiseOnSpawn(global::Celeste.Player player) => OnSpawn?.Invoke(player);
+            internal static void RaiseOnDie(global::Celeste.Player player) => OnDie?.Invoke(player);
             internal static void RaiseOnAfterUpdate(global::Celeste.Player player) =>
                 OnAfterUpdate?.Invoke(player);
         }
 
         public static partial class Level
         {
+            public delegate void TransitionToHandler(global::Celeste.Level level,
+                global::Celeste.LevelData next, global::Microsoft.Xna.Framework.Vector2 direction);
+            public delegate void ExitHandler(global::Celeste.Level level, global::Celeste.LevelExit exit,
+                global::Celeste.LevelExit.Mode mode, global::Celeste.Session session,
+                global::Celeste.HiresSnow snow);
+            public static event TransitionToHandler OnTransitionTo;
+            public static event ExitHandler OnExit;
+            public delegate bool LoadEntityHandler(global::Celeste.Level level,
+                global::Celeste.LevelData levelData, global::Microsoft.Xna.Framework.Vector2 offset,
+                global::Celeste.EntityData entityData);
+            public static event LoadEntityHandler OnLoadEntity;
+            internal static bool LoadEntity(global::Celeste.Level level,
+                global::Celeste.LevelData levelData, global::Microsoft.Xna.Framework.Vector2 offset,
+                global::Celeste.EntityData entityData)
+            {
+                if (OnLoadEntity == null) return false;
+                foreach (LoadEntityHandler handler in OnLoadEntity.GetInvocationList())
+                {
+                    if (handler(level, levelData, offset, entityData)) return true;
+                }
+                return false;
+            }
+
+            internal static void RaiseOnTransitionTo(global::Celeste.Level level,
+                global::Celeste.LevelData next, global::Microsoft.Xna.Framework.Vector2 direction) =>
+                OnTransitionTo?.Invoke(level, next, direction);
+            internal static void RaiseOnExit(global::Celeste.Level level, global::Celeste.LevelExit exit,
+                global::Celeste.LevelExit.Mode mode, global::Celeste.Session session,
+                global::Celeste.HiresSnow snow) => OnExit?.Invoke(level, exit, mode, session, snow);
+
             public delegate void LoadLevelHandler(global::Celeste.Level level, global::Celeste.Player.IntroTypes playerIntro, bool isFromLoader);
             public static event LoadLevelHandler OnLoadLevel;
             internal static void RaiseOnLoadLevel(global::Celeste.Level level, global::Celeste.Player.IntroTypes intro, bool fromLoader) =>
@@ -278,6 +386,14 @@ public static partial class Everest
                 }
                 return null;
             }
+        }
+
+        public static class LevelLoader
+        {
+            public delegate void LoadingThreadHandler(global::Celeste.Level level);
+            public static event LoadingThreadHandler OnLoadingThread;
+            internal static void RaiseOnLoadingThread(global::Celeste.Level level) =>
+                OnLoadingThread?.Invoke(level);
         }
     }
 }
@@ -314,6 +430,18 @@ public sealed class ModAsset
     }
 
     public T Deserialize<T>() => TryDeserialize(out T value) ? value : default;
+
+    public Stream Stream => global::Microsoft.Xna.Framework.TitleContainer.OpenStream(LogicalPath);
+    public byte[] Data
+    {
+        get
+        {
+            using Stream input = Stream;
+            using MemoryStream output = new();
+            input.CopyTo(output);
+            return output.ToArray();
+        }
+    }
 }
 
 public sealed class AssetTypeYaml { private AssetTypeYaml() { } }

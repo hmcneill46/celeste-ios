@@ -1,4 +1,5 @@
 using System.IO.Compression;
+using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
 using System.Xml;
@@ -8,6 +9,12 @@ namespace AppleEverestBuilder;
 
 internal static class ContentCompiler
 {
+    // Stage 25K-C measured every distributed SJ 1.0.12 map: the largest
+    // desktop-ignored appendix is 1,260,932 bytes. Keep the compatibility
+    // rule deliberately bounded rather than treating arbitrary trailing data
+    // as a valid map extension.
+    internal const long MaxMapAppendixBytes = 2L * 1024 * 1024;
+
     internal static MapProgressionRecord InspectProgression(string path, string logicalPath, string sha256,
         IReadOnlySet<string>? staticallyLoweredStrawberryEntities = null)
     {
@@ -38,7 +45,7 @@ internal static class ContentCompiler
         int elements = 0;
         ReadProgressionElement(reader, table, null, null, 0, ref elements, rooms, entities, triggers,
             checkpoints, presentation);
-        if (stream.Position != stream.Length) throw new InvalidDataException("map binary contains trailing bytes");
+        _ = InspectAppendix(stream);
         string[] entitySet = entities.Distinct(StringComparer.Ordinal).OrderBy(value => value, StringComparer.Ordinal).ToArray();
         string[] triggerSet = triggers.Distinct(StringComparer.Ordinal).OrderBy(value => value, StringComparer.Ordinal).ToArray();
         int berries = entities.Count(value => value is "strawberry" or "goldenBerry" ||
@@ -79,7 +86,7 @@ internal static class ContentCompiler
             List<(string Kind, string Id)> result = [];
             int elements = 0;
             ReadElement(reader, table, null, 0, ref elements, result);
-            if (stream.Position != stream.Length) throw new InvalidDataException("map binary contains trailing bytes");
+            _ = InspectAppendix(stream);
             return result.Distinct().OrderBy(value => value.Kind, StringComparer.Ordinal)
                 .ThenBy(value => value.Id, StringComparer.Ordinal).ToArray();
         }
@@ -104,13 +111,72 @@ internal static class ContentCompiler
             List<MapElementRecord> result = [];
             int elements = 0;
             ReadDetailedElement(reader, table, null, "", 0, ref elements, result);
-            if (stream.Position != stream.Length) throw new InvalidDataException("map binary contains trailing bytes");
+            _ = InspectAppendix(stream);
             return result;
         }
         catch (EndOfStreamException exception)
         {
             throw new InvalidDataException("map binary body is truncated", exception);
         }
+    }
+
+    internal static MapBinaryBoundaryRecord InspectBoundary(string path)
+    {
+        using FileStream stream = File.OpenRead(path);
+        using BinaryReader reader = new(stream, Encoding.UTF8, leaveOpen: true);
+        try
+        {
+            if (reader.ReadString() != "CELESTE MAP")
+                throw new InvalidDataException("map binary has an invalid Celeste header");
+            string package = reader.ReadString();
+            if (package.Length > 1024) throw new InvalidDataException("map binary package is invalid");
+            int count = reader.ReadInt16();
+            if (count is < 1 or > 8192) throw new InvalidDataException("map string table is invalid");
+            string[] table = new string[count];
+            for (int index = 0; index < count; index++)
+            {
+                table[index] = reader.ReadString();
+                if (table[index].Length > 4096)
+                    throw new InvalidDataException("map string table value is too long");
+            }
+            List<(string Kind, string Id)> ignored = [];
+            int elements = 0;
+            ReadElement(reader, table, null, 0, ref elements, ignored);
+            return InspectAppendix(stream);
+        }
+        catch (EndOfStreamException exception)
+        {
+            throw new InvalidDataException("map binary body is truncated", exception);
+        }
+    }
+
+    private static MapBinaryBoundaryRecord InspectAppendix(Stream stream)
+    {
+        long rootBytes = stream.Position;
+        long appendixBytes = stream.Length - rootBytes;
+        if (appendixBytes < 0 || appendixBytes > MaxMapAppendixBytes)
+            throw new InvalidDataException("map binary appendix exceeds the bounded compatibility limit");
+
+        string appendixSha256;
+        if (appendixBytes == 0)
+        {
+            appendixSha256 = Hashing.BytesSha256([]);
+        }
+        else
+        {
+            using IncrementalHash hash = IncrementalHash.CreateHash(HashAlgorithmName.SHA256);
+            byte[] buffer = new byte[64 * 1024];
+            long remaining = appendixBytes;
+            while (remaining > 0)
+            {
+                int read = stream.Read(buffer, 0, (int)Math.Min(buffer.Length, remaining));
+                if (read <= 0) throw new InvalidDataException("map binary appendix is truncated");
+                hash.AppendData(buffer, 0, read);
+                remaining -= read;
+            }
+            appendixSha256 = Convert.ToHexString(hash.GetHashAndReset()).ToLowerInvariant();
+        }
+        return new(stream.Length, rootBytes, appendixBytes, appendixSha256);
     }
 
     public static string Stage(string source, string relative, string contentOutput)

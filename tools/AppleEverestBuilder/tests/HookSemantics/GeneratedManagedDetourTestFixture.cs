@@ -45,7 +45,7 @@ namespace On.Celeste
         private static orig_Clean active;
         public static event hook_Clean Clean
         {
-            add => global::Celeste.Mod.AppleEverestHookList.AddEvent(Hooks_Clean, value);
+            add => global::Celeste.Mod.AppleEverestHookList.AddEvent(Hooks_Clean, value, "celeste-dialog-clean");
             remove => global::Celeste.Mod.AppleEverestHookList.RemoveEvent(Hooks_Clean, value);
         }
         internal static int ActiveHandlerCount => Hooks_Clean.Count(value => value.IsValid);
@@ -78,12 +78,12 @@ namespace On.Celeste
         private static orig_Die active;
         public static event hook_Die Die
         {
-            add => global::Celeste.Mod.AppleEverestHookList.AddEvent(Hooks_Die, value);
+            add => global::Celeste.Mod.AppleEverestHookList.AddEvent(Hooks_Die, value, "celeste-player-die");
             remove => global::Celeste.Mod.AppleEverestHookList.RemoveEvent(Hooks_Die, value);
         }
         internal static global::Celeste.Mod.IAppleEverestManagedHookRegistration RegisterDirect_Die(
-            hook_Die handler, global::MonoMod.RuntimeDetour.DetourConfig config, bool applyByDefault) =>
-            global::Celeste.Mod.AppleEverestHookList.AddDirect(Hooks_Die, handler, config, applyByDefault);
+            hook_Die handler, bool applyByDefault, long? staticDispatcherOrdinal) =>
+            global::Celeste.Mod.AppleEverestHookList.AddDirect(Hooks_Die, handler, applyByDefault, staticDispatcherOrdinal);
         internal static void RemoveOwner_Die(string owner) => global::Celeste.Mod.AppleEverestHookList.RemoveOwner(Hooks_Die, owner);
         internal static global::Celeste.PlayerDeadBody Invoke_Die(global::Celeste.Player self, int direction,
             bool evenIfInvincible, bool registerDeathInStats, orig_Die originalBody)
@@ -115,7 +115,7 @@ namespace On.Celeste
         private static orig_Update active;
         public static event hook_Update Update
         {
-            add => global::Celeste.Mod.AppleEverestHookList.AddEvent(Hooks_Update, value);
+            add => global::Celeste.Mod.AppleEverestHookList.AddEvent(Hooks_Update, value, "celeste-player-update");
             remove => global::Celeste.Mod.AppleEverestHookList.RemoveEvent(Hooks_Update, value);
         }
         internal static void RemoveOwner_Update(string owner) =>
@@ -155,12 +155,12 @@ namespace Celeste.Mod
     {
         internal static IAppleEverestManagedHookRegistration CreateByPlan(string planId, bool applyByDefault)
         {
-            return global::On.Celeste.Player.RegisterDirect_Die(Adapter(planId), null, applyByDefault);
+            return global::On.Celeste.Player.RegisterDirect_Die(Adapter(planId), applyByDefault, null);
         }
 
-        internal static IAppleEverestManagedHookRegistration CreateConfiguredForTest(
-            string planId, global::MonoMod.RuntimeDetour.DetourConfig config, bool applyByDefault = true)
-            => global::On.Celeste.Player.RegisterDirect_Die(Adapter(planId), config, applyByDefault);
+        internal static IAppleEverestManagedHookRegistration CreateOrderedForTest(
+            string planId, long staticDispatcherOrdinal, bool applyByDefault = true)
+            => global::On.Celeste.Player.RegisterDirect_Die(Adapter(planId), applyByDefault, staticDispatcherOrdinal);
 
         private static global::On.Celeste.Player.hook_Die Adapter(string planId) => planId switch
         {

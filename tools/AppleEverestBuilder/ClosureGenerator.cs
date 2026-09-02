@@ -192,8 +192,9 @@ internal static class ClosureGenerator
             CustomAudioManifestSource(customAudioBanks, customAudioManifestSha256), new UTF8Encoding(false));
         StaticAssetGeneration staticAssets = StaticAssetGenerator.Generate(codeModules, stagedContent, content);
         File.WriteAllText(Path.Combine(managed, "GeneratedAppleEverestStaticAssets.cs"), staticAssets.Source, new UTF8Encoding(false));
-        File.WriteAllText(Path.Combine(managed, "GeneratedAppleEverestAotRoots.cs"), RootsSource(codeModules), new UTF8Encoding(false));
         string staticAotSource = StaticAotCompatibility.GeneratedSource(ordered);
+        File.WriteAllText(Path.Combine(managed, "GeneratedAppleEverestAotRoots.cs"),
+            RootsSource(codeModules, staticAotSource.Length != 0), new UTF8Encoding(false));
         if (staticAotSource.Length != 0)
             File.WriteAllText(Path.Combine(managed, "GeneratedAppleEverestStaticAotCompatibility.cs"),
                 staticAotSource, new UTF8Encoding(false));
@@ -202,6 +203,8 @@ internal static class ClosureGenerator
         IReadOnlyDictionary<string, ManagedDetourTarget> detourTargetsById = detourTargets.ToDictionary(target => target.Id, StringComparer.Ordinal);
         File.WriteAllText(Path.Combine(managed, "GeneratedAppleEverestManagedDetours.cs"),
             ManagedDetourGenerator.DispatcherSource(detourTargets), new UTF8Encoding(false));
+        File.WriteAllText(Path.Combine(managed, "GeneratedAppleEverestConfiguredOrdinals.cs"),
+            StaticConfiguredDetourCompatibility.GeneratedOrdinalSource(ordered), new UTF8Encoding(false));
         File.WriteAllText(Path.Combine(managed, "GeneratedAppleEverestDirectHooks.cs"),
             ManagedDetourGenerator.DirectRegistrySource(directPlans, detourTargetsById), new UTF8Encoding(false));
         GeneratedModInteropPlan modInterop = ModInteropPlanner.Generate(ordered);
@@ -210,6 +213,10 @@ internal static class ClosureGenerator
         File.WriteAllText(Path.Combine(managed, "AppleEverestExternalAssemblyRoots.props"),
             ExternalAssemblyRootsSource(frozenAssemblies), new UTF8Encoding(false));
         string frozenIlPlanSha256 = StaticIlFreeze.PlanSha256(frozenIlTransforms);
+        string configuredPlanSha256 = Hashing.BytesSha256(Encoding.UTF8.GetBytes(string.Join("\n",
+            ordered.Where(mod => mod.StaticConfiguredDetours != null)
+                .OrderBy(mod => mod.Metadata.Name, StringComparer.Ordinal)
+                .Select(mod => mod.StaticConfiguredDetours!.PlanSha256))));
         if (frozenIlTransforms.Count > 0)
             PrepareStaticIlHost(repositoryRoot, ordered, frozenIlTransforms, outputRoot, managed);
 
@@ -229,6 +236,7 @@ internal static class ClosureGenerator
             $"{ProductPolicy.TransformerVersion}\nmanaged:{managedHash}\ncontent:{contentHash}\n" +
             $"assemblies:{frozenAssemblyLogicalSha256}\nregistry:{registryHash}\nhooks:{hookTransformHash}\n" +
             $"api-surface:{apiSurfaceHash}\nstatic-il:{frozenIlPlanSha256}\n" +
+            $"configured-order:{configuredPlanSha256}\n" +
             $"custom-audio:{customAudioManifestSha256}\ncustom-banks:{customBankLogicalSetSha256}\n" +
             $"mod-interop:{modInterop.PlanSha256}\n" +
             $"progression:{Hashing.BytesSha256(Encoding.UTF8.GetBytes(progressionManifestSource))}\n" +
@@ -247,6 +255,10 @@ internal static class ClosureGenerator
             managedDetourCatalogSchema = 2,
             managedDetourTargetCount = detourTargets.Count,
             directManagedHookCount = directPlans.Count,
+            configuredOrderingBehavior = ConfiguredDetourOrdering.SemanticVersion,
+            configuredPlanCount = ordered.Count(mod => mod.StaticConfiguredDetours != null),
+            configuredPlanSha256,
+            runtimeConfiguredGraph = false,
             modInteropSchema = 1,
             modInteropBehavior = "monomod-dfc30a1506d37fb88a2c2be004f525205f46a24c-static-v1",
             modInteropPlanSha256 = modInterop.PlanSha256,
@@ -352,6 +364,8 @@ internal static class ClosureGenerator
                     : null,
                 mechanisms = mod.Mechanisms,
                 staticAotCompatibility = mod.StaticAotCompatibility?.Id,
+                staticConfiguredDetours = mod.StaticConfiguredDetours?.Id,
+                staticConfiguredPlanSha256 = mod.StaticConfiguredDetours?.PlanSha256,
                 modInteropRegistrations = mod.ModInteropRegistrations.Select(registration => registration.RegisteredType).ToArray(),
                 frozenIlTransforms = mod.FrozenIlTransforms.Select(plan => plan.PlanId).ToArray(),
                 customAudioBanks = mod.CustomAudioBanks.Select(bank => bank.BankPath).ToArray(),
@@ -507,6 +521,7 @@ internal static class ClosureGenerator
         AppleApiSurface.Apply(managedRoot);
         PreparePinnedEverestManagedTargets(managedRoot);
         ManagedDetourGenerator.RewriteTargets(managedRoot, ManagedDetourCatalog.Targets);
+        StaticAotCompatibility.PatchRuntimeRequiredGameSources(managedRoot);
         if (File.Exists(Path.Combine(destination, "GeneratedAppleEverestStaticAotCompatibility.cs")))
             StaticAotCompatibility.PatchGameSources(managedRoot);
         PatchDeferredAtlasTextureLoading(managedRoot);
@@ -652,7 +667,8 @@ internal static class ClosureGenerator
                 module ? mod.DirectManagedHooks : Array.Empty<DirectManagedHookPlan>(),
                 module ? mod.ModInteropRegistrations : Array.Empty<ModInteropRegistrationPlan>(),
                 module ? mod.FrozenIlTransforms : Array.Empty<FrozenIlTransformPlan>(),
-                module ? mod.StaticAotCompatibility : null);
+                module ? mod.StaticAotCompatibility : null,
+                module ? mod.StaticConfiguredDetours : null);
             frozenAssemblies.Add(new FrozenAssemblyRecord(mod.Metadata.Name, assemblyName, fileName, original, frozen));
         }
     }
@@ -752,7 +768,8 @@ internal static class ClosureGenerator
     {
         ReplaceOnce(path,
             "\t\t\tswitch (entity3.Name)\n\t\t\t{",
-            "\t\t\tif (global::Celeste.Mod.GeneratedAppleEverestGameplayRegistry.TryCreateEntity(entity3.Name, entity3, vector, entityID, out Entity appleEverestEntity))\n\t\t\t{\n\t\t\t\tAdd(appleEverestEntity);\n\t\t\t\tcontinue;\n\t\t\t}\n\t\t\tswitch (entity3.Name)\n\t\t\t{");
+            "\t\t\tif (LoadCustomEntity(entity3, this)) continue;\n" +
+            "\t\t\tswitch (entity3.Name)\n\t\t\t{");
         ReplaceOnce(path,
             "\t\t\tswitch (trigger.Name)\n\t\t\t{",
             "\t\t\tif (global::Celeste.Mod.GeneratedAppleEverestGameplayRegistry.TryCreateTrigger(trigger.Name, trigger, vector, entityID3, out Entity appleEverestTrigger))\n\t\t\t{\n\t\t\t\tAdd(appleEverestTrigger);\n\t\t\t\tcontinue;\n\t\t\t}\n\t\t\tswitch (trigger.Name)\n\t\t\t{");
@@ -872,6 +889,8 @@ internal static class ClosureGenerator
             "\t\tif (Texture != null && !Texture.IsDisposed) return;\n" +
             "\t\tforceReload = true;\n\t\ttry\n\t\t{\n\t\t\tReload();\n\t\t}\n" +
             "\t\tfinally\n\t\t{\n\t\t\tforceReload = false;\n\t\t}\n\t}\n\n" +
+            "\tpublic Texture2D Texture_Safe\n\t{\n" +
+            "\t\tget\n\t\t{\n\t\t\tEnsureLoaded();\n\t\t\treturn Texture;\n\t\t}\n\t}\n\n" +
             "\tprivate void ReadDeferredPngDimensions()\n\t{\n" +
             "\t\tif (!string.Equals(System.IO.Path.GetExtension(Path), \".png\", StringComparison.OrdinalIgnoreCase))\n" +
             "\t\t\tthrow new InvalidDataException(\"deferred textures must be PNG files: \" + Path);\n" +
@@ -1166,6 +1185,38 @@ internal static class ClosureGenerator
             "\t\tif (string.IsNullOrEmpty(levelSet) || levelSet == \"Celeste\") CmdHearts(amount);\n" +
             "\t}\n\n" +
             "\tprivate static void CmdHearts(int amount = 24)\n\t{");
+
+        // The pinned Everest PlayerHair patch factors the color expression
+        // into this public method. Helpers hook the method itself, so it must
+        // exist before the immutable HookGen dispatcher rewrite runs.
+        string playerHair = Path.Combine(managedRoot, "Celeste", "PlayerHair.cs");
+        ReplaceOnce(playerHair,
+            "\tprivate Vector2 GetHairScale(int index)\n\t{",
+            "\tpublic Color GetHairColor(int index)\n\t{\n" +
+            "\t\treturn Color * Alpha;\n" +
+            "\t}\n\n" +
+            "\tprivate Vector2 GetHairScale(int index)\n\t{");
+        ReplaceOnce(playerHair,
+            ").Draw(Nodes[num], origin, color2, GetHairScale(num));",
+            ").Draw(Nodes[num], origin, GetHairColor(num), GetHairScale(num));");
+
+        // This is the exact pinned Everest interception point. The closed
+        // product resolves only host-generated factories and typed events;
+        // no runtime assembly scanning or attribute discovery is introduced.
+        string level = Path.Combine(managedRoot, "Celeste", "Level.cs");
+        ReplaceOnce(level,
+            "\tpublic void LoadLevel(Player.IntroTypes playerIntro, bool isFromLoader = false)\n\t{",
+            "\tpublic static bool LoadCustomEntity(EntityData entityData, Level level)\n" +
+            "\t{\n" +
+            "\t\tLevelData levelData = level.Session.LevelData;\n" +
+            "\t\tVector2 offset = new Vector2(levelData.Bounds.Left, levelData.Bounds.Top);\n" +
+            "\t\tEntityID entityId = new EntityID(levelData.Name, entityData.ID);\n" +
+            "\t\tif (global::Celeste.Mod.Everest.Events.Level.LoadEntity(level, levelData, offset, entityData)) return true;\n" +
+            "\t\tif (!global::Celeste.Mod.GeneratedAppleEverestGameplayRegistry.TryCreateEntity(entityData.Name, entityData, offset, entityId, out Entity entity)) return false;\n" +
+            "\t\tlevel.Add(entity);\n" +
+            "\t\treturn true;\n" +
+            "\t}\n\n" +
+            "\tpublic void LoadLevel(Player.IntroTypes playerIntro, bool isFromLoader = false)\n\t{");
     }
 
     private static void PatchModuleDurability(string managedRoot)
@@ -1807,7 +1858,8 @@ internal static class ClosureGenerator
             .AppendLine("                return true;");
     }
 
-    private static string RootsSource(IReadOnlyList<(ResolvedMod Mod, AppleStaticDeclaration Declaration)> modules)
+    private static string RootsSource(IReadOnlyList<(ResolvedMod Mod, AppleStaticDeclaration Declaration)> modules,
+        bool includeStaticFieldAccessRoots)
     {
         StringBuilder result = new("using System;\nnamespace Celeste.Mod;\n\ninternal static class GeneratedAppleEverestAotRoots\n{\n    internal static void Root()\n    {\n");
         foreach ((_, AppleStaticDeclaration declaration) in modules)
@@ -1822,7 +1874,7 @@ internal static class ClosureGenerator
             foreach (string type in declaration.CustomBackdropFactories.Select(value => value.Type).Distinct(StringComparer.Ordinal))
                 result.Append("        _ = typeof(global::").Append(type).AppendLine(");");
         }
-        if (modules.Any(item => item.Mod.StaticAotCompatibility != null))
+        if (includeStaticFieldAccessRoots)
             result.AppendLine("        global::Celeste.Mod.AppleEverestStaticFieldAccess.RootReviewedReflectionMembers();");
         result.AppendLine("        _ = typeof(global::Celeste.Mod.Entities.CustomCoreMessage);");
         return result.AppendLine("    }").AppendLine("}").ToString();

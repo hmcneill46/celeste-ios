@@ -29,19 +29,31 @@ internal static class CompatibilityAnalyzer
         ("ModInterop(", CompatibilityClass.MODINTEROP_DEFERRED)
     ];
 
-    public static ResolvedMod Analyze(ModInput input, EverestYamlEntry metadata) => AnalyzeCore(input, metadata, rejectUnsupported: true);
-    public static ResolvedMod Audit(ModInput input, EverestYamlEntry metadata) => AnalyzeCore(input, metadata, rejectUnsupported: false);
+    public static ResolvedMod Analyze(ModInput input, EverestYamlEntry metadata) =>
+        AnalyzeCore(input, metadata, rejectUnsupported: true, configuredFixture: false);
+    public static ResolvedMod Audit(ModInput input, EverestYamlEntry metadata) =>
+        AnalyzeCore(input, metadata, rejectUnsupported: false, configuredFixture: false);
+    public static ResolvedMod AnalyzeConfiguredFixture(ModInput input, EverestYamlEntry metadata) =>
+        AnalyzeCore(input, metadata, rejectUnsupported: true, configuredFixture: true);
+    public static ResolvedMod AuditConfiguredFixture(ModInput input, EverestYamlEntry metadata) =>
+        AnalyzeCore(input, metadata, rejectUnsupported: false, configuredFixture: true);
 
-    private static ResolvedMod AnalyzeCore(ModInput input, EverestYamlEntry metadata, bool rejectUnsupported)
+    private static ResolvedMod AnalyzeCore(ModInput input, EverestYamlEntry metadata, bool rejectUnsupported,
+        bool configuredFixture)
     {
-        StaticSemanticLoweringPlan? semantic = StaticSemanticLowering.Resolve(input, metadata);
+        StaticConfiguredCompatibilityPlan? configured = configuredFixture
+            ? StaticConfiguredDetourCompatibility.Resolve(input, metadata) : null;
+        if (configuredFixture && configured == null)
+            throw new InvalidDataException($"configured fixture is not hash-locked: {metadata.Name}@{metadata.Version}");
+        StaticSemanticLoweringPlan? semantic = configuredFixture ? null : StaticSemanticLowering.Resolve(input, metadata);
         IReadOnlyList<FrozenIlTransformPlan> frozenIl = semantic == null ? StaticIlFreeze.Resolve(input, metadata) : [];
         StaticAotCompatibilityPlan? staticAot = semantic == null ? StaticAotCompatibility.Resolve(input, metadata) : null;
-        IReadOnlyList<CustomAudioBankPlan> customAudio = semantic == null ? CustomAudioManifest.Resolve(input, metadata) : [];
+        IReadOnlyList<CustomAudioBankPlan> customAudio = semantic == null && !configuredFixture
+            ? CustomAudioManifest.Resolve(input, metadata) : [];
         List<string> managed = semantic == null
             ? input.Files.Where(file => IsManaged(file.Path)).Select(file => file.Path).ToList()
             : [];
-        List<string> content = input.Files.Where(file => IsContent(file.Path) &&
+        List<string> content = configuredFixture ? [] : input.Files.Where(file => IsContent(file.Path) &&
             (semantic == null || StaticSemanticLowering.IncludeContent(file.Path))).Select(file => file.Path).ToList();
         SortedSet<string> mechanisms = new(StringComparer.Ordinal);
         bool hookGenRegistration = false;
@@ -55,7 +67,7 @@ internal static class CompatibilityAnalyzer
         // architecture.  Treat their mere presence as a product boundary: an
         // otherwise compatible helper must not silently ship a partial feature
         // set whose custom events can never be resolved on Apple devices.
-        foreach (string bank in (semantic == null ? input.Files : Array.Empty<FileRecord>()).Where(file =>
+        foreach (string bank in (semantic == null && !configuredFixture ? input.Files : Array.Empty<FileRecord>()).Where(file =>
                      file.Path.EndsWith(".bank", StringComparison.OrdinalIgnoreCase))
                  .Select(file => file.Path))
             Record("custom-fmod-bank:" + bank, customAudio.Any(plan => plan.SourcePath == bank)
@@ -99,7 +111,8 @@ internal static class CompatibilityAnalyzer
                     frozenIl.Count > 0 && string.Equals(relative, normalizedDeclaredEntry, StringComparison.Ordinal),
                     frozenIl.Any(plan => plan.Mechanism == "DIRECT_ILHOOK") &&
                     string.Equals(relative, normalizedDeclaredEntry, StringComparison.Ordinal),
-                    string.Equals(relative, normalizedDeclaredEntry, StringComparison.Ordinal) ? staticAot : null);
+                    string.Equals(relative, normalizedDeclaredEntry, StringComparison.Ordinal) ? staticAot : null,
+                    string.Equals(relative, normalizedDeclaredEntry, StringComparison.Ordinal) ? configured : null);
                 if (assemblyModInterop.Count > 0 && !string.Equals(relative, normalizedDeclaredEntry, StringComparison.Ordinal))
                 {
                     Record($"{relative}:DEFERRED_UNLINKED_MODINTEROP_ASSEMBLY", CompatibilityClass.MODINTEROP_DEFERRED);
@@ -130,7 +143,7 @@ internal static class CompatibilityAnalyzer
                 declaration = AssemblyFreezer.InspectDeclaration(Path.Combine(input.StagingRoot,
                     normalized.Replace('/', Path.DirectorySeparatorChar)), metadata.Name,
                     allowNonPublicCustomFactories: frozenIl.Count > 0 ||
-                    staticAot?.AllowNonPublicCustomFactories == true);
+                    staticAot?.AllowNonPublicCustomFactories == true || configuredFixture);
             }
             else
             {
@@ -152,6 +165,10 @@ internal static class CompatibilityAnalyzer
         if (staticAot != null)
             Record("hash-locked-static-aot-compatibility:" + staticAot.Id,
                 CompatibilityClass.HASH_LOCKED_STATIC_AOT_COMPATIBILITY);
+
+        if (configured != null)
+            Record("hash-locked-static-configured-detour-sequence:" + configured.PlanSha256,
+                CompatibilityClass.STATIC_CONFIGURED_DETOUR_SEQUENCE);
 
         if (rejectUnsupported && classification is (CompatibilityClass.MODINTEROP_DEFERRED or CompatibilityClass.ON_HOOK_DEFERRED or CompatibilityClass.IL_HOOK_DEFERRED or CompatibilityClass.DIRECT_HOOK_DEFERRED or
             CompatibilityClass.DYNAMIC_TARGET_DEFERRED or CompatibilityClass.DYNAMIC_DETOUR_DEFERRED or CompatibilityClass.DETOUR_CONFIG_DEFERRED or
@@ -175,6 +192,7 @@ internal static class CompatibilityAnalyzer
             ModInteropRegistrations = modInteropRegistrations,
             FrozenIlTransforms = frozenIl,
             StaticAotCompatibility = staticAot,
+            StaticConfiguredDetours = configured,
             StaticSemanticLowering = semantic,
             CustomAudioBanks = customAudio
         };
@@ -224,7 +242,8 @@ internal static class CompatibilityAnalyzer
         bool rejectUnsupported,
         bool registeredStaticIl,
         bool registeredDirectIl,
-        StaticAotCompatibilityPlan? staticAot)
+        StaticAotCompatibilityPlan? staticAot,
+        StaticConfiguredCompatibilityPlan? configured)
     {
         try
         {
@@ -276,7 +295,10 @@ internal static class CompatibilityAnalyzer
                         break;
                     case "DetourConfig":
                     case "DetourContext":
-                        record($"DEFERRED_DETOUR_CONFIG:{type.FullName}", CompatibilityClass.DETOUR_CONFIG_DEFERRED);
+                    case "DetourConfigContext":
+                        record($"configured-detour-type:{type.FullName}", configured != null
+                            ? CompatibilityClass.STATIC_CONFIGURED_DETOUR_SEQUENCE
+                            : CompatibilityClass.DETOUR_CONFIG_DEFERRED);
                         break;
                     default:
                         record($"unsupported RuntimeDetour type:{type.FullName}", CompatibilityClass.DIRECT_HOOK_DEFERRED);
@@ -359,7 +381,11 @@ internal static class CompatibilityAnalyzer
                         record($"unsupported direct Hook member:{called.FullName}", CompatibilityClass.DIRECT_HOOK_DEFERRED);
                 }
             }
-            if (runtimeDetourReference && directConstructorCount == 0)
+            // A closed configured plan can legitimately reference only the
+            // context/configuration ABI and no direct Hook constructor.  Its
+            // exact member census was already validated by the hash-locked
+            // registry, so it is not an unresolved RuntimeDetour surface.
+            if (runtimeDetourReference && directConstructorCount == 0 && configured == null)
                 record("MonoMod.RuntimeDetour:unresolved-or-unsupported-surface", CompatibilityClass.DIRECT_HOOK_DEFERRED);
         }
         catch (BadImageFormatException)
@@ -541,20 +567,21 @@ internal static class CompatibilityAnalyzer
             CompatibilityClass.STATIC_IL_EVENT_SEQUENCE => 8,
             CompatibilityClass.STATIC_DIRECT_ILHOOK_FREEZE => 9,
             CompatibilityClass.HASH_LOCKED_STATIC_AOT_COMPATIBILITY => 10,
-            CompatibilityClass.HASH_LOCKED_STATIC_SEMANTIC_LOWERING => 11,
-            CompatibilityClass.STATIC_CUSTOM_FMOD_BANK => 12,
-            CompatibilityClass.MODINTEROP_DEFERRED => 13,
-            CompatibilityClass.ON_HOOK_DEFERRED => 14,
-            CompatibilityClass.IL_HOOK_DEFERRED => 15,
-            CompatibilityClass.DIRECT_HOOK_DEFERRED => 16,
-            CompatibilityClass.DYNAMIC_TARGET_DEFERRED => 17,
-            CompatibilityClass.DYNAMIC_DETOUR_DEFERRED => 18,
-            CompatibilityClass.DETOUR_CONFIG_DEFERRED => 19,
-            CompatibilityClass.DYNAMIC_CODE_UNSUPPORTED => 20,
-            CompatibilityClass.CUSTOM_AUDIO_UNSUPPORTED => 21,
-            CompatibilityClass.NATIVE_UNSUPPORTED => 22,
-            CompatibilityClass.LUA_UNSUPPORTED => 23,
-            CompatibilityClass.PLATFORM_UNSUPPORTED => 24,
+            CompatibilityClass.STATIC_CONFIGURED_DETOUR_SEQUENCE => 11,
+            CompatibilityClass.HASH_LOCKED_STATIC_SEMANTIC_LOWERING => 12,
+            CompatibilityClass.STATIC_CUSTOM_FMOD_BANK => 13,
+            CompatibilityClass.MODINTEROP_DEFERRED => 14,
+            CompatibilityClass.ON_HOOK_DEFERRED => 15,
+            CompatibilityClass.IL_HOOK_DEFERRED => 16,
+            CompatibilityClass.DIRECT_HOOK_DEFERRED => 17,
+            CompatibilityClass.DYNAMIC_TARGET_DEFERRED => 18,
+            CompatibilityClass.DYNAMIC_DETOUR_DEFERRED => 19,
+            CompatibilityClass.DETOUR_CONFIG_DEFERRED => 20,
+            CompatibilityClass.DYNAMIC_CODE_UNSUPPORTED => 21,
+            CompatibilityClass.CUSTOM_AUDIO_UNSUPPORTED => 22,
+            CompatibilityClass.NATIVE_UNSUPPORTED => 23,
+            CompatibilityClass.LUA_UNSUPPORTED => 24,
+            CompatibilityClass.PLATFORM_UNSUPPORTED => 25,
             _ => 99
         };
         return Rank(detected) > Rank(current) ? detected : current;

@@ -2,6 +2,14 @@ using System.Collections.Generic;
 
 namespace Celeste.Mod
 {
+    internal static class GeneratedAppleEverestConfiguredOrdinals
+    {
+        internal static long? Resolve(string owner, string targetId) =>
+            owner == "ConfiguredAfterAll" && targetId == "celeste-player-die"
+                ? 1L << 60
+                : null;
+    }
+
     public enum LogLevel { Verbose, Debug, Info, Warn, Error }
 
     public static class AppleEverestStaticRuntime

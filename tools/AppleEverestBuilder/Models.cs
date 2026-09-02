@@ -9,7 +9,7 @@ internal static class ProductPolicy
     public const long MaxSingleFileBytes = 64L * 1024 * 1024;
     public const int MaxPathDepth = 24;
     public const int MaxYamlBytes = 1024 * 1024;
-    public const string TransformerVersion = "apple-everest-static-v17";
+    public const string TransformerVersion = "apple-everest-static-v18";
     public const int LevelSetProgressionSchemaVersion = 1;
     public const string CanonicalClass = "celeste-1.4.0.0-a";
 }
@@ -140,6 +140,7 @@ internal enum CompatibilityClass
     STATIC_IL_EVENT_SEQUENCE,
     STATIC_DIRECT_ILHOOK_FREEZE,
     HASH_LOCKED_STATIC_AOT_COMPATIBILITY,
+    STATIC_CONFIGURED_DETOUR_SEQUENCE,
     HASH_LOCKED_STATIC_SEMANTIC_LOWERING,
     STATIC_CUSTOM_FMOD_BANK,
     MODINTEROP_DEFERRED,
@@ -175,6 +176,11 @@ internal sealed record MapProgressionRecord(
     string[] AreaModes,
     bool CompletionAvailable,
     MapPresentationRecord? Presentation = null);
+internal sealed record MapBinaryBoundaryRecord(
+    long FileBytes,
+    long ConsumedRootBytes,
+    long AppendixBytes,
+    string AppendixSha256);
 internal sealed record MapPresentationRecord(
     string Icon,
     string TitleBaseColor,
@@ -354,7 +360,44 @@ internal sealed record DirectManagedHookPlan(
     string Capture,
     string ConstructorSignature,
     int ExpressionInstructionCount = 9,
-    bool CustomOriginalDelegate = false);
+    bool CustomOriginalDelegate = false,
+    long? StaticDispatcherOrdinal = null);
+
+internal sealed record StaticDetourConfig(
+    string Id,
+    int? Priority,
+    string[] Before,
+    string[] After,
+    int SubPriority = 0);
+
+internal sealed record StaticConfiguredDetourNode(
+    string PlanId,
+    string TargetId,
+    string HookKind,
+    StaticDetourConfig? Config,
+    long RegistrationOrdinal,
+    int ModuleLoadOrdinal,
+    string Lifetime = "MODULE_IMMUTABLE_ACTIVE");
+
+internal sealed record StaticConfiguredDetourSequence(
+    string TargetId,
+    string[] RegistrationOrder,
+    string[] ConfiguredExecutionOrder,
+    string[] ManagedDispatcherOrder,
+    string[] IlCompositionOrder,
+    string PlanSha256);
+
+internal sealed record StaticConfiguredCompatibilityPlan(
+    string Id,
+    string Owner,
+    string Version,
+    string SourceSha256,
+    string DllPath,
+    string DllSha256,
+    string[] ConfiguredMethods,
+    StaticConfiguredDetourNode[] Nodes,
+    StaticConfiguredDetourSequence[] Sequences,
+    string PlanSha256);
 
 internal sealed record FrozenIlTransformPlan(
     string PlanId,
@@ -407,6 +450,7 @@ internal sealed class ResolvedMod
     public required IReadOnlyList<ModInteropRegistrationPlan> ModInteropRegistrations { get; init; }
     public required IReadOnlyList<FrozenIlTransformPlan> FrozenIlTransforms { get; init; }
     public StaticAotCompatibilityPlan? StaticAotCompatibility { get; init; }
+    public StaticConfiguredCompatibilityPlan? StaticConfiguredDetours { get; init; }
     public StaticSemanticLoweringPlan? StaticSemanticLowering { get; init; }
     public IReadOnlyList<CustomAudioBankPlan> CustomAudioBanks { get; init; } = [];
 }

@@ -1,0 +1,3282 @@
+{
+  "census": {
+    "configuredIlSiteCount": 13,
+    "detourConfigReferenceCount": 67,
+    "detourContextReferenceCount": 38,
+    "directIlHookSiteCount": 7,
+    "directManagedHookSiteCount": 4,
+    "dynamicLifetimeSiteCount": 9,
+    "dynamicManipulatorSiteCount": 0,
+    "dynamicTargetSiteCount": 0,
+    "helperCount": 13,
+    "hookGenIlSiteCount": 8,
+    "hookGenOnSiteCount": 22,
+    "siteCount": 39,
+    "staticallyEligibleSiteCount": 30,
+    "zeroUnclassifiedSites": true
+  },
+  "determinism": {
+    "configuredPlanSha256": "bfbae569352041d00d98c5792354bc403423566ad796a69912431392111a9895",
+    "identical": true,
+    "independentClosureRunCount": 3,
+    "runs": [
+      {
+        "configuredPlanSha256": "bfbae569352041d00d98c5792354bc403423566ad796a69912431392111a9895",
+        "fileCount": 57,
+        "productClosureFileSetSha256": "394fe8ffc1fc3ec3dd2b94429c99af405caa9b0c0eacf370b12ee694103ef190",
+        "run": 1,
+        "sharedClosureSha256": "fe9e0a4b7a19fa4a9ea4d607aa2424617d8567636c97248f39dfed19961ccdf6"
+      },
+      {
+        "configuredPlanSha256": "bfbae569352041d00d98c5792354bc403423566ad796a69912431392111a9895",
+        "fileCount": 57,
+        "productClosureFileSetSha256": "394fe8ffc1fc3ec3dd2b94429c99af405caa9b0c0eacf370b12ee694103ef190",
+        "run": 2,
+        "sharedClosureSha256": "fe9e0a4b7a19fa4a9ea4d607aa2424617d8567636c97248f39dfed19961ccdf6"
+      },
+      {
+        "configuredPlanSha256": "bfbae569352041d00d98c5792354bc403423566ad796a69912431392111a9895",
+        "fileCount": 57,
+        "productClosureFileSetSha256": "394fe8ffc1fc3ec3dd2b94429c99af405caa9b0c0eacf370b12ee694103ef190",
+        "run": 3,
+        "sharedClosureSha256": "fe9e0a4b7a19fa4a9ea4d607aa2424617d8567636c97248f39dfed19961ccdf6"
+      }
+    ],
+    "selectedFixturePlanSha256": "016bb7899f8622318936ef96933c69486fb183e97f35234bae481b630f77a384",
+    "sharedClosureSha256": "fe9e0a4b7a19fa4a9ea4d607aa2424617d8567636c97248f39dfed19961ccdf6"
+  },
+  "eligibilityClass": {
+    "dynamicLifetimeRejected": true,
+    "name": "STATIC_CONFIGURED_DETOUR_SEQUENCE",
+    "requirements": [
+      "exact static target",
+      "exact static hook or manipulator",
+      "immutable config known on Mac",
+      "installed-build immutable-active lifetime",
+      "no gameplay Apply/Undo/Dispose",
+      "no config mutation",
+      "no runtime target or manipulator selection"
+    ],
+    "runtimeFallback": false
+  },
+  "orderingSemantics": {
+    "after": "DIRECTED_EDGE_NAMED_ID_BEFORE_CONFIGURED_NODE",
+    "afterAll": "INT32_MAX_PRIORITY_AS_OBSERVED_BY_PINNED_REFERENCE",
+    "before": "DIRECTED_EDGE_CONFIGURED_NODE_BEFORE_NAMED_ID",
+    "beforeAll": "INT32_MIN_PRIORITY_AS_OBSERVED_BY_PINNED_REFERENCE",
+    "cycles": "REJECTED_AT_PLAN_CONSTRUCTION",
+    "il": "PINNED_IL_ORDER_IS_REVERSED_RELATIVE_TO_MANAGED_HOOK_CHAIN_AND_EACH_MANIPULATOR_SEES_PRIOR_OUTPUT",
+    "legacyWildcard": "LEGACY_BEFORE_STAR_NORMALIZES_TO_INT32_MIN; LEGACY_AFTER_STAR_NORMALIZES_TO_INT32_MAX; LEGACY_ADAPTER_SWAPS_BEFORE_AFTER_FOR_REORGANIZED_CONFIG",
+    "priority": "PINNED_DEPGRAPH_HIGHER_PRIORITY_OUTER_AND_FIRST_IN_CHAIN",
+    "ties": "PINNED_SUBPRIORITY_THEN_GLOBAL_REGISTRATION_INDEX; LATER_EQUAL_REGISTRATION_IS_OUTER"
+  },
+  "pinnedReference": {
+    "cases": {
+      "after": {
+        "chain": [
+          "second",
+          "first"
+        ],
+        "registration": [
+          "first",
+          "second"
+        ],
+        "trace": [
+          "second-before",
+          "first-before",
+          "original",
+          "first-after",
+          "second-after"
+        ],
+        "value": 176
+      },
+      "afterAllNormalized": {
+        "chain": [
+          "after-all",
+          "peer",
+          "ordinary"
+        ],
+        "registration": [
+          "ordinary",
+          "peer",
+          "after-all"
+        ],
+        "trace": [
+          "after-all-before",
+          "peer-before",
+          "ordinary-before",
+          "original",
+          "ordinary-after",
+          "peer-after",
+          "after-all-after"
+        ],
+        "value": 1969
+      },
+      "afterWildcard": {
+        "chain": [
+          "after-wildcard",
+          "peer",
+          "ordinary"
+        ],
+        "registration": [
+          "ordinary",
+          "peer",
+          "after-wildcard"
+        ],
+        "trace": [
+          "after-wildcard-before",
+          "peer-before",
+          "ordinary-before",
+          "original",
+          "ordinary-after",
+          "peer-after",
+          "after-wildcard-after"
+        ],
+        "value": 2474
+      },
+      "ambientContext": {
+        "active": true,
+        "before": [
+          "other"
+        ],
+        "id": "ambient",
+        "priority": 17,
+        "value": 3
+      },
+      "before": {
+        "chain": [
+          "before",
+          "after"
+        ],
+        "registration": [
+          "after",
+          "before"
+        ],
+        "trace": [
+          "before-before",
+          "after-before",
+          "original",
+          "after-after",
+          "before-after"
+        ],
+        "value": 176
+      },
+      "beforeAllNormalized": {
+        "chain": [
+          "peer",
+          "before-all",
+          "ordinary"
+        ],
+        "registration": [
+          "ordinary",
+          "peer",
+          "before-all"
+        ],
+        "trace": [
+          "peer-before",
+          "before-all-before",
+          "ordinary-before",
+          "original",
+          "ordinary-after",
+          "before-all-after",
+          "peer-after"
+        ],
+        "value": 1530
+      },
+      "beforeWildcard": {
+        "chain": [
+          "before-wildcard",
+          "peer",
+          "ordinary"
+        ],
+        "registration": [
+          "ordinary",
+          "peer",
+          "before-wildcard"
+        ],
+        "trace": [
+          "before-wildcard-before",
+          "peer-before",
+          "ordinary-before",
+          "original",
+          "ordinary-after",
+          "peer-after",
+          "before-wildcard-after"
+        ],
+        "value": 2575
+      },
+      "cycleRejected": {
+        "exception": "Cycle detected",
+        "rejected": true
+      },
+      "defaultAndTie": {
+        "chain": [
+          "tie-b",
+          "tie-a",
+          "ordinary"
+        ],
+        "registration": [
+          "tie-a",
+          "tie-b",
+          "ordinary"
+        ],
+        "trace": [
+          "tie-b-before",
+          "tie-a-before",
+          "ordinary-before",
+          "original",
+          "ordinary-after",
+          "tie-a-after",
+          "tie-b-after"
+        ],
+        "value": 1576
+      },
+      "ilAThenB": {
+        "composition": [
+          "A",
+          "A",
+          "B"
+        ],
+        "graph": [
+          "A",
+          "B"
+        ],
+        "value": 3
+      },
+      "ilBThenA": {
+        "composition": [
+          "B",
+          "B",
+          "A"
+        ],
+        "graph": [
+          "B",
+          "A"
+        ],
+        "value": 2
+      },
+      "lifetime": {
+        "IsApplied": false,
+        "IsValid": false,
+        "applied": 11,
+        "disposed": 1,
+        "initial": 1,
+        "undone": 1
+      },
+      "multipleIds": {
+        "chain": [
+          "first",
+          "middle",
+          "last"
+        ],
+        "registration": [
+          "middle",
+          "last",
+          "first"
+        ],
+        "trace": [
+          "first-before",
+          "middle-before",
+          "last-before",
+          "original",
+          "last-after",
+          "middle-after",
+          "first-after"
+        ],
+        "value": 1579
+      },
+      "priority": {
+        "chain": [
+          "high",
+          "low",
+          "ordinary"
+        ],
+        "registration": [
+          "low",
+          "ordinary",
+          "high"
+        ],
+        "trace": [
+          "high-before",
+          "low-before",
+          "ordinary-before",
+          "original",
+          "ordinary-after",
+          "low-after",
+          "high-after"
+        ],
+        "value": 1453
+      }
+    },
+    "monoModCommit": "dfc30a1506d37fb88a2c2be004f525205f46a24c",
+    "runtimeAssembly": "MonoMod.RuntimeDetour",
+    "runtimeVersion": "25.3.1.0",
+    "schemaVersion": 1
+  },
+  "pins": {
+    "monoModCommit": "dfc30a1506d37fb88a2c2be004f525205f46a24c",
+    "monoModRuntimeDetourVersion": "25.3.1.0",
+    "strawberryJamVersion": "1.0.12",
+    "strawberryJamZipSha256": "4e1a2fc12baa3db27da433b93bf26b59f34b3e6b7f760c41d8d127636d020655"
+  },
+  "runtimeBoundary": {
+    "RuntimeDetourPresent": false,
+    "dynamicInvokePresent": false,
+    "interpreter": false,
+    "objectArrayDispatchPresent": false,
+    "reflectionDispatchPresent": false,
+    "runtimeConfigurationGraphPresent": false,
+    "runtimeIlHookBackendPresent": false
+  },
+  "sameTargetComposition": {
+    "configuredAndOrdinaryProven": true,
+    "configuredDirectIlHookPlusEventRealEligibleCase": "NO_EXACT_ELIGIBLE_DISTRIBUTED_CASE_IN_THE_39_SITE_CENSUS",
+    "configuredDirectIlHookPlusEventSyntheticPinnedConformance": true,
+    "managedWrapperAroundFrozenIlProven": true,
+    "nonCommutativeOrders": {
+      "A_then_B": {
+        "composition": [
+          "A",
+          "A",
+          "B"
+        ],
+        "value": 3
+      },
+      "B_then_A": {
+        "composition": [
+          "B",
+          "B",
+          "A"
+        ],
+        "value": 2
+      }
+    },
+    "twoConfiguredProven": true
+  },
+  "schemaVersion": 1,
+  "selectedRealFixture": {
+    "appleFinalAssemblySha256": "30ad2a90d6d1f250bd42431f0b900bd0d4e4777b4e39614a6fd467dd81710149",
+    "appleFinalTargetInstructionSha256": "19e211c4b655b88ad4f1130982d109671452c96fa6cee4bf88dea06431b4c885",
+    "canonicalTargetInstructionSha256": "2079f53ceba4e9143c75e98b138d710a5e4b95271bfe5ae10ab94f7db5980b4c",
+    "configNormalized": {
+      "After": [],
+      "Before": [],
+      "Id": "LunaticHelper",
+      "Priority": 2147483647,
+      "SubPriority": -2147483648
+    },
+    "configSource": {
+      "after": [
+        "*"
+      ],
+      "id": "LunaticHelper",
+      "legacyContext": true
+    },
+    "desktopPatchedAssemblySha256": "87082a3e2117a880bdc9565fafb223480f9bb01dacefbf219f57f826c09ac7df",
+    "desktopPatchedBaselineTargetInstructionSha256": "78ae30f07c73e7a47cb05471ce5b871edc15d0933c4c5450d851cab3d0e28ec8",
+    "dllSha256": "fc08f00296551a6025c5e31422c6edd5e8136e6861459f44ffea909129c6a925",
+    "hook": "LunaticHelper.BubbleReturnBerry::onPlayerConstructor",
+    "hookKind": "HOOKGEN_ON",
+    "license": "NO_LICENSE_FILE_IN_DISTRIBUTED_ARCHIVE; public source used audit-only",
+    "lifetime": "MODULE_IMMUTABLE_ACTIVE",
+    "package": "LunaticHelper",
+    "planSha256": "016bb7899f8622318936ef96933c69486fb183e97f35234bae481b630f77a384",
+    "productionAuthority": "ORDINARY_DISTRIBUTED_DLL",
+    "semanticDiffSha256": "576c6e57bd149341343abb9e23712d4fb026b002376775d42e4d4138be142214",
+    "sourceLogicalSha256": "e7cef501937fc1bc07d1ff13e753fe920b4ccbbd4e4db4c0b2c4312de89fdd78",
+    "sourceRequiredForProduction": false,
+    "target": "System.Void Celeste.Player::.ctor(Microsoft.Xna.Framework.Vector2,Celeste.PlayerSpriteMode)",
+    "targetId": "celeste-player-ctor",
+    "targetSequencePlanSha256": "8079747d5b8cb965ff00706f7e24dcf83ba5a13e05059e3e17eda41c7f2cd801",
+    "version": "1.1.1",
+    "zipSha256": "b10e044b1dfa412605bee3ba6bfdd4263591099d331d6c1aab1e9ba65bf6a3e5"
+  },
+  "sites": [
+    {
+      "ambientDetourContext": "LEXICALLY_SCOPED_DURING_SYNCHRONOUS_CONSTRUCTION",
+      "applyBehavior": "IMMEDIATE_SUBSCRIPTION_OR_CONSTRUCTION",
+      "assembly": "BrokemiaHelper",
+      "assemblySha256": "89408eb1fb4ab1f11312f5dcbb579d3747b7b5bf38f7bf2c62359ffe2c1df841",
+      "assemblyVersion": "1.0.0.0",
+      "conditionalCreation": "UNCONDITIONAL_FOR_INSTALLED_PROVIDER",
+      "configurationPhases": [
+        {
+          "normalizedStatic": {
+            "after": [],
+            "before": [],
+            "id": "BrokemiaHelper",
+            "priority": -2147483648,
+            "subPriorityPolicy": "PINNED_GLOBAL_REGISTRATION_INDEX"
+          },
+          "source": {
+            "after": [],
+            "before": [
+              "*"
+            ],
+            "id": "BrokemiaHelper",
+            "legacyContext": true,
+            "priority": null
+          }
+        }
+      ],
+      "constructionSiteFingerprintSha256": "38aac167e85d64cdd0f247559b2072eb81daf2dd78da4b22e4ddc6319fa3d5c1",
+      "containingMethod": "System.Void BrokemiaHelper.BrokemiaHelperModule::Load()",
+      "dependencyModuleLoadOrder": 5,
+      "disposeBehavior": "MODULE_UNLOAD_ONLY_IN_ACCEPTED_INSTALLED_BUILD",
+      "eligibility": "STATIC_CONFIGURED_DETOUR_SEQUENCE",
+      "lifetime": "MODULE_IMMUTABLE_ACTIVE_IN_ACCEPTED_STATIC_CLOSURE",
+      "package": "BrokemiaHelper",
+      "packageVersion": "1.8.5",
+      "packageZipSha256": "c80d7d71cdccef7c9b418e05d53debd197b59717d3cdeade72910ace33d4fbeb",
+      "registrationOrder": "LEXICAL_IL_ORDER_THEN_PINNED_GLOBAL_REGISTRATION_INDEX",
+      "rejectionReason": null,
+      "sameTargetParticipants": [
+        {
+          "participants": [
+            {
+              "hookKind": "HOOKGEN_ON",
+              "hookOrManipulator": "BrokemiaHelper.FakeBooster",
+              "package": "BrokemiaHelper",
+              "siteOrdinal": 1
+            },
+            {
+              "hookKind": "HOOKGEN_ON",
+              "hookOrManipulator": "CollabUtils2.StrawberryHooks",
+              "package": "CollabUtils2",
+              "siteOrdinal": 2
+            },
+            {
+              "hookKind": "HOOKGEN_ON",
+              "hookOrManipulator": "vitmod.InteractiveChaser.Player_Die",
+              "package": "CrystallineHelper",
+              "siteOrdinal": 6
+            },
+            {
+              "hookKind": "HOOKGEN_ON",
+              "hookOrManipulator": "StrawberryJam2021.DashCountTrigger",
+              "package": "StrawberryJam2021",
+              "siteOrdinal": 32
+            },
+            {
+              "hookKind": "HOOKGEN_ON",
+              "hookOrManipulator": "VivHelper.RefillCancel",
+              "package": "VivHelper",
+              "siteOrdinal": 36
+            }
+          ],
+          "target": "Celeste.Player::Die"
+        }
+      ],
+      "siteOrdinal": 1,
+      "storage": "STATIC_EVENT_OR_IDETOUR_FIELD",
+      "targetScopeKind": "EXACT_TARGET_SET",
+      "targetSetFingerprintSha256": "9c39dd055552df34238bcf730e79b21136cb15d1174bd6f1252b43319bb8110e",
+      "targets": [
+        {
+          "hookKind": "HOOKGEN_ON",
+          "hookOrManipulator": "BrokemiaHelper.FakeBooster",
+          "target": "Celeste.Booster::PlayerBoosted"
+        },
+        {
+          "hookKind": "HOOKGEN_ON",
+          "hookOrManipulator": "BrokemiaHelper.FakeBooster",
+          "target": "Celeste.Booster::OnPlayerDashed"
+        },
+        {
+          "hookKind": "HOOKGEN_ON",
+          "hookOrManipulator": "BrokemiaHelper.FakeBooster",
+          "target": "Celeste.Booster::PlayerReleased"
+        },
+        {
+          "hookKind": "HOOKGEN_ON",
+          "hookOrManipulator": "BrokemiaHelper.FakeBooster",
+          "target": "Celeste.Player::Die"
+        },
+        {
+          "hookKind": "HOOKGEN_ON",
+          "hookOrManipulator": "BrokemiaHelper.FakeBooster",
+          "target": "Celeste.Player::Respawn"
+        }
+      ],
+      "undoBehavior": "MODULE_UNLOAD_ONLY_IN_ACCEPTED_INSTALLED_BUILD"
+    },
+    {
+      "ambientDetourContext": "LEXICALLY_SCOPED_DURING_SYNCHRONOUS_CONSTRUCTION",
+      "applyBehavior": "IMMEDIATE_SUBSCRIPTION_OR_CONSTRUCTION",
+      "assembly": "CollabUtils2",
+      "assemblySha256": "ce7d646252a2fc51f1f513071d97eaa1acedf7ddb0871276c688914e37319f60",
+      "assemblyVersion": "1.0.0.0",
+      "conditionalCreation": "UNCONDITIONAL_FOR_INSTALLED_PROVIDER",
+      "configurationPhases": [
+        {
+          "normalizedStatic": {
+            "after": [],
+            "before": [],
+            "id": "CollabUtils2_BeforeAll",
+            "priority": -2147483648,
+            "subPriorityPolicy": "PINNED_GLOBAL_REGISTRATION_INDEX"
+          },
+          "source": {
+            "after": [],
+            "before": [],
+            "id": "CollabUtils2_BeforeAll",
+            "legacyContext": false,
+            "priority": -2147483648
+          }
+        }
+      ],
+      "constructionSiteFingerprintSha256": "56a49e7c006700cbf5b913065a57385619b52f98bb5195bada6aea4021028d6f",
+      "containingMethod": "System.Void Celeste.Mod.CollabUtils2.Entities.StrawberryHooks::Load()",
+      "dependencyModuleLoadOrder": 9,
+      "disposeBehavior": "MODULE_UNLOAD_ONLY_IN_ACCEPTED_INSTALLED_BUILD",
+      "eligibility": "STATIC_CONFIGURED_DETOUR_SEQUENCE",
+      "lifetime": "MODULE_IMMUTABLE_ACTIVE_IN_ACCEPTED_STATIC_CLOSURE",
+      "package": "CollabUtils2",
+      "packageVersion": "1.13.4",
+      "packageZipSha256": "4bcea8a9011edb8b7d27b433c47f1f4a871b8f7a4dd7f2bffac67bb99c7f6ad5",
+      "registrationOrder": "LEXICAL_IL_ORDER_THEN_PINNED_GLOBAL_REGISTRATION_INDEX",
+      "rejectionReason": null,
+      "sameTargetParticipants": [
+        {
+          "participants": [
+            {
+              "hookKind": "HOOKGEN_ON",
+              "hookOrManipulator": "BrokemiaHelper.FakeBooster",
+              "package": "BrokemiaHelper",
+              "siteOrdinal": 1
+            },
+            {
+              "hookKind": "HOOKGEN_ON",
+              "hookOrManipulator": "CollabUtils2.StrawberryHooks",
+              "package": "CollabUtils2",
+              "siteOrdinal": 2
+            },
+            {
+              "hookKind": "HOOKGEN_ON",
+              "hookOrManipulator": "vitmod.InteractiveChaser.Player_Die",
+              "package": "CrystallineHelper",
+              "siteOrdinal": 6
+            },
+            {
+              "hookKind": "HOOKGEN_ON",
+              "hookOrManipulator": "StrawberryJam2021.DashCountTrigger",
+              "package": "StrawberryJam2021",
+              "siteOrdinal": 32
+            },
+            {
+              "hookKind": "HOOKGEN_ON",
+              "hookOrManipulator": "VivHelper.RefillCancel",
+              "package": "VivHelper",
+              "siteOrdinal": 36
+            }
+          ],
+          "target": "Celeste.Player::Die"
+        }
+      ],
+      "siteOrdinal": 2,
+      "storage": "STATIC_EVENT_OR_IDETOUR_FIELD",
+      "targetScopeKind": "EXACT_TARGET_SET",
+      "targetSetFingerprintSha256": "7c5c1e6b8aad868e1de76c3163bd515af5ddb17bc9c1921cd755df3e897013a9",
+      "targets": [
+        {
+          "hookKind": "HOOKGEN_ON",
+          "hookOrManipulator": "CollabUtils2.StrawberryHooks",
+          "target": "Celeste.Player::Die"
+        }
+      ],
+      "undoBehavior": "MODULE_UNLOAD_ONLY_IN_ACCEPTED_INSTALLED_BUILD"
+    },
+    {
+      "ambientDetourContext": "LEXICALLY_SCOPED_DURING_SYNCHRONOUS_CONSTRUCTION",
+      "applyBehavior": "IMMEDIATE_SUBSCRIPTION_OR_CONSTRUCTION",
+      "assembly": "CollabUtils2",
+      "assemblySha256": "ce7d646252a2fc51f1f513071d97eaa1acedf7ddb0871276c688914e37319f60",
+      "assemblyVersion": "1.0.0.0",
+      "conditionalCreation": "UNCONDITIONAL_FOR_INSTALLED_PROVIDER",
+      "configurationPhases": [
+        {
+          "normalizedStatic": {
+            "after": [],
+            "before": [],
+            "id": "CollabUtils2_BeforeAll",
+            "priority": -2147483648,
+            "subPriorityPolicy": "PINNED_GLOBAL_REGISTRATION_INDEX"
+          },
+          "source": {
+            "after": [],
+            "before": [],
+            "id": "CollabUtils2_BeforeAll",
+            "legacyContext": false,
+            "priority": -2147483648
+          }
+        }
+      ],
+      "constructionSiteFingerprintSha256": "7a1338a985151a165f321aa71c3334460d09ec510bf27de31a61915d0ff65bf9",
+      "containingMethod": "System.Void Celeste.Mod.CollabUtils2.UI.ReturnToLobbyHelper::Load()",
+      "dependencyModuleLoadOrder": 9,
+      "disposeBehavior": "MODULE_UNLOAD_ONLY_IN_ACCEPTED_INSTALLED_BUILD",
+      "eligibility": "STATIC_CONFIGURED_DETOUR_SEQUENCE",
+      "lifetime": "MODULE_IMMUTABLE_ACTIVE_IN_ACCEPTED_STATIC_CLOSURE",
+      "package": "CollabUtils2",
+      "packageVersion": "1.13.4",
+      "packageZipSha256": "4bcea8a9011edb8b7d27b433c47f1f4a871b8f7a4dd7f2bffac67bb99c7f6ad5",
+      "registrationOrder": "LEXICAL_IL_ORDER_THEN_PINNED_GLOBAL_REGISTRATION_INDEX",
+      "rejectionReason": null,
+      "sameTargetParticipants": [],
+      "siteOrdinal": 3,
+      "storage": "STATIC_EVENT_OR_IDETOUR_FIELD",
+      "targetScopeKind": "EXACT_TARGET_SET",
+      "targetSetFingerprintSha256": "661789f61eb1ec917ee84f8ae83560838fdc13d416e777f4470812eeb51ef49b",
+      "targets": [
+        {
+          "hookKind": "HOOKGEN_ON",
+          "hookOrManipulator": "CollabUtils2.ReturnToLobbyHelper",
+          "target": "Celeste.LevelEnter::Go"
+        }
+      ],
+      "undoBehavior": "MODULE_UNLOAD_ONLY_IN_ACCEPTED_INSTALLED_BUILD"
+    },
+    {
+      "ambientDetourContext": "LEXICALLY_SCOPED_DURING_SYNCHRONOUS_CONSTRUCTION",
+      "applyBehavior": "IMMEDIATE_SUBSCRIPTION_OR_CONSTRUCTION",
+      "assembly": "CommunalHelper",
+      "assemblySha256": "4011b959ed4e9cc4cb98bf43f6884ae81361fecc994787640553205029c94a8a",
+      "assemblyVersion": "1.0.0.0",
+      "conditionalCreation": "UNCONDITIONAL_FOR_INSTALLED_PROVIDER",
+      "configurationPhases": [
+        {
+          "normalizedStatic": {
+            "after": [],
+            "before": [],
+            "id": "CommunalHelper",
+            "priority": 2147483647,
+            "subPriorityPolicy": "PINNED_GLOBAL_REGISTRATION_INDEX"
+          },
+          "source": {
+            "after": [
+              "*"
+            ],
+            "before": [],
+            "id": "CommunalHelper",
+            "legacyContext": true,
+            "priority": null
+          }
+        }
+      ],
+      "constructionSiteFingerprintSha256": "e0a5bb7fba6bfaf799d685d0887b0cc53c279066251df814748830d74dc9bd31",
+      "containingMethod": "System.Void Celeste.Mod.CommunalHelper.Entities.AeroBlockCharged::Load()",
+      "dependencyModuleLoadOrder": 11,
+      "disposeBehavior": "MODULE_UNLOAD_ONLY_IN_ACCEPTED_INSTALLED_BUILD",
+      "eligibility": "STATIC_CONFIGURED_DETOUR_SEQUENCE",
+      "lifetime": "MODULE_IMMUTABLE_ACTIVE_IN_ACCEPTED_STATIC_CLOSURE",
+      "package": "CommunalHelper",
+      "packageVersion": "1.25.5",
+      "packageZipSha256": "44f4fb0b277a4900fd2a555e1a73e661140aa7b2455d3c7776cf420193349e3c",
+      "registrationOrder": "LEXICAL_IL_ORDER_THEN_PINNED_GLOBAL_REGISTRATION_INDEX",
+      "rejectionReason": null,
+      "sameTargetParticipants": [
+        {
+          "participants": [
+            {
+              "hookKind": "HOOKGEN_ON",
+              "hookOrManipulator": "CommunalHelper.AeroBlockCharged",
+              "package": "CommunalHelper",
+              "siteOrdinal": 4
+            },
+            {
+              "hookKind": "HOOKGEN_ON",
+              "hookOrManipulator": "ExtendedVariants.Variants.DisableWallJumping",
+              "package": "ExtendedVariantMode",
+              "siteOrdinal": 10
+            }
+          ],
+          "target": "Celeste.Player::WallJump"
+        }
+      ],
+      "siteOrdinal": 4,
+      "storage": "STATIC_EVENT_OR_IDETOUR_FIELD",
+      "targetScopeKind": "EXACT_TARGET_SET",
+      "targetSetFingerprintSha256": "d6285df262edcbae76f9727d89ed7d1058a6d476d3109ce90c5cdd91eb3a99de",
+      "targets": [
+        {
+          "hookKind": "HOOKGEN_ON",
+          "hookOrManipulator": "CommunalHelper.AeroBlockCharged",
+          "target": "Celeste.Player::Jump"
+        },
+        {
+          "hookKind": "HOOKGEN_ON",
+          "hookOrManipulator": "CommunalHelper.AeroBlockCharged",
+          "target": "Celeste.Player::WallJump"
+        },
+        {
+          "hookKind": "HOOKGEN_ON",
+          "hookOrManipulator": "CommunalHelper.AeroBlockCharged",
+          "target": "Celeste.Player::ClimbJump"
+        },
+        {
+          "hookKind": "HOOKGEN_ON",
+          "hookOrManipulator": "CommunalHelper.AeroBlockCharged",
+          "target": "Celeste.Player::SuperJump"
+        },
+        {
+          "hookKind": "HOOKGEN_ON",
+          "hookOrManipulator": "CommunalHelper.AeroBlockCharged",
+          "target": "Celeste.Player::SuperWallJump"
+        }
+      ],
+      "undoBehavior": "MODULE_UNLOAD_ONLY_IN_ACCEPTED_INSTALLED_BUILD"
+    },
+    {
+      "ambientDetourContext": "LEXICALLY_SCOPED_DURING_SYNCHRONOUS_CONSTRUCTION",
+      "applyBehavior": "CONFIG_OBJECT_CONSTRUCTION_ONLY",
+      "assembly": "vitmod",
+      "assemblySha256": "456410258fbce4594c3e987d025bf651e1bd3f49d2d676a921d8ea9f27ba052a",
+      "assemblyVersion": "1.0.0.0",
+      "conditionalCreation": "UNCONDITIONAL_FOR_INSTALLED_PROVIDER",
+      "configurationPhases": [
+        {
+          "normalizedStatic": {
+            "after": [],
+            "before": [],
+            "id": "CrystallineHelper_InteractiveChaser",
+            "priority": 0,
+            "subPriorityPolicy": "PINNED_GLOBAL_REGISTRATION_INDEX"
+          },
+          "source": {
+            "after": [],
+            "before": [],
+            "id": "CrystallineHelper_InteractiveChaser",
+            "legacyContext": false,
+            "priority": 0
+          }
+        }
+      ],
+      "constructionSiteFingerprintSha256": "ef13bef54642e0fe4c2845a889ceb70b40fc33df49cdf3b450119d6fa097d80e",
+      "containingMethod": "System.Void vitmod.InteractiveChaser::.cctor()",
+      "dependencyModuleLoadOrder": 13,
+      "disposeBehavior": "NOT_APPLICABLE_TO_CONFIG_ROOT",
+      "eligibility": "STATIC_CONFIGURED_DETOUR_SEQUENCE",
+      "lifetime": "MODULE_IMMUTABLE_ACTIVE_IN_ACCEPTED_STATIC_CLOSURE",
+      "package": "CrystallineHelper",
+      "packageVersion": "1.17.2",
+      "packageZipSha256": "4573f5e45dce0905142cd2b119f4a9a744bdce8ef3199319d1e46b6d1d342747",
+      "registrationOrder": "LEXICAL_IL_ORDER_THEN_PINNED_GLOBAL_REGISTRATION_INDEX",
+      "rejectionReason": null,
+      "sameTargetParticipants": [],
+      "siteOrdinal": 5,
+      "storage": "STATIC_DETOURCONFIG_FIELD",
+      "targetScopeKind": "CONFIGURATION_ROOT_ONLY",
+      "targetSetFingerprintSha256": "8b7cdd915bb4f6af3a5c7f4d4ecc69bd91d738a68f627926e755224030c3ec06",
+      "targets": [
+        {
+          "hookKind": "CONFIGURATION_ROOT_ONLY",
+          "hookOrManipulator": "new DetourConfig(CrystallineHelper_InteractiveChaser,0)",
+          "target": "vitmod.InteractiveChaser::RootConfig"
+        }
+      ],
+      "undoBehavior": "NOT_APPLICABLE_TO_CONFIG_ROOT"
+    },
+    {
+      "ambientDetourContext": "LEXICALLY_SCOPED_DURING_SYNCHRONOUS_CONSTRUCTION",
+      "applyBehavior": "IMMEDIATE_SUBSCRIPTION_OR_CONSTRUCTION",
+      "assembly": "vitmod",
+      "assemblySha256": "456410258fbce4594c3e987d025bf651e1bd3f49d2d676a921d8ea9f27ba052a",
+      "assemblyVersion": "1.0.0.0",
+      "conditionalCreation": "UNCONDITIONAL_FOR_INSTALLED_PROVIDER",
+      "configurationPhases": [
+        {
+          "normalizedStatic": {
+            "after": [],
+            "before": [],
+            "id": "CrystallineHelper_InteractiveChaser",
+            "priority": 0,
+            "subPriorityPolicy": "PINNED_GLOBAL_REGISTRATION_INDEX"
+          },
+          "source": {
+            "after": [],
+            "before": [],
+            "id": "CrystallineHelper_InteractiveChaser",
+            "legacyContext": false,
+            "priority": 0
+          }
+        }
+      ],
+      "constructionSiteFingerprintSha256": "33807df79f65d752c14f18801ef14803b739bb3cabe1a69da157a2930c38627c",
+      "containingMethod": "System.Void vitmod.InteractiveChaser::Load()",
+      "dependencyModuleLoadOrder": 13,
+      "disposeBehavior": "MODULE_UNLOAD_ONLY_IN_ACCEPTED_INSTALLED_BUILD",
+      "eligibility": "STATIC_CONFIGURED_DETOUR_SEQUENCE",
+      "lifetime": "MODULE_IMMUTABLE_ACTIVE_IN_ACCEPTED_STATIC_CLOSURE",
+      "package": "CrystallineHelper",
+      "packageVersion": "1.17.2",
+      "packageZipSha256": "4573f5e45dce0905142cd2b119f4a9a744bdce8ef3199319d1e46b6d1d342747",
+      "registrationOrder": "LEXICAL_IL_ORDER_THEN_PINNED_GLOBAL_REGISTRATION_INDEX",
+      "rejectionReason": null,
+      "sameTargetParticipants": [
+        {
+          "participants": [
+            {
+              "hookKind": "HOOKGEN_ON",
+              "hookOrManipulator": "BrokemiaHelper.FakeBooster",
+              "package": "BrokemiaHelper",
+              "siteOrdinal": 1
+            },
+            {
+              "hookKind": "HOOKGEN_ON",
+              "hookOrManipulator": "CollabUtils2.StrawberryHooks",
+              "package": "CollabUtils2",
+              "siteOrdinal": 2
+            },
+            {
+              "hookKind": "HOOKGEN_ON",
+              "hookOrManipulator": "vitmod.InteractiveChaser.Player_Die",
+              "package": "CrystallineHelper",
+              "siteOrdinal": 6
+            },
+            {
+              "hookKind": "HOOKGEN_ON",
+              "hookOrManipulator": "StrawberryJam2021.DashCountTrigger",
+              "package": "StrawberryJam2021",
+              "siteOrdinal": 32
+            },
+            {
+              "hookKind": "HOOKGEN_ON",
+              "hookOrManipulator": "VivHelper.RefillCancel",
+              "package": "VivHelper",
+              "siteOrdinal": 36
+            }
+          ],
+          "target": "Celeste.Player::Die"
+        }
+      ],
+      "siteOrdinal": 6,
+      "storage": "STATIC_EVENT_OR_IDETOUR_FIELD",
+      "targetScopeKind": "EXACT_TARGET_SET",
+      "targetSetFingerprintSha256": "105b00f48248d13a02ba672b121f59018c9b1249d9c25642602273c0d094b873",
+      "targets": [
+        {
+          "hookKind": "HOOKGEN_ON",
+          "hookOrManipulator": "vitmod.InteractiveChaser.Player_Die",
+          "target": "Celeste.Player::Die"
+        }
+      ],
+      "undoBehavior": "MODULE_UNLOAD_ONLY_IN_ACCEPTED_INSTALLED_BUILD"
+    },
+    {
+      "ambientDetourContext": "LEXICALLY_SCOPED_DURING_SYNCHRONOUS_CONSTRUCTION",
+      "applyBehavior": "IMMEDIATE_SUBSCRIPTION_OR_CONSTRUCTION",
+      "assembly": "ExtendedVariantMode",
+      "assemblySha256": "cb28846f7f7348ddb996f63498c97694616436e97ef34f67880b697ba024fe81",
+      "assemblyVersion": "1.0.0.0",
+      "conditionalCreation": "RUNTIME_VARIANT_OR_HOOK_STATE",
+      "configurationPhases": [
+        {
+          "normalizedStatic": {
+            "after": [],
+            "before": [],
+            "id": "ExtendedVariantMode_Default",
+            "priority": 0,
+            "subPriorityPolicy": "PINNED_GLOBAL_REGISTRATION_INDEX"
+          },
+          "source": {
+            "after": [],
+            "before": [],
+            "id": "ExtendedVariantMode_Default",
+            "legacyContext": false,
+            "priority": null
+          }
+        }
+      ],
+      "constructionSiteFingerprintSha256": "f3f180bc5e3f6cb27c1d0c38295f627e60dd4d6fdc041ebb1b9085deb0ba1490",
+      "containingMethod": "System.Void ExtendedVariants.Module.ExtendedVariantsModule::hookStuffRightNow()",
+      "dependencyModuleLoadOrder": 18,
+      "disposeBehavior": "GAMEPLAY_OR_MODULE_DISPOSE_PATH_PRESENT",
+      "eligibility": "REJECT_DYNAMIC_LIFETIME",
+      "lifetime": "DYNAMIC_APPLY_UNDO_DISPOSE",
+      "package": "ExtendedVariantMode",
+      "packageVersion": "0.50.5",
+      "packageZipSha256": "4019b362d9ad1b2d3a6a670f833ef6324d735d5791a0bf21b62cf5cfbc0d639d",
+      "registrationOrder": "LEXICAL_IL_ORDER_THEN_PINNED_GLOBAL_REGISTRATION_INDEX",
+      "rejectionReason": "GAMEPLAY_OR_RUNTIME_HOOK_LIFETIME_MUTATION",
+      "sameTargetParticipants": [],
+      "siteOrdinal": 7,
+      "storage": "STATIC_EVENT_OR_IDETOUR_FIELD",
+      "targetScopeKind": "EXACT_SYNCHRONOUS_INITIALIZER_GRAPH",
+      "targetSetFingerprintSha256": "69f75df3b7988378d5f01e64ccf74beb3f3d67275a308d0acf4e171883740ceb",
+      "targets": [
+        {
+          "hookKind": "AMBIENT_REACHABLE_REGISTRATION_SCOPE",
+          "hookOrManipulator": "ExtendedVariantMode_Default",
+          "target": "ExtendedVariants.Module.ExtendedVariantsModule::hookStuffRightNowInner()"
+        }
+      ],
+      "undoBehavior": "GAMEPLAY_OR_MODULE_UNHOOK_PATH_PRESENT"
+    },
+    {
+      "ambientDetourContext": "LEXICALLY_SCOPED_DURING_SYNCHRONOUS_CONSTRUCTION",
+      "applyBehavior": "IMMEDIATE_SUBSCRIPTION_OR_CONSTRUCTION",
+      "assembly": "ExtendedVariantMode",
+      "assemblySha256": "cb28846f7f7348ddb996f63498c97694616436e97ef34f67880b697ba024fe81",
+      "assemblyVersion": "1.0.0.0",
+      "conditionalCreation": "RUNTIME_VARIANT_OR_HOOK_STATE",
+      "configurationPhases": [
+        {
+          "normalizedStatic": {
+            "after": [],
+            "before": [],
+            "id": "ExtendedVariantMode_Default",
+            "priority": 0,
+            "subPriorityPolicy": "PINNED_GLOBAL_REGISTRATION_INDEX"
+          },
+          "source": {
+            "after": [],
+            "before": [],
+            "id": "ExtendedVariantMode_Default",
+            "legacyContext": false,
+            "priority": null
+          }
+        }
+      ],
+      "constructionSiteFingerprintSha256": "c0cf784f8d7f21631a38c5c04b83b1dbc998624ac2aa70ef50120c3b34eb56f5",
+      "containingMethod": "System.Void ExtendedVariants.Module.ExtendedVariantsModule::initializeStuff()",
+      "dependencyModuleLoadOrder": 18,
+      "disposeBehavior": "GAMEPLAY_OR_MODULE_DISPOSE_PATH_PRESENT",
+      "eligibility": "REJECT_DYNAMIC_LIFETIME",
+      "lifetime": "DYNAMIC_APPLY_UNDO_DISPOSE",
+      "package": "ExtendedVariantMode",
+      "packageVersion": "0.50.5",
+      "packageZipSha256": "4019b362d9ad1b2d3a6a670f833ef6324d735d5791a0bf21b62cf5cfbc0d639d",
+      "registrationOrder": "LEXICAL_IL_ORDER_THEN_PINNED_GLOBAL_REGISTRATION_INDEX",
+      "rejectionReason": "GAMEPLAY_OR_RUNTIME_HOOK_LIFETIME_MUTATION",
+      "sameTargetParticipants": [],
+      "siteOrdinal": 8,
+      "storage": "STATIC_EVENT_OR_IDETOUR_FIELD",
+      "targetScopeKind": "EXACT_SYNCHRONOUS_INITIALIZER_GRAPH",
+      "targetSetFingerprintSha256": "e3f9a2bea15982e6424ff1d9260609cd4f4cc2fc2ef61da3464701c02d27b0b0",
+      "targets": [
+        {
+          "hookKind": "AMBIENT_REACHABLE_REGISTRATION_SCOPE",
+          "hookOrManipulator": "ExtendedVariantMode_Default",
+          "target": "ExtendedVariants.Module.ExtendedVariantsModule::initializeStuffInner()"
+        }
+      ],
+      "undoBehavior": "GAMEPLAY_OR_MODULE_UNHOOK_PATH_PRESENT"
+    },
+    {
+      "ambientDetourContext": "LEXICALLY_SCOPED_DURING_SYNCHRONOUS_CONSTRUCTION",
+      "applyBehavior": "IMMEDIATE_SUBSCRIPTION_OR_CONSTRUCTION",
+      "assembly": "ExtendedVariantMode",
+      "assemblySha256": "cb28846f7f7348ddb996f63498c97694616436e97ef34f67880b697ba024fe81",
+      "assemblyVersion": "1.0.0.0",
+      "conditionalCreation": "RUNTIME_VARIANT_OR_HOOK_STATE",
+      "configurationPhases": [
+        {
+          "normalizedStatic": {
+            "after": [],
+            "before": [],
+            "id": "ExtendedVariantMode_BeforeAll",
+            "priority": -2147483648,
+            "subPriorityPolicy": "PINNED_GLOBAL_REGISTRATION_INDEX"
+          },
+          "source": {
+            "after": [],
+            "before": [],
+            "id": "ExtendedVariantMode_BeforeAll",
+            "legacyContext": false,
+            "priority": -2147483648
+          }
+        }
+      ],
+      "constructionSiteFingerprintSha256": "3e69e07f5397acc9fa3b9750e94eaa582f17d2d3fad69e7ca4d353ad81c6d611",
+      "containingMethod": "System.Void ExtendedVariants.UI.VanillaVariantOptions::Load()",
+      "dependencyModuleLoadOrder": 18,
+      "disposeBehavior": "GAMEPLAY_OR_MODULE_DISPOSE_PATH_PRESENT",
+      "eligibility": "REJECT_DYNAMIC_LIFETIME",
+      "lifetime": "DYNAMIC_APPLY_UNDO_DISPOSE",
+      "package": "ExtendedVariantMode",
+      "packageVersion": "0.50.5",
+      "packageZipSha256": "4019b362d9ad1b2d3a6a670f833ef6324d735d5791a0bf21b62cf5cfbc0d639d",
+      "registrationOrder": "LEXICAL_IL_ORDER_THEN_PINNED_GLOBAL_REGISTRATION_INDEX",
+      "rejectionReason": "GAMEPLAY_OR_RUNTIME_HOOK_LIFETIME_MUTATION",
+      "sameTargetParticipants": [],
+      "siteOrdinal": 9,
+      "storage": "STATIC_EVENT_OR_IDETOUR_FIELD",
+      "targetScopeKind": "EXACT_TARGET_SET",
+      "targetSetFingerprintSha256": "e9e11b58f903e0a341f4170db5a12b7efab6f96cc74bc82f8381e1151bcaa805",
+      "targets": [
+        {
+          "hookKind": "HOOKGEN_ON",
+          "hookOrManipulator": "ExtendedVariants.UI.VanillaVariantOptions",
+          "target": "Celeste.Level::VariantMode"
+        },
+        {
+          "hookKind": "HOOKGEN_ON",
+          "hookOrManipulator": "ExtendedVariants.UI.VanillaVariantOptions",
+          "target": "Celeste.Level::AssistMode"
+        }
+      ],
+      "undoBehavior": "GAMEPLAY_OR_MODULE_UNHOOK_PATH_PRESENT"
+    },
+    {
+      "ambientDetourContext": "LEXICALLY_SCOPED_DURING_SYNCHRONOUS_CONSTRUCTION",
+      "applyBehavior": "IMMEDIATE_SUBSCRIPTION_OR_CONSTRUCTION",
+      "assembly": "ExtendedVariantMode",
+      "assemblySha256": "cb28846f7f7348ddb996f63498c97694616436e97ef34f67880b697ba024fe81",
+      "assemblyVersion": "1.0.0.0",
+      "conditionalCreation": "RUNTIME_VARIANT_OR_HOOK_STATE",
+      "configurationPhases": [
+        {
+          "normalizedStatic": {
+            "after": [],
+            "before": [],
+            "id": "ExtendedVariantMode_AfterAll",
+            "priority": 2147483647,
+            "subPriorityPolicy": "PINNED_GLOBAL_REGISTRATION_INDEX"
+          },
+          "source": {
+            "after": [],
+            "before": [],
+            "id": "ExtendedVariantMode_AfterAll",
+            "legacyContext": false,
+            "priority": 2147483647
+          }
+        }
+      ],
+      "constructionSiteFingerprintSha256": "2a2a6e615dd7782d175d009784a310d856bd7190a2c3c470c4ee147c422069e0",
+      "containingMethod": "System.Void ExtendedVariants.Variants.DisableWallJumping::Load()",
+      "dependencyModuleLoadOrder": 18,
+      "disposeBehavior": "GAMEPLAY_OR_MODULE_DISPOSE_PATH_PRESENT",
+      "eligibility": "REJECT_DYNAMIC_LIFETIME",
+      "lifetime": "DYNAMIC_APPLY_UNDO_DISPOSE",
+      "package": "ExtendedVariantMode",
+      "packageVersion": "0.50.5",
+      "packageZipSha256": "4019b362d9ad1b2d3a6a670f833ef6324d735d5791a0bf21b62cf5cfbc0d639d",
+      "registrationOrder": "LEXICAL_IL_ORDER_THEN_PINNED_GLOBAL_REGISTRATION_INDEX",
+      "rejectionReason": "GAMEPLAY_OR_RUNTIME_HOOK_LIFETIME_MUTATION",
+      "sameTargetParticipants": [
+        {
+          "participants": [
+            {
+              "hookKind": "HOOKGEN_ON",
+              "hookOrManipulator": "CommunalHelper.AeroBlockCharged",
+              "package": "CommunalHelper",
+              "siteOrdinal": 4
+            },
+            {
+              "hookKind": "HOOKGEN_ON",
+              "hookOrManipulator": "ExtendedVariants.Variants.DisableWallJumping",
+              "package": "ExtendedVariantMode",
+              "siteOrdinal": 10
+            }
+          ],
+          "target": "Celeste.Player::WallJump"
+        }
+      ],
+      "siteOrdinal": 10,
+      "storage": "STATIC_EVENT_OR_IDETOUR_FIELD",
+      "targetScopeKind": "EXACT_TARGET_SET",
+      "targetSetFingerprintSha256": "8897bd8343d52680b98672c0c074f3cc49a0f06d136570a375fb5db95964352f",
+      "targets": [
+        {
+          "hookKind": "HOOKGEN_ON",
+          "hookOrManipulator": "ExtendedVariants.Variants.DisableWallJumping",
+          "target": "Celeste.Player::WallJump"
+        }
+      ],
+      "undoBehavior": "GAMEPLAY_OR_MODULE_UNHOOK_PATH_PRESENT"
+    },
+    {
+      "ambientDetourContext": "LEXICALLY_SCOPED_DURING_SYNCHRONOUS_CONSTRUCTION",
+      "applyBehavior": "IMMEDIATE_SUBSCRIPTION_OR_CONSTRUCTION",
+      "assembly": "ExtendedVariantMode",
+      "assemblySha256": "cb28846f7f7348ddb996f63498c97694616436e97ef34f67880b697ba024fe81",
+      "assemblyVersion": "1.0.0.0",
+      "conditionalCreation": "RUNTIME_VARIANT_OR_HOOK_STATE",
+      "configurationPhases": [
+        {
+          "normalizedStatic": {
+            "after": [],
+            "before": [],
+            "id": "ExtendedVariantMode_AfterAll",
+            "priority": 2147483647,
+            "subPriorityPolicy": "PINNED_GLOBAL_REGISTRATION_INDEX"
+          },
+          "source": {
+            "after": [],
+            "before": [],
+            "id": "ExtendedVariantMode_AfterAll",
+            "legacyContext": false,
+            "priority": 2147483647
+          }
+        }
+      ],
+      "constructionSiteFingerprintSha256": "74480332b618a5872c6e2f8a018f4fe90052a638cf4dffa08b0027cec65205ed",
+      "containingMethod": "System.Void ExtendedVariants.Variants.Gravity::Load()",
+      "dependencyModuleLoadOrder": 18,
+      "disposeBehavior": "GAMEPLAY_OR_MODULE_DISPOSE_PATH_PRESENT",
+      "eligibility": "REJECT_DYNAMIC_LIFETIME",
+      "lifetime": "DYNAMIC_APPLY_UNDO_DISPOSE",
+      "package": "ExtendedVariantMode",
+      "packageVersion": "0.50.5",
+      "packageZipSha256": "4019b362d9ad1b2d3a6a670f833ef6324d735d5791a0bf21b62cf5cfbc0d639d",
+      "registrationOrder": "LEXICAL_IL_ORDER_THEN_PINNED_GLOBAL_REGISTRATION_INDEX",
+      "rejectionReason": "GAMEPLAY_OR_RUNTIME_HOOK_LIFETIME_MUTATION",
+      "sameTargetParticipants": [
+        {
+          "participants": [
+            {
+              "hookKind": "HOOKGEN_IL",
+              "hookOrManipulator": "ExtendedVariants.Variants.Gravity",
+              "package": "ExtendedVariantMode",
+              "siteOrdinal": 11
+            },
+            {
+              "hookKind": "HOOKGEN_IL",
+              "hookOrManipulator": "VivHelper.HoldablePlus",
+              "package": "VivHelper",
+              "siteOrdinal": 37
+            }
+          ],
+          "target": "Celeste.Player::NormalUpdate"
+        }
+      ],
+      "siteOrdinal": 11,
+      "storage": "STATIC_EVENT_OR_IDETOUR_FIELD",
+      "targetScopeKind": "EXACT_TARGET_SET",
+      "targetSetFingerprintSha256": "b74fc52cdd52ed34e8a49a0c16cf7bd4b38f905cd36af54413717915ce30981f",
+      "targets": [
+        {
+          "hookKind": "HOOKGEN_IL",
+          "hookOrManipulator": "ExtendedVariants.Variants.Gravity",
+          "target": "Celeste.Player::NormalUpdate"
+        }
+      ],
+      "undoBehavior": "GAMEPLAY_OR_MODULE_UNHOOK_PATH_PRESENT"
+    },
+    {
+      "ambientDetourContext": "LEXICALLY_SCOPED_DURING_SYNCHRONOUS_CONSTRUCTION",
+      "applyBehavior": "IMMEDIATE_SUBSCRIPTION_OR_CONSTRUCTION",
+      "assembly": "ExtendedVariantMode",
+      "assemblySha256": "cb28846f7f7348ddb996f63498c97694616436e97ef34f67880b697ba024fe81",
+      "assemblyVersion": "1.0.0.0",
+      "conditionalCreation": "RUNTIME_VARIANT_OR_HOOK_STATE",
+      "configurationPhases": [
+        {
+          "normalizedStatic": {
+            "after": [],
+            "before": [],
+            "id": "ExtendedVariantMode_AfterAll",
+            "priority": 2147483647,
+            "subPriorityPolicy": "PINNED_GLOBAL_REGISTRATION_INDEX"
+          },
+          "source": {
+            "after": [],
+            "before": [],
+            "id": "ExtendedVariantMode_AfterAll",
+            "legacyContext": false,
+            "priority": 2147483647
+          }
+        }
+      ],
+      "constructionSiteFingerprintSha256": "8c6020601027125b7b4b14a1391cd6030eff6bff965a542f34f4b08ba14e86d9",
+      "containingMethod": "System.Void ExtendedVariants.Variants.InvertHorizontalControls::Load()",
+      "dependencyModuleLoadOrder": 18,
+      "disposeBehavior": "GAMEPLAY_OR_MODULE_DISPOSE_PATH_PRESENT",
+      "eligibility": "REJECT_DYNAMIC_LIFETIME",
+      "lifetime": "DYNAMIC_APPLY_UNDO_DISPOSE",
+      "package": "ExtendedVariantMode",
+      "packageVersion": "0.50.5",
+      "packageZipSha256": "4019b362d9ad1b2d3a6a670f833ef6324d735d5791a0bf21b62cf5cfbc0d639d",
+      "registrationOrder": "LEXICAL_IL_ORDER_THEN_PINNED_GLOBAL_REGISTRATION_INDEX",
+      "rejectionReason": "GAMEPLAY_OR_RUNTIME_HOOK_LIFETIME_MUTATION",
+      "sameTargetParticipants": [
+        {
+          "participants": [
+            {
+              "hookKind": "HOOKGEN_ON",
+              "hookOrManipulator": "ExtendedVariants.Variants.InvertHorizontalControls",
+              "package": "ExtendedVariantMode",
+              "siteOrdinal": 12
+            },
+            {
+              "hookKind": "HOOKGEN_ON",
+              "hookOrManipulator": "ExtendedVariants.Variants.InvertVerticalControls",
+              "package": "ExtendedVariantMode",
+              "siteOrdinal": 13
+            }
+          ],
+          "target": "Celeste.Level::Update"
+        }
+      ],
+      "siteOrdinal": 12,
+      "storage": "STATIC_EVENT_OR_IDETOUR_FIELD",
+      "targetScopeKind": "EXACT_TARGET_SET",
+      "targetSetFingerprintSha256": "a97661d30020262784c4734e90689be6d3f0c0fb1eef28e0b9bdcdb9eb51947a",
+      "targets": [
+        {
+          "hookKind": "HOOKGEN_ON",
+          "hookOrManipulator": "ExtendedVariants.Variants.InvertHorizontalControls",
+          "target": "Celeste.Level::Update"
+        }
+      ],
+      "undoBehavior": "GAMEPLAY_OR_MODULE_UNHOOK_PATH_PRESENT"
+    },
+    {
+      "ambientDetourContext": "LEXICALLY_SCOPED_DURING_SYNCHRONOUS_CONSTRUCTION",
+      "applyBehavior": "IMMEDIATE_SUBSCRIPTION_OR_CONSTRUCTION",
+      "assembly": "ExtendedVariantMode",
+      "assemblySha256": "cb28846f7f7348ddb996f63498c97694616436e97ef34f67880b697ba024fe81",
+      "assemblyVersion": "1.0.0.0",
+      "conditionalCreation": "RUNTIME_VARIANT_OR_HOOK_STATE",
+      "configurationPhases": [
+        {
+          "normalizedStatic": {
+            "after": [],
+            "before": [],
+            "id": "ExtendedVariantMode_AfterAll",
+            "priority": 2147483647,
+            "subPriorityPolicy": "PINNED_GLOBAL_REGISTRATION_INDEX"
+          },
+          "source": {
+            "after": [],
+            "before": [],
+            "id": "ExtendedVariantMode_AfterAll",
+            "legacyContext": false,
+            "priority": 2147483647
+          }
+        }
+      ],
+      "constructionSiteFingerprintSha256": "b345908dcef1f95c61a9f12601798d2b5396513c93a94a789e47ea1f2ce678fa",
+      "containingMethod": "System.Void ExtendedVariants.Variants.InvertVerticalControls::Load()",
+      "dependencyModuleLoadOrder": 18,
+      "disposeBehavior": "GAMEPLAY_OR_MODULE_DISPOSE_PATH_PRESENT",
+      "eligibility": "REJECT_DYNAMIC_LIFETIME",
+      "lifetime": "DYNAMIC_APPLY_UNDO_DISPOSE",
+      "package": "ExtendedVariantMode",
+      "packageVersion": "0.50.5",
+      "packageZipSha256": "4019b362d9ad1b2d3a6a670f833ef6324d735d5791a0bf21b62cf5cfbc0d639d",
+      "registrationOrder": "LEXICAL_IL_ORDER_THEN_PINNED_GLOBAL_REGISTRATION_INDEX",
+      "rejectionReason": "GAMEPLAY_OR_RUNTIME_HOOK_LIFETIME_MUTATION",
+      "sameTargetParticipants": [
+        {
+          "participants": [
+            {
+              "hookKind": "HOOKGEN_ON",
+              "hookOrManipulator": "ExtendedVariants.Variants.InvertHorizontalControls",
+              "package": "ExtendedVariantMode",
+              "siteOrdinal": 12
+            },
+            {
+              "hookKind": "HOOKGEN_ON",
+              "hookOrManipulator": "ExtendedVariants.Variants.InvertVerticalControls",
+              "package": "ExtendedVariantMode",
+              "siteOrdinal": 13
+            }
+          ],
+          "target": "Celeste.Level::Update"
+        }
+      ],
+      "siteOrdinal": 13,
+      "storage": "STATIC_EVENT_OR_IDETOUR_FIELD",
+      "targetScopeKind": "EXACT_TARGET_SET",
+      "targetSetFingerprintSha256": "6c7c0d56939882f7436a31c332dcb65b4de25744154cbddffcccc4c2c2321544",
+      "targets": [
+        {
+          "hookKind": "HOOKGEN_ON",
+          "hookOrManipulator": "ExtendedVariants.Variants.InvertVerticalControls",
+          "target": "Celeste.Level::Update"
+        }
+      ],
+      "undoBehavior": "GAMEPLAY_OR_MODULE_UNHOOK_PATH_PRESENT"
+    },
+    {
+      "ambientDetourContext": "LEXICALLY_SCOPED_DURING_SYNCHRONOUS_CONSTRUCTION",
+      "applyBehavior": "IMMEDIATE_SUBSCRIPTION_OR_CONSTRUCTION",
+      "assembly": "ExtendedVariantMode",
+      "assemblySha256": "cb28846f7f7348ddb996f63498c97694616436e97ef34f67880b697ba024fe81",
+      "assemblyVersion": "1.0.0.0",
+      "conditionalCreation": "RUNTIME_VARIANT_OR_HOOK_STATE",
+      "configurationPhases": [
+        {
+          "normalizedStatic": {
+            "after": [],
+            "before": [],
+            "id": "ExtendedVariantMode_BeforeAll",
+            "priority": -2147483648,
+            "subPriorityPolicy": "PINNED_GLOBAL_REGISTRATION_INDEX"
+          },
+          "source": {
+            "after": [],
+            "before": [],
+            "id": "ExtendedVariantMode_BeforeAll",
+            "legacyContext": false,
+            "priority": -2147483648
+          }
+        }
+      ],
+      "constructionSiteFingerprintSha256": "ae6e0d41bdebe43ddbd01647980a0a764ea5608a74eb04767d4be0524f6328a1",
+      "containingMethod": "System.Void ExtendedVariants.Variants.NoFreezeFrames::Load()",
+      "dependencyModuleLoadOrder": 18,
+      "disposeBehavior": "GAMEPLAY_OR_MODULE_DISPOSE_PATH_PRESENT",
+      "eligibility": "REJECT_DYNAMIC_LIFETIME",
+      "lifetime": "DYNAMIC_APPLY_UNDO_DISPOSE",
+      "package": "ExtendedVariantMode",
+      "packageVersion": "0.50.5",
+      "packageZipSha256": "4019b362d9ad1b2d3a6a670f833ef6324d735d5791a0bf21b62cf5cfbc0d639d",
+      "registrationOrder": "LEXICAL_IL_ORDER_THEN_PINNED_GLOBAL_REGISTRATION_INDEX",
+      "rejectionReason": "GAMEPLAY_OR_RUNTIME_HOOK_LIFETIME_MUTATION",
+      "sameTargetParticipants": [
+        {
+          "participants": [
+            {
+              "hookKind": "HOOKGEN_ON",
+              "hookOrManipulator": "ExtendedVariants.Variants.NoFreezeFrames",
+              "package": "ExtendedVariantMode",
+              "siteOrdinal": 14
+            },
+            {
+              "hookKind": "HOOKGEN_ON",
+              "hookOrManipulator": "VivHelper.ExplodeLaunchModifier",
+              "package": "VivHelper",
+              "siteOrdinal": 35
+            }
+          ],
+          "target": "Celeste.Celeste::Freeze"
+        }
+      ],
+      "siteOrdinal": 14,
+      "storage": "STATIC_EVENT_OR_IDETOUR_FIELD",
+      "targetScopeKind": "EXACT_TARGET_SET",
+      "targetSetFingerprintSha256": "33e920034a578cc07af64ee47c222f7900a941318df25b8e3a372520cfab49a9",
+      "targets": [
+        {
+          "hookKind": "HOOKGEN_ON",
+          "hookOrManipulator": "ExtendedVariants.Variants.NoFreezeFrames",
+          "target": "Celeste.Celeste::Freeze"
+        }
+      ],
+      "undoBehavior": "GAMEPLAY_OR_MODULE_UNHOOK_PATH_PRESENT"
+    },
+    {
+      "ambientDetourContext": "LEXICALLY_SCOPED_DURING_SYNCHRONOUS_CONSTRUCTION",
+      "applyBehavior": "IMMEDIATE_SUBSCRIPTION_OR_CONSTRUCTION",
+      "assembly": "ExtendedVariantMode",
+      "assemblySha256": "cb28846f7f7348ddb996f63498c97694616436e97ef34f67880b697ba024fe81",
+      "assemblyVersion": "1.0.0.0",
+      "conditionalCreation": "RUNTIME_VARIANT_OR_HOOK_STATE",
+      "configurationPhases": [
+        {
+          "normalizedStatic": {
+            "after": [],
+            "before": [],
+            "id": "ExtendedVariantMode_AfterAll",
+            "priority": 2147483647,
+            "subPriorityPolicy": "PINNED_GLOBAL_REGISTRATION_INDEX"
+          },
+          "source": {
+            "after": [],
+            "before": [],
+            "id": "ExtendedVariantMode_AfterAll",
+            "legacyContext": false,
+            "priority": 2147483647
+          }
+        }
+      ],
+      "constructionSiteFingerprintSha256": "97375cd2bee6392f4cc90e670f1eb05a2aef4a6217130ae78e91a24664831a89",
+      "containingMethod": "System.Void ExtendedVariants.Variants.Stamina::Load()",
+      "dependencyModuleLoadOrder": 18,
+      "disposeBehavior": "GAMEPLAY_OR_MODULE_DISPOSE_PATH_PRESENT",
+      "eligibility": "REJECT_DYNAMIC_LIFETIME",
+      "lifetime": "DYNAMIC_APPLY_UNDO_DISPOSE",
+      "package": "ExtendedVariantMode",
+      "packageVersion": "0.50.5",
+      "packageZipSha256": "4019b362d9ad1b2d3a6a670f833ef6324d735d5791a0bf21b62cf5cfbc0d639d",
+      "registrationOrder": "LEXICAL_IL_ORDER_THEN_PINNED_GLOBAL_REGISTRATION_INDEX",
+      "rejectionReason": "GAMEPLAY_OR_RUNTIME_HOOK_LIFETIME_MUTATION",
+      "sameTargetParticipants": [
+        {
+          "participants": [
+            {
+              "hookKind": "HOOKGEN_ON",
+              "hookOrManipulator": "ExtendedVariants.Variants.Stamina",
+              "package": "ExtendedVariantMode",
+              "siteOrdinal": 15
+            },
+            {
+              "hookKind": "HOOKGEN_ON",
+              "hookOrManipulator": "LunaticHelper.BubbleReturnBerry.onPlayerConstructor",
+              "package": "LunaticHelper",
+              "siteOrdinal": 21
+            }
+          ],
+          "target": "Celeste.Player::.ctor"
+        },
+        {
+          "participants": [
+            {
+              "hookKind": "HOOKGEN_ON",
+              "hookOrManipulator": "ExtendedVariants.Variants.Stamina",
+              "package": "ExtendedVariantMode",
+              "siteOrdinal": 15
+            },
+            {
+              "hookKind": "HOOKGEN_ON",
+              "hookOrManipulator": "VivHelper.RefillCancel",
+              "package": "VivHelper",
+              "siteOrdinal": 36
+            }
+          ],
+          "target": "Celeste.Player::UseRefill"
+        }
+      ],
+      "siteOrdinal": 15,
+      "storage": "STATIC_EVENT_OR_IDETOUR_FIELD",
+      "targetScopeKind": "EXACT_TARGET_SET",
+      "targetSetFingerprintSha256": "86a0527789d514a296b9d554af9604ea355c5478701b45856c158745e24a4e89",
+      "targets": [
+        {
+          "hookKind": "HOOKGEN_ON",
+          "hookOrManipulator": "ExtendedVariants.Variants.Stamina",
+          "target": "Celeste.Player::OnTransition"
+        },
+        {
+          "hookKind": "HOOKGEN_ON",
+          "hookOrManipulator": "ExtendedVariants.Variants.Stamina",
+          "target": "Celeste.Player::.ctor"
+        },
+        {
+          "hookKind": "HOOKGEN_ON",
+          "hookOrManipulator": "ExtendedVariants.Variants.Stamina",
+          "target": "Celeste.Player::UseRefill"
+        }
+      ],
+      "undoBehavior": "GAMEPLAY_OR_MODULE_UNHOOK_PATH_PRESENT"
+    },
+    {
+      "ambientDetourContext": "LEXICALLY_SCOPED_DURING_SYNCHRONOUS_CONSTRUCTION",
+      "applyBehavior": "CONFIG_OBJECT_CONSTRUCTION_ONLY",
+      "assembly": "FemtoHelper",
+      "assemblySha256": "f99b8ec46987b8dd5b0ce018f854d55f07519651d720d63ed7343eaf82963280",
+      "assemblyVersion": "1.0.0.0",
+      "conditionalCreation": "UNCONDITIONAL_FOR_INSTALLED_PROVIDER",
+      "configurationPhases": [
+        {
+          "normalizedStatic": {
+            "after": [],
+            "before": [],
+            "id": "FemtoHelper",
+            "priority": 0,
+            "subPriorityPolicy": "PINNED_GLOBAL_REGISTRATION_INDEX"
+          },
+          "source": {
+            "after": [],
+            "before": [],
+            "id": "FemtoHelper",
+            "legacyContext": false,
+            "priority": null
+          }
+        }
+      ],
+      "constructionSiteFingerprintSha256": "d4341b6efcb469614e76fed97f051788f059b60a4f00a21afbc9411be202906d",
+      "containingMethod": "System.Void Celeste.Mod.FemtoHelper.FemtoModule::.cctor()",
+      "dependencyModuleLoadOrder": 21,
+      "disposeBehavior": "NOT_APPLICABLE_TO_CONFIG_ROOT",
+      "eligibility": "STATIC_CONFIGURED_DETOUR_SEQUENCE",
+      "lifetime": "MODULE_IMMUTABLE_ACTIVE_IN_ACCEPTED_STATIC_CLOSURE",
+      "package": "FemtoHelper",
+      "packageVersion": "1.15.22",
+      "packageZipSha256": "5a845805bae30490ed7c9da84410fbe672628b8fe927a830f5f2eb148eb88419",
+      "registrationOrder": "LEXICAL_IL_ORDER_THEN_PINNED_GLOBAL_REGISTRATION_INDEX",
+      "rejectionReason": null,
+      "sameTargetParticipants": [],
+      "siteOrdinal": 16,
+      "storage": "STATIC_DETOURCONFIG_FIELD",
+      "targetScopeKind": "CONFIGURATION_ROOT_ONLY",
+      "targetSetFingerprintSha256": "efdbca86ad7d5c752370d603840474f930678f944fb9f781a711e57e39a356f9",
+      "targets": [
+        {
+          "hookKind": "CONFIGURATION_ROOT_ONLY",
+          "hookOrManipulator": "new DetourConfig(FemtoHelper)",
+          "target": "Celeste.Mod.FemtoHelper.FemtoModule::FemtoDetourRootConfig"
+        }
+      ],
+      "undoBehavior": "NOT_APPLICABLE_TO_CONFIG_ROOT"
+    },
+    {
+      "ambientDetourContext": "LEXICALLY_SCOPED_DURING_SYNCHRONOUS_CONSTRUCTION",
+      "applyBehavior": "IMMEDIATE_SUBSCRIPTION_OR_CONSTRUCTION",
+      "assembly": "GravityHelper",
+      "assemblySha256": "6cc0d6cad8ab95dfcd022f80be58695d689a919cbcf6a4a7de4d7b5718dfae80",
+      "assemblyVersion": "1.2.28.0",
+      "conditionalCreation": "UNCONDITIONAL_FOR_INSTALLED_PROVIDER",
+      "configurationPhases": [
+        {
+          "normalizedStatic": {
+            "after": [],
+            "before": [
+              "MaxHelpingHand"
+            ],
+            "id": "GravityHelper",
+            "priority": 0,
+            "subPriorityPolicy": "PINNED_GLOBAL_REGISTRATION_INDEX"
+          },
+          "source": {
+            "after": [
+              "MaxHelpingHand"
+            ],
+            "before": [],
+            "id": "GravityHelper",
+            "legacyContext": true,
+            "priority": null
+          }
+        }
+      ],
+      "constructionSiteFingerprintSha256": "48d3094653b32c82c8d3722e08375d0f60df3ece8b4cfe7480d51f8b36622b94",
+      "containingMethod": "System.Void Celeste.Mod.GravityHelper.Hooks.ActorHooks::Load()",
+      "dependencyModuleLoadOrder": 25,
+      "disposeBehavior": "MODULE_UNLOAD_ONLY_IN_ACCEPTED_INSTALLED_BUILD",
+      "eligibility": "STATIC_CONFIGURED_DETOUR_SEQUENCE",
+      "lifetime": "MODULE_IMMUTABLE_ACTIVE_IN_ACCEPTED_STATIC_CLOSURE",
+      "package": "GravityHelper",
+      "packageVersion": "1.2.28",
+      "packageZipSha256": "d4a40744f4c155d655973754422643980321b6660027bc01b660a71b0d00649b",
+      "registrationOrder": "LEXICAL_IL_ORDER_THEN_PINNED_GLOBAL_REGISTRATION_INDEX",
+      "rejectionReason": null,
+      "sameTargetParticipants": [
+        {
+          "participants": [
+            {
+              "hookKind": "HOOKGEN_IL",
+              "hookOrManipulator": "GravityHelper.ActorHooks",
+              "package": "GravityHelper",
+              "siteOrdinal": 17
+            },
+            {
+              "hookKind": "HOOKGEN_ON",
+              "hookOrManipulator": "GravityHelper.ActorHooks",
+              "package": "GravityHelper",
+              "siteOrdinal": 17
+            },
+            {
+              "hookKind": "HOOKGEN_IL",
+              "hookOrManipulator": "MaxHelpingHand.UpsideDownJumpThru",
+              "package": "MaxHelpingHand",
+              "siteOrdinal": 26
+            }
+          ],
+          "target": "Celeste.Actor::MoveVExact"
+        },
+        {
+          "participants": [
+            {
+              "hookKind": "HOOKGEN_IL",
+              "hookOrManipulator": "GravityHelper.ActorHooks",
+              "package": "GravityHelper",
+              "siteOrdinal": 17
+            },
+            {
+              "hookKind": "HOOKGEN_ON",
+              "hookOrManipulator": "GravityHelper.ActorHooks",
+              "package": "GravityHelper",
+              "siteOrdinal": 17
+            },
+            {
+              "hookKind": "HOOKGEN_IL",
+              "hookOrManipulator": "MaxHelpingHand.UpsideDownJumpThru",
+              "package": "MaxHelpingHand",
+              "siteOrdinal": 26
+            }
+          ],
+          "target": "Celeste.Actor::MoveVExact"
+        }
+      ],
+      "siteOrdinal": 17,
+      "storage": "STATIC_EVENT_OR_IDETOUR_FIELD",
+      "targetScopeKind": "EXACT_TARGET_SET",
+      "targetSetFingerprintSha256": "a500b21ee6a2bcdf42fddc67a41cd921df62850810c0fe03a9a3eb5d60332d57",
+      "targets": [
+        {
+          "hookKind": "HOOKGEN_IL",
+          "hookOrManipulator": "GravityHelper.ActorHooks",
+          "target": "Celeste.Actor::MoveVExact"
+        },
+        {
+          "hookKind": "HOOKGEN_ON",
+          "hookOrManipulator": "GravityHelper.ActorHooks",
+          "target": "Celeste.Actor::MoveV"
+        },
+        {
+          "hookKind": "HOOKGEN_ON",
+          "hookOrManipulator": "GravityHelper.ActorHooks",
+          "target": "Celeste.Actor::MoveVExact"
+        },
+        {
+          "hookKind": "HOOKGEN_ON",
+          "hookOrManipulator": "GravityHelper.ActorHooks",
+          "target": "Celeste.Actor::IsRiding(Celeste.JumpThru)"
+        }
+      ],
+      "undoBehavior": "MODULE_UNLOAD_ONLY_IN_ACCEPTED_INSTALLED_BUILD"
+    },
+    {
+      "ambientDetourContext": "LEXICALLY_SCOPED_DURING_SYNCHRONOUS_CONSTRUCTION",
+      "applyBehavior": "IMMEDIATE_SUBSCRIPTION_OR_CONSTRUCTION",
+      "assembly": "GravityHelper",
+      "assemblySha256": "6cc0d6cad8ab95dfcd022f80be58695d689a919cbcf6a4a7de4d7b5718dfae80",
+      "assemblyVersion": "1.2.28.0",
+      "conditionalCreation": "UNCONDITIONAL_FOR_INSTALLED_PROVIDER",
+      "configurationPhases": [
+        {
+          "normalizedStatic": {
+            "after": [
+              "MaxHelpingHand",
+              "SpringCollab2020"
+            ],
+            "before": [],
+            "id": "GravityHelper",
+            "priority": 0,
+            "subPriorityPolicy": "PINNED_GLOBAL_REGISTRATION_INDEX"
+          },
+          "source": {
+            "after": [],
+            "before": [
+              "MaxHelpingHand",
+              "SpringCollab2020"
+            ],
+            "id": "GravityHelper",
+            "legacyContext": true,
+            "priority": null
+          }
+        }
+      ],
+      "constructionSiteFingerprintSha256": "8b8e835f47edd8871ed7cf017ae410f016a9daa29e8d17840a81627180a01ad9",
+      "containingMethod": "System.Void Celeste.Mod.GravityHelper.Hooks.PlayerHooks::Load()",
+      "dependencyModuleLoadOrder": 25,
+      "disposeBehavior": "MODULE_UNLOAD_ONLY_IN_ACCEPTED_INSTALLED_BUILD",
+      "eligibility": "STATIC_CONFIGURED_DETOUR_SEQUENCE",
+      "lifetime": "MODULE_IMMUTABLE_ACTIVE_IN_ACCEPTED_STATIC_CLOSURE",
+      "package": "GravityHelper",
+      "packageVersion": "1.2.28",
+      "packageZipSha256": "d4a40744f4c155d655973754422643980321b6660027bc01b660a71b0d00649b",
+      "registrationOrder": "LEXICAL_IL_ORDER_THEN_PINNED_GLOBAL_REGISTRATION_INDEX",
+      "rejectionReason": null,
+      "sameTargetParticipants": [
+        {
+          "participants": [
+            {
+              "hookKind": "DIRECT_ILHOOK",
+              "hookOrManipulator": "GravityHelper.PlayerHooks",
+              "package": "GravityHelper",
+              "siteOrdinal": 18
+            },
+            {
+              "hookKind": "DIRECT_ILHOOK",
+              "hookOrManipulator": "MaxHelpingHand.UpsideDownJumpThru",
+              "package": "MaxHelpingHand",
+              "siteOrdinal": 26
+            },
+            {
+              "hookKind": "DIRECT_ILHOOK",
+              "hookOrManipulator": "MaxHelpingHand.CameraCatchupSpeedTrigger",
+              "package": "MaxHelpingHand",
+              "siteOrdinal": 30
+            },
+            {
+              "hookKind": "DIRECT_ILHOOK",
+              "hookOrManipulator": "XaphanHelper.LightningDash",
+              "package": "XaphanHelper",
+              "siteOrdinal": 39
+            }
+          ],
+          "target": "Celeste.Player::orig_Update"
+        },
+        {
+          "participants": [
+            {
+              "hookKind": "DIRECT_ILHOOK",
+              "hookOrManipulator": "GravityHelper.PlayerHooks",
+              "package": "GravityHelper",
+              "siteOrdinal": 18
+            },
+            {
+              "hookKind": "DIRECT_MANAGED_HOOK",
+              "hookOrManipulator": "MaxHelpingHand.UpsideDownJumpThru.modCanUnDuck",
+              "package": "MaxHelpingHand",
+              "siteOrdinal": 26
+            }
+          ],
+          "target": "Celeste.Player::get_CanUnDuck"
+        }
+      ],
+      "siteOrdinal": 18,
+      "storage": "STATIC_EVENT_OR_IDETOUR_FIELD",
+      "targetScopeKind": "EXACT_TARGET_SET",
+      "targetSetFingerprintSha256": "27aa58d9744c9feeb087e145d928ba468e38908b2a556783de28febab10bb58c",
+      "targets": [
+        {
+          "hookKind": "DIRECT_ILHOOK",
+          "hookOrManipulator": "GravityHelper.PlayerHooks",
+          "target": "Celeste.Player::orig_Update"
+        },
+        {
+          "hookKind": "DIRECT_ILHOOK",
+          "hookOrManipulator": "GravityHelper.PlayerHooks",
+          "target": "Celeste.Player::DashCoroutine.state-machine"
+        },
+        {
+          "hookKind": "DIRECT_ILHOOK",
+          "hookOrManipulator": "GravityHelper.PlayerHooks",
+          "target": "Celeste.Player::IntroJumpCoroutine.state-machine"
+        },
+        {
+          "hookKind": "DIRECT_ILHOOK",
+          "hookOrManipulator": "GravityHelper.PlayerHooks",
+          "target": "Celeste.Player::PickupCoroutine.state-machine"
+        },
+        {
+          "hookKind": "DIRECT_ILHOOK",
+          "hookOrManipulator": "GravityHelper.PlayerHooks",
+          "target": "Celeste.Player::orig_UpdateSprite"
+        },
+        {
+          "hookKind": "DIRECT_ILHOOK",
+          "hookOrManipulator": "GravityHelper.PlayerHooks",
+          "target": "Celeste.Player::orig_WallJump"
+        },
+        {
+          "hookKind": "DIRECT_ILHOOK",
+          "hookOrManipulator": "GravityHelper.PlayerHooks",
+          "target": "Celeste.Player::get_CanUnDuck"
+        },
+        {
+          "hookKind": "DIRECT_ILHOOK",
+          "hookOrManipulator": "GravityHelper.PlayerHooks",
+          "target": "Celeste.Player::get_CameraTarget"
+        },
+        {
+          "hookKind": "DIRECT_ILHOOK",
+          "hookOrManipulator": "GravityHelper.PlayerHooks",
+          "target": "Celeste.Player::.ctor.OnFrameChange"
+        }
+      ],
+      "undoBehavior": "MODULE_UNLOAD_ONLY_IN_ACCEPTED_INSTALLED_BUILD"
+    },
+    {
+      "ambientDetourContext": "LEXICALLY_SCOPED_DURING_SYNCHRONOUS_CONSTRUCTION",
+      "applyBehavior": "IMMEDIATE_SUBSCRIPTION_OR_CONSTRUCTION",
+      "assembly": "GravityHelper",
+      "assemblySha256": "6cc0d6cad8ab95dfcd022f80be58695d689a919cbcf6a4a7de4d7b5718dfae80",
+      "assemblyVersion": "1.2.28.0",
+      "conditionalCreation": "UNCONDITIONAL_FOR_INSTALLED_PROVIDER",
+      "configurationPhases": [
+        {
+          "normalizedStatic": {
+            "after": [],
+            "before": [],
+            "id": "GravityHelper",
+            "priority": -2147483648,
+            "subPriorityPolicy": "PINNED_GLOBAL_REGISTRATION_INDEX"
+          },
+          "source": {
+            "after": [],
+            "before": [
+              "*"
+            ],
+            "id": "GravityHelper",
+            "legacyContext": true,
+            "priority": null
+          }
+        }
+      ],
+      "constructionSiteFingerprintSha256": "2dc89e2a278070f6adaf662a4705e88c1aac0aa9c5678cb73e27b620211f0631",
+      "containingMethod": "System.Void Celeste.Mod.GravityHelper.Hooks.SpikesHooks::Load()",
+      "dependencyModuleLoadOrder": 25,
+      "disposeBehavior": "MODULE_UNLOAD_ONLY_IN_ACCEPTED_INSTALLED_BUILD",
+      "eligibility": "STATIC_CONFIGURED_DETOUR_SEQUENCE",
+      "lifetime": "MODULE_IMMUTABLE_ACTIVE_IN_ACCEPTED_STATIC_CLOSURE",
+      "package": "GravityHelper",
+      "packageVersion": "1.2.28",
+      "packageZipSha256": "d4a40744f4c155d655973754422643980321b6660027bc01b660a71b0d00649b",
+      "registrationOrder": "LEXICAL_IL_ORDER_THEN_PINNED_GLOBAL_REGISTRATION_INDEX",
+      "rejectionReason": null,
+      "sameTargetParticipants": [],
+      "siteOrdinal": 19,
+      "storage": "STATIC_EVENT_OR_IDETOUR_FIELD",
+      "targetScopeKind": "EXACT_TARGET_SET",
+      "targetSetFingerprintSha256": "94939655e0d8951b364793109592d17c08e71a2df6e9ab6c5030c9d6f234d620",
+      "targets": [
+        {
+          "hookKind": "HOOKGEN_ON",
+          "hookOrManipulator": "GravityHelper.SpikesHooks",
+          "target": "Celeste.Spikes::OnCollide"
+        }
+      ],
+      "undoBehavior": "MODULE_UNLOAD_ONLY_IN_ACCEPTED_INSTALLED_BUILD"
+    },
+    {
+      "ambientDetourContext": "LEXICALLY_SCOPED_DURING_SYNCHRONOUS_CONSTRUCTION",
+      "applyBehavior": "IMMEDIATE_SUBSCRIPTION_OR_CONSTRUCTION",
+      "assembly": "JungleHelper",
+      "assemblySha256": "fed840ade7250f05e38b70a81bcfe751ca87ff63274f4b568172868cacf56f8a",
+      "assemblyVersion": "1.0.0.0",
+      "conditionalCreation": "UNCONDITIONAL_FOR_INSTALLED_PROVIDER",
+      "configurationPhases": [
+        {
+          "normalizedStatic": {
+            "after": [],
+            "before": [],
+            "id": "JungleHelper_BeforeAll",
+            "priority": -2147483648,
+            "subPriorityPolicy": "PINNED_GLOBAL_REGISTRATION_INDEX"
+          },
+          "source": {
+            "after": [],
+            "before": [],
+            "id": "JungleHelper_BeforeAll",
+            "legacyContext": false,
+            "priority": -2147483648
+          }
+        }
+      ],
+      "constructionSiteFingerprintSha256": "c24ccb9d3d075afe0bf76d7f3a66eb1e87ca95674e1be0e72f2338f02de76960",
+      "containingMethod": "System.Void Celeste.Mod.JungleHelper.Entities.EnforceSkinController::Load()",
+      "dependencyModuleLoadOrder": 29,
+      "disposeBehavior": "MODULE_UNLOAD_ONLY_IN_ACCEPTED_INSTALLED_BUILD",
+      "eligibility": "STATIC_CONFIGURED_DETOUR_SEQUENCE",
+      "lifetime": "MODULE_IMMUTABLE_ACTIVE_IN_ACCEPTED_STATIC_CLOSURE",
+      "package": "JungleHelper",
+      "packageVersion": "1.4.10",
+      "packageZipSha256": "a140e21cbb5fd2dcaac70d4d5e36d49476e414861455ae25dedc0678164406cc",
+      "registrationOrder": "LEXICAL_IL_ORDER_THEN_PINNED_GLOBAL_REGISTRATION_INDEX",
+      "rejectionReason": null,
+      "sameTargetParticipants": [],
+      "siteOrdinal": 20,
+      "storage": "STATIC_EVENT_OR_IDETOUR_FIELD",
+      "targetScopeKind": "EXACT_TARGET_SET",
+      "targetSetFingerprintSha256": "1b19a01934fd19d940d0d98a099e2fe774685b039a48d2d269cf82b5ccdd00df",
+      "targets": [
+        {
+          "hookKind": "DIRECT_MANAGED_HOOK",
+          "hookOrManipulator": "JungleHelper.EnforceSkinController",
+          "target": "Monocle.SpriteBank::CreateOn"
+        }
+      ],
+      "undoBehavior": "MODULE_UNLOAD_ONLY_IN_ACCEPTED_INSTALLED_BUILD"
+    },
+    {
+      "ambientDetourContext": "LEXICALLY_SCOPED_DURING_SYNCHRONOUS_CONSTRUCTION",
+      "applyBehavior": "IMMEDIATE_SUBSCRIPTION_OR_CONSTRUCTION",
+      "assembly": "LunaticHelper",
+      "assemblySha256": "fc08f00296551a6025c5e31422c6edd5e8136e6861459f44ffea909129c6a925",
+      "assemblyVersion": "1.0.0.0",
+      "conditionalCreation": "UNCONDITIONAL_FOR_INSTALLED_PROVIDER",
+      "configurationPhases": [
+        {
+          "normalizedStatic": {
+            "after": [],
+            "before": [],
+            "id": "LunaticHelper",
+            "priority": 2147483647,
+            "subPriorityPolicy": "PINNED_GLOBAL_REGISTRATION_INDEX"
+          },
+          "source": {
+            "after": [
+              "*"
+            ],
+            "before": [],
+            "id": "LunaticHelper",
+            "legacyContext": true,
+            "priority": null
+          }
+        }
+      ],
+      "constructionSiteFingerprintSha256": "561e3337baae5910cca0599ca1a8730f957c81d218f47b014a19a1531af304d7",
+      "containingMethod": "System.Void LunaticHelper.BubbleReturnBerry::Load()",
+      "dependencyModuleLoadOrder": 31,
+      "disposeBehavior": "MODULE_UNLOAD_ONLY_IN_ACCEPTED_INSTALLED_BUILD",
+      "eligibility": "STATIC_CONFIGURED_DETOUR_SEQUENCE",
+      "lifetime": "MODULE_IMMUTABLE_ACTIVE_IN_ACCEPTED_STATIC_CLOSURE",
+      "package": "LunaticHelper",
+      "packageVersion": "1.1.1",
+      "packageZipSha256": "b10e044b1dfa412605bee3ba6bfdd4263591099d331d6c1aab1e9ba65bf6a3e5",
+      "registrationOrder": "LEXICAL_IL_ORDER_THEN_PINNED_GLOBAL_REGISTRATION_INDEX",
+      "rejectionReason": null,
+      "sameTargetParticipants": [
+        {
+          "participants": [
+            {
+              "hookKind": "HOOKGEN_ON",
+              "hookOrManipulator": "ExtendedVariants.Variants.Stamina",
+              "package": "ExtendedVariantMode",
+              "siteOrdinal": 15
+            },
+            {
+              "hookKind": "HOOKGEN_ON",
+              "hookOrManipulator": "LunaticHelper.BubbleReturnBerry.onPlayerConstructor",
+              "package": "LunaticHelper",
+              "siteOrdinal": 21
+            }
+          ],
+          "target": "Celeste.Player::.ctor"
+        }
+      ],
+      "siteOrdinal": 21,
+      "storage": "STATIC_EVENT_OR_IDETOUR_FIELD",
+      "targetScopeKind": "EXACT_TARGET_SET",
+      "targetSetFingerprintSha256": "224c412a8fc044c3017c857a3f135215c2712b716d1bd8231b61c1932b0d52a6",
+      "targets": [
+        {
+          "hookKind": "HOOKGEN_ON",
+          "hookOrManipulator": "LunaticHelper.BubbleReturnBerry.onPlayerConstructor",
+          "target": "Celeste.Player::.ctor"
+        }
+      ],
+      "undoBehavior": "MODULE_UNLOAD_ONLY_IN_ACCEPTED_INSTALLED_BUILD"
+    },
+    {
+      "ambientDetourContext": "LEXICALLY_SCOPED_DURING_SYNCHRONOUS_CONSTRUCTION",
+      "applyBehavior": "IMMEDIATE_SUBSCRIPTION_OR_CONSTRUCTION",
+      "assembly": "MaxHelpingHand",
+      "assemblySha256": "6f463f2c014eb60c4abb61e395eb5065455d4bf469f4c83fce9814fb7bfcdfa6",
+      "assemblyVersion": "1.0.0.0",
+      "conditionalCreation": "UNCONDITIONAL_FOR_INSTALLED_PROVIDER",
+      "configurationPhases": [
+        {
+          "normalizedStatic": {
+            "after": [],
+            "before": [],
+            "id": "MaddieHelpingHand_AfterAll",
+            "priority": 2147483647,
+            "subPriorityPolicy": "PINNED_GLOBAL_REGISTRATION_INDEX"
+          },
+          "source": {
+            "after": [],
+            "before": [],
+            "id": "MaddieHelpingHand_AfterAll",
+            "legacyContext": false,
+            "priority": 2147483647
+          }
+        }
+      ],
+      "constructionSiteFingerprintSha256": "3c6c94791e2034298efb8e6060558f490ea37f5c47cd92f772a3a77919315712",
+      "containingMethod": "System.Void Celeste.Mod.MaxHelpingHand.Effects.HdParallax::Load()",
+      "dependencyModuleLoadOrder": 32,
+      "disposeBehavior": "MODULE_UNLOAD_ONLY_IN_ACCEPTED_INSTALLED_BUILD",
+      "eligibility": "STATIC_CONFIGURED_DETOUR_SEQUENCE",
+      "lifetime": "MODULE_IMMUTABLE_ACTIVE_IN_ACCEPTED_STATIC_CLOSURE",
+      "package": "MaxHelpingHand",
+      "packageVersion": "1.40.9",
+      "packageZipSha256": "abfc5d167936410e9b6665018335ee654455e30710caffe01540b232da468fee",
+      "registrationOrder": "LEXICAL_IL_ORDER_THEN_PINNED_GLOBAL_REGISTRATION_INDEX",
+      "rejectionReason": null,
+      "sameTargetParticipants": [],
+      "siteOrdinal": 22,
+      "storage": "STATIC_EVENT_OR_IDETOUR_FIELD",
+      "targetScopeKind": "EXACT_TARGET_SET",
+      "targetSetFingerprintSha256": "199bc157dd5eed28161e03da0e5a0070963fdbb0450538f0462adb88ee449b4c",
+      "targets": [
+        {
+          "hookKind": "HOOKGEN_IL",
+          "hookOrManipulator": "MaxHelpingHand.HdParallax",
+          "target": "Celeste.Level::Render"
+        },
+        {
+          "hookKind": "HOOKGEN_IL",
+          "hookOrManipulator": "MaxHelpingHand.HdParallax",
+          "target": "Monocle.Parallax::Render"
+        }
+      ],
+      "undoBehavior": "MODULE_UNLOAD_ONLY_IN_ACCEPTED_INSTALLED_BUILD"
+    },
+    {
+      "ambientDetourContext": "LEXICALLY_SCOPED_DURING_SYNCHRONOUS_CONSTRUCTION",
+      "applyBehavior": "IMMEDIATE_SUBSCRIPTION_OR_CONSTRUCTION",
+      "assembly": "MaxHelpingHand",
+      "assemblySha256": "6f463f2c014eb60c4abb61e395eb5065455d4bf469f4c83fce9814fb7bfcdfa6",
+      "assemblyVersion": "1.0.0.0",
+      "conditionalCreation": "BUILD_CLOSURE_DEPENDENCY_CONDITIONAL",
+      "configurationPhases": [
+        {
+          "normalizedStatic": {
+            "after": [],
+            "before": [],
+            "id": "MaddieHelpingHand_AfterAll",
+            "priority": 2147483647,
+            "subPriorityPolicy": "PINNED_GLOBAL_REGISTRATION_INDEX"
+          },
+          "source": {
+            "after": [],
+            "before": [],
+            "id": "MaddieHelpingHand_AfterAll",
+            "legacyContext": false,
+            "priority": 2147483647
+          }
+        }
+      ],
+      "constructionSiteFingerprintSha256": "4e4daf37ff06eee8afb2907f1a999bfad0e29ff18a3e1abcfdb37e149693c75c",
+      "containingMethod": "System.Void Celeste.Mod.MaxHelpingHand.Entities.CustomSeekerBarrier::LoadMods()",
+      "dependencyModuleLoadOrder": 32,
+      "disposeBehavior": "MODULE_UNLOAD_ONLY_IN_ACCEPTED_INSTALLED_BUILD",
+      "eligibility": "STATIC_CONFIGURED_DETOUR_SEQUENCE",
+      "lifetime": "MODULE_IMMUTABLE_ACTIVE_IN_ACCEPTED_STATIC_CLOSURE",
+      "package": "MaxHelpingHand",
+      "packageVersion": "1.40.9",
+      "packageZipSha256": "abfc5d167936410e9b6665018335ee654455e30710caffe01540b232da468fee",
+      "registrationOrder": "LEXICAL_IL_ORDER_THEN_PINNED_GLOBAL_REGISTRATION_INDEX",
+      "rejectionReason": null,
+      "sameTargetParticipants": [],
+      "siteOrdinal": 23,
+      "storage": "STATIC_EVENT_OR_IDETOUR_FIELD",
+      "targetScopeKind": "EXACT_TARGET_SET",
+      "targetSetFingerprintSha256": "5df42528a89678789f69af4f7602c3f21a559188dd50361d1230b81a5088526c",
+      "targets": [
+        {
+          "hookKind": "DIRECT_ILHOOK",
+          "hookOrManipulator": "MaxHelpingHand.CustomSeekerBarrier",
+          "target": "Celeste.Mod.EeveeHelper.Entities.HoldableContainer::Update"
+        }
+      ],
+      "undoBehavior": "MODULE_UNLOAD_ONLY_IN_ACCEPTED_INSTALLED_BUILD"
+    },
+    {
+      "ambientDetourContext": "LEXICALLY_SCOPED_DURING_SYNCHRONOUS_CONSTRUCTION",
+      "applyBehavior": "IMMEDIATE_SUBSCRIPTION_OR_CONSTRUCTION",
+      "assembly": "MaxHelpingHand",
+      "assemblySha256": "6f463f2c014eb60c4abb61e395eb5065455d4bf469f4c83fce9814fb7bfcdfa6",
+      "assemblyVersion": "1.0.0.0",
+      "conditionalCreation": "UNCONDITIONAL_FOR_INSTALLED_PROVIDER",
+      "configurationPhases": [
+        {
+          "normalizedStatic": {
+            "after": [],
+            "before": [],
+            "id": "MaddieHelpingHand_AfterAll",
+            "priority": 2147483647,
+            "subPriorityPolicy": "PINNED_GLOBAL_REGISTRATION_INDEX"
+          },
+          "source": {
+            "after": [],
+            "before": [],
+            "id": "MaddieHelpingHand_AfterAll",
+            "legacyContext": false,
+            "priority": 2147483647
+          }
+        }
+      ],
+      "constructionSiteFingerprintSha256": "2f4837c6382ac069f21df3c96e41372bc6286c28ab821960562167d745593a21",
+      "containingMethod": "System.Void Celeste.Mod.MaxHelpingHand.Entities.RainbowSpinnerColorAreaController::Load()",
+      "dependencyModuleLoadOrder": 32,
+      "disposeBehavior": "MODULE_UNLOAD_ONLY_IN_ACCEPTED_INSTALLED_BUILD",
+      "eligibility": "STATIC_CONFIGURED_DETOUR_SEQUENCE",
+      "lifetime": "MODULE_IMMUTABLE_ACTIVE_IN_ACCEPTED_STATIC_CLOSURE",
+      "package": "MaxHelpingHand",
+      "packageVersion": "1.40.9",
+      "packageZipSha256": "abfc5d167936410e9b6665018335ee654455e30710caffe01540b232da468fee",
+      "registrationOrder": "LEXICAL_IL_ORDER_THEN_PINNED_GLOBAL_REGISTRATION_INDEX",
+      "rejectionReason": null,
+      "sameTargetParticipants": [],
+      "siteOrdinal": 24,
+      "storage": "STATIC_EVENT_OR_IDETOUR_FIELD",
+      "targetScopeKind": "EXACT_TARGET_SET",
+      "targetSetFingerprintSha256": "93d1da1bdf405546a61265330327df04b75de730069113190dec143f3b4359ee",
+      "targets": [
+        {
+          "hookKind": "HOOKGEN_ON",
+          "hookOrManipulator": "MaxHelpingHand.RainbowSpinnerColorAreaController",
+          "target": "Celeste.CrystalStaticSpinner::GetHue"
+        }
+      ],
+      "undoBehavior": "MODULE_UNLOAD_ONLY_IN_ACCEPTED_INSTALLED_BUILD"
+    },
+    {
+      "ambientDetourContext": "LEXICALLY_SCOPED_DURING_SYNCHRONOUS_CONSTRUCTION",
+      "applyBehavior": "IMMEDIATE_SUBSCRIPTION_OR_CONSTRUCTION",
+      "assembly": "MaxHelpingHand",
+      "assemblySha256": "6f463f2c014eb60c4abb61e395eb5065455d4bf469f4c83fce9814fb7bfcdfa6",
+      "assemblyVersion": "1.0.0.0",
+      "conditionalCreation": "BUILD_CLOSURE_DEPENDENCY_CONDITIONAL",
+      "configurationPhases": [
+        {
+          "normalizedStatic": {
+            "after": [],
+            "before": [],
+            "id": "MaddieHelpingHand_AfterAll",
+            "priority": 2147483647,
+            "subPriorityPolicy": "PINNED_GLOBAL_REGISTRATION_INDEX"
+          },
+          "source": {
+            "after": [],
+            "before": [],
+            "id": "MaddieHelpingHand_AfterAll",
+            "legacyContext": false,
+            "priority": 2147483647
+          }
+        }
+      ],
+      "constructionSiteFingerprintSha256": "915910ae417427406007d09d9570c5c825fe4f2b7b1b41d3187831bcd2e2698b",
+      "containingMethod": "System.Void Celeste.Mod.MaxHelpingHand.Entities.RainbowSpinnerColorAreaController::LoadMods()",
+      "dependencyModuleLoadOrder": 32,
+      "disposeBehavior": "MODULE_UNLOAD_ONLY_IN_ACCEPTED_INSTALLED_BUILD",
+      "eligibility": "STATIC_CONFIGURED_DETOUR_SEQUENCE",
+      "lifetime": "MODULE_IMMUTABLE_ACTIVE_IN_ACCEPTED_STATIC_CLOSURE",
+      "package": "MaxHelpingHand",
+      "packageVersion": "1.40.9",
+      "packageZipSha256": "abfc5d167936410e9b6665018335ee654455e30710caffe01540b232da468fee",
+      "registrationOrder": "LEXICAL_IL_ORDER_THEN_PINNED_GLOBAL_REGISTRATION_INDEX",
+      "rejectionReason": null,
+      "sameTargetParticipants": [],
+      "siteOrdinal": 25,
+      "storage": "STATIC_EVENT_OR_IDETOUR_FIELD",
+      "targetScopeKind": "EXACT_TARGET_SET",
+      "targetSetFingerprintSha256": "79a54ee1464b29352555e91ffd4cf0b1c81ef5fddaadd6f43a67ab179985ca35",
+      "targets": [
+        {
+          "hookKind": "DIRECT_MANAGED_HOOK",
+          "hookOrManipulator": "MaxHelpingHand.RainbowSpinnerColorAreaController.getRainbowDecalComponentHue",
+          "target": "Celeste.Mod.JungleHelper.Components.RainbowDecalComponent::getHue"
+        }
+      ],
+      "undoBehavior": "MODULE_UNLOAD_ONLY_IN_ACCEPTED_INSTALLED_BUILD"
+    },
+    {
+      "ambientDetourContext": "LEXICALLY_SCOPED_DURING_SYNCHRONOUS_CONSTRUCTION",
+      "applyBehavior": "IMMEDIATE_SUBSCRIPTION_OR_CONSTRUCTION",
+      "assembly": "MaxHelpingHand",
+      "assemblySha256": "6f463f2c014eb60c4abb61e395eb5065455d4bf469f4c83fce9814fb7bfcdfa6",
+      "assemblyVersion": "1.0.0.0",
+      "conditionalCreation": "UNCONDITIONAL_FOR_INSTALLED_PROVIDER",
+      "configurationPhases": [
+        {
+          "normalizedStatic": {
+            "after": [],
+            "before": [],
+            "id": "MaxHelpingHand",
+            "priority": 2147483647,
+            "subPriorityPolicy": "PINNED_GLOBAL_REGISTRATION_INDEX"
+          },
+          "source": {
+            "after": [],
+            "before": [],
+            "id": "MaxHelpingHand",
+            "legacyContext": false,
+            "priority": 2147483647
+          }
+        }
+      ],
+      "constructionSiteFingerprintSha256": "414a9a2d5d40e279af3966db2d26599a5b9cf7a663f6eb08a9cacb9e3119e0b3",
+      "containingMethod": "System.Void Celeste.Mod.MaxHelpingHand.Entities.UpsideDownJumpThru::activateHooks()",
+      "dependencyModuleLoadOrder": 32,
+      "disposeBehavior": "MODULE_UNLOAD_ONLY_IN_ACCEPTED_INSTALLED_BUILD",
+      "eligibility": "STATIC_CONFIGURED_DETOUR_SEQUENCE",
+      "lifetime": "MODULE_IMMUTABLE_ACTIVE_IN_ACCEPTED_STATIC_CLOSURE",
+      "package": "MaxHelpingHand",
+      "packageVersion": "1.40.9",
+      "packageZipSha256": "abfc5d167936410e9b6665018335ee654455e30710caffe01540b232da468fee",
+      "registrationOrder": "LEXICAL_IL_ORDER_THEN_PINNED_GLOBAL_REGISTRATION_INDEX",
+      "rejectionReason": null,
+      "sameTargetParticipants": [
+        {
+          "participants": [
+            {
+              "hookKind": "DIRECT_ILHOOK",
+              "hookOrManipulator": "GravityHelper.PlayerHooks",
+              "package": "GravityHelper",
+              "siteOrdinal": 18
+            },
+            {
+              "hookKind": "DIRECT_ILHOOK",
+              "hookOrManipulator": "MaxHelpingHand.UpsideDownJumpThru",
+              "package": "MaxHelpingHand",
+              "siteOrdinal": 26
+            },
+            {
+              "hookKind": "DIRECT_ILHOOK",
+              "hookOrManipulator": "MaxHelpingHand.CameraCatchupSpeedTrigger",
+              "package": "MaxHelpingHand",
+              "siteOrdinal": 30
+            },
+            {
+              "hookKind": "DIRECT_ILHOOK",
+              "hookOrManipulator": "XaphanHelper.LightningDash",
+              "package": "XaphanHelper",
+              "siteOrdinal": 39
+            }
+          ],
+          "target": "Celeste.Player::orig_Update"
+        },
+        {
+          "participants": [
+            {
+              "hookKind": "HOOKGEN_IL",
+              "hookOrManipulator": "GravityHelper.ActorHooks",
+              "package": "GravityHelper",
+              "siteOrdinal": 17
+            },
+            {
+              "hookKind": "HOOKGEN_ON",
+              "hookOrManipulator": "GravityHelper.ActorHooks",
+              "package": "GravityHelper",
+              "siteOrdinal": 17
+            },
+            {
+              "hookKind": "HOOKGEN_IL",
+              "hookOrManipulator": "MaxHelpingHand.UpsideDownJumpThru",
+              "package": "MaxHelpingHand",
+              "siteOrdinal": 26
+            }
+          ],
+          "target": "Celeste.Actor::MoveVExact"
+        },
+        {
+          "participants": [
+            {
+              "hookKind": "HOOKGEN_ON",
+              "hookOrManipulator": "MaxHelpingHand.UpsideDownJumpThru",
+              "package": "MaxHelpingHand",
+              "siteOrdinal": 26
+            },
+            {
+              "hookKind": "HOOKGEN_ON",
+              "hookOrManipulator": "VivHelper.RefillCancel",
+              "package": "VivHelper",
+              "siteOrdinal": 36
+            }
+          ],
+          "target": "Celeste.Player::Update"
+        },
+        {
+          "participants": [
+            {
+              "hookKind": "DIRECT_ILHOOK",
+              "hookOrManipulator": "GravityHelper.PlayerHooks",
+              "package": "GravityHelper",
+              "siteOrdinal": 18
+            },
+            {
+              "hookKind": "DIRECT_MANAGED_HOOK",
+              "hookOrManipulator": "MaxHelpingHand.UpsideDownJumpThru.modCanUnDuck",
+              "package": "MaxHelpingHand",
+              "siteOrdinal": 26
+            }
+          ],
+          "target": "Celeste.Player::get_CanUnDuck"
+        }
+      ],
+      "siteOrdinal": 26,
+      "storage": "STATIC_EVENT_OR_IDETOUR_FIELD",
+      "targetScopeKind": "EXACT_TARGET_SET",
+      "targetSetFingerprintSha256": "ea3602c065059ccc398c43237457a983a7e0c0559fa1ebe6b355d0c7930bac93",
+      "targets": [
+        {
+          "hookKind": "HOOKGEN_ON",
+          "hookOrManipulator": "MaxHelpingHand.UpsideDownJumpThru",
+          "target": "Celeste.Player::OnCollideV"
+        },
+        {
+          "hookKind": "HOOKGEN_IL",
+          "hookOrManipulator": "MaxHelpingHand.UpsideDownJumpThru",
+          "target": "Celeste.Player::ClimbUpdate"
+        },
+        {
+          "hookKind": "DIRECT_ILHOOK",
+          "hookOrManipulator": "MaxHelpingHand.UpsideDownJumpThru",
+          "target": "Celeste.Player::orig_Update"
+        },
+        {
+          "hookKind": "HOOKGEN_IL",
+          "hookOrManipulator": "MaxHelpingHand.UpsideDownJumpThru",
+          "target": "Celeste.Platform::MoveVExactCollideSolids"
+        },
+        {
+          "hookKind": "HOOKGEN_IL",
+          "hookOrManipulator": "MaxHelpingHand.UpsideDownJumpThru",
+          "target": "Celeste.Player::DashUpdate"
+        },
+        {
+          "hookKind": "HOOKGEN_IL",
+          "hookOrManipulator": "MaxHelpingHand.UpsideDownJumpThru",
+          "target": "Celeste.Player::RedDashUpdate"
+        },
+        {
+          "hookKind": "HOOKGEN_IL",
+          "hookOrManipulator": "MaxHelpingHand.UpsideDownJumpThru",
+          "target": "Celeste.Actor::MoveVExact"
+        },
+        {
+          "hookKind": "HOOKGEN_ON",
+          "hookOrManipulator": "MaxHelpingHand.UpsideDownJumpThru",
+          "target": "Celeste.Player::Update"
+        },
+        {
+          "hookKind": "HOOKGEN_ON",
+          "hookOrManipulator": "MaxHelpingHand.UpsideDownJumpThru",
+          "target": "Celeste.JumpThru::HasPlayerRider"
+        },
+        {
+          "hookKind": "DIRECT_MANAGED_HOOK",
+          "hookOrManipulator": "MaxHelpingHand.UpsideDownJumpThru.modCanUnDuck",
+          "target": "Celeste.Player::get_CanUnDuck"
+        }
+      ],
+      "undoBehavior": "MODULE_UNLOAD_ONLY_IN_ACCEPTED_INSTALLED_BUILD"
+    },
+    {
+      "ambientDetourContext": "LEXICALLY_SCOPED_DURING_SYNCHRONOUS_CONSTRUCTION",
+      "applyBehavior": "IMMEDIATE_SUBSCRIPTION_OR_CONSTRUCTION",
+      "assembly": "MaxHelpingHand",
+      "assemblySha256": "6f463f2c014eb60c4abb61e395eb5065455d4bf469f4c83fce9814fb7bfcdfa6",
+      "assemblyVersion": "1.0.0.0",
+      "conditionalCreation": "BUILD_CLOSURE_DEPENDENCY_CONDITIONAL",
+      "configurationPhases": [
+        {
+          "normalizedStatic": {
+            "after": [],
+            "before": [],
+            "id": "MaddieHelpingHand_Default",
+            "priority": 0,
+            "subPriorityPolicy": "PINNED_GLOBAL_REGISTRATION_INDEX"
+          },
+          "source": {
+            "after": [],
+            "before": [],
+            "id": "MaddieHelpingHand_Default",
+            "legacyContext": false,
+            "priority": null
+          }
+        }
+      ],
+      "constructionSiteFingerprintSha256": "24eeb9cf892e5e6eb2a9c2b2116fc7faefcace056c6dc9e4e86c8100a8a85350",
+      "containingMethod": "System.Void Celeste.Mod.MaxHelpingHand.Module.MaxHelpingHandModule::HookMods()",
+      "dependencyModuleLoadOrder": 32,
+      "disposeBehavior": "MODULE_UNLOAD_ONLY_IN_ACCEPTED_INSTALLED_BUILD",
+      "eligibility": "STATIC_CONFIGURED_DETOUR_SEQUENCE",
+      "lifetime": "MODULE_IMMUTABLE_ACTIVE_IN_ACCEPTED_STATIC_CLOSURE",
+      "package": "MaxHelpingHand",
+      "packageVersion": "1.40.9",
+      "packageZipSha256": "abfc5d167936410e9b6665018335ee654455e30710caffe01540b232da468fee",
+      "registrationOrder": "LEXICAL_IL_ORDER_THEN_PINNED_GLOBAL_REGISTRATION_INDEX",
+      "rejectionReason": null,
+      "sameTargetParticipants": [],
+      "siteOrdinal": 27,
+      "storage": "STATIC_EVENT_OR_IDETOUR_FIELD",
+      "targetScopeKind": "EXACT_SYNCHRONOUS_INITIALIZER_GRAPH",
+      "targetSetFingerprintSha256": "f16ab7a57ee8b6e1e44356a0fc847889b4864c0b59cbda7a2377c2ec22fc0891",
+      "targets": [
+        {
+          "hookKind": "AMBIENT_REACHABLE_REGISTRATION_SCOPE",
+          "hookOrManipulator": "MaddieHelpingHand_Default",
+          "target": "Celeste.Mod.MaxHelpingHand.Module.MaxHelpingHandModule::HookMods()"
+        }
+      ],
+      "undoBehavior": "MODULE_UNLOAD_ONLY_IN_ACCEPTED_INSTALLED_BUILD"
+    },
+    {
+      "ambientDetourContext": "LEXICALLY_SCOPED_DURING_SYNCHRONOUS_CONSTRUCTION",
+      "applyBehavior": "IMMEDIATE_SUBSCRIPTION_OR_CONSTRUCTION",
+      "assembly": "MaxHelpingHand",
+      "assemblySha256": "6f463f2c014eb60c4abb61e395eb5065455d4bf469f4c83fce9814fb7bfcdfa6",
+      "assemblyVersion": "1.0.0.0",
+      "conditionalCreation": "UNCONDITIONAL_FOR_INSTALLED_PROVIDER",
+      "configurationPhases": [
+        {
+          "normalizedStatic": {
+            "after": [],
+            "before": [],
+            "id": "MaddieHelpingHand_Default",
+            "priority": 0,
+            "subPriorityPolicy": "PINNED_GLOBAL_REGISTRATION_INDEX"
+          },
+          "source": {
+            "after": [],
+            "before": [],
+            "id": "MaddieHelpingHand_Default",
+            "legacyContext": false,
+            "priority": null
+          }
+        }
+      ],
+      "constructionSiteFingerprintSha256": "5127b82f51192c06b4f12ba32c7e3cffe5e9f9b93aa21420a02a1d50dd3d0d53",
+      "containingMethod": "System.Void Celeste.Mod.MaxHelpingHand.Module.MaxHelpingHandModule::Load()",
+      "dependencyModuleLoadOrder": 32,
+      "disposeBehavior": "MODULE_UNLOAD_ONLY_IN_ACCEPTED_INSTALLED_BUILD",
+      "eligibility": "STATIC_CONFIGURED_DETOUR_SEQUENCE",
+      "lifetime": "MODULE_IMMUTABLE_ACTIVE_IN_ACCEPTED_STATIC_CLOSURE",
+      "package": "MaxHelpingHand",
+      "packageVersion": "1.40.9",
+      "packageZipSha256": "abfc5d167936410e9b6665018335ee654455e30710caffe01540b232da468fee",
+      "registrationOrder": "LEXICAL_IL_ORDER_THEN_PINNED_GLOBAL_REGISTRATION_INDEX",
+      "rejectionReason": null,
+      "sameTargetParticipants": [],
+      "siteOrdinal": 28,
+      "storage": "STATIC_EVENT_OR_IDETOUR_FIELD",
+      "targetScopeKind": "EXACT_SYNCHRONOUS_INITIALIZER_GRAPH",
+      "targetSetFingerprintSha256": "6867089d30446205b443b43c6a65d9b2e019bad419c7cca386c39269e3ecc66d",
+      "targets": [
+        {
+          "hookKind": "AMBIENT_REACHABLE_REGISTRATION_SCOPE",
+          "hookOrManipulator": "MaddieHelpingHand_Default",
+          "target": "Celeste.Mod.MaxHelpingHand.Module.MaxHelpingHandModule::Load()"
+        },
+        {
+          "hookKind": "HOOKGEN_ON",
+          "hookOrManipulator": "MaxHelpingHandModule",
+          "target": "Celeste.Level::OnLoadBackdrop"
+        },
+        {
+          "hookKind": "DIRECT_MANAGED_HOOK",
+          "hookOrManipulator": "MaxHelpingHandModule.onModRegister",
+          "target": "Celeste.Mod.Everest::Register"
+        }
+      ],
+      "undoBehavior": "MODULE_UNLOAD_ONLY_IN_ACCEPTED_INSTALLED_BUILD"
+    },
+    {
+      "ambientDetourContext": "LEXICALLY_SCOPED_DURING_SYNCHRONOUS_CONSTRUCTION",
+      "applyBehavior": "IMMEDIATE_SUBSCRIPTION_OR_CONSTRUCTION",
+      "assembly": "MaxHelpingHand",
+      "assemblySha256": "6f463f2c014eb60c4abb61e395eb5065455d4bf469f4c83fce9814fb7bfcdfa6",
+      "assemblyVersion": "1.0.0.0",
+      "conditionalCreation": "UNCONDITIONAL_FOR_INSTALLED_PROVIDER",
+      "configurationPhases": [
+        {
+          "normalizedStatic": {
+            "after": [],
+            "before": [],
+            "id": "MaddieHelpingHand_Default",
+            "priority": 0,
+            "subPriorityPolicy": "PINNED_GLOBAL_REGISTRATION_INDEX"
+          },
+          "source": {
+            "after": [],
+            "before": [],
+            "id": "MaddieHelpingHand_Default",
+            "legacyContext": false,
+            "priority": null
+          }
+        }
+      ],
+      "constructionSiteFingerprintSha256": "a102b0b5b5d50b04cf235d2b8370bcf176fd843a3e6ab0a8c66153c7cacf1b96",
+      "containingMethod": "System.Void Celeste.Mod.MaxHelpingHand.Module.MaxHelpingHandModule::LoadContent(System.Boolean)",
+      "dependencyModuleLoadOrder": 32,
+      "disposeBehavior": "MODULE_UNLOAD_ONLY_IN_ACCEPTED_INSTALLED_BUILD",
+      "eligibility": "STATIC_CONFIGURED_DETOUR_SEQUENCE",
+      "lifetime": "MODULE_IMMUTABLE_ACTIVE_IN_ACCEPTED_STATIC_CLOSURE",
+      "package": "MaxHelpingHand",
+      "packageVersion": "1.40.9",
+      "packageZipSha256": "abfc5d167936410e9b6665018335ee654455e30710caffe01540b232da468fee",
+      "registrationOrder": "LEXICAL_IL_ORDER_THEN_PINNED_GLOBAL_REGISTRATION_INDEX",
+      "rejectionReason": null,
+      "sameTargetParticipants": [],
+      "siteOrdinal": 29,
+      "storage": "STATIC_EVENT_OR_IDETOUR_FIELD",
+      "targetScopeKind": "EXACT_SYNCHRONOUS_INITIALIZER_GRAPH",
+      "targetSetFingerprintSha256": "d61b2c6a240c1e3c8b7acb1429aca867ac456b8c9912be0ec665e85fab5838d4",
+      "targets": [
+        {
+          "hookKind": "AMBIENT_REACHABLE_REGISTRATION_SCOPE",
+          "hookOrManipulator": "MaddieHelpingHand_Default",
+          "target": "Celeste.Mod.MaxHelpingHand.Module.MaxHelpingHandModule::LoadContent(System.Boolean)"
+        }
+      ],
+      "undoBehavior": "MODULE_UNLOAD_ONLY_IN_ACCEPTED_INSTALLED_BUILD"
+    },
+    {
+      "ambientDetourContext": "LEXICALLY_SCOPED_DURING_SYNCHRONOUS_CONSTRUCTION",
+      "applyBehavior": "IMMEDIATE_SUBSCRIPTION_OR_CONSTRUCTION",
+      "assembly": "MaxHelpingHand",
+      "assemblySha256": "6f463f2c014eb60c4abb61e395eb5065455d4bf469f4c83fce9814fb7bfcdfa6",
+      "assemblyVersion": "1.0.0.0",
+      "conditionalCreation": "UNCONDITIONAL_FOR_INSTALLED_PROVIDER",
+      "configurationPhases": [
+        {
+          "normalizedStatic": {
+            "after": [],
+            "before": [],
+            "id": "MaddieHelpingHand_BeforeAll",
+            "priority": -2147483648,
+            "subPriorityPolicy": "PINNED_GLOBAL_REGISTRATION_INDEX"
+          },
+          "source": {
+            "after": [],
+            "before": [],
+            "id": "MaddieHelpingHand_BeforeAll",
+            "legacyContext": false,
+            "priority": -2147483648
+          }
+        }
+      ],
+      "constructionSiteFingerprintSha256": "8b2217527aa390a3cf57a0ab006c03ad8e8c7023c4a7591f93bb293e6b86614e",
+      "containingMethod": "System.Void Celeste.Mod.MaxHelpingHand.Triggers.CameraCatchupSpeedTrigger::Load()",
+      "dependencyModuleLoadOrder": 32,
+      "disposeBehavior": "MODULE_UNLOAD_ONLY_IN_ACCEPTED_INSTALLED_BUILD",
+      "eligibility": "STATIC_CONFIGURED_DETOUR_SEQUENCE",
+      "lifetime": "MODULE_IMMUTABLE_ACTIVE_IN_ACCEPTED_STATIC_CLOSURE",
+      "package": "MaxHelpingHand",
+      "packageVersion": "1.40.9",
+      "packageZipSha256": "abfc5d167936410e9b6665018335ee654455e30710caffe01540b232da468fee",
+      "registrationOrder": "LEXICAL_IL_ORDER_THEN_PINNED_GLOBAL_REGISTRATION_INDEX",
+      "rejectionReason": null,
+      "sameTargetParticipants": [
+        {
+          "participants": [
+            {
+              "hookKind": "DIRECT_ILHOOK",
+              "hookOrManipulator": "GravityHelper.PlayerHooks",
+              "package": "GravityHelper",
+              "siteOrdinal": 18
+            },
+            {
+              "hookKind": "DIRECT_ILHOOK",
+              "hookOrManipulator": "MaxHelpingHand.UpsideDownJumpThru",
+              "package": "MaxHelpingHand",
+              "siteOrdinal": 26
+            },
+            {
+              "hookKind": "DIRECT_ILHOOK",
+              "hookOrManipulator": "MaxHelpingHand.CameraCatchupSpeedTrigger",
+              "package": "MaxHelpingHand",
+              "siteOrdinal": 30
+            },
+            {
+              "hookKind": "DIRECT_ILHOOK",
+              "hookOrManipulator": "XaphanHelper.LightningDash",
+              "package": "XaphanHelper",
+              "siteOrdinal": 39
+            }
+          ],
+          "target": "Celeste.Player::orig_Update"
+        }
+      ],
+      "siteOrdinal": 30,
+      "storage": "STATIC_EVENT_OR_IDETOUR_FIELD",
+      "targetScopeKind": "EXACT_TARGET_SET",
+      "targetSetFingerprintSha256": "4884a515aa451412bbc0c15fe3c904b32f1a8543706aad6f4b49d0a8e2b2cba5",
+      "targets": [
+        {
+          "hookKind": "DIRECT_ILHOOK",
+          "hookOrManipulator": "MaxHelpingHand.CameraCatchupSpeedTrigger",
+          "target": "Celeste.Player::orig_Update"
+        }
+      ],
+      "undoBehavior": "MODULE_UNLOAD_ONLY_IN_ACCEPTED_INSTALLED_BUILD"
+    },
+    {
+      "ambientDetourContext": "LEXICALLY_SCOPED_DURING_SYNCHRONOUS_CONSTRUCTION",
+      "applyBehavior": "IMMEDIATE_SUBSCRIPTION_OR_CONSTRUCTION",
+      "assembly": "MaxHelpingHand",
+      "assemblySha256": "6f463f2c014eb60c4abb61e395eb5065455d4bf469f4c83fce9814fb7bfcdfa6",
+      "assemblyVersion": "1.0.0.0",
+      "conditionalCreation": "UNCONDITIONAL_FOR_INSTALLED_PROVIDER",
+      "configurationPhases": [
+        {
+          "normalizedStatic": {
+            "after": [],
+            "before": [],
+            "id": "MaddieHelpingHand_BeforeAll",
+            "priority": -2147483648,
+            "subPriorityPolicy": "PINNED_GLOBAL_REGISTRATION_INDEX"
+          },
+          "source": {
+            "after": [],
+            "before": [],
+            "id": "MaddieHelpingHand_BeforeAll",
+            "legacyContext": false,
+            "priority": -2147483648
+          }
+        },
+        {
+          "normalizedStatic": {
+            "after": [],
+            "before": [],
+            "id": "MaddieHelpingHand_AfterAll",
+            "priority": 2147483647,
+            "subPriorityPolicy": "PINNED_GLOBAL_REGISTRATION_INDEX"
+          },
+          "source": {
+            "after": [],
+            "before": [],
+            "id": "MaddieHelpingHand_AfterAll",
+            "legacyContext": false,
+            "priority": 2147483647
+          }
+        }
+      ],
+      "constructionSiteFingerprintSha256": "c716eeaee6c0f2918c81724b65e198582e86bfc91f75228db43e0f25b0fed6f2",
+      "containingMethod": "System.Void Celeste.Mod.MaxHelpingHand.Triggers.MadelineSilhouetteTrigger::Load()",
+      "dependencyModuleLoadOrder": 32,
+      "disposeBehavior": "MODULE_UNLOAD_ONLY_IN_ACCEPTED_INSTALLED_BUILD",
+      "eligibility": "STATIC_CONFIGURED_DETOUR_SEQUENCE",
+      "lifetime": "MODULE_IMMUTABLE_ACTIVE_IN_ACCEPTED_STATIC_CLOSURE",
+      "package": "MaxHelpingHand",
+      "packageVersion": "1.40.9",
+      "packageZipSha256": "abfc5d167936410e9b6665018335ee654455e30710caffe01540b232da468fee",
+      "registrationOrder": "LEXICAL_IL_ORDER_THEN_PINNED_GLOBAL_REGISTRATION_INDEX",
+      "rejectionReason": null,
+      "sameTargetParticipants": [],
+      "siteOrdinal": 31,
+      "storage": "STATIC_EVENT_OR_IDETOUR_FIELD",
+      "targetScopeKind": "EXACT_TARGET_SET",
+      "targetSetFingerprintSha256": "356e5351989c413a2e1e993d4e1a4d6f469ad2ad1afac565a7dd8599a6056874",
+      "targets": [
+        {
+          "hookKind": "HOOKGEN_IL",
+          "hookOrManipulator": "MaxHelpingHand.MadelineSilhouetteTrigger",
+          "target": "Celeste.Player::Render"
+        },
+        {
+          "hookKind": "HOOKGEN_ON",
+          "hookOrManipulator": "MaxHelpingHand.MadelineSilhouetteTrigger",
+          "target": "Celeste.PlayerSprite::.ctor"
+        },
+        {
+          "hookKind": "HOOKGEN_ON",
+          "hookOrManipulator": "MaxHelpingHand.MadelineSilhouetteTrigger",
+          "target": "Celeste.Player::ResetSprite"
+        }
+      ],
+      "undoBehavior": "MODULE_UNLOAD_ONLY_IN_ACCEPTED_INSTALLED_BUILD"
+    },
+    {
+      "ambientDetourContext": "LEXICALLY_SCOPED_DURING_SYNCHRONOUS_CONSTRUCTION",
+      "applyBehavior": "IMMEDIATE_SUBSCRIPTION_OR_CONSTRUCTION",
+      "assembly": "StrawberryJam2021",
+      "assemblySha256": "8d5b9184204e7e7728965bcf95af5f150f6220dafbfe52fdd6c23e50d47e5258",
+      "assemblyVersion": "1.0.0.0",
+      "conditionalCreation": "UNCONDITIONAL_FOR_INSTALLED_PROVIDER",
+      "configurationPhases": [
+        {
+          "normalizedStatic": {
+            "after": [],
+            "before": [],
+            "id": "StrawberryJam2021",
+            "priority": 2147483647,
+            "subPriorityPolicy": "PINNED_GLOBAL_REGISTRATION_INDEX"
+          },
+          "source": {
+            "after": [
+              "*"
+            ],
+            "before": [],
+            "id": "StrawberryJam2021",
+            "legacyContext": true,
+            "priority": null
+          }
+        }
+      ],
+      "constructionSiteFingerprintSha256": "889e798ea76277d9468997d238af54fae65a230b834b06b50c2f9bf826cb977b",
+      "containingMethod": "System.Void Celeste.Mod.StrawberryJam2021.Triggers.DashCountTrigger::Load()",
+      "dependencyModuleLoadOrder": 41,
+      "disposeBehavior": "MODULE_UNLOAD_ONLY_IN_ACCEPTED_INSTALLED_BUILD",
+      "eligibility": "STATIC_CONFIGURED_DETOUR_SEQUENCE",
+      "lifetime": "MODULE_IMMUTABLE_ACTIVE_IN_ACCEPTED_STATIC_CLOSURE",
+      "package": "StrawberryJam2021",
+      "packageVersion": "1.0.12",
+      "packageZipSha256": "4e1a2fc12baa3db27da433b93bf26b59f34b3e6b7f760c41d8d127636d020655",
+      "registrationOrder": "LEXICAL_IL_ORDER_THEN_PINNED_GLOBAL_REGISTRATION_INDEX",
+      "rejectionReason": null,
+      "sameTargetParticipants": [
+        {
+          "participants": [
+            {
+              "hookKind": "HOOKGEN_ON",
+              "hookOrManipulator": "BrokemiaHelper.FakeBooster",
+              "package": "BrokemiaHelper",
+              "siteOrdinal": 1
+            },
+            {
+              "hookKind": "HOOKGEN_ON",
+              "hookOrManipulator": "CollabUtils2.StrawberryHooks",
+              "package": "CollabUtils2",
+              "siteOrdinal": 2
+            },
+            {
+              "hookKind": "HOOKGEN_ON",
+              "hookOrManipulator": "vitmod.InteractiveChaser.Player_Die",
+              "package": "CrystallineHelper",
+              "siteOrdinal": 6
+            },
+            {
+              "hookKind": "HOOKGEN_ON",
+              "hookOrManipulator": "StrawberryJam2021.DashCountTrigger",
+              "package": "StrawberryJam2021",
+              "siteOrdinal": 32
+            },
+            {
+              "hookKind": "HOOKGEN_ON",
+              "hookOrManipulator": "VivHelper.RefillCancel",
+              "package": "VivHelper",
+              "siteOrdinal": 36
+            }
+          ],
+          "target": "Celeste.Player::Die"
+        }
+      ],
+      "siteOrdinal": 32,
+      "storage": "STATIC_EVENT_OR_IDETOUR_FIELD",
+      "targetScopeKind": "EXACT_TARGET_SET",
+      "targetSetFingerprintSha256": "855632e58488af65bea95f5f37dedf66cc0bf3a14c2fbfdf94f83c29e21bffcf",
+      "targets": [
+        {
+          "hookKind": "HOOKGEN_ON",
+          "hookOrManipulator": "StrawberryJam2021.DashCountTrigger",
+          "target": "Celeste.PlayerHair::GetHairColor"
+        },
+        {
+          "hookKind": "HOOKGEN_ON",
+          "hookOrManipulator": "StrawberryJam2021.DashCountTrigger",
+          "target": "Celeste.Player::GetCurrentTrailColor"
+        },
+        {
+          "hookKind": "HOOKGEN_ON",
+          "hookOrManipulator": "StrawberryJam2021.DashCountTrigger",
+          "target": "Celeste.Player::Die"
+        },
+        {
+          "hookKind": "HOOKGEN_ON",
+          "hookOrManipulator": "StrawberryJam2021.DashCountTrigger",
+          "target": "Celeste.DeathEffect::Draw"
+        }
+      ],
+      "undoBehavior": "MODULE_UNLOAD_ONLY_IN_ACCEPTED_INSTALLED_BUILD"
+    },
+    {
+      "ambientDetourContext": "LEXICALLY_SCOPED_DURING_SYNCHRONOUS_CONSTRUCTION",
+      "applyBehavior": "IMMEDIATE_SUBSCRIPTION_OR_CONSTRUCTION",
+      "assembly": "VivHelper",
+      "assemblySha256": "d843355cbce2be03611d46a200cc4b341888ec53deb29e940b18442bbdc4f55f",
+      "assemblyVersion": "1.0.0.0",
+      "conditionalCreation": "UNCONDITIONAL_FOR_INSTALLED_PROVIDER",
+      "configurationPhases": [
+        {
+          "normalizedStatic": {
+            "after": [],
+            "before": [],
+            "id": "VivHelper",
+            "priority": 2147483647,
+            "subPriorityPolicy": "PINNED_GLOBAL_REGISTRATION_INDEX"
+          },
+          "source": {
+            "after": [
+              "*"
+            ],
+            "before": [],
+            "id": "VivHelper",
+            "legacyContext": true,
+            "priority": null
+          }
+        }
+      ],
+      "constructionSiteFingerprintSha256": "6a3d94520a8c7ddeb5ec42818dcfa33ce99e236994281c1fce19cca5fe6c3ae6",
+      "containingMethod": "System.Void VivHelper.Entities.BadelineBoostCustom::Load()",
+      "dependencyModuleLoadOrder": 47,
+      "disposeBehavior": "MODULE_UNLOAD_ONLY_IN_ACCEPTED_INSTALLED_BUILD",
+      "eligibility": "STATIC_CONFIGURED_DETOUR_SEQUENCE",
+      "lifetime": "MODULE_IMMUTABLE_ACTIVE_IN_ACCEPTED_STATIC_CLOSURE",
+      "package": "VivHelper",
+      "packageVersion": "1.14.10",
+      "packageZipSha256": "9a95f51659ccfcb78404f9610307918d6114fc824298fbb8493651ec7c80215a",
+      "registrationOrder": "LEXICAL_IL_ORDER_THEN_PINNED_GLOBAL_REGISTRATION_INDEX",
+      "rejectionReason": null,
+      "sameTargetParticipants": [],
+      "siteOrdinal": 33,
+      "storage": "STATIC_EVENT_OR_IDETOUR_FIELD",
+      "targetScopeKind": "EXACT_TARGET_SET",
+      "targetSetFingerprintSha256": "18705a91097eca8cca40d1e2f7ef7aebe3627654d1fc1e6ab250608e4df86b05",
+      "targets": [
+        {
+          "hookKind": "DIRECT_ILHOOK",
+          "hookOrManipulator": "VivHelper.BadelineBoostCustom.BoostRoutineAddCustomRefillTraits",
+          "target": "Celeste.BadelineBoost::BoostRoutine.state-machine"
+        },
+        {
+          "hookKind": "HOOKGEN_ON",
+          "hookOrManipulator": "VivHelper.BadelineBoostCustom",
+          "target": "Celeste.BadelineBoost::BoostRoutine"
+        },
+        {
+          "hookKind": "HOOKGEN_IL",
+          "hookOrManipulator": "VivHelper.BadelineBoostCustom",
+          "target": "Celeste.Player::BadelineBoostLaunch"
+        }
+      ],
+      "undoBehavior": "MODULE_UNLOAD_ONLY_IN_ACCEPTED_INSTALLED_BUILD"
+    },
+    {
+      "ambientDetourContext": "LEXICALLY_SCOPED_DURING_SYNCHRONOUS_CONSTRUCTION",
+      "applyBehavior": "IMMEDIATE_SUBSCRIPTION_OR_CONSTRUCTION",
+      "assembly": "VivHelper",
+      "assemblySha256": "d843355cbce2be03611d46a200cc4b341888ec53deb29e940b18442bbdc4f55f",
+      "assemblyVersion": "1.0.0.0",
+      "conditionalCreation": "UNCONDITIONAL_FOR_INSTALLED_PROVIDER",
+      "configurationPhases": [
+        {
+          "normalizedStatic": {
+            "after": [],
+            "before": [],
+            "id": "VivHelper",
+            "priority": -2147483648,
+            "subPriorityPolicy": "PINNED_GLOBAL_REGISTRATION_INDEX"
+          },
+          "source": {
+            "after": [],
+            "before": [
+              "*"
+            ],
+            "id": "VivHelper",
+            "legacyContext": true,
+            "priority": null
+          }
+        }
+      ],
+      "constructionSiteFingerprintSha256": "56d0ab81d8bea9ca820efa286cb6cf8f14164740c6caa8940e0795e2bc7370a7",
+      "containingMethod": "System.Void VivHelper.Entities.BronzeBerry::Load()",
+      "dependencyModuleLoadOrder": 47,
+      "disposeBehavior": "MODULE_UNLOAD_ONLY_IN_ACCEPTED_INSTALLED_BUILD",
+      "eligibility": "STATIC_CONFIGURED_DETOUR_SEQUENCE",
+      "lifetime": "MODULE_IMMUTABLE_ACTIVE_IN_ACCEPTED_STATIC_CLOSURE",
+      "package": "VivHelper",
+      "packageVersion": "1.14.10",
+      "packageZipSha256": "9a95f51659ccfcb78404f9610307918d6114fc824298fbb8493651ec7c80215a",
+      "registrationOrder": "LEXICAL_IL_ORDER_THEN_PINNED_GLOBAL_REGISTRATION_INDEX",
+      "rejectionReason": null,
+      "sameTargetParticipants": [],
+      "siteOrdinal": 34,
+      "storage": "STATIC_EVENT_OR_IDETOUR_FIELD",
+      "targetScopeKind": "EXACT_TARGET_SET",
+      "targetSetFingerprintSha256": "e190b98c9388cde15597c07d228316ddfcfc840278327a00897c4781c0348837",
+      "targets": [
+        {
+          "hookKind": "DIRECT_ILHOOK",
+          "hookOrManipulator": "VivHelper.BronzeBerry.ModifyRender",
+          "target": "Celeste.OuiChapterPanel.Option::Render"
+        },
+        {
+          "hookKind": "DIRECT_ILHOOK",
+          "hookOrManipulator": "VivHelper.BronzeBerry.CacheOptionData",
+          "target": "Celeste.OuiChapterPanel::SwapRoutine.state-machine"
+        }
+      ],
+      "undoBehavior": "MODULE_UNLOAD_ONLY_IN_ACCEPTED_INSTALLED_BUILD"
+    },
+    {
+      "ambientDetourContext": "LEXICALLY_SCOPED_DURING_SYNCHRONOUS_CONSTRUCTION",
+      "applyBehavior": "IMMEDIATE_SUBSCRIPTION_OR_CONSTRUCTION",
+      "assembly": "VivHelper",
+      "assemblySha256": "d843355cbce2be03611d46a200cc4b341888ec53deb29e940b18442bbdc4f55f",
+      "assemblyVersion": "1.0.0.0",
+      "conditionalCreation": "UNCONDITIONAL_FOR_INSTALLED_PROVIDER",
+      "configurationPhases": [
+        {
+          "normalizedStatic": {
+            "after": [],
+            "before": [],
+            "id": "VivHelper",
+            "priority": 2147483647,
+            "subPriorityPolicy": "PINNED_GLOBAL_REGISTRATION_INDEX"
+          },
+          "source": {
+            "after": [
+              "*"
+            ],
+            "before": [],
+            "id": "VivHelper",
+            "legacyContext": true,
+            "priority": null
+          }
+        }
+      ],
+      "constructionSiteFingerprintSha256": "645a7b18cecbe254a0f0e1bc3ec1c244b0419c725504ecbff3d432ed17e3520d",
+      "containingMethod": "System.Void VivHelper.Entities.ExplodeLaunchModifier::Load()",
+      "dependencyModuleLoadOrder": 47,
+      "disposeBehavior": "MODULE_UNLOAD_ONLY_IN_ACCEPTED_INSTALLED_BUILD",
+      "eligibility": "STATIC_CONFIGURED_DETOUR_SEQUENCE",
+      "lifetime": "MODULE_IMMUTABLE_ACTIVE_IN_ACCEPTED_STATIC_CLOSURE",
+      "package": "VivHelper",
+      "packageVersion": "1.14.10",
+      "packageZipSha256": "9a95f51659ccfcb78404f9610307918d6114fc824298fbb8493651ec7c80215a",
+      "registrationOrder": "LEXICAL_IL_ORDER_THEN_PINNED_GLOBAL_REGISTRATION_INDEX",
+      "rejectionReason": null,
+      "sameTargetParticipants": [
+        {
+          "participants": [
+            {
+              "hookKind": "HOOKGEN_ON",
+              "hookOrManipulator": "ExtendedVariants.Variants.NoFreezeFrames",
+              "package": "ExtendedVariantMode",
+              "siteOrdinal": 14
+            },
+            {
+              "hookKind": "HOOKGEN_ON",
+              "hookOrManipulator": "VivHelper.ExplodeLaunchModifier",
+              "package": "VivHelper",
+              "siteOrdinal": 35
+            }
+          ],
+          "target": "Celeste.Celeste::Freeze"
+        }
+      ],
+      "siteOrdinal": 35,
+      "storage": "STATIC_EVENT_OR_IDETOUR_FIELD",
+      "targetScopeKind": "EXACT_TARGET_SET",
+      "targetSetFingerprintSha256": "ddae3be8573613380ea5869497d266833f2e265b08cddb336c43bdea146ca283",
+      "targets": [
+        {
+          "hookKind": "HOOKGEN_ON",
+          "hookOrManipulator": "VivHelper.ExplodeLaunchModifier",
+          "target": "Celeste.Celeste::Freeze"
+        }
+      ],
+      "undoBehavior": "MODULE_UNLOAD_ONLY_IN_ACCEPTED_INSTALLED_BUILD"
+    },
+    {
+      "ambientDetourContext": "LEXICALLY_SCOPED_DURING_SYNCHRONOUS_CONSTRUCTION",
+      "applyBehavior": "IMMEDIATE_SUBSCRIPTION_OR_CONSTRUCTION",
+      "assembly": "VivHelper",
+      "assemblySha256": "d843355cbce2be03611d46a200cc4b341888ec53deb29e940b18442bbdc4f55f",
+      "assemblyVersion": "1.0.0.0",
+      "conditionalCreation": "UNCONDITIONAL_FOR_INSTALLED_PROVIDER",
+      "configurationPhases": [
+        {
+          "normalizedStatic": {
+            "after": [],
+            "before": [],
+            "id": "VivHelper",
+            "priority": 2147483647,
+            "subPriorityPolicy": "PINNED_GLOBAL_REGISTRATION_INDEX"
+          },
+          "source": {
+            "after": [
+              "*"
+            ],
+            "before": [],
+            "id": "VivHelper",
+            "legacyContext": true,
+            "priority": null
+          }
+        }
+      ],
+      "constructionSiteFingerprintSha256": "411b889272194bacc563a726590e03bc9225aabfac87be757ac881d635267b5d",
+      "containingMethod": "System.Void VivHelper.Entities.RefillCancel::Load()",
+      "dependencyModuleLoadOrder": 47,
+      "disposeBehavior": "MODULE_UNLOAD_ONLY_IN_ACCEPTED_INSTALLED_BUILD",
+      "eligibility": "STATIC_CONFIGURED_DETOUR_SEQUENCE",
+      "lifetime": "MODULE_IMMUTABLE_ACTIVE_IN_ACCEPTED_STATIC_CLOSURE",
+      "package": "VivHelper",
+      "packageVersion": "1.14.10",
+      "packageZipSha256": "9a95f51659ccfcb78404f9610307918d6114fc824298fbb8493651ec7c80215a",
+      "registrationOrder": "LEXICAL_IL_ORDER_THEN_PINNED_GLOBAL_REGISTRATION_INDEX",
+      "rejectionReason": null,
+      "sameTargetParticipants": [
+        {
+          "participants": [
+            {
+              "hookKind": "HOOKGEN_ON",
+              "hookOrManipulator": "ExtendedVariants.Variants.Stamina",
+              "package": "ExtendedVariantMode",
+              "siteOrdinal": 15
+            },
+            {
+              "hookKind": "HOOKGEN_ON",
+              "hookOrManipulator": "VivHelper.RefillCancel",
+              "package": "VivHelper",
+              "siteOrdinal": 36
+            }
+          ],
+          "target": "Celeste.Player::UseRefill"
+        },
+        {
+          "participants": [
+            {
+              "hookKind": "HOOKGEN_ON",
+              "hookOrManipulator": "MaxHelpingHand.UpsideDownJumpThru",
+              "package": "MaxHelpingHand",
+              "siteOrdinal": 26
+            },
+            {
+              "hookKind": "HOOKGEN_ON",
+              "hookOrManipulator": "VivHelper.RefillCancel",
+              "package": "VivHelper",
+              "siteOrdinal": 36
+            }
+          ],
+          "target": "Celeste.Player::Update"
+        },
+        {
+          "participants": [
+            {
+              "hookKind": "HOOKGEN_ON",
+              "hookOrManipulator": "BrokemiaHelper.FakeBooster",
+              "package": "BrokemiaHelper",
+              "siteOrdinal": 1
+            },
+            {
+              "hookKind": "HOOKGEN_ON",
+              "hookOrManipulator": "CollabUtils2.StrawberryHooks",
+              "package": "CollabUtils2",
+              "siteOrdinal": 2
+            },
+            {
+              "hookKind": "HOOKGEN_ON",
+              "hookOrManipulator": "vitmod.InteractiveChaser.Player_Die",
+              "package": "CrystallineHelper",
+              "siteOrdinal": 6
+            },
+            {
+              "hookKind": "HOOKGEN_ON",
+              "hookOrManipulator": "StrawberryJam2021.DashCountTrigger",
+              "package": "StrawberryJam2021",
+              "siteOrdinal": 32
+            },
+            {
+              "hookKind": "HOOKGEN_ON",
+              "hookOrManipulator": "VivHelper.RefillCancel",
+              "package": "VivHelper",
+              "siteOrdinal": 36
+            }
+          ],
+          "target": "Celeste.Player::Die"
+        }
+      ],
+      "siteOrdinal": 36,
+      "storage": "STATIC_EVENT_OR_IDETOUR_FIELD",
+      "targetScopeKind": "EXACT_TARGET_SET",
+      "targetSetFingerprintSha256": "0483831ffac148b98aaad6553e08840cb1931610e0976d942eaa64668ce34dd2",
+      "targets": [
+        {
+          "hookKind": "HOOKGEN_ON",
+          "hookOrManipulator": "VivHelper.RefillCancel",
+          "target": "Celeste.Player::UseRefill"
+        },
+        {
+          "hookKind": "HOOKGEN_ON",
+          "hookOrManipulator": "VivHelper.RefillCancel",
+          "target": "Celeste.Player::Update"
+        },
+        {
+          "hookKind": "HOOKGEN_ON",
+          "hookOrManipulator": "VivHelper.RefillCancel",
+          "target": "Celeste.Player::Die"
+        },
+        {
+          "hookKind": "EVEREST_EVENT",
+          "hookOrManipulator": "VivHelper.RefillCancel",
+          "target": "Celeste.Mod.Everest.Events.Level::OnExit"
+        }
+      ],
+      "undoBehavior": "MODULE_UNLOAD_ONLY_IN_ACCEPTED_INSTALLED_BUILD"
+    },
+    {
+      "ambientDetourContext": "LEXICALLY_SCOPED_DURING_SYNCHRONOUS_CONSTRUCTION",
+      "applyBehavior": "IMMEDIATE_SUBSCRIPTION_OR_CONSTRUCTION",
+      "assembly": "VivHelper",
+      "assemblySha256": "d843355cbce2be03611d46a200cc4b341888ec53deb29e940b18442bbdc4f55f",
+      "assemblyVersion": "1.0.0.0",
+      "conditionalCreation": "UNCONDITIONAL_FOR_INSTALLED_PROVIDER",
+      "configurationPhases": [
+        {
+          "normalizedStatic": {
+            "after": [],
+            "before": [],
+            "id": "VivHelper",
+            "priority": 2147483647,
+            "subPriorityPolicy": "PINNED_GLOBAL_REGISTRATION_INDEX"
+          },
+          "source": {
+            "after": [
+              "*"
+            ],
+            "before": [],
+            "id": "VivHelper",
+            "legacyContext": true,
+            "priority": null
+          }
+        }
+      ],
+      "constructionSiteFingerprintSha256": "c157e1db521939db92cd75ff4bd2ce21579d02df55f7680fdf5978563332ce7c",
+      "containingMethod": "System.Void VivHelper.HoldablePlus::Load()",
+      "dependencyModuleLoadOrder": 47,
+      "disposeBehavior": "MODULE_UNLOAD_ONLY_IN_ACCEPTED_INSTALLED_BUILD",
+      "eligibility": "STATIC_CONFIGURED_DETOUR_SEQUENCE",
+      "lifetime": "MODULE_IMMUTABLE_ACTIVE_IN_ACCEPTED_STATIC_CLOSURE",
+      "package": "VivHelper",
+      "packageVersion": "1.14.10",
+      "packageZipSha256": "9a95f51659ccfcb78404f9610307918d6114fc824298fbb8493651ec7c80215a",
+      "registrationOrder": "LEXICAL_IL_ORDER_THEN_PINNED_GLOBAL_REGISTRATION_INDEX",
+      "rejectionReason": null,
+      "sameTargetParticipants": [
+        {
+          "participants": [
+            {
+              "hookKind": "HOOKGEN_IL",
+              "hookOrManipulator": "ExtendedVariants.Variants.Gravity",
+              "package": "ExtendedVariantMode",
+              "siteOrdinal": 11
+            },
+            {
+              "hookKind": "HOOKGEN_IL",
+              "hookOrManipulator": "VivHelper.HoldablePlus",
+              "package": "VivHelper",
+              "siteOrdinal": 37
+            }
+          ],
+          "target": "Celeste.Player::NormalUpdate"
+        }
+      ],
+      "siteOrdinal": 37,
+      "storage": "STATIC_EVENT_OR_IDETOUR_FIELD",
+      "targetScopeKind": "EXACT_TARGET_SET",
+      "targetSetFingerprintSha256": "cf581e94a7cf009b63082df59e0c8c55a1cf11c7e6c6a6b32c2c9d148f4e54dc",
+      "targets": [
+        {
+          "hookKind": "HOOKGEN_IL",
+          "hookOrManipulator": "VivHelper.HoldablePlus",
+          "target": "Celeste.Player::NormalUpdate"
+        },
+        {
+          "hookKind": "HOOKGEN_IL",
+          "hookOrManipulator": "VivHelper.HoldablePlus",
+          "target": "Celeste.Player::Throw"
+        }
+      ],
+      "undoBehavior": "MODULE_UNLOAD_ONLY_IN_ACCEPTED_INSTALLED_BUILD"
+    },
+    {
+      "ambientDetourContext": "LEXICALLY_SCOPED_DURING_SYNCHRONOUS_CONSTRUCTION",
+      "applyBehavior": "IMMEDIATE_SUBSCRIPTION_OR_CONSTRUCTION",
+      "assembly": "VivHelper",
+      "assemblySha256": "d843355cbce2be03611d46a200cc4b341888ec53deb29e940b18442bbdc4f55f",
+      "assemblyVersion": "1.0.0.0",
+      "conditionalCreation": "UNCONDITIONAL_FOR_INSTALLED_PROVIDER",
+      "configurationPhases": [
+        {
+          "normalizedStatic": {
+            "after": [],
+            "before": [
+              "MaxHelpingHand"
+            ],
+            "id": "VivHelper",
+            "priority": 0,
+            "subPriorityPolicy": "PINNED_GLOBAL_REGISTRATION_INDEX"
+          },
+          "source": {
+            "after": [
+              "MaxHelpingHand"
+            ],
+            "before": [],
+            "id": "VivHelper",
+            "legacyContext": true,
+            "priority": null
+          }
+        }
+      ],
+      "constructionSiteFingerprintSha256": "c8cfe684420f02de133ff6bfc026f07880a712fc7906034e3d9c7d992dad203f",
+      "containingMethod": "System.Void VivHelper.SolidModifierComponent::Load()",
+      "dependencyModuleLoadOrder": 47,
+      "disposeBehavior": "MODULE_UNLOAD_ONLY_IN_ACCEPTED_INSTALLED_BUILD",
+      "eligibility": "STATIC_CONFIGURED_DETOUR_SEQUENCE",
+      "lifetime": "MODULE_IMMUTABLE_ACTIVE_IN_ACCEPTED_STATIC_CLOSURE",
+      "package": "VivHelper",
+      "packageVersion": "1.14.10",
+      "packageZipSha256": "9a95f51659ccfcb78404f9610307918d6114fc824298fbb8493651ec7c80215a",
+      "registrationOrder": "LEXICAL_IL_ORDER_THEN_PINNED_GLOBAL_REGISTRATION_INDEX",
+      "rejectionReason": null,
+      "sameTargetParticipants": [],
+      "siteOrdinal": 38,
+      "storage": "STATIC_EVENT_OR_IDETOUR_FIELD",
+      "targetScopeKind": "EXACT_TARGET_SET",
+      "targetSetFingerprintSha256": "9aadddac590ca3bf193bd0dcbfec259bbf1af6edfcc4103cd14dfca1ba30bffd",
+      "targets": [
+        {
+          "hookKind": "HOOKGEN_IL",
+          "hookOrManipulator": "VivHelper.SolidModifierComponent",
+          "target": "Celeste.Player::WallJumpCheck"
+        }
+      ],
+      "undoBehavior": "MODULE_UNLOAD_ONLY_IN_ACCEPTED_INSTALLED_BUILD"
+    },
+    {
+      "ambientDetourContext": "LEXICALLY_SCOPED_DURING_SYNCHRONOUS_CONSTRUCTION",
+      "applyBehavior": "IMMEDIATE_SUBSCRIPTION_OR_CONSTRUCTION",
+      "assembly": "XaphanHelper",
+      "assemblySha256": "e408dc081cb79d89b3436724b74413a603189cb53e84af5844918df08717273c",
+      "assemblyVersion": "1.0.0.0",
+      "conditionalCreation": "UNCONDITIONAL_FOR_INSTALLED_PROVIDER",
+      "configurationPhases": [
+        {
+          "normalizedStatic": {
+            "after": [],
+            "before": [],
+            "id": "XaphanHelper",
+            "priority": 2147483647,
+            "subPriorityPolicy": "PINNED_GLOBAL_REGISTRATION_INDEX"
+          },
+          "source": {
+            "after": [
+              "*"
+            ],
+            "before": [],
+            "id": "XaphanHelper",
+            "legacyContext": true,
+            "priority": null
+          }
+        }
+      ],
+      "constructionSiteFingerprintSha256": "91ce0b58750335065a036fefb469ee0e00c9eaaa917105d156081349f4e8b5eb",
+      "containingMethod": "System.Void Celeste.Mod.XaphanHelper.Upgrades.LightningDash::Load()",
+      "dependencyModuleLoadOrder": 49,
+      "disposeBehavior": "MODULE_UNLOAD_ONLY_IN_ACCEPTED_INSTALLED_BUILD",
+      "eligibility": "STATIC_CONFIGURED_DETOUR_SEQUENCE",
+      "lifetime": "MODULE_IMMUTABLE_ACTIVE_IN_ACCEPTED_STATIC_CLOSURE",
+      "package": "XaphanHelper",
+      "packageVersion": "1.0.79",
+      "packageZipSha256": "ca868d06eb05f0c5de55126090e5019210e9d83c3dae9394cbcd155acf8eb16f",
+      "registrationOrder": "LEXICAL_IL_ORDER_THEN_PINNED_GLOBAL_REGISTRATION_INDEX",
+      "rejectionReason": null,
+      "sameTargetParticipants": [
+        {
+          "participants": [
+            {
+              "hookKind": "DIRECT_ILHOOK",
+              "hookOrManipulator": "GravityHelper.PlayerHooks",
+              "package": "GravityHelper",
+              "siteOrdinal": 18
+            },
+            {
+              "hookKind": "DIRECT_ILHOOK",
+              "hookOrManipulator": "MaxHelpingHand.UpsideDownJumpThru",
+              "package": "MaxHelpingHand",
+              "siteOrdinal": 26
+            },
+            {
+              "hookKind": "DIRECT_ILHOOK",
+              "hookOrManipulator": "MaxHelpingHand.CameraCatchupSpeedTrigger",
+              "package": "MaxHelpingHand",
+              "siteOrdinal": 30
+            },
+            {
+              "hookKind": "DIRECT_ILHOOK",
+              "hookOrManipulator": "XaphanHelper.LightningDash",
+              "package": "XaphanHelper",
+              "siteOrdinal": 39
+            }
+          ],
+          "target": "Celeste.Player::orig_Update"
+        }
+      ],
+      "siteOrdinal": 39,
+      "storage": "STATIC_EVENT_OR_IDETOUR_FIELD",
+      "targetScopeKind": "EXACT_TARGET_SET",
+      "targetSetFingerprintSha256": "b8d31aa6c61155c7543c2e733ed4d0e82ab6611a04b156e21c0c26894be452ca",
+      "targets": [
+        {
+          "hookKind": "DIRECT_ILHOOK",
+          "hookOrManipulator": "XaphanHelper.LightningDash",
+          "target": "Celeste.Player::orig_Update"
+        }
+      ],
+      "undoBehavior": "MODULE_UNLOAD_ONLY_IN_ACCEPTED_INSTALLED_BUILD"
+    }
+  ],
+  "stage": "25K-D",
+  "status": "GREEN"
+}

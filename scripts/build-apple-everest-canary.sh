@@ -22,6 +22,7 @@ TVOS_DEVICE_ID=""
 PREPARE_ONLY=0
 CLEAN=0
 REUSE_BUILD=0
+CONFIGURED_FIXTURE=0
 MODS=()
 
 usage() {
@@ -43,6 +44,7 @@ Options:
   --prepare-only           generate and apply the shared closure without publishing
   --clean                  replace only marked prior canary output
   --reuse-build            package an already-marked completed AOT build
+  --configured-fixture     build one exact hash-locked configured-detour fixture
   -h, --help               show this help
 EOF
 }
@@ -60,6 +62,7 @@ while (($#)); do
     --prepare-only) PREPARE_ONLY=1; shift ;;
     --clean) CLEAN=1; shift ;;
     --reuse-build) REUSE_BUILD=1; shift ;;
+    --configured-fixture) CONFIGURED_FIXTURE=1; shift ;;
     -h|--help) usage; exit 0 ;;
     *) echo "error: unknown option: $1" >&2; exit 2 ;;
   esac
@@ -183,9 +186,16 @@ if ((include_dj_frozen_il_canary)); then
 fi
 mod_args=()
 for mod in "${MODS[@]}"; do mod_args+=(--mod "$mod"); done
-(cd /private/tmp && "$DOTNET8" run --project "$BUILDER_PROJECT" -- build \
-  --profile "$PROFILE" --repo-root "$REPO_ROOT" --upstream "$UPSTREAM" --output "$CLOSURE" \
-  "${mod_args[@]}")
+if ((CONFIGURED_FIXTURE)); then
+  ((${#MODS[@]} == 1)) || { echo "error: --configured-fixture requires exactly one --mod" >&2; exit 2; }
+  (cd /private/tmp && "$DOTNET8" run --project "$BUILDER_PROJECT" -- build-configured-fixture \
+    --profile "$PROFILE" --repo-root "$REPO_ROOT" --upstream "$UPSTREAM" --output "$CLOSURE" \
+    --mod "${MODS[0]}")
+else
+  (cd /private/tmp && "$DOTNET8" run --project "$BUILDER_PROJECT" -- build \
+    --profile "$PROFILE" --repo-root "$REPO_ROOT" --upstream "$UPSTREAM" --output "$CLOSURE" \
+    "${mod_args[@]}")
+fi
 
 prepare_platform() {
   local platform="$1" base destination

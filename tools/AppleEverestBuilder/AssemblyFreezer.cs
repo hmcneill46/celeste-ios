@@ -90,11 +90,13 @@ internal static class AssemblyFreezer
         IReadOnlyList<DirectManagedHookPlan> directHooks,
         IReadOnlyList<ModInteropRegistrationPlan> modInteropRegistrations,
         IReadOnlyList<FrozenIlTransformPlan>? frozenIlTransforms = null,
-        StaticAotCompatibilityPlan? staticAotCompatibility = null)
+        StaticAotCompatibilityPlan? staticAotCompatibility = null,
+        StaticConfiguredCompatibilityPlan? configuredCompatibility = null)
     {
         using AssemblyDefinition assembly = AssemblyDefinition.ReadAssembly(source, new ReaderParameters { ReadSymbols = false });
         frozenIlTransforms ??= [];
         StaticIlFreeze.RewriteDeviceAssembly(assembly, frozenIlTransforms);
+        StaticConfiguredDetourCompatibility.RewriteDeviceAssembly(assembly, configuredCompatibility);
         StaticAotCompatibility.RewriteDeviceAssembly(assembly, staticAotCompatibility);
         string assemblyName = assembly.Name.Name;
         if (string.IsNullOrWhiteSpace(assemblyName) || assemblyName.Length > 255 ||

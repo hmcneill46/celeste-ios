@@ -1,4 +1,5 @@
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace AppleEverestBuilder;
 
@@ -45,7 +46,9 @@ internal static class ManagedDetourGenerator
             source.AppendLine("        {");
             EmitAdapter(source, plan, target, "            ");
             source.Append("            return global::").Append(target.HookNamespace).Append('.').Append(target.HookType)
-                .Append(".RegisterDirect_").Append(target.EventName).AppendLine("(adapter, null, applyByDefault);\n        }");
+                .Append(".RegisterDirect_").Append(target.EventName).Append("(adapter, applyByDefault, ")
+                .Append(plan.StaticDispatcherOrdinal?.ToString(System.Globalization.CultureInfo.InvariantCulture) ?? "null")
+                .AppendLine(");\n        }");
         }
         source.AppendLine("        throw new NotSupportedException($\"direct managed Hook plan was not statically authorized: {planId}\");\n    }");
         source.AppendLine("}\n}");
@@ -91,6 +94,15 @@ internal static class ManagedDetourGenerator
             int first = text.IndexOf(needle, StringComparison.Ordinal);
             if (first < 0 || first != text.LastIndexOf(needle, StringComparison.Ordinal))
                 throw new InvalidDataException($"managed-detour target declaration drifted or is ambiguous: {target.Id}");
+            if (target.EventName.Equals("ctor", StringComparison.Ordinal) ||
+                target.EventName.StartsWith("ctor_", StringComparison.Ordinal))
+            {
+                int constructorOpen = first + needle.Length - 1;
+                int constructorClose = MatchingBrace(text, constructorOpen);
+                text = RelaxMovedConstructorReadonlyFields(
+                    text, text[(constructorOpen + 1)..constructorClose], target.Id);
+                first = text.IndexOf(needle, StringComparison.Ordinal);
+            }
             string wrapper = "\t" + target.SourceDeclaration + "\n\t{\n\t\t";
             if (target.ReturnType != "void") wrapper += "return ";
             wrapper += "global::" + target.HookNamespace + "." + target.HookType + ".Invoke_" + target.EventName + "(";
@@ -112,6 +124,29 @@ internal static class ManagedDetourGenerator
             text = text[..first] + wrapper + text[(first + needle.Length)..];
             File.WriteAllText(path, text, new UTF8Encoding(false));
         }
+    }
+
+    private static string RelaxMovedConstructorReadonlyFields(string text, string constructorBody, string targetId)
+    {
+        string[] assignedNames = Regex.Matches(constructorBody,
+                @"(?m)^\s*(?:this\.)?(?<name>[A-Za-z_][A-Za-z0-9_]*)\s*=")
+            .Select(match => match.Groups["name"].Value)
+            .Distinct(StringComparer.Ordinal)
+            .OrderBy(value => value, StringComparer.Ordinal)
+            .ToArray();
+        foreach (string name in assignedNames)
+        {
+            Regex declaration = new(
+                @"(?m)^(?<prefix>\t(?:(?:public|private|protected|internal|static|unsafe|new|volatile)\s+)*)" +
+                @"readonly\s+(?<suffix>[^;\r\n]*\b" + Regex.Escape(name) + @"\b[^;\r\n]*;)$");
+            MatchCollection matches = declaration.Matches(text);
+            if (matches.Count > 1)
+                throw new InvalidDataException(
+                    $"managed-detour constructor readonly field is ambiguous: {targetId}:{name}");
+            if (matches.Count == 1)
+                text = declaration.Replace(text, "${prefix}${suffix}", 1);
+        }
+        return text;
     }
 
     private static string RewritePropertyGetter(string text, ManagedDetourTarget target)
@@ -161,10 +196,10 @@ internal static class ManagedDetourGenerator
         source.Append("    private static ").Append(target.OrigDelegate).Append(" Active_").Append(target.EventName).AppendLine(";");
         source.Append("    public static event ").Append(target.HookDelegate).Append(' ').Append(target.EventName)
             .Append(" { add => global::Celeste.Mod.AppleEverestHookList.AddEvent(Hooks_").Append(target.EventName)
-            .Append(", value); remove => global::Celeste.Mod.AppleEverestHookList.RemoveEvent(Hooks_").Append(target.EventName).AppendLine(", value); }");
+            .Append(", value, \"").Append(Escape(target.Id)).Append("\"); remove => global::Celeste.Mod.AppleEverestHookList.RemoveEvent(Hooks_").Append(target.EventName).AppendLine(", value); }");
         source.Append("    internal static global::Celeste.Mod.IAppleEverestManagedHookRegistration RegisterDirect_").Append(target.EventName)
-            .Append('(').Append(target.HookDelegate).AppendLine(" handler, global::MonoMod.RuntimeDetour.DetourConfig config, bool applyByDefault) =>")
-            .Append("        global::Celeste.Mod.AppleEverestHookList.AddDirect(Hooks_").Append(target.EventName).AppendLine(", handler, config, applyByDefault);");
+            .Append('(').Append(target.HookDelegate).AppendLine(" handler, bool applyByDefault, long? staticDispatcherOrdinal) =>")
+            .Append("        global::Celeste.Mod.AppleEverestHookList.AddDirect(Hooks_").Append(target.EventName).AppendLine(", handler, applyByDefault, staticDispatcherOrdinal);");
         source.Append("    internal static void RemoveOwner_").Append(target.EventName).Append("(string owner) => global::Celeste.Mod.AppleEverestHookList.RemoveOwner(Hooks_")
             .Append(target.EventName).AppendLine(", owner);");
 

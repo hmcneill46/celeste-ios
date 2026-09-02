@@ -151,6 +151,69 @@ try
         FrozenMod("FrozenB", [FrozenPlan("FrozenB", "B", sharedFrozenTarget)])]).ToArray();
     Pass(independent.Select(plan => plan.RegistrationOrdinal).SequenceEqual([0, 0, 1]),
         "frozen IL registration ordinals are target-local");
+
+    const string orderingTarget = "System.Int32 Fixture.Target::Run(System.Int32)";
+    StaticConfiguredDetourNode[] priorityNodes =
+    [
+        new("low", orderingTarget, "MANAGED_HOOK", new("low", -10, [], []), 0, 0),
+        new("ordinary", orderingTarget, "MANAGED_HOOK", null, 1, 0),
+        new("high", orderingTarget, "MANAGED_HOOK", new("high", 10, [], []), 2, 0)
+    ];
+    StaticConfiguredDetourSequence prioritySequence = ConfiguredDetourOrdering.Resolve(orderingTarget, priorityNodes);
+    Pass(prioritySequence.ConfiguredExecutionOrder.SequenceEqual(["high", "low"]) &&
+         prioritySequence.ManagedDispatcherOrder.SequenceEqual(["ordinary", "low", "high"]) &&
+         prioritySequence.IlCompositionOrder.SequenceEqual(["high", "low", "ordinary"]),
+        "configured priority, managed wrapping and IL composition remain distinct");
+    Pass(StaticConfiguredDetourCompatibility.ConfiguredOrdinalBase > 1_000_000_000L,
+        "configured managed ordinals occupy a disjoint fixed range");
+    Pass(ConfiguredDetourOrdering.Resolve(orderingTarget, priorityNodes.Reverse()).PlanSha256 ==
+         prioritySequence.PlanSha256,
+        "configured plan is deterministic across reversed input enumeration");
+
+    StaticConfiguredDetourSequence beforeSequence = ConfiguredDetourOrdering.Resolve(orderingTarget,
+    [
+        new("before", orderingTarget, "MANAGED_HOOK", new("before", -10, ["after"], []), 0, 0),
+        new("after", orderingTarget, "MANAGED_HOOK", new("after", 10, [], []), 1, 0)
+    ]);
+    Pass(beforeSequence.ConfiguredExecutionOrder.SequenceEqual(["before", "after"]) &&
+         beforeSequence.ManagedDispatcherOrder.SequenceEqual(["after", "before"]),
+        "Before constraint overrides priority with exact wrapper reversal");
+
+    StaticConfiguredDetourSequence afterSequence = ConfiguredDetourOrdering.Resolve(orderingTarget,
+    [
+        new("first", orderingTarget, "IL_EVENT", new("first", 10, [], ["second"]), 0, 0),
+        new("second", orderingTarget, "IL_EVENT", new("second", -10, [], []), 1, 0)
+    ]);
+    Pass(afterSequence.ConfiguredExecutionOrder.SequenceEqual(["second", "first"]),
+        "After constraint overrides priority");
+
+    StaticDetourConfig beforeAll = ConfiguredDetourOrdering.NormalizeLegacy("legacy-before-all", 42,
+        ["*"], [], 7, forIlHook: false);
+    StaticDetourConfig afterAll = ConfiguredDetourOrdering.NormalizeLegacy("legacy-after-all", 42,
+        [], ["*"], 8, forIlHook: false);
+    StaticDetourConfig beforeAllIl = ConfiguredDetourOrdering.NormalizeLegacy("legacy-il-before-all", 42,
+        ["*"], [], 9, forIlHook: true);
+    Pass(beforeAll.Priority == int.MinValue && afterAll.Priority == int.MaxValue &&
+         beforeAll.Before.Length == 0 && beforeAll.After.Length == 0,
+        "legacy wildcard priorities match pinned Everest adapter");
+    Pass(beforeAllIl.Priority == int.MaxValue && beforeAllIl.SubPriority == int.MaxValue - 9,
+        "legacy IL wildcard and global registration order are reversed exactly");
+
+    Throws(() => ConfiguredDetourOrdering.Resolve(orderingTarget,
+    [
+        new("cycle-a", orderingTarget, "IL_EVENT", new("cycle-a", null, ["cycle-b"], []), 0, 0),
+        new("cycle-b", orderingTarget, "IL_EVENT", new("cycle-b", null, ["cycle-a"], []), 1, 0)
+    ]), "CYCLE", "configured ordering cycle rejected before AOT");
+    Throws(() => ConfiguredDetourOrdering.Resolve(orderingTarget,
+    [
+        new("dynamic", orderingTarget, "IL_EVENT", new("dynamic", null, [], []), 0, 0,
+            "GAMEPLAY_SCOPED_MUTABLE")
+    ]), "DYNAMIC_CONFIG_LIFETIME_DEFERRED", "dynamic configured lifetime remains rejected");
+    Throws(() => ConfiguredDetourOrdering.Resolve(orderingTarget,
+    [
+        new("same-a", orderingTarget, "IL_EVENT", new("same", 1, [], []), 0, 0),
+        new("same-b", orderingTarget, "IL_EVENT", new("same", 2, [], []), 1, 0)
+    ]), "DUPLICATE_INCOMPATIBLE_ID", "incompatible duplicate config identity rejected");
     ResolvedMod cpopGraph = Mod("CpopHelper", "1.3.0", [("Everest", "1.3471.0")]);
     ResolvedMod quizGraph = Mod("QuizSample", "0.0.1", [("CpopHelper", "1.0.0"), ("Everest", "1.3761.0")]);
     Pass(EverestGraphResolver.Resolve([quizGraph, cpopGraph]).Select(mod => mod.Metadata.Name)
@@ -904,6 +967,50 @@ try
     (string targetMagic, string targetPackage, byte[] targetBody) = ReadMap(Path.Combine(normalizedOut, "Maps/Author/RealMap.bin"));
     Pass(sourceMagic == "CELESTE MAP" && targetMagic == sourceMagic && targetPackage == "Author/RealMap" &&
          targetBody.SequenceEqual(sourceBody), "Everest map package is normalized without changing its binary body");
+
+    MapBinaryBoundaryRecord plainBoundary = ContentCompiler.InspectBoundary(genericMap);
+    Pass(plainBoundary.ConsumedRootBytes == plainBoundary.FileBytes && plainBoundary.AppendixBytes == 0 &&
+         plainBoundary.AppendixSha256 == Hashing.BytesSha256([]),
+        "no-appendix map boundary and bytes remain unchanged");
+    string appendedMap = Path.Combine(temporary, "map-with-appendix.bin");
+    byte[] appendix = Encoding.UTF8.GetBytes("desktop-owned-trailing-appendix\0not-a-second-root");
+    using (FileStream output = File.Create(appendedMap))
+    {
+        output.Write(File.ReadAllBytes(genericMap));
+        output.Write(appendix);
+    }
+    MapBinaryBoundaryRecord appendedBoundary = ContentCompiler.InspectBoundary(appendedMap);
+    Pass(appendedBoundary.ConsumedRootBytes == plainBoundary.FileBytes &&
+         appendedBoundary.AppendixBytes == appendix.Length &&
+         appendedBoundary.AppendixSha256 == Hashing.BytesSha256(appendix),
+        "valid primary root records bounded appendix length and SHA-256 without interpreting it");
+    Pass(JsonSerializer.Serialize(ContentCompiler.InspectElements(appendedMap)) ==
+         JsonSerializer.Serialize(ContentCompiler.InspectElements(genericMap)),
+        "appended map root semantics equal desktop stop-after-root behavior");
+    string plainMapHash = Hashing.FileSha256(genericMap);
+    string appendedMapHash = Hashing.FileSha256(appendedMap);
+    MapProgressionRecord plainProgression = ContentCompiler.InspectProgression(genericMap,
+        "Maps/AppleEverest/Canary.bin", plainMapHash);
+    MapProgressionRecord appendedProgression = ContentCompiler.InspectProgression(appendedMap,
+        "Maps/AppleEverest/Canary.bin", appendedMapHash);
+    Pass(plainMapHash != appendedMapHash && appendedProgression.MapSha256 == appendedMapHash &&
+         appendedProgression.Rooms.SequenceEqual(plainProgression.Rooms) &&
+         appendedProgression.ProgressionEntities.SequenceEqual(plainProgression.ProgressionEntities) &&
+         appendedProgression.CompatibilityId != plainProgression.CompatibilityId,
+        "complete source hash remains authoritative while parsed root semantics are unchanged");
+    string oversizedAppendixMap = Path.Combine(temporary, "oversized-map-appendix.bin");
+    using (FileStream output = File.Create(oversizedAppendixMap))
+    {
+        output.Write(File.ReadAllBytes(genericMap));
+        output.SetLength(output.Length + ContentCompiler.MaxMapAppendixBytes + 1);
+    }
+    Throws(() => ContentCompiler.InspectBoundary(oversizedAppendixMap), "bounded compatibility limit",
+        "pathological map appendix rejected");
+    string truncatedRootMap = Path.Combine(temporary, "truncated-map-root.bin");
+    byte[] validRootBytes = File.ReadAllBytes(genericMap);
+    File.WriteAllBytes(truncatedRootMap, validRootBytes[..^1]);
+    Throws(() => ContentCompiler.InspectBoundary(truncatedRootMap), "truncated",
+        "truncated primary map root rejected rather than treated as appendix");
     string invalidMap = Path.Combine(temporary, "invalid-map.bin");
     File.WriteAllText(invalidMap, "not a Celeste map");
     Throws(() => ContentCompiler.Stage(invalidMap, "Content/Maps/Author/Invalid.bin", normalizedOut),
@@ -942,10 +1049,10 @@ try
     {
         JsonElement targets = targetCatalog.RootElement.GetProperty("targets");
         Pass(targetCatalog.RootElement.GetProperty("schemaVersion").GetInt32() == 2 &&
-             targets.GetArrayLength() == 102,
+             targets.GetArrayLength() == 205,
             "signature-driven managed-detour target catalog v2");
         string[] ids = targets.EnumerateArray().Select(target => target.GetProperty("id").GetString()!).ToArray();
-        Pass(ids.Distinct(StringComparer.Ordinal).Count() == 102 &&
+        Pass(ids.Distinct(StringComparer.Ordinal).Count() == 205 &&
              ids.Contains("celeste-commands-cmd-ow-complete", StringComparer.Ordinal) &&
              ids.Contains("celeste-oui-chapter-select-enter", StringComparer.Ordinal) &&
              ids.Contains("celeste-area-mode-stats-clone", StringComparer.Ordinal) &&
@@ -1019,6 +1126,32 @@ try
     Pass(signatureMatrix.All(target => File.ReadAllText(Path.Combine(signatureRoot, target.SourceFile))
             .Contains(target.OriginalDeclaration, StringComparison.Ordinal)),
         "signature generator rewrites each synthetic target into one wrapper and one original body");
+    ManagedDetourTarget readonlyConstructor = new()
+    {
+        Id = "fixture-readonly-constructor",
+        SourceFile = "ReadonlyConstructor.cs",
+        SourceDeclaration = "public ReadonlyConstructor(int value)",
+        OriginalDeclaration = "private void Original_ctor_int(int value)",
+        OriginalAlias = "Original_ctor_int",
+        HookNamespace = "On.Fixture",
+        HookType = "ReadonlyConstructor",
+        EventName = "ctor_int",
+        OrigDelegate = "orig_ctor_int",
+        HookDelegate = "hook_ctor_int",
+        IsStatic = false,
+        ReceiverType = "global::Fixture.ReadonlyConstructor",
+        ReturnType = "void",
+        Parameters = [new ManagedDetourParameter { Type = "int", Name = "value" }]
+    };
+    Text(signatureRoot, readonlyConstructor.SourceFile,
+        "namespace Fixture; public class ReadonlyConstructor\n{\n\tprivate readonly int value;\n" +
+        "\tpublic ReadonlyConstructor(int value)\n\t{\n\t\tthis.value = value;\n\t}\n}\n");
+    ManagedDetourGenerator.RewriteTargets(signatureRoot, [readonlyConstructor]);
+    string readonlyConstructorSource = File.ReadAllText(Path.Combine(signatureRoot, readonlyConstructor.SourceFile));
+    Pass(readonlyConstructorSource.Contains("private int value;", StringComparison.Ordinal) &&
+         !readonlyConstructorSource.Contains("private readonly int value;", StringComparison.Ordinal) &&
+         readonlyConstructorSource.Contains("private void Original_ctor_int", StringComparison.Ordinal),
+        "constructor detour source move relaxes only readonly fields assigned by the moved body");
     DirectManagedHookPlan directEvidencePlan = new(
         "fixture:direct-evidence", "Fixture", "Fixture", "Fixture.DirectEvidence::.ctor", 0,
         "fixture-instance-return", "InstanceReturn", "Fixture.DirectEvidence", "Apply", true, "int",
@@ -1129,7 +1262,7 @@ try
     Pass(staticCompatibility.Contains("PatchPinnedEverestHelperAbi", StringComparison.Ordinal) &&
          staticCompatibility.Contains("public DashListener(Action<Vector2> onDash)", StringComparison.Ordinal) &&
          staticCompatibility.Contains("public Action<Vector2> SpeedSetter", StringComparison.Ordinal) &&
-         staticCompatibility.Contains("public Texture2D Texture_Safe", StringComparison.Ordinal) &&
+         closureGenerator.Contains("public Texture2D Texture_Safe", StringComparison.Ordinal) &&
          staticCompatibility.Contains("TryGetCustomDebris(out string path, char tiletype)", StringComparison.Ordinal),
         "exact ChronoHelper Everest ABI is reproduced as ordinary static Apple source");
     Pass(staticCompatibility.Contains("RewriteChronoNamespacedContentPath", StringComparison.Ordinal) &&
@@ -1200,6 +1333,11 @@ try
          runtimeApi.Contains("public static void SetLogLevel(string tag, LogLevel level)", StringComparison.Ordinal) &&
          runtimeApi.Contains("public static void Log(string tag, string value)", StringComparison.Ordinal),
         "binary-compatible Everest content and module-state facades preserve compiled accessor shapes");
+    Pass(runtimeApi.Contains("public static int AttrInt(this global::Celeste.BinaryPacker.Element element,", StringComparison.Ordinal) &&
+         runtimeApi.Contains("CultureInfo.InvariantCulture", StringComparison.Ordinal) &&
+         staticCompatibility.Contains("public static void Rumble(RumbleStrength strength, RumbleLength length) =>", StringComparison.Ordinal) &&
+         staticCompatibility.Contains("Rumble(strength, length, null);", StringComparison.Ordinal),
+        "pinned LunaticHelper keeps its exact public Everest AttrInt and two-argument rumble ABI");
     Pass(runtimeApi.Contains("public sealed class ButtonBinding", StringComparison.Ordinal) &&
          runtimeApi.Contains("public VirtualButton Button", StringComparison.Ordinal) &&
          runtimeApi.Contains("internal void InitializeCurrentInput()", StringComparison.Ordinal) &&
@@ -1230,6 +1368,8 @@ try
     Pass(closureScanner.Contains("method.DeclaringType is ArrayType", StringComparison.Ordinal) &&
          closureScanner.Contains("method.Name is \".ctor\" or \"Get\" or \"Set\" or \"Address\"", StringComparison.Ordinal),
         "post-link API verifier distinguishes CLR multidimensional-array intrinsics from target APIs");
+    Pass(closureScanner.Contains("AotName(source.Name.Name) + \"__\" + methodName", StringComparison.Ordinal),
+        "native AOT verifier matches Mono's exact Mach-O assembly/type symbol separator");
     Pass(!Directory.EnumerateFiles(Path.Combine(repository, "apple-everest/runtime"), "*.cs").Select(File.ReadAllText)
         .Any(text => text.Contains("DynamicInvoke", StringComparison.Ordinal) || text.Contains("Assembly.Load", StringComparison.Ordinal) ||
                      text.Contains("DynamicMethod", StringComparison.Ordinal) || text.Contains("Reflection.Emit", StringComparison.Ordinal) ||
@@ -1243,7 +1383,7 @@ try
          testClosureViolations[0].Contains("System.Diagnostics.Process::Start", StringComparison.Ordinal),
         "linked-runtime scanner isolates the intentional desktop static-plan test host spawn");
 
-    Pass(ProductPolicy.TransformerVersion == "apple-everest-static-v17", "real-ZIP transformer version");
+    Pass(ProductPolicy.TransformerVersion == "apple-everest-static-v18", "real-ZIP transformer version");
     Pass(File.Exists(Path.Combine(repository, "tools/AppleEverestBuilder/AssemblyFreezer.cs")),
         "binary-first assembly freezer exists");
     string models = File.ReadAllText(Path.Combine(repository, "tools/AppleEverestBuilder/Models.cs"));
@@ -1291,6 +1431,9 @@ try
          buildScript.Contains(".dll.llvm.o", StringComparison.Ordinal) &&
          buildScript.Contains("mono_object", StringComparison.Ordinal),
         "product gate checks both LLVM and companion Mono AOT objects");
+    Pass(buildScript.Contains("--configured-fixture", StringComparison.Ordinal) &&
+         buildScript.Contains("build-configured-fixture", StringComparison.Ordinal),
+        "canary builder can select the exact real configured-detour production lane");
     Pass(File.Exists(Path.Combine(repository, "scripts/build-apple-everest-real-mods.sh")) &&
          File.Exists(Path.Combine(repository, "scripts/audit-apple-everest-mods.sh")),
         "ordinary-ZIP internal build and audit entry points");
@@ -1414,7 +1557,7 @@ try
          staticIlFreeze.Contains("frozen-IL On lifecycle contract drifted", StringComparison.Ordinal),
         "Load and Unload rewrites fail closed");
     Pass(staticIlFreeze.Contains("On.Celeste.CassetteBlock", StringComparison.Ordinal) == false &&
-         ManagedDetourCatalog.Targets.Count == 102,
+         ManagedDetourCatalog.Targets.Count == 205,
         "ordinary same-target On hooks remain catalog-driven");
     Pass(ManagedDetourCatalog.Targets.Any(target => target.Id == "celeste-crystal-static-spinner-create-sprites"),
         "same-target CrystalStaticSpinner On target registered");

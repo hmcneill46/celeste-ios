@@ -17,10 +17,27 @@ internal static class Program
             {
                 case "acquire": Acquire(One(options, "--profile"), One(options, "--output")); break;
                 case "build": Build(One(options, "--profile"), One(options, "--repo-root"), One(options, "--upstream"), One(options, "--output"), Many(options, "--mod")); break;
+                case "build-configured-fixture": BuildConfiguredFixture(One(options, "--profile"),
+                    One(options, "--repo-root"), One(options, "--upstream"),
+                    One(options, "--output"), One(options, "--mod")); break;
                 case "audit": Audit(Many(options, "--mod"), One(options, "--output")); break;
+                case "audit-configured-fixture": AuditConfiguredFixture(
+                    One(options, "--mod"), One(options, "--output")); break;
                 case "inspect-map": InspectMap(One(options, "--map"), One(options, "--output")); break;
+                case "inspect-map-boundary": InspectMapBoundary(
+                    One(options, "--map"), One(options, "--output")); break;
                 case "census-dll": AssemblyMechanismCensus.Write(
                     One(options, "--dll"), One(options, "--output")); break;
+                case "dump-method-il": AssemblyMechanismCensus.WriteMethodIl(
+                    One(options, "--dll"), One(options, "--method"), One(options, "--output")); break;
+                case "dump-configured-il": AssemblyMechanismCensus.WriteConfiguredIl(
+                    One(options, "--dll"), One(options, "--output")); break;
+                case "discover-hook-descriptors": HookDescriptorDiscovery.Write(
+                    One(options, "--hookgen"), One(options, "--game"),
+                    Many(options, "--dll"), One(options, "--output")); break;
+                case "discover-api-breadth": HookDescriptorDiscovery.WriteApiBreadth(
+                    One(options, "--game"), One(options, "--canonical"), One(options, "--apple"),
+                    Many(options, "--dll"), One(options, "--output")); break;
                 case "apply": ClosureGenerator.Apply(One(options, "--closure"), One(options, "--managed-root")); break;
                 case "scan-runtime": RuntimeClosureScanner.Verify(One(options, "--assembly")); break;
                 case "verify-preserved-assembly": RuntimeClosureScanner.VerifyPreserved(
@@ -145,6 +162,35 @@ internal static class Program
         File.WriteAllText(output, JsonSerializer.Serialize(report, new JsonSerializerOptions { WriteIndented = true }) + "\n");
     }
 
+    private static void AuditConfiguredFixture(string modPath, string output)
+    {
+        string staging = Path.Combine(Path.GetTempPath(), "apple-everest-configured-audit-" + Guid.NewGuid().ToString("N"));
+        Directory.CreateDirectory(staging);
+        try
+        {
+            ModInput input = SafeModIngestor.Ingest(Path.GetFullPath(modPath), staging, 0);
+            if (input.Metadata.Count != 1)
+                throw new InvalidDataException("configured fixture must contain exactly one module");
+            ResolvedMod result = CompatibilityAnalyzer.AuditConfiguredFixture(input, input.Metadata[0]);
+            Directory.CreateDirectory(Path.GetDirectoryName(Path.GetFullPath(output))!);
+            File.WriteAllText(Path.GetFullPath(output), JsonSerializer.Serialize(new
+            {
+                schemaVersion = 1,
+                transformerVersion = ProductPolicy.TransformerVersion,
+                name = result.Metadata.Name,
+                version = result.Metadata.Version,
+                sourceLogicalSha256 = result.Input.SourceSha256,
+                classification = result.Classification.ToString(),
+                mechanisms = result.Mechanisms,
+                configured = result.StaticConfiguredDetours,
+                managedDetourTargets = result.ManagedDetourTargets,
+                customEntityFactories = result.Declaration?.CustomEntityFactories.Length ?? 0,
+                omittedCustomEntityFactories = result.Declaration?.OmittedCustomEntityFactories.Length ?? 0
+            }, new JsonSerializerOptions { WriteIndented = true }) + "\n");
+        }
+        finally { Directory.Delete(staging, recursive: true); }
+    }
+
     private static void InspectMap(string map, string output)
     {
         string source = Path.GetFullPath(map);
@@ -170,6 +216,29 @@ internal static class Program
             new JsonSerializerOptions { WriteIndented = true }) + "\n");
     }
 
+    private static void InspectMapBoundary(string map, string output)
+    {
+        string source = Path.GetFullPath(map);
+        if (!File.Exists(source)) throw new FileNotFoundException("map input does not exist", source);
+        MapBinaryBoundaryRecord boundary = ContentCompiler.InspectBoundary(source);
+        object report = new
+        {
+            schemaVersion = 1,
+            map = Path.GetFileName(source),
+            sourceMapSha256 = Hashing.FileSha256(source),
+            boundary.FileBytes,
+            boundary.ConsumedRootBytes,
+            boundary.AppendixBytes,
+            boundary.AppendixSha256,
+            appendixInterpreted = false,
+            maximumAppendixBytes = ContentCompiler.MaxMapAppendixBytes
+        };
+        output = Path.GetFullPath(output);
+        Directory.CreateDirectory(Path.GetDirectoryName(output)!);
+        File.WriteAllText(output, JsonSerializer.Serialize(report,
+            new JsonSerializerOptions { WriteIndented = true }) + "\n");
+    }
+
     private static void Build(string profilePath, string repoRoot, string upstream, string output, IReadOnlyList<string> modPaths)
     {
         AppleEverestProfile profile = LoadProfile(profilePath);
@@ -188,6 +257,24 @@ internal static class Program
         }
         IReadOnlyList<ResolvedMod> ordered = EverestGraphResolver.Resolve(analyzed);
         ClosureGenerator.Generate(profile, ordered, Path.GetFullPath(repoRoot), output);
+        Directory.Delete(staging, recursive: true);
+    }
+
+    private static void BuildConfiguredFixture(string profilePath, string repoRoot, string upstream,
+        string output, string modPath)
+    {
+        AppleEverestProfile profile = LoadProfile(profilePath);
+        VerifyUpstream(profile, upstream);
+        output = Path.GetFullPath(output);
+        if (Directory.Exists(output)) throw new InvalidDataException("closure output already exists");
+        Directory.CreateDirectory(output);
+        string staging = Path.Combine(output, ".staging");
+        Directory.CreateDirectory(staging);
+        ModInput input = SafeModIngestor.Ingest(Path.GetFullPath(modPath), staging, 0);
+        if (input.Metadata.Count != 1)
+            throw new InvalidDataException("configured fixture must contain exactly one module");
+        ResolvedMod analyzed = CompatibilityAnalyzer.AnalyzeConfiguredFixture(input, input.Metadata[0]);
+        ClosureGenerator.Generate(profile, [analyzed], Path.GetFullPath(repoRoot), output);
         Directory.Delete(staging, recursive: true);
     }
 
@@ -257,5 +344,5 @@ internal static class Program
 
     private static void Run(string command, params string[] args) { _ = Capture(command, args); }
 
-    private static void Help() => Console.WriteLine("AppleEverestBuilder acquire|audit|inspect-map|census-dll|build|apply|scan-runtime|verify-preserved-assembly|verify-referenced-api|verify-aot-object|verify-profile (closed static-AOT Apple product)");
+    private static void Help() => Console.WriteLine("AppleEverestBuilder acquire|audit|inspect-map|inspect-map-boundary|census-dll|build|apply|scan-runtime|verify-preserved-assembly|verify-referenced-api|verify-aot-object|verify-profile (closed static-AOT Apple product)");
 }

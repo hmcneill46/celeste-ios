@@ -1,0 +1,1322 @@
+{
+  "apiBreadth": {
+    "missingAfter": 0,
+    "newExactMemberCount": 29,
+    "newExactMembers": [
+      {
+        "appleStatus": "PUBLIC",
+        "member": "System.Void Celeste.Mod.EverestModule::.ctor()",
+        "referenceSiteCount": 8,
+        "review": "EXACT_MEMBER_ONLY"
+      },
+      {
+        "appleStatus": "PUBLIC",
+        "member": "System.Type[] Celeste.Mod.Extensions::GetTypesSafe(System.Reflection.Assembly)",
+        "referenceSiteCount": 1,
+        "review": "EXACT_MEMBER_ONLY"
+      },
+      {
+        "appleStatus": "PUBLIC",
+        "member": "System.String Celeste.Mod.EverestModuleMetadata::get_Name()",
+        "referenceSiteCount": 2,
+        "review": "EXACT_MEMBER_ONLY"
+      },
+      {
+        "appleStatus": "PUBLIC",
+        "member": "System.Void Celeste.Mod.EverestModuleMetadata::set_Name(System.String)",
+        "referenceSiteCount": 5,
+        "review": "EXACT_MEMBER_ONLY"
+      },
+      {
+        "appleStatus": "PUBLIC",
+        "member": "System.Version Celeste.Mod.EverestModuleMetadata::get_Version()",
+        "referenceSiteCount": 2,
+        "review": "EXACT_MEMBER_ONLY"
+      },
+      {
+        "appleStatus": "PUBLIC",
+        "member": "System.Void Celeste.Mod.EverestModuleMetadata::set_Version(System.Version)",
+        "referenceSiteCount": 1,
+        "review": "EXACT_MEMBER_ONLY"
+      },
+      {
+        "appleStatus": "PUBLIC",
+        "member": "System.Void Celeste.Mod.EverestModuleMetadata::set_VersionString(System.String)",
+        "referenceSiteCount": 4,
+        "review": "EXACT_MEMBER_ONLY"
+      },
+      {
+        "appleStatus": "PUBLIC",
+        "member": "System.Collections.ObjectModel.ReadOnlyCollection`1<Celeste.Mod.EverestModule> Celeste.Mod.Everest::get_Modules()",
+        "referenceSiteCount": 1,
+        "review": "EXACT_MEMBER_ONLY"
+      },
+      {
+        "appleStatus": "PUBLIC",
+        "member": "System.String Celeste.Mod.Everest::get_PathEverest()",
+        "referenceSiteCount": 1,
+        "review": "EXACT_MEMBER_ONLY"
+      },
+      {
+        "appleStatus": "PUBLIC",
+        "member": "System.Boolean Celeste.Mod.Everest/Loader::DependencyLoaded(Celeste.Mod.EverestModuleMetadata)",
+        "referenceSiteCount": 2,
+        "review": "EXACT_MEMBER_ONLY"
+      },
+      {
+        "appleStatus": "PUBLIC",
+        "member": "System.Boolean Celeste.Mod.Everest/Loader::TryGetDependency(Celeste.Mod.EverestModuleMetadata,Celeste.Mod.EverestModule&)",
+        "referenceSiteCount": 1,
+        "review": "EXACT_MEMBER_ONLY"
+      },
+      {
+        "appleStatus": "PUBLIC",
+        "member": "System.Boolean Celeste.Mod.Everest/Loader::VersionSatisfiesDependency(System.Version,System.Version)",
+        "referenceSiteCount": 1,
+        "review": "EXACT_MEMBER_ONLY"
+      },
+      {
+        "appleStatus": "PUBLIC",
+        "member": "System.Boolean Celeste.Mod.Everest/Content::TryGet(System.String,Celeste.Mod.ModAsset&,System.Boolean)",
+        "referenceSiteCount": 1,
+        "review": "EXACT_MEMBER_ONLY"
+      },
+      {
+        "appleStatus": "PUBLIC",
+        "member": "System.Void Celeste.Mod.Everest/Events/Player::add_OnRegisterStates(System.Action`1<Celeste.Player>)",
+        "referenceSiteCount": 2,
+        "review": "EXACT_MEMBER_ONLY"
+      },
+      {
+        "appleStatus": "PUBLIC",
+        "member": "System.Void Celeste.Mod.Everest/Events/Player::add_OnSpawn(System.Action`1<Celeste.Player>)",
+        "referenceSiteCount": 1,
+        "review": "EXACT_MEMBER_ONLY"
+      },
+      {
+        "appleStatus": "PUBLIC",
+        "member": "System.Void Celeste.Mod.Everest/Events/Player::add_OnDie(System.Action`1<Celeste.Player>)",
+        "referenceSiteCount": 1,
+        "review": "EXACT_MEMBER_ONLY"
+      },
+      {
+        "appleStatus": "PUBLIC",
+        "member": "System.Void Celeste.Mod.Everest/Events/Level/TransitionToHandler::.ctor(System.Object,System.IntPtr)",
+        "referenceSiteCount": 1,
+        "review": "EXACT_MEMBER_ONLY"
+      },
+      {
+        "appleStatus": "PUBLIC",
+        "member": "System.Void Celeste.Mod.Everest/Events/Level::add_OnTransitionTo(Celeste.Mod.Everest/Events/Level/TransitionToHandler)",
+        "referenceSiteCount": 1,
+        "review": "EXACT_MEMBER_ONLY"
+      },
+      {
+        "appleStatus": "PUBLIC",
+        "member": "System.Void Celeste.Mod.Everest/Events/Level/ExitHandler::.ctor(System.Object,System.IntPtr)",
+        "referenceSiteCount": 1,
+        "review": "EXACT_MEMBER_ONLY"
+      },
+      {
+        "appleStatus": "PUBLIC",
+        "member": "System.Void Celeste.Mod.Everest/Events/Level::add_OnExit(Celeste.Mod.Everest/Events/Level/ExitHandler)",
+        "referenceSiteCount": 1,
+        "review": "EXACT_MEMBER_ONLY"
+      },
+      {
+        "appleStatus": "PUBLIC",
+        "member": "System.Void Celeste.Mod.Everest/Events/Level/LoadEntityHandler::.ctor(System.Object,System.IntPtr)",
+        "referenceSiteCount": 2,
+        "review": "EXACT_MEMBER_ONLY"
+      },
+      {
+        "appleStatus": "PUBLIC",
+        "member": "System.Void Celeste.Mod.Everest/Events/Level::add_OnLoadEntity(Celeste.Mod.Everest/Events/Level/LoadEntityHandler)",
+        "referenceSiteCount": 2,
+        "review": "EXACT_MEMBER_ONLY"
+      },
+      {
+        "appleStatus": "PUBLIC",
+        "member": "System.Void Celeste.Mod.Everest/Events/LevelLoader/LoadingThreadHandler::.ctor(System.Object,System.IntPtr)",
+        "referenceSiteCount": 2,
+        "review": "EXACT_MEMBER_ONLY"
+      },
+      {
+        "appleStatus": "PUBLIC",
+        "member": "System.Void Celeste.Mod.Everest/Events/LevelLoader::add_OnLoadingThread(Celeste.Mod.Everest/Events/LevelLoader/LoadingThreadHandler)",
+        "referenceSiteCount": 2,
+        "review": "EXACT_MEMBER_ONLY"
+      },
+      {
+        "appleStatus": "PUBLIC",
+        "member": "System.Byte[] Celeste.Mod.ModAsset::get_Data()",
+        "referenceSiteCount": 1,
+        "review": "EXACT_MEMBER_ONLY"
+      },
+      {
+        "appleStatus": "PUBLIC",
+        "member": "System.Void Celeste.Mod.DecalRegistry::AddPropertyHandler(System.String,System.Action`2<Celeste.Decal,System.Xml.XmlAttributeCollection>)",
+        "referenceSiteCount": 2,
+        "review": "EXACT_MEMBER_ONLY"
+      },
+      {
+        "appleStatus": "PUBLIC",
+        "member": "System.Void Celeste.Mod.StrawberryRegistry::Register(System.Type,System.Boolean,System.Boolean)",
+        "referenceSiteCount": 1,
+        "review": "EXACT_MEMBER_ONLY"
+      },
+      {
+        "appleStatus": "PUBLIC",
+        "member": "System.Reflection.Assembly Celeste.Mod.Helpers.FakeAssembly::GetFakeEntryAssembly()",
+        "referenceSiteCount": 1,
+        "review": "EXACT_MEMBER_ONLY"
+      },
+      {
+        "appleStatus": "PUBLIC",
+        "member": "Microsoft.Xna.Framework.Graphics.Texture2D Monocle.VirtualTexture::get_Texture_Safe()",
+        "referenceSiteCount": 1,
+        "review": "EXACT_MEMBER_ONLY"
+      }
+    ],
+    "nonpublicAfter": 0,
+    "referenceSiteCount": 326,
+    "uniqueReferencedMemberCount": 114
+  },
+  "beginnerSliceRecount": {
+    "blockerGroupsAfter": 4,
+    "blockerGroupsBefore": 7,
+    "closed": [
+      "bounded map appendix",
+      "static eligible configured ordering",
+      "exact evidenced Beginner descriptor/API breadth"
+    ],
+    "remaining": [
+      "Contort/EVM/Jungle/YetAnother semantic lowerings",
+      "StrawberryJam2021 root lifecycle/UI/state lowering",
+      "bounded multi-bank FMOD",
+      "Crystalline/Vortex bounded mechanisms"
+    ],
+    "sliceReadyToBuild": false
+  },
+  "descriptorBreadth": {
+    "catalogAfter": 205,
+    "catalogBefore": 102,
+    "catalogManifestSha256": "9235a8941261b7ed753b61e11ed3f7c67e8ea626a5b19e2074ced7c4b7a6ccc1",
+    "newDescriptorCount": 103,
+    "newPinnedPatchedApiCount": 5,
+    "newSourceBackedCount": 98,
+    "reachableReferenceSiteCount": 200,
+    "reachableRequirementCount": 176,
+    "targets": [
+      {
+        "declarationLocked": true,
+        "hook": "On.Celeste.Actor::MoveH",
+        "id": "celeste-actor-move-h",
+        "overloadLocked": true,
+        "provenance": "REACHABLE_BEGINNER_PROVIDER_INITIALIZATION",
+        "sourceDeclaration": "public bool MoveH(float moveH, Collision onCollide = null, Solid pusher = null)",
+        "sourceFile": "Celeste/Actor.cs"
+      },
+      {
+        "declarationLocked": true,
+        "hook": "On.Celeste.Actor::MoveV",
+        "id": "celeste-actor-move-v",
+        "overloadLocked": true,
+        "provenance": "REACHABLE_BEGINNER_PROVIDER_INITIALIZATION",
+        "sourceDeclaration": "public bool MoveV(float moveV, Collision onCollide = null, Solid pusher = null)",
+        "sourceFile": "Celeste/Actor.cs"
+      },
+      {
+        "declarationLocked": true,
+        "hook": "On.Celeste.Actor::NaiveMove",
+        "id": "celeste-actor-naive-move",
+        "overloadLocked": true,
+        "provenance": "REACHABLE_BEGINNER_PROVIDER_INITIALIZATION",
+        "sourceDeclaration": "public void NaiveMove(Vector2 amount)",
+        "sourceFile": "Celeste/Actor.cs"
+      },
+      {
+        "declarationLocked": true,
+        "hook": "On.Celeste.Actor::Update",
+        "id": "celeste-actor-update",
+        "overloadLocked": true,
+        "provenance": "REACHABLE_BEGINNER_PROVIDER_INITIALIZATION",
+        "sourceDeclaration": "public override void Update()",
+        "sourceFile": "Celeste/Actor.cs"
+      },
+      {
+        "declarationLocked": true,
+        "hook": "On.Celeste.Audio::CreateInstance",
+        "id": "celeste-audio-create-instance",
+        "overloadLocked": true,
+        "provenance": "REACHABLE_BEGINNER_PROVIDER_INITIALIZATION",
+        "sourceDeclaration": "public static EventInstance CreateInstance(string path, Vector2? position = null)",
+        "sourceFile": "Celeste/Audio.cs"
+      },
+      {
+        "declarationLocked": true,
+        "hook": "On.Celeste.BadelineBoost::BoostRoutine",
+        "id": "celeste-badeline-boost-boost-routine",
+        "overloadLocked": true,
+        "provenance": "REACHABLE_BEGINNER_PROVIDER_INITIALIZATION",
+        "sourceDeclaration": "private IEnumerator BoostRoutine(Player player)",
+        "sourceFile": "Celeste/BadelineBoost.cs"
+      },
+      {
+        "declarationLocked": true,
+        "hook": "On.Celeste.Booster::AppearParticles",
+        "id": "celeste-booster-appear-particles",
+        "overloadLocked": true,
+        "provenance": "REACHABLE_BEGINNER_PROVIDER_INITIALIZATION",
+        "sourceDeclaration": "private void AppearParticles()",
+        "sourceFile": "Celeste/Booster.cs"
+      },
+      {
+        "declarationLocked": true,
+        "hook": "On.Celeste.Booster::BoostRoutine",
+        "id": "celeste-booster-boost-routine",
+        "overloadLocked": true,
+        "provenance": "REACHABLE_BEGINNER_PROVIDER_INITIALIZATION",
+        "sourceDeclaration": "private IEnumerator BoostRoutine(Player player, Vector2 dir)",
+        "sourceFile": "Celeste/Booster.cs"
+      },
+      {
+        "declarationLocked": true,
+        "hook": "On.Celeste.Booster::OnPlayer",
+        "id": "celeste-booster-on-player",
+        "overloadLocked": true,
+        "provenance": "REACHABLE_BEGINNER_PROVIDER_INITIALIZATION",
+        "sourceDeclaration": "private void OnPlayer(Player player)",
+        "sourceFile": "Celeste/Booster.cs"
+      },
+      {
+        "declarationLocked": true,
+        "hook": "On.Celeste.Booster::OnPlayerDashed",
+        "id": "celeste-booster-on-player-dashed",
+        "overloadLocked": true,
+        "provenance": "REACHABLE_BEGINNER_PROVIDER_INITIALIZATION",
+        "sourceDeclaration": "public void OnPlayerDashed(Vector2 direction)",
+        "sourceFile": "Celeste/Booster.cs"
+      },
+      {
+        "declarationLocked": true,
+        "hook": "On.Celeste.Booster::PlayerDied",
+        "id": "celeste-booster-player-died",
+        "overloadLocked": true,
+        "provenance": "REACHABLE_BEGINNER_PROVIDER_INITIALIZATION",
+        "sourceDeclaration": "public void PlayerDied()",
+        "sourceFile": "Celeste/Booster.cs"
+      },
+      {
+        "declarationLocked": true,
+        "hook": "On.Celeste.Booster::PlayerReleased",
+        "id": "celeste-booster-player-released",
+        "overloadLocked": true,
+        "provenance": "REACHABLE_BEGINNER_PROVIDER_INITIALIZATION",
+        "sourceDeclaration": "public void PlayerReleased()",
+        "sourceFile": "Celeste/Booster.cs"
+      },
+      {
+        "declarationLocked": true,
+        "hook": "On.Celeste.Bumper::Added",
+        "id": "celeste-bumper-added",
+        "overloadLocked": true,
+        "provenance": "REACHABLE_BEGINNER_PROVIDER_INITIALIZATION",
+        "sourceDeclaration": "public override void Added(Scene scene)",
+        "sourceFile": "Celeste/Bumper.cs"
+      },
+      {
+        "declarationLocked": true,
+        "hook": "On.Celeste.CassetteBlock::TryActorWiggleUp",
+        "id": "celeste-cassette-block-try-actor-wiggle-up",
+        "overloadLocked": true,
+        "provenance": "REACHABLE_BEGINNER_PROVIDER_INITIALIZATION",
+        "sourceDeclaration": "private bool TryActorWiggleUp(Entity actor)",
+        "sourceFile": "Celeste/CassetteBlock.cs"
+      },
+      {
+        "declarationLocked": true,
+        "hook": "On.Celeste.CassetteBlock::UpdateVisualState",
+        "id": "celeste-cassette-block-update-visual-state",
+        "overloadLocked": true,
+        "provenance": "REACHABLE_BEGINNER_PROVIDER_INITIALIZATION",
+        "sourceDeclaration": "private void UpdateVisualState()",
+        "sourceFile": "Celeste/CassetteBlock.cs"
+      },
+      {
+        "declarationLocked": true,
+        "hook": "On.Celeste.Cassette::OnPlayer",
+        "id": "celeste-cassette-on-player",
+        "overloadLocked": true,
+        "provenance": "REACHABLE_BEGINNER_PROVIDER_INITIALIZATION",
+        "sourceDeclaration": "private void OnPlayer(Player player)",
+        "sourceFile": "Celeste/Cassette.cs"
+      },
+      {
+        "declarationLocked": true,
+        "hook": "On.Celeste.Celeste::Freeze",
+        "id": "celeste-celeste-freeze",
+        "overloadLocked": true,
+        "provenance": "REACHABLE_BEGINNER_PROVIDER_INITIALIZATION",
+        "sourceDeclaration": "public static void Freeze(float time)",
+        "sourceFile": "Celeste/Celeste.cs"
+      },
+      {
+        "declarationLocked": true,
+        "hook": "On.Celeste.ClutterBlockBase::Render",
+        "id": "celeste-clutter-block-base-render",
+        "overloadLocked": true,
+        "provenance": "REACHABLE_BEGINNER_PROVIDER_INITIALIZATION",
+        "sourceDeclaration": "public override void Render()",
+        "sourceFile": "Celeste/ClutterBlockBase.cs"
+      },
+      {
+        "declarationLocked": true,
+        "hook": "On.Celeste.CoreModeToggle::Update",
+        "id": "celeste-core-mode-toggle-update",
+        "overloadLocked": true,
+        "provenance": "REACHABLE_BEGINNER_PROVIDER_INITIALIZATION",
+        "sourceDeclaration": "public override void Update()",
+        "sourceFile": "Celeste/CoreModeToggle.cs"
+      },
+      {
+        "declarationLocked": true,
+        "hook": "On.Celeste.CrushBlock::ActivateParticles",
+        "id": "celeste-crush-block-activate-particles",
+        "overloadLocked": true,
+        "provenance": "REACHABLE_BEGINNER_PROVIDER_INITIALIZATION",
+        "sourceDeclaration": "private void ActivateParticles(Vector2 dir)",
+        "sourceFile": "Celeste/CrushBlock.cs"
+      },
+      {
+        "declarationLocked": true,
+        "hook": "On.Celeste.CrushBlock::ctor_EntityData_Vector2",
+        "id": "celeste-crush-block-ctor-entity-data-vector2",
+        "overloadLocked": true,
+        "provenance": "REACHABLE_BEGINNER_PROVIDER_INITIALIZATION",
+        "sourceDeclaration": "public CrushBlock(EntityData data, Vector2 offset)\n\t\t: this(data.Position + offset, data.Width, data.Height, data.Enum(\"axes\", Axes.Both), data.Bool(\"chillout\"))",
+        "sourceFile": "Celeste/CrushBlock.cs"
+      },
+      {
+        "declarationLocked": true,
+        "hook": "On.Celeste.CrystalStaticSpinner::Update",
+        "id": "celeste-crystal-static-spinner-update",
+        "overloadLocked": true,
+        "provenance": "REACHABLE_BEGINNER_PROVIDER_INITIALIZATION",
+        "sourceDeclaration": "public override void Update()",
+        "sourceFile": "Celeste/CrystalStaticSpinner.cs"
+      },
+      {
+        "declarationLocked": true,
+        "hook": "On.Celeste.DashBlock::OnDashed",
+        "id": "celeste-dash-block-on-dashed",
+        "overloadLocked": true,
+        "provenance": "REACHABLE_BEGINNER_PROVIDER_INITIALIZATION",
+        "sourceDeclaration": "private DashCollisionResults OnDashed(Player player, Vector2 direction)",
+        "sourceFile": "Celeste/DashBlock.cs"
+      },
+      {
+        "declarationLocked": true,
+        "hook": "On.Celeste.Debris::Added",
+        "id": "celeste-debris-added",
+        "overloadLocked": true,
+        "provenance": "REACHABLE_BEGINNER_PROVIDER_INITIALIZATION",
+        "sourceDeclaration": "public override void Added(Scene scene)",
+        "sourceFile": "Celeste/Debris.cs"
+      },
+      {
+        "declarationLocked": true,
+        "hook": "On.Celeste.DreamBlock::OneUseDestroy",
+        "id": "celeste-dream-block-one-use-destroy",
+        "overloadLocked": true,
+        "provenance": "REACHABLE_BEGINNER_PROVIDER_INITIALIZATION",
+        "sourceDeclaration": "private void OneUseDestroy()",
+        "sourceFile": "Celeste/DreamBlock.cs"
+      },
+      {
+        "declarationLocked": true,
+        "hook": "On.Celeste.DustGraphic::ctor",
+        "id": "celeste-dust-graphic-ctor",
+        "overloadLocked": true,
+        "provenance": "REACHABLE_BEGINNER_PROVIDER_INITIALIZATION",
+        "sourceDeclaration": "public DustGraphic(bool ignoreSolids, bool autoControlEyes = false, bool autoExpandDust = false)\n\t\t: base(active: true, visible: true)",
+        "sourceFile": "Celeste/DustGraphic.cs"
+      },
+      {
+        "declarationLocked": true,
+        "hook": "On.Celeste.Editor.LevelTemplate::ctor_LevelData",
+        "id": "celeste-editor-level-template-ctor-level-data",
+        "overloadLocked": true,
+        "provenance": "REACHABLE_BEGINNER_PROVIDER_INITIALIZATION",
+        "sourceDeclaration": "public LevelTemplate(LevelData data)",
+        "sourceFile": "Celeste/Editor/LevelTemplate.cs"
+      },
+      {
+        "declarationLocked": true,
+        "hook": "On.Celeste.Editor.LevelTemplate::RenderContents",
+        "id": "celeste-editor-level-template-render-contents",
+        "overloadLocked": true,
+        "provenance": "REACHABLE_BEGINNER_PROVIDER_INITIALIZATION",
+        "sourceDeclaration": "public void RenderContents(Camera camera, List<LevelTemplate> allLevels)",
+        "sourceFile": "Celeste/Editor/LevelTemplate.cs"
+      },
+      {
+        "declarationLocked": true,
+        "hook": "On.Celeste.Editor.MapEditor::ctor",
+        "id": "celeste-editor-map-editor-ctor",
+        "overloadLocked": true,
+        "provenance": "REACHABLE_BEGINNER_PROVIDER_INITIALIZATION",
+        "sourceDeclaration": "public MapEditor(AreaKey area, bool reloadMapData = true)",
+        "sourceFile": "Celeste/Editor/MapEditor.cs"
+      },
+      {
+        "declarationLocked": true,
+        "hook": "On.Celeste.FallingBlock::Sequence",
+        "id": "celeste-falling-block-sequence",
+        "overloadLocked": true,
+        "provenance": "REACHABLE_BEGINNER_PROVIDER_INITIALIZATION",
+        "sourceDeclaration": "private IEnumerator Sequence()",
+        "sourceFile": "Celeste/FallingBlock.cs"
+      },
+      {
+        "declarationLocked": true,
+        "hook": "On.Celeste.FancyText::Parse",
+        "id": "celeste-fancy-text-parse",
+        "overloadLocked": true,
+        "provenance": "REACHABLE_BEGINNER_PROVIDER_INITIALIZATION",
+        "sourceDeclaration": "private Text Parse()",
+        "sourceFile": "Celeste/FancyText.cs"
+      },
+      {
+        "declarationLocked": true,
+        "hook": "On.Celeste.FinalBoss::Added",
+        "id": "celeste-final-boss-added",
+        "overloadLocked": true,
+        "provenance": "REACHABLE_BEGINNER_PROVIDER_INITIALIZATION",
+        "sourceDeclaration": "public override void Added(Scene scene)",
+        "sourceFile": "Celeste/FinalBoss.cs"
+      },
+      {
+        "declarationLocked": true,
+        "hook": "On.Celeste.FireBall::OnBounce",
+        "id": "celeste-fire-ball-on-bounce",
+        "overloadLocked": true,
+        "provenance": "REACHABLE_BEGINNER_PROVIDER_INITIALIZATION",
+        "sourceDeclaration": "private void OnBounce(Player player)",
+        "sourceFile": "Celeste/FireBall.cs"
+      },
+      {
+        "declarationLocked": true,
+        "hook": "On.Celeste.FloatySpaceBlock::AddToGroupAndFindChildren",
+        "id": "celeste-floaty-space-block-add-to-group-and-find-children",
+        "overloadLocked": true,
+        "provenance": "REACHABLE_BEGINNER_PROVIDER_INITIALIZATION",
+        "sourceDeclaration": "private void AddToGroupAndFindChildren(FloatySpaceBlock from)",
+        "sourceFile": "Celeste/FloatySpaceBlock.cs"
+      },
+      {
+        "declarationLocked": true,
+        "hook": "On.Celeste.FloatySpaceBlock::Awake",
+        "id": "celeste-floaty-space-block-awake",
+        "overloadLocked": true,
+        "provenance": "REACHABLE_BEGINNER_PROVIDER_INITIALIZATION",
+        "sourceDeclaration": "public override void Awake(Scene scene)",
+        "sourceFile": "Celeste/FloatySpaceBlock.cs"
+      },
+      {
+        "declarationLocked": true,
+        "hook": "On.Celeste.GameLoader::Begin",
+        "id": "celeste-game-loader-begin",
+        "overloadLocked": true,
+        "provenance": "REACHABLE_BEGINNER_PROVIDER_INITIALIZATION",
+        "sourceDeclaration": "public override void Begin()",
+        "sourceFile": "Celeste/GameLoader.cs"
+      },
+      {
+        "declarationLocked": true,
+        "hook": "On.Celeste.Holdable::Pickup",
+        "id": "celeste-holdable-pickup",
+        "overloadLocked": true,
+        "provenance": "REACHABLE_BEGINNER_PROVIDER_INITIALIZATION",
+        "sourceDeclaration": "public bool Pickup(Player player)",
+        "sourceFile": "Celeste/Holdable.cs"
+      },
+      {
+        "declarationLocked": true,
+        "hook": "On.Celeste.Holdable::Release",
+        "id": "celeste-holdable-release",
+        "overloadLocked": true,
+        "provenance": "REACHABLE_BEGINNER_PROVIDER_INITIALIZATION",
+        "sourceDeclaration": "public void Release(Vector2 force)",
+        "sourceFile": "Celeste/Holdable.cs"
+      },
+      {
+        "declarationLocked": true,
+        "hook": "On.Celeste.JumpThru::GetPlayerRider",
+        "id": "celeste-jump-thru-get-player-rider",
+        "overloadLocked": true,
+        "provenance": "REACHABLE_BEGINNER_PROVIDER_INITIALIZATION",
+        "sourceDeclaration": "public Player GetPlayerRider()",
+        "sourceFile": "Celeste/JumpThru.cs"
+      },
+      {
+        "declarationLocked": true,
+        "hook": "On.Celeste.JumpThru::HasPlayerRider",
+        "id": "celeste-jump-thru-has-player-rider",
+        "overloadLocked": true,
+        "provenance": "REACHABLE_BEGINNER_PROVIDER_INITIALIZATION",
+        "sourceDeclaration": "public bool HasPlayerRider()",
+        "sourceFile": "Celeste/JumpThru.cs"
+      },
+      {
+        "declarationLocked": true,
+        "hook": "On.Celeste.JumpThru::HasRider",
+        "id": "celeste-jump-thru-has-rider",
+        "overloadLocked": true,
+        "provenance": "REACHABLE_BEGINNER_PROVIDER_INITIALIZATION",
+        "sourceDeclaration": "public bool HasRider()",
+        "sourceFile": "Celeste/JumpThru.cs"
+      },
+      {
+        "declarationLocked": true,
+        "hook": "On.Celeste.JumpThru::MoveHExact",
+        "id": "celeste-jump-thru-move-h-exact",
+        "overloadLocked": true,
+        "provenance": "REACHABLE_BEGINNER_PROVIDER_INITIALIZATION",
+        "sourceDeclaration": "public override void MoveHExact(int move)",
+        "sourceFile": "Celeste/JumpThru.cs"
+      },
+      {
+        "declarationLocked": true,
+        "hook": "On.Celeste.JumpThru::MoveVExact",
+        "id": "celeste-jump-thru-move-v-exact",
+        "overloadLocked": true,
+        "provenance": "REACHABLE_BEGINNER_PROVIDER_INITIALIZATION",
+        "sourceDeclaration": "public override void MoveVExact(int move)",
+        "sourceFile": "Celeste/JumpThru.cs"
+      },
+      {
+        "declarationLocked": true,
+        "hook": "On.Celeste.Leader::Update",
+        "id": "celeste-leader-update",
+        "overloadLocked": true,
+        "provenance": "REACHABLE_BEGINNER_PROVIDER_INITIALIZATION",
+        "sourceDeclaration": "public override void Update()",
+        "sourceFile": "Celeste/Leader.cs"
+      },
+      {
+        "declarationLocked": true,
+        "hook": "On.Celeste.Level::CompleteArea_bool_bool_bool",
+        "id": "celeste-level-complete-area-bool-bool-bool",
+        "overloadLocked": true,
+        "provenance": "REACHABLE_BEGINNER_PROVIDER_INITIALIZATION",
+        "sourceDeclaration": "public ScreenWipe CompleteArea(bool spotlightWipe = true, bool skipScreenWipe = false, bool skipCompleteScreen = false)",
+        "sourceFile": "Celeste/Level.cs"
+      },
+      {
+        "declarationLocked": true,
+        "hook": "On.Celeste.Level::LoadCustomEntity",
+        "id": "celeste-level-load-custom-entity",
+        "overloadLocked": true,
+        "provenance": "PINNED_PATCHED_APPLE_API",
+        "sourceDeclaration": "public static bool LoadCustomEntity(EntityData entityData, Level level)",
+        "sourceFile": "Celeste/Level.cs"
+      },
+      {
+        "declarationLocked": true,
+        "hook": "On.Celeste.Level::TransitionRoutine",
+        "id": "celeste-level-transition-routine",
+        "overloadLocked": true,
+        "provenance": "REACHABLE_BEGINNER_PROVIDER_INITIALIZATION",
+        "sourceDeclaration": "private IEnumerator TransitionRoutine(LevelData next, Vector2 direction)",
+        "sourceFile": "Celeste/Level.cs"
+      },
+      {
+        "declarationLocked": true,
+        "hook": "On.Celeste.Lookout::Interact",
+        "id": "celeste-lookout-interact",
+        "overloadLocked": true,
+        "provenance": "REACHABLE_BEGINNER_PROVIDER_INITIALIZATION",
+        "sourceDeclaration": "private void Interact(Player player)",
+        "sourceFile": "Celeste/Lookout.cs"
+      },
+      {
+        "declarationLocked": true,
+        "hook": "On.Celeste.Lookout::LookRoutine",
+        "id": "celeste-lookout-look-routine",
+        "overloadLocked": true,
+        "provenance": "REACHABLE_BEGINNER_PROVIDER_INITIALIZATION",
+        "sourceDeclaration": "private IEnumerator LookRoutine(Player player)",
+        "sourceFile": "Celeste/Lookout.cs"
+      },
+      {
+        "declarationLocked": true,
+        "hook": "On.Celeste.Lookout::StopInteracting",
+        "id": "celeste-lookout-stop-interacting",
+        "overloadLocked": true,
+        "provenance": "REACHABLE_BEGINNER_PROVIDER_INITIALIZATION",
+        "sourceDeclaration": "public void StopInteracting()",
+        "sourceFile": "Celeste/Lookout.cs"
+      },
+      {
+        "declarationLocked": true,
+        "hook": "On.Celeste.MiniTextbox::ctor",
+        "id": "celeste-mini-textbox-ctor",
+        "overloadLocked": true,
+        "provenance": "REACHABLE_BEGINNER_PROVIDER_INITIALIZATION",
+        "sourceDeclaration": "public MiniTextbox(string dialogId)",
+        "sourceFile": "Celeste/MiniTextbox.cs"
+      },
+      {
+        "declarationLocked": true,
+        "hook": "On.Celeste.MiniTextbox::Routine",
+        "id": "celeste-mini-textbox-routine",
+        "overloadLocked": true,
+        "provenance": "REACHABLE_BEGINNER_PROVIDER_INITIALIZATION",
+        "sourceDeclaration": "private IEnumerator Routine()",
+        "sourceFile": "Celeste/MiniTextbox.cs"
+      },
+      {
+        "declarationLocked": true,
+        "hook": "On.Celeste.Mod.Entities.DialogCutscene::OnBegin",
+        "id": "celeste-mod-entities-dialog-cutscene-on-begin",
+        "overloadLocked": true,
+        "provenance": "PINNED_PATCHED_APPLE_API",
+        "sourceDeclaration": "public override void OnBegin(Level level)",
+        "sourceFile": "Celeste/Mod/AppleEverestStatic/EverestDialogCutsceneStaticApi.cs"
+      },
+      {
+        "declarationLocked": true,
+        "hook": "On.Celeste.Mod.Entities.DialogCutscene::OnEnd",
+        "id": "celeste-mod-entities-dialog-cutscene-on-end",
+        "overloadLocked": true,
+        "provenance": "PINNED_PATCHED_APPLE_API",
+        "sourceDeclaration": "public override void OnEnd(Level level)",
+        "sourceFile": "Celeste/Mod/AppleEverestStatic/EverestDialogCutsceneStaticApi.cs"
+      },
+      {
+        "declarationLocked": true,
+        "hook": "On.Celeste.Mod.Meta.MapMeta::ApplyTo",
+        "id": "celeste-mod-meta-map-meta-apply-to",
+        "overloadLocked": true,
+        "provenance": "PINNED_PATCHED_APPLE_API",
+        "sourceDeclaration": "public void ApplyTo(AreaData area)",
+        "sourceFile": "Celeste/Mod/AppleEverestStatic/EverestMapMetaStaticApi.cs"
+      },
+      {
+        "declarationLocked": true,
+        "hook": "On.Celeste.MoveBlock::MoveCheck",
+        "id": "celeste-move-block-move-check",
+        "overloadLocked": true,
+        "provenance": "REACHABLE_BEGINNER_PROVIDER_INITIALIZATION",
+        "sourceDeclaration": "private bool MoveCheck(Vector2 speed)",
+        "sourceFile": "Celeste/MoveBlock.cs"
+      },
+      {
+        "declarationLocked": true,
+        "hook": "On.Celeste.Platform::EnableStaticMovers",
+        "id": "celeste-platform-enable-static-movers",
+        "overloadLocked": true,
+        "provenance": "REACHABLE_BEGINNER_PROVIDER_INITIALIZATION",
+        "sourceDeclaration": "public void EnableStaticMovers()",
+        "sourceFile": "Celeste/Platform.cs"
+      },
+      {
+        "declarationLocked": true,
+        "hook": "On.Celeste.Platform::MoveHCollideSolids",
+        "id": "celeste-platform-move-h-collide-solids",
+        "overloadLocked": true,
+        "provenance": "REACHABLE_BEGINNER_PROVIDER_INITIALIZATION",
+        "sourceDeclaration": "public bool MoveHCollideSolids(float moveH, bool thruDashBlocks, Action<Vector2, Vector2, Platform> onCollide = null)",
+        "sourceFile": "Celeste/Platform.cs"
+      },
+      {
+        "declarationLocked": true,
+        "hook": "On.Celeste.Platform::MoveVCollideSolids",
+        "id": "celeste-platform-move-v-collide-solids",
+        "overloadLocked": true,
+        "provenance": "REACHABLE_BEGINNER_PROVIDER_INITIALIZATION",
+        "sourceDeclaration": "public bool MoveVCollideSolids(float moveV, bool thruDashBlocks, Action<Vector2, Vector2, Platform> onCollide = null)",
+        "sourceFile": "Celeste/Platform.cs"
+      },
+      {
+        "declarationLocked": true,
+        "hook": "On.Celeste.Player::BoostCoroutine",
+        "id": "celeste-player-boost-coroutine",
+        "overloadLocked": true,
+        "provenance": "REACHABLE_BEGINNER_PROVIDER_INITIALIZATION",
+        "sourceDeclaration": "private IEnumerator BoostCoroutine()",
+        "sourceFile": "Celeste/Player.cs"
+      },
+      {
+        "declarationLocked": true,
+        "hook": "On.Celeste.Player::Bounce",
+        "id": "celeste-player-bounce",
+        "overloadLocked": true,
+        "provenance": "REACHABLE_BEGINNER_PROVIDER_INITIALIZATION",
+        "sourceDeclaration": "public void Bounce(float fromY)",
+        "sourceFile": "Celeste/Player.cs"
+      },
+      {
+        "declarationLocked": true,
+        "hook": "On.Celeste.Player::ClimbUpdate",
+        "id": "celeste-player-climb-update",
+        "overloadLocked": true,
+        "provenance": "REACHABLE_BEGINNER_PROVIDER_INITIALIZATION",
+        "sourceDeclaration": "private int ClimbUpdate()",
+        "sourceFile": "Celeste/Player.cs"
+      },
+      {
+        "declarationLocked": true,
+        "hook": "On.Celeste.Player::DashCoroutine",
+        "id": "celeste-player-dash-coroutine",
+        "overloadLocked": true,
+        "provenance": "REACHABLE_BEGINNER_PROVIDER_INITIALIZATION",
+        "sourceDeclaration": "private IEnumerator DashCoroutine()",
+        "sourceFile": "Celeste/Player.cs"
+      },
+      {
+        "declarationLocked": true,
+        "hook": "On.Celeste.PlayerDeadBody::Awake",
+        "id": "celeste-player-dead-body-awake",
+        "overloadLocked": true,
+        "provenance": "REACHABLE_BEGINNER_PROVIDER_INITIALIZATION",
+        "sourceDeclaration": "public override void Awake(Scene scene)",
+        "sourceFile": "Celeste/PlayerDeadBody.cs"
+      },
+      {
+        "declarationLocked": true,
+        "hook": "On.Celeste.Player::DreamDashBegin",
+        "id": "celeste-player-dream-dash-begin",
+        "overloadLocked": true,
+        "provenance": "REACHABLE_BEGINNER_PROVIDER_INITIALIZATION",
+        "sourceDeclaration": "private void DreamDashBegin()",
+        "sourceFile": "Celeste/Player.cs"
+      },
+      {
+        "declarationLocked": true,
+        "hook": "On.Celeste.Player::DreamDashUpdate",
+        "id": "celeste-player-dream-dash-update",
+        "overloadLocked": true,
+        "provenance": "REACHABLE_BEGINNER_PROVIDER_INITIALIZATION",
+        "sourceDeclaration": "private int DreamDashUpdate()",
+        "sourceFile": "Celeste/Player.cs"
+      },
+      {
+        "declarationLocked": true,
+        "hook": "On.Celeste.PlayerHair::GetHairColor",
+        "id": "celeste-player-hair-get-hair-color",
+        "overloadLocked": true,
+        "provenance": "PINNED_PATCHED_APPLE_API",
+        "sourceDeclaration": "public Color GetHairColor(int index)",
+        "sourceFile": "Celeste/PlayerHair.cs"
+      },
+      {
+        "declarationLocked": true,
+        "hook": "On.Celeste.Player::IsRiding_Solid",
+        "id": "celeste-player-is-riding-solid",
+        "overloadLocked": true,
+        "provenance": "REACHABLE_BEGINNER_PROVIDER_INITIALIZATION",
+        "sourceDeclaration": "public override bool IsRiding(Solid solid)",
+        "sourceFile": "Celeste/Player.cs"
+      },
+      {
+        "declarationLocked": true,
+        "hook": "On.Celeste.Player::OnCollideH",
+        "id": "celeste-player-on-collide-h",
+        "overloadLocked": true,
+        "provenance": "REACHABLE_BEGINNER_PROVIDER_INITIALIZATION",
+        "sourceDeclaration": "private void OnCollideH(CollisionData data)",
+        "sourceFile": "Celeste/Player.cs"
+      },
+      {
+        "declarationLocked": true,
+        "hook": "On.Celeste.Player::OnCollideV",
+        "id": "celeste-player-on-collide-v",
+        "overloadLocked": true,
+        "provenance": "REACHABLE_BEGINNER_PROVIDER_INITIALIZATION",
+        "sourceDeclaration": "private void OnCollideV(CollisionData data)",
+        "sourceFile": "Celeste/Player.cs"
+      },
+      {
+        "declarationLocked": true,
+        "hook": "On.Celeste.Player::OnSquish",
+        "id": "celeste-player-on-squish",
+        "overloadLocked": true,
+        "provenance": "REACHABLE_BEGINNER_PROVIDER_INITIALIZATION",
+        "sourceDeclaration": "protected override void OnSquish(CollisionData data)",
+        "sourceFile": "Celeste/Player.cs"
+      },
+      {
+        "declarationLocked": true,
+        "hook": "On.Celeste.Player::RedDashCoroutine",
+        "id": "celeste-player-red-dash-coroutine",
+        "overloadLocked": true,
+        "provenance": "REACHABLE_BEGINNER_PROVIDER_INITIALIZATION",
+        "sourceDeclaration": "private IEnumerator RedDashCoroutine()",
+        "sourceFile": "Celeste/Player.cs"
+      },
+      {
+        "declarationLocked": true,
+        "hook": "On.Celeste.Player::RedDashUpdate",
+        "id": "celeste-player-red-dash-update",
+        "overloadLocked": true,
+        "provenance": "REACHABLE_BEGINNER_PROVIDER_INITIALIZATION",
+        "sourceDeclaration": "private int RedDashUpdate()",
+        "sourceFile": "Celeste/Player.cs"
+      },
+      {
+        "declarationLocked": true,
+        "hook": "On.Celeste.Player::StartDash",
+        "id": "celeste-player-start-dash",
+        "overloadLocked": true,
+        "provenance": "REACHABLE_BEGINNER_PROVIDER_INITIALIZATION",
+        "sourceDeclaration": "public int StartDash()",
+        "sourceFile": "Celeste/Player.cs"
+      },
+      {
+        "declarationLocked": true,
+        "hook": "On.Celeste.Player::SuperBounce",
+        "id": "celeste-player-super-bounce",
+        "overloadLocked": true,
+        "provenance": "REACHABLE_BEGINNER_PROVIDER_INITIALIZATION",
+        "sourceDeclaration": "public void SuperBounce(float fromY)",
+        "sourceFile": "Celeste/Player.cs"
+      },
+      {
+        "declarationLocked": true,
+        "hook": "On.Celeste.Player::TempleFallCoroutine",
+        "id": "celeste-player-temple-fall-coroutine",
+        "overloadLocked": true,
+        "provenance": "REACHABLE_BEGINNER_PROVIDER_INITIALIZATION",
+        "sourceDeclaration": "private IEnumerator TempleFallCoroutine()",
+        "sourceFile": "Celeste/Player.cs"
+      },
+      {
+        "declarationLocked": true,
+        "hook": "On.Celeste.Player::UpdateCarry",
+        "id": "celeste-player-update-carry",
+        "overloadLocked": true,
+        "provenance": "REACHABLE_BEGINNER_PROVIDER_INITIALIZATION",
+        "sourceDeclaration": "public void UpdateCarry()",
+        "sourceFile": "Celeste/Player.cs"
+      },
+      {
+        "declarationLocked": true,
+        "hook": "On.Celeste.Player::UpdateHair",
+        "id": "celeste-player-update-hair",
+        "overloadLocked": true,
+        "provenance": "REACHABLE_BEGINNER_PROVIDER_INITIALIZATION",
+        "sourceDeclaration": "public void UpdateHair(bool applyGravity)",
+        "sourceFile": "Celeste/Player.cs"
+      },
+      {
+        "declarationLocked": true,
+        "hook": "On.Celeste.Player::UpdateSprite",
+        "id": "celeste-player-update-sprite",
+        "overloadLocked": true,
+        "provenance": "REACHABLE_BEGINNER_PROVIDER_INITIALIZATION",
+        "sourceDeclaration": "private void UpdateSprite()",
+        "sourceFile": "Celeste/Player.cs"
+      },
+      {
+        "declarationLocked": true,
+        "hook": "On.Celeste.Puffer::Explode",
+        "id": "celeste-puffer-explode",
+        "overloadLocked": true,
+        "provenance": "REACHABLE_BEGINNER_PROVIDER_INITIALIZATION",
+        "sourceDeclaration": "private void Explode()",
+        "sourceFile": "Celeste/Puffer.cs"
+      },
+      {
+        "declarationLocked": true,
+        "hook": "On.Celeste.Puffer::OnCollideH",
+        "id": "celeste-puffer-on-collide-h",
+        "overloadLocked": true,
+        "provenance": "REACHABLE_BEGINNER_PROVIDER_INITIALIZATION",
+        "sourceDeclaration": "private void OnCollideH(CollisionData data)",
+        "sourceFile": "Celeste/Puffer.cs"
+      },
+      {
+        "declarationLocked": true,
+        "hook": "On.Celeste.Puffer::OnCollideV",
+        "id": "celeste-puffer-on-collide-v",
+        "overloadLocked": true,
+        "provenance": "REACHABLE_BEGINNER_PROVIDER_INITIALIZATION",
+        "sourceDeclaration": "private void OnCollideV(CollisionData data)",
+        "sourceFile": "Celeste/Puffer.cs"
+      },
+      {
+        "declarationLocked": true,
+        "hook": "On.Celeste.Seeker::RegenerateCoroutine",
+        "id": "celeste-seeker-regenerate-coroutine",
+        "overloadLocked": true,
+        "provenance": "REACHABLE_BEGINNER_PROVIDER_INITIALIZATION",
+        "sourceDeclaration": "private IEnumerator RegenerateCoroutine()",
+        "sourceFile": "Celeste/Seeker.cs"
+      },
+      {
+        "declarationLocked": true,
+        "hook": "On.Celeste.Session::ctor",
+        "id": "celeste-session-ctor",
+        "overloadLocked": true,
+        "provenance": "REACHABLE_BEGINNER_PROVIDER_INITIALIZATION",
+        "sourceDeclaration": "internal Session()",
+        "sourceFile": "Celeste/Session.cs"
+      },
+      {
+        "declarationLocked": true,
+        "hook": "On.Celeste.Session::Restart",
+        "id": "celeste-session-restart",
+        "overloadLocked": true,
+        "provenance": "REACHABLE_BEGINNER_PROVIDER_INITIALIZATION",
+        "sourceDeclaration": "public Session Restart(string intoLevel = null)",
+        "sourceFile": "Celeste/Session.cs"
+      },
+      {
+        "declarationLocked": true,
+        "hook": "On.Celeste.Solid::Update",
+        "id": "celeste-solid-update",
+        "overloadLocked": true,
+        "provenance": "REACHABLE_BEGINNER_PROVIDER_INITIALIZATION",
+        "sourceDeclaration": "public override void Update()",
+        "sourceFile": "Celeste/Solid.cs"
+      },
+      {
+        "declarationLocked": true,
+        "hook": "On.Celeste.SoundSource::Update",
+        "id": "celeste-sound-source-update",
+        "overloadLocked": true,
+        "provenance": "REACHABLE_BEGINNER_PROVIDER_INITIALIZATION",
+        "sourceDeclaration": "public override void Update()",
+        "sourceFile": "Celeste/SoundSource.cs"
+      },
+      {
+        "declarationLocked": true,
+        "hook": "On.Celeste.Spikes::IsRiding_JumpThru",
+        "id": "celeste-spikes-is-riding-jump-thru",
+        "overloadLocked": true,
+        "provenance": "REACHABLE_BEGINNER_PROVIDER_INITIALIZATION",
+        "sourceDeclaration": "private bool IsRiding(JumpThru jumpThru)",
+        "sourceFile": "Celeste/Spikes.cs"
+      },
+      {
+        "declarationLocked": true,
+        "hook": "On.Celeste.Spikes::OnCollide",
+        "id": "celeste-spikes-on-collide",
+        "overloadLocked": true,
+        "provenance": "REACHABLE_BEGINNER_PROVIDER_INITIALIZATION",
+        "sourceDeclaration": "private void OnCollide(Player player)",
+        "sourceFile": "Celeste/Spikes.cs"
+      },
+      {
+        "declarationLocked": true,
+        "hook": "On.Celeste.SpotlightWipe::ctor",
+        "id": "celeste-spotlight-wipe-ctor",
+        "overloadLocked": true,
+        "provenance": "REACHABLE_BEGINNER_PROVIDER_INITIALIZATION",
+        "sourceDeclaration": "public SpotlightWipe(Scene scene, bool wipeIn, Action onComplete = null)\n\t\t: base(scene, wipeIn, onComplete)",
+        "sourceFile": "Celeste/SpotlightWipe.cs"
+      },
+      {
+        "declarationLocked": true,
+        "hook": "On.Celeste.Strawberry::OnCollect",
+        "id": "celeste-strawberry-on-collect",
+        "overloadLocked": true,
+        "provenance": "REACHABLE_BEGINNER_PROVIDER_INITIALIZATION",
+        "sourceDeclaration": "public void OnCollect()",
+        "sourceFile": "Celeste/Strawberry.cs"
+      },
+      {
+        "declarationLocked": true,
+        "hook": "On.Celeste.Textbox::ctor_string_Language_Func1Array",
+        "id": "celeste-textbox-ctor-string-language-func1-array",
+        "overloadLocked": true,
+        "provenance": "REACHABLE_BEGINNER_PROVIDER_INITIALIZATION",
+        "sourceDeclaration": "public Textbox(string dialog, Language language, params Func<IEnumerator>[] events)",
+        "sourceFile": "Celeste/Textbox.cs"
+      },
+      {
+        "declarationLocked": true,
+        "hook": "On.Celeste.Textbox::Update",
+        "id": "celeste-textbox-update",
+        "overloadLocked": true,
+        "provenance": "REACHABLE_BEGINNER_PROVIDER_INITIALIZATION",
+        "sourceDeclaration": "public override void Update()",
+        "sourceFile": "Celeste/Textbox.cs"
+      },
+      {
+        "declarationLocked": true,
+        "hook": "On.Celeste.TheoCrystal::ctor_Vector2",
+        "id": "celeste-theo-crystal-ctor-vector2",
+        "overloadLocked": true,
+        "provenance": "REACHABLE_BEGINNER_PROVIDER_INITIALIZATION",
+        "sourceDeclaration": "public TheoCrystal(Vector2 position)\n\t\t: base(position)",
+        "sourceFile": "Celeste/TheoCrystal.cs"
+      },
+      {
+        "declarationLocked": true,
+        "hook": "On.Celeste.TouchSwitch::ctor_Vector2",
+        "id": "celeste-touch-switch-ctor-vector2",
+        "overloadLocked": true,
+        "provenance": "REACHABLE_BEGINNER_PROVIDER_INITIALIZATION",
+        "sourceDeclaration": "public TouchSwitch(Vector2 position)\n\t\t: base(position)",
+        "sourceFile": "Celeste/TouchSwitch.cs"
+      },
+      {
+        "declarationLocked": true,
+        "hook": "On.Celeste.TriggerSpikes::Render",
+        "id": "celeste-trigger-spikes-render",
+        "overloadLocked": true,
+        "provenance": "REACHABLE_BEGINNER_PROVIDER_INITIALIZATION",
+        "sourceDeclaration": "public override void Render()",
+        "sourceFile": "Celeste/TriggerSpikes.cs"
+      },
+      {
+        "declarationLocked": true,
+        "hook": "On.Monocle.Collider::Collide_Collider",
+        "id": "monocle-collider-collide-collider",
+        "overloadLocked": true,
+        "provenance": "REACHABLE_BEGINNER_PROVIDER_INITIALIZATION",
+        "sourceDeclaration": "public bool Collide(Collider collider)",
+        "sourceFile": "Monocle/Collider.cs"
+      },
+      {
+        "declarationLocked": true,
+        "hook": "On.Monocle.Entity::DebugRender",
+        "id": "monocle-entity-debug-render",
+        "overloadLocked": true,
+        "provenance": "REACHABLE_BEGINNER_PROVIDER_INITIALIZATION",
+        "sourceDeclaration": "public virtual void DebugRender(Camera camera)",
+        "sourceFile": "Monocle/Entity.cs"
+      },
+      {
+        "declarationLocked": true,
+        "hook": "On.Monocle.EntityList::Add_Entity",
+        "id": "monocle-entity-list-add-entity",
+        "overloadLocked": true,
+        "provenance": "REACHABLE_BEGINNER_PROVIDER_INITIALIZATION",
+        "sourceDeclaration": "public void Add(Entity entity)",
+        "sourceFile": "Monocle/EntityList.cs"
+      },
+      {
+        "declarationLocked": true,
+        "hook": "On.Monocle.Scene::BeforeUpdate",
+        "id": "monocle-scene-before-update",
+        "overloadLocked": true,
+        "provenance": "REACHABLE_BEGINNER_PROVIDER_INITIALIZATION",
+        "sourceDeclaration": "public virtual void BeforeUpdate()",
+        "sourceFile": "Monocle/Scene.cs"
+      },
+      {
+        "declarationLocked": true,
+        "hook": "On.Monocle.StateMachine::Update",
+        "id": "monocle-state-machine-update",
+        "overloadLocked": true,
+        "provenance": "REACHABLE_BEGINNER_PROVIDER_INITIALIZATION",
+        "sourceDeclaration": "public override void Update()",
+        "sourceFile": "Monocle/StateMachine.cs"
+      },
+      {
+        "declarationLocked": true,
+        "hook": "On.Monocle.Tracker::Initialize",
+        "id": "monocle-tracker-initialize",
+        "overloadLocked": true,
+        "provenance": "REACHABLE_BEGINNER_PROVIDER_INITIALIZATION",
+        "sourceDeclaration": "public static void Initialize()",
+        "sourceFile": "Monocle/Tracker.cs"
+      },
+      {
+        "declarationLocked": true,
+        "hook": "On.Monocle.VirtualButton::Update",
+        "id": "monocle-virtual-button-update",
+        "overloadLocked": true,
+        "provenance": "REACHABLE_BEGINNER_PROVIDER_INITIALIZATION",
+        "sourceDeclaration": "public override void Update()",
+        "sourceFile": "Monocle/VirtualButton.cs"
+      }
+    ],
+    "uniqueReachableTargetCount": 131,
+    "unresolvedCount": 0
+  },
+  "fullStrawberryJamPayoff": {
+    "audioCoverage": {
+      "accepted": 0,
+      "percent": 0.0,
+      "total": 149
+    },
+    "classificationCounts": {
+      "A": 17,
+      "B": 17,
+      "C": 6,
+      "D": 11,
+      "E": 1,
+      "F": 0,
+      "G": 0
+    },
+    "configuredOrderingAffectedMapsAfter": 128,
+    "configuredOrderingAffectedMapsBefore": 128,
+    "configuredProvidersDynamicLifetime": 1,
+    "configuredProvidersStaticEligible": 12,
+    "configuredSitesDynamicLifetime": 9,
+    "configuredSitesStaticEligible": 30,
+    "contentIdOccurrenceCoverage": {
+      "accepted": 43350,
+      "percent": 15.817,
+      "total": 274073
+    },
+    "coveragePolicy": "NO_WHOLE_PACKAGE_UPGRADE_FROM_SLICE_BOUNDED_INITIALIZATION_EVIDENCE",
+    "helperMechanismCoverage": {
+      "accepted": 3818,
+      "percent": 34.6807,
+      "total": 11009
+    },
+    "lobbyUiCoverage": {
+      "accepted": 0,
+      "percent": 0.0,
+      "total": 6
+    },
+    "mapsUnlockedByConfiguredOrdering": 0,
+    "packageCoverage": {
+      "accepted": 17,
+      "percent": 32.6923,
+      "total": 52
+    },
+    "reasonNoMapUnlock": "ExtendedVariantMode dynamic-lifetime configuration remains a required graph-wide dependency",
+    "zeroKnownBlockerMaps": {
+      "accepted": 0,
+      "percent": 0.0,
+      "total": 128
+    }
+  },
+  "nextStageDecision": {
+    "estimatedBoundedStagesBeforeFirstSlice": 3,
+    "fullStrawberryJamBuildRational": false,
+    "helperRootSemanticLoweringsHigherValue": true,
+    "multiBankFmodNext": false,
+    "recommendedScope": "bounded root/helper semantic lowerings for Contort, ExtendedVariantMode, Jungle, YetAnotherHelper and StrawberryJam2021 root surface"
+  },
+  "pins": {
+    "auditedAppleGameSha256": "30ad2a90d6d1f250bd42431f0b900bd0d4e4777b4e39614a6fd467dd81710149",
+    "canonicalGameSha256": "fd73f8a2311fa5737ded550cbad4b75c85b7686b36432f59185e940fcb65fcfe",
+    "hookGenSha256": "e5a417a7717e07b04f73f1c8eb9684119f6832db375f23178d7b925d7a9c6bf8",
+    "patchedGameSha256": "87082a3e2117a880bdc9565fafb223480f9bb01dacefbf219f57f826c09ac7df"
+  },
+  "providers": [
+    {
+      "apiReferenceSiteCount": 11,
+      "descriptorReferenceSiteCount": 35,
+      "descriptorRequirementCount": 31,
+      "helperSha256": "89408eb1fb4ab1f11312f5dcbb579d3747b7b5bf38f7bf2c62359ffe2c1df841",
+      "missingAppleApiCount": 0,
+      "nonpublicAppleApiCount": 0,
+      "package": "BrokemiaHelper",
+      "provider": "BrokemiaHelper",
+      "uniqueApiMemberCount": 10,
+      "uniqueExactTargetCount": 31,
+      "unresolvedDescriptorCount": 0
+    },
+    {
+      "apiReferenceSiteCount": 31,
+      "descriptorReferenceSiteCount": 6,
+      "descriptorRequirementCount": 6,
+      "helperSha256": "dd0951122a93ffce9cfd74e36415dff34473061eacb792cf758168080828a2fa",
+      "missingAppleApiCount": 0,
+      "nonpublicAppleApiCount": 0,
+      "package": "CherryHelper",
+      "provider": "CherryHelper",
+      "uniqueApiMemberCount": 22,
+      "uniqueExactTargetCount": 6,
+      "unresolvedDescriptorCount": 0
+    },
+    {
+      "apiReferenceSiteCount": 84,
+      "descriptorReferenceSiteCount": 65,
+      "descriptorRequirementCount": 54,
+      "helperSha256": "f99b8ec46987b8dd5b0ce018f854d55f07519651d720d63ed7343eaf82963280",
+      "missingAppleApiCount": 0,
+      "nonpublicAppleApiCount": 0,
+      "package": "FemtoHelper",
+      "provider": "FemtoHelper",
+      "uniqueApiMemberCount": 36,
+      "uniqueExactTargetCount": 54,
+      "unresolvedDescriptorCount": 0
+    },
+    {
+      "apiReferenceSiteCount": 17,
+      "descriptorReferenceSiteCount": 17,
+      "descriptorRequirementCount": 15,
+      "helperSha256": "42801778b18505cd4455e59e5c3865f3f0268580d73e256e886b531cd8025ede",
+      "missingAppleApiCount": 0,
+      "nonpublicAppleApiCount": 0,
+      "package": "FlaglinesAndSuch",
+      "provider": "FlaglinesAndSuch",
+      "uniqueApiMemberCount": 14,
+      "uniqueExactTargetCount": 15,
+      "unresolvedDescriptorCount": 0
+    },
+    {
+      "apiReferenceSiteCount": 23,
+      "descriptorReferenceSiteCount": 1,
+      "descriptorRequirementCount": 1,
+      "helperSha256": "723e204638703111c12746badd31b8d37cd41d4978d1a2d98315647406d880af",
+      "missingAppleApiCount": 0,
+      "nonpublicAppleApiCount": 0,
+      "package": "FrostHelper",
+      "provider": "FrostTempleHelper",
+      "uniqueApiMemberCount": 13,
+      "uniqueExactTargetCount": 1,
+      "unresolvedDescriptorCount": 0
+    },
+    {
+      "apiReferenceSiteCount": 1,
+      "descriptorReferenceSiteCount": 3,
+      "descriptorRequirementCount": 3,
+      "helperSha256": "110a7d00881f4ad38b587ca51afdb0f03c4d3d0ac20cc46da3e665615932c367",
+      "missingAppleApiCount": 0,
+      "nonpublicAppleApiCount": 0,
+      "package": "HonlyHelper",
+      "provider": "HonlyHelper",
+      "uniqueApiMemberCount": 1,
+      "uniqueExactTargetCount": 3,
+      "unresolvedDescriptorCount": 0
+    },
+    {
+      "apiReferenceSiteCount": 6,
+      "descriptorReferenceSiteCount": 16,
+      "descriptorRequirementCount": 14,
+      "helperSha256": "d48168822a646892dc9850ebfcb75376cb80663cef7c2fceb9c36fe3d3af02e7",
+      "missingAppleApiCount": 0,
+      "nonpublicAppleApiCount": 0,
+      "package": "PandorasBox",
+      "provider": "PandorasBox",
+      "uniqueApiMemberCount": 5,
+      "uniqueExactTargetCount": 14,
+      "unresolvedDescriptorCount": 0
+    },
+    {
+      "apiReferenceSiteCount": 153,
+      "descriptorReferenceSiteCount": 57,
+      "descriptorRequirementCount": 52,
+      "helperSha256": "d843355cbce2be03611d46a200cc4b341888ec53deb29e940b18442bbdc4f55f",
+      "missingAppleApiCount": 0,
+      "nonpublicAppleApiCount": 0,
+      "package": "VivHelper",
+      "provider": "VivHelper",
+      "uniqueApiMemberCount": 67,
+      "uniqueExactTargetCount": 52,
+      "unresolvedDescriptorCount": 0
+    }
+  ],
+  "schemaVersion": 1,
+  "scope": {
+    "broadPublicizerUsed": false,
+    "fullHelperApiExpansion": false,
+    "lobby": "StrawberryJam2021/0-Lobbies/1-Beginner",
+    "map": "StrawberryJam2021/1-Beginner/Bing_Over_Google",
+    "providerCount": 8,
+    "providerPolicy": "ONLY_DISTRIBUTED_BEGINNER_CLOSURE_PROVIDERS_AND_REACHABLE_INITIALIZATION"
+  },
+  "stage": "25K-D",
+  "status": "GREEN"
+}

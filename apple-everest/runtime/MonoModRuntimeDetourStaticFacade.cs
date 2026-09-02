@@ -35,6 +35,13 @@ public sealed class DetourConfig
     public DetourConfig AddAfter(params string[] value) => AddAfter((IEnumerable<string>)value);
 }
 
+public sealed class DetourConfigContext : IDisposable
+{
+    public DetourConfigContext(DetourConfig config) { Config = config; }
+    public DetourConfig Config { get; }
+    public void Dispose() { }
+}
+
 public sealed class Hook : IDisposable
 {
     public const bool ApplyByDefault = true;
