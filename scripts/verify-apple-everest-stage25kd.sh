@@ -14,6 +14,9 @@ DOTNET8="$REPO_ROOT/.build/apple-everest/toolchain/dotnet8/dotnet"
 (cd /tmp && "$DOTNET8" \
   "$REPO_ROOT/tools/AppleEverestBuilder/tests/bin/Debug/net8.0/AppleEverestBuilder.Tests.dll" \
   "$REPO_ROOT")
+(cd /tmp && dotnet restore \
+  "$REPO_ROOT/tools/AppleEverestBuilder/tests/HookSemantics/AppleEverestHookSemantics.Tests.csproj" \
+  --locked-mode >/dev/null)
 (cd /tmp && dotnet build \
   "$REPO_ROOT/tools/AppleEverestBuilder/tests/HookSemantics/AppleEverestHookSemantics.Tests.csproj" \
   --no-restore >/dev/null)

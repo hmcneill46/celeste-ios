@@ -1,6 +1,6 @@
 # Apple Everest Stage 25K-D — configured ordering and bounded map appendices
 
-Status: **IN PROGRESS — automated and hardware closeout pending**
+Status: **IN PROGRESS — automated and clean-clone gates pass; reachable-iPhone physical exercise pending**
 
 Stage 25K-D closes three prerequisites identified by the Strawberry Jam audit without building or claiming support for Strawberry Jam: bounded one-root map appendices, immutable configured detour ordering, and the exact managed-hook/API breadth reached by the current Beginner slice. Dynamic configuration, Strawberry Jam root behavior, multi-bank audio, and the remaining helper mechanisms stay fail-closed.
 
@@ -13,6 +13,8 @@ Map ingestion now parses exactly one valid BinaryPacker root, records the consum
 Configured ordering is deliberately restricted to `STATIC_CONFIGURED_DETOUR_SEQUENCE`: exact target, exact hook/manipulator, immutable host-known configuration, and immutable-active lifetime. Repository-pinned MonoMod is the behavioral authority. The host resolves a target-local graph, hashes the resulting plan, composes IL sequentially in the pinned order, and emits only typed ordinals/chains or already-frozen bodies. Cycles, incompatible duplicate identities, drift, dynamic targets/manipulators/configuration, and gameplay-scoped lifetimes reject before AOT. The Apple runtime receives no detour backend or serialized graph.
 
 All 39 audited construction sites in 13 helpers are fully classified: 30 are statically eligible and nine ExtendedVariantMode sites retain dynamic lifetime and reject. The real production fixture is ordinary LunaticHelper 1.1.1. Its distributed DLL is the authority; its legacy `After("*")` Player-constructor HookGen registration is normalized by the pinned rules and emitted as a static typed registration. Three independent closures reproduce the same configured plan, output file set, and shared closure hash.
+
+A fresh recursive clone independently reacquired the 52 exact public Strawberry Jam dependency archives, then reproduced all 128 map boundaries, all 39 configured construction methods, the 67/38 configuration-reference census, the 176 resolved Beginner descriptor requirements across eight providers, and three byte-identical LunaticHelper closures. The mutable live Everest updater entry for FrostHelper has drifted since K-C, so clean reproduction bypassed only that live-record comparison; every authoritative archived release URL and SHA-256 check remained enforced. The clean clone then passed the full 496/50/46 test boundary. No ignored fixture was copied into it.
 
 The configured canary additionally preserves only the two exact public desktop-Everest ABI members reached by that pinned fixture: `BinaryPacker.Element.AttrInt` with upstream conversion semantics and the legacy two-argument `Input.Rumble` overload forwarding to the existing Apple-aware implementation. The linked-product contract scanner verifies these references; they are separate from, and do not alter, the Beginner-slice API-breadth count below.
 
@@ -45,7 +47,7 @@ Hardware availability is reported exactly: no unavailable device receives an inf
 15. Configured IL sites? 13 exact configured IL sites; direct evidence also records eight HookGen IL and seven direct ILHook construction sites where site categories overlap.
 16. Configured managed Hook sites? Four direct managed-Hook sites.
 17. Configured On.* sites? 22 HookGen `On.*` sites.
-18. Helpers affected? 13: BrokemiaHelper, CollabUtils2, CommunalHelper, CrystallineHelper, ExtendedVariantMode, FemtoHelper, GravityHelper, JungleHelper, LunaticHelper, MaxHelpingHand, StrawberryJam2021, VivHelper, and VortexHelper.
+18. Helpers affected? 13: BrokemiaHelper, CollabUtils2, CommunalHelper, CrystallineHelper, ExtendedVariantMode, FemtoHelper, GravityHelper, JungleHelper, LunaticHelper, MaxHelpingHand, StrawberryJam2021, VivHelper, and XaphanHelper.
 19. Exact priority semantics? Pinned DepGraph higher priority is outer and first in the managed invocation chain; configured execution, managed wrapping, and IL composition are recorded separately.
 20. Before semantics? `Before(X)` creates an edge from the configured node to config ID `X`.
 21. After semantics? `After(X)` creates an edge from config ID `X` to the configured node.
@@ -89,9 +91,9 @@ Hardware availability is reported exactly: no unavailable device receives an inf
 59. Content-ID coverage after? 43,350/274,073 = 15.817%.
 60. Helper-mechanism coverage after? 3,818/11,009 = 34.6807%.
 61. Zero-blocker SJ maps after? 0/128.
-62. iPhone physical? PENDING until the final configured canary is installed and the listed behavior is exercised on the currently reachable iPhone 12 Pro Max.
-63. iPadOS 15.8.8 physical? PENDING exactly: the paired iPad mini 4 was unavailable during Stage D closeout; no pass is inferred.
-64. Apple TV physical? PENDING until the final configured canary is installed and the listed behavior is exercised; the paired Apple TV 4K 3rd generation is currently disconnected.
+62. iPhone physical? PENDING functional exercise: the final development-signed configured canary installed and launched successfully on the reachable iPhone 12 Pro Max, but the phone remained unlocked/in use and iPhone Mirroring could not reconnect for the checklist. No functional pass is inferred.
+63. iPadOS 15.8.8 physical? PENDING exactly: the paired iPad mini 4 was booted but its developer tunnel was unavailable during Stage D closeout; no pass is inferred.
+64. Apple TV physical? PENDING exactly: the paired Apple TV 4K 3rd generation was disconnected during Stage D closeout; no pass is inferred.
 65. Shared closure hash? `fe9e0a4b7a19fa4a9ea4d607aa2424617d8567636c97248f39dfed19961ccdf6`; all three independent runs also have the product file-set hash `394fe8ffc1fc3ec3dd2b94429c99af405caa9b0c0eacf370b12ee694103ef190`.
 66. Full trim? Yes, on the iOS/iPadOS and tvOS canary products.
 67. Full AOT? Yes, including product scans and required native AOT objects.
@@ -108,10 +110,10 @@ Hardware availability is reported exactly: no unavailable device receives an inf
 78. Canonical/native locks unchanged? Yes: Content `30a1c147d1a3ab0aa45762094e393ed7fd69951dd66e5af063447641e0699c46`, raw `db7b722159fbdef8625c81608165aea162957dce956fcd5b16eeceaa1089a273`, patched `0c6515adadf58251ab2da66c6c61a1f61bd19b85f5dcdd4f1280552af650a4b5`, Stage 6 `1a981bc5994261775c1fea497cd042780fdbbcb24b7390a2f4db6aab1be747d9`, iOS native `9fb302d221180e39f270ea5ebf48e18433b67bd0a40943c042a227fe0f8ad6a2`, tvOS native `6286e0545b32e9c56732955d4cf816ed8f5dc0d816ab610dd9fe1752090a01fc`, vanilla iOS generated `2f5d6fffaa151530f48deac7ff402c2c6d475b20eeef5579f1db784d57da2357`.
 79. Protected refs untouched? Yes; no merge, tag, force-push, upstream push, or protected-ref update occurred.
 80. Actions zero? Yes; no workflow file changed and no hosted Actions run was invoked.
-81. Clean clone reproduced? PENDING until the exact final feature tip exists; no pass is inferred from the working tree.
+81. Clean clone reproduced? Yes. A fresh recursive clone independently reacquired the exact public releases; reproduced 128 map boundaries, 39 configured sites, the selected real fixture, 176 descriptor requirements, and three byte-identical closures; and passed the full 496/50/46 verifier boundary. The exact final-tip clean check is repeated after the closeout commit.
 82. Privacy pass? Yes: no third-party ZIP/DLL/map/bank/game bytes, Apple product, save, signing material, device identifier, or private absolute path is tracked.
-83. Disk before/after? Approximately 47 GiB free at Stage D start and 36 GiB before disposable canary/clone cleanup; the final post-cleanup value is reported in the handoff.
-84. Integration-ready? Yes for this bounded Stage D architecture after all automated and available-hardware gates; not for Strawberry Jam itself.
+83. Disk before/after? Approximately 47 GiB free at Stage D start and 27 GiB while the disposable clean-clone reproduction remains present; the final post-cleanup value is reported in the handoff.
+84. Integration-ready? The bounded architecture and all automated gates are ready; final integration status remains pending only the reachable-iPhone functional checklist. Strawberry Jam itself is not ready or supported.
 85. Exact fast-forward SHA? The same immutable final feature-tip SHA reported in the handoff; it descends directly from `d6bdaa4cf6d4c8ccf451d6ac1bfb66cde5d0dc10`.
 86. Is Beginner slice now ready to build? No; Stage D deliberately does not package or run it.
 87. If no, exact remaining blockers? The four groups in answer 55: four helper semantic lowerings, SJ root lifecycle/UI/state, bounded multi-bank FMOD, and Crystalline/Vortex mechanisms.
@@ -123,4 +125,4 @@ Hardware availability is reported exactly: no unavailable device receives an inf
 
 ## Final boundary
 
-Stage 25K-D is integration-ready as a bounded static-AOT compatibility increment. It does not merge, tag, push, run Actions, build the Beginner slice, or claim Strawberry Jam support.
+Stage 25K-D has completed its implementation, deterministic-product, regression, privacy, and clean-clone boundaries. Final GREEN/integration-ready status awaits only the functional checklist on the already-installed reachable-iPhone canary. It does not merge, tag, push, run Actions, build the Beginner slice, or claim Strawberry Jam support.
