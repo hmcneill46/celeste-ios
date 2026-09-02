@@ -1,6 +1,6 @@
 # Apple Everest Stage 25K-D — configured ordering and bounded map appendices
 
-Status: **IN PROGRESS — automated and clean-clone gates pass; reachable-iPhone physical exercise pending**
+Status: **GREEN — bounded Stage 25K-D acceptance complete**
 
 Stage 25K-D closes three prerequisites identified by the Strawberry Jam audit without building or claiming support for Strawberry Jam: bounded one-root map appendices, immutable configured detour ordering, and the exact managed-hook/API breadth reached by the current Beginner slice. Dynamic configuration, Strawberry Jam root behavior, multi-bank audio, and the remaining helper mechanisms stay fail-closed.
 
@@ -26,7 +26,7 @@ The Beginner reachability audit adds 103 declaration- and overload-locked descri
 
 The current 496-test builder suite, 50-test typed HookGen suite, 46-check Stage D verifier, pinned MonoMod runner, focused historical regressions, full-trim/full-AOT canary, privacy/reference locks, and clean-clone reproduction are the acceptance boundary. The canary uses one shared target-neutral LunaticHelper closure for iOS/iPadOS/tvOS with `UseInterpreter=false`; product scans reject RuntimeDetour, a live ILHook backend, Mono.Cecil/MonoMod.Cil, `DynamicMethod`, `Reflection.Emit`, a host worker, runtime loading, or a serialized configuration graph.
 
-Hardware availability is reported exactly: no unavailable device receives an inferred pass. Strawberry Jam remains unsupported.
+The reachable iPhone canary passed physical acceptance: clean launch and portrait-to-landscape transition were directly observed, and the user confirmed gameplay, configured Player construction, movement/jump/dash, death/respawn, pause, audio, touch, and background/reopen behavior. Hardware availability is otherwise reported exactly: no unavailable device receives an inferred pass. Strawberry Jam remains unsupported.
 
 ## Answers to the 92 closeout questions
 
@@ -91,7 +91,7 @@ Hardware availability is reported exactly: no unavailable device receives an inf
 59. Content-ID coverage after? 43,350/274,073 = 15.817%.
 60. Helper-mechanism coverage after? 3,818/11,009 = 34.6807%.
 61. Zero-blocker SJ maps after? 0/128.
-62. iPhone physical? PENDING functional exercise: the final development-signed configured canary installed and launched successfully on the reachable iPhone 12 Pro Max, but the phone remained unlocked/in use and iPhone Mirroring could not reconnect for the checklist. No functional pass is inferred.
+62. iPhone physical? PASS on the final development-signed configured canary. Clean launch and portrait-to-landscape transition were directly observed; the user confirmed gameplay, configured Player construction, movement/jump/dash, death/respawn, pause, audio, touch, and background/reopen behavior.
 63. iPadOS 15.8.8 physical? PENDING exactly: the paired iPad mini 4 was booted but its developer tunnel was unavailable during Stage D closeout; no pass is inferred.
 64. Apple TV physical? PENDING exactly: the paired Apple TV 4K 3rd generation was disconnected during Stage D closeout; no pass is inferred.
 65. Shared closure hash? `fe9e0a4b7a19fa4a9ea4d607aa2424617d8567636c97248f39dfed19961ccdf6`; all three independent runs also have the product file-set hash `394fe8ffc1fc3ec3dd2b94429c99af405caa9b0c0eacf370b12ee694103ef190`.
@@ -112,8 +112,8 @@ Hardware availability is reported exactly: no unavailable device receives an inf
 80. Actions zero? Yes; no workflow file changed and no hosted Actions run was invoked.
 81. Clean clone reproduced? Yes. A fresh recursive clone independently reacquired the exact public releases; reproduced 128 map boundaries, 39 configured sites, the selected real fixture, 176 descriptor requirements, and three byte-identical closures; and passed the full 496/50/46 verifier boundary. The exact final-tip clean check is repeated after the closeout commit.
 82. Privacy pass? Yes: no third-party ZIP/DLL/map/bank/game bytes, Apple product, save, signing material, device identifier, or private absolute path is tracked.
-83. Disk before/after? Approximately 47 GiB free at Stage D start and 27 GiB while the disposable clean-clone reproduction remains present; the final post-cleanup value is reported in the handoff.
-84. Integration-ready? The bounded architecture and all automated gates are ready; final integration status remains pending only the reachable-iPhone functional checklist. Strawberry Jam itself is not ready or supported.
+83. Disk before/after? Approximately 47 GiB free at Stage D start and 31 GiB after removing the independently reacquired public fixtures, three clean-clone closures, unsigned canary products, and disposable clone. Only task-owned marked outputs were removed.
+84. Integration-ready? Yes, for the bounded Stage D architecture. Strawberry Jam itself is not ready or supported.
 85. Exact fast-forward SHA? The same immutable final feature-tip SHA reported in the handoff; it descends directly from `d6bdaa4cf6d4c8ccf451d6ac1bfb66cde5d0dc10`.
 86. Is Beginner slice now ready to build? No; Stage D deliberately does not package or run it.
 87. If no, exact remaining blockers? The four groups in answer 55: four helper semantic lowerings, SJ root lifecycle/UI/state, bounded multi-bank FMOD, and Crystalline/Vortex mechanisms.
@@ -125,4 +125,4 @@ Hardware availability is reported exactly: no unavailable device receives an inf
 
 ## Final boundary
 
-Stage 25K-D has completed its implementation, deterministic-product, regression, privacy, and clean-clone boundaries. Final GREEN/integration-ready status awaits only the functional checklist on the already-installed reachable-iPhone canary. It does not merge, tag, push, run Actions, build the Beginner slice, or claim Strawberry Jam support.
+Stage 25K-D is GREEN and integration-ready as a bounded static-AOT compatibility increment. It does not merge, tag, push, run Actions, build the Beginner slice, or claim Strawberry Jam support.
