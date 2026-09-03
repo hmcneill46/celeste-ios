@@ -36,16 +36,21 @@ def download(url: str, output: pathlib.Path, expected: str | None = None) -> Non
     output.parent.mkdir(parents=True, exist_ok=True)
     if expected is not None and output.is_file() and sha256(output) == expected:
         return
-    source_url = url
+    source_urls = [url]
     mirror = re.fullmatch(r"https://gamebanana\.com/mmdl/(\d+)", url)
     if mirror:
-        source_url = f"https://celestemodupdater.0x0a.de/banana-mirror/{mirror.group(1)}.zip"
-    command = ["curl", "--fail", "--location", "--retry", "10", "--retry-all-errors",
-               "--retry-delay", "2", "--silent", "--show-error", "--output", str(output)]
-    if expected is not None and output.is_file() and output.stat().st_size:
-        command.extend(["--continue-at", "-"])
-    command.append(source_url)
-    subprocess.run(command, check=True)
+        source_urls.append(f"https://celestemodupdater.0x0a.de/banana-mirror/{mirror.group(1)}.zip")
+    for index, source_url in enumerate(source_urls):
+        command = ["curl", "--fail", "--location", "--retry", "10", "--retry-all-errors",
+                   "--retry-delay", "2", "--silent", "--show-error", "--output", str(output)]
+        if expected is not None and output.is_file() and output.stat().st_size:
+            command.extend(["--continue-at", "-"])
+        command.append(source_url)
+        result = subprocess.run(command)
+        if result.returncode == 0:
+            break
+        if index + 1 == len(source_urls):
+            raise subprocess.CalledProcessError(result.returncode, command)
     actual = sha256(output)
     if expected is not None and actual != expected:
         raise SystemExit(f"FAIL: public download drift for {url}: {actual}")
@@ -146,7 +151,8 @@ def update_database_entry(path: pathlib.Path, name: str) -> dict[str, object]:
 
 
 def validate_live_release_records(graph: dict, update_database: pathlib.Path) -> None:
-    """Allow catalogue churn while pinning all 52 semantically relevant records."""
+    """Allow catalogue advancement while pinning all 52 audited archives."""
+    advanced: list[str] = []
     for node in graph["nodes"]:
         live = update_database_entry(update_database, node["name"])
         expected = {
@@ -154,8 +160,18 @@ def validate_live_release_records(graph: dict, update_database: pathlib.Path) ->
             "GameBananaFileId": node["gameBananaFileId"], "URL": node["publicUrl"],
             "Size": node["zipBytes"], "xxHash": node["updaterXxHash"],
         }
-        if live != expected:
+        if live == expected:
+            continue
+        # The update database is a moving pointer. A strictly later release is
+        # expected over time; the historical URL below is still downloaded and
+        # checked against its pinned SHA-256 before it can enter the fixture.
+        if (live.get("Version") == expected["Version"] or
+                not isinstance(live.get("LastUpdate"), int) or
+                live["LastUpdate"] <= expected["LastUpdate"]):
             raise SystemExit(f"FAIL: live release identity drift for {node['name']}")
+        advanced.append(f"{node['name']} {expected['Version']} -> {live['Version']}")
+    if advanced:
+        print("INFO: live catalogue advanced beyond pinned audit: " + ", ".join(advanced))
 
 
 def main() -> int:

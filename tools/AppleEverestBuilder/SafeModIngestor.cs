@@ -7,6 +7,9 @@ namespace AppleEverestBuilder;
 
 internal static class SafeModIngestor
 {
+    private const string StrawberryJam1012ArchiveSha256 = "4e1a2fc12baa3db27da433b93bf26b59f34b3e6b7f760c41d8d127636d020655";
+    private const int StrawberryJam1012MaxFiles = 30000;
+    private const long StrawberryJam1012MaxExpandedBytes = 256L * 1024 * 1024;
     private static readonly IDeserializer Yaml = new DeserializerBuilder()
         .WithNamingConvention(NullNamingConvention.Instance)
         .IgnoreUnmatchedProperties()
@@ -20,14 +23,20 @@ internal static class SafeModIngestor
 
         string staging = Path.Combine(stagingParent, $"mod-{index:D3}");
         Directory.CreateDirectory(staging);
-        if (File.Exists(source)) ExtractZip(source, staging);
+        bool exactStrawberryJam = File.Exists(source) &&
+            Hashing.FileSha256(source) == StrawberryJam1012ArchiveSha256;
+        if (File.Exists(source)) ExtractZip(source, staging,
+            exactStrawberryJam ? StrawberryJam1012MaxFiles : ProductPolicy.MaxFiles,
+            exactStrawberryJam ? StrawberryJam1012MaxExpandedBytes : ProductPolicy.MaxExpandedBytes);
         else CopyDirectory(source, staging);
 
         IReadOnlyList<FileRecord> files = Hashing.Inventory(staging);
-        if (files.Count == 0 || files.Count > ProductPolicy.MaxFiles)
+        int maxFiles = exactStrawberryJam ? StrawberryJam1012MaxFiles : ProductPolicy.MaxFiles;
+        long maxExpandedBytes = exactStrawberryJam ? StrawberryJam1012MaxExpandedBytes : ProductPolicy.MaxExpandedBytes;
+        if (files.Count == 0 || files.Count > maxFiles)
             throw new InvalidDataException("mod file-count budget exceeded or input is empty");
         long bytes = files.Sum(item => item.Bytes);
-        if (bytes > ProductPolicy.MaxExpandedBytes)
+        if (bytes > maxExpandedBytes)
             throw new InvalidDataException("mod expanded-size budget exceeded");
 
         string yamlPath = new[] { "everest.yaml", "everest.yml" }
@@ -63,12 +72,12 @@ internal static class SafeModIngestor
         };
     }
 
-    private static void ExtractZip(string archive, string destination)
+    private static void ExtractZip(string archive, string destination, int maxFiles, long maxExpandedBytes)
     {
         if (!string.Equals(Path.GetExtension(archive), ".zip", StringComparison.OrdinalIgnoreCase))
             throw new InvalidDataException("only ZIP archives or directories are accepted");
         using ZipArchive zip = ZipFile.OpenRead(archive);
-        if (zip.Entries.Count == 0 || zip.Entries.Count > ProductPolicy.MaxFiles)
+        if (zip.Entries.Count == 0 || zip.Entries.Count > maxFiles)
             throw new InvalidDataException("ZIP file-count budget exceeded or archive is empty");
         HashSet<string> seen = new(StringComparer.OrdinalIgnoreCase);
         long expanded = 0;
@@ -88,7 +97,7 @@ internal static class SafeModIngestor
             if (entry.Length < 0 || entry.Length > ProductPolicy.MaxSingleFileBytes)
                 throw new InvalidDataException($"ZIP member size budget exceeded: {path}");
             expanded = checked(expanded + entry.Length);
-            if (expanded > ProductPolicy.MaxExpandedBytes)
+            if (expanded > maxExpandedBytes)
                 throw new InvalidDataException("ZIP expanded-size budget exceeded");
             string target = ResolveUnder(destination, path);
             Directory.CreateDirectory(Path.GetDirectoryName(target)!);

@@ -14,6 +14,7 @@
     <Compile Include="../../../apple-everest/runtime/AppleEverestSettingsCodec.cs" Link="AppleEverestSettingsCodec.cs" />
     <Compile Include="../../../apple-everest/runtime/AppleEverestBoundedYaml.cs" Link="AppleEverestBoundedYaml.cs" />
     <Compile Include="../../../apple-everest/runtime/AppleEverestModuleYaml.cs" Link="AppleEverestModuleYaml.cs" />
+    <Compile Include="../../../apple-everest/runtime/semantics/AppleEverestStrawberryJamState.cs" Link="AppleEverestStrawberryJamState.cs" />
     <Compile Include="../../../apple-everest/runtime/AppleEverestModuleSnapshotCodec.cs" Link="AppleEverestModuleSnapshotCodec.cs" />
     <Compile Include="../../../apple-everest/runtime/AppleEverestModuleCompression.cs" Link="AppleEverestModuleCompression.cs" />
     <Compile Include="../../../apple-everest/runtime/AppleEverestModuleReplicaAuthority.cs" Link="AppleEverestModuleReplicaAuthority.cs" />

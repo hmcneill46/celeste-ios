@@ -1,0 +1,1873 @@
+{
+  "appendixBytes": 149841,
+  "appendixSha256": "d76dba1bc5834d999f4d622afd008a702ffe6663b17fe7b0be3c5cc69afabe0d",
+  "audioEventsFromMap": [
+    "event:/env/amb/06_lake",
+    "event:/music/lvl2/beginning",
+    "event:/sj21_BegLobby"
+  ],
+  "berryCountFromKc": 22,
+  "chapterPanels": [
+    {
+      "allowSaving": true,
+      "boundsDerivedFromJar": true,
+      "entityId": 37,
+      "map": "StrawberryJam2021/1-Beginner/coffe",
+      "returnMode": "SetReturnToHere",
+      "room": "sj2021beginnerlobby",
+      "sourceId": "SJ2021/StrawberryJamJar",
+      "sprite": "beginner"
+    },
+    {
+      "allowSaving": true,
+      "boundsDerivedFromJar": true,
+      "entityId": 94,
+      "map": "StrawberryJam2021/1-Beginner/joltik",
+      "returnMode": "SetReturnToHere",
+      "room": "sj2021beginnerlobby",
+      "sourceId": "SJ2021/StrawberryJamJar",
+      "sprite": "beginner"
+    },
+    {
+      "allowSaving": true,
+      "boundsDerivedFromJar": true,
+      "entityId": 177,
+      "map": "StrawberryJam2021/1-Beginner/frozenflygone",
+      "returnMode": "SetReturnToHere",
+      "room": "sj2021beginnerlobby",
+      "sourceId": "SJ2021/StrawberryJamJar",
+      "sprite": "beginner"
+    },
+    {
+      "allowSaving": true,
+      "boundsDerivedFromJar": true,
+      "entityId": 180,
+      "map": "StrawberryJam2021/1-Beginner/Flagpole1up",
+      "returnMode": "SetReturnToHere",
+      "room": "sj2021beginnerlobby",
+      "sourceId": "SJ2021/StrawberryJamJar",
+      "sprite": "beginner"
+    },
+    {
+      "allowSaving": true,
+      "boundsDerivedFromJar": true,
+      "entityId": 204,
+      "map": "StrawberryJam2021/1-Beginner/voliver9",
+      "returnMode": "SetReturnToHere",
+      "room": "sj2021beginnerlobby",
+      "sourceId": "SJ2021/StrawberryJamJar",
+      "sprite": "beginner"
+    },
+    {
+      "allowSaving": true,
+      "boundsDerivedFromJar": true,
+      "entityId": 287,
+      "map": "StrawberryJam2021/1-Beginner/Owen-Shirrell",
+      "returnMode": "SetReturnToHere",
+      "room": "sj2021beginnerlobby",
+      "sourceId": "SJ2021/StrawberryJamJar",
+      "sprite": "beginner"
+    },
+    {
+      "allowSaving": true,
+      "boundsDerivedFromJar": true,
+      "entityId": 335,
+      "map": "StrawberryJam2021/1-Beginner/skeleton",
+      "returnMode": "SetReturnToHere",
+      "room": "sj2021beginnerlobby",
+      "sourceId": "SJ2021/StrawberryJamJar",
+      "sprite": "beginner"
+    },
+    {
+      "allowSaving": true,
+      "boundsDerivedFromJar": true,
+      "entityId": 353,
+      "map": "StrawberryJam2021/1-Beginner/cellularAutomaton",
+      "returnMode": "SetReturnToHere",
+      "room": "sj2021beginnerlobby",
+      "sourceId": "SJ2021/StrawberryJamJar",
+      "sprite": "beginner"
+    },
+    {
+      "allowSaving": true,
+      "boundsDerivedFromJar": true,
+      "entityId": 392,
+      "map": "StrawberryJam2021/1-Beginner/Jadeturtle",
+      "returnMode": "SetReturnToHere",
+      "room": "sj2021beginnerlobby",
+      "sourceId": "SJ2021/StrawberryJamJar",
+      "sprite": "beginner"
+    },
+    {
+      "allowSaving": true,
+      "boundsDerivedFromJar": true,
+      "entityId": 398,
+      "map": "StrawberryJam2021/1-Beginner/Ceph",
+      "returnMode": "SetReturnToHere",
+      "room": "sj2021beginnerlobby",
+      "sourceId": "SJ2021/StrawberryJamJar",
+      "sprite": "beginner"
+    },
+    {
+      "allowSaving": true,
+      "boundsDerivedFromJar": true,
+      "entityId": 405,
+      "map": "StrawberryJam2021/1-Beginner/Circumplex",
+      "returnMode": "SetReturnToHere",
+      "room": "sj2021beginnerlobby",
+      "sourceId": "SJ2021/StrawberryJamJar",
+      "sprite": "beginner"
+    },
+    {
+      "allowSaving": true,
+      "boundsDerivedFromJar": true,
+      "entityId": 482,
+      "map": "StrawberryJam2021/1-Beginner/Quinnigan",
+      "returnMode": "SetReturnToHere",
+      "room": "sj2021beginnerlobby",
+      "sourceId": "SJ2021/StrawberryJamJar",
+      "sprite": "beginner"
+    },
+    {
+      "allowSaving": true,
+      "boundsDerivedFromJar": true,
+      "entityId": 519,
+      "map": "StrawberryJam2021/1-Beginner/NotYourBadeline",
+      "returnMode": "SetReturnToHere",
+      "room": "sj2021beginnerlobby",
+      "sourceId": "SJ2021/StrawberryJamJar",
+      "sprite": "beginner"
+    },
+    {
+      "allowSaving": true,
+      "boundsDerivedFromJar": true,
+      "entityId": 529,
+      "map": "StrawberryJam2021/1-Beginner/Bing_Over_Google",
+      "returnMode": "SetReturnToHere",
+      "room": "sj2021beginnerlobby",
+      "sourceId": "SJ2021/StrawberryJamJar",
+      "sprite": "beginner"
+    },
+    {
+      "allowSaving": true,
+      "boundsDerivedFromJar": true,
+      "entityId": 548,
+      "map": "StrawberryJam2021/1-Beginner/asteriskblue",
+      "returnMode": "SetReturnToHere",
+      "room": "sj2021beginnerlobby",
+      "sourceId": "SJ2021/StrawberryJamJar",
+      "sprite": "beginner"
+    },
+    {
+      "allowSaving": true,
+      "boundsDerivedFromJar": true,
+      "entityId": 710,
+      "map": "StrawberryJam2021/1-Beginner/hyperlife",
+      "returnMode": "SetReturnToHere",
+      "room": "sj2021beginnerlobby",
+      "sourceId": "SJ2021/StrawberryJamJar",
+      "sprite": "beginner"
+    },
+    {
+      "allowSaving": true,
+      "boundsDerivedFromJar": true,
+      "entityId": 738,
+      "map": "StrawberryJam2021/1-Beginner/snas",
+      "returnMode": "SetReturnToHere",
+      "room": "sj2021beginnerlobby",
+      "sourceId": "SJ2021/StrawberryJamJar",
+      "sprite": "beginner"
+    },
+    {
+      "allowSaving": true,
+      "boundsDerivedFromJar": true,
+      "entityId": 747,
+      "map": "StrawberryJam2021/1-Beginner/CoupCritik",
+      "returnMode": "SetReturnToHere",
+      "room": "sj2021beginnerlobby",
+      "sourceId": "SJ2021/StrawberryJamJar",
+      "sprite": "beginner"
+    },
+    {
+      "allowSaving": true,
+      "boundsDerivedFromJar": true,
+      "entityId": 871,
+      "map": "StrawberryJam2021/1-Beginner/Eclipse",
+      "returnMode": "SetReturnToHere",
+      "room": "sj2021beginnerlobby",
+      "sourceId": "SJ2021/StrawberryJamJar",
+      "sprite": "beginner"
+    },
+    {
+      "allowSaving": true,
+      "boundsDerivedFromJar": true,
+      "entityId": 950,
+      "map": "StrawberryJam2021/1-Beginner/mosscairn",
+      "returnMode": "SetReturnToHere",
+      "room": "sj2021beginnerlobby",
+      "sourceId": "SJ2021/StrawberryJamJar",
+      "sprite": "beginner"
+    },
+    {
+      "allowSaving": false,
+      "boundsDerivedFromJar": false,
+      "entityId": 1210,
+      "map": "StrawberryJam2021/0-Gyms/1-Beginner",
+      "returnMode": "SetReturnToHere",
+      "room": "sj2021beginnerlobby",
+      "sourceId": "CollabUtils2/ChapterPanelTrigger",
+      "sprite": null
+    },
+    {
+      "allowSaving": true,
+      "boundsDerivedFromJar": true,
+      "entityId": 1219,
+      "map": "StrawberryJam2021/1-Beginner/HankyMueller",
+      "returnMode": "SetReturnToHere",
+      "room": "sj2021beginnerlobby",
+      "sourceId": "SJ2021/StrawberryJamJar",
+      "sprite": "beginner"
+    },
+    {
+      "allowSaving": true,
+      "boundsDerivedFromJar": false,
+      "entityId": 1582,
+      "map": "StrawberryJam2021/1-Beginner/ZZ-HeartSide",
+      "returnMode": "SetReturnToHere",
+      "room": "sj2021beginnerlobby",
+      "sourceId": "CollabUtils2/ChapterPanelTrigger",
+      "sprite": null
+    }
+  ],
+  "collab": {
+    "completionAuthority": "vanilla AreaStats.Modes[0].Completed through existing static progression descriptor",
+    "difficulty": "Beginner",
+    "id": "StrawberryJam2021",
+    "installedSubordinateMaps": [
+      "StrawberryJam2021/1-Beginner/Bing_Over_Google"
+    ],
+    "jarAssociatedMaps": [
+      "StrawberryJam2021/1-Beginner/Bing_Over_Google",
+      "StrawberryJam2021/1-Beginner/Ceph",
+      "StrawberryJam2021/1-Beginner/Circumplex",
+      "StrawberryJam2021/1-Beginner/CoupCritik",
+      "StrawberryJam2021/1-Beginner/Eclipse",
+      "StrawberryJam2021/1-Beginner/Flagpole1up",
+      "StrawberryJam2021/1-Beginner/HankyMueller",
+      "StrawberryJam2021/1-Beginner/Jadeturtle",
+      "StrawberryJam2021/1-Beginner/NotYourBadeline",
+      "StrawberryJam2021/1-Beginner/Owen-Shirrell",
+      "StrawberryJam2021/1-Beginner/Quinnigan",
+      "StrawberryJam2021/1-Beginner/asteriskblue",
+      "StrawberryJam2021/1-Beginner/cellularAutomaton",
+      "StrawberryJam2021/1-Beginner/coffe",
+      "StrawberryJam2021/1-Beginner/frozenflygone",
+      "StrawberryJam2021/1-Beginner/hyperlife",
+      "StrawberryJam2021/1-Beginner/joltik",
+      "StrawberryJam2021/1-Beginner/mosscairn",
+      "StrawberryJam2021/1-Beginner/skeleton",
+      "StrawberryJam2021/1-Beginner/snas",
+      "StrawberryJam2021/1-Beginner/voliver9"
+    ],
+    "jarCount": 21,
+    "journalLevelSet": "StrawberryJam2021/1-Beginner",
+    "journalPrimitive": "AppleEverestCollabJournalProgress",
+    "journalRowsWhenOnlySliceInstalled": [
+      "StrawberryJam2021/1-Beginner/Bing_Over_Google"
+    ],
+    "returnAuthority": "CollabUtils2 SetReturnToHere: generated jar panel at jar Position-(24,32), node Position-(0,32)"
+  },
+  "consumedRootBytes": 524807,
+  "customIds": [
+    {
+      "id": "FemtoHelper/WindPetals",
+      "kind": "backdrop",
+      "occurrences": 2,
+      "providers": [
+        "FemtoHelper"
+      ]
+    },
+    {
+      "id": "FlaglinesAndSuch/customDreamStars",
+      "kind": "backdrop",
+      "occurrences": 1,
+      "providers": [
+        "FlaglinesAndSuch"
+      ]
+    },
+    {
+      "id": "FlaglinesAndSuch/customGodrays",
+      "kind": "backdrop",
+      "occurrences": 1,
+      "providers": [
+        "FlaglinesAndSuch"
+      ]
+    },
+    {
+      "id": "LunaticHelper/CustomDust",
+      "kind": "backdrop",
+      "occurrences": 3,
+      "providers": [
+        "LunaticHelper"
+      ]
+    },
+    {
+      "id": "MaxHelpingHand/HeatWaveNoColorGrade",
+      "kind": "backdrop",
+      "occurrences": 1,
+      "providers": [
+        "MaxHelpingHand"
+      ]
+    },
+    {
+      "id": "BrokemiaHelper/caveWall",
+      "kind": "entity",
+      "occurrences": 1,
+      "providers": [
+        "BrokemiaHelper"
+      ]
+    },
+    {
+      "id": "CherryHelper/ItemCrystal",
+      "kind": "entity",
+      "occurrences": 1,
+      "providers": [
+        "CherryHelper"
+      ]
+    },
+    {
+      "id": "CherryHelper/ItemCrystalPedestal",
+      "kind": "entity",
+      "occurrences": 1,
+      "providers": [
+        "CherryHelper"
+      ]
+    },
+    {
+      "id": "CollabUtils2/LobbyMapController",
+      "kind": "entity",
+      "occurrences": 1,
+      "providers": [
+        "CollabUtils2"
+      ]
+    },
+    {
+      "id": "CollabUtils2/LobbyMapMarker",
+      "kind": "entity",
+      "occurrences": 1,
+      "providers": [
+        "CollabUtils2"
+      ]
+    },
+    {
+      "id": "CollabUtils2/LobbyMapWarp",
+      "kind": "entity",
+      "occurrences": 6,
+      "providers": [
+        "CollabUtils2"
+      ]
+    },
+    {
+      "id": "CollabUtils2/MiniHeartDoor",
+      "kind": "entity",
+      "occurrences": 1,
+      "providers": [
+        "CollabUtils2"
+      ]
+    },
+    {
+      "id": "CollabUtils2/RainbowBerry",
+      "kind": "entity",
+      "occurrences": 1,
+      "providers": [
+        "CollabUtils2"
+      ]
+    },
+    {
+      "id": "FancyTileEntities/FancySolidTiles",
+      "kind": "entity",
+      "occurrences": 47,
+      "providers": [
+        "FancyTileEntities"
+      ]
+    },
+    {
+      "id": "FemtoHelper/CustomParallaxBigWaterfall",
+      "kind": "entity",
+      "occurrences": 24,
+      "providers": [
+        "FemtoHelper"
+      ]
+    },
+    {
+      "id": "FemtoHelper/ParticleEmitter",
+      "kind": "entity",
+      "occurrences": 6,
+      "providers": [
+        "FemtoHelper"
+      ]
+    },
+    {
+      "id": "FrostHelper/CustomFireBarrier",
+      "kind": "entity",
+      "occurrences": 1,
+      "providers": [
+        "FrostHelper"
+      ]
+    },
+    {
+      "id": "FrostHelper/CustomFlutterBird",
+      "kind": "entity",
+      "occurrences": 2,
+      "providers": [
+        "FrostHelper"
+      ]
+    },
+    {
+      "id": "FrostHelper/DecalContainer",
+      "kind": "entity",
+      "occurrences": 1,
+      "providers": [
+        "FrostHelper"
+      ]
+    },
+    {
+      "id": "FrostHelper/EntityMover",
+      "kind": "entity",
+      "occurrences": 1,
+      "providers": [
+        "FrostHelper"
+      ]
+    },
+    {
+      "id": "FrostHelper/IceSpinner",
+      "kind": "entity",
+      "occurrences": 20,
+      "providers": [
+        "FrostHelper"
+      ]
+    },
+    {
+      "id": "FrostHelper/WireLamps",
+      "kind": "entity",
+      "occurrences": 10,
+      "providers": [
+        "FrostHelper"
+      ]
+    },
+    {
+      "id": "HonlyHelper/PettableCat",
+      "kind": "entity",
+      "occurrences": 3,
+      "providers": [
+        "HonlyHelper"
+      ]
+    },
+    {
+      "id": "JungleHelper/MossyWall",
+      "kind": "entity",
+      "occurrences": 209,
+      "providers": [
+        "JungleHelper"
+      ]
+    },
+    {
+      "id": "LunaticHelper/InvisibleLightSource",
+      "kind": "entity",
+      "occurrences": 2,
+      "providers": [
+        "LunaticHelper"
+      ]
+    },
+    {
+      "id": "MaxHelpingHand/CustomTutorialWithNoBird",
+      "kind": "entity",
+      "occurrences": 1,
+      "providers": [
+        "MaxHelpingHand"
+      ]
+    },
+    {
+      "id": "MaxHelpingHand/FlagExitBlock",
+      "kind": "entity",
+      "occurrences": 7,
+      "providers": [
+        "MaxHelpingHand"
+      ]
+    },
+    {
+      "id": "MaxHelpingHand/MoreCustomNPC",
+      "kind": "entity",
+      "occurrences": 1,
+      "providers": [
+        "MaxHelpingHand"
+      ]
+    },
+    {
+      "id": "MaxHelpingHand/ParallaxFadeOutController",
+      "kind": "entity",
+      "occurrences": 1,
+      "providers": [
+        "MaxHelpingHand"
+      ]
+    },
+    {
+      "id": "MaxHelpingHand/RainbowSpinnerColorAreaController",
+      "kind": "entity",
+      "occurrences": 1,
+      "providers": [
+        "MaxHelpingHand"
+      ]
+    },
+    {
+      "id": "MaxHelpingHand/SidewaysJumpThru",
+      "kind": "entity",
+      "occurrences": 3,
+      "providers": [
+        "MaxHelpingHand"
+      ]
+    },
+    {
+      "id": "MaxHelpingHand/StylegroundFadeController",
+      "kind": "entity",
+      "occurrences": 1,
+      "providers": [
+        "MaxHelpingHand"
+      ]
+    },
+    {
+      "id": "SJ2021/AllInOneMask",
+      "kind": "entity",
+      "occurrences": 8,
+      "providers": [
+        "StrawberryJam2021"
+      ]
+    },
+    {
+      "id": "SJ2021/BloomMask",
+      "kind": "entity",
+      "occurrences": 3,
+      "providers": [
+        "StrawberryJam2021"
+      ]
+    },
+    {
+      "id": "SJ2021/GlowController",
+      "kind": "entity",
+      "occurrences": 1,
+      "providers": [
+        "StrawberryJam2021"
+      ]
+    },
+    {
+      "id": "SJ2021/StrawberryJamJar",
+      "kind": "entity",
+      "occurrences": 21,
+      "providers": [
+        "StrawberryJam2021"
+      ]
+    },
+    {
+      "id": "SJ2021/StylegroundMask",
+      "kind": "entity",
+      "occurrences": 39,
+      "providers": [
+        "StrawberryJam2021"
+      ]
+    },
+    {
+      "id": "VivHelper/CustomHangingLamp",
+      "kind": "entity",
+      "occurrences": 7,
+      "providers": [
+        "VivHelper"
+      ]
+    },
+    {
+      "id": "VivHelper/CustomSpinner",
+      "kind": "entity",
+      "occurrences": 14,
+      "providers": [
+        "VivHelper"
+      ]
+    },
+    {
+      "id": "VortexHelper/AttachedJumpThru",
+      "kind": "entity",
+      "occurrences": 2,
+      "providers": [
+        "VortexHelper"
+      ]
+    },
+    {
+      "id": "XaphanHelper/Slope",
+      "kind": "entity",
+      "occurrences": 14,
+      "providers": [
+        "XaphanHelper"
+      ]
+    },
+    {
+      "id": "YetAnotherHelper/BubbleField",
+      "kind": "entity",
+      "occurrences": 4,
+      "providers": [
+        "YetAnotherHelper"
+      ]
+    },
+    {
+      "id": "pandorasBox/coloredBigWaterfall",
+      "kind": "entity",
+      "occurrences": 2,
+      "providers": [
+        "PandorasBox"
+      ]
+    },
+    {
+      "id": "pandorasBox/coloredWater",
+      "kind": "entity",
+      "occurrences": 54,
+      "providers": [
+        "PandorasBox"
+      ]
+    },
+    {
+      "id": "pandorasBox/coloredWaterfall",
+      "kind": "entity",
+      "occurrences": 30,
+      "providers": [
+        "PandorasBox"
+      ]
+    },
+    {
+      "id": "pandorasBox/entityActivator",
+      "kind": "entity",
+      "occurrences": 3,
+      "providers": [
+        "PandorasBox"
+      ]
+    },
+    {
+      "id": "CollabUtils2/ChapterPanelTrigger",
+      "kind": "trigger",
+      "occurrences": 2,
+      "providers": [
+        "CollabUtils2"
+      ]
+    },
+    {
+      "id": "CollabUtils2/JournalTrigger",
+      "kind": "trigger",
+      "occurrences": 9,
+      "providers": [
+        "CollabUtils2"
+      ]
+    },
+    {
+      "id": "CollabUtils2/MiniHeartDoorUnlockCutsceneTrigger",
+      "kind": "trigger",
+      "occurrences": 1,
+      "providers": [
+        "CollabUtils2"
+      ]
+    },
+    {
+      "id": "CollabUtils2/RainbowBerryUnlockCutsceneTrigger",
+      "kind": "trigger",
+      "occurrences": 1,
+      "providers": [
+        "CollabUtils2"
+      ]
+    },
+    {
+      "id": "ContortHelper/MadelineSpotlightModifierTrigger",
+      "kind": "trigger",
+      "occurrences": 3,
+      "providers": [
+        "ContortHelper"
+      ]
+    },
+    {
+      "id": "DJMapHelper/colorGradeTrigger",
+      "kind": "trigger",
+      "occurrences": 7,
+      "providers": [
+        "DJMapHelper"
+      ]
+    },
+    {
+      "id": "ExtendedVariantMode/FloatExtendedVariantFadeTrigger",
+      "kind": "trigger",
+      "occurrences": 3,
+      "providers": [
+        "ExtendedVariantMode"
+      ]
+    },
+    {
+      "id": "ExtendedVariantMode/ResetVariantsTrigger",
+      "kind": "trigger",
+      "occurrences": 1,
+      "providers": [
+        "ExtendedVariantMode"
+      ]
+    },
+    {
+      "id": "FrostHelper/OnSpawnActivator",
+      "kind": "trigger",
+      "occurrences": 1,
+      "providers": [
+        "FrostHelper"
+      ]
+    },
+    {
+      "id": "HonlyHelper/CameraTargetCrossfadeTrigger",
+      "kind": "trigger",
+      "occurrences": 3,
+      "providers": [
+        "HonlyHelper"
+      ]
+    },
+    {
+      "id": "MaxHelpingHand/CameraCatchupSpeedTrigger",
+      "kind": "trigger",
+      "occurrences": 2,
+      "providers": [
+        "MaxHelpingHand"
+      ]
+    },
+    {
+      "id": "MaxHelpingHand/CameraOffsetBorder",
+      "kind": "trigger",
+      "occurrences": 42,
+      "providers": [
+        "MaxHelpingHand"
+      ]
+    },
+    {
+      "id": "MaxHelpingHand/ColorGradeFadeTrigger",
+      "kind": "trigger",
+      "occurrences": 18,
+      "providers": [
+        "MaxHelpingHand"
+      ]
+    },
+    {
+      "id": "MaxHelpingHand/FlagToggleCameraOffsetTrigger",
+      "kind": "trigger",
+      "occurrences": 9,
+      "providers": [
+        "MaxHelpingHand"
+      ]
+    },
+    {
+      "id": "MaxHelpingHand/FlagToggleSmoothCameraOffsetTrigger",
+      "kind": "trigger",
+      "occurrences": 5,
+      "providers": [
+        "MaxHelpingHand"
+      ]
+    },
+    {
+      "id": "everest/flagTrigger",
+      "kind": "trigger",
+      "occurrences": 109,
+      "providers": [
+        "EverestCore"
+      ]
+    },
+    {
+      "id": "everest/smoothCameraOffsetTrigger",
+      "kind": "trigger",
+      "occurrences": 23,
+      "providers": [
+        "EverestCore"
+      ]
+    },
+    {
+      "id": "vitellary/bloomstrengthtrigger",
+      "kind": "trigger",
+      "occurrences": 9,
+      "providers": [
+        "CrystallineHelper"
+      ]
+    },
+    {
+      "id": "vitellary/editdepthtrigger",
+      "kind": "trigger",
+      "occurrences": 43,
+      "providers": [
+        "CrystallineHelper"
+      ]
+    },
+    {
+      "id": "vitellary/triggertrigger",
+      "kind": "trigger",
+      "occurrences": 1,
+      "providers": [
+        "CrystallineHelper"
+      ]
+    }
+  ],
+  "fileBytes": 674648,
+  "guardEvidence": {
+    "decalCount": 7064,
+    "groupedParallaxDecalCount": 0,
+    "stylegroundTagSets": [
+      "sjstylemask_BHS",
+      "sjstylemask_BeginnerLobbyFalls",
+      "sjstylemask_Hanky",
+      "sjstylemask_lobby_azure_caverns_stylegrounds",
+      "sjstylemask_lobby_beginner_aquatic_stylegrounds",
+      "sjstylemask_lobby_beginner_cave",
+      "sjstylemask_lobby_cassette_cliffs_stylegrounds",
+      "sjstylemask_lobby_collapsing_stylegrounds",
+      "sjstylemask_lobby_coresaken_city_stylegrounds",
+      "sjstylemask_lobby_dropzle_stylegrounds",
+      "sjstylemask_lobby_forest_path_stylegrounds",
+      "sjstylemask_lobby_if_my_driveway_stylegrounds",
+      "sjstylemask_lobby_loopy_lagoon_stylegrounds",
+      "sjstylemask_lobby_midnight_spire_stylegrounds",
+      "sjstylemask_lobby_potential_for_anything_stylegrounds",
+      "sjstylemask_lobby_rose_garden_stylegrounds",
+      "sjstylemask_lobby_seeing_is_believing_stylegrounds",
+      "sjstylemask_lobby_soap_stylegrounds",
+      "sjstylemask_lobby_strawberry_orchard_stylegrounds",
+      "sjstylemask_lobby_switchtube_vista_stylegrounds",
+      "sjstylemask_lobby_treehive_stylegrounds",
+      "sjstylemask_mosscairn",
+      "sjstylemask_otc",
+      "sjstylemask_squeeze_stylegrounds",
+      "sjstylemask_troposphere_stylegrounds"
+    ],
+    "taggedVanillaHeatWaveCount": 0
+  },
+  "helperRootFeatures": [
+    {
+      "attributeSequenceSha256": "232b159df234df305553a683174f86529a70296a8cb1c7d63c3955a61fdb71c6",
+      "distinctAttributes": [
+        {
+          "left": true,
+          "spriteDirectory": "JungleHelper/Moss"
+        },
+        {
+          "left": false,
+          "spriteDirectory": "JungleHelper/Moss"
+        }
+      ],
+      "id": "JungleHelper/MossyWall",
+      "kind": "entity",
+      "occurrences": 209
+    },
+    {
+      "attributeSequenceSha256": "fa9215c4e5c19eca65397ee0b07012e54d43ecfc9ebb5148af5475c39f6d0d55",
+      "distinctAttributes": [
+        {
+          "addBaseLight": true,
+          "bloomBaseFrom": 0,
+          "bloomBaseTo": 0,
+          "bloomStrengthFrom": 1,
+          "bloomStrengthTo": 1,
+          "colorGradeFadeFrom": 0,
+          "colorGradeFadeTo": 0,
+          "colorGradeFrom": "(current)",
+          "colorGradeTo": "(current)",
+          "customFade": "circle",
+          "entityRenderer": false,
+          "fade": "None",
+          "flag": "",
+          "lightingFrom": -1,
+          "lightingTo": -1,
+          "notFlag": false,
+          "scrollX": 0,
+          "scrollY": 0,
+          "styleAlphaFrom": 0,
+          "styleAlphaTo": 1,
+          "styleBehindFg": true,
+          "stylemaskTag": ""
+        },
+        {
+          "addBaseLight": true,
+          "bloomBaseFrom": -1,
+          "bloomBaseTo": -1,
+          "bloomStrengthFrom": -1,
+          "bloomStrengthTo": -1,
+          "colorGradeFadeFrom": 0,
+          "colorGradeFadeTo": 0,
+          "colorGradeFrom": "(current)",
+          "colorGradeTo": "(current)",
+          "customFade": "circle",
+          "entityRenderer": false,
+          "fade": "None",
+          "flag": "",
+          "lightingFrom": -1,
+          "lightingTo": -1,
+          "notFlag": false,
+          "scrollX": 0,
+          "scrollY": 0,
+          "styleAlphaFrom": 0,
+          "styleAlphaTo": 1,
+          "styleBehindFg": true,
+          "stylemaskTag": "BHS"
+        },
+        {
+          "addBaseLight": true,
+          "bloomBaseFrom": -1,
+          "bloomBaseTo": -1,
+          "bloomStrengthFrom": -1,
+          "bloomStrengthTo": -1,
+          "colorGradeFadeFrom": 0,
+          "colorGradeFadeTo": 1,
+          "colorGradeFrom": "(current)",
+          "colorGradeTo": "(current)",
+          "customFade": "circle",
+          "entityRenderer": false,
+          "fade": "LeftToRight",
+          "flag": "",
+          "lightingFrom": -1,
+          "lightingTo": -1,
+          "notFlag": false,
+          "scrollX": 0,
+          "scrollY": 0,
+          "styleAlphaFrom": 0,
+          "styleAlphaTo": 1,
+          "styleBehindFg": true,
+          "stylemaskTag": "Hanky"
+        },
+        {
+          "addBaseLight": true,
+          "bloomBaseFrom": -1,
+          "bloomBaseTo": -1,
+          "bloomStrengthFrom": -1,
+          "bloomStrengthTo": -1,
+          "colorGradeFadeFrom": 0,
+          "colorGradeFadeTo": 1,
+          "colorGradeFrom": "(current)",
+          "colorGradeTo": "(current)",
+          "customFade": "circle",
+          "entityRenderer": false,
+          "fade": "None",
+          "flag": "",
+          "lightingFrom": -1,
+          "lightingTo": -1,
+          "notFlag": false,
+          "scrollX": 0,
+          "scrollY": 0,
+          "styleAlphaFrom": 0,
+          "styleAlphaTo": 1,
+          "styleBehindFg": true,
+          "stylemaskTag": "Hanky"
+        },
+        {
+          "addBaseLight": true,
+          "bloomBaseFrom": -1,
+          "bloomBaseTo": -1,
+          "bloomStrengthFrom": -1,
+          "bloomStrengthTo": -1,
+          "colorGradeFadeFrom": 0,
+          "colorGradeFadeTo": 1,
+          "colorGradeFrom": "(current)",
+          "colorGradeTo": "(current)",
+          "customFade": "circle",
+          "entityRenderer": false,
+          "fade": "RightToLeft",
+          "flag": "",
+          "lightingFrom": -1,
+          "lightingTo": -1,
+          "notFlag": false,
+          "scrollX": 0,
+          "scrollY": 0,
+          "styleAlphaFrom": 0,
+          "styleAlphaTo": 1,
+          "styleBehindFg": true,
+          "stylemaskTag": "Hanky"
+        },
+        {
+          "addBaseLight": true,
+          "bloomBaseFrom": 0,
+          "bloomBaseTo": 0,
+          "bloomStrengthFrom": 1,
+          "bloomStrengthTo": 1,
+          "colorGradeFadeFrom": 0,
+          "colorGradeFadeTo": 0,
+          "colorGradeFrom": "(current)",
+          "colorGradeTo": "(current)",
+          "customFade": "circle",
+          "entityRenderer": false,
+          "fade": "None",
+          "flag": "",
+          "lightingFrom": -1,
+          "lightingTo": -1,
+          "notFlag": false,
+          "scrollX": 0,
+          "scrollY": 0,
+          "styleAlphaFrom": 0,
+          "styleAlphaTo": 1,
+          "styleBehindFg": true,
+          "stylemaskTag": "-"
+        }
+      ],
+      "id": "SJ2021/AllInOneMask",
+      "kind": "entity",
+      "occurrences": 8
+    },
+    {
+      "attributeSequenceSha256": "bfa325aced10b7d9f6766c33c1bc10db71f71a3d5a9e5d81ced9e0e1ca3219a9",
+      "distinctAttributes": [
+        {
+          "baseFrom": -1,
+          "baseTo": -1,
+          "customFade": "circle",
+          "fade": "None",
+          "flag": "",
+          "notFlag": false,
+          "scrollX": 0,
+          "scrollY": 0,
+          "strengthFrom": 0,
+          "strengthTo": 0
+        }
+      ],
+      "id": "SJ2021/BloomMask",
+      "kind": "entity",
+      "occurrences": 3
+    },
+    {
+      "attributeSequenceSha256": "5b6cd0f93c1ed36111e53120f63eba234403b0e4dceba0d2849fc2a2bb388989",
+      "distinctAttributes": [
+        {
+          "bloomAlpha": 1,
+          "bloomBlacklist": "",
+          "bloomOffsetX": 0,
+          "bloomOffsetY": 0,
+          "bloomRadius": 8,
+          "bloomWhitelist": "",
+          "lightAlpha": 1,
+          "lightBlacklist": "",
+          "lightColor": "FFFFFF",
+          "lightEndFade": 48,
+          "lightOffsetX": 0,
+          "lightOffsetY": 0,
+          "lightStartFade": 24,
+          "lightWhitelist": ""
+        }
+      ],
+      "id": "SJ2021/GlowController",
+      "kind": "entity",
+      "occurrences": 1
+    },
+    {
+      "attributeSequenceSha256": "a7133a33033046a3d503ba7d672428da93e00b9b4d030c165226f55d98482c6a",
+      "distinctAttributes": [
+        {
+          "allowSaving": true,
+          "map": "StrawberryJam2021/1-Beginner/Eclipse",
+          "returnToLobbyMode": "SetReturnToHere",
+          "sprite": "beginner"
+        },
+        {
+          "allowSaving": true,
+          "map": "StrawberryJam2021/1-Beginner/skeleton",
+          "returnToLobbyMode": "SetReturnToHere",
+          "sprite": "beginner"
+        },
+        {
+          "allowSaving": true,
+          "map": "StrawberryJam2021/1-Beginner/Owen-Shirrell",
+          "returnToLobbyMode": "SetReturnToHere",
+          "sprite": "beginner"
+        },
+        {
+          "allowSaving": true,
+          "map": "StrawberryJam2021/1-Beginner/HankyMueller",
+          "returnToLobbyMode": "SetReturnToHere",
+          "sprite": "beginner"
+        },
+        {
+          "allowSaving": true,
+          "map": "StrawberryJam2021/1-Beginner/cellularAutomaton",
+          "returnToLobbyMode": "SetReturnToHere",
+          "sprite": "beginner"
+        },
+        {
+          "allowSaving": true,
+          "map": "StrawberryJam2021/1-Beginner/CoupCritik",
+          "returnToLobbyMode": "SetReturnToHere",
+          "sprite": "beginner"
+        },
+        {
+          "allowSaving": true,
+          "map": "StrawberryJam2021/1-Beginner/Bing_Over_Google",
+          "returnToLobbyMode": "SetReturnToHere",
+          "sprite": "beginner"
+        },
+        {
+          "allowSaving": true,
+          "map": "StrawberryJam2021/1-Beginner/Circumplex",
+          "returnToLobbyMode": "SetReturnToHere",
+          "sprite": "beginner"
+        },
+        {
+          "allowSaving": true,
+          "map": "StrawberryJam2021/1-Beginner/snas",
+          "returnToLobbyMode": "SetReturnToHere",
+          "sprite": "beginner"
+        },
+        {
+          "allowSaving": true,
+          "map": "StrawberryJam2021/1-Beginner/hyperlife",
+          "returnToLobbyMode": "SetReturnToHere",
+          "sprite": "beginner"
+        },
+        {
+          "allowSaving": true,
+          "map": "StrawberryJam2021/1-Beginner/coffe",
+          "returnToLobbyMode": "SetReturnToHere",
+          "sprite": "beginner"
+        },
+        {
+          "allowSaving": true,
+          "map": "StrawberryJam2021/1-Beginner/joltik",
+          "returnToLobbyMode": "SetReturnToHere",
+          "sprite": "beginner"
+        },
+        {
+          "allowSaving": true,
+          "map": "StrawberryJam2021/1-Beginner/Ceph",
+          "returnToLobbyMode": "SetReturnToHere",
+          "sprite": "beginner"
+        },
+        {
+          "allowSaving": true,
+          "map": "StrawberryJam2021/1-Beginner/mosscairn",
+          "returnToLobbyMode": "SetReturnToHere",
+          "sprite": "beginner"
+        },
+        {
+          "allowSaving": true,
+          "map": "StrawberryJam2021/1-Beginner/Jadeturtle",
+          "returnToLobbyMode": "SetReturnToHere",
+          "sprite": "beginner"
+        },
+        {
+          "allowSaving": true,
+          "map": "StrawberryJam2021/1-Beginner/Flagpole1up",
+          "returnToLobbyMode": "SetReturnToHere",
+          "sprite": "beginner"
+        },
+        {
+          "allowSaving": true,
+          "map": "StrawberryJam2021/1-Beginner/frozenflygone",
+          "returnToLobbyMode": "SetReturnToHere",
+          "sprite": "beginner"
+        },
+        {
+          "allowSaving": true,
+          "map": "StrawberryJam2021/1-Beginner/Quinnigan",
+          "returnToLobbyMode": "SetReturnToHere",
+          "sprite": "beginner"
+        },
+        {
+          "allowSaving": true,
+          "map": "StrawberryJam2021/1-Beginner/asteriskblue",
+          "returnToLobbyMode": "SetReturnToHere",
+          "sprite": "beginner"
+        },
+        {
+          "allowSaving": true,
+          "map": "StrawberryJam2021/1-Beginner/voliver9",
+          "returnToLobbyMode": "SetReturnToHere",
+          "sprite": "beginner"
+        },
+        {
+          "allowSaving": true,
+          "map": "StrawberryJam2021/1-Beginner/NotYourBadeline",
+          "returnToLobbyMode": "SetReturnToHere",
+          "sprite": "beginner"
+        }
+      ],
+      "id": "SJ2021/StrawberryJamJar",
+      "kind": "entity",
+      "occurrences": 21
+    },
+    {
+      "attributeSequenceSha256": "41a930e9f049111f110813531eb62f6d44b5fef1987e8a18565c9a32c44ec4e0",
+      "distinctAttributes": [
+        {
+          "alphaFrom": 0,
+          "alphaTo": 1,
+          "behindFg": true,
+          "customFade": "circle",
+          "entityRenderer": false,
+          "fade": "None",
+          "flag": "",
+          "notFlag": false,
+          "scrollX": 0,
+          "scrollY": 0,
+          "tag": "lobby_midnight_spire_stylegrounds"
+        },
+        {
+          "alphaFrom": 1,
+          "alphaTo": 1,
+          "behindFg": true,
+          "customFade": "",
+          "entityRenderer": false,
+          "fade": "None",
+          "flag": "",
+          "notFlag": false,
+          "scrollX": 0,
+          "scrollY": 0,
+          "tag": "lobby_potential_for_anything_stylegrounds"
+        },
+        {
+          "alphaFrom": 1,
+          "alphaTo": 1,
+          "behindFg": true,
+          "customFade": "circle",
+          "entityRenderer": false,
+          "fade": "None",
+          "flag": "",
+          "notFlag": false,
+          "scrollX": 0,
+          "scrollY": 0,
+          "tag": "lobby_treehive_stylegrounds"
+        },
+        {
+          "alphaFrom": 1,
+          "alphaTo": 1,
+          "behindFg": true,
+          "customFade": "circle",
+          "entityRenderer": false,
+          "fade": "None",
+          "flag": "",
+          "notFlag": false,
+          "scrollX": 0,
+          "scrollY": 0,
+          "tag": "lobby_cassette_cliffs_stylegrounds"
+        },
+        {
+          "alphaFrom": 0,
+          "alphaTo": 1,
+          "behindFg": true,
+          "customFade": "circle",
+          "entityRenderer": false,
+          "fade": "LeftToRight",
+          "flag": "",
+          "notFlag": false,
+          "scrollX": 0,
+          "scrollY": 0,
+          "tag": "lobby_treehive_stylegrounds"
+        },
+        {
+          "alphaFrom": 1,
+          "alphaTo": 1,
+          "behindFg": true,
+          "customFade": "circle",
+          "entityRenderer": false,
+          "fade": "None",
+          "flag": "",
+          "notFlag": false,
+          "scrollX": 0,
+          "scrollY": 0,
+          "tag": "lobby_switchtube_vista_stylegrounds"
+        },
+        {
+          "alphaFrom": 1,
+          "alphaTo": 1,
+          "behindFg": true,
+          "customFade": "circle",
+          "entityRenderer": false,
+          "fade": "None",
+          "flag": "",
+          "notFlag": false,
+          "scrollX": 0,
+          "scrollY": 0,
+          "tag": "lobby_strawberry_orchard_stylegrounds"
+        },
+        {
+          "alphaFrom": 1,
+          "alphaTo": 0,
+          "behindFg": true,
+          "customFade": "circle",
+          "entityRenderer": false,
+          "fade": "LeftToRight",
+          "flag": "",
+          "notFlag": false,
+          "scrollX": 0,
+          "scrollY": 0,
+          "tag": "lobby_cassette_cliffs_stylegrounds"
+        },
+        {
+          "alphaFrom": 0,
+          "alphaTo": 1,
+          "behindFg": true,
+          "customFade": "circle",
+          "entityRenderer": false,
+          "fade": "None",
+          "flag": "",
+          "notFlag": false,
+          "scrollX": 0,
+          "scrollY": 0,
+          "tag": "lobby_dropzle_stylegrounds"
+        },
+        {
+          "alphaFrom": 1,
+          "alphaTo": 1,
+          "behindFg": true,
+          "customFade": "circle",
+          "entityRenderer": false,
+          "fade": "None",
+          "flag": "",
+          "notFlag": false,
+          "scrollX": 0,
+          "scrollY": 0,
+          "tag": "lobby_coresaken_city_stylegrounds"
+        },
+        {
+          "alphaFrom": 1,
+          "alphaTo": 1,
+          "behindFg": true,
+          "customFade": "circle",
+          "entityRenderer": false,
+          "fade": "None",
+          "flag": "",
+          "notFlag": false,
+          "scrollX": 0,
+          "scrollY": 0,
+          "tag": "BeginnerLobbyFalls"
+        },
+        {
+          "alphaFrom": 0,
+          "alphaTo": 1,
+          "behindFg": true,
+          "customFade": "circle",
+          "entityRenderer": false,
+          "fade": "None",
+          "flag": "",
+          "notFlag": false,
+          "scrollX": 0,
+          "scrollY": 0,
+          "tag": "lobby_collapsing_stylegrounds"
+        },
+        {
+          "alphaFrom": 1,
+          "alphaTo": 1,
+          "behindFg": true,
+          "customFade": "circle",
+          "entityRenderer": false,
+          "fade": "None",
+          "flag": "",
+          "notFlag": false,
+          "scrollX": 0,
+          "scrollY": 0,
+          "tag": "lobby_loopy_lagoon_stylegrounds"
+        },
+        {
+          "alphaFrom": 0.004999999888241291,
+          "alphaTo": 1,
+          "behindFg": true,
+          "customFade": "circle",
+          "entityRenderer": false,
+          "fade": "BottomToTop",
+          "flag": "",
+          "notFlag": false,
+          "scrollX": 0,
+          "scrollY": 0,
+          "tag": "lobby_potential_for_anything_stylegrounds"
+        },
+        {
+          "alphaFrom": 1,
+          "alphaTo": 1,
+          "behindFg": true,
+          "customFade": "circle",
+          "entityRenderer": false,
+          "fade": "None",
+          "flag": "",
+          "notFlag": false,
+          "scrollX": 0,
+          "scrollY": 0,
+          "tag": "lobby_soap_stylegrounds"
+        },
+        {
+          "alphaFrom": 0,
+          "alphaTo": 1,
+          "behindFg": true,
+          "customFade": "circle",
+          "entityRenderer": false,
+          "fade": "None",
+          "flag": "",
+          "notFlag": false,
+          "scrollX": 0,
+          "scrollY": 0,
+          "tag": "mosscairn"
+        },
+        {
+          "alphaFrom": 1,
+          "alphaTo": 1,
+          "behindFg": true,
+          "customFade": "circle",
+          "entityRenderer": false,
+          "fade": "None",
+          "flag": "",
+          "notFlag": false,
+          "scrollX": 0,
+          "scrollY": 0,
+          "tag": "lobby_rose_garden_stylegrounds"
+        },
+        {
+          "alphaFrom": 1,
+          "alphaTo": 1,
+          "behindFg": true,
+          "customFade": "circle",
+          "entityRenderer": false,
+          "fade": "None",
+          "flag": "",
+          "notFlag": false,
+          "scrollX": 0,
+          "scrollY": 0,
+          "tag": "lobby_if_my_driveway_stylegrounds"
+        },
+        {
+          "alphaFrom": 1,
+          "alphaTo": 1,
+          "behindFg": true,
+          "customFade": "circle",
+          "entityRenderer": false,
+          "fade": "None",
+          "flag": "",
+          "notFlag": false,
+          "scrollX": 0,
+          "scrollY": 0,
+          "tag": "lobby_seeing_is_believing_stylegrounds"
+        },
+        {
+          "alphaFrom": 0,
+          "alphaTo": 1,
+          "behindFg": true,
+          "customFade": "circle",
+          "entityRenderer": false,
+          "fade": "None",
+          "flag": "",
+          "notFlag": false,
+          "scrollX": 0,
+          "scrollY": 0,
+          "tag": "otc"
+        },
+        {
+          "alphaFrom": 0,
+          "alphaTo": 1,
+          "behindFg": true,
+          "customFade": "circle",
+          "entityRenderer": false,
+          "fade": "None",
+          "flag": "",
+          "notFlag": false,
+          "scrollX": 0,
+          "scrollY": 0,
+          "tag": "lobby_beginner_aquatic_stylegrounds"
+        },
+        {
+          "alphaFrom": 1,
+          "alphaTo": 0,
+          "behindFg": true,
+          "customFade": "circle",
+          "entityRenderer": false,
+          "fade": "RightToLeft",
+          "flag": "",
+          "notFlag": false,
+          "scrollX": 0,
+          "scrollY": 0,
+          "tag": "lobby_soap_stylegrounds"
+        },
+        {
+          "alphaFrom": 1,
+          "alphaTo": 1,
+          "behindFg": true,
+          "customFade": "circle",
+          "entityRenderer": false,
+          "fade": "None",
+          "flag": "",
+          "notFlag": false,
+          "scrollX": 0,
+          "scrollY": 0,
+          "tag": "lobby_forest_path_stylegrounds"
+        },
+        {
+          "alphaFrom": 1,
+          "alphaTo": 0,
+          "behindFg": true,
+          "customFade": "circle",
+          "entityRenderer": false,
+          "fade": "LeftToRight",
+          "flag": "",
+          "notFlag": false,
+          "scrollX": 0,
+          "scrollY": 0,
+          "tag": "lobby_loopy_lagoon_stylegrounds"
+        },
+        {
+          "alphaFrom": 1,
+          "alphaTo": 1,
+          "behindFg": true,
+          "customFade": "circle",
+          "entityRenderer": false,
+          "fade": "None",
+          "flag": "",
+          "notFlag": false,
+          "scrollX": 0,
+          "scrollY": 0,
+          "tag": "squeeze_stylegrounds"
+        },
+        {
+          "alphaFrom": 1,
+          "alphaTo": 1,
+          "behindFg": true,
+          "customFade": "circle",
+          "entityRenderer": false,
+          "fade": "None",
+          "flag": "",
+          "notFlag": false,
+          "scrollX": 0,
+          "scrollY": 0,
+          "tag": "lobby_azure_caverns_stylegrounds"
+        },
+        {
+          "alphaFrom": 0.004999999888241291,
+          "alphaTo": 1,
+          "behindFg": true,
+          "customFade": "circle",
+          "entityRenderer": false,
+          "fade": "BottomToTop",
+          "flag": "",
+          "notFlag": false,
+          "scrollX": 0,
+          "scrollY": 0,
+          "tag": "lobby_rose_garden_stylegrounds"
+        },
+        {
+          "alphaFrom": 1,
+          "alphaTo": 1,
+          "behindFg": true,
+          "customFade": "circle",
+          "entityRenderer": false,
+          "fade": "None",
+          "flag": "",
+          "notFlag": false,
+          "scrollX": 0,
+          "scrollY": 0,
+          "tag": "troposphere_stylegrounds"
+        },
+        {
+          "alphaFrom": 1,
+          "alphaTo": 1,
+          "behindFg": true,
+          "customFade": "circle",
+          "entityRenderer": false,
+          "fade": "None",
+          "flag": "",
+          "notFlag": false,
+          "scrollX": 0,
+          "scrollY": 0,
+          "tag": "lobby_dropzle_stylegrounds"
+        },
+        {
+          "alphaFrom": 1,
+          "alphaTo": 0,
+          "behindFg": true,
+          "customFade": "",
+          "entityRenderer": false,
+          "fade": "LeftToRight",
+          "flag": "",
+          "notFlag": false,
+          "scrollX": 0,
+          "scrollY": 0,
+          "tag": "lobby_coresaken_city_stylegrounds"
+        }
+      ],
+      "id": "SJ2021/StylegroundMask",
+      "kind": "entity",
+      "occurrences": 39
+    },
+    {
+      "attributeSequenceSha256": "f8baaceff97595144ad06f8a275713623091353da8f9c4131e6137ec51402ac3",
+      "distinctAttributes": [
+        {
+          "activationMode": "Always",
+          "direction": "Left",
+          "flag": "bubble_push_field",
+          "liftOffOfGround": true,
+          "strength": 1.5
+        },
+        {
+          "activationMode": "Always",
+          "direction": "Right",
+          "flag": "bubble_push_field",
+          "liftOffOfGround": true,
+          "strength": 1.5
+        }
+      ],
+      "id": "YetAnotherHelper/BubbleField",
+      "kind": "entity",
+      "occurrences": 4
+    },
+    {
+      "attributeSequenceSha256": "23b7083dca2da578f2119969fc2490f8256b117d04385744aa1d9b2ffc7a5b3a",
+      "distinctAttributes": [
+        {
+          "alpha": 1,
+          "color": "White",
+          "delay": 0,
+          "duration": 0.19999998807907104,
+          "easer": "CubeInOut",
+          "endFade": 64,
+          "flagsAfterInvoke": "",
+          "neededFlags": "",
+          "occurOnEnter": true,
+          "oneUse": false,
+          "persistent": false,
+          "startFade": 32
+        },
+        {
+          "alpha": 0,
+          "color": "White",
+          "delay": 0,
+          "duration": 0.19999998807907104,
+          "easer": "CubeInOut",
+          "endFade": 0,
+          "flagsAfterInvoke": "",
+          "neededFlags": "",
+          "occurOnEnter": true,
+          "oneUse": false,
+          "persistent": false,
+          "startFade": 0
+        },
+        {
+          "alpha": 0.699999988079071,
+          "color": "White",
+          "delay": 0,
+          "duration": 0.19999998807907104,
+          "easer": "CubeInOut",
+          "endFade": 64,
+          "flagsAfterInvoke": "",
+          "neededFlags": "",
+          "occurOnEnter": true,
+          "oneUse": false,
+          "persistent": false,
+          "startFade": 32
+        }
+      ],
+      "id": "ContortHelper/MadelineSpotlightModifierTrigger",
+      "kind": "trigger",
+      "occurrences": 3
+    },
+    {
+      "attributeSequenceSha256": "74bac57ce7ea50c561cc8f3d646713057c3e3d92d9c318b957e3de84c992b50e",
+      "distinctAttributes": [
+        {
+          "positionMode": "BottomToTop",
+          "revertOnDeath": false,
+          "valueA": 0.800000011920929,
+          "valueB": 1,
+          "variantChange": "BackgroundBrightness"
+        },
+        {
+          "positionMode": "LeftToRight",
+          "revertOnDeath": false,
+          "valueA": 0.800000011920929,
+          "valueB": 1,
+          "variantChange": "BackgroundBrightness"
+        },
+        {
+          "positionMode": "NoEffect",
+          "revertOnDeath": false,
+          "valueA": 0.800000011920929,
+          "valueB": 0.800000011920929,
+          "variantChange": "BackgroundBrightness"
+        }
+      ],
+      "id": "ExtendedVariantMode/FloatExtendedVariantFadeTrigger",
+      "kind": "trigger",
+      "occurrences": 3
+    },
+    {
+      "attributeSequenceSha256": "b26cbaa4e3f99b43e667c370c864de067c8f332eeff3235990ce944eb7c1c841",
+      "distinctAttributes": [
+        {
+          "extended": true,
+          "vanilla": true
+        }
+      ],
+      "id": "ExtendedVariantMode/ResetVariantsTrigger",
+      "kind": "trigger",
+      "occurrences": 1
+    }
+  ],
+  "journalTriggers": [
+    {
+      "attributes": {
+        "levelset": "StrawberryJam2021/1-Beginner",
+        "showOnlyDiscovered": false,
+        "vanillaJournal": false
+      },
+      "entityId": 1198,
+      "room": "sj2021beginnerlobby"
+    },
+    {
+      "attributes": {
+        "levelset": "StrawberryJam2021/1-Beginner",
+        "showOnlyDiscovered": false,
+        "vanillaJournal": false
+      },
+      "entityId": 1199,
+      "room": "sj2021beginnerlobby"
+    },
+    {
+      "attributes": {
+        "levelset": "StrawberryJam2021/1-Beginner",
+        "showOnlyDiscovered": false,
+        "vanillaJournal": false
+      },
+      "entityId": 1200,
+      "room": "sj2021beginnerlobby"
+    },
+    {
+      "attributes": {
+        "levelset": "StrawberryJam2021/1-Beginner",
+        "showOnlyDiscovered": false,
+        "vanillaJournal": false
+      },
+      "entityId": 1201,
+      "room": "sj2021beginnerlobby"
+    },
+    {
+      "attributes": {
+        "levelset": "StrawberryJam2021/1-Beginner",
+        "showOnlyDiscovered": false,
+        "vanillaJournal": false
+      },
+      "entityId": 1202,
+      "room": "sj2021beginnerlobby"
+    },
+    {
+      "attributes": {
+        "levelset": "StrawberryJam2021/1-Beginner",
+        "showOnlyDiscovered": false,
+        "vanillaJournal": false
+      },
+      "entityId": 1204,
+      "room": "sj2021beginnerlobby"
+    },
+    {
+      "attributes": {
+        "levelset": "StrawberryJam2021/1-Beginner",
+        "showOnlyDiscovered": false,
+        "vanillaJournal": false
+      },
+      "entityId": 1205,
+      "room": "sj2021beginnerlobby"
+    },
+    {
+      "attributes": {
+        "levelset": "StrawberryJam2021/1-Beginner",
+        "showOnlyDiscovered": false,
+        "vanillaJournal": false
+      },
+      "entityId": 1206,
+      "room": "sj2021beginnerlobby"
+    },
+    {
+      "attributes": {
+        "levelset": "StrawberryJam2021/1-Beginner",
+        "showOnlyDiscovered": false,
+        "vanillaJournal": false
+      },
+      "entityId": 1209,
+      "room": "sj2021beginnerlobby"
+    }
+  ],
+  "lobbyMetadata": {
+    "backgroundMusic": "event:/sj21_levelselect",
+    "difficulty": "Beginner",
+    "sourceSha256": "d8110177870130c4a0003a310b0f2f06eb2836e5ecbd53f97658ee46a6db450f"
+  },
+  "manifestSha256": "fdd710714ca6280790d9bd70fbe22e0776b9a8b1abdc2c9bbca45e8eabd23092",
+  "packagedAsPlayableSlice": false,
+  "progressionCompatibilityId": "e9e4d8c99bdecded8a85516e723096abfa51340c7a1d00524c27686de3c9c9e6",
+  "providers": [
+    "BrokemiaHelper",
+    "CherryHelper",
+    "CollabUtils2",
+    "ContortHelper",
+    "CrystallineHelper",
+    "DJMapHelper",
+    "EverestCore",
+    "ExtendedVariantMode",
+    "FancyTileEntities",
+    "FemtoHelper",
+    "FlaglinesAndSuch",
+    "FrostHelper",
+    "HonlyHelper",
+    "JungleHelper",
+    "LunaticHelper",
+    "MaxHelpingHand",
+    "PandorasBox",
+    "StrawberryJam2021",
+    "VivHelper",
+    "VortexHelper",
+    "XaphanHelper",
+    "YetAnotherHelper"
+  ],
+  "roomCount": 1,
+  "rooms": [
+    "sj2021beginnerlobby"
+  ],
+  "schemaVersion": 1,
+  "sid": "StrawberryJam2021/0-Lobbies/1-Beginner",
+  "sourceMapSha256": "a4e3e20a2f0cc878fe43b32fb8025d7650b20cc6265f69e37bf3110a7cdf47c2",
+  "sourceModified": false,
+  "stage": "25K-E",
+  "vanillaEntityAndBackdropCounts": {
+    "bloomFadeTrigger": 42,
+    "booster": 26,
+    "cameraOffsetTrigger": 36,
+    "cameraTargetTrigger": 99,
+    "changeRespawnTrigger": 48,
+    "cobweb": 5,
+    "crumbleWallOnRumble": 2,
+    "dashBlock": 4,
+    "door": 5,
+    "fakeWall": 1,
+    "floatySpaceBlock": 54,
+    "flutterbird": 7,
+    "glassBlock": 3,
+    "godrays": 1,
+    "hanginglamp": 4,
+    "invisibleBarrier": 2,
+    "jumpThru": 95,
+    "lightFadeTrigger": 71,
+    "moveBlock": 1,
+    "musicFadeTrigger": 31,
+    "parallax": 202,
+    "playbackTutorial": 10,
+    "player": 52,
+    "rain": 5,
+    "resortLantern": 3,
+    "rumbleTrigger": 1,
+    "snowBg": 5,
+    "snowFg": 2,
+    "soundSource": 1,
+    "spawnFacingTrigger": 18,
+    "spikesDown": 4,
+    "spikesLeft": 1,
+    "spikesRight": 1,
+    "spikesUp": 3,
+    "spinner": 4,
+    "spring": 56,
+    "stardust": 1,
+    "starfield": 6,
+    "swapBlock": 2,
+    "torch": 2,
+    "wallBooster": 1,
+    "wallSpringLeft": 10,
+    "wallSpringRight": 13,
+    "wire": 3
+  }
+}

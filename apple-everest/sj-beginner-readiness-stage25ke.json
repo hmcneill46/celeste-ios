@@ -1,0 +1,379 @@
+{
+  "artifactSha256": "9079dfd0f4a934c2c34ed066c1baafd48e688bcebdc1affaede5087b083ce0fd",
+  "audioHandoffCount": 4,
+  "beginnerBlockerGroups": {
+    "remaining": [
+      "bounded multi-bank FMOD",
+      "CrystallineHelper/VortexHelper exact bounded mechanisms"
+    ],
+    "stage25kc": 7,
+    "stage25kd": 4,
+    "stage25ke": 2
+  },
+  "boundedStagesBeforeFirstSlice": 1,
+  "configuredOrdering": {
+    "class": "STATIC_CONFIGURED_DETOUR_SEQUENCE",
+    "evmNineSitesRemainRejected": true,
+    "lunaticFixturePlanSha256": "bfbae569352041d00d98c5792354bc403423566ad796a69912431392111a9895"
+  },
+  "customIdOccurrenceCoverage": {
+    "auditedLobbyAndBing": 920,
+    "closedByStage25keHelpers": 220,
+    "closedByStage25keRoot": 72,
+    "closedByStage25keSpecialBerry": 1,
+    "previouslyClosedOrVanilla": 572,
+    "remainingMechanismOccurrences": 55
+  },
+  "determinism": {
+    "closure": {
+      "appleApiSurfaceSha256": "d594dea86e944b468819818773f2177312445bbebe022bcbc7ea1ff779c8652c",
+      "contentLogicalSha256": "60091f1045188c19198813d9a047730d9c3c48c3a7d941d37395e986a5557425",
+      "hookTransformSha256": "194596dc3af274aa1aceb735d57518e1761808cd92f1c6a65fa88e3b53ebdef4",
+      "managedLogicalSha256": "e719bb72ad71d83d0ece6503d106f1ad69bba6123bc306434d41083191c9df99",
+      "moduleDurabilityClosureSha256": "b35d0cdb2ec208483b87a14448f16c59548be6d320b3ca519875d03618bb967d",
+      "registrySha256": "c26570a4b9ae76541624c85c9f425ccc92fabcba11577600a35477548c245b66",
+      "sharedClosureSha256": "9ae24c882bf931c29ad3967377217290fbbb48cc44b0f27f741a5f19a76150e5",
+      "staticSemanticRuntimePatchSha256": "b737d6820d6b54aa42240e320528d8d80d76e7e75516a9601cce3ef8eb25e22c"
+    },
+    "completeTreeCompared": true,
+    "fileCount": 743,
+    "omissionControlClosureSha256": "a6f8a54df875fb7fa81e2ed3d3d19df8cc9a145a48e2c475d806147d8f727b46",
+    "omissions": [
+      {
+        "closureSha256": "3a4b0d6ed07cf55e2cc4de1844f1a5b3dc612737e1dc415082a5e3d78871ba54",
+        "controlMapsIdentical": true,
+        "factoriesRemoved": [
+          "ContortHelper/MadelineSpotlightModifierTrigger"
+        ],
+        "managedCompile": true,
+        "omitted": "ContortHelper",
+        "sourcesRemoved": [
+          "AppleEverestContortSemantics.cs"
+        ],
+        "unrelatedPlansIdentical": true
+      },
+      {
+        "closureSha256": "51f68d7f13de6946cdcbc584d0bb5e8aaca9fcaf3608a08787a5eace0107e9e8",
+        "controlMapsIdentical": true,
+        "factoriesRemoved": [
+          "ExtendedVariantMode/FloatExtendedVariantFadeTrigger",
+          "ExtendedVariantMode/ResetVariantsTrigger"
+        ],
+        "managedCompile": true,
+        "omitted": "ExtendedVariantMode",
+        "sourcesRemoved": [
+          "AppleEverestVariantSemantics.cs"
+        ],
+        "unrelatedPlansIdentical": true
+      },
+      {
+        "closureSha256": "550dc0ba41fbd677183f87b199d98248c97bdb097de4fee5998eb98d5180b382",
+        "controlMapsIdentical": true,
+        "factoriesRemoved": [
+          "JungleHelper/MossyWall"
+        ],
+        "managedCompile": true,
+        "omitted": "JungleHelper",
+        "sourcesRemoved": [
+          "AppleEverestJungleSemantics.cs"
+        ],
+        "unrelatedPlansIdentical": true
+      },
+      {
+        "closureSha256": "57ab6739c824f5080a9d6fc4e6ae6f81fdf8d60045b9768741213550ac734a5b",
+        "controlMapsIdentical": true,
+        "factoriesRemoved": [
+          "YetAnotherHelper/BubbleField"
+        ],
+        "managedCompile": true,
+        "omitted": "YetAnotherHelper",
+        "sourcesRemoved": [
+          "AppleEverestBubbleSemantics.cs"
+        ],
+        "unrelatedPlansIdentical": true
+      }
+    ],
+    "runsIdentical": true,
+    "schemaVersion": 1,
+    "stage": "25K-E"
+  },
+  "hookGen": {
+    "appleApiMembersAfter": 30,
+    "appleApiMembersBefore": 30,
+    "broadPublicizer": false,
+    "catalogAfter": 205,
+    "catalogBefore": 205,
+    "exactInternalSourceAccesses": [
+      "Celeste.Player.noWindTimer",
+      "Celeste.Player.windDirection",
+      "Celeste.Player.windTimeout",
+      "Celeste.SoundSource.instance"
+    ],
+    "newDescriptors": 0,
+    "newPublicMembers": 0
+  },
+  "manifestHashes": {
+    "bing": "9118e61cff9edb6a34e2eba9868e4c64a1721e095b8222d9f996c60ef1c352b4",
+    "lobby": "fdd710714ca6280790d9bd70fbe22e0776b9a8b1abdc2c9bbca45e8eabd23092"
+  },
+  "mapAppendix": {
+    "hardPerMapBound": 2097152,
+    "mapsWithAppendix": 124,
+    "maxBytes": 1260932,
+    "originalHashesAndProgressionIdentitiesUnchanged": true,
+    "totalBytes": 19240291
+  },
+  "mapsStillBlocked": [
+    "StrawberryJam2021/0-Lobbies/1-Beginner",
+    "StrawberryJam2021/1-Beginner/Bing_Over_Google"
+  ],
+  "newlyClosedProviders": [
+    "ContortHelper",
+    "ExtendedVariantMode",
+    "JungleHelper",
+    "YetAnotherHelper",
+    "StrawberryJam2021"
+  ],
+  "nextStageRecommendation": "one Stage 25K-F is bounded if four custom banks and the 55 authored Crystalline/Vortex occurrences remain within their audited exact mechanisms; split F1/F2 if either mechanism audit broadens",
+  "plannedFirstSliceStage": "25K-G",
+  "playableSliceBuildIntentionallyDeferred": true,
+  "playableSliceBuilt": false,
+  "providerClosure": [
+    "BrokemiaHelper",
+    "CherryHelper",
+    "CollabUtils2",
+    "ContortHelper",
+    "CrystallineHelper",
+    "DJMapHelper",
+    "EverestCore",
+    "ExtendedVariantMode",
+    "FancyTileEntities",
+    "FemtoHelper",
+    "FlaglinesAndSuch",
+    "FrostHelper",
+    "HonlyHelper",
+    "JungleHelper",
+    "LunaticHelper",
+    "MaxHelpingHand",
+    "PandorasBox",
+    "StrawberryJam2021",
+    "VivHelper",
+    "VortexHelper",
+    "XaphanHelper",
+    "YetAnotherHelper"
+  ],
+  "providerClosureCount": 22,
+  "providersWithRemainingMechanisms": [
+    "CrystallineHelper",
+    "VortexHelper"
+  ],
+  "remainingMechanismSurface": [
+    {
+      "attributeSequenceSha256": "1e73fa9808f558778d3bd43985acba5b14087234a049959cb5bf3b718180c713",
+      "distinctAttributes": [
+        {
+          "surfaceIndex": -1,
+          "texture": "wood",
+          "width": 8
+        }
+      ],
+      "id": "VortexHelper/AttachedJumpThru",
+      "kind": "entity",
+      "occurrences": 2,
+      "providers": [
+        "VortexHelper"
+      ]
+    },
+    {
+      "attributeSequenceSha256": "6a9b7857025d76de8497bb67d26480435c3c24c3e397397884f2ce67c4b9cdf7",
+      "distinctAttributes": [
+        {
+          "bloomStrengthFrom": 1,
+          "bloomStrengthTo": 2,
+          "height": 144,
+          "positionMode": "NoEffect",
+          "width": 48
+        },
+        {
+          "bloomStrengthFrom": 1,
+          "bloomStrengthTo": 1.2999999523162842,
+          "height": 136,
+          "positionMode": "LeftToRight",
+          "width": 32
+        },
+        {
+          "bloomStrengthFrom": 1,
+          "bloomStrengthTo": 1,
+          "height": 32,
+          "positionMode": "RightToLeft",
+          "width": 40
+        },
+        {
+          "bloomStrengthFrom": 0.5,
+          "bloomStrengthTo": 0.5,
+          "height": 136,
+          "positionMode": "NoEffect",
+          "width": 128
+        },
+        {
+          "bloomStrengthFrom": 1.2999999523162842,
+          "bloomStrengthTo": 1.2999999523162842,
+          "height": 200,
+          "positionMode": "NoEffect",
+          "width": 208
+        },
+        {
+          "bloomStrengthFrom": 1,
+          "bloomStrengthTo": 2,
+          "height": 176,
+          "positionMode": "LeftToRight",
+          "width": 56
+        },
+        {
+          "bloomStrengthFrom": 1,
+          "bloomStrengthTo": 2,
+          "height": 152,
+          "positionMode": "RightToLeft",
+          "width": 40
+        },
+        {
+          "bloomStrengthFrom": 1,
+          "bloomStrengthTo": 0.5,
+          "height": 56,
+          "positionMode": "RightToLeft",
+          "width": 24
+        },
+        {
+          "bloomStrengthFrom": 1,
+          "bloomStrengthTo": 1.2999999523162842,
+          "height": 136,
+          "positionMode": "RightToLeft",
+          "width": 32
+        }
+      ],
+      "id": "vitellary/bloomstrengthtrigger",
+      "kind": "trigger",
+      "occurrences": 9,
+      "providers": [
+        "CrystallineHelper"
+      ]
+    },
+    {
+      "attributeSequenceSha256": "4b09da1ef99e10d0e1e3ffacdfa689122ff47764c2752559e8921e0c99d836c1",
+      "distinctAttributes": [
+        {
+          "debug": false,
+          "depth": -12000,
+          "entitiesToAffect": "Celeste.Mod.FancyTileEntities.FancySolidTiles",
+          "height": 24,
+          "updateOnEntry": false,
+          "width": 24
+        },
+        {
+          "debug": false,
+          "depth": -10010,
+          "entitiesToAffect": "Celeste.Mod.MaxHelpingHand.Entities.FlagExitBlock",
+          "height": 336,
+          "updateOnEntry": false,
+          "width": 80
+        },
+        {
+          "debug": false,
+          "depth": -10010,
+          "entitiesToAffect": "Celeste.Mod.MaxHelpingHand.Entities.FlagExitBlock",
+          "height": 56,
+          "updateOnEntry": false,
+          "width": 16
+        },
+        {
+          "debug": false,
+          "depth": -12000,
+          "entitiesToAffect": "Celeste.Mod.FancyTileEntities.FancySolidTiles",
+          "height": 24,
+          "updateOnEntry": false,
+          "width": 32
+        },
+        {
+          "debug": false,
+          "depth": -10011,
+          "entitiesToAffect": "Celeste.Mod.FancyTileEntities.FancySolidTiles",
+          "height": 24,
+          "updateOnEntry": false,
+          "width": 32
+        },
+        {
+          "debug": false,
+          "depth": -12000,
+          "entitiesToAffect": "Celeste.Mod.FancyTileEntities.FancySolidTiles",
+          "height": 24,
+          "updateOnEntry": false,
+          "width": 120
+        },
+        {
+          "debug": false,
+          "depth": -12000,
+          "entitiesToAffect": "Celeste.Mod.FancyTileEntities.FancySolidTiles",
+          "height": 8,
+          "updateOnEntry": false,
+          "width": 8
+        }
+      ],
+      "id": "vitellary/editdepthtrigger",
+      "kind": "trigger",
+      "occurrences": 43,
+      "providers": [
+        "CrystallineHelper"
+      ]
+    },
+    {
+      "attributeSequenceSha256": "2390e649aa2d0994b234e387596682e9ef18eb90a686d7c72c716014fba7c83c",
+      "distinctAttributes": [
+        {
+          "absoluteValue": false,
+          "activateOnTransition": false,
+          "activationType": "OnHoldableEnter",
+          "collideCount": 1,
+          "comparisonType": "EqualTo",
+          "coreMode": "None",
+          "dashCount": 0,
+          "deaths": 0,
+          "delay": 0.4000000059604645,
+          "entityType": "Celeste.Mod.CherryHelper.ItemCrystal",
+          "entityTypeToCollide": "Celeste.Strawberry",
+          "flag": "",
+          "height": 5,
+          "invertCondition": false,
+          "matchPosition": false,
+          "oneUse": true,
+          "onlyOnEnter": false,
+          "randomize": false,
+          "requiredSpeed": 0,
+          "solidType": "",
+          "talkBubbleX": 0,
+          "talkBubbleY": 0,
+          "timeToWait": 0,
+          "width": 16
+        }
+      ],
+      "id": "vitellary/triggertrigger",
+      "kind": "trigger",
+      "occurrences": 1,
+      "providers": [
+        "CrystallineHelper"
+      ]
+    }
+  ],
+  "runtimeBoundary": {
+    "generalDynamicData": false,
+    "interpreter": false,
+    "jit": false,
+    "lua": false,
+    "runtimeAssemblyLoad": false,
+    "runtimeDetourContext": false,
+    "runtimeHelperDiscovery": false
+  },
+  "schemaVersion": 1,
+  "stage": "25K-E",
+  "status": "DEVELOPMENT_INTEGRATION_READY",
+  "unclassified": 0
+}

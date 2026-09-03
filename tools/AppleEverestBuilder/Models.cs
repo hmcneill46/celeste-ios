@@ -9,7 +9,7 @@ internal static class ProductPolicy
     public const long MaxSingleFileBytes = 64L * 1024 * 1024;
     public const int MaxPathDepth = 24;
     public const int MaxYamlBytes = 1024 * 1024;
-    public const string TransformerVersion = "apple-everest-static-v18";
+    public const string TransformerVersion = "apple-everest-static-v19";
     public const int LevelSetProgressionSchemaVersion = 1;
     public const string CanonicalClass = "celeste-1.4.0.0-a";
 }
@@ -458,7 +458,15 @@ internal sealed class ResolvedMod
 internal sealed record StaticAotCompatibilityPlan(string Id, string Owner, string Version,
     string SourceSha256, string DllPath, string DllSha256, bool AllowNonPublicCustomFactories);
 
-internal sealed record StaticSemanticFactory(string Kind, string Id, string RuntimeFactory);
+internal sealed record StaticSemanticFactory(string Kind, string Id, string RuntimeFactory,
+    string? ConstructorExpression = null);
+
+internal sealed record StaticSemanticDependency(string Name, string Version);
+
+internal sealed record StaticSemanticModulePlan(
+    AppleStaticDeclaration Declaration,
+    string DurabilitySchema,
+    string DurabilityAdapterExpression);
 
 internal sealed record StaticSemanticLoweringPlan(
     string Id,
@@ -467,4 +475,8 @@ internal sealed record StaticSemanticLoweringPlan(
     string SourceSha256,
     string DllPath,
     string DllSha256,
-    IReadOnlyList<StaticSemanticFactory> Factories);
+    IReadOnlyList<StaticSemanticFactory> Factories,
+    IReadOnlyList<StaticSemanticDependency>? EffectiveDependencies,
+    IReadOnlyList<string>? ContentPrefixes,
+    StaticSemanticModulePlan? Module,
+    IReadOnlyList<string>? RuntimeFiles = null);

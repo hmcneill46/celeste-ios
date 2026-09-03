@@ -325,7 +325,32 @@ default-YAML class fail closed or remain explicitly deferred. Custom audio is
 supported only through the exact `STATIC_CUSTOM_FMOD_BANK` class described
 above; dynamic bank discovery, custom master/strings replacement, native FMOD
 plugins, programmer-sound callbacks, and arbitrary hot unload/reload remain
-deferred. Strawberry Jam has not been downloaded, built, or tested.
+deferred. The exact Strawberry Jam Beginner audit inputs have been inspected
+and its four C-class helpers plus bounded root behavior now have hash-locked
+static semantic plans. This is not complete package support and the playable
+slice remains unbuilt while its custom-bank and Crystalline/Vortex mechanisms
+are pending.
+
+## Strawberry Jam Beginner semantic plans
+
+Stage 25K-E accepts five narrow `STATIC_SEMANTIC_LOWERING` identities. Their
+factories and runtime source are selected from the immutable plan rather than
+from a mod-name dispatcher:
+
+| Exact package | Accepted Beginner behavior | Remaining package boundary |
+| --- | --- | --- |
+| ContortHelper 1.5.5 | `MadelineSpotlightModifierTrigger` | Every other Contort entity, effect, setting and hook is unselected. |
+| ExtendedVariantMode 0.50.5 | Typed `BackgroundBrightness` fade/reset and fixed render effect | General variant registry and nine dynamic-lifetime configured sites remain rejected. |
+| JungleHelper 1.4.10 | `MossyWall` with exact authored sprite directory, collider and static-mover behavior | Lantern, skin enforcement, cassette and unrelated Jungle behavior remain unselected. |
+| YetAnotherHelper 1.2.5 | Horizontal `BubbleField`, strength 1.5, Always mode, lift and wind | Vertical and conditional modes and all unrelated entities remain unselected. |
+| StrawberryJam2021 1.0.12 root | Typed lifecycle/state, Beginner masks/glow/jars, playback toggle and collab-facing lobby data | Full root entity/effect/cutscene library, custom audio loading, and non-Beginner behavior remain unselected. |
+
+Every method in the five pinned DLLs has one of five closed reachability
+classifications. Required reflection and `DynamicData` observations are replaced
+by generated exact access or typed state, leaving zero runtime module/helper
+discovery and zero arbitrary attachment. The two exact maps retain their full
+source hashes and BinaryPacker appendices in metadata only; they are not staged
+into the K-E product.
 
 The full 18-graph census and explicit distance table are tracked in
 [`apple-everest/graph-il-closure-audit-stage25hc.json`](../apple-everest/graph-il-closure-audit-stage25hc.json).

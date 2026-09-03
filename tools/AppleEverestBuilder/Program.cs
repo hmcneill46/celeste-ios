@@ -28,6 +28,8 @@ internal static class Program
                     One(options, "--map"), One(options, "--output")); break;
                 case "census-dll": AssemblyMechanismCensus.Write(
                     One(options, "--dll"), One(options, "--output")); break;
+                case "census-semantics": SemanticReachabilityCensus.Write(
+                    One(options, "--dll"), One(options, "--output")); break;
                 case "dump-method-il": AssemblyMechanismCensus.WriteMethodIl(
                     One(options, "--dll"), One(options, "--method"), One(options, "--output")); break;
                 case "dump-configured-il": AssemblyMechanismCensus.WriteConfiguredIl(
@@ -344,5 +346,5 @@ internal static class Program
 
     private static void Run(string command, params string[] args) { _ = Capture(command, args); }
 
-    private static void Help() => Console.WriteLine("AppleEverestBuilder acquire|audit|inspect-map|inspect-map-boundary|census-dll|build|apply|scan-runtime|verify-preserved-assembly|verify-referenced-api|verify-aot-object|verify-profile (closed static-AOT Apple product)");
+    private static void Help() => Console.WriteLine("AppleEverestBuilder acquire|audit|inspect-map|inspect-map-boundary|census-dll|census-semantics|build|apply|scan-runtime|verify-preserved-assembly|verify-referenced-api|verify-aot-object|verify-profile (closed static-AOT Apple product)");
 }

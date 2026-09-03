@@ -53,17 +53,18 @@ internal static class EverestGraphResolver
                     EverestVersion.Satisfies(EverestVersion.Parse(conflict.Version), EverestVersion.Parse(installed.Metadata.Version)))
                     throw new InvalidDataException($"conflict: {mod.Metadata.Name} rejects {conflict.Name} {conflict.Version}");
             }
-            foreach (EverestDependency dependency in mod.Metadata.Dependencies)
+            foreach (EverestDependency dependency in RequiredDependencies(mod))
             {
-                if (dependency.Name is "Everest" or "EverestCore")
+                if (dependency.Name is "Everest" or "EverestCore" or "Celeste")
                 {
-                    if (!EverestVersion.Satisfies(EverestVersion.Parse(dependency.Version), EverestVersion.Parse("1.6458.0")))
-                        throw new InvalidDataException($"incompatible platform dependency: {mod.Metadata.Name} requires {dependency.Name} {dependency.Version}, static host is 1.6458.0");
+                    string installed = dependency.Name == "Celeste" ? "1.4.0.0" : "1.6458.0";
+                    if (!EverestVersion.Satisfies(EverestVersion.Parse(dependency.Version), EverestVersion.Parse(installed)))
+                        throw new InvalidDataException($"incompatible platform dependency: {mod.Metadata.Name} requires {dependency.Name} {dependency.Version}, static host is {installed}");
                     continue;
                 }
                 RequireCompatible(byName, mod, dependency, optional: false);
             }
-            foreach (EverestDependency dependency in mod.Metadata.OptionalDependencies)
+            foreach (EverestDependency dependency in OptionalDependencies(mod))
                 RequireCompatible(byName, mod, dependency, optional: true);
         }
 
@@ -81,9 +82,9 @@ internal static class EverestGraphResolver
             }
             state[name] = 1;
             ResolvedMod mod = byName[name];
-            IEnumerable<string> edges = mod.Metadata.Dependencies.Select(item => item.Name)
-                .Where(item => item is not ("Everest" or "EverestCore"))
-                .Concat(mod.Metadata.OptionalDependencies.Select(item => item.Name).Where(byName.ContainsKey))
+            IEnumerable<string> edges = RequiredDependencies(mod).Select(item => item.Name)
+                .Where(item => item is not ("Everest" or "EverestCore" or "Celeste"))
+                .Concat(OptionalDependencies(mod).Select(item => item.Name).Where(byName.ContainsKey))
                 .Distinct(StringComparer.Ordinal)
                 .OrderBy(value => value, StringComparer.Ordinal);
             foreach (string dependency in edges) Visit(dependency);
@@ -91,6 +92,16 @@ internal static class EverestGraphResolver
             result.Add(mod);
         }
     }
+
+    internal static IReadOnlyList<EverestDependency> RequiredDependencies(ResolvedMod mod) =>
+        mod.StaticSemanticLowering?.EffectiveDependencies is { } lowered
+            ? lowered.Select(value => new EverestDependency { Name = value.Name, Version = value.Version }).ToArray()
+            : mod.Metadata.Dependencies;
+
+    internal static IReadOnlyList<EverestDependency> OptionalDependencies(ResolvedMod mod) =>
+        mod.StaticSemanticLowering?.EffectiveDependencies != null
+            ? []
+            : mod.Metadata.OptionalDependencies;
 
     private static void RequireCompatible(
         IReadOnlyDictionary<string, ResolvedMod> byName,

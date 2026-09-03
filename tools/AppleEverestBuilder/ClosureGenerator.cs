@@ -32,8 +32,16 @@ internal static class ClosureGenerator
         Directory.CreateDirectory(content);
 
         string runtimeRoot = Path.Combine(repositoryRoot, "apple-everest", "runtime");
+        bool hasSemanticRuntime = ordered.Any(mod => mod.StaticSemanticLowering?.RuntimeFiles?.Count > 0);
         foreach (string source in Directory.EnumerateFiles(runtimeRoot, "*.cs").OrderBy(Path.GetFileName, StringComparer.Ordinal))
             File.Copy(source, Path.Combine(managed, Path.GetFileName(source)), overwrite: false);
+        foreach (string name in ordered.SelectMany(mod => mod.StaticSemanticLowering?.RuntimeFiles ?? [])
+                     .Distinct(StringComparer.Ordinal).OrderBy(name => name, StringComparer.Ordinal))
+        {
+            if (Path.GetFileName(name) != name || !name.EndsWith(".cs", StringComparison.Ordinal))
+                throw new InvalidDataException("invalid registered semantic runtime source");
+            File.Copy(Path.Combine(runtimeRoot, "semantics", name), Path.Combine(managed, name), overwrite: false);
+        }
 
         List<(ResolvedMod Mod, AppleStaticDeclaration Declaration)> codeModules = [];
         List<ContentMountRecord> stagedContent = [];
@@ -44,7 +52,12 @@ internal static class ClosureGenerator
         for (int modOrder = 0; modOrder < ordered.Count; modOrder++)
         {
             ResolvedMod mod = ordered[modOrder];
-            if (!string.IsNullOrWhiteSpace(mod.Metadata.DLL) && mod.StaticSemanticLowering == null)
+            if (mod.StaticSemanticLowering?.Module is { } semanticModule)
+            {
+                ValidateDeclaration(semanticModule.Declaration, mod.Metadata.Name);
+                codeModules.Add((mod, semanticModule.Declaration));
+            }
+            else if (!string.IsNullOrWhiteSpace(mod.Metadata.DLL) && mod.StaticSemanticLowering == null)
             {
                 AppleStaticDeclaration declaration = mod.Declaration
                     ?? throw new InvalidDataException($"{mod.Metadata.Name} has no closed module declaration");
@@ -73,7 +86,7 @@ internal static class ClosureGenerator
             {
                 string source = Path.Combine(mod.Input.StagingRoot, relative.Replace('/', Path.DirectorySeparatorChar));
                 string stagedPath = NormalizeContentPath(mod.Metadata.Name, relative);
-                string logical = ContentCompiler.Stage(source, stagedPath, content);
+                string logical = StaticSemanticLowering.StageContent(mod.StaticSemanticLowering, source, relative, stagedPath, content);
                 stagedContent.Add(new ContentMountRecord(mod.Metadata.Name, modOrder, relative, logical,
                     Hashing.FileSha256(Path.Combine(content, logical.Replace('/', Path.DirectorySeparatorChar))),
                     Hashing.FileSha256(source)));
@@ -225,7 +238,8 @@ internal static class ClosureGenerator
         string registryHash = Hashing.FileSha256(Path.Combine(managed, "GeneratedAppleEverestModuleRegistry.cs"));
         string apiSurfaceHash = AppleApiSurface.ContractSha256;
         string hookTransformHash = Hashing.BytesSha256(Encoding.UTF8.GetBytes(
-            TargetPatchContract + "\nAppleApiSurface:" + apiSurfaceHash));
+            TargetPatchContract + "\nAppleApiSurface:" + apiSurfaceHash +
+            (hasSemanticRuntime ? "\nSemanticRuntime:" + StaticSemanticRuntimePatches.ContractSha256 : "")));
         string managedHash = Hashing.LogicalHash(managedInventory);
         string contentHash = Hashing.LogicalHash(contentInventory);
         string frozenAssemblyLogicalSha256 = Hashing.BytesSha256(Encoding.UTF8.GetBytes(string.Join("\n",
@@ -315,7 +329,18 @@ internal static class ClosureGenerator
                 plan.ExpectedDelegateTargets,
                 runtimeUnload = "unsupported-immutable-active"
             }).ToArray(),
-            customEntityFactoryCount = customFactories.Length + CoreGameplayFactories.Count(value => value.Kind == "entity"),
+            customEntityFactoryCount = customFactories.Count(value => value.Kind == "entity") +
+                                       ordered.Where(mod => mod.StaticSemanticLowering != null)
+                                           .SelectMany(mod => mod.StaticSemanticLowering!.Factories)
+                                           .Count(value => value.Kind == "entity") +
+                                       CoreGameplayFactories.Count(value => value.Kind == "entity"),
+            customTriggerFactoryCount = customFactories.Count(value => value.Kind == "trigger") +
+                                        ordered.Where(mod => mod.StaticSemanticLowering != null)
+                                            .SelectMany(mod => mod.StaticSemanticLowering!.Factories)
+                                            .Count(value => value.Kind == "trigger") +
+                                        CoreGameplayFactories.Count(value => value.Kind == "trigger"),
+            staticSemanticFactoryCount = ordered.Where(mod => mod.StaticSemanticLowering != null)
+                .SelectMany(mod => mod.StaticSemanticLowering!.Factories).Count(),
             customBackdropFactoryCount = backdropFactories.Length,
             moduleSettingCount = codeModules.Sum(item => item.Declaration.SettingsProperties.Length),
             moduleDurabilityAdapterCount = durabilityAdapters.Count,
@@ -364,6 +389,7 @@ internal static class ClosureGenerator
                     : null,
                 mechanisms = mod.Mechanisms,
                 staticAotCompatibility = mod.StaticAotCompatibility?.Id,
+                staticSemanticLowering = mod.StaticSemanticLowering,
                 staticConfiguredDetours = mod.StaticConfiguredDetours?.Id,
                 staticConfiguredPlanSha256 = mod.StaticConfiguredDetours?.PlanSha256,
                 modInteropRegistrations = mod.ModInteropRegistrations.Select(registration => registration.RegisteredType).ToArray(),
@@ -379,6 +405,7 @@ internal static class ClosureGenerator
             contentLogicalSha256 = contentHash,
             registrySha256 = registryHash,
             hookTransformSha256 = hookTransformHash,
+            staticSemanticRuntimePatchSha256 = hasSemanticRuntime ? StaticSemanticRuntimePatches.ContractSha256 : null,
             appleApiSurfaceSha256 = apiSurfaceHash,
             appleApiSurfaceMemberCount = AppleApiSurface.Members.Count,
             contentMounts = stagedContent.Select(mount => new
@@ -479,6 +506,10 @@ internal static class ClosureGenerator
     public static void Apply(string closureRoot, string managedRoot)
     {
         RequireMarker(closureRoot);
+        using (JsonDocument manifest = JsonDocument.Parse(File.ReadAllText(Path.Combine(closureRoot, "compatibility-manifest.json"))))
+            if (manifest.RootElement.TryGetProperty("staticSemanticRuntimePatchSha256", out JsonElement semanticContract) &&
+                semanticContract.ValueKind != JsonValueKind.Null && semanticContract.GetString() != StaticSemanticRuntimePatches.ContractSha256)
+                throw new InvalidDataException("semantic runtime patch contract does not match this builder");
         if (!File.Exists(Path.Combine(managedRoot, "Celeste.Modern.csproj")))
             throw new InvalidDataException("managed target is not a generated Celeste tree");
         string destination = Path.Combine(managedRoot, "Celeste", "Mod", "AppleEverestStatic");
@@ -554,6 +585,7 @@ internal static class ClosureGenerator
         PatchSecondCollabSemantics(
             Path.Combine(managedRoot, "Celeste", "HeartGemDoor.cs"),
             Path.Combine(managedRoot, "Celeste", "Strawberry.cs"));
+        StaticSemanticRuntimePatches.Apply(managedRoot);
         PatchTracker(Path.Combine(managedRoot, "Monocle", "Tracker.cs"));
         PatchPooler(Path.Combine(managedRoot, "Monocle", "Pooler.cs"));
         PatchProject(Path.Combine(managedRoot, "Celeste.Modern.csproj"), closureRoot);
@@ -1149,6 +1181,20 @@ internal static class ClosureGenerator
         string engine = Path.Combine(managedRoot, "Monocle", "Engine.cs");
         ReplaceOnce(engine, "\tprivate Scene scene;", "\tpublic Scene scene;");
 
+        // YetAnotherHelper 1.2.5 reflects three exact vanilla Player
+        // fields for BubbleField.  The hash-locked semantic replacement is
+        // compiled into the same assembly, so expose only that fixed ABI to
+        // the generated code. The vertical-only climbNoMoveTimer lookup is omitted.
+        // This is deliberately internal rather than a
+        // broad/public member expansion and introduces no runtime reflection.
+        if (File.Exists(Path.Combine(managedRoot, "Celeste", "Mod", "AppleEverestStatic", "AppleEverestBubbleSemantics.cs")))
+        {
+            string player = Path.Combine(managedRoot, "Celeste", "Player.cs");
+            ReplaceOnce(player, "\tprivate float noWindTimer;", "\tinternal float noWindTimer;");
+            ReplaceOnce(player, "\tprivate Vector2 windDirection;", "\tinternal Vector2 windDirection;");
+            ReplaceOnce(player, "\tprivate float windTimeout;", "\tinternal float windTimeout;");
+        }
+
         // CaeruleaHelper 1.11.1 calls Everest's public PointWrap backdrop
         // entry point. Keep the canonical renderer otherwise unchanged: the
         // helper explicitly ends this batch before returning to vanilla.
@@ -1422,8 +1468,8 @@ internal static class ClosureGenerator
             .AppendLine("    {");
         foreach ((ResolvedMod mod, AppleStaticDeclaration declaration) in modules)
         {
-            string dependencies = StringArray(mod.Metadata.Dependencies.Select(dep => dep.Name));
-            string requiredBy = StringArray(resolved.Where(candidate => candidate.Metadata.Dependencies.Any(dependency =>
+            string dependencies = StringArray(EverestGraphResolver.RequiredDependencies(mod).Select(dep => dep.Name));
+            string requiredBy = StringArray(resolved.Where(candidate => EverestGraphResolver.RequiredDependencies(candidate).Any(dependency =>
                     dependency.Name == mod.Metadata.Name)).Select(candidate => candidate.Metadata.Name));
             result.Append("        new AppleEverestModuleDescriptor(\"").Append(Escape(mod.Metadata.Name)).Append("\", \"")
                 .Append(Escape(mod.Metadata.Version)).Append("\", ").Append(dependencies).Append(", ")
@@ -1849,11 +1895,14 @@ internal static class ClosureGenerator
 
     private static void AppendSemanticFactoryCase(StringBuilder result, string owner, StaticSemanticFactory factory)
     {
-        result.Append("            case \"").Append(Escape(factory.Id)).AppendLine("\":")
-            .Append("                entity = AppleEverestSemanticFactories.Create")
-            .Append(factory.Kind == "entity" ? "Entity" : "Trigger")
-            .AppendLine("(id, data, offset, entityId);")
-            .Append("                AppleEverestStaticRuntime.RecordCustomFactoryUse(\"").Append(Escape(owner)).Append("\", \"")
+        result.Append("            case \"").Append(Escape(factory.Id)).AppendLine("\":");
+        if (factory.ConstructorExpression != null)
+            result.Append("                entity = ").Append(factory.ConstructorExpression).AppendLine(";");
+        else
+            result.Append("                entity = AppleEverestSemanticFactories.Create")
+                .Append(factory.Kind == "entity" ? "Entity" : "Trigger")
+                .AppendLine("(id, data, offset, entityId);");
+        result.Append("                AppleEverestStaticRuntime.RecordCustomFactoryUse(\"").Append(Escape(owner)).Append("\", \"")
             .Append(Escape(factory.Id)).Append("\", \"").Append(factory.Kind).AppendLine("\");")
             .AppendLine("                return true;");
     }

@@ -40,7 +40,6 @@ internal static class AppleEverestSemanticFactories
         "CommunalHelper/DreamMoveBlock" => CreateDreamMoveBlock(data, offset),
         "CommunalHelper/StationBlock" => new AppleEverestStationBlock(data, offset),
         "CommunalHelper/StationBlockTrack" => new AppleEverestStationTrack(data, offset),
-        "LunaticHelper/StrawberryWithReturn" => new Strawberry(data, offset, entityId),
         "LunaticHelper/StrawberryGate" => new AppleEverestStrawberryGate(data, offset),
         "MaxHelpingHand/GroupedTriggerSpikesUp" => new AppleEverestGroupedTriggerSpikesUp(data, offset),
         "MaxHelpingHand/CustomSummitCheckpoint" => new SummitCheckpoint(data, offset),

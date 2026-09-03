@@ -10,7 +10,11 @@ internal static class StaticSemanticLowering
 {
     private sealed record Registered(
         string Id, string Owner, string Version, string SourceSha256,
-        string DllPath, string DllSha256, StaticSemanticFactory[] Factories);
+        string DllPath, string DllSha256, StaticSemanticFactory[] Factories,
+        StaticSemanticDependency[]? EffectiveDependencies = null,
+        string[]? ContentPrefixes = null,
+        StaticSemanticModulePlan? Module = null,
+        string[]? RuntimeFiles = null);
 
     private static readonly Registered[] Registry =
     [
@@ -61,9 +65,9 @@ internal static class StaticSemanticLowering
             "e7cef501937fc1bc07d1ff13e753fe920b4ccbbd4e4db4c0b2c4312de89fdd78",
             "LunaticHelper.dll", "fc08f00296551a6025c5e31422c6edd5e8136e6861459f44ffea909129c6a925",
             [
-                new("entity", "LunaticHelper/StrawberryWithReturn", "strawberry-with-return"),
+                new("entity", "LunaticHelper/StrawberryWithReturn", "strawberry-with-return", "new AppleEverestBubbleReturnBerry(data, offset, entityId)"),
                 new("entity", "LunaticHelper/StrawberryGate", "strawberry-gate")
-            ]),
+            ], RuntimeFiles: ["AppleEverestBubbleReturnBerry.cs"]),
         new("shroomhelper-1.2.10-henny-v1", "ShroomHelper", "1.2.10",
             "76fa23d9dfabb8203dc2eee8ca406bcb8407766f6385ef7c28dc439be0e40034",
             "Code/bin/ShroomHelper.dll", "2428be4659522324b4b426452b17a095a78b857048d6340a0c4720151c08fa1d",
@@ -78,8 +82,90 @@ internal static class StaticSemanticLowering
         new("fancytileentities-1.6.2-henny-v1", "FancyTileEntities", "1.6.2",
             "e62e9cf62cdbe9f4fdeb27f1174aa6fed55ffc40f0485cd870c3f433ced79a29",
             "FancyTileEntities/bin/Debug/net452/FancyTileEntities.dll", "48c4ba952c602c8f40325392edf9975c86ea7a90cd25a3954b0efe7086b6f0a1",
-            [new("entity", "FancyTileEntities/FancyFakeWall", "fancy-fake-wall")])
+            [new("entity", "FancyTileEntities/FancyFakeWall", "fancy-fake-wall")]),
+        new("contorthelper-1.5.5-sj-beginner-v1", "ContortHelper", "1.5.5",
+            "d71860aa6259b612f63ffe5b3189f68a3a7130d6c5e7f49bd2f6edeb64fca45a",
+            "ContortHelper.dll", "c3983e67e1b535fbb1e0f0a541e8c78ad8f4cd150f66636c783a83dc5ffb4488",
+            [new("trigger", "ContortHelper/MadelineSpotlightModifierTrigger", "madeline-spotlight-modifier",
+                "new AppleEverestMadelineSpotlightModifierTrigger(data, offset)")],
+            [], [], RuntimeFiles: ["AppleEverestContortSemantics.cs"]),
+        new("extendedvariantmode-0.50.5-sj-beginner-v1", "ExtendedVariantMode", "0.50.5",
+            "0f07fdc4c3d177c90dd9c5fbc57e2cbe46872ce4f248a4259b1168081e768bef",
+            "bin/ExtendedVariantMode.dll", "cb28846f7f7348ddb996f63498c97694616436e97ef34f67880b697ba024fe81",
+            [
+                new("trigger", "ExtendedVariantMode/FloatExtendedVariantFadeTrigger", "background-brightness-fade",
+                    "new AppleEverestBackgroundBrightnessFadeTrigger(data, offset)"),
+                new("trigger", "ExtendedVariantMode/ResetVariantsTrigger", "reset-slice-variants",
+                    "new AppleEverestResetSliceVariantsTrigger(data, offset)")
+            ], [], [], VariantModule(), ["AppleEverestVariantSemantics.cs"]),
+        new("junglehelper-1.4.10-sj-beginner-v1", "JungleHelper", "1.4.10",
+            "911457d12e30d0912eb2420a39dbde7dc892560cd8a512284dccb89d93ff6e49",
+            "Code/bin/JungleHelper.dll", "fed840ade7250f05e38b70a81bcfe751ca87ff63274f4b568172868cacf56f8a",
+            [new("entity", "JungleHelper/MossyWall", "mossy-wall", "new AppleEverestMossyWall(data, offset)")], [],
+            ["Graphics/Atlases/Gameplay/JungleHelper/Moss/"], RuntimeFiles: ["AppleEverestJungleSemantics.cs"]),
+        new("yetanotherhelper-1.2.5-sj-beginner-v1", "YetAnotherHelper", "1.2.5",
+            "e48a8c6b1941ebef23853fdb65b4db487aa9aa3162935b975b5468675de93da6",
+            "YetAnotherHelper/bin/Debug/net452/YetAnotherHelper.dll", "f48e16a568edf43913beac0684bd26b7dc12d45be4011a8b214e05db86b78aea",
+            [new("entity", "YetAnotherHelper/BubbleField", "bubble-field", "new AppleEverestBubbleField(data, offset)")], [],
+            ["Graphics/Atlases/Gameplay/particles/YetAnotherHelper/"], RuntimeFiles: ["AppleEverestBubbleSemantics.cs"]),
+        new("strawberryjam2021-1.0.12-beginner-root-v1", "StrawberryJam2021", "1.0.12",
+            "d5e68237d8371fa26ed5d804578ce5b1841673ba380d7438fb4fafcd73899063",
+            "Code/StrawberryJam2021.dll", "8d5b9184204e7e7728965bcf95af5f150f6220dafbfe52fdd6c23e50d47e5258",
+            [
+                new("entity", "SJ2021/AllInOneMask", "sj-all-in-one-mask", "new AppleEverestSJMaskEntity(\"all-in-one\", data, offset)"),
+                new("entity", "SJ2021/BloomMask", "sj-bloom-mask", "new AppleEverestSJMaskEntity(\"bloom\", data, offset)"),
+                new("entity", "SJ2021/GlowController", "sj-glow-controller", "new AppleEverestSJGlowController(data, offset)"),
+                new("entity", "SJ2021/StrawberryJamJar", "sj-jam-jar", "new AppleEverestSJJamJar(data, offset)"),
+                new("entity", "SJ2021/StylegroundMask", "sj-styleground-mask", "new AppleEverestSJMaskEntity(\"styleground\", data, offset)"),
+                new("entity", "appleEverest/stage25keRootState", "root-state-canary", "new AppleEverestStage25KERootCanary(data, offset)")
+            ],
+            [new("CollabUtils2", "1.10.11")],
+            ["Graphics/StrawberryJam2021/CustomEntitySprites.xml", "Graphics/Atlases/Gameplay/objects/StrawberryJam2021/jamJar/beginner/"],
+            StrawberryJamModule(),
+            ["AppleEverestStrawberryJamState.cs", "AppleEverestStrawberryJamEntities.cs",
+                "AppleEverestStrawberryJamRendering.cs", "AppleEverestRootStateCanary.cs"])
     ];
+
+    private static StaticSemanticModulePlan VariantModule() => new(
+        new AppleStaticDeclaration
+        {
+            SchemaVersion = 1,
+            ModuleType = "Celeste.Mod.AppleEverestVariantModule",
+            SessionType = "Celeste.Mod.AppleEverestVariantSession",
+            Durability = new AppleModuleDurabilityCompatibility
+            {
+                SaveDataClass = "NONE", SessionClass = "TYPED_YAML", AsyncClass = "DEFAULT_ASYNC"
+            }
+        },
+        "evm-beginner-state-v1:session=BackgroundBrightness:Single=1",
+        "global::Celeste.Mod.AppleEverestVariantDurability.Adapter");
+
+    private static StaticSemanticModulePlan StrawberryJamModule() => new(
+        new AppleStaticDeclaration
+        {
+            SchemaVersion = 1,
+            ModuleType = "Celeste.Mod.AppleEverestStrawberryJamModule",
+            SettingsType = "Celeste.Mod.AppleEverestStrawberryJamSettings",
+            SaveDataType = "Celeste.Mod.AppleEverestStrawberryJamSaveData",
+            SessionType = "Celeste.Mod.AppleEverestStrawberryJamSession",
+            ButtonBindingProperties = ["TogglePlaybacks"],
+            SettingsProperties =
+            [
+                new AppleSettingProperty
+                {
+                    Name = "DisplayDashSequence", Label = "Display Dash Sequence",
+                    Kind = "bool", Type = "System.Boolean"
+                }
+            ],
+            Durability = new AppleModuleDurabilityCompatibility
+            {
+                SaveDataClass = "TYPED_YAML",
+                SessionClass = "TYPED_YAML",
+                AsyncClass = "DEFAULT_ASYNC"
+            }
+        },
+        "sj2021-root-state-v1:save=ModifiedThemeMaps,FilledJamJarSIDs;session=MusicWonkyBeatIndex,CassetteWonkyBeatIndex,MusicBeatTimer,CassetteBeatTimer,CassetteBlocksDisabled,CassetteBlocksLastParameter,OshiroBSideMode,SkateboardEnabled,ZeroG,ExpiringDashRemainingTime,ExpiringDashFlashThreshold,RainDensity",
+        "global::Celeste.Mod.AppleEverestStrawberryJamModuleDurability.Adapter");
 
     internal static StaticSemanticLoweringPlan? Resolve(ModInput input, EverestYamlEntry metadata)
     {
@@ -99,10 +185,39 @@ internal static class StaticSemanticLowering
         if (!File.Exists(full) || Hashing.FileSha256(full) != registered.DllSha256)
             throw new InvalidDataException($"semantic lowering DLL identity mismatch for {metadata.Name}");
         return new(registered.Id, registered.Owner, registered.Version, registered.SourceSha256,
-            registered.DllPath, registered.DllSha256, registered.Factories);
+            registered.DllPath, registered.DllSha256, registered.Factories,
+            registered.EffectiveDependencies, registered.ContentPrefixes, registered.Module, registered.RuntimeFiles);
     }
 
-    internal static bool IncludeContent(string path) =>
+    internal static bool IncludeContent(string path) => IncludeOrdinaryContent(path);
+
+    internal static string StageContent(StaticSemanticLoweringPlan? plan, string source, string relative,
+        string stagedPath, string content)
+    {
+        if (plan?.Id != "strawberryjam2021-1.0.12-beginner-root-v1" ||
+            relative != "Graphics/StrawberryJam2021/CustomEntitySprites.xml")
+            return ContentCompiler.Stage(source, stagedPath, content);
+        // Project the one audited SpriteBank definition from the original
+        // distributed asset. Other entity textures are not in this product.
+        System.Xml.Linq.XDocument original = System.Xml.Linq.XDocument.Load(source);
+        System.Xml.Linq.XElement jar = original.Root!.Elements("jamJar_beginner").Single();
+        System.Xml.Linq.XDocument projected = new(new System.Xml.Linq.XElement(original.Root.Name,
+            new System.Xml.Linq.XElement(jar)));
+        string temporary = Path.Combine(Path.GetTempPath(), "apple-everest-jar-" + Guid.NewGuid().ToString("N") + ".xml");
+        try
+        {
+            projected.Save(temporary);
+            return ContentCompiler.Stage(temporary, stagedPath, content);
+        }
+        finally { File.Delete(temporary); }
+    }
+
+    internal static bool IncludeContent(StaticSemanticLoweringPlan plan, string path) =>
+        IncludeOrdinaryContent(path) &&
+        (plan.ContentPrefixes == null || plan.ContentPrefixes.Any(prefix =>
+            path.StartsWith(prefix, StringComparison.Ordinal)));
+
+    private static bool IncludeOrdinaryContent(string path) =>
         !path.EndsWith(".dll", StringComparison.OrdinalIgnoreCase) &&
         !path.EndsWith(".cs", StringComparison.OrdinalIgnoreCase) &&
         !path.EndsWith(".bank", StringComparison.OrdinalIgnoreCase) &&

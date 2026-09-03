@@ -54,7 +54,7 @@ internal static class CompatibilityAnalyzer
             ? input.Files.Where(file => IsManaged(file.Path)).Select(file => file.Path).ToList()
             : [];
         List<string> content = configuredFixture ? [] : input.Files.Where(file => IsContent(file.Path) &&
-            (semantic == null || StaticSemanticLowering.IncludeContent(file.Path))).Select(file => file.Path).ToList();
+            (semantic == null || StaticSemanticLowering.IncludeContent(semantic, file.Path))).Select(file => file.Path).ToList();
         SortedSet<string> mechanisms = new(StringComparer.Ordinal);
         bool hookGenRegistration = false;
         CompatibilityClass classification = semantic != null

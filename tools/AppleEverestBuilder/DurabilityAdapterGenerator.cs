@@ -20,6 +20,15 @@ internal static class DurabilityAdapterGenerator
         int index = 0;
         foreach ((ResolvedMod mod, AppleStaticDeclaration declaration) in modules)
         {
+            if (mod.StaticSemanticLowering?.Module is { } semanticModule)
+            {
+                string semanticField = "Module" + (index++).ToString("D3");
+                fields.Append("    internal static readonly AppleEverestModuleDurabilityAdapter ").Append(semanticField)
+                    .Append(" = ").Append(semanticModule.DurabilityAdapterExpression).AppendLine(";");
+                string semanticSchema = Hashing.BytesSha256(Encoding.UTF8.GetBytes(semanticModule.DurabilitySchema));
+                adapters.Add(mod.Metadata.Name, new GeneratedDurabilityAdapter(mod.Metadata.Name, semanticField, semanticSchema));
+                continue;
+            }
             if (mod.DeclaredAssemblyPath == null ||
                 declaration.SaveDataType == null && declaration.SessionType == null)
                 continue;

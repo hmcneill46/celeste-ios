@@ -617,6 +617,46 @@ initialization audit expands the signature-locked managed-detour catalog by
 103 targets and adds 29 individually reviewed API members for eight providers;
 no broad publicizer is used.
 
+## Hash-locked helper and root semantic lowering
+
+Stage 25K-E adds `STATIC_SEMANTIC_LOWERING` for five exact distributed
+identities: ContortHelper 1.5.5, ExtendedVariantMode 0.50.5, JungleHelper
+1.4.10, YetAnotherHelper 1.2.5, and the StrawberryJam2021 1.0.12 root. The
+ordinary DLL is inspected on the Mac and remains the behavioral authority.
+The product receives only the typed factories, state, content projection, and
+fixed source integration registered for that exact ZIP and DLL hash. A changed
+archive or assembly fails before code generation.
+
+The accepted Beginner behavior is deliberately small: Contort's spotlight
+trigger, EVM's `BackgroundBrightness` fade/reset and render effect, Jungle's
+`MossyWall`, YetAnother's horizontal `BubbleField`, and the root's lifecycle,
+typed Settings/SaveData/Session, masks, glow cleanup, jam jars, playback toggle,
+and lobby state. The exact `LunaticHelper/StrawberryWithReturn` in
+`Bing_Over_Google` is also a direct typed factory. Generated runtime files are
+included only while their owning plan is selected; four omission builds prove
+that each helper disappears without changing unrelated plans or maps.
+
+The root and EVM use the existing Stage 25F per-module durability aggregate.
+Root `ModifiedThemeMaps` and `FilledJamJarSIDs` remain module SaveData, separate
+from AEVPSV1 map progression. Root Session and EVM brightness are typed module
+sessions. The fixed schemas sort sets, tolerate unknown fields, reject unknown
+versions and malformed shapes, and never invoke a reflection serializer.
+
+Some distributed implementations use reflection or `DynamicData` to reach
+known vanilla fields or attach renderer state. The generated product replaces
+those sites with four exact internal source accesses and typed renderer/session
+state. It does not ship a general `DynamicData` store, `DetourContext`, runtime
+hook installation, module/helper scanning, or an assembly loader. EVM's nine
+dynamic-lifetime K-D sites remain rejected; its required visual result comes
+from an immutable render branch controlled by the typed session value.
+
+The machine-readable closure census is in
+[`apple-everest/sj-helper-semantics-stage25ke.json`](../apple-everest/sj-helper-semantics-stage25ke.json),
+[`apple-everest/sj-root-semantics-stage25ke.json`](../apple-everest/sj-root-semantics-stage25ke.json),
+and [`apple-everest/sj-beginner-readiness-stage25ke.json`](../apple-everest/sj-beginner-readiness-stage25ke.json).
+This stage still does not package the Strawberry Jam slice. Its remaining
+groups are bounded multi-bank FMOD and the exact Crystalline/Vortex mechanisms.
+
 The deferred IL rung uses the ordinary GoldenTrainer 1.5.4 release. Its DLL
 contains `IL.Celeste.SummitCheckpoint.Update` plus a direct `ILHook` on
 `Player.orig_Die`; the host analyzer now identifies both from CLI metadata.

@@ -1,0 +1,170 @@
+{
+  "appendixBytes": 65339,
+  "appendixSha256": "963d5f086279311c18561df8fb135e445ca1cf0bcc2d3f1ba0d8b21f8376da6d",
+  "audioEventsFromMap": [
+    "event:/env/amb/01_main",
+    "event:/music/lvl1/main",
+    "event:/sj21_bingovergoogle"
+  ],
+  "berryCountFromKc": 4,
+  "chapterPanels": [],
+  "consumedRootBytes": 70024,
+  "customIds": [
+    {
+      "id": "CherryHelper/AssistRect",
+      "kind": "entity",
+      "occurrences": 47,
+      "providers": [
+        "CherryHelper"
+      ]
+    },
+    {
+      "id": "CollabUtils2/MiniHeart",
+      "kind": "entity",
+      "occurrences": 1,
+      "providers": [
+        "CollabUtils2"
+      ]
+    },
+    {
+      "id": "CollabUtils2/SilverBerry",
+      "kind": "entity",
+      "occurrences": 1,
+      "providers": [
+        "CollabUtils2"
+      ]
+    },
+    {
+      "id": "LunaticHelper/StrawberryWithReturn",
+      "kind": "entity",
+      "occurrences": 1,
+      "providers": [
+        "LunaticHelper"
+      ]
+    },
+    {
+      "id": "MaxHelpingHand/GroupedTriggerSpikesUp",
+      "kind": "entity",
+      "occurrences": 1,
+      "providers": [
+        "MaxHelpingHand"
+      ]
+    },
+    {
+      "id": "MaxHelpingHand/SetFlagOnSpawnController",
+      "kind": "entity",
+      "occurrences": 2,
+      "providers": [
+        "MaxHelpingHand"
+      ]
+    },
+    {
+      "id": "MaxHelpingHand/SidewaysJumpThru",
+      "kind": "entity",
+      "occurrences": 5,
+      "providers": [
+        "MaxHelpingHand"
+      ]
+    },
+    {
+      "id": "MaxHelpingHand/FlagToggleCameraOffsetTrigger",
+      "kind": "trigger",
+      "occurrences": 1,
+      "providers": [
+        "MaxHelpingHand"
+      ]
+    },
+    {
+      "id": "MaxHelpingHand/FlagToggleCameraTargetTrigger",
+      "kind": "trigger",
+      "occurrences": 2,
+      "providers": [
+        "MaxHelpingHand"
+      ]
+    },
+    {
+      "id": "MaxHelpingHand/FlagToggleSmoothCameraOffsetTrigger",
+      "kind": "trigger",
+      "occurrences": 1,
+      "providers": [
+        "MaxHelpingHand"
+      ]
+    },
+    {
+      "id": "everest/flagTrigger",
+      "kind": "trigger",
+      "occurrences": 2,
+      "providers": [
+        "EverestCore"
+      ]
+    }
+  ],
+  "fileBytes": 135363,
+  "guardEvidence": {
+    "decalCount": 278,
+    "groupedParallaxDecalCount": 0,
+    "stylegroundTagSets": [],
+    "taggedVanillaHeatWaveCount": 0
+  },
+  "helperRootFeatures": [],
+  "journalTriggers": [],
+  "manifestSha256": "9118e61cff9edb6a34e2eba9868e4c64a1721e095b8222d9f996c60ef1c352b4",
+  "packagedAsPlayableSlice": false,
+  "progressionCompatibilityId": "4024d36a33c33e411381e26ca2482ba09f828bc1c7f86306a98a915e904e39e1",
+  "providers": [
+    "CherryHelper",
+    "CollabUtils2",
+    "EverestCore",
+    "LunaticHelper",
+    "MaxHelpingHand"
+  ],
+  "roomCount": 13,
+  "rooms": [
+    "00- intro",
+    "01- Crusher",
+    "02- Bait N' Switch",
+    "02B- a stwawbewwy??",
+    "03- Uberjump",
+    "04- Head Trauma",
+    "05- Boing",
+    "06- Bubbles",
+    "07- Falling Cannon",
+    "07B- OwO whats this??",
+    "08- U Turn",
+    "09- Fin",
+    "filler"
+  ],
+  "schemaVersion": 1,
+  "sid": "StrawberryJam2021/1-Beginner/Bing_Over_Google",
+  "sourceMapSha256": "e770a8d193f217d09a6e153fbe272813d26a04d972df947ac812aa5cfe66f347",
+  "sourceModified": false,
+  "stage": "25K-E",
+  "vanillaEntityAndBackdropCounts": {
+    "blockField": 1,
+    "booster": 11,
+    "cameraOffsetTrigger": 15,
+    "changeRespawnTrigger": 8,
+    "exitBlock": 2,
+    "fakeWall": 1,
+    "introCrusher": 23,
+    "jumpThru": 7,
+    "lightbeam": 2,
+    "musicFadeTrigger": 53,
+    "parallax": 5,
+    "player": 20,
+    "refill": 6,
+    "snowBg": 1,
+    "snowFg": 1,
+    "spawnFacingTrigger": 1,
+    "spikesDown": 7,
+    "spikesLeft": 10,
+    "spikesRight": 4,
+    "spikesUp": 9,
+    "spinner": 1291,
+    "spring": 2,
+    "strawberry": 2,
+    "towerviewer": 10,
+    "wallSpringRight": 10,
+    "zipMover": 10
+  }
+}

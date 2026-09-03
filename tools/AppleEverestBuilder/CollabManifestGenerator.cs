@@ -33,6 +33,12 @@ internal static class CollabManifestGenerator
                     item.LogicalPath.StartsWith("Maps/" + id + "/", StringComparison.Ordinal) &&
                     item.LogicalPath.EndsWith(".bin", StringComparison.Ordinal))
                 .OrderBy(item => item.LogicalPath, StringComparer.Ordinal).ToArray();
+            // A semantic module can deliberately contribute lifecycle/state only.
+            // Its source archive may still carry a collab marker, but an empty
+            // content allow-list means the playable collab is outside this
+            // closure and must not be inferred from the unmounted source files.
+            if (mounts.Length == 0 && mod.StaticSemanticLowering?.ContentPrefixes != null)
+                continue;
             MapProgressionRecord[] owned = mounts.Select(item =>
                     maps.Single(map => map.Sid == item.LogicalPath["Maps/".Length..^4]))
                 .OrderBy(map => map.Sid, StringComparer.Ordinal).ToArray();

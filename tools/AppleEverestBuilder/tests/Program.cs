@@ -95,6 +95,7 @@ try
 {
     passed += ModInteropTests.Run(repository, temporary);
     passed += ModuleDurabilityTests.Run(repository, temporary);
+    passed += StrawberryJamStateTests.Run();
     passed += LevelSetProgressionTests.Run(repository, temporary);
     passed += CollabStaticTests.Run(repository, temporary);
 
@@ -1383,7 +1384,7 @@ try
          testClosureViolations[0].Contains("System.Diagnostics.Process::Start", StringComparison.Ordinal),
         "linked-runtime scanner isolates the intentional desktop static-plan test host spawn");
 
-    Pass(ProductPolicy.TransformerVersion == "apple-everest-static-v18", "real-ZIP transformer version");
+    Pass(ProductPolicy.TransformerVersion == "apple-everest-static-v19", "real-ZIP transformer version");
     Pass(File.Exists(Path.Combine(repository, "tools/AppleEverestBuilder/AssemblyFreezer.cs")),
         "binary-first assembly freezer exists");
     string models = File.ReadAllText(Path.Combine(repository, "tools/AppleEverestBuilder/Models.cs"));
