@@ -322,14 +322,14 @@ Reflection.Emit, desktop process/file-watcher behavior, unregistered helper
 ecosystems, dynamic/open-generic or custom runtime ModInterop systems, settings
 outside the bounded shapes, and module SaveData/Session outside the bounded
 default-YAML class fail closed or remain explicitly deferred. Custom audio is
-supported only through the exact `STATIC_CUSTOM_FMOD_BANK` class described
-above; dynamic bank discovery, custom master/strings replacement, native FMOD
+supported only through exact `STATIC_CUSTOM_FMOD_BANK` and bounded
+`STATIC_CUSTOM_FMOD_BANK_SET` manifests; dynamic bank discovery, custom master/strings replacement, native FMOD
 plugins, programmer-sound callbacks, and arbitrary hot unload/reload remain
 deferred. The exact Strawberry Jam Beginner audit inputs have been inspected
-and its four C-class helpers plus bounded root behavior now have hash-locked
-static semantic plans. This is not complete package support and the playable
-slice remains unbuilt while its custom-bank and Crystalline/Vortex mechanisms
-are pending.
+and its four C-class helpers, bounded root behavior, four-bank audio set, and
+Crystalline/Vortex mechanisms now have hash-locked static plans. This is not
+complete package support, and the real playable slice remains intentionally
+unbuilt until Stage 25K-G.
 
 ## Strawberry Jam Beginner semantic plans
 
@@ -354,3 +354,16 @@ into the K-E product.
 
 The full 18-graph census and explicit distance table are tracked in
 [`apple-everest/graph-il-closure-audit-stage25hc.json`](../apple-everest/graph-il-closure-audit-stage25hc.json).
+
+Stage 25K-F adds these exact Beginner-only rows:
+
+| Exact package | Accepted Beginner behavior | Remaining package boundary |
+| --- | --- | --- |
+| CrystallineHelper 1.17.2 | Nine `vitellary/bloomstrengthtrigger`, 43 `vitellary/editdepthtrigger`, and one `vitellary/triggertrigger` occurrences | All unrelated helper entities and profiles remain unselected. |
+| VortexHelper 1.2.19 | Two `VortexHelper/AttachedJumpThru` occurrences with typed static attachment, collision, rendering, movement, and lift behavior | The earlier H-C frozen-IL plans remain separate; unrelated Vortex entities and dynamic profiles remain unselected. |
+| StrawberryJam audio set | Four exact banks providing `sj21_jamjar-blue`, `sj21_BegLobby`, `sj21_bingovergoogle`, and `sj21_levelselect` after the retained Chrono bank | The other audited Strawberry Jam banks are host evidence only and are not packaged. |
+
+The complete 55-occurrence mapping and four-bank GUID census are in
+[`apple-everest/sj-crystalline-vortex-stage25kf.json`](../apple-everest/sj-crystalline-vortex-stage25kf.json)
+and
+[`apple-everest/sj-multibank-audio-stage25kf.json`](../apple-everest/sj-multibank-audio-stage25kf.json).

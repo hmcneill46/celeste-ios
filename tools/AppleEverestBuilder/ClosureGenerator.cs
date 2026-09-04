@@ -46,7 +46,7 @@ internal static class ClosureGenerator
         List<(ResolvedMod Mod, AppleStaticDeclaration Declaration)> codeModules = [];
         List<ContentMountRecord> stagedContent = [];
         List<FrozenAssemblyRecord> frozenAssemblies = [];
-        List<(CustomAudioBankPlan Plan, int Ordinal)> customAudioBanks = [];
+        List<(CustomAudioBankPlan Plan, int ModuleOrdinal, int BankOrdinal)> unorderedCustomAudioBanks = [];
         IReadOnlyList<FrozenIlTransformPlan> frozenIlTransforms = ComposeFrozenIlTransforms(ordered);
         int sourceIndex = 0;
         for (int modOrder = 0; modOrder < ordered.Count; modOrder++)
@@ -91,10 +91,12 @@ internal static class ClosureGenerator
                     Hashing.FileSha256(Path.Combine(content, logical.Replace('/', Path.DirectorySeparatorChar))),
                     Hashing.FileSha256(source)));
             }
-            foreach (CustomAudioBankPlan bank in mod.CustomAudioBanks.OrderBy(value => value.SourcePath, StringComparer.Ordinal))
-                customAudioBanks.Add((bank, customAudioBanks.Count));
+            for (int bankOrdinal = 0; bankOrdinal < mod.CustomAudioBanks.Count; bankOrdinal++)
+                unorderedCustomAudioBanks.Add((mod.CustomAudioBanks[bankOrdinal], modOrder, bankOrdinal));
         }
 
+        IReadOnlyList<(CustomAudioBankPlan Plan, int Ordinal)> customAudioBanks =
+            CustomAudioManifest.Order(unorderedCustomAudioBanks);
         CustomAudioManifest.ValidateGraph(customAudioBanks);
         foreach ((CustomAudioBankPlan bank, _) in customAudioBanks)
         {
@@ -1821,6 +1823,7 @@ internal static class ClosureGenerator
                 AppendSemanticFactoryCase(result, mod.Metadata.Name, factory);
         result.AppendLine("            case \"everest/coreMessage\":")
             .AppendLine("                entity = new global::Celeste.Mod.Entities.CustomCoreMessage(data, offset);")
+            .AppendLine("                entity.Add(new AppleEverestStaticIdentity(id, entityId));")
             .AppendLine("                AppleEverestStaticRuntime.RecordCustomFactoryUse(\"EverestCore\", \"everest/coreMessage\", \"entity\");")
             .AppendLine("                return true;");
         result.AppendLine("        }")
@@ -1844,6 +1847,7 @@ internal static class ClosureGenerator
             .AppendLine("            case \"everest/flagTrigger\":")
             .AppendLine("            case \"everest/smoothCameraOffsetTrigger\":")
             .AppendLine("                entity = AppleEverestSemanticFactories.CreateTrigger(id, data, offset, entityId);")
+            .AppendLine("                entity.Add(new AppleEverestStaticIdentity(id, entityId));")
             .AppendLine("                AppleEverestStaticRuntime.RecordCustomFactoryUse(\"EverestCore\", id, \"trigger\");")
             .AppendLine("                return true;");
         result.AppendLine("        }")
@@ -1888,6 +1892,7 @@ internal static class ClosureGenerator
         };
         result.Append("            case \"").Append(Escape(factory.Id)).AppendLine("\":")
             .Append("                entity = new global::").Append(factory.Type).Append('(').Append(arguments).AppendLine(");")
+            .AppendLine("                entity.Add(new AppleEverestStaticIdentity(id, entityId));")
             .Append("                AppleEverestStaticRuntime.RecordCustomFactoryUse(\"").Append(Escape(owner)).Append("\", \"")
             .Append(Escape(factory.Id)).Append("\", \"").Append(factory.Kind).AppendLine("\");")
             .AppendLine("                return true;");
@@ -1902,6 +1907,7 @@ internal static class ClosureGenerator
             result.Append("                entity = AppleEverestSemanticFactories.Create")
                 .Append(factory.Kind == "entity" ? "Entity" : "Trigger")
                 .AppendLine("(id, data, offset, entityId);");
+        result.AppendLine("                entity.Add(new AppleEverestStaticIdentity(id, entityId));");
         result.Append("                AppleEverestStaticRuntime.RecordCustomFactoryUse(\"").Append(Escape(owner)).Append("\", \"")
             .Append(Escape(factory.Id)).Append("\", \"").Append(factory.Kind).AppendLine("\");")
             .AppendLine("                return true;");

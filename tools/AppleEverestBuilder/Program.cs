@@ -118,6 +118,7 @@ internal static class Program
                                 CompatibilityClass.STATIC_DIRECT_ILHOOK_FREEZE or CompatibilityClass.HASH_LOCKED_STATIC_AOT_COMPATIBILITY or
                                 CompatibilityClass.HASH_LOCKED_STATIC_SEMANTIC_LOWERING
                                 or CompatibilityClass.STATIC_CUSTOM_FMOD_BANK
+                                or CompatibilityClass.STATIC_CUSTOM_FMOD_BANK_SET
                                 ? "candidate" : "deferred"
                         });
                     }

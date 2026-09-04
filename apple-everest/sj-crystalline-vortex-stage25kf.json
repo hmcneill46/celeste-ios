@@ -1,0 +1,2514 @@
+{
+  "artifactSha256": "a219eecc8d8fb834e9651a88e25ad6b4b8a0bf5e81fa0a6b243241bdc5c79dc7",
+  "canary": {
+    "attachedJumpThru": "attached to moving vanilla zip mover to exercise collision, motion and lift",
+    "bloom": "three exact position modes and values",
+    "dataOnly": true,
+    "editDepth": "typed canary target must change from -100 to -20000 before Awake",
+    "sid": "AppleEverest/Stage25KF",
+    "triggerTrigger": "Theo Holdable activates rumble and flag targets after 0.4 seconds"
+  },
+  "countsByCustomId": {
+    "VortexHelper/AttachedJumpThru": 2,
+    "vitellary/bloomstrengthtrigger": 9,
+    "vitellary/editdepthtrigger": 43,
+    "vitellary/triggertrigger": 1
+  },
+  "helperPins": {
+    "CrystallineHelper": {
+      "distributedSourceFileCount": 44,
+      "dllPath": "Code/bin/vitmod.dll",
+      "dllSha256": "456410258fbce4594c3e987d025bf651e1bd3f49d2d676a921d8ea9f27ba052a",
+      "ids": [
+        "vitellary/bloomstrengthtrigger",
+        "vitellary/editdepthtrigger",
+        "vitellary/triggertrigger"
+      ],
+      "license": "NO_LICENSE_FILE_IN_DISTRIBUTED_ARCHIVE",
+      "logicalSourceSha256": "6a5fdd5a7b4ae95b77ebc351a5b663c872c67a5d09347752fbf423e7ae50deb2",
+      "occurrenceCount": 53,
+      "publicUrl": "https://gamebanana.com/mmdl/1744902",
+      "reachableMethodCensus": [
+        {
+          "bodySha256": "3f9f6a77199afe6d101cd451272fe6ae5aca2721fdc80cbc0d402c448b537819",
+          "disposition": "REACHABLE_REQUIRED",
+          "dynamicDataCalls": [],
+          "hookCalls": [],
+          "method": "System.Void vitmod.BloomStrengthTrigger::.ctor(Celeste.EntityData,Microsoft.Xna.Framework.Vector2)",
+          "reflectionCalls": [],
+          "type": "vitmod.BloomStrengthTrigger"
+        },
+        {
+          "bodySha256": "05a67f0b1a5d14cb5940417eab31d7215f0af0b2f22ad1cf8db25667d3fffd56",
+          "disposition": "REACHABLE_REQUIRED",
+          "dynamicDataCalls": [],
+          "hookCalls": [],
+          "method": "System.Void vitmod.BloomStrengthTrigger::OnStay(Celeste.Player)",
+          "reflectionCalls": [],
+          "type": "vitmod.BloomStrengthTrigger"
+        },
+        {
+          "bodySha256": "3e2167895f84cfba30e13814e6c1dda6f1e381f9087bf3ac115b4fe05a0fa129",
+          "disposition": "REACHABLE_REQUIRED",
+          "dynamicDataCalls": [],
+          "hookCalls": [],
+          "method": "System.Void vitmod.EditDepthTrigger::.ctor(Celeste.EntityData,Microsoft.Xna.Framework.Vector2)",
+          "reflectionCalls": [],
+          "type": "vitmod.EditDepthTrigger"
+        },
+        {
+          "bodySha256": "512d21607bb186e41e94bb52b38d73d4146f364a2a423052d2f6b880a847eda2",
+          "disposition": "REACHABLE_REQUIRED",
+          "dynamicDataCalls": [],
+          "hookCalls": [],
+          "method": "System.Void vitmod.EditDepthTrigger::Added(Monocle.Scene)",
+          "reflectionCalls": [
+            "System.String System.Type::get_FullName()"
+          ],
+          "type": "vitmod.EditDepthTrigger"
+        },
+        {
+          "bodySha256": "560a9246f5539fa9179fdb85b1373e1072a1f04d4a0fbb586293228212609f06",
+          "disposition": "REACHABLE_REQUIRED",
+          "dynamicDataCalls": [],
+          "hookCalls": [],
+          "method": "System.Void vitmod.EditDepthTrigger::HandleEntity(Monocle.Entity,System.Boolean)",
+          "reflectionCalls": [],
+          "type": "vitmod.EditDepthTrigger"
+        },
+        {
+          "bodySha256": "40fc6da7f9e35e157559afdcdb24a21f5fcaaefc174349a6175b9e5f659f7a16",
+          "disposition": "REACHABLE_REQUIRED",
+          "dynamicDataCalls": [],
+          "hookCalls": [],
+          "method": "System.Void vitmod.EditDepthTrigger::Update()",
+          "reflectionCalls": [],
+          "type": "vitmod.EditDepthTrigger"
+        },
+        {
+          "bodySha256": "152e7f21c97669f942d53bdddbb6ed5d4ddaed375ae9b04ab2ef7e52b7a938c7",
+          "disposition": "PRESENT_UNREACHABLE_EXACT_AUTHORED_PROFILE",
+          "dynamicDataCalls": [],
+          "hookCalls": [],
+          "method": "System.Boolean vitmod.TriggerTrigger::CheckInput(vitmod.TriggerTrigger/InputTypes,System.Boolean)",
+          "reflectionCalls": [],
+          "type": "vitmod.TriggerTrigger"
+        },
+        {
+          "bodySha256": "73a3f40e204846807af0b5b472c0b8ea1960202b1fa734b946af2f87c4f6c660",
+          "disposition": "REACHABLE_REQUIRED",
+          "dynamicDataCalls": [],
+          "hookCalls": [],
+          "method": "System.Boolean vitmod.TriggerTrigger::Compare(System.Single,System.Single)",
+          "reflectionCalls": [],
+          "type": "vitmod.TriggerTrigger"
+        },
+        {
+          "bodySha256": "c562abae82fb7e77691c543c085079206cb22b83576df9ee416381b537c044a4",
+          "disposition": "REACHABLE_REQUIRED",
+          "dynamicDataCalls": [],
+          "hookCalls": [],
+          "method": "System.Boolean vitmod.TriggerTrigger::GetActivateCondition(Celeste.Player)",
+          "reflectionCalls": [],
+          "type": "vitmod.TriggerTrigger"
+        },
+        {
+          "bodySha256": "97f6a06849637aa64aa401d74e796bb2b8fac5d1050ebf5510a38162177f096b",
+          "disposition": "PRESENT_UNREACHABLE_EXACT_AUTHORED_PROFILE",
+          "dynamicDataCalls": [],
+          "hookCalls": [
+            "System.Boolean On.Celeste.PlayerCollider/orig_Check::Invoke(Celeste.PlayerCollider,Celeste.Player)"
+          ],
+          "method": "System.Boolean vitmod.TriggerTrigger::PlayerCollider_Check(On.Celeste.PlayerCollider/orig_Check,Celeste.PlayerCollider,Celeste.Player)",
+          "reflectionCalls": [
+            "System.String System.Type::get_FullName()",
+            "System.String System.Reflection.MemberInfo::get_Name()",
+            "System.String System.Reflection.MemberInfo::get_Name()",
+            "System.String System.Reflection.MemberInfo::get_Name()"
+          ],
+          "type": "vitmod.TriggerTrigger"
+        },
+        {
+          "bodySha256": "203e9fca967745945ebb74d26a1a305c0e6494142e0a1abe599189442e272bad",
+          "disposition": "PRESENT_UNREACHABLE_EXACT_AUTHORED_PROFILE",
+          "dynamicDataCalls": [],
+          "hookCalls": [],
+          "method": "System.Collections.IEnumerator vitmod.TriggerTrigger::InteractExit()",
+          "reflectionCalls": [],
+          "type": "vitmod.TriggerTrigger"
+        },
+        {
+          "bodySha256": "df0726dbdfeebbe6e5af0bfd0b8d55650c47a404bde29beb0a77351baf270ceb",
+          "disposition": "PRESENT_UNREACHABLE_EXACT_AUTHORED_PROFILE",
+          "dynamicDataCalls": [],
+          "hookCalls": [],
+          "method": "System.Collections.IEnumerator vitmod.TriggerTrigger::JumpRoutine(Celeste.Player,vitmod.TriggerTrigger)",
+          "reflectionCalls": [],
+          "type": "vitmod.TriggerTrigger"
+        },
+        {
+          "bodySha256": "ea6f4c1774b56fb50fec8b1306aebd45023b852a46d4b7d038fba60a0e609081",
+          "disposition": "REACHABLE_REQUIRED",
+          "dynamicDataCalls": [],
+          "hookCalls": [],
+          "method": "System.Void vitmod.TriggerTrigger::.cctor()",
+          "reflectionCalls": [],
+          "type": "vitmod.TriggerTrigger"
+        },
+        {
+          "bodySha256": "3fea8ca7d07f0c2e793d225a20789d05a92859dd5110c68480dad722dc9e482a",
+          "disposition": "REACHABLE_REQUIRED",
+          "dynamicDataCalls": [],
+          "hookCalls": [],
+          "method": "System.Void vitmod.TriggerTrigger::.ctor(Celeste.EntityData,Microsoft.Xna.Framework.Vector2)",
+          "reflectionCalls": [],
+          "type": "vitmod.TriggerTrigger"
+        },
+        {
+          "bodySha256": "1692765ace4070bc4b85cbf85a09a291c29effb38bc994b3d433785cf1a012f9",
+          "disposition": "REACHABLE_REQUIRED",
+          "dynamicDataCalls": [],
+          "hookCalls": [],
+          "method": "System.Void vitmod.TriggerTrigger::<.ctor>b__6_0(Celeste.Holdable)",
+          "reflectionCalls": [],
+          "type": "vitmod.TriggerTrigger"
+        },
+        {
+          "bodySha256": "f7154505f55b25c5356db6b6ad7acb7c08a3317e70db254d6cb2b9cbfdebff99",
+          "disposition": "REACHABLE_REQUIRED",
+          "dynamicDataCalls": [],
+          "hookCalls": [],
+          "method": "System.Void vitmod.TriggerTrigger::<.ctor>b__6_1(Celeste.Player)",
+          "reflectionCalls": [],
+          "type": "vitmod.TriggerTrigger"
+        },
+        {
+          "bodySha256": "d44d83e723f3064018c38019d12ed314405c6e0bea9053f151db54f7f1deb55e",
+          "disposition": "REACHABLE_REQUIRED",
+          "dynamicDataCalls": [],
+          "hookCalls": [],
+          "method": "System.Void vitmod.TriggerTrigger::<.ctor>b__6_2(System.Single)",
+          "reflectionCalls": [],
+          "type": "vitmod.TriggerTrigger"
+        },
+        {
+          "bodySha256": "9e2684f9ee650ec34edd1ba21260e4fcf9f69ae8b0069bec7d9abfee6cff795a",
+          "disposition": "REACHABLE_REQUIRED",
+          "dynamicDataCalls": [],
+          "hookCalls": [],
+          "method": "System.Void vitmod.TriggerTrigger::ActivateTriggers(Celeste.Player)",
+          "reflectionCalls": [],
+          "type": "vitmod.TriggerTrigger"
+        },
+        {
+          "bodySha256": "a85c6e700955d0e3a6e038e097960ff1c6c6429fc2d3da42577ebdc1d5212ea1",
+          "disposition": "REACHABLE_REQUIRED",
+          "dynamicDataCalls": [],
+          "hookCalls": [],
+          "method": "System.Void vitmod.TriggerTrigger::Awake(Monocle.Scene)",
+          "reflectionCalls": [],
+          "type": "vitmod.TriggerTrigger"
+        },
+        {
+          "bodySha256": "a7634756e321cc72384346cf17aea1cd606f1dd46a5c729f728923fb74f73c2d",
+          "disposition": "REACHABLE_REQUIRED",
+          "dynamicDataCalls": [],
+          "hookCalls": [],
+          "method": "System.Void vitmod.TriggerTrigger::CleanTriggers()",
+          "reflectionCalls": [],
+          "type": "vitmod.TriggerTrigger"
+        },
+        {
+          "bodySha256": "f5d6340d70cf23382a12dd874a6745633ed062e4d28008d65d33f353142bf98f",
+          "disposition": "REACHABLE_REQUIRED",
+          "dynamicDataCalls": [],
+          "hookCalls": [],
+          "method": "System.Void vitmod.TriggerTrigger::DeactivateTriggers(Celeste.Player)",
+          "reflectionCalls": [],
+          "type": "vitmod.TriggerTrigger"
+        },
+        {
+          "bodySha256": "5103634c5dbeb38d21faf1ba67a8a7e75606dc81632ab246facf61ccb308771f",
+          "disposition": "PRESENT_UNREACHABLE_EXACT_AUTHORED_PROFILE",
+          "dynamicDataCalls": [],
+          "hookCalls": [],
+          "method": "System.Void vitmod.TriggerTrigger::Engine_Update(MonoMod.Cil.ILContext)",
+          "reflectionCalls": [],
+          "type": "vitmod.TriggerTrigger"
+        },
+        {
+          "bodySha256": "ea07f87d39b5923806fce4cab612b4123b3e134a43118ac98df2c743f0dfd08c",
+          "disposition": "PRESENT_UNREACHABLE_EXACT_AUTHORED_PROFILE",
+          "dynamicDataCalls": [],
+          "hookCalls": [
+            "System.Void On.Celeste.Level/orig_LoadLevel::Invoke(Celeste.Level,Celeste.Player/IntroTypes,System.Boolean)"
+          ],
+          "method": "System.Void vitmod.TriggerTrigger::Level_LoadLevel(On.Celeste.Level/orig_LoadLevel,Celeste.Level,Celeste.Player/IntroTypes,System.Boolean)",
+          "reflectionCalls": [],
+          "type": "vitmod.TriggerTrigger"
+        },
+        {
+          "bodySha256": "ff0fde3eec501a55d34200b6d40854525447cd57a30bedbd14698b6176d8eea3",
+          "disposition": "PRESENT_UNREACHABLE_EXACT_AUTHORED_PROFILE",
+          "dynamicDataCalls": [],
+          "hookCalls": [
+            "System.Void vitmod.TriggerTrigger::Level_LoadLevel(On.Celeste.Level/orig_LoadLevel,Celeste.Level,Celeste.Player/IntroTypes,System.Boolean)",
+            "System.Void On.Celeste.Level/hook_LoadLevel::.ctor(System.Object,System.IntPtr)",
+            "System.Void On.Celeste.Level::add_LoadLevel(On.Celeste.Level/hook_LoadLevel)",
+            "System.Void vitmod.TriggerTrigger::Player_Jump(On.Celeste.Player/orig_Jump,Celeste.Player,System.Boolean,System.Boolean)",
+            "System.Void On.Celeste.Player/hook_Jump::.ctor(System.Object,System.IntPtr)",
+            "System.Void On.Celeste.Player::add_Jump(On.Celeste.Player/hook_Jump)",
+            "System.Void vitmod.TriggerTrigger::Player_WallJump(On.Celeste.Player/orig_WallJump,Celeste.Player,System.Int32)",
+            "System.Void On.Celeste.Player/hook_WallJump::.ctor(System.Object,System.IntPtr)",
+            "System.Void On.Celeste.Player::add_WallJump(On.Celeste.Player/hook_WallJump)",
+            "System.Boolean vitmod.TriggerTrigger::PlayerCollider_Check(On.Celeste.PlayerCollider/orig_Check,Celeste.PlayerCollider,Celeste.Player)",
+            "System.Void On.Celeste.PlayerCollider/hook_Check::.ctor(System.Object,System.IntPtr)",
+            "System.Void On.Celeste.PlayerCollider::add_Check(On.Celeste.PlayerCollider/hook_Check)",
+            "System.Void IL.Monocle.Engine::add_Update(MonoMod.Cil.ILContext/Manipulator)"
+          ],
+          "method": "System.Void vitmod.TriggerTrigger::Load()",
+          "reflectionCalls": [],
+          "type": "vitmod.TriggerTrigger"
+        },
+        {
+          "bodySha256": "3ea9ad19f29f7aaae9fb3c5bb9ad1dc13d565fc680715220e249eaa420bf0c1e",
+          "disposition": "REACHABLE_REQUIRED",
+          "dynamicDataCalls": [],
+          "hookCalls": [],
+          "method": "System.Void vitmod.TriggerTrigger::OnEnter(Celeste.Player)",
+          "reflectionCalls": [],
+          "type": "vitmod.TriggerTrigger"
+        },
+        {
+          "bodySha256": "37bf514b317ed82ba589dca45672ef22781251884f28b5735be90809ead256b9",
+          "disposition": "REACHABLE_REQUIRED",
+          "dynamicDataCalls": [],
+          "hookCalls": [],
+          "method": "System.Void vitmod.TriggerTrigger::OnLeave(Celeste.Player)",
+          "reflectionCalls": [],
+          "type": "vitmod.TriggerTrigger"
+        },
+        {
+          "bodySha256": "9541fbbf6b236eb078381353c930cd2cc5c52c3770d7589648e56d057d8428f3",
+          "disposition": "PRESENT_UNREACHABLE_EXACT_AUTHORED_PROFILE",
+          "dynamicDataCalls": [],
+          "hookCalls": [
+            "System.Void On.Celeste.Player/orig_Jump::Invoke(Celeste.Player,System.Boolean,System.Boolean)"
+          ],
+          "method": "System.Void vitmod.TriggerTrigger::Player_Jump(On.Celeste.Player/orig_Jump,Celeste.Player,System.Boolean,System.Boolean)",
+          "reflectionCalls": [],
+          "type": "vitmod.TriggerTrigger"
+        },
+        {
+          "bodySha256": "82ecf6253093f78152b8eb7003688392417ddbe16ce7270f0cf0e32bc96c8113",
+          "disposition": "PRESENT_UNREACHABLE_EXACT_AUTHORED_PROFILE",
+          "dynamicDataCalls": [],
+          "hookCalls": [
+            "System.Void On.Celeste.Player/orig_WallJump::Invoke(Celeste.Player,System.Int32)"
+          ],
+          "method": "System.Void vitmod.TriggerTrigger::Player_WallJump(On.Celeste.Player/orig_WallJump,Celeste.Player,System.Int32)",
+          "reflectionCalls": [],
+          "type": "vitmod.TriggerTrigger"
+        },
+        {
+          "bodySha256": "cb4f9faaaeca025d2f0375362f8ee83153a49321aa9d2dcae4322869ffdab51b",
+          "disposition": "REACHABLE_REQUIRED",
+          "dynamicDataCalls": [],
+          "hookCalls": [],
+          "method": "System.Void vitmod.TriggerTrigger::TryActivate(Celeste.Player)",
+          "reflectionCalls": [],
+          "type": "vitmod.TriggerTrigger"
+        },
+        {
+          "bodySha256": "0804f813b51a332ca379d54f3dd4fea2bd8cb9bb308488111eb66e3cecfaa65b",
+          "disposition": "REACHABLE_REQUIRED",
+          "dynamicDataCalls": [],
+          "hookCalls": [],
+          "method": "System.Void vitmod.TriggerTrigger::TryDeactivate(Celeste.Player,System.Boolean)",
+          "reflectionCalls": [],
+          "type": "vitmod.TriggerTrigger"
+        },
+        {
+          "bodySha256": "02233e80c62aca1b630f1f66b205c0657f5562922728958e6305bef393d84ed4",
+          "disposition": "REACHABLE_REQUIRED",
+          "dynamicDataCalls": [],
+          "hookCalls": [],
+          "method": "System.Void vitmod.TriggerTrigger::TryRemove()",
+          "reflectionCalls": [],
+          "type": "vitmod.TriggerTrigger"
+        },
+        {
+          "bodySha256": "f60a024ba8168b48c82341308d52470ee9c19d3ed9818d13c8b642dc47a17777",
+          "disposition": "PRESENT_UNREACHABLE_EXACT_AUTHORED_PROFILE",
+          "dynamicDataCalls": [],
+          "hookCalls": [
+            "System.Void vitmod.TriggerTrigger::Level_LoadLevel(On.Celeste.Level/orig_LoadLevel,Celeste.Level,Celeste.Player/IntroTypes,System.Boolean)",
+            "System.Void On.Celeste.Level/hook_LoadLevel::.ctor(System.Object,System.IntPtr)",
+            "System.Void On.Celeste.Level::remove_LoadLevel(On.Celeste.Level/hook_LoadLevel)",
+            "System.Void vitmod.TriggerTrigger::Player_Jump(On.Celeste.Player/orig_Jump,Celeste.Player,System.Boolean,System.Boolean)",
+            "System.Void On.Celeste.Player/hook_Jump::.ctor(System.Object,System.IntPtr)",
+            "System.Void On.Celeste.Player::remove_Jump(On.Celeste.Player/hook_Jump)",
+            "System.Void vitmod.TriggerTrigger::Player_WallJump(On.Celeste.Player/orig_WallJump,Celeste.Player,System.Int32)",
+            "System.Void On.Celeste.Player/hook_WallJump::.ctor(System.Object,System.IntPtr)",
+            "System.Void On.Celeste.Player::remove_WallJump(On.Celeste.Player/hook_WallJump)",
+            "System.Boolean vitmod.TriggerTrigger::PlayerCollider_Check(On.Celeste.PlayerCollider/orig_Check,Celeste.PlayerCollider,Celeste.Player)",
+            "System.Void On.Celeste.PlayerCollider/hook_Check::.ctor(System.Object,System.IntPtr)",
+            "System.Void On.Celeste.PlayerCollider::remove_Check(On.Celeste.PlayerCollider/hook_Check)",
+            "System.Void IL.Monocle.Engine::remove_Update(MonoMod.Cil.ILContext/Manipulator)"
+          ],
+          "method": "System.Void vitmod.TriggerTrigger::Unload()",
+          "reflectionCalls": [],
+          "type": "vitmod.TriggerTrigger"
+        },
+        {
+          "bodySha256": "8e5a811e156fa993c71a2e905672f37c7cd73217ee8d296287849b17796cb14f",
+          "disposition": "REACHABLE_REQUIRED",
+          "dynamicDataCalls": [],
+          "hookCalls": [],
+          "method": "System.Void vitmod.TriggerTrigger::Update()",
+          "reflectionCalls": [],
+          "type": "vitmod.TriggerTrigger"
+        },
+        {
+          "bodySha256": "12762ac987238744cbe778d4e656b4e5de1992ec7b92bd280f4e0f4d86d17e88",
+          "disposition": "REACHABLE_REQUIRED",
+          "dynamicDataCalls": [],
+          "hookCalls": [],
+          "method": "System.Void vitmod.TriggerTrigger::UpdateConditions(Celeste.Player)",
+          "reflectionCalls": [],
+          "type": "vitmod.TriggerTrigger"
+        },
+        {
+          "bodySha256": "69f759d414e81972ec9bad2a67f2a397ad033608c2e73138b0a8c9055d9bf685",
+          "disposition": "PRESENT_UNREACHABLE_EXACT_AUTHORED_PROFILE",
+          "dynamicDataCalls": [],
+          "hookCalls": [],
+          "method": "System.Void vitmod.TriggerTrigger::UpdateFreezeInput()",
+          "reflectionCalls": [],
+          "type": "vitmod.TriggerTrigger"
+        },
+        {
+          "bodySha256": "3f1d9c85bc224b92c9de8545e003e8fe3337653c25507a7fd75842b8dde21e38",
+          "disposition": "REACHABLE_REQUIRED",
+          "dynamicDataCalls": [],
+          "hookCalls": [],
+          "method": "System.Void vitmod.TriggerTrigger::UpdateTriggers(Celeste.Player)",
+          "reflectionCalls": [],
+          "type": "vitmod.TriggerTrigger"
+        },
+        {
+          "bodySha256": "dbaa6d73e197778ec3a4a979d79796acfc480591b537cc711671165b52b98102",
+          "disposition": "REACHABLE_REQUIRED",
+          "dynamicDataCalls": [],
+          "hookCalls": [],
+          "method": "System.Boolean vitmod.TriggerTrigger/<>c::<CleanTriggers>b__16_0(Celeste.Trigger)",
+          "reflectionCalls": [],
+          "type": "vitmod.TriggerTrigger/<>c"
+        },
+        {
+          "bodySha256": "178664f351afecdd68dce71f148477848131f3445b15ff9f375d6b8eba9b6bf4",
+          "disposition": "PRESENT_UNREACHABLE_EXACT_AUTHORED_PROFILE",
+          "dynamicDataCalls": [],
+          "hookCalls": [],
+          "method": "System.Boolean vitmod.TriggerTrigger/<>c::<Engine_Update>b__28_0(Mono.Cecil.Cil.Instruction)",
+          "reflectionCalls": [],
+          "type": "vitmod.TriggerTrigger/<>c"
+        },
+        {
+          "bodySha256": "454bbdc7815012fbffaebb0b4b151dd5e2aa19b5e1acf0e60794ce4370a94eb5",
+          "disposition": "PRESENT_UNREACHABLE_EXACT_AUTHORED_PROFILE",
+          "dynamicDataCalls": [],
+          "hookCalls": [],
+          "method": "System.Boolean vitmod.TriggerTrigger/<>c::<Engine_Update>b__28_1(Mono.Cecil.Cil.Instruction)",
+          "reflectionCalls": [],
+          "type": "vitmod.TriggerTrigger/<>c"
+        },
+        {
+          "bodySha256": "1f0dd3cc1a19fd46bc667833d0f7e9afa1af80ae714305dcce4533719416a124",
+          "disposition": "REACHABLE_REQUIRED",
+          "dynamicDataCalls": [],
+          "hookCalls": [],
+          "method": "System.Void vitmod.TriggerTrigger/<>c::.cctor()",
+          "reflectionCalls": [],
+          "type": "vitmod.TriggerTrigger/<>c"
+        },
+        {
+          "bodySha256": "7905746033bb0f37fe1060a42f1aeaf9ed38ec2d067fa4cd1e6be780af540ed9",
+          "disposition": "REACHABLE_REQUIRED",
+          "dynamicDataCalls": [],
+          "hookCalls": [],
+          "method": "System.Void vitmod.TriggerTrigger/<>c::.ctor()",
+          "reflectionCalls": [],
+          "type": "vitmod.TriggerTrigger/<>c"
+        },
+        {
+          "bodySha256": "3b267ee57ac5a012c99c5db1d4bacebfc49b3e453cbc95adc0d02f3ec34fb951",
+          "disposition": "REACHABLE_REQUIRED",
+          "dynamicDataCalls": [],
+          "hookCalls": [],
+          "method": "System.Void vitmod.TriggerTrigger/<>c__DisplayClass12_0::.ctor()",
+          "reflectionCalls": [],
+          "type": "vitmod.TriggerTrigger/<>c__DisplayClass12_0"
+        },
+        {
+          "bodySha256": "331650f93783d8bd1cb85b7193eba0f808551f2799896755c54d7db3d0f70e58",
+          "disposition": "REACHABLE_REQUIRED",
+          "dynamicDataCalls": [],
+          "hookCalls": [],
+          "method": "System.Void vitmod.TriggerTrigger/<>c__DisplayClass12_0::<TryActivate>b__0()",
+          "reflectionCalls": [],
+          "type": "vitmod.TriggerTrigger/<>c__DisplayClass12_0"
+        },
+        {
+          "bodySha256": "32daa1cf0f62fd4beb2158cac513f563b5a1b3f018392a216a25277092392504",
+          "disposition": "REACHABLE_REQUIRED",
+          "dynamicDataCalls": [],
+          "hookCalls": [],
+          "method": "System.Void vitmod.TriggerTrigger/<>c__DisplayClass13_0::.ctor()",
+          "reflectionCalls": [],
+          "type": "vitmod.TriggerTrigger/<>c__DisplayClass13_0"
+        },
+        {
+          "bodySha256": "41e409d85c7c3bc4c0b7229b94c36090160dd169a801309983feaada3397c5ed",
+          "disposition": "REACHABLE_REQUIRED",
+          "dynamicDataCalls": [],
+          "hookCalls": [],
+          "method": "System.Void vitmod.TriggerTrigger/<>c__DisplayClass13_0::<TryDeactivate>b__0()",
+          "reflectionCalls": [],
+          "type": "vitmod.TriggerTrigger/<>c__DisplayClass13_0"
+        },
+        {
+          "bodySha256": "7fe5e0260a410f81964861db94c041ba248c46a1518c2cd05aaf48d86eec8631",
+          "disposition": "PRESENT_UNREACHABLE_EXACT_AUTHORED_PROFILE",
+          "dynamicDataCalls": [],
+          "hookCalls": [],
+          "method": "System.Boolean vitmod.TriggerTrigger/<InteractExit>d__21::MoveNext()",
+          "reflectionCalls": [],
+          "type": "vitmod.TriggerTrigger/<InteractExit>d__21"
+        },
+        {
+          "bodySha256": "00f8af7fbd5559fb5c246b874c7d501815438edc8563d98d4481f57b746b9a02",
+          "disposition": "PRESENT_UNREACHABLE_EXACT_AUTHORED_PROFILE",
+          "dynamicDataCalls": [],
+          "hookCalls": [],
+          "method": "System.Object vitmod.TriggerTrigger/<InteractExit>d__21::System.Collections.Generic.IEnumerator<System.Object>.get_Current()",
+          "reflectionCalls": [],
+          "type": "vitmod.TriggerTrigger/<InteractExit>d__21"
+        },
+        {
+          "bodySha256": "f05673cfe799217488250b81446fd270a25a9f40ab7fae20b30a972d004e70cd",
+          "disposition": "PRESENT_UNREACHABLE_EXACT_AUTHORED_PROFILE",
+          "dynamicDataCalls": [],
+          "hookCalls": [],
+          "method": "System.Object vitmod.TriggerTrigger/<InteractExit>d__21::System.Collections.IEnumerator.get_Current()",
+          "reflectionCalls": [],
+          "type": "vitmod.TriggerTrigger/<InteractExit>d__21"
+        },
+        {
+          "bodySha256": "83b40e83464dc062414d9f78db1e32b89611a87595ae91e720b35c9bd5ac3938",
+          "disposition": "PRESENT_UNREACHABLE_EXACT_AUTHORED_PROFILE",
+          "dynamicDataCalls": [],
+          "hookCalls": [],
+          "method": "System.Void vitmod.TriggerTrigger/<InteractExit>d__21::.ctor(System.Int32)",
+          "reflectionCalls": [],
+          "type": "vitmod.TriggerTrigger/<InteractExit>d__21"
+        },
+        {
+          "bodySha256": "4d51c1f923c0b76ee3717748d74126a8d71495e161741e647bffd6e0ee19c837",
+          "disposition": "PRESENT_UNREACHABLE_EXACT_AUTHORED_PROFILE",
+          "dynamicDataCalls": [],
+          "hookCalls": [],
+          "method": "System.Void vitmod.TriggerTrigger/<InteractExit>d__21::System.Collections.IEnumerator.Reset()",
+          "reflectionCalls": [],
+          "type": "vitmod.TriggerTrigger/<InteractExit>d__21"
+        },
+        {
+          "bodySha256": "3322dabc26fd5ae5c0d82ce6ac2ed8e6989c06908a6e22420c100f0489ce061e",
+          "disposition": "PRESENT_UNREACHABLE_EXACT_AUTHORED_PROFILE",
+          "dynamicDataCalls": [],
+          "hookCalls": [],
+          "method": "System.Void vitmod.TriggerTrigger/<InteractExit>d__21::System.IDisposable.Dispose()",
+          "reflectionCalls": [],
+          "type": "vitmod.TriggerTrigger/<InteractExit>d__21"
+        },
+        {
+          "bodySha256": "066f208b27fff9d2fd5445a9c9668ffe697dea29f42664f89f959eacdcbefcd1",
+          "disposition": "PRESENT_UNREACHABLE_EXACT_AUTHORED_PROFILE",
+          "dynamicDataCalls": [],
+          "hookCalls": [],
+          "method": "System.Boolean vitmod.TriggerTrigger/<JumpRoutine>d__25::MoveNext()",
+          "reflectionCalls": [],
+          "type": "vitmod.TriggerTrigger/<JumpRoutine>d__25"
+        },
+        {
+          "bodySha256": "909860e437fdf01ce4e90dc3cfc9647d9f78c93d49adb59a8e6789270784bb33",
+          "disposition": "PRESENT_UNREACHABLE_EXACT_AUTHORED_PROFILE",
+          "dynamicDataCalls": [],
+          "hookCalls": [],
+          "method": "System.Object vitmod.TriggerTrigger/<JumpRoutine>d__25::System.Collections.Generic.IEnumerator<System.Object>.get_Current()",
+          "reflectionCalls": [],
+          "type": "vitmod.TriggerTrigger/<JumpRoutine>d__25"
+        },
+        {
+          "bodySha256": "a0d693f8ef780ef21e50547a4a39537fce2a9ad42b216a8d6f1adb10826560cd",
+          "disposition": "PRESENT_UNREACHABLE_EXACT_AUTHORED_PROFILE",
+          "dynamicDataCalls": [],
+          "hookCalls": [],
+          "method": "System.Object vitmod.TriggerTrigger/<JumpRoutine>d__25::System.Collections.IEnumerator.get_Current()",
+          "reflectionCalls": [],
+          "type": "vitmod.TriggerTrigger/<JumpRoutine>d__25"
+        },
+        {
+          "bodySha256": "d504ec170fb5f3aa195a24bb0e8d1d30fb645b9c77db35eba6e38337847cd587",
+          "disposition": "PRESENT_UNREACHABLE_EXACT_AUTHORED_PROFILE",
+          "dynamicDataCalls": [],
+          "hookCalls": [],
+          "method": "System.Void vitmod.TriggerTrigger/<JumpRoutine>d__25::.ctor(System.Int32)",
+          "reflectionCalls": [],
+          "type": "vitmod.TriggerTrigger/<JumpRoutine>d__25"
+        },
+        {
+          "bodySha256": "072f19e31d17c259aa0deab171dddfdab44cbd1ee1696d967fa9f7a72533e00d",
+          "disposition": "PRESENT_UNREACHABLE_EXACT_AUTHORED_PROFILE",
+          "dynamicDataCalls": [],
+          "hookCalls": [],
+          "method": "System.Void vitmod.TriggerTrigger/<JumpRoutine>d__25::System.Collections.IEnumerator.Reset()",
+          "reflectionCalls": [],
+          "type": "vitmod.TriggerTrigger/<JumpRoutine>d__25"
+        },
+        {
+          "bodySha256": "9990e965d2f7c1ba795cc9a55f31af96ad8bf7fb63aa9467e87ce5ccd9ed0a56",
+          "disposition": "PRESENT_UNREACHABLE_EXACT_AUTHORED_PROFILE",
+          "dynamicDataCalls": [],
+          "hookCalls": [],
+          "method": "System.Void vitmod.TriggerTrigger/<JumpRoutine>d__25::System.IDisposable.Dispose()",
+          "reflectionCalls": [],
+          "type": "vitmod.TriggerTrigger/<JumpRoutine>d__25"
+        }
+      ],
+      "sourceAvailability": "DISTRIBUTED_SOURCE_PRESENT",
+      "sourceCommit": "NOT_BOUND_BY_RELEASE_METADATA",
+      "unclassifiedMethodCount": 0,
+      "version": "1.17.2",
+      "zipSha256": "4573f5e45dce0905142cd2b119f4a9a744bdce8ef3199319d1e46b6d1d342747"
+    },
+    "VortexHelper": {
+      "distributedSourceFileCount": 15,
+      "dllPath": "Code/bin/VortexHelper.dll",
+      "dllSha256": "f5a32f02c2699dcdf41bb1af808ead631491571c3d259429761953693bd37f73",
+      "ids": [
+        "VortexHelper/AttachedJumpThru"
+      ],
+      "license": "NO_LICENSE_FILE_IN_DISTRIBUTED_ARCHIVE",
+      "logicalSourceSha256": "c071d33bb1cc4f0387ea204834e212bd020f3143aea68c9f4e56b9bfa35def1b",
+      "occurrenceCount": 2,
+      "priorAcceptedEvidence": "Stage 25H-C frozen-IL evidence retained; it did not cover this AttachedJumpThru population",
+      "publicUrl": "https://gamebanana.com/mmdl/1368600",
+      "reachableMethodCensus": [
+        {
+          "bodySha256": "e0134d92e0014d4f61f5c7b2099412d7e338fc06de05ae55a09b436fa045b8ee",
+          "disposition": "REACHABLE_REQUIRED",
+          "dynamicDataCalls": [],
+          "hookCalls": [],
+          "method": "System.Boolean Celeste.Mod.VortexHelper.Entities.AttachedJumpThru::IsRiding(Celeste.Solid)",
+          "reflectionCalls": [],
+          "type": "Celeste.Mod.VortexHelper.Entities.AttachedJumpThru"
+        },
+        {
+          "bodySha256": "07eb2dfe0ffa450707760be4c7a2d307dc648d7947fa7e4dcb486be20edaedd5",
+          "disposition": "REACHABLE_REQUIRED",
+          "dynamicDataCalls": [],
+          "hookCalls": [],
+          "method": "System.Void Celeste.Mod.VortexHelper.Entities.AttachedJumpThru::.ctor(Celeste.EntityData,Microsoft.Xna.Framework.Vector2)",
+          "reflectionCalls": [],
+          "type": "Celeste.Mod.VortexHelper.Entities.AttachedJumpThru"
+        },
+        {
+          "bodySha256": "a0ece1777386479fa0e0e133519d03e83724ef5afd6dd2ee8b084f6055885c85",
+          "disposition": "REACHABLE_REQUIRED",
+          "dynamicDataCalls": [],
+          "hookCalls": [],
+          "method": "System.Void Celeste.Mod.VortexHelper.Entities.AttachedJumpThru::.ctor(Microsoft.Xna.Framework.Vector2,System.Int32,System.String,System.Int32)",
+          "reflectionCalls": [],
+          "type": "Celeste.Mod.VortexHelper.Entities.AttachedJumpThru"
+        },
+        {
+          "bodySha256": "965d9e70054125510d29eb50341e52befc42f5ed540d9e8dab4cd457b420aae9",
+          "disposition": "REACHABLE_REQUIRED",
+          "dynamicDataCalls": [],
+          "hookCalls": [],
+          "method": "System.Void Celeste.Mod.VortexHelper.Entities.AttachedJumpThru::<.ctor>b__10_0(Celeste.Platform)",
+          "reflectionCalls": [],
+          "type": "Celeste.Mod.VortexHelper.Entities.AttachedJumpThru"
+        },
+        {
+          "bodySha256": "6e6a44d6a9d56de5075b49bb4ed4be0e0c29d9831e6121d8412af80f08a53b90",
+          "disposition": "REACHABLE_REQUIRED",
+          "dynamicDataCalls": [],
+          "hookCalls": [],
+          "method": "System.Void Celeste.Mod.VortexHelper.Entities.AttachedJumpThru::Awake(Monocle.Scene)",
+          "reflectionCalls": [],
+          "type": "Celeste.Mod.VortexHelper.Entities.AttachedJumpThru"
+        },
+        {
+          "bodySha256": "8cb1f9ef7a817c58c1d07ecae2fdd46fc9327754e6174b3313a25095dc20536e",
+          "disposition": "REACHABLE_REQUIRED",
+          "dynamicDataCalls": [],
+          "hookCalls": [],
+          "method": "System.Void Celeste.Mod.VortexHelper.Entities.AttachedJumpThru::MoveHExact(System.Int32)",
+          "reflectionCalls": [],
+          "type": "Celeste.Mod.VortexHelper.Entities.AttachedJumpThru"
+        },
+        {
+          "bodySha256": "8ad025231c30d5c7e0580adaa72ce4126434e6a6e8bca890ee7e54ae4bf316e8",
+          "disposition": "REACHABLE_REQUIRED",
+          "dynamicDataCalls": [],
+          "hookCalls": [],
+          "method": "System.Void Celeste.Mod.VortexHelper.Entities.AttachedJumpThru::OnDisable()",
+          "reflectionCalls": [],
+          "type": "Celeste.Mod.VortexHelper.Entities.AttachedJumpThru"
+        },
+        {
+          "bodySha256": "ba1cfe9918ebd1c2381dd41cf60c7114c1cd5b48add8fc1c491472ff1ca37e7d",
+          "disposition": "REACHABLE_REQUIRED",
+          "dynamicDataCalls": [],
+          "hookCalls": [],
+          "method": "System.Void Celeste.Mod.VortexHelper.Entities.AttachedJumpThru::OnEnable()",
+          "reflectionCalls": [],
+          "type": "Celeste.Mod.VortexHelper.Entities.AttachedJumpThru"
+        },
+        {
+          "bodySha256": "86a4b7dac6f486f31d1cbca62948cafe6e39d22289fc94ee93c850833c6cc56d",
+          "disposition": "REACHABLE_REQUIRED",
+          "dynamicDataCalls": [
+            "System.Void MonoMod.Utils.DynData`1<Celeste.MoveBlock>::.ctor(!0)",
+            "!!0 MonoMod.Utils.DynData`1<Celeste.MoveBlock>::Get<System.Single>(System.String)"
+          ],
+          "hookCalls": [],
+          "method": "System.Void Celeste.Mod.VortexHelper.Entities.AttachedJumpThru::OnMove(Microsoft.Xna.Framework.Vector2)",
+          "reflectionCalls": [],
+          "type": "Celeste.Mod.VortexHelper.Entities.AttachedJumpThru"
+        },
+        {
+          "bodySha256": "9db629a8d72608ca808b1a969f7355e73962297ec1e84c6af06ff27db0ba13b5",
+          "disposition": "REACHABLE_REQUIRED",
+          "dynamicDataCalls": [],
+          "hookCalls": [],
+          "method": "System.Void Celeste.Mod.VortexHelper.Entities.AttachedJumpThru::OnSetLiftSpeed(Microsoft.Xna.Framework.Vector2)",
+          "reflectionCalls": [],
+          "type": "Celeste.Mod.VortexHelper.Entities.AttachedJumpThru"
+        },
+        {
+          "bodySha256": "33e469acec83a40ef8b89095d362cddbbb29feb1614ac3a193021e3966ff9c1f",
+          "disposition": "REACHABLE_REQUIRED",
+          "dynamicDataCalls": [],
+          "hookCalls": [],
+          "method": "System.Void Celeste.Mod.VortexHelper.Entities.AttachedJumpThru::OnShake(Microsoft.Xna.Framework.Vector2)",
+          "reflectionCalls": [],
+          "type": "Celeste.Mod.VortexHelper.Entities.AttachedJumpThru"
+        },
+        {
+          "bodySha256": "577eb14d48ee6a69402c805657749accdd841760f19df933ff49a8e14fc814ae",
+          "disposition": "REACHABLE_REQUIRED",
+          "dynamicDataCalls": [],
+          "hookCalls": [],
+          "method": "System.Void Celeste.Mod.VortexHelper.Entities.AttachedJumpThru::OnStaticMoverTrigger(Celeste.StaticMover)",
+          "reflectionCalls": [],
+          "type": "Celeste.Mod.VortexHelper.Entities.AttachedJumpThru"
+        },
+        {
+          "bodySha256": "093d2ceb800d8a516d0d2a3cb983711e82cb1cafeaac8e4f6e8c8a3756bc10f1",
+          "disposition": "REACHABLE_REQUIRED",
+          "dynamicDataCalls": [],
+          "hookCalls": [],
+          "method": "System.Void Celeste.Mod.VortexHelper.Entities.AttachedJumpThru::Render()",
+          "reflectionCalls": [],
+          "type": "Celeste.Mod.VortexHelper.Entities.AttachedJumpThru"
+        },
+        {
+          "bodySha256": "d8701c5836b3fcf8aefdc26e1f2eed8cc081c2a704b5649e424afb21119245f7",
+          "disposition": "REACHABLE_REQUIRED",
+          "dynamicDataCalls": [],
+          "hookCalls": [],
+          "method": "System.Void Celeste.Mod.VortexHelper.Entities.AttachedJumpThru::SetColor(Microsoft.Xna.Framework.Color)",
+          "reflectionCalls": [],
+          "type": "Celeste.Mod.VortexHelper.Entities.AttachedJumpThru"
+        },
+        {
+          "bodySha256": "d195ef3d950d97d7ee7883fee0e8da5f79a4c0c001463840596ddff19dec7d8e",
+          "disposition": "REACHABLE_REQUIRED",
+          "dynamicDataCalls": [],
+          "hookCalls": [],
+          "method": "System.Void Celeste.Mod.VortexHelper.Entities.AttachedJumpThru::TriggerPlatform()",
+          "reflectionCalls": [],
+          "type": "Celeste.Mod.VortexHelper.Entities.AttachedJumpThru"
+        },
+        {
+          "bodySha256": "6071073fcad40d5ffb3e9291855b027b63937b20e93aafaf173f8b877ed7c168",
+          "disposition": "REACHABLE_REQUIRED",
+          "dynamicDataCalls": [],
+          "hookCalls": [],
+          "method": "System.Void Celeste.Mod.VortexHelper.Entities.AttachedJumpThru::Update()",
+          "reflectionCalls": [],
+          "type": "Celeste.Mod.VortexHelper.Entities.AttachedJumpThru"
+        },
+        {
+          "bodySha256": "f3204372884d3c6b395ce95bcdd22b82edd08c7f76f91eb946e6125550c25d14",
+          "disposition": "REACHABLE_REQUIRED",
+          "dynamicDataCalls": [],
+          "hookCalls": [],
+          "method": "System.Void Celeste.Mod.VortexHelper.Misc.StaticMoverWithLiftSpeed::.ctor()",
+          "reflectionCalls": [],
+          "type": "Celeste.Mod.VortexHelper.Misc.StaticMoverWithLiftSpeed"
+        },
+        {
+          "bodySha256": "9adf78586c386222489d20f46fc203815adb40bbd6c24adba0ae0d1c88c8852f",
+          "disposition": "PRESENT_UNREACHABLE_EXACT_AUTHORED_PROFILE",
+          "dynamicDataCalls": [],
+          "hookCalls": [],
+          "method": "System.Void Celeste.Mod.VortexHelper.Misc.StaticMoverWithLiftSpeed/Hooks::.cctor()",
+          "reflectionCalls": [],
+          "type": "Celeste.Mod.VortexHelper.Misc.StaticMoverWithLiftSpeed/Hooks"
+        },
+        {
+          "bodySha256": "f7bb4fc933c46fcf201bdb88ffa32b248adf1c8da5e3ebb200e6bad7523fff4a",
+          "disposition": "PRESENT_UNREACHABLE_EXACT_AUTHORED_PROFILE",
+          "dynamicDataCalls": [],
+          "hookCalls": [
+            "System.Void Celeste.Mod.VortexHelper.Misc.StaticMoverWithLiftSpeed/Hooks::Platform_MoveStaticMovers(On.Celeste.Platform/orig_MoveStaticMovers,Celeste.Platform,Microsoft.Xna.Framework.Vector2)",
+            "System.Void On.Celeste.Platform/hook_MoveStaticMovers::.ctor(System.Object,System.IntPtr)",
+            "System.Void On.Celeste.Platform::add_MoveStaticMovers(On.Celeste.Platform/hook_MoveStaticMovers)",
+            "System.Void Celeste.Mod.VortexHelper.Misc.StaticMoverWithLiftSpeed/Hooks::StaticMover_Move(On.Celeste.StaticMover/orig_Move,Celeste.StaticMover,Microsoft.Xna.Framework.Vector2)",
+            "System.Void On.Celeste.StaticMover/hook_Move::.ctor(System.Object,System.IntPtr)",
+            "System.Void On.Celeste.StaticMover::add_Move(On.Celeste.StaticMover/hook_Move)"
+          ],
+          "method": "System.Void Celeste.Mod.VortexHelper.Misc.StaticMoverWithLiftSpeed/Hooks::Hook()",
+          "reflectionCalls": [],
+          "type": "Celeste.Mod.VortexHelper.Misc.StaticMoverWithLiftSpeed/Hooks"
+        },
+        {
+          "bodySha256": "760aafb2b337fed08a3d4e9b8f17291381f7f7ab836a06d68fe9866b42fc4c4d",
+          "disposition": "PRESENT_UNREACHABLE_EXACT_AUTHORED_PROFILE",
+          "dynamicDataCalls": [],
+          "hookCalls": [
+            "System.Void On.Celeste.Platform/orig_MoveStaticMovers::Invoke(Celeste.Platform,Microsoft.Xna.Framework.Vector2)"
+          ],
+          "method": "System.Void Celeste.Mod.VortexHelper.Misc.StaticMoverWithLiftSpeed/Hooks::Platform_MoveStaticMovers(On.Celeste.Platform/orig_MoveStaticMovers,Celeste.Platform,Microsoft.Xna.Framework.Vector2)",
+          "reflectionCalls": [],
+          "type": "Celeste.Mod.VortexHelper.Misc.StaticMoverWithLiftSpeed/Hooks"
+        },
+        {
+          "bodySha256": "964189389e09bfc379358598ac9ad9e9cc5453b7188dcb4a9fe3164495d41db6",
+          "disposition": "PRESENT_UNREACHABLE_EXACT_AUTHORED_PROFILE",
+          "dynamicDataCalls": [],
+          "hookCalls": [
+            "System.Void On.Celeste.StaticMover/orig_Move::Invoke(Celeste.StaticMover,Microsoft.Xna.Framework.Vector2)"
+          ],
+          "method": "System.Void Celeste.Mod.VortexHelper.Misc.StaticMoverWithLiftSpeed/Hooks::StaticMover_Move(On.Celeste.StaticMover/orig_Move,Celeste.StaticMover,Microsoft.Xna.Framework.Vector2)",
+          "reflectionCalls": [],
+          "type": "Celeste.Mod.VortexHelper.Misc.StaticMoverWithLiftSpeed/Hooks"
+        },
+        {
+          "bodySha256": "d22ccd0ea8717999ed50224329e4f58660fdc66f151f39af263a43341334e030",
+          "disposition": "PRESENT_UNREACHABLE_EXACT_AUTHORED_PROFILE",
+          "dynamicDataCalls": [],
+          "hookCalls": [
+            "System.Void Celeste.Mod.VortexHelper.Misc.StaticMoverWithLiftSpeed/Hooks::Platform_MoveStaticMovers(On.Celeste.Platform/orig_MoveStaticMovers,Celeste.Platform,Microsoft.Xna.Framework.Vector2)",
+            "System.Void On.Celeste.Platform/hook_MoveStaticMovers::.ctor(System.Object,System.IntPtr)",
+            "System.Void On.Celeste.Platform::remove_MoveStaticMovers(On.Celeste.Platform/hook_MoveStaticMovers)",
+            "System.Void Celeste.Mod.VortexHelper.Misc.StaticMoverWithLiftSpeed/Hooks::StaticMover_Move(On.Celeste.StaticMover/orig_Move,Celeste.StaticMover,Microsoft.Xna.Framework.Vector2)",
+            "System.Void On.Celeste.StaticMover/hook_Move::.ctor(System.Object,System.IntPtr)",
+            "System.Void On.Celeste.StaticMover::remove_Move(On.Celeste.StaticMover/hook_Move)"
+          ],
+          "method": "System.Void Celeste.Mod.VortexHelper.Misc.StaticMoverWithLiftSpeed/Hooks::Unhook()",
+          "reflectionCalls": [],
+          "type": "Celeste.Mod.VortexHelper.Misc.StaticMoverWithLiftSpeed/Hooks"
+        }
+      ],
+      "sourceAvailability": "DISTRIBUTED_SOURCE_PRESENT",
+      "sourceCommit": "NOT_BOUND_BY_RELEASE_METADATA",
+      "unclassifiedMethodCount": 0,
+      "version": "1.2.19",
+      "zipSha256": "b6280fe2e3c05d355c32a51049854137c41be72d24ec4aec9d997cc7c4394db2"
+    }
+  },
+  "lowering": {
+    "arbitraryReflection": false,
+    "crystallineReflectionDisposition": "authored CLR names resolve on Mac to two exact custom IDs; device lookup uses AppleEverestStaticIdentity",
+    "dynamicHookLifetime": false,
+    "factoriesAreStaticTyped": true,
+    "generalDynamicData": false,
+    "newRuntimeHookClass": false,
+    "triggerConnectionDisposition": "two authored nodes resolve on Mac to typed rumble and Everest flag triggers",
+    "vortexDynamicDataDisposition": "MoveBlock speed branch is unreachable: exact targets are Xaphan slopes; typed Platform.LiftSpeed replaces StaticMoverWithLiftSpeed hooks"
+  },
+  "occurrenceCount": 55,
+  "occurrences": [
+    {
+      "attributes": {
+        "id": 599,
+        "surfaceIndex": -1,
+        "texture": "wood",
+        "width": 8,
+        "x": 1014,
+        "y": 1520
+      },
+      "classification": "STATIC_TYPED_FACTORY_ACCEPTED",
+      "customId": "VortexHelper/AttachedJumpThru",
+      "entityId": 599,
+      "kind": "entity",
+      "map": "StrawberryJam2021/0-Lobbies/1-Beginner",
+      "nodes": [],
+      "provider": "VortexHelper",
+      "resolvedRelation": {
+        "description": "left slope at (1016,1520)",
+        "liftSpeed": "zero for exact static slope population",
+        "movingTarget": false,
+        "targetAttributes": {
+          "canJumpThrough": true,
+          "canSlide": false,
+          "customDirectory": "objects/XaphanHelper/Slope",
+          "gentle": false,
+          "id": 255,
+          "noRender": true,
+          "rainbow": false,
+          "side": "Left",
+          "slopeHeight": 4,
+          "soundIndex": 5,
+          "stickyDash": false,
+          "texture": "cement",
+          "tilesBottom": "Horizontal",
+          "tilesTop": "Horizontal",
+          "upsideDown": false,
+          "x": 1016,
+          "y": 1520
+        },
+        "targetCustomId": "XaphanHelper/Slope",
+        "targetEntityId": 255
+      },
+      "room": "sj2021beginnerlobby"
+    },
+    {
+      "attributes": {
+        "id": 603,
+        "surfaceIndex": -1,
+        "texture": "wood",
+        "width": 8,
+        "x": 893,
+        "y": 1504
+      },
+      "classification": "STATIC_TYPED_FACTORY_ACCEPTED",
+      "customId": "VortexHelper/AttachedJumpThru",
+      "entityId": 603,
+      "kind": "entity",
+      "map": "StrawberryJam2021/0-Lobbies/1-Beginner",
+      "nodes": [],
+      "provider": "VortexHelper",
+      "resolvedRelation": {
+        "description": "left slope at (896,1504)",
+        "liftSpeed": "zero for exact static slope population",
+        "movingTarget": false,
+        "targetAttributes": {
+          "canJumpThrough": true,
+          "canSlide": false,
+          "customDirectory": "objects/XaphanHelper/Slope",
+          "gentle": false,
+          "id": 254,
+          "noRender": true,
+          "rainbow": false,
+          "side": "Left",
+          "slopeHeight": 2,
+          "soundIndex": 5,
+          "stickyDash": false,
+          "texture": "cement",
+          "tilesBottom": "Horizontal",
+          "tilesTop": "Horizontal",
+          "upsideDown": false,
+          "x": 896,
+          "y": 1504
+        },
+        "targetCustomId": "XaphanHelper/Slope",
+        "targetEntityId": 254
+      },
+      "room": "sj2021beginnerlobby"
+    },
+    {
+      "attributes": {
+        "debug": false,
+        "depth": -12000,
+        "entitiesToAffect": "Celeste.Mod.FancyTileEntities.FancySolidTiles",
+        "height": 24,
+        "id": 584,
+        "updateOnEntry": false,
+        "width": 32,
+        "x": 888,
+        "y": 736
+      },
+      "classification": "STATIC_TYPED_FACTORY_ACCEPTED",
+      "customId": "vitellary/editdepthtrigger",
+      "entityId": 584,
+      "kind": "trigger",
+      "map": "StrawberryJam2021/0-Lobbies/1-Beginner",
+      "nodes": [],
+      "provider": "CrystallineHelper",
+      "resolvedRelation": {
+        "authoredClrType": "Celeste.Mod.FancyTileEntities.FancySolidTiles",
+        "collidingTargetEntityIds": [
+          585
+        ],
+        "noOpInPinnedRoom": false,
+        "selection": "exact typed identity plus overlap",
+        "targetCustomId": "FancyTileEntities/FancySolidTiles"
+      },
+      "room": "sj2021beginnerlobby"
+    },
+    {
+      "attributes": {
+        "debug": false,
+        "depth": -12000,
+        "entitiesToAffect": "Celeste.Mod.FancyTileEntities.FancySolidTiles",
+        "height": 24,
+        "id": 598,
+        "updateOnEntry": false,
+        "width": 32,
+        "x": 1344,
+        "y": 1568
+      },
+      "classification": "STATIC_TYPED_FACTORY_ACCEPTED",
+      "customId": "vitellary/editdepthtrigger",
+      "entityId": 598,
+      "kind": "trigger",
+      "map": "StrawberryJam2021/0-Lobbies/1-Beginner",
+      "nodes": [],
+      "provider": "CrystallineHelper",
+      "resolvedRelation": {
+        "authoredClrType": "Celeste.Mod.FancyTileEntities.FancySolidTiles",
+        "collidingTargetEntityIds": [
+          597
+        ],
+        "noOpInPinnedRoom": false,
+        "selection": "exact typed identity plus overlap",
+        "targetCustomId": "FancyTileEntities/FancySolidTiles"
+      },
+      "room": "sj2021beginnerlobby"
+    },
+    {
+      "attributes": {
+        "debug": false,
+        "depth": -12000,
+        "entitiesToAffect": "Celeste.Mod.FancyTileEntities.FancySolidTiles",
+        "height": 24,
+        "id": 157,
+        "updateOnEntry": false,
+        "width": 32,
+        "x": 1648,
+        "y": 1512
+      },
+      "classification": "STATIC_TYPED_FACTORY_ACCEPTED",
+      "customId": "vitellary/editdepthtrigger",
+      "entityId": 157,
+      "kind": "trigger",
+      "map": "StrawberryJam2021/0-Lobbies/1-Beginner",
+      "nodes": [],
+      "provider": "CrystallineHelper",
+      "resolvedRelation": {
+        "authoredClrType": "Celeste.Mod.FancyTileEntities.FancySolidTiles",
+        "collidingTargetEntityIds": [
+          156
+        ],
+        "noOpInPinnedRoom": false,
+        "selection": "exact typed identity plus overlap",
+        "targetCustomId": "FancyTileEntities/FancySolidTiles"
+      },
+      "room": "sj2021beginnerlobby"
+    },
+    {
+      "attributes": {
+        "debug": false,
+        "depth": -12000,
+        "entitiesToAffect": "Celeste.Mod.FancyTileEntities.FancySolidTiles",
+        "height": 24,
+        "id": 653,
+        "updateOnEntry": false,
+        "width": 32,
+        "x": 3808,
+        "y": 688
+      },
+      "classification": "STATIC_TYPED_FACTORY_ACCEPTED",
+      "customId": "vitellary/editdepthtrigger",
+      "entityId": 653,
+      "kind": "trigger",
+      "map": "StrawberryJam2021/0-Lobbies/1-Beginner",
+      "nodes": [],
+      "provider": "CrystallineHelper",
+      "resolvedRelation": {
+        "authoredClrType": "Celeste.Mod.FancyTileEntities.FancySolidTiles",
+        "collidingTargetEntityIds": [
+          648
+        ],
+        "noOpInPinnedRoom": false,
+        "selection": "exact typed identity plus overlap",
+        "targetCustomId": "FancyTileEntities/FancySolidTiles"
+      },
+      "room": "sj2021beginnerlobby"
+    },
+    {
+      "attributes": {
+        "debug": false,
+        "depth": -12000,
+        "entitiesToAffect": "Celeste.Mod.FancyTileEntities.FancySolidTiles",
+        "height": 8,
+        "id": 808,
+        "updateOnEntry": false,
+        "width": 8,
+        "x": 2176,
+        "y": 920
+      },
+      "classification": "STATIC_TYPED_FACTORY_ACCEPTED",
+      "customId": "vitellary/editdepthtrigger",
+      "entityId": 808,
+      "kind": "trigger",
+      "map": "StrawberryJam2021/0-Lobbies/1-Beginner",
+      "nodes": [],
+      "provider": "CrystallineHelper",
+      "resolvedRelation": {
+        "authoredClrType": "Celeste.Mod.FancyTileEntities.FancySolidTiles",
+        "collidingTargetEntityIds": [
+          805
+        ],
+        "noOpInPinnedRoom": false,
+        "selection": "exact typed identity plus overlap",
+        "targetCustomId": "FancyTileEntities/FancySolidTiles"
+      },
+      "room": "sj2021beginnerlobby"
+    },
+    {
+      "attributes": {
+        "debug": false,
+        "depth": -12000,
+        "entitiesToAffect": "Celeste.Mod.FancyTileEntities.FancySolidTiles",
+        "height": 8,
+        "id": 809,
+        "updateOnEntry": false,
+        "width": 8,
+        "x": 2232,
+        "y": 912
+      },
+      "classification": "STATIC_TYPED_FACTORY_ACCEPTED",
+      "customId": "vitellary/editdepthtrigger",
+      "entityId": 809,
+      "kind": "trigger",
+      "map": "StrawberryJam2021/0-Lobbies/1-Beginner",
+      "nodes": [],
+      "provider": "CrystallineHelper",
+      "resolvedRelation": {
+        "authoredClrType": "Celeste.Mod.FancyTileEntities.FancySolidTiles",
+        "collidingTargetEntityIds": [
+          806
+        ],
+        "noOpInPinnedRoom": false,
+        "selection": "exact typed identity plus overlap",
+        "targetCustomId": "FancyTileEntities/FancySolidTiles"
+      },
+      "room": "sj2021beginnerlobby"
+    },
+    {
+      "attributes": {
+        "debug": false,
+        "depth": -12000,
+        "entitiesToAffect": "Celeste.Mod.FancyTileEntities.FancySolidTiles",
+        "height": 8,
+        "id": 810,
+        "updateOnEntry": false,
+        "width": 8,
+        "x": 2360,
+        "y": 888
+      },
+      "classification": "STATIC_TYPED_FACTORY_ACCEPTED",
+      "customId": "vitellary/editdepthtrigger",
+      "entityId": 810,
+      "kind": "trigger",
+      "map": "StrawberryJam2021/0-Lobbies/1-Beginner",
+      "nodes": [],
+      "provider": "CrystallineHelper",
+      "resolvedRelation": {
+        "authoredClrType": "Celeste.Mod.FancyTileEntities.FancySolidTiles",
+        "collidingTargetEntityIds": [
+          807
+        ],
+        "noOpInPinnedRoom": false,
+        "selection": "exact typed identity plus overlap",
+        "targetCustomId": "FancyTileEntities/FancySolidTiles"
+      },
+      "room": "sj2021beginnerlobby"
+    },
+    {
+      "attributes": {
+        "debug": false,
+        "depth": -12000,
+        "entitiesToAffect": "Celeste.Mod.FancyTileEntities.FancySolidTiles",
+        "height": 8,
+        "id": 813,
+        "updateOnEntry": false,
+        "width": 8,
+        "x": 2712,
+        "y": 904
+      },
+      "classification": "STATIC_TYPED_FACTORY_ACCEPTED",
+      "customId": "vitellary/editdepthtrigger",
+      "entityId": 813,
+      "kind": "trigger",
+      "map": "StrawberryJam2021/0-Lobbies/1-Beginner",
+      "nodes": [],
+      "provider": "CrystallineHelper",
+      "resolvedRelation": {
+        "authoredClrType": "Celeste.Mod.FancyTileEntities.FancySolidTiles",
+        "collidingTargetEntityIds": [
+          812
+        ],
+        "noOpInPinnedRoom": false,
+        "selection": "exact typed identity plus overlap",
+        "targetCustomId": "FancyTileEntities/FancySolidTiles"
+      },
+      "room": "sj2021beginnerlobby"
+    },
+    {
+      "attributes": {
+        "debug": false,
+        "depth": -12000,
+        "entitiesToAffect": "Celeste.Mod.FancyTileEntities.FancySolidTiles",
+        "height": 8,
+        "id": 815,
+        "updateOnEntry": false,
+        "width": 8,
+        "x": 2448,
+        "y": 920
+      },
+      "classification": "STATIC_TYPED_FACTORY_ACCEPTED",
+      "customId": "vitellary/editdepthtrigger",
+      "entityId": 815,
+      "kind": "trigger",
+      "map": "StrawberryJam2021/0-Lobbies/1-Beginner",
+      "nodes": [],
+      "provider": "CrystallineHelper",
+      "resolvedRelation": {
+        "authoredClrType": "Celeste.Mod.FancyTileEntities.FancySolidTiles",
+        "collidingTargetEntityIds": [
+          811
+        ],
+        "noOpInPinnedRoom": false,
+        "selection": "exact typed identity plus overlap",
+        "targetCustomId": "FancyTileEntities/FancySolidTiles"
+      },
+      "room": "sj2021beginnerlobby"
+    },
+    {
+      "attributes": {
+        "debug": false,
+        "depth": -12000,
+        "entitiesToAffect": "Celeste.Mod.FancyTileEntities.FancySolidTiles",
+        "height": 8,
+        "id": 820,
+        "updateOnEntry": false,
+        "width": 8,
+        "x": 1112,
+        "y": 1040
+      },
+      "classification": "STATIC_TYPED_FACTORY_ACCEPTED",
+      "customId": "vitellary/editdepthtrigger",
+      "entityId": 820,
+      "kind": "trigger",
+      "map": "StrawberryJam2021/0-Lobbies/1-Beginner",
+      "nodes": [],
+      "provider": "CrystallineHelper",
+      "resolvedRelation": {
+        "authoredClrType": "Celeste.Mod.FancyTileEntities.FancySolidTiles",
+        "collidingTargetEntityIds": [],
+        "noOpInPinnedRoom": true,
+        "selection": "exact typed identity plus overlap",
+        "targetCustomId": "FancyTileEntities/FancySolidTiles"
+      },
+      "room": "sj2021beginnerlobby"
+    },
+    {
+      "attributes": {
+        "debug": false,
+        "depth": -12000,
+        "entitiesToAffect": "Celeste.Mod.FancyTileEntities.FancySolidTiles",
+        "height": 8,
+        "id": 821,
+        "updateOnEntry": false,
+        "width": 8,
+        "x": 944,
+        "y": 1048
+      },
+      "classification": "STATIC_TYPED_FACTORY_ACCEPTED",
+      "customId": "vitellary/editdepthtrigger",
+      "entityId": 821,
+      "kind": "trigger",
+      "map": "StrawberryJam2021/0-Lobbies/1-Beginner",
+      "nodes": [],
+      "provider": "CrystallineHelper",
+      "resolvedRelation": {
+        "authoredClrType": "Celeste.Mod.FancyTileEntities.FancySolidTiles",
+        "collidingTargetEntityIds": [
+          818
+        ],
+        "noOpInPinnedRoom": false,
+        "selection": "exact typed identity plus overlap",
+        "targetCustomId": "FancyTileEntities/FancySolidTiles"
+      },
+      "room": "sj2021beginnerlobby"
+    },
+    {
+      "attributes": {
+        "debug": false,
+        "depth": -12000,
+        "entitiesToAffect": "Celeste.Mod.FancyTileEntities.FancySolidTiles",
+        "height": 8,
+        "id": 823,
+        "updateOnEntry": false,
+        "width": 8,
+        "x": 1024,
+        "y": 1080
+      },
+      "classification": "STATIC_TYPED_FACTORY_ACCEPTED",
+      "customId": "vitellary/editdepthtrigger",
+      "entityId": 823,
+      "kind": "trigger",
+      "map": "StrawberryJam2021/0-Lobbies/1-Beginner",
+      "nodes": [],
+      "provider": "CrystallineHelper",
+      "resolvedRelation": {
+        "authoredClrType": "Celeste.Mod.FancyTileEntities.FancySolidTiles",
+        "collidingTargetEntityIds": [
+          822
+        ],
+        "noOpInPinnedRoom": false,
+        "selection": "exact typed identity plus overlap",
+        "targetCustomId": "FancyTileEntities/FancySolidTiles"
+      },
+      "room": "sj2021beginnerlobby"
+    },
+    {
+      "attributes": {
+        "debug": false,
+        "depth": -12000,
+        "entitiesToAffect": "Celeste.Mod.FancyTileEntities.FancySolidTiles",
+        "height": 8,
+        "id": 545,
+        "updateOnEntry": false,
+        "width": 8,
+        "x": 2680,
+        "y": 1272
+      },
+      "classification": "STATIC_TYPED_FACTORY_ACCEPTED",
+      "customId": "vitellary/editdepthtrigger",
+      "entityId": 545,
+      "kind": "trigger",
+      "map": "StrawberryJam2021/0-Lobbies/1-Beginner",
+      "nodes": [],
+      "provider": "CrystallineHelper",
+      "resolvedRelation": {
+        "authoredClrType": "Celeste.Mod.FancyTileEntities.FancySolidTiles",
+        "collidingTargetEntityIds": [
+          544
+        ],
+        "noOpInPinnedRoom": false,
+        "selection": "exact typed identity plus overlap",
+        "targetCustomId": "FancyTileEntities/FancySolidTiles"
+      },
+      "room": "sj2021beginnerlobby"
+    },
+    {
+      "attributes": {
+        "debug": false,
+        "depth": -12000,
+        "entitiesToAffect": "Celeste.Mod.FancyTileEntities.FancySolidTiles",
+        "height": 8,
+        "id": 825,
+        "updateOnEntry": false,
+        "width": 8,
+        "x": 2840,
+        "y": 1272
+      },
+      "classification": "STATIC_TYPED_FACTORY_ACCEPTED",
+      "customId": "vitellary/editdepthtrigger",
+      "entityId": 825,
+      "kind": "trigger",
+      "map": "StrawberryJam2021/0-Lobbies/1-Beginner",
+      "nodes": [],
+      "provider": "CrystallineHelper",
+      "resolvedRelation": {
+        "authoredClrType": "Celeste.Mod.FancyTileEntities.FancySolidTiles",
+        "collidingTargetEntityIds": [
+          824
+        ],
+        "noOpInPinnedRoom": false,
+        "selection": "exact typed identity plus overlap",
+        "targetCustomId": "FancyTileEntities/FancySolidTiles"
+      },
+      "room": "sj2021beginnerlobby"
+    },
+    {
+      "attributes": {
+        "debug": false,
+        "depth": -12000,
+        "entitiesToAffect": "Celeste.Mod.FancyTileEntities.FancySolidTiles",
+        "height": 8,
+        "id": 826,
+        "updateOnEntry": false,
+        "width": 8,
+        "x": 2864,
+        "y": 1224
+      },
+      "classification": "STATIC_TYPED_FACTORY_ACCEPTED",
+      "customId": "vitellary/editdepthtrigger",
+      "entityId": 826,
+      "kind": "trigger",
+      "map": "StrawberryJam2021/0-Lobbies/1-Beginner",
+      "nodes": [],
+      "provider": "CrystallineHelper",
+      "resolvedRelation": {
+        "authoredClrType": "Celeste.Mod.FancyTileEntities.FancySolidTiles",
+        "collidingTargetEntityIds": [
+          814
+        ],
+        "noOpInPinnedRoom": false,
+        "selection": "exact typed identity plus overlap",
+        "targetCustomId": "FancyTileEntities/FancySolidTiles"
+      },
+      "room": "sj2021beginnerlobby"
+    },
+    {
+      "attributes": {
+        "debug": false,
+        "depth": -12000,
+        "entitiesToAffect": "Celeste.Mod.FancyTileEntities.FancySolidTiles",
+        "height": 8,
+        "id": 829,
+        "updateOnEntry": false,
+        "width": 8,
+        "x": 2640,
+        "y": 1128
+      },
+      "classification": "STATIC_TYPED_FACTORY_ACCEPTED",
+      "customId": "vitellary/editdepthtrigger",
+      "entityId": 829,
+      "kind": "trigger",
+      "map": "StrawberryJam2021/0-Lobbies/1-Beginner",
+      "nodes": [],
+      "provider": "CrystallineHelper",
+      "resolvedRelation": {
+        "authoredClrType": "Celeste.Mod.FancyTileEntities.FancySolidTiles",
+        "collidingTargetEntityIds": [
+          828
+        ],
+        "noOpInPinnedRoom": false,
+        "selection": "exact typed identity plus overlap",
+        "targetCustomId": "FancyTileEntities/FancySolidTiles"
+      },
+      "room": "sj2021beginnerlobby"
+    },
+    {
+      "attributes": {
+        "debug": false,
+        "depth": -12000,
+        "entitiesToAffect": "Celeste.Mod.FancyTileEntities.FancySolidTiles",
+        "height": 8,
+        "id": 839,
+        "updateOnEntry": false,
+        "width": 8,
+        "x": 1440,
+        "y": 1344
+      },
+      "classification": "STATIC_TYPED_FACTORY_ACCEPTED",
+      "customId": "vitellary/editdepthtrigger",
+      "entityId": 839,
+      "kind": "trigger",
+      "map": "StrawberryJam2021/0-Lobbies/1-Beginner",
+      "nodes": [],
+      "provider": "CrystallineHelper",
+      "resolvedRelation": {
+        "authoredClrType": "Celeste.Mod.FancyTileEntities.FancySolidTiles",
+        "collidingTargetEntityIds": [
+          838
+        ],
+        "noOpInPinnedRoom": false,
+        "selection": "exact typed identity plus overlap",
+        "targetCustomId": "FancyTileEntities/FancySolidTiles"
+      },
+      "room": "sj2021beginnerlobby"
+    },
+    {
+      "attributes": {
+        "debug": false,
+        "depth": -12000,
+        "entitiesToAffect": "Celeste.Mod.FancyTileEntities.FancySolidTiles",
+        "height": 8,
+        "id": 840,
+        "updateOnEntry": false,
+        "width": 8,
+        "x": 1368,
+        "y": 1344
+      },
+      "classification": "STATIC_TYPED_FACTORY_ACCEPTED",
+      "customId": "vitellary/editdepthtrigger",
+      "entityId": 840,
+      "kind": "trigger",
+      "map": "StrawberryJam2021/0-Lobbies/1-Beginner",
+      "nodes": [],
+      "provider": "CrystallineHelper",
+      "resolvedRelation": {
+        "authoredClrType": "Celeste.Mod.FancyTileEntities.FancySolidTiles",
+        "collidingTargetEntityIds": [
+          836
+        ],
+        "noOpInPinnedRoom": false,
+        "selection": "exact typed identity plus overlap",
+        "targetCustomId": "FancyTileEntities/FancySolidTiles"
+      },
+      "room": "sj2021beginnerlobby"
+    },
+    {
+      "attributes": {
+        "debug": false,
+        "depth": -12000,
+        "entitiesToAffect": "Celeste.Mod.FancyTileEntities.FancySolidTiles",
+        "height": 8,
+        "id": 841,
+        "updateOnEntry": false,
+        "width": 8,
+        "x": 1400,
+        "y": 1320
+      },
+      "classification": "STATIC_TYPED_FACTORY_ACCEPTED",
+      "customId": "vitellary/editdepthtrigger",
+      "entityId": 841,
+      "kind": "trigger",
+      "map": "StrawberryJam2021/0-Lobbies/1-Beginner",
+      "nodes": [],
+      "provider": "CrystallineHelper",
+      "resolvedRelation": {
+        "authoredClrType": "Celeste.Mod.FancyTileEntities.FancySolidTiles",
+        "collidingTargetEntityIds": [
+          837
+        ],
+        "noOpInPinnedRoom": false,
+        "selection": "exact typed identity plus overlap",
+        "targetCustomId": "FancyTileEntities/FancySolidTiles"
+      },
+      "room": "sj2021beginnerlobby"
+    },
+    {
+      "attributes": {
+        "debug": false,
+        "depth": -12000,
+        "entitiesToAffect": "Celeste.Mod.FancyTileEntities.FancySolidTiles",
+        "height": 8,
+        "id": 843,
+        "updateOnEntry": false,
+        "width": 8,
+        "x": 1920,
+        "y": 1240
+      },
+      "classification": "STATIC_TYPED_FACTORY_ACCEPTED",
+      "customId": "vitellary/editdepthtrigger",
+      "entityId": 843,
+      "kind": "trigger",
+      "map": "StrawberryJam2021/0-Lobbies/1-Beginner",
+      "nodes": [],
+      "provider": "CrystallineHelper",
+      "resolvedRelation": {
+        "authoredClrType": "Celeste.Mod.FancyTileEntities.FancySolidTiles",
+        "collidingTargetEntityIds": [
+          827
+        ],
+        "noOpInPinnedRoom": false,
+        "selection": "exact typed identity plus overlap",
+        "targetCustomId": "FancyTileEntities/FancySolidTiles"
+      },
+      "room": "sj2021beginnerlobby"
+    },
+    {
+      "attributes": {
+        "debug": false,
+        "depth": -12000,
+        "entitiesToAffect": "Celeste.Mod.FancyTileEntities.FancySolidTiles",
+        "height": 8,
+        "id": 844,
+        "updateOnEntry": false,
+        "width": 8,
+        "x": 1896,
+        "y": 1232
+      },
+      "classification": "STATIC_TYPED_FACTORY_ACCEPTED",
+      "customId": "vitellary/editdepthtrigger",
+      "entityId": 844,
+      "kind": "trigger",
+      "map": "StrawberryJam2021/0-Lobbies/1-Beginner",
+      "nodes": [],
+      "provider": "CrystallineHelper",
+      "resolvedRelation": {
+        "authoredClrType": "Celeste.Mod.FancyTileEntities.FancySolidTiles",
+        "collidingTargetEntityIds": [
+          842
+        ],
+        "noOpInPinnedRoom": false,
+        "selection": "exact typed identity plus overlap",
+        "targetCustomId": "FancyTileEntities/FancySolidTiles"
+      },
+      "room": "sj2021beginnerlobby"
+    },
+    {
+      "attributes": {
+        "debug": false,
+        "depth": -12000,
+        "entitiesToAffect": "Celeste.Mod.FancyTileEntities.FancySolidTiles",
+        "height": 24,
+        "id": 783,
+        "updateOnEntry": false,
+        "width": 24,
+        "x": 2192,
+        "y": 1088
+      },
+      "classification": "STATIC_TYPED_FACTORY_ACCEPTED",
+      "customId": "vitellary/editdepthtrigger",
+      "entityId": 783,
+      "kind": "trigger",
+      "map": "StrawberryJam2021/0-Lobbies/1-Beginner",
+      "nodes": [],
+      "provider": "CrystallineHelper",
+      "resolvedRelation": {
+        "authoredClrType": "Celeste.Mod.FancyTileEntities.FancySolidTiles",
+        "collidingTargetEntityIds": [
+          127
+        ],
+        "noOpInPinnedRoom": false,
+        "selection": "exact typed identity plus overlap",
+        "targetCustomId": "FancyTileEntities/FancySolidTiles"
+      },
+      "room": "sj2021beginnerlobby"
+    },
+    {
+      "attributes": {
+        "debug": false,
+        "depth": -12000,
+        "entitiesToAffect": "Celeste.Mod.FancyTileEntities.FancySolidTiles",
+        "height": 24,
+        "id": 887,
+        "updateOnEntry": false,
+        "width": 32,
+        "x": 1568,
+        "y": 944
+      },
+      "classification": "STATIC_TYPED_FACTORY_ACCEPTED",
+      "customId": "vitellary/editdepthtrigger",
+      "entityId": 887,
+      "kind": "trigger",
+      "map": "StrawberryJam2021/0-Lobbies/1-Beginner",
+      "nodes": [],
+      "provider": "CrystallineHelper",
+      "resolvedRelation": {
+        "authoredClrType": "Celeste.Mod.FancyTileEntities.FancySolidTiles",
+        "collidingTargetEntityIds": [
+          886
+        ],
+        "noOpInPinnedRoom": false,
+        "selection": "exact typed identity plus overlap",
+        "targetCustomId": "FancyTileEntities/FancySolidTiles"
+      },
+      "room": "sj2021beginnerlobby"
+    },
+    {
+      "attributes": {
+        "debug": false,
+        "depth": -10010,
+        "entitiesToAffect": "Celeste.Mod.MaxHelpingHand.Entities.FlagExitBlock",
+        "height": 336,
+        "id": 936,
+        "updateOnEntry": false,
+        "width": 80,
+        "x": 2216,
+        "y": 1640
+      },
+      "classification": "STATIC_TYPED_FACTORY_ACCEPTED",
+      "customId": "vitellary/editdepthtrigger",
+      "entityId": 936,
+      "kind": "trigger",
+      "map": "StrawberryJam2021/0-Lobbies/1-Beginner",
+      "nodes": [],
+      "provider": "CrystallineHelper",
+      "resolvedRelation": {
+        "authoredClrType": "Celeste.Mod.MaxHelpingHand.Entities.FlagExitBlock",
+        "collidingTargetEntityIds": [
+          949,
+          953,
+          972,
+          974,
+          977
+        ],
+        "noOpInPinnedRoom": false,
+        "selection": "exact typed identity plus overlap",
+        "targetCustomId": "MaxHelpingHand/FlagExitBlock"
+      },
+      "room": "sj2021beginnerlobby"
+    },
+    {
+      "attributes": {
+        "debug": false,
+        "depth": -10011,
+        "entitiesToAffect": "Celeste.Mod.FancyTileEntities.FancySolidTiles",
+        "height": 24,
+        "id": 948,
+        "updateOnEntry": false,
+        "width": 32,
+        "x": 2112,
+        "y": 1848
+      },
+      "classification": "STATIC_TYPED_FACTORY_ACCEPTED",
+      "customId": "vitellary/editdepthtrigger",
+      "entityId": 948,
+      "kind": "trigger",
+      "map": "StrawberryJam2021/0-Lobbies/1-Beginner",
+      "nodes": [],
+      "provider": "CrystallineHelper",
+      "resolvedRelation": {
+        "authoredClrType": "Celeste.Mod.FancyTileEntities.FancySolidTiles",
+        "collidingTargetEntityIds": [
+          416
+        ],
+        "noOpInPinnedRoom": false,
+        "selection": "exact typed identity plus overlap",
+        "targetCustomId": "FancyTileEntities/FancySolidTiles"
+      },
+      "room": "sj2021beginnerlobby"
+    },
+    {
+      "attributes": {
+        "debug": false,
+        "depth": -10010,
+        "entitiesToAffect": "Celeste.Mod.MaxHelpingHand.Entities.FlagExitBlock",
+        "height": 56,
+        "id": 980,
+        "updateOnEntry": false,
+        "width": 16,
+        "x": 2264,
+        "y": 2176
+      },
+      "classification": "STATIC_TYPED_FACTORY_ACCEPTED",
+      "customId": "vitellary/editdepthtrigger",
+      "entityId": 980,
+      "kind": "trigger",
+      "map": "StrawberryJam2021/0-Lobbies/1-Beginner",
+      "nodes": [],
+      "provider": "CrystallineHelper",
+      "resolvedRelation": {
+        "authoredClrType": "Celeste.Mod.MaxHelpingHand.Entities.FlagExitBlock",
+        "collidingTargetEntityIds": [
+          978,
+          979
+        ],
+        "noOpInPinnedRoom": false,
+        "selection": "exact typed identity plus overlap",
+        "targetCustomId": "MaxHelpingHand/FlagExitBlock"
+      },
+      "room": "sj2021beginnerlobby"
+    },
+    {
+      "attributes": {
+        "debug": false,
+        "depth": -12000,
+        "entitiesToAffect": "Celeste.Mod.FancyTileEntities.FancySolidTiles",
+        "height": 8,
+        "id": 982,
+        "updateOnEntry": false,
+        "width": 8,
+        "x": 2272,
+        "y": 1720
+      },
+      "classification": "STATIC_TYPED_FACTORY_ACCEPTED",
+      "customId": "vitellary/editdepthtrigger",
+      "entityId": 982,
+      "kind": "trigger",
+      "map": "StrawberryJam2021/0-Lobbies/1-Beginner",
+      "nodes": [],
+      "provider": "CrystallineHelper",
+      "resolvedRelation": {
+        "authoredClrType": "Celeste.Mod.FancyTileEntities.FancySolidTiles",
+        "collidingTargetEntityIds": [
+          981
+        ],
+        "noOpInPinnedRoom": false,
+        "selection": "exact typed identity plus overlap",
+        "targetCustomId": "FancyTileEntities/FancySolidTiles"
+      },
+      "room": "sj2021beginnerlobby"
+    },
+    {
+      "attributes": {
+        "debug": false,
+        "depth": -12000,
+        "entitiesToAffect": "Celeste.Mod.FancyTileEntities.FancySolidTiles",
+        "height": 8,
+        "id": 984,
+        "updateOnEntry": false,
+        "width": 8,
+        "x": 2240,
+        "y": 1720
+      },
+      "classification": "STATIC_TYPED_FACTORY_ACCEPTED",
+      "customId": "vitellary/editdepthtrigger",
+      "entityId": 984,
+      "kind": "trigger",
+      "map": "StrawberryJam2021/0-Lobbies/1-Beginner",
+      "nodes": [],
+      "provider": "CrystallineHelper",
+      "resolvedRelation": {
+        "authoredClrType": "Celeste.Mod.FancyTileEntities.FancySolidTiles",
+        "collidingTargetEntityIds": [
+          983
+        ],
+        "noOpInPinnedRoom": false,
+        "selection": "exact typed identity plus overlap",
+        "targetCustomId": "FancyTileEntities/FancySolidTiles"
+      },
+      "room": "sj2021beginnerlobby"
+    },
+    {
+      "attributes": {
+        "debug": false,
+        "depth": -12000,
+        "entitiesToAffect": "Celeste.Mod.FancyTileEntities.FancySolidTiles",
+        "height": 24,
+        "id": 1047,
+        "updateOnEntry": false,
+        "width": 120,
+        "x": 1664,
+        "y": 1744
+      },
+      "classification": "STATIC_TYPED_FACTORY_ACCEPTED",
+      "customId": "vitellary/editdepthtrigger",
+      "entityId": 1047,
+      "kind": "trigger",
+      "map": "StrawberryJam2021/0-Lobbies/1-Beginner",
+      "nodes": [],
+      "provider": "CrystallineHelper",
+      "resolvedRelation": {
+        "authoredClrType": "Celeste.Mod.FancyTileEntities.FancySolidTiles",
+        "collidingTargetEntityIds": [
+          663,
+          1046
+        ],
+        "noOpInPinnedRoom": false,
+        "selection": "exact typed identity plus overlap",
+        "targetCustomId": "FancyTileEntities/FancySolidTiles"
+      },
+      "room": "sj2021beginnerlobby"
+    },
+    {
+      "attributes": {
+        "debug": false,
+        "depth": -12000,
+        "entitiesToAffect": "Celeste.Mod.FancyTileEntities.FancySolidTiles",
+        "height": 8,
+        "id": 1049,
+        "updateOnEntry": false,
+        "width": 8,
+        "x": 1216,
+        "y": 1728
+      },
+      "classification": "STATIC_TYPED_FACTORY_ACCEPTED",
+      "customId": "vitellary/editdepthtrigger",
+      "entityId": 1049,
+      "kind": "trigger",
+      "map": "StrawberryJam2021/0-Lobbies/1-Beginner",
+      "nodes": [],
+      "provider": "CrystallineHelper",
+      "resolvedRelation": {
+        "authoredClrType": "Celeste.Mod.FancyTileEntities.FancySolidTiles",
+        "collidingTargetEntityIds": [
+          1048
+        ],
+        "noOpInPinnedRoom": false,
+        "selection": "exact typed identity plus overlap",
+        "targetCustomId": "FancyTileEntities/FancySolidTiles"
+      },
+      "room": "sj2021beginnerlobby"
+    },
+    {
+      "attributes": {
+        "debug": false,
+        "depth": -12000,
+        "entitiesToAffect": "Celeste.Mod.FancyTileEntities.FancySolidTiles",
+        "height": 8,
+        "id": 1052,
+        "updateOnEntry": false,
+        "width": 8,
+        "x": 1448,
+        "y": 1784
+      },
+      "classification": "STATIC_TYPED_FACTORY_ACCEPTED",
+      "customId": "vitellary/editdepthtrigger",
+      "entityId": 1052,
+      "kind": "trigger",
+      "map": "StrawberryJam2021/0-Lobbies/1-Beginner",
+      "nodes": [],
+      "provider": "CrystallineHelper",
+      "resolvedRelation": {
+        "authoredClrType": "Celeste.Mod.FancyTileEntities.FancySolidTiles",
+        "collidingTargetEntityIds": [
+          1051
+        ],
+        "noOpInPinnedRoom": false,
+        "selection": "exact typed identity plus overlap",
+        "targetCustomId": "FancyTileEntities/FancySolidTiles"
+      },
+      "room": "sj2021beginnerlobby"
+    },
+    {
+      "attributes": {
+        "absoluteValue": false,
+        "activateOnTransition": false,
+        "activationType": "OnHoldableEnter",
+        "collideCount": 1,
+        "comparisonType": "EqualTo",
+        "coreMode": "None",
+        "dashCount": 0,
+        "deaths": 0,
+        "delay": 0.4000000059604645,
+        "entityType": "Celeste.Mod.CherryHelper.ItemCrystal",
+        "entityTypeToCollide": "Celeste.Strawberry",
+        "flag": "",
+        "height": 5,
+        "id": 1140,
+        "invertCondition": false,
+        "matchPosition": false,
+        "oneUse": true,
+        "onlyOnEnter": false,
+        "randomize": false,
+        "requiredSpeed": 0,
+        "solidType": "",
+        "talkBubbleX": 0,
+        "talkBubbleY": 0,
+        "timeToWait": 0,
+        "width": 16,
+        "x": 456,
+        "y": 2067
+      },
+      "classification": "STATIC_TYPED_FACTORY_ACCEPTED",
+      "customId": "vitellary/triggertrigger",
+      "entityId": 1140,
+      "kind": "trigger",
+      "map": "StrawberryJam2021/0-Lobbies/1-Beginner",
+      "nodes": [
+        {
+          "x": 480,
+          "y": 2168
+        },
+        {
+          "x": 440,
+          "y": 2168
+        }
+      ],
+      "provider": "CrystallineHelper",
+      "resolvedRelation": {
+        "activation": "OnHoldableEnter",
+        "delaySeconds": 0.4,
+        "entityTypeAttributeDisposition": "desktop OnHoldableEnter accepts any Holdable; authored CherryHelper name is unused",
+        "oneUse": true,
+        "targetsInAuthoredNodeOrder": [
+          {
+            "attributes": {
+              "constrainHeight": true,
+              "height": 24,
+              "id": 1142,
+              "manualTrigger": false,
+              "persistent": true,
+              "width": 24,
+              "x": 472,
+              "y": 2160
+            },
+            "customId": "rumbleTrigger",
+            "entityId": 1142,
+            "node": {
+              "x": 480,
+              "y": 2168
+            }
+          },
+          {
+            "attributes": {
+              "death_count": -1,
+              "flag": "crabcat",
+              "height": 24,
+              "id": 1141,
+              "mode": "OnPlayerEnter",
+              "only_once": true,
+              "state": true,
+              "width": 24,
+              "x": 432,
+              "y": 2160
+            },
+            "customId": "everest/flagTrigger",
+            "entityId": 1141,
+            "node": {
+              "x": 440,
+              "y": 2168
+            }
+          }
+        ]
+      },
+      "room": "sj2021beginnerlobby"
+    },
+    {
+      "attributes": {
+        "debug": false,
+        "depth": -12000,
+        "entitiesToAffect": "Celeste.Mod.FancyTileEntities.FancySolidTiles",
+        "height": 24,
+        "id": 1147,
+        "updateOnEntry": false,
+        "width": 32,
+        "x": 2184,
+        "y": 1464
+      },
+      "classification": "STATIC_TYPED_FACTORY_ACCEPTED",
+      "customId": "vitellary/editdepthtrigger",
+      "entityId": 1147,
+      "kind": "trigger",
+      "map": "StrawberryJam2021/0-Lobbies/1-Beginner",
+      "nodes": [],
+      "provider": "CrystallineHelper",
+      "resolvedRelation": {
+        "authoredClrType": "Celeste.Mod.FancyTileEntities.FancySolidTiles",
+        "collidingTargetEntityIds": [
+          1146
+        ],
+        "noOpInPinnedRoom": false,
+        "selection": "exact typed identity plus overlap",
+        "targetCustomId": "FancyTileEntities/FancySolidTiles"
+      },
+      "room": "sj2021beginnerlobby"
+    },
+    {
+      "attributes": {
+        "debug": false,
+        "depth": -12000,
+        "entitiesToAffect": "Celeste.Mod.FancyTileEntities.FancySolidTiles",
+        "height": 24,
+        "id": 1115,
+        "updateOnEntry": false,
+        "width": 32,
+        "x": 2064,
+        "y": 1600
+      },
+      "classification": "STATIC_TYPED_FACTORY_ACCEPTED",
+      "customId": "vitellary/editdepthtrigger",
+      "entityId": 1115,
+      "kind": "trigger",
+      "map": "StrawberryJam2021/0-Lobbies/1-Beginner",
+      "nodes": [],
+      "provider": "CrystallineHelper",
+      "resolvedRelation": {
+        "authoredClrType": "Celeste.Mod.FancyTileEntities.FancySolidTiles",
+        "collidingTargetEntityIds": [
+          1116
+        ],
+        "noOpInPinnedRoom": false,
+        "selection": "exact typed identity plus overlap",
+        "targetCustomId": "FancyTileEntities/FancySolidTiles"
+      },
+      "room": "sj2021beginnerlobby"
+    },
+    {
+      "attributes": {
+        "debug": false,
+        "depth": -12000,
+        "entitiesToAffect": "Celeste.Mod.FancyTileEntities.FancySolidTiles",
+        "height": 8,
+        "id": 1196,
+        "updateOnEntry": false,
+        "width": 8,
+        "x": 3208,
+        "y": 864
+      },
+      "classification": "STATIC_TYPED_FACTORY_ACCEPTED",
+      "customId": "vitellary/editdepthtrigger",
+      "entityId": 1196,
+      "kind": "trigger",
+      "map": "StrawberryJam2021/0-Lobbies/1-Beginner",
+      "nodes": [],
+      "provider": "CrystallineHelper",
+      "resolvedRelation": {
+        "authoredClrType": "Celeste.Mod.FancyTileEntities.FancySolidTiles",
+        "collidingTargetEntityIds": [
+          1135
+        ],
+        "noOpInPinnedRoom": false,
+        "selection": "exact typed identity plus overlap",
+        "targetCustomId": "FancyTileEntities/FancySolidTiles"
+      },
+      "room": "sj2021beginnerlobby"
+    },
+    {
+      "attributes": {
+        "debug": false,
+        "depth": -12000,
+        "entitiesToAffect": "Celeste.Mod.FancyTileEntities.FancySolidTiles",
+        "height": 8,
+        "id": 1197,
+        "updateOnEntry": false,
+        "width": 8,
+        "x": 3144,
+        "y": 872
+      },
+      "classification": "STATIC_TYPED_FACTORY_ACCEPTED",
+      "customId": "vitellary/editdepthtrigger",
+      "entityId": 1197,
+      "kind": "trigger",
+      "map": "StrawberryJam2021/0-Lobbies/1-Beginner",
+      "nodes": [],
+      "provider": "CrystallineHelper",
+      "resolvedRelation": {
+        "authoredClrType": "Celeste.Mod.FancyTileEntities.FancySolidTiles",
+        "collidingTargetEntityIds": [
+          1144
+        ],
+        "noOpInPinnedRoom": false,
+        "selection": "exact typed identity plus overlap",
+        "targetCustomId": "FancyTileEntities/FancySolidTiles"
+      },
+      "room": "sj2021beginnerlobby"
+    },
+    {
+      "attributes": {
+        "bloomStrengthFrom": 1,
+        "bloomStrengthTo": 1.2999999523162842,
+        "height": 136,
+        "id": 1215,
+        "positionMode": "RightToLeft",
+        "width": 32,
+        "x": 3392,
+        "y": 1136
+      },
+      "classification": "STATIC_TYPED_FACTORY_ACCEPTED",
+      "customId": "vitellary/bloomstrengthtrigger",
+      "entityId": 1215,
+      "kind": "trigger",
+      "map": "StrawberryJam2021/0-Lobbies/1-Beginner",
+      "nodes": [],
+      "provider": "CrystallineHelper",
+      "room": "sj2021beginnerlobby"
+    },
+    {
+      "attributes": {
+        "bloomStrengthFrom": 1.2999999523162842,
+        "bloomStrengthTo": 1.2999999523162842,
+        "height": 200,
+        "id": 1216,
+        "positionMode": "NoEffect",
+        "width": 208,
+        "x": 3184,
+        "y": 1136
+      },
+      "classification": "STATIC_TYPED_FACTORY_ACCEPTED",
+      "customId": "vitellary/bloomstrengthtrigger",
+      "entityId": 1216,
+      "kind": "trigger",
+      "map": "StrawberryJam2021/0-Lobbies/1-Beginner",
+      "nodes": [],
+      "provider": "CrystallineHelper",
+      "room": "sj2021beginnerlobby"
+    },
+    {
+      "attributes": {
+        "debug": false,
+        "depth": -12000,
+        "entitiesToAffect": "Celeste.Mod.FancyTileEntities.FancySolidTiles",
+        "height": 24,
+        "id": 1236,
+        "updateOnEntry": false,
+        "width": 32,
+        "x": 2144,
+        "y": 704
+      },
+      "classification": "STATIC_TYPED_FACTORY_ACCEPTED",
+      "customId": "vitellary/editdepthtrigger",
+      "entityId": 1236,
+      "kind": "trigger",
+      "map": "StrawberryJam2021/0-Lobbies/1-Beginner",
+      "nodes": [],
+      "provider": "CrystallineHelper",
+      "resolvedRelation": {
+        "authoredClrType": "Celeste.Mod.FancyTileEntities.FancySolidTiles",
+        "collidingTargetEntityIds": [
+          1237
+        ],
+        "noOpInPinnedRoom": false,
+        "selection": "exact typed identity plus overlap",
+        "targetCustomId": "FancyTileEntities/FancySolidTiles"
+      },
+      "room": "sj2021beginnerlobby"
+    },
+    {
+      "attributes": {
+        "debug": false,
+        "depth": -12000,
+        "entitiesToAffect": "Celeste.Mod.FancyTileEntities.FancySolidTiles",
+        "height": 24,
+        "id": 1239,
+        "updateOnEntry": false,
+        "width": 32,
+        "x": 1208,
+        "y": 1088
+      },
+      "classification": "STATIC_TYPED_FACTORY_ACCEPTED",
+      "customId": "vitellary/editdepthtrigger",
+      "entityId": 1239,
+      "kind": "trigger",
+      "map": "StrawberryJam2021/0-Lobbies/1-Beginner",
+      "nodes": [],
+      "provider": "CrystallineHelper",
+      "resolvedRelation": {
+        "authoredClrType": "Celeste.Mod.FancyTileEntities.FancySolidTiles",
+        "collidingTargetEntityIds": [
+          1240
+        ],
+        "noOpInPinnedRoom": false,
+        "selection": "exact typed identity plus overlap",
+        "targetCustomId": "FancyTileEntities/FancySolidTiles"
+      },
+      "room": "sj2021beginnerlobby"
+    },
+    {
+      "attributes": {
+        "debug": false,
+        "depth": -12000,
+        "entitiesToAffect": "Celeste.Mod.FancyTileEntities.FancySolidTiles",
+        "height": 24,
+        "id": 1241,
+        "updateOnEntry": false,
+        "width": 32,
+        "x": 2984,
+        "y": 1608
+      },
+      "classification": "STATIC_TYPED_FACTORY_ACCEPTED",
+      "customId": "vitellary/editdepthtrigger",
+      "entityId": 1241,
+      "kind": "trigger",
+      "map": "StrawberryJam2021/0-Lobbies/1-Beginner",
+      "nodes": [],
+      "provider": "CrystallineHelper",
+      "resolvedRelation": {
+        "authoredClrType": "Celeste.Mod.FancyTileEntities.FancySolidTiles",
+        "collidingTargetEntityIds": [],
+        "noOpInPinnedRoom": true,
+        "selection": "exact typed identity plus overlap",
+        "targetCustomId": "FancyTileEntities/FancySolidTiles"
+      },
+      "room": "sj2021beginnerlobby"
+    },
+    {
+      "attributes": {
+        "debug": false,
+        "depth": -12000,
+        "entitiesToAffect": "Celeste.Mod.FancyTileEntities.FancySolidTiles",
+        "height": 24,
+        "id": 1243,
+        "updateOnEntry": false,
+        "width": 32,
+        "x": 2552,
+        "y": 1696
+      },
+      "classification": "STATIC_TYPED_FACTORY_ACCEPTED",
+      "customId": "vitellary/editdepthtrigger",
+      "entityId": 1243,
+      "kind": "trigger",
+      "map": "StrawberryJam2021/0-Lobbies/1-Beginner",
+      "nodes": [],
+      "provider": "CrystallineHelper",
+      "resolvedRelation": {
+        "authoredClrType": "Celeste.Mod.FancyTileEntities.FancySolidTiles",
+        "collidingTargetEntityIds": [
+          1244
+        ],
+        "noOpInPinnedRoom": false,
+        "selection": "exact typed identity plus overlap",
+        "targetCustomId": "FancyTileEntities/FancySolidTiles"
+      },
+      "room": "sj2021beginnerlobby"
+    },
+    {
+      "attributes": {
+        "debug": false,
+        "depth": -12000,
+        "entitiesToAffect": "Celeste.Mod.FancyTileEntities.FancySolidTiles",
+        "height": 8,
+        "id": 1247,
+        "updateOnEntry": false,
+        "width": 8,
+        "x": 2520,
+        "y": 1152
+      },
+      "classification": "STATIC_TYPED_FACTORY_ACCEPTED",
+      "customId": "vitellary/editdepthtrigger",
+      "entityId": 1247,
+      "kind": "trigger",
+      "map": "StrawberryJam2021/0-Lobbies/1-Beginner",
+      "nodes": [],
+      "provider": "CrystallineHelper",
+      "resolvedRelation": {
+        "authoredClrType": "Celeste.Mod.FancyTileEntities.FancySolidTiles",
+        "collidingTargetEntityIds": [
+          1245
+        ],
+        "noOpInPinnedRoom": false,
+        "selection": "exact typed identity plus overlap",
+        "targetCustomId": "FancyTileEntities/FancySolidTiles"
+      },
+      "room": "sj2021beginnerlobby"
+    },
+    {
+      "attributes": {
+        "debug": false,
+        "depth": -12000,
+        "entitiesToAffect": "Celeste.Mod.FancyTileEntities.FancySolidTiles",
+        "height": 8,
+        "id": 1336,
+        "updateOnEntry": false,
+        "width": 8,
+        "x": 2672,
+        "y": 1832
+      },
+      "classification": "STATIC_TYPED_FACTORY_ACCEPTED",
+      "customId": "vitellary/editdepthtrigger",
+      "entityId": 1336,
+      "kind": "trigger",
+      "map": "StrawberryJam2021/0-Lobbies/1-Beginner",
+      "nodes": [],
+      "provider": "CrystallineHelper",
+      "resolvedRelation": {
+        "authoredClrType": "Celeste.Mod.FancyTileEntities.FancySolidTiles",
+        "collidingTargetEntityIds": [
+          1335
+        ],
+        "noOpInPinnedRoom": false,
+        "selection": "exact typed identity plus overlap",
+        "targetCustomId": "FancyTileEntities/FancySolidTiles"
+      },
+      "room": "sj2021beginnerlobby"
+    },
+    {
+      "attributes": {
+        "debug": false,
+        "depth": -12000,
+        "entitiesToAffect": "Celeste.Mod.FancyTileEntities.FancySolidTiles",
+        "height": 8,
+        "id": 1339,
+        "updateOnEntry": false,
+        "width": 8,
+        "x": 2968,
+        "y": 1760
+      },
+      "classification": "STATIC_TYPED_FACTORY_ACCEPTED",
+      "customId": "vitellary/editdepthtrigger",
+      "entityId": 1339,
+      "kind": "trigger",
+      "map": "StrawberryJam2021/0-Lobbies/1-Beginner",
+      "nodes": [],
+      "provider": "CrystallineHelper",
+      "resolvedRelation": {
+        "authoredClrType": "Celeste.Mod.FancyTileEntities.FancySolidTiles",
+        "collidingTargetEntityIds": [
+          1337
+        ],
+        "noOpInPinnedRoom": false,
+        "selection": "exact typed identity plus overlap",
+        "targetCustomId": "FancyTileEntities/FancySolidTiles"
+      },
+      "room": "sj2021beginnerlobby"
+    },
+    {
+      "attributes": {
+        "debug": false,
+        "depth": -12000,
+        "entitiesToAffect": "Celeste.Mod.FancyTileEntities.FancySolidTiles",
+        "height": 8,
+        "id": 1340,
+        "updateOnEntry": false,
+        "width": 8,
+        "x": 3216,
+        "y": 1792
+      },
+      "classification": "STATIC_TYPED_FACTORY_ACCEPTED",
+      "customId": "vitellary/editdepthtrigger",
+      "entityId": 1340,
+      "kind": "trigger",
+      "map": "StrawberryJam2021/0-Lobbies/1-Beginner",
+      "nodes": [],
+      "provider": "CrystallineHelper",
+      "resolvedRelation": {
+        "authoredClrType": "Celeste.Mod.FancyTileEntities.FancySolidTiles",
+        "collidingTargetEntityIds": [
+          1338
+        ],
+        "noOpInPinnedRoom": false,
+        "selection": "exact typed identity plus overlap",
+        "targetCustomId": "FancyTileEntities/FancySolidTiles"
+      },
+      "room": "sj2021beginnerlobby"
+    },
+    {
+      "attributes": {
+        "bloomStrengthFrom": 1,
+        "bloomStrengthTo": 0.5,
+        "height": 56,
+        "id": 1443,
+        "positionMode": "RightToLeft",
+        "width": 24,
+        "x": 3720,
+        "y": 2040
+      },
+      "classification": "STATIC_TYPED_FACTORY_ACCEPTED",
+      "customId": "vitellary/bloomstrengthtrigger",
+      "entityId": 1443,
+      "kind": "trigger",
+      "map": "StrawberryJam2021/0-Lobbies/1-Beginner",
+      "nodes": [],
+      "provider": "CrystallineHelper",
+      "room": "sj2021beginnerlobby"
+    },
+    {
+      "attributes": {
+        "bloomStrengthFrom": 0.5,
+        "bloomStrengthTo": 0.5,
+        "height": 136,
+        "id": 1448,
+        "positionMode": "NoEffect",
+        "width": 128,
+        "x": 3592,
+        "y": 2000
+      },
+      "classification": "STATIC_TYPED_FACTORY_ACCEPTED",
+      "customId": "vitellary/bloomstrengthtrigger",
+      "entityId": 1448,
+      "kind": "trigger",
+      "map": "StrawberryJam2021/0-Lobbies/1-Beginner",
+      "nodes": [],
+      "provider": "CrystallineHelper",
+      "room": "sj2021beginnerlobby"
+    },
+    {
+      "attributes": {
+        "bloomStrengthFrom": 1,
+        "bloomStrengthTo": 1.2999999523162842,
+        "height": 136,
+        "id": 1214,
+        "positionMode": "LeftToRight",
+        "width": 32,
+        "x": 3152,
+        "y": 1184
+      },
+      "classification": "STATIC_TYPED_FACTORY_ACCEPTED",
+      "customId": "vitellary/bloomstrengthtrigger",
+      "entityId": 1214,
+      "kind": "trigger",
+      "map": "StrawberryJam2021/0-Lobbies/1-Beginner",
+      "nodes": [],
+      "provider": "CrystallineHelper",
+      "room": "sj2021beginnerlobby"
+    },
+    {
+      "attributes": {
+        "bloomStrengthFrom": 1,
+        "bloomStrengthTo": 2,
+        "height": 176,
+        "id": 1583,
+        "positionMode": "LeftToRight",
+        "width": 56,
+        "x": 1040,
+        "y": 1416
+      },
+      "classification": "STATIC_TYPED_FACTORY_ACCEPTED",
+      "customId": "vitellary/bloomstrengthtrigger",
+      "entityId": 1583,
+      "kind": "trigger",
+      "map": "StrawberryJam2021/0-Lobbies/1-Beginner",
+      "nodes": [],
+      "provider": "CrystallineHelper",
+      "room": "sj2021beginnerlobby"
+    },
+    {
+      "attributes": {
+        "bloomStrengthFrom": 1,
+        "bloomStrengthTo": 2,
+        "height": 144,
+        "id": 1584,
+        "positionMode": "NoEffect",
+        "width": 48,
+        "x": 1120,
+        "y": 1424
+      },
+      "classification": "STATIC_TYPED_FACTORY_ACCEPTED",
+      "customId": "vitellary/bloomstrengthtrigger",
+      "entityId": 1584,
+      "kind": "trigger",
+      "map": "StrawberryJam2021/0-Lobbies/1-Beginner",
+      "nodes": [],
+      "provider": "CrystallineHelper",
+      "room": "sj2021beginnerlobby"
+    },
+    {
+      "attributes": {
+        "bloomStrengthFrom": 1,
+        "bloomStrengthTo": 2,
+        "height": 152,
+        "id": 1585,
+        "positionMode": "RightToLeft",
+        "width": 40,
+        "x": 1200,
+        "y": 1432
+      },
+      "classification": "STATIC_TYPED_FACTORY_ACCEPTED",
+      "customId": "vitellary/bloomstrengthtrigger",
+      "entityId": 1585,
+      "kind": "trigger",
+      "map": "StrawberryJam2021/0-Lobbies/1-Beginner",
+      "nodes": [],
+      "provider": "CrystallineHelper",
+      "room": "sj2021beginnerlobby"
+    },
+    {
+      "attributes": {
+        "bloomStrengthFrom": 1,
+        "bloomStrengthTo": 1,
+        "height": 32,
+        "id": 1407,
+        "positionMode": "RightToLeft",
+        "width": 40,
+        "x": 1568,
+        "y": 1440
+      },
+      "classification": "STATIC_TYPED_FACTORY_ACCEPTED",
+      "customId": "vitellary/bloomstrengthtrigger",
+      "entityId": 1407,
+      "kind": "trigger",
+      "map": "StrawberryJam2021/0-Lobbies/1-Beginner",
+      "nodes": [],
+      "provider": "CrystallineHelper",
+      "room": "sj2021beginnerlobby"
+    }
+  ],
+  "schemaVersion": 1,
+  "semantics": {
+    "attachedJumpThru": "JumpThru collision, StaticMover attachment, platform movement/lift, shake/render offset, enable/disable, rider platform trigger; no persistence",
+    "bloomStrength": "OnStay clamped Celeste Trigger position interpolation into Level.Bloom.Strength; room-scoped, no persistence",
+    "editDepth": "Added-time exact CLR-type equality and overlap become typed custom-ID equality and overlap; Depth mutation lasts for room entity lifetime only",
+    "triggerTrigger": "any Holdable collision, 0.4-second one-shot delay, target OnLeave-if-inside then OnEnter in node order, remove source"
+  },
+  "sourceMap": "StrawberryJam2021/0-Lobbies/1-Beginner",
+  "sourceMapPackaged": false,
+  "sourceMapSha256": "a4e3e20a2f0cc878fe43b32fb8025d7650b20cc6265f69e37bf3110a7cdf47c2",
+  "stage": "25K-F",
+  "unknownOccurrenceCount": 0
+}

@@ -164,10 +164,13 @@ internal static class RuntimeClosureScanner
                      !method.IsAbstract && !method.IsPInvokeImpl))
         {
             string methodName = AotName(type.FullName) + "_" + AotName(method.Name);
-            // Mono's Mach-O AOT exports separate the assembly identity from
-            // the fully-mangled type/method name with two underscores.
+            // Mono's Mach-O AOT exports have used both one and two separators
+            // between the assembly identity and the fully-mangled method name
+            // across accepted Apple toolchains. Match either exact prefix.
             string llvmPrefix = "_" + AotName(source.Name.Name) + "__" + methodName;
+            string llvmSinglePrefix = "_" + AotName(source.Name.Name) + "_" + methodName;
             bool present = symbols.Any(symbol => symbol.StartsWith(llvmPrefix, StringComparison.Ordinal) ||
+                                                 symbol.StartsWith(llvmSinglePrefix, StringComparison.Ordinal) ||
                                                  symbol.StartsWith(methodName, StringComparison.Ordinal));
             // The full-AOT compiler may eliminate an individually preserved
             // but unreachable compiler-generated lambda while still emitting

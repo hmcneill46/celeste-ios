@@ -657,6 +657,30 @@ and [`apple-everest/sj-beginner-readiness-stage25ke.json`](../apple-everest/sj-b
 This stage still does not package the Strawberry Jam slice. Its remaining
 groups are bounded multi-bank FMOD and the exact Crystalline/Vortex mechanisms.
 
+Stage 25K-F closes those two pre-integration groups without staging either real
+map. `STATIC_CUSTOM_FMOD_BANK_SET` extends the one-bank mechanism to an exact
+ordered graph. The generated manifest loads ChronoHelper after the seven
+vanilla banks, followed by four independently identified Strawberry Jam banks
+in resolved module and content-registration order. Every bank identity, byte
+hash, exported GUID record, event mapping, and compatible shared bus is checked
+on the Mac. Unequal duplicate identities or path/GUID collisions fail before
+AOT. Device initialization remains transactional and uses Celeste's one Studio
+system; repeated initialization on that system is a no-op, and normal
+`Studio.System.unloadAll` remains the sole teardown owner.
+
+The same stage adds two more exact `STATIC_SEMANTIC_LOWERING` identities.
+CrystallineHelper 1.17.2 receives typed bloom-strength, edit-depth, and
+trigger-trigger factories for its 53 Beginner-lobby occurrences. VortexHelper
+1.2.19 receives a typed attached jump-thru factory for its two occurrences.
+Authored CLR target names and trigger nodes are resolved on the Mac to exact
+custom IDs and typed connections; device code uses explicit identity
+components, existing `Level.Bloom` state, `StaticMover`, and `Platform.LiftSpeed`.
+No general `DynamicData`, reflection lookup, new hook class, or dynamic hook
+lifetime is introduced. The resulting 920 audited custom-ID occurrences are
+accepted or vanilla, with zero pre-integration blocker groups. This means
+`READY_FOR_K_G_INTEGRATION_BUILD`; it is not physical acceptance of the real
+Beginner slice or full Strawberry Jam support.
+
 The deferred IL rung uses the ordinary GoldenTrainer 1.5.4 release. Its DLL
 contains `IL.Celeste.SummitCheckpoint.Update` plus a direct `ILHook` on
 `Player.orig_Die`; the host analyzer now identifies both from CLI metadata.

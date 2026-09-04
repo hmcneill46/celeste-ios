@@ -1,0 +1,142 @@
+{
+  "acceptedBaseline": {
+    "aevpsv1Version": 1,
+    "bingManifestSha256": "9118e61cff9edb6a34e2eba9868e4c64a1721e095b8222d9f996c60ef1c352b4",
+    "configuredAggregatePlanSha256": "bfbae569352041d00d98c5792354bc403423566ad796a69912431392111a9895",
+    "lobbyManifestSha256": "fdd710714ca6280790d9bd70fbe22e0776b9a8b1abdc2c9bbca45e8eabd23092",
+    "stage25keSharedClosureSha256": "9ae24c882bf931c29ad3967377217290fbbb48cc44b0f27f741a5f19a76150e5"
+  },
+  "actualLobbyOrBingMapPackaged": false,
+  "appleApi": {
+    "broadPublicizer": false,
+    "membersAfter": 30,
+    "membersBefore": 30,
+    "newMembers": 0
+  },
+  "artifactSha256": "82411f05a1a66804b772840d711debbcd0715d81d6ee2b20a59cdee16f2b292e",
+  "beginnerBlockerGroups": {
+    "afterStage25kf": 0,
+    "beforeStage25kf": 2,
+    "remaining": []
+  },
+  "customIdOccurrenceCoverage": {
+    "acceptedOrVanilla": 920,
+    "auditedLobbyAndBing": 920,
+    "blocked": 0,
+    "closedByStage25kf": 55,
+    "unclassified": 0
+  },
+  "determinism": {
+    "closure": {
+      "appleApiSurfaceSha256": "d594dea86e944b468819818773f2177312445bbebe022bcbc7ea1ff779c8652c",
+      "contentLogicalSha256": "fa9517f3b19fab6b01b6efea5ae4a32d09012436a6d07d222ac61e1d202992f6",
+      "customAudioManifestSha256": "25da52f33cef1b952a2062656dd08210b63b2085c12ea5287f91af45810f0ff9",
+      "customBankLogicalSetSha256": "b5e9335c967fcb6d1e3ce4cdbdde6cee975c04b01dc86432c901c2ddd318cb77",
+      "hookTransformSha256": "194596dc3af274aa1aceb735d57518e1761808cd92f1c6a65fa88e3b53ebdef4",
+      "managedLogicalSha256": "ce8ec185d7f4540e74ed0fddf4d4244e7678c23e4cc8e2435f15602b2ec6453a",
+      "moduleDurabilityClosureSha256": "e91a3f4527247ca54643506eb87fbca6b43c006338d312ffdac1c1fa6d8f9b33",
+      "registrySha256": "c84aa7b2810039f41624295cc4645da0faa666708460b852dc0ad8cb563140c6",
+      "sharedClosureSha256": "2df2d7e7b268de76905fdd07fc7e5cbf4768b728808cdb26efc3ff19b0332edd",
+      "staticSemanticRuntimePatchSha256": "b737d6820d6b54aa42240e320528d8d80d76e7e75516a9601cce3ef8eb25e22c"
+    },
+    "completeTreeCompared": true,
+    "customAudioBankCount": 5,
+    "fileCount": 1034,
+    "loadOrder": [
+      [
+        8,
+        "ChronoHelper",
+        "bank:/ExpertContestHelper"
+      ],
+      [
+        9,
+        "StrawberryJam2021AudioA",
+        "bank:/sj21_bingovergoogle"
+      ],
+      [
+        10,
+        "StrawberryJam2021AudioA",
+        "bank:/sj21_shared"
+      ],
+      [
+        11,
+        "StrawberryJam2021AudioB",
+        "bank:/sj21_BegLobby"
+      ],
+      [
+        12,
+        "StrawberryJam2021",
+        "bank:/sj21_jamjars"
+      ]
+    ],
+    "omissionControlClosureSha256": "deaba1846389b98cd4431d0b7684c35ca6eb8e4b91d151f7dcf64233e1bbcbf7",
+    "omissions": [
+      {
+        "acceptedBeginnerManifestHashesRetained": true,
+        "audioManifestIdentical": true,
+        "closureSha256": "80d0b2f7f37937a41f89bd937019559332e635ce9ce5da1f4c3c0d170371f03b",
+        "factoriesRemoved": [
+          "vitellary/bloomstrengthtrigger",
+          "vitellary/editdepthtrigger",
+          "vitellary/triggertrigger",
+          "appleEverest/stage25kfDepthTarget"
+        ],
+        "managedCompile": true,
+        "omitted": "CrystallineHelper",
+        "runtimeSourcesRemoved": [
+          "AppleEverestCrystallineSemantics.cs"
+        ],
+        "unrelatedSemanticPlansIdentical": true
+      },
+      {
+        "acceptedBeginnerManifestHashesRetained": true,
+        "audioManifestIdentical": true,
+        "closureSha256": "e3a1069bb1444df85c29a012113a8726bd8dfaecaf56c78855c4d73e3cf4c3d7",
+        "factoriesRemoved": [
+          "VortexHelper/AttachedJumpThru"
+        ],
+        "managedCompile": true,
+        "omitted": "VortexHelper",
+        "runtimeSourcesRemoved": [
+          "AppleEverestVortexSemantics.cs"
+        ],
+        "unrelatedSemanticPlansIdentical": true
+      }
+    ],
+    "runsIdentical": true,
+    "schemaVersion": 1,
+    "stage": "25K-F",
+    "staticSemanticFactoryCount": 30
+  },
+  "factories": {
+    "canaryFactoriesAdded": 2,
+    "productionMechanismFactoriesAdded": 4,
+    "staticSemanticAfter": 30,
+    "staticSemanticBefore": 24
+  },
+  "fullStrawberryJamSupport": false,
+  "hookGen": {
+    "catalogAfter": 205,
+    "catalogBefore": 205,
+    "newDescriptors": 0
+  },
+  "nextStageRecommendation": "Stage 25K-G — first unchanged Strawberry Jam Beginner slice integration and physical acceptance",
+  "playableSliceBuildIntentionallyDeferred": true,
+  "playableSliceBuilt": false,
+  "providerClosureCount": 22,
+  "providersWithRemainingMechanisms": [],
+  "readiness": "READY_FOR_K_G_INTEGRATION_BUILD",
+  "runtimeBoundary": {
+    "arbitraryReflection": false,
+    "generalDynamicData": false,
+    "interpreter": false,
+    "jit": false,
+    "lua": false,
+    "newRuntimeHookClass": false,
+    "runtimeBankScanning": false,
+    "runtimeHelperDiscovery": false,
+    "secondFmodSystem": false
+  },
+  "schemaVersion": 1,
+  "stage": "25K-F"
+}

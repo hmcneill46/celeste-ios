@@ -10,6 +10,12 @@ internal static class SafeModIngestor
     private const string StrawberryJam1012ArchiveSha256 = "4e1a2fc12baa3db27da433b93bf26b59f34b3e6b7f760c41d8d127636d020655";
     private const int StrawberryJam1012MaxFiles = 30000;
     private const long StrawberryJam1012MaxExpandedBytes = 256L * 1024 * 1024;
+    private const long StrawberryJamAudioMaxExpandedBytes = 384L * 1024 * 1024;
+    private static readonly HashSet<string> StrawberryJamAudioArchiveSha256 = new(StringComparer.Ordinal)
+    {
+        "81e9cbc39b3a5525c93dfc5b24b675a833a8fb616e8a01cfc0838296f5e37e1d",
+        "70b90f45709956a4d18bfbb5941836c534344a1cf0ab859a50430daa3b76ef42"
+    };
     private static readonly IDeserializer Yaml = new DeserializerBuilder()
         .WithNamingConvention(NullNamingConvention.Instance)
         .IgnoreUnmatchedProperties()
@@ -23,16 +29,17 @@ internal static class SafeModIngestor
 
         string staging = Path.Combine(stagingParent, $"mod-{index:D3}");
         Directory.CreateDirectory(staging);
-        bool exactStrawberryJam = File.Exists(source) &&
-            Hashing.FileSha256(source) == StrawberryJam1012ArchiveSha256;
+        string? archiveSha256 = File.Exists(source) ? Hashing.FileSha256(source) : null;
+        bool exactStrawberryJam = archiveSha256 == StrawberryJam1012ArchiveSha256;
+        bool exactStrawberryJamAudio = archiveSha256 != null && StrawberryJamAudioArchiveSha256.Contains(archiveSha256);
+        int maxFiles = exactStrawberryJam ? StrawberryJam1012MaxFiles : ProductPolicy.MaxFiles;
+        long maxExpandedBytes = exactStrawberryJamAudio ? StrawberryJamAudioMaxExpandedBytes
+            : exactStrawberryJam ? StrawberryJam1012MaxExpandedBytes : ProductPolicy.MaxExpandedBytes;
         if (File.Exists(source)) ExtractZip(source, staging,
-            exactStrawberryJam ? StrawberryJam1012MaxFiles : ProductPolicy.MaxFiles,
-            exactStrawberryJam ? StrawberryJam1012MaxExpandedBytes : ProductPolicy.MaxExpandedBytes);
+            maxFiles, maxExpandedBytes);
         else CopyDirectory(source, staging);
 
         IReadOnlyList<FileRecord> files = Hashing.Inventory(staging);
-        int maxFiles = exactStrawberryJam ? StrawberryJam1012MaxFiles : ProductPolicy.MaxFiles;
-        long maxExpandedBytes = exactStrawberryJam ? StrawberryJam1012MaxExpandedBytes : ProductPolicy.MaxExpandedBytes;
         if (files.Count == 0 || files.Count > maxFiles)
             throw new InvalidDataException("mod file-count budget exceeded or input is empty");
         long bytes = files.Sum(item => item.Bytes);

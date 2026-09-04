@@ -48,13 +48,21 @@ internal static class CompatibilityAnalyzer
         StaticSemanticLoweringPlan? semantic = configuredFixture ? null : StaticSemanticLowering.Resolve(input, metadata);
         IReadOnlyList<FrozenIlTransformPlan> frozenIl = semantic == null ? StaticIlFreeze.Resolve(input, metadata) : [];
         StaticAotCompatibilityPlan? staticAot = semantic == null ? StaticAotCompatibility.Resolve(input, metadata) : null;
-        IReadOnlyList<CustomAudioBankPlan> customAudio = semantic == null && !configuredFixture
+        IReadOnlyList<CustomAudioBankPlan> customAudio = !configuredFixture
             ? CustomAudioManifest.Resolve(input, metadata) : [];
         List<string> managed = semantic == null
             ? input.Files.Where(file => IsManaged(file.Path)).Select(file => file.Path).ToList()
             : [];
-        List<string> content = configuredFixture ? [] : input.Files.Where(file => IsContent(file.Path) &&
-            (semantic == null || StaticSemanticLowering.IncludeContent(semantic, file.Path))).Select(file => file.Path).ToList();
+        List<string> content = configuredFixture ? [] : input.Files.Where(file =>
+        {
+            if (!IsContent(file.Path)) return false;
+            bool selectedBank = customAudio.Any(plan => plan.SourcePath == file.Path);
+            if (selectedBank) return true;
+            if (customAudio.Count > 0 && (file.Path.EndsWith(".bank", StringComparison.OrdinalIgnoreCase) ||
+                                         file.Path.EndsWith(".guids.txt", StringComparison.OrdinalIgnoreCase)))
+                return false;
+            return semantic == null || StaticSemanticLowering.IncludeContent(semantic, file.Path);
+        }).Select(file => file.Path).ToList();
         SortedSet<string> mechanisms = new(StringComparer.Ordinal);
         bool hookGenRegistration = false;
         CompatibilityClass classification = semantic != null
@@ -67,12 +75,22 @@ internal static class CompatibilityAnalyzer
         // architecture.  Treat their mere presence as a product boundary: an
         // otherwise compatible helper must not silently ship a partial feature
         // set whose custom events can never be resolved on Apple devices.
-        foreach (string bank in (semantic == null && !configuredFixture ? input.Files : Array.Empty<FileRecord>()).Where(file =>
+        foreach (string bank in (!configuredFixture && (semantic == null || customAudio.Count > 0)
+                     ? input.Files : Array.Empty<FileRecord>()).Where(file =>
                      file.Path.EndsWith(".bank", StringComparison.OrdinalIgnoreCase))
                  .Select(file => file.Path))
+        {
+            if (customAudio.Count > 0 && !customAudio.Any(plan => plan.SourcePath == bank))
+            {
+                mechanisms.Add("custom-fmod-bank-omitted-by-registered-set:" + bank);
+                continue;
+            }
             Record("custom-fmod-bank:" + bank, customAudio.Any(plan => plan.SourcePath == bank)
-                ? CompatibilityClass.STATIC_CUSTOM_FMOD_BANK
+                ? customAudio.Count == 1 && CustomAudioManifest.IsLegacySingleBank(customAudio[0])
+                    ? CompatibilityClass.STATIC_CUSTOM_FMOD_BANK
+                    : CompatibilityClass.STATIC_CUSTOM_FMOD_BANK_SET
                 : CompatibilityClass.CUSTOM_AUDIO_UNSUPPORTED);
+        }
 
         AppleStaticDeclaration? declaration = null;
         string? declaredAssembly = null;
@@ -570,18 +588,19 @@ internal static class CompatibilityAnalyzer
             CompatibilityClass.STATIC_CONFIGURED_DETOUR_SEQUENCE => 11,
             CompatibilityClass.HASH_LOCKED_STATIC_SEMANTIC_LOWERING => 12,
             CompatibilityClass.STATIC_CUSTOM_FMOD_BANK => 13,
-            CompatibilityClass.MODINTEROP_DEFERRED => 14,
-            CompatibilityClass.ON_HOOK_DEFERRED => 15,
-            CompatibilityClass.IL_HOOK_DEFERRED => 16,
-            CompatibilityClass.DIRECT_HOOK_DEFERRED => 17,
-            CompatibilityClass.DYNAMIC_TARGET_DEFERRED => 18,
-            CompatibilityClass.DYNAMIC_DETOUR_DEFERRED => 19,
-            CompatibilityClass.DETOUR_CONFIG_DEFERRED => 20,
-            CompatibilityClass.DYNAMIC_CODE_UNSUPPORTED => 21,
-            CompatibilityClass.CUSTOM_AUDIO_UNSUPPORTED => 22,
-            CompatibilityClass.NATIVE_UNSUPPORTED => 23,
-            CompatibilityClass.LUA_UNSUPPORTED => 24,
-            CompatibilityClass.PLATFORM_UNSUPPORTED => 25,
+            CompatibilityClass.STATIC_CUSTOM_FMOD_BANK_SET => 14,
+            CompatibilityClass.MODINTEROP_DEFERRED => 15,
+            CompatibilityClass.ON_HOOK_DEFERRED => 16,
+            CompatibilityClass.IL_HOOK_DEFERRED => 17,
+            CompatibilityClass.DIRECT_HOOK_DEFERRED => 18,
+            CompatibilityClass.DYNAMIC_TARGET_DEFERRED => 19,
+            CompatibilityClass.DYNAMIC_DETOUR_DEFERRED => 20,
+            CompatibilityClass.DETOUR_CONFIG_DEFERRED => 21,
+            CompatibilityClass.DYNAMIC_CODE_UNSUPPORTED => 22,
+            CompatibilityClass.CUSTOM_AUDIO_UNSUPPORTED => 23,
+            CompatibilityClass.NATIVE_UNSUPPORTED => 24,
+            CompatibilityClass.LUA_UNSUPPORTED => 25,
+            CompatibilityClass.PLATFORM_UNSUPPORTED => 26,
             _ => 99
         };
         return Rank(detected) > Rank(current) ? detected : current;

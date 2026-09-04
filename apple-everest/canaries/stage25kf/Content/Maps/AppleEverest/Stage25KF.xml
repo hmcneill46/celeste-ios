@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Map>
+  <levels>
+    <level name="lvl_canary" x="0" y="0" width="320" height="184" music="event:/music/lvl1/main" ambience="event:/env/amb/01_main" windPattern="None" dark="false">
+      <entities>
+        <player id="0" x="24" y="152" />
+        <appleEverestEntity name="appleEverest/stage25kfAudio" id="42" x="32" y="152" />
+        <zipMover id="40" x="80" y="136" width="32" height="16" theme="Normal">
+          <node x="80" y="72" />
+        </zipMover>
+        <appleEverestEntity name="VortexHelper/AttachedJumpThru" id="41" x="112" y="136" width="8" texture="wood" surfaceIndex="-1" />
+        <appleEverestEntity name="appleEverest/stage25kfDepthTarget" id="46" x="192" y="136" width="16" height="16" />
+        <theoCrystal id="47" x="240" y="152" />
+      </entities>
+      <triggers>
+        <appleEverestTrigger name="vitellary/bloomstrengthtrigger" id="50" x="0" y="0" width="64" height="168" bloomStrengthFrom="0.5" bloomStrengthTo="1" positionMode="LeftToRight" />
+        <appleEverestTrigger name="vitellary/bloomstrengthtrigger" id="51" x="64" y="0" width="64" height="168" bloomStrengthFrom="1.3" bloomStrengthTo="2" positionMode="RightToLeft" />
+        <appleEverestTrigger name="vitellary/bloomstrengthtrigger" id="52" x="128" y="0" width="48" height="168" bloomStrengthFrom="1" bloomStrengthTo="1" positionMode="NoEffect" />
+        <appleEverestTrigger name="vitellary/editdepthtrigger" id="48" x="192" y="136" width="16" height="16" entitiesToAffect="appleEverest/stage25kfDepthTarget" depth="-20000" debug="false" updateOnEntry="false" cacheValidEntities="false" />
+        <appleEverestTrigger name="vitellary/triggertrigger" id="43" x="224" y="120" width="40" height="48" activationType="OnHoldableEnter" oneUse="true" delay="0.4" randomize="false" matchPosition="false" activateOnTransition="false" invertCondition="false" onlyOnEnter="false">
+          <node x="280" y="120" />
+          <node x="280" y="152" />
+        </appleEverestTrigger>
+        <rumbleTrigger id="44" x="272" y="112" width="24" height="24" manualTrigger="false" persistent="false" />
+        <appleEverestTrigger name="everest/flagTrigger" id="45" x="272" y="144" width="24" height="24" flag="stage25kf_holdable" mode="OnPlayerEnter" state="true" only_once="true" />
+      </triggers>
+      <bgdecals />
+      <fgdecals />
+      <solids>0000000000000000000000000000000000000000
+0000000000000000000000000000000000000000
+0000000000000000000000000000000000000000
+0000000000000000000000000000000000000000
+0000000000000000000000000000000000000000
+0000000000000000000000000000000000000000
+0000000000000000000000000000000000000000
+0000000000000000000000000000000000000000
+0000000000000000000000000000000000000000
+0000000000000000000000000000000000000000
+0000000000000000000000000000000000000000
+0000000000000000000000000000000000000000
+0000000000000000000000000000000000000000
+0000000000000000000000000000000000000000
+0000000000000000000000000000000000000000
+0000000000000000000000000000000000000000
+0000000000000000000000000000000000000000
+0000000000000000000000000000000000000000
+0000000000000000000000000000000000000000
+0000000000000000000000000000000000000000
+0000000000000000000000000000000000000000
+1111111111111111111111111111111111111111
+1111111111111111111111111111111111111111</solids>
+      <bg>0000000000000000000000000000000000000000</bg>
+      <fgtiles />
+      <bgtiles />
+      <objtiles />
+    </level>
+  </levels>
+  <Filler />
+  <Style color="10152c">
+    <Backgrounds />
+    <Foregrounds />
+  </Style>
+</Map>

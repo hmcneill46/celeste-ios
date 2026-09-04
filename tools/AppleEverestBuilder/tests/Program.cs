@@ -308,6 +308,57 @@ try
     };
     Throws(() => CustomAudioManifest.ValidateGraph([(exactBank, 0), (conflictingGuid, 1)]),
         "GUID collision", "cross-module custom FMOD GUID collision rejected");
+    CustomAudioBankPlan conflictingLogicalPath = exactBank with
+    {
+        StagedPath = "AppleEverest/Mods/Other/Audio/logical.bank",
+        BankId = Guid.NewGuid(),
+        BankSha256 = new string('e', 64),
+        Guids = [new CustomAudioGuidRecord(Guid.NewGuid(), exactBank.BankPath, "bank")]
+    };
+    Throws(() => CustomAudioManifest.ValidateGraph([(exactBank, 8), (conflictingLogicalPath, 9)]),
+        "logical bank path collision", "same logical bank path with different identity is rejected");
+    CustomAudioBankPlan conflictingEventPath = exactBank with
+    {
+        StagedPath = "AppleEverest/Mods/Other/Audio/event-path.bank",
+        BankId = Guid.NewGuid(),
+        BankPath = "bank:/EventPath",
+        BankSha256 = new string('d', 64),
+        Guids = [new CustomAudioGuidRecord(Guid.NewGuid(), exactGuids[0].Path, "event")]
+    };
+    Throws(() => CustomAudioManifest.ValidateGraph([(exactBank, 8), (conflictingEventPath, 9)]),
+        "path collision", "same event path with different GUID is rejected");
+    CustomAudioBankPlan compatibleSharedBus = exactBank with
+    {
+        StagedPath = "AppleEverest/Mods/Other/Audio/shared-bus.bank",
+        BankId = Guid.NewGuid(),
+        BankPath = "bank:/SharedBus",
+        BankSha256 = new string('c', 64),
+        Guids = [new CustomAudioGuidRecord(Guid.Parse("7429d822-1e68-4251-9907-6d4e8d14a82e"),
+            "bus:/music/tunes/mains", "bus")]
+    };
+    CustomAudioBankPlan compatibleSharedBus2 = compatibleSharedBus with
+    {
+        StagedPath = "AppleEverest/Mods/Other2/Audio/shared-bus-2.bank",
+        BankId = Guid.NewGuid(),
+        BankPath = "bank:/SharedBus2",
+        BankSha256 = new string('b', 64)
+    };
+    CustomAudioManifest.ValidateGraph([(compatibleSharedBus, 8), (compatibleSharedBus2, 9)]);
+    Pass(true, "compatible shared bus GUID/path is accepted");
+    IReadOnlyList<(CustomAudioBankPlan Plan, int Ordinal)> exactOrder = CustomAudioManifest.Order([
+        (exactBank with { Owner = "StrawberryJam2021", SourcePath = "Audio/sj21_jamjars.bank" }, 0, 0),
+        (exactBank with { Owner = "StrawberryJam2021AudioB", SourcePath = "Audio/sj21_BegLobby.bank" }, 1, 0),
+        (exactBank with { Owner = "StrawberryJam2021AudioA", SourcePath = "Audio/sj21_shared.bank" }, 2, 1),
+        (exactBank with { Owner = "StrawberryJam2021AudioA", SourcePath = "Audio/sj21_bingovergoogle.bank" }, 2, 0),
+        (exactBank, 3, 0)
+    ]);
+    Pass(exactOrder.Select(item => (item.Plan.Owner, item.Plan.SourcePath, item.Ordinal)).SequenceEqual([
+        ("ChronoHelper", "Audio/ExpertContestHelper.bank", 8),
+        ("StrawberryJam2021AudioA", "Audio/sj21_bingovergoogle.bank", 9),
+        ("StrawberryJam2021AudioA", "Audio/sj21_shared.bank", 10),
+        ("StrawberryJam2021AudioB", "Audio/sj21_BegLobby.bank", 11),
+        ("StrawberryJam2021", "Audio/sj21_jamjars.bank", 12)
+    ]), "custom FMOD order matches pinned desktop module and archive registration order");
     Pass(CustomAudioManifest.Schema == "apple-everest-custom-audio-v1" &&
          CustomAudioManifest.LoadPolicy.EndsWith("loadBankFile", StringComparison.Ordinal),
         "custom FMOD compatibility policy is locked");

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using FMOD;
 using FMOD.Studio;
 using Monocle;
@@ -80,8 +81,12 @@ internal static class AppleEverestCustomAudioRuntime
             throw new InvalidOperationException("custom FMOD registry belongs to another live Studio System");
         try
         {
-            foreach (AppleEverestCustomBankDescriptor descriptor in descriptors)
+            for (int descriptorIndex = 0; descriptorIndex < descriptors.Length; descriptorIndex++)
             {
+                AppleEverestCustomBankDescriptor descriptor = descriptors[descriptorIndex];
+                int expectedOrdinal = 8 + descriptorIndex;
+                if (descriptor.LoadOrdinal != expectedOrdinal)
+                    throw new InvalidOperationException($"custom FMOD load ordinal mismatch: expected={expectedOrdinal}; actual={descriptor.LoadOrdinal}");
                 string path = Path.Combine(Engine.ContentDirectory,
                     descriptor.ResourcePath.Replace('/', Path.DirectorySeparatorChar));
                 RESULT result = system.loadBankFile(path, LOAD_BANK_FLAGS.NORMAL, out Bank bank);
@@ -111,9 +116,15 @@ internal static class AppleEverestCustomAudioRuntime
                     Require(description.getID(out Guid eventId), descriptor.Owner, "event.getID:" + entry.Path);
                     if (eventId != entry.Id)
                         throw new InvalidOperationException($"custom FMOD event GUID mismatch: path={entry.Path}");
-                    Events.Add(entry.Path, entry.Id);
+                    if (Events.TryGetValue(entry.Path, out Guid existing) && existing != entry.Id)
+                        throw new InvalidOperationException($"custom FMOD event path collision: path={entry.Path}");
+                    Events[entry.Path] = entry.Id;
                 }
-                AppleEverestStaticRuntime.Log($"custom-bank=PASS owner={descriptor.Owner} ordinal={descriptor.LoadOrdinal} path={descriptor.BankPath} events={descriptor.Guids.Length - 1} identity=guid-manifest state=LOADED");
+                int events = descriptor.Guids.Count(entry => entry.Kind == "event");
+                int buses = descriptor.Guids.Count(entry => entry.Kind == "bus");
+                int vcas = descriptor.Guids.Count(entry => entry.Kind == "vca");
+                int snapshots = descriptor.Guids.Count(entry => entry.Kind == "snapshot");
+                AppleEverestStaticRuntime.Log($"custom-bank=PASS owner={descriptor.Owner} ordinal={descriptor.LoadOrdinal} path={descriptor.BankPath} events={events} buses={buses} vcas={vcas} snapshots={snapshots} identity=guid-manifest state=LOADED");
             }
             Lifecycle.CompleteLoad(system, Banks.Count);
             AppleEverestStaticRuntime.Log($"custom-audio=PASS schema={GeneratedAppleEverestCustomAudioManifest.Schema} banks={Banks.Count} events={Events.Count} existing-studio-system=true");
