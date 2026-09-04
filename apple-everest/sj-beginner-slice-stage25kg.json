@@ -1,0 +1,144 @@
+{
+  "schemaVersion": 1,
+  "stage": "25K-G",
+  "status": "YELLOW_NEW_COMPATIBILITY_MECHANISM_REQUIRED",
+  "startSha": "e38a886f54a719ad973f21f4ef84587d52b49718",
+  "branch": "feature/apple-everest-first-sj-slice",
+  "stopPolicy": "Stage 25K-G section 48 requires STOP when unchanged real content exposes a genuinely new compatibility mechanism.",
+  "kFReadiness": {
+    "verifierResult": "PASS",
+    "auditedLobbyAndBing": 920,
+    "acceptedOrVanilla": 920,
+    "blocked": 0,
+    "unclassified": 0,
+    "readiness": "READY_FOR_K_G_INTEGRATION_BUILD",
+    "remainedValidForIntegration": false,
+    "finding": "The existing census classified factory IDs but did not close selected constructor base types and reachable helper behavior."
+  },
+  "strawberryJam": {
+    "version": "1.0.12",
+    "rootZipSha256": "4e1a2fc12baa3db27da433b93bf26b59f34b3e6b7f760c41d8d127636d020655",
+    "rootDllPath": "bin/StrawberryJam2021.dll",
+    "rootDllSha256": "8d5b9184204e7e7728965bcf95af5f150f6220dafbfe52fdd6c23e50d47e5258"
+  },
+  "maps": {
+    "lobby": {
+      "sourcePath": "Maps/StrawberryJam2021/0-Lobbies/1-Beginner.bin",
+      "sourceSha256": "a4e3e20a2f0cc878fe43b32fb8025d7650b20cc6265f69e37bf3110a7cdf47c2",
+      "fileBytes": 674648,
+      "binaryPackerRootBytes": 524807,
+      "appendixBytes": 149841,
+      "appendixSha256": "d76dba1bc5834d999f4d622afd008a702ffe6663b17fe7b0be3c5cc69afabe0d",
+      "sourcePackage": "3Plain",
+      "sid": "StrawberryJam2021/0-Lobbies/1-Beginner",
+      "rooms": [
+        "sj2021beginnerlobby"
+      ],
+      "authoredPlayerSpawnCount": 52,
+      "physicalSpawn": null,
+      "compatibilityId": "e9e4d8c99bdecded8a85516e723096abfa51340c7a1d00524c27686de3c9c9e6",
+      "preliminaryClosureByteIdentical": true
+    },
+    "bing": {
+      "sourcePath": "Maps/StrawberryJam2021/1-Beginner/Bing_Over_Google.bin",
+      "sourceSha256": "e770a8d193f217d09a6e153fbe272813d26a04d972df947ac812aa5cfe66f347",
+      "fileBytes": 135363,
+      "binaryPackerRootBytes": 70024,
+      "appendixBytes": 65339,
+      "appendixSha256": "963d5f086279311c18561df8fb135e445ca1cf0bcc2d3f1ba0d8b21f8376da6d",
+      "sourcePackage": "Bing_Over_Google",
+      "sid": "StrawberryJam2021/1-Beginner/Bing_Over_Google",
+      "rooms": [
+        "00- intro",
+        "01- Crusher",
+        "02- Bait N' Switch",
+        "02B- a stwawbewwy??",
+        "03- Uberjump",
+        "04- Head Trauma",
+        "05- Boing",
+        "06- Bubbles",
+        "07- Falling Cannon",
+        "07B- OwO whats this??",
+        "08- U Turn",
+        "09- Fin"
+      ],
+      "authoredPlayerSpawnCount": 20,
+      "expectedInitialSpawn": {
+        "room": "00- intro",
+        "x": 264,
+        "y": 152
+      },
+      "physicalSpawn": null,
+      "compatibilityId": "4024d36a33c33e411381e26ca2482ba09f828bc1c7f86306a98a915e904e39e1",
+      "preliminaryClosureByteIdentical": true
+    }
+  },
+  "content": {
+    "selectionArtifact": "apple-everest/sj-beginner-content-stage25kg.json",
+    "selectionArtifactSha256": "54fd788f092eba329f928b168664d6ee18b370e02d2a44f4c713e649e0d59e35",
+    "selectedPackageCount": 14,
+    "selectedFileCount": 1212,
+    "strawberryJamRootSelectedFileCount": 1178,
+    "selectedMapBinCount": 2,
+    "rootArchiveMapBinCount": 128,
+    "excludedMapBinCount": 126,
+    "unrelatedStrawberryJamMapBins": 0,
+    "preliminaryClosureMountedFileCount": 7970,
+    "preliminaryClosureSha256": "bc20bca22b14b064b0aef26a4b04855ba03cb3fb7b2846b089f8ceaacbca92d6",
+    "preliminaryClosureAccepted": false,
+    "threeRunDeterminismCompleted": false
+  },
+  "blocker": {
+    "provider": "MaxHelpingHand",
+    "version": "1.40.9",
+    "archiveSha256": "abfc5d167936410e9b6665018335ee654455e30710caffe01540b232da468fee",
+    "dllSha256": "6f463f2c014eb60c4abb61e395eb5065455d4bf469f4c83fce9814fb7bfcdfa6",
+    "group": "Everest base entities plus selected helper runtime hook/reflection semantics",
+    "compileErrors": [
+      "CS7068: Celeste.Mod.Entities.CustomBirdTutorial is absent from the static Apple runtime",
+      "CS7068: Celeste.Mod.Entities.CustomNPC is absent from the static Apple runtime"
+    ],
+    "authoredOccurrences": [
+      {
+        "id": "MaxHelpingHand/CustomTutorialWithNoBird",
+        "room": "sj2021beginnerlobby",
+        "x": 1128,
+        "y": 787,
+        "requiredNewSemantics": [
+          "Everest CustomBirdTutorial base behavior",
+          "BirdNPC.StartleAndFlyAway hook behavior",
+          "BirdTutorialGui.Render pointer-direction IL behavior"
+        ]
+      },
+      {
+        "id": "MaxHelpingHand/MoreCustomNPC",
+        "room": "sj2021beginnerlobby",
+        "x": 3168,
+        "y": 1904,
+        "requiredNewSemantics": [
+          "Everest CustomNPC base behavior",
+          "runtime private-field reflection used by helper type initialization",
+          "CustomNPC.Talk ILHook behavior in the distributed implementation"
+        ]
+      }
+    ],
+    "additionalSelectedLoadDependentSurfaceRequiresFutureAudit": true,
+    "classification": "NEW_COMPATIBILITY_MECHANISM",
+    "allowedKGBugFix": false
+  },
+  "product": {
+    "iosBuild": "FAILED_BEFORE_AOT",
+    "tvosBuild": "NOT_RUN_MANDATORY_STOP",
+    "ipa": null,
+    "app": null,
+    "physicalAcceptance": "NOT_RUN_NO_ACCEPTED_PRODUCT"
+  },
+  "claims": {
+    "originalMapsModified": false,
+    "wholeStrawberryJamSupported": false,
+    "developmentIntegrationReady": false,
+    "allPlatformReleaseReady": false,
+    "firstPhysicallyRunningUnchangedStrawberryJamMapOnApple": false
+  },
+  "artifactSha256": "5218ef34e25d8f77898dedcec1664f8da914efb9151b380e845b31f930897470"
+}

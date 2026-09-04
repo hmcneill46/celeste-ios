@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "stage": "25K-G",
+  "status": "NOT_RUN_NEW_COMPATIBILITY_MECHANISM_REQUIRED",
+  "acceptedProductExists": false,
+  "iphone": {
+    "hardwareAvailable": true,
+    "result": "NOT_RUN_NO_ACCEPTED_IOS_PRODUCT"
+  },
+  "ipad": {
+    "hardwareAvailable": false,
+    "result": "IPADOS_PHYSICAL_PENDING_HARDWARE_UNAVAILABLE"
+  },
+  "appleTv": {
+    "hardwareAvailable": true,
+    "result": "NOT_RUN_MANDATORY_YELLOW_STOP"
+  },
+  "lobby": {
+    "launch": null,
+    "spawn": null,
+    "audio": null,
+    "crystalline": null,
+    "vortex": null,
+    "contort": null,
+    "extendedVariantMode": null,
+    "jungle": null,
+    "yetAnother": null,
+    "rootState": null
+  },
+  "chapterPanel": null,
+  "bing": null,
+  "saveAndQuit": null,
+  "coldResume": null,
+  "returnToLobby": null,
+  "reentry": null,
+  "journal": null,
+  "completion": null,
+  "previousProgression": null,
+  "lastAllThreeDevicePhysicalGreen": "Stage 25K-B build 35",
+  "artifactSha256": "b07dc11da0b7f58fcd941c1d41693d76df2f5fad98fef19c38c95282efc225b7"
+}
