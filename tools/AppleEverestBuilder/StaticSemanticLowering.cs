@@ -59,8 +59,17 @@ internal static class StaticSemanticLowering
                 new("entity", "MaxHelpingHand/FlagSwitchGate", "flag-switch-gate"),
                 new("entity", "MaxHelpingHand/FlagTouchSwitch", "flag-touch-switch"),
                 new("entity", "MaxHelpingHand/SecretBerry", "secret-berry"),
+                new("entity", "MaxHelpingHand/CustomTutorialWithNoBird", "custom-tutorial-with-no-bird",
+                    "new AppleEverestCustomTutorialWithNoBird(data, offset, entityId)"),
+                new("entity", "MaxHelpingHand/MoreCustomNPC", "more-custom-npc",
+                    "new AppleEverestMoreCustomNpc(data, offset, entityId)"),
                 new("trigger", "MaxHelpingHand/CameraCatchupSpeedTrigger", "camera-catchup-speed")
-            ]),
+            ], ContentPrefixes:
+            [
+                "Graphics/Atlases/Gameplay/MaxHelpingHand/summitcheckpoints/",
+                "Graphics/Atlases/Gameplay/objects/MaxHelpingHand/flagSwitchGate/",
+                "Graphics/Atlases/Gameplay/objects/MaxHelpingHand/flagTouchSwitch/"
+            ], RuntimeFiles: ["AppleEverestEverestBaseEntitySemantics.cs"]),
         new("lunatichelper-1.1.1-henny-v1", "LunaticHelper", "1.1.1",
             "e7cef501937fc1bc07d1ff13e753fe920b4ccbbd4e4db4c0b2c4312de89fdd78",
             "LunaticHelper.dll", "fc08f00296551a6025c5e31422c6edd5e8136e6861459f44ffea909129c6a925",

@@ -16,7 +16,7 @@ internal static class Program
             switch (args[0])
             {
                 case "acquire": Acquire(One(options, "--profile"), One(options, "--output")); break;
-                case "build": Build(One(options, "--profile"), One(options, "--repo-root"), One(options, "--upstream"), One(options, "--output"), Many(options, "--mod")); break;
+                case "build": Build(One(options, "--profile"), One(options, "--repo-root"), One(options, "--upstream"), One(options, "--output"), Many(options, "--mod"), Optional(options, "--factory-closure")); break;
                 case "build-configured-fixture": BuildConfiguredFixture(One(options, "--profile"),
                     One(options, "--repo-root"), One(options, "--upstream"),
                     One(options, "--output"), One(options, "--mod")); break;
@@ -49,6 +49,13 @@ internal static class Program
                 case "verify-aot-object": RuntimeClosureScanner.VerifyAotObjects(
                     One(options, "--source"), Many(options, "--object")); break;
                 case "verify-profile": _ = LoadProfile(One(options, "--profile")); break;
+                case "validate-factory-closure":
+                    SelectedFactoryClosureResult closure = SelectedFactoryTypeClosure.LoadAndValidate(
+                        One(options, "--manifest"));
+                    Console.WriteLine($"selected={closure.SelectedFactories} closed={closure.FullyClosed} blocked={closure.Blocked} unknown={closure.Unknown}");
+                    break;
+                case "inspect-factory-types": FactoryTypeInspector.Write(
+                    One(options, "--request"), One(options, "--assembly-root"), One(options, "--output")); break;
                 default: throw new InvalidDataException($"unknown command: {args[0]}");
             }
             Console.WriteLine($"PASS: AppleEverestBuilder {args[0]}");
@@ -242,7 +249,8 @@ internal static class Program
             new JsonSerializerOptions { WriteIndented = true }) + "\n");
     }
 
-    private static void Build(string profilePath, string repoRoot, string upstream, string output, IReadOnlyList<string> modPaths)
+    private static void Build(string profilePath, string repoRoot, string upstream, string output,
+        IReadOnlyList<string> modPaths, string? factoryClosurePath)
     {
         AppleEverestProfile profile = LoadProfile(profilePath);
         VerifyUpstream(profile, upstream);
@@ -259,6 +267,11 @@ internal static class Program
             analyzed.AddRange(input.Metadata.Select(metadata => CompatibilityAnalyzer.Analyze(input, metadata)));
         }
         IReadOnlyList<ResolvedMod> ordered = EverestGraphResolver.Resolve(analyzed);
+        if (factoryClosurePath != null)
+        {
+            SelectedFactoryClosureResult closure = SelectedFactoryTypeClosure.LoadAndValidate(factoryClosurePath);
+            SelectedFactoryTypeClosure.ValidateAvailableFactories(closure, ordered);
+        }
         ClosureGenerator.Generate(profile, ordered, Path.GetFullPath(repoRoot), output);
         Directory.Delete(staging, recursive: true);
     }
@@ -334,6 +347,10 @@ internal static class Program
     private static string One(Dictionary<string, List<string>> options, string name) =>
         options.TryGetValue(name, out List<string>? values) && values.Count == 1 ? values[0] : throw new InvalidDataException($"exactly one {name} is required");
     private static IReadOnlyList<string> Many(Dictionary<string, List<string>> options, string name) => options.TryGetValue(name, out List<string>? values) ? values : [];
+    private static string? Optional(Dictionary<string, List<string>> options, string name) =>
+        options.TryGetValue(name, out List<string>? values)
+            ? values.Count == 1 ? values[0] : throw new InvalidDataException($"at most one {name} is allowed")
+            : null;
 
     private static string Capture(string command, params string[] args)
     {
@@ -347,5 +364,5 @@ internal static class Program
 
     private static void Run(string command, params string[] args) { _ = Capture(command, args); }
 
-    private static void Help() => Console.WriteLine("AppleEverestBuilder acquire|audit|inspect-map|inspect-map-boundary|census-dll|census-semantics|build|apply|scan-runtime|verify-preserved-assembly|verify-referenced-api|verify-aot-object|verify-profile (closed static-AOT Apple product)");
+    private static void Help() => Console.WriteLine("AppleEverestBuilder acquire|audit|inspect-map|inspect-map-boundary|inspect-factory-types|census-dll|census-semantics|validate-factory-closure|build|apply|scan-runtime|verify-preserved-assembly|verify-referenced-api|verify-aot-object|verify-profile (closed static-AOT Apple product)");
 }

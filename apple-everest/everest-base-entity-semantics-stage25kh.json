@@ -1,0 +1,113 @@
+{
+  "architecture": {
+    "reason": "Both distributed derived types remove or bypass the dynamic base surfaces; exact profile guards make their remaining observable paths smaller and closed.",
+    "shape": "FLATTENED_TYPED_SELECTED_ENTITIES"
+  },
+  "artifactSha256": "cd6884579555d5fb1d96bcb188c15e89cc6c0027b52ea129a95ef17baf20a9e7",
+  "class": "STATIC_EVEREST_ENTITY_BASE_SEMANTICS",
+  "customBirdTutorial": {
+    "acceptedMembers": [
+      "birdId",
+      "onlyOnce=false",
+      "caw=false",
+      "faceLeft=false",
+      "dialog info",
+      "single dialog: control",
+      "immediate activation without matching trigger",
+      "ShowTutorial/HideTutorial bubble lifecycle",
+      "VertexLight",
+      "right pointer GUI"
+    ],
+    "activation": "Awake shows immediately because the selected room contains no matching CustomBirdTutorialTrigger",
+    "constructor": ".ctor(EntityData,Vector2)",
+    "content": [
+      "ActiveFont",
+      "VertexLight",
+      "BirdTutorialGui colors",
+      "project-owned dialog"
+    ],
+    "inheritance": [
+      "Celeste.Mod.Entities.CustomBirdTutorial",
+      "Celeste.BirdNPC",
+      "Celeste.Actor",
+      "Monocle.Entity"
+    ],
+    "sourceType": "Celeste.Mod.Entities.CustomBirdTutorial",
+    "unimplementedRejectedProfiles": [
+      "bird sprite",
+      "caw",
+      "faceLeft",
+      "onlyOnce",
+      "tutorial triggers",
+      "texture/button/direction/mod-reflection controls",
+      "non-Right pointers",
+      "BirdNPC movement modes and fly-away effects"
+    ]
+  },
+  "customNpc": {
+    "acceptedMembers": [
+      "empty sprite path",
+      "spriteRate=1",
+      "single dialog",
+      "onlyOnce=false",
+      "endLevel=false",
+      "indicator=(0,-40)",
+      "approachWhenTalking=false",
+      "approachDistance=16",
+      "no flips",
+      "two-node TalkComponent bounds",
+      "dummy player talk state",
+      "cutscene start/end",
+      "repeat counter reset",
+      "Language.FromTxt-compatible portrait command and cleaned-text parsing"
+    ],
+    "constructor": ".ctor(EntityData,Vector2,EntityID)",
+    "inheritance": [
+      "Celeste.Mod.Entities.CustomNPC",
+      "Celeste.NPC",
+      "Monocle.Entity"
+    ],
+    "privateMembersUsedByMax": [
+      {
+        "access": "read/write",
+        "member": "textures",
+        "selectedUse": "PRESENT_BUT_UNREACHABLE",
+        "type": "List<MTexture>"
+      },
+      {
+        "access": "read/write",
+        "member": "scale",
+        "selectedUse": "PRESENT_BUT_UNREACHABLE",
+        "type": "Vector2"
+      }
+    ],
+    "sourceType": "Celeste.Mod.Entities.CustomNPC",
+    "unimplementedRejectedProfiles": [
+      "nonempty sprite/frames/spriteName",
+      "animation",
+      "flips",
+      "multiple dialogs",
+      "onlyOnce",
+      "endLevel",
+      "approach movement",
+      "nonempty onlyIfFlag/setFlag",
+      "auto skip",
+      "custom font"
+    ]
+  },
+  "everest": {
+    "commit": "4bbde91b8dbaaddef2ceec75ca0cd6d59b3b8d00",
+    "customBirdTutorialSourceSha256": "e353517fb2271caca39b364df86203b689015b530823f6a16b0194f1cd339e67",
+    "customNpcSourceSha256": "d89d1ad0d2e71c171746a8664c50bb54e41a4af3073afe267217f54d166ffa1d",
+    "tag": "stable-1.6458.0"
+  },
+  "runtime": {
+    "dynamicData": false,
+    "emptyStubs": false,
+    "reflection": false,
+    "runtimeHooks": false,
+    "runtimeIl": false
+  },
+  "schemaVersion": 1,
+  "stage": "25K-H"
+}

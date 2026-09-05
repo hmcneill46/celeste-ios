@@ -23,6 +23,7 @@ PREPARE_ONLY=0
 CLEAN=0
 REUSE_BUILD=0
 CONFIGURED_FIXTURE=0
+FACTORY_CLOSURE=""
 MODS=()
 
 usage() {
@@ -45,6 +46,7 @@ Options:
   --clean                  replace only marked prior canary output
   --reuse-build            package an already-marked completed AOT build
   --configured-fixture     build one exact hash-locked configured-detour fixture
+  --factory-closure JSON   validate selected factory closure before generation
   -h, --help               show this help
 EOF
 }
@@ -63,10 +65,15 @@ while (($#)); do
     --clean) CLEAN=1; shift ;;
     --reuse-build) REUSE_BUILD=1; shift ;;
     --configured-fixture) CONFIGURED_FIXTURE=1; shift ;;
+    --factory-closure) FACTORY_CLOSURE="$2"; shift 2 ;;
     -h|--help) usage; exit 0 ;;
     *) echo "error: unknown option: $1" >&2; exit 2 ;;
   esac
 done
+if [[ -n "$FACTORY_CLOSURE" ]]; then
+  [[ -f "$FACTORY_CLOSURE" ]] || { echo "error: factory closure does not exist" >&2; exit 2; }
+  FACTORY_CLOSURE="$(python3 -c 'import pathlib,sys; print(pathlib.Path(sys.argv[1]).resolve())' "$FACTORY_CLOSURE")"
+fi
 for index in "${!MODS[@]}"; do
   [[ -e "${MODS[$index]}" ]] || { echo "error: mod input does not exist: ${MODS[$index]}" >&2; exit 2; }
   MODS[$index]="$(python3 -c 'import pathlib,sys; print(pathlib.Path(sys.argv[1]).resolve())' "${MODS[$index]}")"
@@ -186,6 +193,8 @@ if ((include_dj_frozen_il_canary)); then
 fi
 mod_args=()
 for mod in "${MODS[@]}"; do mod_args+=(--mod "$mod"); done
+factory_closure_args=()
+[[ -z "$FACTORY_CLOSURE" ]] || factory_closure_args=(--factory-closure "$FACTORY_CLOSURE")
 if ((CONFIGURED_FIXTURE)); then
   ((${#MODS[@]} == 1)) || { echo "error: --configured-fixture requires exactly one --mod" >&2; exit 2; }
   (cd /private/tmp && "$DOTNET8" run --project "$BUILDER_PROJECT" -- build-configured-fixture \
@@ -194,7 +203,7 @@ if ((CONFIGURED_FIXTURE)); then
 else
   (cd /private/tmp && "$DOTNET8" run --project "$BUILDER_PROJECT" -- build \
     --profile "$PROFILE" --repo-root "$REPO_ROOT" --upstream "$UPSTREAM" --output "$CLOSURE" \
-    "${mod_args[@]}")
+    "${factory_closure_args[@]}" "${mod_args[@]}")
 fi
 
 prepare_platform() {

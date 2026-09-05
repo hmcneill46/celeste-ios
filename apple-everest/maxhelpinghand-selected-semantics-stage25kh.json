@@ -1,0 +1,183 @@
+{
+  "archiveSha256": "abfc5d167936410e9b6665018335ee654455e30710caffe01540b232da468fee",
+  "artifactSha256": "0ee00df2eca0ae534c60822ecba6de43e4157d5ba2289220fb9700772881b0e8",
+  "content": {
+    "retainedAcceptedFactoryPrefixes": [
+      "Graphics/Atlases/Gameplay/MaxHelpingHand/summitcheckpoints/",
+      "Graphics/Atlases/Gameplay/objects/MaxHelpingHand/flagSwitchGate/",
+      "Graphics/Atlases/Gameplay/objects/MaxHelpingHand/flagTouchSwitch/"
+    ],
+    "selectedTwoRequiredMaxAssets": [],
+    "wholeHelperContentIncluded": false
+  },
+  "customTutorialWithNoBird": {
+    "authoredAttributes": {
+      "birdId": "0",
+      "controls": "dialog:SJ2021_lobby_gym_tutorial_controls",
+      "direction": "Right",
+      "id": 893,
+      "info": "SJ2021_lobby_gym_tutorial_info",
+      "onlyOnce": false,
+      "x": 1128,
+      "y": 787
+    },
+    "authoredNodes": [],
+    "base": "Celeste.Mod.Entities.CustomBirdTutorial",
+    "birdHook": {
+      "kind": "HookGen On.Celeste.BirdNPC.StartleAndFlyAway",
+      "lifetime": "type Load to Unload",
+      "lowering": "typed hide path performs no startle, sound, flight, flag, or removal",
+      "selectedOrigCalled": false
+    },
+    "differences": [
+      "removes BirdNPC.Sprite",
+      "stores pointer direction",
+      "suppresses StartleAndFlyAway only for this derived type",
+      "replaces vanilla bottom pointer for non-Down directions"
+    ],
+    "renderIl": {
+      "capture": [
+        "controlsWidth",
+        "infoWidth",
+        "infoHeight",
+        "lineColor",
+        "bgColor"
+      ],
+      "coordinateRule": "recomputed unmirrored (owner+gui-camera.floor)*6",
+      "kind": "IL.Celeste.BirdTutorialGui.Render",
+      "lowering": "AppleEverestDirectionalTutorialGui owns typed direction and draws the exact Right loop",
+      "selectedEffect": "37 scaled one-pixel vertical slices extend from right bubble edge; return -1 suppresses vanilla pointer"
+    },
+    "resolvedDefaults": {
+      "caw": false,
+      "faceLeft": false,
+      "hasPointer": true
+    }
+  },
+  "device": {
+    "moduleScanner": false,
+    "packagedDll": false,
+    "runtimeDetour": false,
+    "runtimeIl": false,
+    "runtimeReflection": false
+  },
+  "distributedSurface": {
+    "mechanismCounts": {
+      "assemblyLoadCalls": 0,
+      "detourConfigReferences": 30,
+      "detourContextReferences": 11,
+      "directHookConstructors": 21,
+      "directIlHookConstructors": 34,
+      "dynDataCalls": 0,
+      "dynamicDataCalls": 0,
+      "dynamicMethodCalls": 0,
+      "emitDelegateCalls": 105,
+      "everestContentCalls": 0,
+      "fastReflectionCalls": 0,
+      "fileSystemWatcherCalls": 0,
+      "fmodCalls": 2,
+      "ilEventSubscriptions": 82,
+      "modInteropCalls": 5,
+      "onHookSubscriptions": 76,
+      "processCalls": 0,
+      "reflectionCalls": 407,
+      "reflectionEmitCalls": 0
+    },
+    "methods": 2178,
+    "types": 447,
+    "unknown": 0
+  },
+  "dllSha256": "6f463f2c014eb60c4abb61e395eb5065455d4bf469f4c83fce9814fb7bfcdfa6",
+  "moduleLoadSurface": {
+    "EverestContent": "zero selected calls",
+    "IL": "selected tutorial pointer lowered; every other distributed registration PRESENT_BUT_UNREACHABLE",
+    "On": "selected tutorial behavior lowered; every other distributed registration PRESENT_BUT_UNREACHABLE",
+    "assetRegistration": "zero selected Max assets",
+    "directHook": "PRESENT_BUT_UNREACHABLE",
+    "directIlHook": "selected NPC talk effect lowered; others PRESENT_BUT_UNREACHABLE",
+    "optionalIntegrations": "PRESENT_BUT_UNREACHABLE",
+    "policy": "The distributed DLL and module are omitted for this semantic provider. Only registered factories are linked.",
+    "reflection": "selected two exact fields eliminated; all other distributed sites PRESENT_BUT_UNREACHABLE",
+    "saveData": "zero selected reads",
+    "session": "zero selected module-session reads",
+    "settings": "zero selected reads",
+    "unknown": 0
+  },
+  "moreCustomNpc": {
+    "authoredAttributes": {
+      "approachDistance": 16,
+      "approachWhenTalking": false,
+      "dialogId": "StrawberryJam2021_0_Lobbies_1_Beginner_Credits",
+      "endLevel": false,
+      "flipX": false,
+      "flipY": false,
+      "frames": "",
+      "id": 1604,
+      "indicatorOffsetX": 0,
+      "indicatorOffsetY": -40,
+      "onlyIfFlag": "",
+      "onlyOnce": false,
+      "setFlag": "",
+      "sprite": "",
+      "spriteRate": 1,
+      "x": 3168,
+      "y": 1904
+    },
+    "authoredNodes": [
+      {},
+      {}
+    ],
+    "base": "Celeste.Mod.Entities.CustomNPC",
+    "dialogPresentation": {
+      "cleanedText": "STAGE 25K-H NPC TALK PASS",
+      "parsed": "{portrait MADELINE left normal} followed by the canary text",
+      "portrait": "portrait_MADELINE normal animation on the left",
+      "source": "[MADELINE left normal] followed by the canary text",
+      "textbox": "Madeline portrait-selected vanilla textbox and overlay"
+    },
+    "reflection": [
+      {
+        "access": "read/write",
+        "declaringType": "Celeste.Mod.Entities.CustomNPC",
+        "initialization": "type initializer",
+        "member": "textures",
+        "memberType": "List<MTexture>",
+        "selectedUse": "PRESENT_BUT_UNREACHABLE: spriteName and frames are empty"
+      },
+      {
+        "access": "read/write",
+        "declaringType": "Celeste.Mod.Entities.CustomNPC",
+        "initialization": "type initializer",
+        "member": "scale",
+        "memberType": "Vector2",
+        "selectedUse": "PRESENT_BUT_UNREACHABLE: spriteName is empty"
+      }
+    ],
+    "resolvedDefaults": {
+      "autoSkipEnabled": false,
+      "customFont": "",
+      "onlyIfFlagInverted": false,
+      "setFlagInverted": false,
+      "spriteName": ""
+    },
+    "talkIlHook": {
+      "branches": {
+        "autoSkip": "false",
+        "customFont": "empty"
+      },
+      "captures": [
+        "MoreCustomNPC instance"
+      ],
+      "kind": "direct ILHook",
+      "lifetime": "type Load to Unload",
+      "lowering": "ordinary typed one-dialog talk coroutine; no hook installed",
+      "selectedEffect": "Textbox.Say arguments and coroutine are unchanged",
+      "target": "CustomNPC.Talk iterator MoveNext"
+    }
+  },
+  "provider": "MaxHelpingHand",
+  "publicUrl": "https://gamebanana.com/mmdl/1778093",
+  "schemaVersion": 1,
+  "stage": "25K-H",
+  "version": "1.40.9"
+}

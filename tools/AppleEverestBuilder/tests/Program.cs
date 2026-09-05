@@ -98,6 +98,8 @@ try
     passed += StrawberryJamStateTests.Run();
     passed += LevelSetProgressionTests.Run(repository, temporary);
     passed += CollabStaticTests.Run(repository, temporary);
+    passed += SelectedFactoryTypeClosureTests.Run();
+    passed += DialogFragmentParserTests.Run();
 
     EverestVersion required = EverestVersion.Parse("1.2.3.4");
     Pass(EverestVersion.Satisfies(required, EverestVersion.Parse("1.2.3.4")), "exact version");

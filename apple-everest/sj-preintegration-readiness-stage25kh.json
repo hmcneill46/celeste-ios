@@ -1,0 +1,59 @@
+{
+  "artifactSha256": "287c939fb5d272efe821ae76d380be4e30f893c0ed8a372c642f9754ef2f06c6",
+  "artifacts": {
+    "baseSemanticsSha256": "cd6884579555d5fb1d96bcb188c15e89cc6c0027b52ea129a95ef17baf20a9e7",
+    "maxSemanticsSha256": "0ee00df2eca0ae534c60822ecba6de43e4157d5ba2289220fb9700772881b0e8",
+    "typeClosureSha256": "715327c0ebad8c0fbd317d55e5e7149957b7cd98ad10ea5ee3da07c7998533f4"
+  },
+  "claims": {
+    "allPlatformReleaseReady": false,
+    "developmentIntegrationReady": true,
+    "fullStrawberryJamSupported": false
+  },
+  "contentIdCensus": {
+    "accepted": 920,
+    "blocked": 0,
+    "totalSelectedOccurrences": 920,
+    "unclassified": 0
+  },
+  "historical": {
+    "kFContentIdResult": "920/920/0/0",
+    "kGCorrectlyStopped": true,
+    "kGMerged": false,
+    "preFixTypeClosure": {
+      "blocked": 2,
+      "blockers": [
+        "MaxHelpingHand/CustomTutorialWithNoBird -> missing CustomBirdTutorial closure",
+        "MaxHelpingHand/MoreCustomNPC -> missing CustomNPC closure"
+      ],
+      "fullyClosed": 71,
+      "selectedFactories": 73,
+      "unknown": 0
+    },
+    "remainedValidForIntegration": false
+  },
+  "maps": {
+    "bingSha256": "e770a8d193f217d09a6e153fbe272813d26a04d972df947ac812aa5cfe66f347",
+    "lobbySha256": "a4e3e20a2f0cc878fe43b32fb8025d7650b20cc6265f69e37bf3110a7cdf47c2",
+    "packagedInKh": false
+  },
+  "postFix": {
+    "additionalSelectedBlocker": false,
+    "contentIdBlockers": 0,
+    "typeClosureBlockers": 0,
+    "unclassified": 0
+  },
+  "readiness": "READY_FOR_K_I_REAL_SJ_INTEGRATION_RETRY",
+  "schemaVersion": 1,
+  "stage": "25K-H",
+  "status": "GREEN",
+  "typeClosureCensus": {
+    "baseEdges": 191,
+    "blocked": 0,
+    "constructors": 73,
+    "fullyClosed": 73,
+    "moduleLoadDependencies": 73,
+    "selectedFactories": 73,
+    "unknown": 0
+  }
+}

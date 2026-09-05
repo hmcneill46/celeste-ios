@@ -641,34 +641,14 @@ public static class AppleEverestStaticRuntime
                 !logical.EndsWith(".txt", StringComparison.OrdinalIgnoreCase)) continue;
             string languageId = Path.GetFileNameWithoutExtension(logical).ToLowerInvariant();
             if (!global::Celeste.Dialog.Languages.TryGetValue(languageId, out Language language)) continue;
-            string key = null;
-            StringBuilder value = new();
-            void Commit()
+            IReadOnlyDictionary<string, AppleEverestDialogFragmentEntry> entries =
+                AppleEverestDialogFragmentParser.Parse(
+                    ReadBundleText(Path.Combine(Engine.ContentDirectory, logical)), language.Dialog);
+            foreach ((string key, AppleEverestDialogFragmentEntry entry) in entries)
             {
-                if (string.IsNullOrWhiteSpace(key)) return;
-                string raw = value.ToString();
-                language.Dialog[key] = raw;
-                language.Cleaned[key] = raw;
+                language.Dialog[key] = entry.Raw;
+                language.Cleaned[key] = entry.Cleaned;
             }
-            foreach (string rawLine in ReadBundleText(Path.Combine(Engine.ContentDirectory, logical)).Replace("\r", "").Split('\n'))
-            {
-                string line = rawLine.Trim();
-                if (line.Length == 0 || line.StartsWith("#", StringComparison.Ordinal)) continue;
-                int equals = line.IndexOf('=');
-                if (equals > 0)
-                {
-                    Commit();
-                    key = line[..equals].Trim();
-                    value.Clear();
-                    value.Append(line[(equals + 1)..].Trim());
-                }
-                else if (key != null)
-                {
-                    if (value.Length > 0) value.Append("{break}");
-                    value.Append(line);
-                }
-            }
-            Commit();
             Log($"content-dialog=loaded path={logical}");
         }
     }

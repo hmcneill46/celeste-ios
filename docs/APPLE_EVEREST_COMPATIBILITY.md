@@ -1,7 +1,7 @@
 # Apple Everest real-mod compatibility
 
 This is a technical test matrix for the experimental shared Apple static-AOT
-builder. It lists only exact public inputs inspected through Stage 25H-D. It is not
+builder. It lists only exact public inputs inspected through Stage 25K-H. It is not
 a promise that similarly named, newer, older, or dependent mods work. The
 normal iOS and tvOS products do not contain these mods.
 
@@ -28,6 +28,24 @@ Status vocabulary:
 | [Dash Toggle Helper](https://github.com/kyfex-uwu/DashToggleHelper) | 1.1.0; ZIP `677e8fbd…d523`; DLL `531eaa8a…a083`; source `9b140684…530c`; MIT | Two exact HookGen `IL.*` manipulators plus six ordinary `On.*` targets | **SUPPORTED_WITH_STATIC_TRANSFORM** | iOS, iPadOS, tvOS | EverestCore ≥ 1.5421.0 | The pinned MonoMod manipulator methods run in an isolated Mac build process against two exact Celeste target-body fingerprints. The deterministic final bodies are frozen before full AOT; the device contains no Cecil, `MonoMod.Cil`, `ILHook`, dynamic method, or runtime code-patching backend. The module is immutable-active for the installed build. |
 | [Disposable Theo](https://gamebanana.com/mods/53752) | 1.0.6; ZIP `df291c01…b5b5`; DLL `1d47c082…52dcc` | Two instance-owned HookGen `IL.*` manipulators, two ordinary `On.*` hooks, and two compiler-singleton noncapturing delegates | **SUPPORTED_WITH_STATIC_TRANSFORM** | iOS, iPadOS, tvOS | Everest ≥ 1.0.0 | The source-free distributed DLL proves generic lowering of compiler-generated `<>c` singleton delegates which consume runtime stack values. The Mac freezes both exact target bodies and roots the ordinary singleton methods/fields; no host closure object or dynamic-reference cell enters the app. No license declaration was located, so external bytes are not redistributed. |
 | [CaeruleaHelper](https://github.com/azure-bluet/CaeruleaHelper) | 1.11.1; ZIP `6a064951…3807`; DLL `3c5b79a5…973a`; source `036bc9ad…4d07`; MIT | One direct `ILHook` plus eight ordinary HookGen `IL.*` targets | **SUPPORTED_WITH_STATIC_TRANSFORM** | iOS, iPadOS, tvOS | EverestCore ≥ 1.5577.0 | The direct construction fits `STATIC_DIRECT_ILHOOK_FREEZE`: exact static `DashCoroutine.MoveNext` target, static manipulator, no `DetourConfig`, immediate apply, and module-lifetime storage with teardown-only disposal. The real No Dash Speed Reset behavior is frozen source-free; the constructor, field, disposal, Cecil, `MonoMod.Cil`, and runtime ILHook backend are absent on device. This exact profile is immutable-active. |
+| [MaxHelpingHand](https://gamebanana.com/mods/53687) | 1.40.9; ZIP `abfc5d16…8fee`; DLL `6f463f2c…dfa6` | Two exact selected semantic factory profiles | **SUPPORTED_WITH_STATIC_TRANSFORM** | iOS, iPadOS, tvOS | Everest `stable-1.6458.0` | Stage 25K-H supports only the Beginner-lobby profiles of `CustomTutorialWithNoBird` and `MoreCustomNPC`. Pinned Everest `CustomBirdTutorial`/`CustomNPC` behavior and the selected Max hook, pointer IL, private fields, and Talk ILHook outcome are flattened into guarded typed entities. This is not general MaxHelpingHand support. |
+
+## Selected-factory type closure
+
+Stage 25K-H records the exact K-G lobby/Bing selection in
+[`apple-everest/selected-factory-type-closure-stage25kh.json`](../apple-everest/selected-factory-type-closure-stage25kh.json).
+The earlier content-ID result of 920 accepted or vanilla occurrences, zero
+blocked, and zero unclassified remains historically accurate, but it was not a
+sufficient integration gate. The strengthened pre-fix model reports 73
+selected factories, 71 closed, and two blocked because their Everest base
+entities and reachable helper behavior were absent. The post-fix graph reports
+73 closed, zero blocked, and zero unknown across 191 transitive base edges.
+
+The current profile-specific readiness marker is
+`READY_FOR_K_I_REAL_SJ_INTEGRATION_RETRY`. No real Strawberry Jam map or asset
+is packaged by this stage. Stage 25K-I must retry the two unchanged maps from
+the accepted K-H tip under both the content-ID and selected-type closure gates.
+Full Strawberry Jam remains unsupported.
 
 ## Bounded build-time frozen IL
 

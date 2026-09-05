@@ -72,6 +72,11 @@ support matrix, and limitations are in [project status](../STATUS.md).
 54. [Stage 25J-C — first real multi-map LevelSet](stages/APPLE_EVEREST_REAL_LEVELSET_STAGE25JC_REPORT.md)
 55. [Stage 25K-A — first real CollabUtils2 lobby/collab](stages/APPLE_EVEREST_FIRST_REAL_COLLAB_STAGE25KA_REPORT.md)
 56. [Stage 25K-B — second real collab and broader CollabUtils2 completion](stages/APPLE_EVEREST_SECOND_REAL_COLLAB_STAGE25KB_REPORT.md)
+57. [Stage 25K-C — Strawberry Jam compatibility audit](stages/APPLE_EVEREST_STRAWBERRY_JAM_AUDIT_STAGE25KC_REPORT.md)
+58. [Stage 25K-D — configured ordering and map appendix compatibility](stages/APPLE_EVEREST_CONFIGURED_ORDERING_STAGE25KD_REPORT.md)
+59. [Stage 25K-E — Strawberry Jam root/helper semantic lowering](stages/APPLE_EVEREST_SJ_ROOT_HELPER_SEMANTICS_STAGE25KE_REPORT.md)
+60. [Stage 25K-F — Strawberry Jam audio and Crystalline/Vortex semantics](stages/APPLE_EVEREST_SJ_AUDIO_CRYSTALLINE_VORTEX_STAGE25KF_REPORT.md)
+61. [Stage 25K-H — selected-factory base-entity closure and MaxHelpingHand semantics](stages/APPLE_EVEREST_BASE_ENTITY_MAXHELPINGHAND_STAGE25KH_REPORT.md)
 
 Diagnostic-only stages whose evidence was intentionally kept in ignored local
 build directories are not reconstructed here. The index covers every tracked

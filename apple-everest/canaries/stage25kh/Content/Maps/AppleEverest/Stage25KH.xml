@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Map>
+  <levels>
+    <level name="lvl_canary" x="0" y="0" width="320" height="184" music="event:/music/lvl1/main" ambience="event:/env/amb/01_main" windPattern="None" dark="false">
+      <entities>
+        <player id="0" x="24" y="152" />
+        <appleEverestEntity name="MaxHelpingHand/CustomTutorialWithNoBird" id="893" x="88" y="144"
+          controls="dialog:SJ2021_lobby_gym_tutorial_controls" onlyOnce="false" direction="Right"
+          birdId="0" info="SJ2021_lobby_gym_tutorial_info" />
+        <appleEverestEntity name="MaxHelpingHand/MoreCustomNPC" id="1604" x="248" y="152"
+          setFlag="" onlyIfFlag="" indicatorOffsetX="0"
+          dialogId="StrawberryJam2021_0_Lobbies_1_Beginner_Credits"
+          flipY="false" flipX="false" onlyOnce="false" endLevel="false"
+          indicatorOffsetY="-40" approachWhenTalking="false" frames=""
+          spriteRate="1" approachDistance="16" sprite="">
+          <node x="184" y="120" />
+          <node x="304" y="160" />
+        </appleEverestEntity>
+      </entities>
+      <triggers />
+      <bgdecals />
+      <fgdecals />
+      <solids>0000000000000000000000000000000000000000
+0000000000000000000000000000000000000000
+0000000000000000000000000000000000000000
+0000000000000000000000000000000000000000
+0000000000000000000000000000000000000000
+0000000000000000000000000000000000000000
+0000000000000000000000000000000000000000
+0000000000000000000000000000000000000000
+0000000000000000000000000000000000000000
+0000000000000000000000000000000000000000
+0000000000000000000000000000000000000000
+0000000000000000000000000000000000000000
+0000000000000000000000000000000000000000
+0000000000000000000000000000000000000000
+0000000000000000000000000000000000000000
+0000000000000000000000000000000000000000
+0000000000000000000000000000000000000000
+0000000000000000000000000000000000000000
+0000000000000000000000000000000000000000
+0000000000000000000000000000000000000000
+0000000000000000000000000000000000000000
+1111111111111111111111111111111111111111
+1111111111111111111111111111111111111111</solids>
+      <bg>0000000000000000000000000000000000000000</bg>
+      <fgtiles />
+      <bgtiles />
+      <objtiles />
+    </level>
+  </levels>
+  <Filler />
+  <Style color="10152c">
+    <Backgrounds />
+    <Foregrounds />
+  </Style>
+</Map>

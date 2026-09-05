@@ -1,0 +1,432 @@
+{
+  "factories": [
+    {
+      "baseChain": [
+        "Celeste.Mod.MaxHelpingHand.Entities.CustomTutorialWithNoBird",
+        "Celeste.Mod.Entities.CustomBirdTutorial",
+        "Celeste.BirdNPC",
+        "Celeste.Actor",
+        "Monocle.Entity"
+      ],
+      "classification": "ACCEPTED_STATIC_SEMANTIC_LOWERING",
+      "concreteSourceType": "Celeste.Mod.MaxHelpingHand.Entities.CustomTutorialWithNoBird",
+      "constructor": "System.Void Celeste.Mod.MaxHelpingHand.Entities.CustomTutorialWithNoBird::.ctor(Celeste.EntityData,Microsoft.Xna.Framework.Vector2)",
+      "constructorParameterTypes": [
+        "Celeste.EntityData",
+        "Microsoft.Xna.Framework.Vector2"
+      ],
+      "contentRequirements": [
+        "vanilla ActiveFont, VertexLight, Draw; project-owned canary dialog"
+      ],
+      "customId": "MaxHelpingHand/CustomTutorialWithNoBird",
+      "kind": "entity",
+      "provider": "MaxHelpingHand",
+      "providerAssembly": "MaxHelpingHand.dll",
+      "reachableLifecycleMethods": [
+        "Awake(Scene)",
+        "TriggerShowTutorial",
+        "TriggerHideTutorial",
+        "ShowTutorial",
+        "HideTutorial",
+        "AppleEverestDirectionalTutorialGui.Update",
+        "AppleEverestDirectionalTutorialGui.Render"
+      ],
+      "requiredHookSites": [
+        "BirdNPC.StartleAndFlyAway On hook: selected instance returns without orig",
+        "BirdTutorialGui.Render IL event: selected Right pointer drawn at bubble right edge"
+      ],
+      "requiredModuleLoadBehavior": [
+        "CustomTutorialWithNoBird.Load hook/IL registrations lowered into typed entity and GUI"
+      ],
+      "requiredReflectionSites": [
+        "five BirdTutorialGui private field operands replaced by owned typed GUI fields"
+      ],
+      "rootNodeIds": [
+        "entity:MaxHelpingHand/CustomTutorialWithNoBird:provider_package"
+      ]
+    },
+    {
+      "baseChain": [
+        "Celeste.Mod.MaxHelpingHand.Entities.MoreCustomNPC",
+        "Celeste.Mod.Entities.CustomNPC",
+        "Celeste.NPC",
+        "Monocle.Entity"
+      ],
+      "classification": "ACCEPTED_STATIC_SEMANTIC_LOWERING",
+      "concreteSourceType": "Celeste.Mod.MaxHelpingHand.Entities.MoreCustomNPC",
+      "constructor": "System.Void Celeste.Mod.MaxHelpingHand.Entities.MoreCustomNPC::.ctor(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
+      "constructorParameterTypes": [
+        "Celeste.EntityData",
+        "Celeste.EntityID",
+        "Microsoft.Xna.Framework.Vector2"
+      ],
+      "contentRequirements": [
+        "no NPC sprite or frames; project-owned canary dialog parsed with vanilla portrait syntax; vanilla Madeline portrait and textbox assets"
+      ],
+      "customId": "MaxHelpingHand/MoreCustomNPC",
+      "kind": "entity",
+      "provider": "MaxHelpingHand",
+      "providerAssembly": "MaxHelpingHand.dll",
+      "reachableLifecycleMethods": [
+        "Added(Scene)",
+        "Update",
+        "Render",
+        "OnTalk(Player)",
+        "Talk(Player)",
+        "OnTalkEnd(Level)"
+      ],
+      "requiredHookSites": [
+        "CustomNPC.Talk direct ILHook: auto-skip and custom-font branches are false for selected data"
+      ],
+      "requiredModuleLoadBehavior": [
+        "MoreCustomNPC.Load ILHook registration lowered into typed talk path"
+      ],
+      "requiredReflectionSites": [
+        "CustomNPC.textures and CustomNPC.scale FieldInfo initialization removed; selected reads unreachable"
+      ],
+      "rootNodeIds": [
+        "entity:MaxHelpingHand/MoreCustomNPC:provider_package"
+      ]
+    }
+  ],
+  "nodes": [
+    {
+      "classification": "ACCEPTED_STATIC_SEMANTIC_LOWERING",
+      "dependencies": [
+        "entity:MaxHelpingHand/CustomTutorialWithNoBird:provider_assembly"
+      ],
+      "evidence": "MaxHelpingHand exact K-G selected provider",
+      "id": "entity:MaxHelpingHand/CustomTutorialWithNoBird:provider_package",
+      "kind": "PROVIDER_PACKAGE",
+      "required": true
+    },
+    {
+      "classification": "ACCEPTED_STATIC_SEMANTIC_LOWERING",
+      "dependencies": [
+        "entity:MaxHelpingHand/CustomTutorialWithNoBird:concrete_type_or_lowering"
+      ],
+      "evidence": "MaxHelpingHand.dll sha256=6f463f2c014eb60c4abb61e395eb5065455d4bf469f4c83fce9814fb7bfcdfa6",
+      "id": "entity:MaxHelpingHand/CustomTutorialWithNoBird:provider_assembly",
+      "kind": "PROVIDER_ASSEMBLY",
+      "required": true
+    },
+    {
+      "classification": "ACCEPTED_STATIC_SEMANTIC_LOWERING",
+      "dependencies": [
+        "entity:MaxHelpingHand/CustomTutorialWithNoBird:base_chain"
+      ],
+      "evidence": "Celeste.Mod.MaxHelpingHand.Entities.CustomTutorialWithNoBird",
+      "id": "entity:MaxHelpingHand/CustomTutorialWithNoBird:concrete_type_or_lowering",
+      "kind": "CONCRETE_TYPE_OR_LOWERING",
+      "required": true
+    },
+    {
+      "classification": "ACCEPTED_STATIC_SEMANTIC_LOWERING",
+      "dependencies": [
+        "entity:MaxHelpingHand/CustomTutorialWithNoBird:constructor"
+      ],
+      "evidence": "Celeste.Mod.MaxHelpingHand.Entities.CustomTutorialWithNoBird -> Celeste.Mod.Entities.CustomBirdTutorial -> Celeste.BirdNPC -> Celeste.Actor -> Monocle.Entity",
+      "id": "entity:MaxHelpingHand/CustomTutorialWithNoBird:base_chain",
+      "kind": "BASE_CHAIN",
+      "required": true
+    },
+    {
+      "classification": "ACCEPTED_STATIC_SEMANTIC_LOWERING",
+      "dependencies": [
+        "entity:MaxHelpingHand/CustomTutorialWithNoBird:constructor_parameter_types"
+      ],
+      "evidence": "System.Void Celeste.Mod.MaxHelpingHand.Entities.CustomTutorialWithNoBird::.ctor(Celeste.EntityData,Microsoft.Xna.Framework.Vector2)",
+      "id": "entity:MaxHelpingHand/CustomTutorialWithNoBird:constructor",
+      "kind": "CONSTRUCTOR",
+      "required": true
+    },
+    {
+      "classification": "ACCEPTED_STATIC_SEMANTIC_LOWERING",
+      "dependencies": [
+        "entity:MaxHelpingHand/CustomTutorialWithNoBird:base_constructor"
+      ],
+      "evidence": "Celeste.EntityData, Microsoft.Xna.Framework.Vector2",
+      "id": "entity:MaxHelpingHand/CustomTutorialWithNoBird:constructor_parameter_types",
+      "kind": "CONSTRUCTOR_PARAMETER_TYPES",
+      "required": true
+    },
+    {
+      "classification": "ACCEPTED_STATIC_SEMANTIC_LOWERING",
+      "dependencies": [
+        "entity:MaxHelpingHand/CustomTutorialWithNoBird:field_property_types"
+      ],
+      "evidence": "each selected base edge is vanilla, accepted static runtime, or explicitly lowered",
+      "id": "entity:MaxHelpingHand/CustomTutorialWithNoBird:base_constructor",
+      "kind": "BASE_CONSTRUCTOR",
+      "required": true
+    },
+    {
+      "classification": "ACCEPTED_STATIC_SEMANTIC_LOWERING",
+      "dependencies": [
+        "entity:MaxHelpingHand/CustomTutorialWithNoBird:type_initializer"
+      ],
+      "evidence": "1 declared selected-type fields inspected",
+      "id": "entity:MaxHelpingHand/CustomTutorialWithNoBird:field_property_types",
+      "kind": "FIELD_PROPERTY_TYPES",
+      "required": true
+    },
+    {
+      "classification": "ACCEPTED_STATIC_SEMANTIC_LOWERING",
+      "dependencies": [
+        "entity:MaxHelpingHand/CustomTutorialWithNoBird:constructor_call_graph"
+      ],
+      "evidence": "no selected type initializer",
+      "id": "entity:MaxHelpingHand/CustomTutorialWithNoBird:type_initializer",
+      "kind": "TYPE_INITIALIZER",
+      "required": true
+    },
+    {
+      "classification": "ACCEPTED_STATIC_SEMANTIC_LOWERING",
+      "dependencies": [
+        "entity:MaxHelpingHand/CustomTutorialWithNoBird:lifecycle"
+      ],
+      "evidence": "selected constructor/factory call graph closed by exact K-H audit",
+      "id": "entity:MaxHelpingHand/CustomTutorialWithNoBird:constructor_call_graph",
+      "kind": "CONSTRUCTOR_CALL_GRAPH",
+      "required": true
+    },
+    {
+      "classification": "ACCEPTED_STATIC_SEMANTIC_LOWERING",
+      "dependencies": [
+        "entity:MaxHelpingHand/CustomTutorialWithNoBird:interaction"
+      ],
+      "evidence": "Awake(Scene), TriggerShowTutorial, TriggerHideTutorial, ShowTutorial, HideTutorial, AppleEverestDirectionalTutorialGui.Update, AppleEverestDirectionalTutorialGui.Render",
+      "id": "entity:MaxHelpingHand/CustomTutorialWithNoBird:lifecycle",
+      "kind": "LIFECYCLE",
+      "required": true
+    },
+    {
+      "classification": "ACCEPTED_STATIC_SEMANTIC_LOWERING",
+      "dependencies": [
+        "entity:MaxHelpingHand/CustomTutorialWithNoBird:coroutine_state_machine"
+      ],
+      "evidence": "selected components and player interaction included in observable closure",
+      "id": "entity:MaxHelpingHand/CustomTutorialWithNoBird:interaction",
+      "kind": "INTERACTION",
+      "required": true
+    },
+    {
+      "classification": "ACCEPTED_STATIC_SEMANTIC_LOWERING",
+      "dependencies": [
+        "entity:MaxHelpingHand/CustomTutorialWithNoBird:module_load"
+      ],
+      "evidence": "selected coroutines/state machines included or proven unreachable",
+      "id": "entity:MaxHelpingHand/CustomTutorialWithNoBird:coroutine_state_machine",
+      "kind": "COROUTINE_STATE_MACHINE",
+      "required": true
+    },
+    {
+      "classification": "ACCEPTED_STATIC_SEMANTIC_LOWERING",
+      "dependencies": [
+        "entity:MaxHelpingHand/CustomTutorialWithNoBird:hooks"
+      ],
+      "evidence": "CustomTutorialWithNoBird.Load hook/IL registrations lowered into typed entity and GUI",
+      "id": "entity:MaxHelpingHand/CustomTutorialWithNoBird:module_load",
+      "kind": "MODULE_LOAD",
+      "required": true
+    },
+    {
+      "classification": "ACCEPTED_STATIC_SEMANTIC_LOWERING",
+      "dependencies": [
+        "entity:MaxHelpingHand/CustomTutorialWithNoBird:reflection"
+      ],
+      "evidence": "BirdNPC.StartleAndFlyAway On hook: selected instance returns without orig; BirdTutorialGui.Render IL event: selected Right pointer drawn at bubble right edge",
+      "id": "entity:MaxHelpingHand/CustomTutorialWithNoBird:hooks",
+      "kind": "HOOKS",
+      "required": true
+    },
+    {
+      "classification": "ACCEPTED_STATIC_SEMANTIC_LOWERING",
+      "dependencies": [
+        "entity:MaxHelpingHand/CustomTutorialWithNoBird:content"
+      ],
+      "evidence": "five BirdTutorialGui private field operands replaced by owned typed GUI fields",
+      "id": "entity:MaxHelpingHand/CustomTutorialWithNoBird:reflection",
+      "kind": "REFLECTION",
+      "required": true
+    },
+    {
+      "classification": "ACCEPTED_STATIC_SEMANTIC_LOWERING",
+      "dependencies": [],
+      "evidence": "vanilla ActiveFont, VertexLight, Draw; project-owned canary dialog",
+      "id": "entity:MaxHelpingHand/CustomTutorialWithNoBird:content",
+      "kind": "CONTENT",
+      "required": true
+    },
+    {
+      "classification": "ACCEPTED_STATIC_SEMANTIC_LOWERING",
+      "dependencies": [
+        "entity:MaxHelpingHand/MoreCustomNPC:provider_assembly"
+      ],
+      "evidence": "MaxHelpingHand exact K-G selected provider",
+      "id": "entity:MaxHelpingHand/MoreCustomNPC:provider_package",
+      "kind": "PROVIDER_PACKAGE",
+      "required": true
+    },
+    {
+      "classification": "ACCEPTED_STATIC_SEMANTIC_LOWERING",
+      "dependencies": [
+        "entity:MaxHelpingHand/MoreCustomNPC:concrete_type_or_lowering"
+      ],
+      "evidence": "MaxHelpingHand.dll sha256=6f463f2c014eb60c4abb61e395eb5065455d4bf469f4c83fce9814fb7bfcdfa6",
+      "id": "entity:MaxHelpingHand/MoreCustomNPC:provider_assembly",
+      "kind": "PROVIDER_ASSEMBLY",
+      "required": true
+    },
+    {
+      "classification": "ACCEPTED_STATIC_SEMANTIC_LOWERING",
+      "dependencies": [
+        "entity:MaxHelpingHand/MoreCustomNPC:base_chain"
+      ],
+      "evidence": "Celeste.Mod.MaxHelpingHand.Entities.MoreCustomNPC",
+      "id": "entity:MaxHelpingHand/MoreCustomNPC:concrete_type_or_lowering",
+      "kind": "CONCRETE_TYPE_OR_LOWERING",
+      "required": true
+    },
+    {
+      "classification": "ACCEPTED_STATIC_SEMANTIC_LOWERING",
+      "dependencies": [
+        "entity:MaxHelpingHand/MoreCustomNPC:constructor"
+      ],
+      "evidence": "Celeste.Mod.MaxHelpingHand.Entities.MoreCustomNPC -> Celeste.Mod.Entities.CustomNPC -> Celeste.NPC -> Monocle.Entity",
+      "id": "entity:MaxHelpingHand/MoreCustomNPC:base_chain",
+      "kind": "BASE_CHAIN",
+      "required": true
+    },
+    {
+      "classification": "ACCEPTED_STATIC_SEMANTIC_LOWERING",
+      "dependencies": [
+        "entity:MaxHelpingHand/MoreCustomNPC:constructor_parameter_types"
+      ],
+      "evidence": "System.Void Celeste.Mod.MaxHelpingHand.Entities.MoreCustomNPC::.ctor(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
+      "id": "entity:MaxHelpingHand/MoreCustomNPC:constructor",
+      "kind": "CONSTRUCTOR",
+      "required": true
+    },
+    {
+      "classification": "ACCEPTED_STATIC_SEMANTIC_LOWERING",
+      "dependencies": [
+        "entity:MaxHelpingHand/MoreCustomNPC:base_constructor"
+      ],
+      "evidence": "Celeste.EntityData, Celeste.EntityID, Microsoft.Xna.Framework.Vector2",
+      "id": "entity:MaxHelpingHand/MoreCustomNPC:constructor_parameter_types",
+      "kind": "CONSTRUCTOR_PARAMETER_TYPES",
+      "required": true
+    },
+    {
+      "classification": "ACCEPTED_STATIC_SEMANTIC_LOWERING",
+      "dependencies": [
+        "entity:MaxHelpingHand/MoreCustomNPC:field_property_types"
+      ],
+      "evidence": "each selected base edge is vanilla, accepted static runtime, or explicitly lowered",
+      "id": "entity:MaxHelpingHand/MoreCustomNPC:base_constructor",
+      "kind": "BASE_CONSTRUCTOR",
+      "required": true
+    },
+    {
+      "classification": "ACCEPTED_STATIC_SEMANTIC_LOWERING",
+      "dependencies": [
+        "entity:MaxHelpingHand/MoreCustomNPC:type_initializer"
+      ],
+      "evidence": "14 declared selected-type fields inspected",
+      "id": "entity:MaxHelpingHand/MoreCustomNPC:field_property_types",
+      "kind": "FIELD_PROPERTY_TYPES",
+      "required": true
+    },
+    {
+      "classification": "ACCEPTED_STATIC_SEMANTIC_LOWERING",
+      "dependencies": [
+        "entity:MaxHelpingHand/MoreCustomNPC:constructor_call_graph"
+      ],
+      "evidence": "System.Void Celeste.Mod.MaxHelpingHand.Entities.MoreCustomNPC::.cctor()",
+      "id": "entity:MaxHelpingHand/MoreCustomNPC:type_initializer",
+      "kind": "TYPE_INITIALIZER",
+      "required": true
+    },
+    {
+      "classification": "ACCEPTED_STATIC_SEMANTIC_LOWERING",
+      "dependencies": [
+        "entity:MaxHelpingHand/MoreCustomNPC:lifecycle"
+      ],
+      "evidence": "selected constructor/factory call graph closed by exact K-H audit",
+      "id": "entity:MaxHelpingHand/MoreCustomNPC:constructor_call_graph",
+      "kind": "CONSTRUCTOR_CALL_GRAPH",
+      "required": true
+    },
+    {
+      "classification": "ACCEPTED_STATIC_SEMANTIC_LOWERING",
+      "dependencies": [
+        "entity:MaxHelpingHand/MoreCustomNPC:interaction"
+      ],
+      "evidence": "Added(Scene), Update, Render, OnTalk(Player), Talk(Player), OnTalkEnd(Level)",
+      "id": "entity:MaxHelpingHand/MoreCustomNPC:lifecycle",
+      "kind": "LIFECYCLE",
+      "required": true
+    },
+    {
+      "classification": "ACCEPTED_STATIC_SEMANTIC_LOWERING",
+      "dependencies": [
+        "entity:MaxHelpingHand/MoreCustomNPC:coroutine_state_machine"
+      ],
+      "evidence": "selected components and player interaction included in observable closure",
+      "id": "entity:MaxHelpingHand/MoreCustomNPC:interaction",
+      "kind": "INTERACTION",
+      "required": true
+    },
+    {
+      "classification": "ACCEPTED_STATIC_SEMANTIC_LOWERING",
+      "dependencies": [
+        "entity:MaxHelpingHand/MoreCustomNPC:module_load"
+      ],
+      "evidence": "selected coroutines/state machines included or proven unreachable",
+      "id": "entity:MaxHelpingHand/MoreCustomNPC:coroutine_state_machine",
+      "kind": "COROUTINE_STATE_MACHINE",
+      "required": true
+    },
+    {
+      "classification": "ACCEPTED_STATIC_SEMANTIC_LOWERING",
+      "dependencies": [
+        "entity:MaxHelpingHand/MoreCustomNPC:hooks"
+      ],
+      "evidence": "MoreCustomNPC.Load ILHook registration lowered into typed talk path",
+      "id": "entity:MaxHelpingHand/MoreCustomNPC:module_load",
+      "kind": "MODULE_LOAD",
+      "required": true
+    },
+    {
+      "classification": "ACCEPTED_STATIC_SEMANTIC_LOWERING",
+      "dependencies": [
+        "entity:MaxHelpingHand/MoreCustomNPC:reflection"
+      ],
+      "evidence": "CustomNPC.Talk direct ILHook: auto-skip and custom-font branches are false for selected data",
+      "id": "entity:MaxHelpingHand/MoreCustomNPC:hooks",
+      "kind": "HOOKS",
+      "required": true
+    },
+    {
+      "classification": "ACCEPTED_STATIC_SEMANTIC_LOWERING",
+      "dependencies": [
+        "entity:MaxHelpingHand/MoreCustomNPC:content"
+      ],
+      "evidence": "CustomNPC.textures and CustomNPC.scale FieldInfo initialization removed; selected reads unreachable",
+      "id": "entity:MaxHelpingHand/MoreCustomNPC:reflection",
+      "kind": "REFLECTION",
+      "required": true
+    },
+    {
+      "classification": "ACCEPTED_STATIC_SEMANTIC_LOWERING",
+      "dependencies": [],
+      "evidence": "no NPC sprite or frames; project-owned canary dialog parsed with vanilla portrait syntax; vanilla Madeline portrait and textbox assets",
+      "id": "entity:MaxHelpingHand/MoreCustomNPC:content",
+      "kind": "CONTENT",
+      "required": true
+    }
+  ],
+  "profile": "stage25kh-data-only-canary",
+  "schemaVersion": 1
+}

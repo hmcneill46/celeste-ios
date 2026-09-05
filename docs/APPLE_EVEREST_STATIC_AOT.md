@@ -120,6 +120,28 @@ pre-AOT YELLOW rather than a stripped map or a misleading product build. The
 runtime module set for any accepted installed build remains immutable: helper
 ZIPs, DLLs, scripts, and registries cannot be added or replaced on-device.
 
+Stage 25K-H strengthens that pre-AOT gate with a selected-factory type-closure
+graph. Every selected entity, trigger, and backdrop must carry evidence for its
+provider package and assembly, concrete type or semantic lowering, transitive
+base and constructor chain, construction-time fields and type initializer,
+lifecycle and coroutine paths, interaction components, module-load state,
+hooks, reflection, and content. The builder recursively follows graph edges,
+cross-checks the selected IDs against the generated factory registry, and
+rejects missing, cyclic, unknown, or unsupported required nodes. A known custom
+ID can therefore no longer conceal an absent base entity until C# compilation.
+
+The first repaired profiles are MaxHelpingHand 1.40.9
+`CustomTutorialWithNoBird` and `MoreCustomNPC`, both derived from types supplied
+by pinned Everest rather than by vanilla Celeste. Their exact selected
+Strawberry Jam Beginner attributes are flattened into two guarded typed
+entities. The first owns its birdless tutorial lifecycle and Right pointer
+drawing; the second owns its no-sprite, two-node, repeatable one-dialog talk
+path. The selected hook, ILHook, and private-field results are expressed as
+ordinary typed state. The Max DLL, desktop Everest entity hierarchy, runtime
+reflection, DynamicData, RuntimeDetour, and live IL are absent from the Apple
+product. Other attribute profiles fail their constructor guards and are not
+claimed supported.
+
 Stage 25I-B closes the one Stage 25I-A blocker previously classified as
 `CUSTOM_AUDIO_UNSUPPORTED` for the exact
 LittleEpic's Precision Challenge 1.0.0 graph. Its pinned ChronoHelper 1.3.3

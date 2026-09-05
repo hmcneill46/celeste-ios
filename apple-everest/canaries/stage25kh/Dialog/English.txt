@@ -1,0 +1,3 @@
+SJ2021_lobby_gym_tutorial_info=STAGE 25K-H TUTORIAL
+SJ2021_lobby_gym_tutorial_controls=RIGHT POINTER / NO BIRD
+StrawberryJam2021_0_Lobbies_1_Beginner_Credits=[MADELINE left normal]STAGE 25K-H NPC TALK PASS
