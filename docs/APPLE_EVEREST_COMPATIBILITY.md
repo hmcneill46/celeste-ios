@@ -1,7 +1,7 @@
 # Apple Everest real-mod compatibility
 
 This is a technical test matrix for the experimental shared Apple static-AOT
-builder. It lists only exact public inputs inspected through Stage 25K-H. It is not
+builder. It lists only exact public inputs inspected through Stage 25K-I. It is not
 a promise that similarly named, newer, older, or dependent mods work. The
 normal iOS and tvOS products do not contain these mods.
 
@@ -32,20 +32,25 @@ Status vocabulary:
 
 ## Selected-factory type closure
 
-Stage 25K-H records the exact K-G lobby/Bing selection in
+Stage 25K-H recorded the exact K-G lobby/Bing selection in
 [`apple-everest/selected-factory-type-closure-stage25kh.json`](../apple-everest/selected-factory-type-closure-stage25kh.json).
-The earlier content-ID result of 920 accepted or vanilla occurrences, zero
-blocked, and zero unclassified remains historically accurate, but it was not a
-sufficient integration gate. The strengthened pre-fix model reports 73
-selected factories, 71 closed, and two blocked because their Everest base
-entities and reachable helper behavior were absent. The post-fix graph reports
-73 closed, zero blocked, and zero unknown across 191 transitive base edges.
+Its 920/920 content-ID result and 73/73 closed-factory result are historical
+claims, superseded by the package-backed K-I preflight. The K-H generator filled
+many closure dimensions with fixed accepted assertions. Those assertions did
+not establish that the selected implementation existed in the accepted runtime.
 
-The current profile-specific readiness marker is
-`READY_FOR_K_I_REAL_SJ_INTEGRATION_RETRY`. No real Strawberry Jam map or asset
-is packaged by this stage. Stage 25K-I must retry the two unchanged maps from
-the accepted K-H tip under both the content-ID and selected-type closure gates.
-Full Strawberry Jam remains unsupported.
+Stage 25K-I is **YELLOW**: 30 of the 73 selected entries have accepted
+registrations, while 43 do not. The missing entries affect 409 of the 920
+selected occurrences. Availability of the other 30 is a necessary condition,
+not a fresh proof of their complete constructor/lifecycle closure. The two
+K-H tutorial/NPC lowerings and their prior physical acceptance remain valid
+within their tested scope. No K-I Apple product was generated.
+
+`READY_FOR_K_I_REAL_SJ_INTEGRATION_RETRY` is therefore not current readiness.
+The [K-I report](history/stages/APPLE_EVEREST_FIRST_SJ_SLICE_RETRY_STAGE25KI_REPORT.md)
+records the exact deficits and unchanged two-map plan. Close and substantiate
+those deficits before another integration attempt. Full Strawberry Jam remains
+unsupported.
 
 ## Bounded build-time frozen IL
 

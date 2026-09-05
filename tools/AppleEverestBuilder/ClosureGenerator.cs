@@ -9,7 +9,7 @@ namespace AppleEverestBuilder;
 internal static class ClosureGenerator
 {
     private static readonly JsonSerializerOptions Json = new() { PropertyNameCaseInsensitive = true };
-    private static readonly (string Kind, string Id, string Owner)[] CoreGameplayFactories =
+    internal static readonly (string Kind, string Id, string Owner)[] CoreGameplayFactories =
     {
         ("entity", "everest/coreMessage", "EverestCore"),
         ("trigger", "everest/changeInventoryTrigger", "EverestCore"),

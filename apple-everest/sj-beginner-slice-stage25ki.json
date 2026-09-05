@@ -1,0 +1,137 @@
+{
+  "aevpsv1Version": 1,
+  "artifactSha256": "4bd4c528193245381de232be71910100b45f7e2ece4dca1b3f42843ae189841b",
+  "bothReadinessGatesPassed": false,
+  "branch": "feature/apple-everest-first-sj-slice-retry",
+  "claims": {
+    "allPlatformReleaseReady": false,
+    "developmentIntegrationReady": false,
+    "firstPhysicallyRunningUnchangedSjSlice": false,
+    "fullStrawberryJamSupported": false,
+    "originalMapsModified": false,
+    "recommendedFastForwardSha": null
+  },
+  "classification": "MISSING_ACCEPTED_SELECTED_IMPLEMENTATIONS_AND_OVERSTATED_K_H_READINESS",
+  "contentPlan": {
+    "audioBankFiles": 4,
+    "excludedSjMapBins": 126,
+    "files": 1212,
+    "helperAssetFiles": 7,
+    "matchesKg": true,
+    "packages": 14,
+    "sha256": "016dcdd528efa0d453fbc4e87db72a8a9f99d40f66ddd66b3f20c76e9373575a",
+    "shippedSjMapBins": 0,
+    "sjAssetsFiles": 24,
+    "sjMapBins": 2,
+    "sjRootFiles": 1178,
+    "totalSjMapBinsInSource": 128,
+    "widerNonMapAssetsAdded": false
+  },
+  "deviceAudioTextureOrSaveClaims": "NO_K_I_PRODUCT_OR_PHYSICAL_EVIDENCE",
+  "factoryRegistrationCensus": {
+    "available": 30,
+    "selected": 73,
+    "unavailable": 43
+  },
+  "freshContentIdRegistrationCensus": {
+    "acceptedRegistration": 511,
+    "blockedRegistration": 409,
+    "selected": 920,
+    "unclassifiedIds": 0
+  },
+  "fullyClosedFactoryCount": null,
+  "historicalContentIdClaim": {
+    "acceptedOrVanilla": 920,
+    "blocked": 0,
+    "selected": 920,
+    "unclassified": 0
+  },
+  "historicalKgSha": "e0d7c1988a9e5a896001735e5fe21d2251446bd0",
+  "kgMerged": false,
+  "maps": {
+    "bing": {
+      "appendixBytes": 65339,
+      "appendixSha256": "963d5f086279311c18561df8fb135e445ca1cf0bcc2d3f1ba0d8b21f8376da6d",
+      "audioEventsInSource": [
+        "event:/env/amb/01_main",
+        "event:/music/lvl1/main",
+        "event:/sj21_bingovergoogle"
+      ],
+      "authoredPlayerSpawnCount": 20,
+      "binaryPackerRootBytes": 70024,
+      "bytes": 135363,
+      "compatibilityId": null,
+      "expectedInitialSpawn": {
+        "room": "00- intro",
+        "x": 264,
+        "y": 152
+      },
+      "packagedInProduct": false,
+      "path": "Maps/StrawberryJam2021/1-Beginner/Bing_Over_Google.bin",
+      "physicalSpawn": null,
+      "rooms": [
+        "00- intro",
+        "01- Crusher",
+        "02- Bait N' Switch",
+        "02B- a stwawbewwy??",
+        "03- Uberjump",
+        "04- Head Trauma",
+        "05- Boing",
+        "06- Bubbles",
+        "07- Falling Cannon",
+        "07B- OwO whats this??",
+        "08- U Turn",
+        "09- Fin",
+        "filler"
+      ],
+      "sha256": "e770a8d193f217d09a6e153fbe272813d26a04d972df947ac812aa5cfe66f347",
+      "sid": "StrawberryJam2021/1-Beginner/Bing_Over_Google",
+      "sourcePackage": "Bing_Over_Google"
+    },
+    "lobby": {
+      "appendixBytes": 149841,
+      "appendixSha256": "d76dba1bc5834d999f4d622afd008a702ffe6663b17fe7b0be3c5cc69afabe0d",
+      "audioEventsInSource": [
+        "event:/env/amb/06_lake",
+        "event:/music/lvl2/beginning",
+        "event:/sj21_BegLobby"
+      ],
+      "authoredPlayerSpawnCount": 52,
+      "binaryPackerRootBytes": 524807,
+      "bytes": 674648,
+      "compatibilityId": null,
+      "packagedInProduct": false,
+      "path": "Maps/StrawberryJam2021/0-Lobbies/1-Beginner.bin",
+      "physicalSpawn": null,
+      "rooms": [
+        "sj2021beginnerlobby"
+      ],
+      "sha256": "a4e3e20a2f0cc878fe43b32fb8025d7650b20cc6265f69e37bf3110a7cdf47c2",
+      "sid": "StrawberryJam2021/0-Lobbies/1-Beginner",
+      "sourcePackage": "3Plain"
+    }
+  },
+  "newRuntimeMechanismCount": null,
+  "nextWork": "Close and substantiate the exact 43 missing selected factories, then rerun both gates on actual pinned production inputs before retrying this same unchanged two-map slice. K-J expansion remains premature.",
+  "product": {
+    "installation": "NOT_RUN",
+    "ios": "NOT_BUILT_PREFLIGHT_BLOCKED",
+    "sharedClosureSha256": null,
+    "signing": "NOT_RUN",
+    "threeClosureDeterminism": "NOT_RUN_PREFLIGHT_BLOCKED",
+    "tvos": "NOT_BUILT_PREFLIGHT_BLOCKED",
+    "versionIncremented": false
+  },
+  "runtimeSourceChanged": false,
+  "schemaVersion": 1,
+  "stage": "25K-I",
+  "startSha": "fe46b3c97cfc7dd74a907da8871ff9ba2c57d6e3",
+  "status": "YELLOW_READINESS_NOT_ESTABLISHED",
+  "stopRule": "Brief sections 6 and 52: changed readiness or unresolved selected closure requires STOP before product construction.",
+  "strawberryJam": {
+    "dllPath": "Code/StrawberryJam2021.dll",
+    "dllSha256": "8d5b9184204e7e7728965bcf95af5f150f6220dafbfe52fdd6c23e50d47e5258",
+    "version": "1.0.12",
+    "zipSha256": "4e1a2fc12baa3db27da433b93bf26b59f34b3e6b7f760c41d8d127636d020655"
+  }
+}

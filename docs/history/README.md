@@ -77,6 +77,7 @@ support matrix, and limitations are in [project status](../STATUS.md).
 59. [Stage 25K-E — Strawberry Jam root/helper semantic lowering](stages/APPLE_EVEREST_SJ_ROOT_HELPER_SEMANTICS_STAGE25KE_REPORT.md)
 60. [Stage 25K-F — Strawberry Jam audio and Crystalline/Vortex semantics](stages/APPLE_EVEREST_SJ_AUDIO_CRYSTALLINE_VORTEX_STAGE25KF_REPORT.md)
 61. [Stage 25K-H — selected-factory base-entity closure and MaxHelpingHand semantics](stages/APPLE_EVEREST_BASE_ENTITY_MAXHELPINGHAND_STAGE25KH_REPORT.md)
+62. [Stage 25K-I — unchanged Strawberry Jam slice retry, stopped at production preflight](stages/APPLE_EVEREST_FIRST_SJ_SLICE_RETRY_STAGE25KI_REPORT.md)
 
 Diagnostic-only stages whose evidence was intentionally kept in ignored local
 build directories are not reconstructed here. The index covers every tracked

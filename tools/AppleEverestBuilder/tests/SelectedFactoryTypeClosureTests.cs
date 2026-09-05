@@ -57,6 +57,18 @@ internal static class SelectedFactoryTypeClosureTests
         Pass(SelectedFactoryTypeClosure.Validate(Valid()) is { FullyClosed: 1, Blocked: 0, Unknown: 0 },
             "complete selected factory closure accepted");
 
+        SelectedFactoryClosureManifest core = Clone(Valid());
+        core.Factories[0].Provider = "EverestCore";
+        core.Factories[0].Kind = "trigger";
+        core.Factories[0].CustomId = "everest/flagTrigger";
+        Pass(SelectedFactoryTypeClosure.UnavailableFactories(SelectedFactoryTypeClosure.Validate(core), []).Length == 0,
+            "production core registry is available to factory preflight");
+        core.Factories[0].Provider = "WrongProvider";
+        Pass(SelectedFactoryTypeClosure.UnavailableFactories(SelectedFactoryTypeClosure.Validate(core), []).Length == 1,
+            "same ID from the wrong provider does not satisfy a reviewed closure");
+        Pass(SelectedFactoryTypeClosure.UnavailableFactories(SelectedFactoryTypeClosure.Validate(Valid()), []).Length == 1,
+            "self-declared accepted graph cannot supply an absent factory");
+
         SelectedFactoryClosureManifest missingDirectBase = Clone(Valid());
         missingDirectBase.Nodes.Single(node => node.Kind == "BASE_CHAIN").Classification = "UNKNOWN";
         Pass(Rejects(missingDirectBase, "BASE_CHAIN"), "missing direct base class rejected");

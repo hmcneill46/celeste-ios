@@ -120,15 +120,26 @@ pre-AOT YELLOW rather than a stripped map or a misleading product build. The
 runtime module set for any accepted installed build remains immutable: helper
 ZIPs, DLLs, scripts, and registries cannot be added or replaced on-device.
 
-Stage 25K-H strengthens that pre-AOT gate with a selected-factory type-closure
+Stage 25K-H introduced a selected-factory type-closure
 graph. Every selected entity, trigger, and backdrop must carry evidence for its
 provider package and assembly, concrete type or semantic lowering, transitive
 base and constructor chain, construction-time fields and type initializer,
 lifecycle and coroutine paths, interaction components, module-load state,
 hooks, reflection, and content. The builder recursively follows graph edges,
 cross-checks the selected IDs against the generated factory registry, and
-rejects missing, cyclic, unknown, or unsupported required nodes. A known custom
-ID can therefore no longer conceal an absent base entity until C# compilation.
+rejects missing, cyclic, unknown, or unsupported required nodes. This validates
+the submitted graph; it does not establish that each accepted assertion is
+true of the production implementation.
+
+Stage 25K-I found that distinction material: K-H's reviewed graph claimed all
+73 selected factories were closed, while 43 lacked an accepted registration.
+The host-only `preflight-factory-closure` command now analyzes exact package
+inputs and binds selected IDs to their accepted provider registrations before
+any content/product generation. It also shares the actual built-in Everest
+factory list with the product generator and checks provider ownership. Its
+30 available entries are not advertised as newly proven behavioral closures.
+The [K-I report](history/stages/APPLE_EVEREST_FIRST_SJ_SLICE_RETRY_STAGE25KI_REPORT.md)
+records a mandatory YELLOW stop and the remaining evidence requirements.
 
 The first repaired profiles are MaxHelpingHand 1.40.9
 `CustomTutorialWithNoBird` and `MoreCustomNPC`, both derived from types supplied

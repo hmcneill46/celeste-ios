@@ -56,6 +56,8 @@ internal static class Program
                     break;
                 case "inspect-factory-types": FactoryTypeInspector.Write(
                     One(options, "--request"), One(options, "--assembly-root"), One(options, "--output")); break;
+                case "preflight-factory-closure": FactoryProfilePreflight.Write(
+                    One(options, "--manifest"), Many(options, "--mod"), One(options, "--output")); break;
                 default: throw new InvalidDataException($"unknown command: {args[0]}");
             }
             Console.WriteLine($"PASS: AppleEverestBuilder {args[0]}");
@@ -364,5 +366,5 @@ internal static class Program
 
     private static void Run(string command, params string[] args) { _ = Capture(command, args); }
 
-    private static void Help() => Console.WriteLine("AppleEverestBuilder acquire|audit|inspect-map|inspect-map-boundary|inspect-factory-types|census-dll|census-semantics|validate-factory-closure|build|apply|scan-runtime|verify-preserved-assembly|verify-referenced-api|verify-aot-object|verify-profile (closed static-AOT Apple product)");
+    private static void Help() => Console.WriteLine("AppleEverestBuilder acquire|audit|inspect-map|inspect-map-boundary|inspect-factory-types|census-dll|census-semantics|validate-factory-closure|preflight-factory-closure|build|apply|scan-runtime|verify-preserved-assembly|verify-referenced-api|verify-aot-object|verify-profile (closed static-AOT Apple product)");
 }
