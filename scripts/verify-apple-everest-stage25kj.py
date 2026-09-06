@@ -293,7 +293,12 @@ def main():
                 require(set(payload) == archived and all(sha(path) == hashlib.sha256(archive.read(name)).hexdigest()
                     for name,path in payload.items()), 'exact '+platform+' IPA payload equals the independently inspected app')
             run(['python3',str(ROOT/'scripts/verify-apple-everest-aot-factory-product.py'),'--build',str(product/'build'/platform),
-                '--app',str(apps[0]),*factory_args,'--output',str(out/(platform+'-aot-proof.json'))],platform+'-aot-proof')
+                '--app',str(apps[0]),*factory_args,'--output',str(out/(platform+'-aot-proof.json')),
+                '--platform-controls-output',str(out/(platform+'-platform-controls.json'))],platform+'-aot-proof')
+            platform_controls = read(out/(platform+'-platform-controls.json'))
+            require(platform_controls['actualProductPositive'] and platform_controls['platform'] == platform
+                and platform_controls['disposableMemoryCopiesOnly'] and len(platform_controls['rejectedControls']) == 15,
+                'actual '+platform+' native platform and 15 isolated platform corruption controls')
         run(runner + ['verify-aot-factory-controls','--request',str(product/'build/ios/selected-factory-product-request.json'),
             *factory_args,'--output',str(out/'aot-controls.json')], 'aot-controls')
         product_verified = True

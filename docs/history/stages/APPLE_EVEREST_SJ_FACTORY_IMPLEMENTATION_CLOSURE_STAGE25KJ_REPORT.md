@@ -18,6 +18,14 @@ This tracked report preserves the observed implementation audit before final dev
 
 The permanent verifier compares portable package, source, registry, guard and factory evidence to this tracked observation. Full local compiler reports remain intact. It still requires the exact six-DLL byte comparison within each build. The separate portable applied-source digest excludes only the host-tool directory; no additional runtime DLL bytes are normalized. Final semantic C and readiness come only from a newly generated exact-product acceptance artifact. `--require-ready --publish-readiness` publishes the complete verdict to that external evidence directory while preserving this frozen source revision.
 
+## Native platform verification correction
+
+The first frozen implementation revision was `a32fe8ae4d321b7bc71aa6d78f4222f2b88f0ece`. Its iOS product passed native verification and was installed, but launch was blocked by the locked device; no K-J physical result was received. Its independent recursive clone passed three identical complete reproductions, 578 builder tests, 50 typed hook tests, desktop HookGen and 574 pending-mode verifier checks. These remain evidence for that superseded revision only.
+
+The signed tvOS build reached native linking and packaging, then exposed a host verifier error: the reviewed Apple SDK uses `--aot=mtriple=arm64-ios` for both iOS and tvOS. The platform check incorrectly expected `arm64-tvos`. The correction verifies the actual ARM64 Mach-O `LC_BUILD_VERSION`, exact plist platform/families/minimum OS/SDK, and the captured platform-specific AOT compiler and LLVM directory for both Celeste and DJMapHelper. It accepts only the reviewed ABI triple. Fifteen isolated memory-copy controls per platform reject wrong native OS, simulator, architecture, absent/duplicate/malformed platform commands, minimum OS, SDK, plist platform/family, compiler/LLVM directory and unreviewed triple.
+
+Both existing native products passed those platform controls diagnostically. The superseded TV product also passed the complete 299-root native proof, and all 12 native corruption controls passed. No runtime implementation changed to resolve this failure. The correction and visible build number 37 create a new source revision; both products, final-revision repetitions, regressions and independent clone must be regenerated for that revision before acceptance. Source equivalence does not transfer physical results.
+
 ## Three independent gates
 
 | Gate | Result | Authority |
@@ -138,7 +146,7 @@ Apple strips executable managed bodies to ret stubs after AOT. The product verif
 
 A development iOS product passed the linked/native/stripping checks and ten initial isolated corruption controls. Additional registration-source and incomplete-receipt controls are implemented; the final fresh dual-platform build and those controls are pending. The signed app verifier checks codesign; isolated negative controls do not pretend to rebuild/sign each corrupt product or establish device semantics.
 
-Current product candidate is 0.1.1 build 36. Final signed iOS/tvOS IPA sizes/hashes and exact source identities will come from their product manifests. iOS must remain arm64, minimum 15 and device families [1,2]; tvOS must retain native TV family [3]. Release/full trim/full AOT, UseInterpreter=false and no JIT are mandatory.
+Current product candidate is 0.1.1 build 37. Build 36 is superseded and has no transferable device acceptance. Final signed iOS/tvOS IPA sizes/hashes and exact source identities will come from their product manifests. iOS must remain arm64, minimum 15 and device families [1,2]; tvOS must retain native TV family [3]. Release/full trim/full AOT, UseInterpreter=false and no JIT are mandatory.
 
 ## Validation and physical acceptance
 
