@@ -1,0 +1,1231 @@
+{
+  "census": {
+    "factories": 27,
+    "occurrences": 49
+  },
+  "occurrences": [
+    {
+      "attributes": {
+        "allowSaving": true,
+        "height": 32,
+        "id": 1,
+        "map": "HennyburgrCompEntries/1-Lobby/redboostercomp",
+        "returnToLobbyMode": "SetReturnToHere",
+        "width": 24,
+        "x": 16,
+        "y": 64
+      },
+      "authority": {
+        "acceptedStage": "25K-A",
+        "archiveSha256": "638ad7beac7a24600c7c0733acf12a645795bd8878fd5bc7c88e6e24b17dce39",
+        "mapSha256": "6bffc2c2cc5d077527051322cfccab8916b33cefc253fc77cb1c7614377e8d2c"
+      },
+      "customId": "CollabUtils2/ChapterPanelTrigger",
+      "entityId": 1,
+      "kind": "trigger",
+      "map": "HennyburgrCompEntries/0-Lobbies/lobby",
+      "nodes": [],
+      "profileSha256": "0e8395f8a753873b53bc51e71b30e5032d6d6ae74574a5cc9726330fc114f0a8",
+      "provider": "CollabUtils2",
+      "room": "a-01"
+    },
+    {
+      "attributes": {
+        "allowSaving": true,
+        "height": 32,
+        "id": 2,
+        "map": "HennyburgrCompEntries/1-Lobby/stationmovers",
+        "returnToLobbyMode": "SetReturnToHere",
+        "width": 24,
+        "x": 280,
+        "y": 64
+      },
+      "authority": {
+        "acceptedStage": "25K-A",
+        "archiveSha256": "638ad7beac7a24600c7c0733acf12a645795bd8878fd5bc7c88e6e24b17dce39",
+        "mapSha256": "6bffc2c2cc5d077527051322cfccab8916b33cefc253fc77cb1c7614377e8d2c"
+      },
+      "customId": "CollabUtils2/ChapterPanelTrigger",
+      "entityId": 2,
+      "kind": "trigger",
+      "map": "HennyburgrCompEntries/0-Lobbies/lobby",
+      "nodes": [],
+      "profileSha256": "d14dd4bc17ed9bda74211db9d3d5af906a2e34369bcf4e6215b93398cf3e0878",
+      "provider": "CollabUtils2",
+      "room": "a-01"
+    },
+    {
+      "attributes": {
+        "height": 32,
+        "id": 3,
+        "levelset": "HennyburgrCompEntries/1-Lobby",
+        "showOnlyDiscovered": false,
+        "vanillaJournal": false,
+        "width": 24,
+        "x": 148,
+        "y": 128
+      },
+      "authority": {
+        "acceptedStage": "25K-A",
+        "archiveSha256": "638ad7beac7a24600c7c0733acf12a645795bd8878fd5bc7c88e6e24b17dce39",
+        "mapSha256": "6bffc2c2cc5d077527051322cfccab8916b33cefc253fc77cb1c7614377e8d2c"
+      },
+      "customId": "CollabUtils2/JournalTrigger",
+      "entityId": 3,
+      "kind": "trigger",
+      "map": "HennyburgrCompEntries/0-Lobbies/lobby",
+      "nodes": [],
+      "profileSha256": "6ab5787b21f2fb16cd84b18f9317780d0847a58da2abd6d93a8ea12ae191f72b",
+      "provider": "CollabUtils2",
+      "room": "a-01"
+    },
+    {
+      "attributes": {
+        "behindMoveBlocks": false,
+        "height": 8,
+        "id": 527,
+        "type": "default",
+        "width": 40,
+        "x": 1128,
+        "y": 80
+      },
+      "authority": {
+        "acceptedStage": "25K-A",
+        "archiveSha256": "638ad7beac7a24600c7c0733acf12a645795bd8878fd5bc7c88e6e24b17dce39",
+        "mapSha256": "072634ac7290cb765db958c9fca345c7a14d877cf57154dd16ad7322a222c8aa"
+      },
+      "customId": "MaxHelpingHand/GroupedTriggerSpikesUp",
+      "entityId": 527,
+      "kind": "entity",
+      "map": "HennyburgrCompEntries/1-Lobby/redboostercomp",
+      "nodes": [],
+      "profileSha256": "47056d31400a067b232374a4bd14abd7fc8f1f211328b3e693a8107f1f5978ad",
+      "provider": "MaxHelpingHand",
+      "room": "hennyburgr_1"
+    },
+    {
+      "attributes": {
+        "checkpointID": -1,
+        "id": 545,
+        "order": -1,
+        "winged": false,
+        "x": 1624,
+        "y": 128
+      },
+      "authority": {
+        "acceptedStage": "25K-A",
+        "archiveSha256": "638ad7beac7a24600c7c0733acf12a645795bd8878fd5bc7c88e6e24b17dce39",
+        "mapSha256": "072634ac7290cb765db958c9fca345c7a14d877cf57154dd16ad7322a222c8aa"
+      },
+      "customId": "LunaticHelper/StrawberryWithReturn",
+      "entityId": 545,
+      "kind": "entity",
+      "map": "HennyburgrCompEntries/1-Lobby/redboostercomp",
+      "nodes": [],
+      "profileSha256": "c6c549194bdd0bc27a89e6385baf5d720128cb0f4c0990a75432ed1c011aa7b0",
+      "provider": "LunaticHelper",
+      "room": "hennyburgr_1"
+    },
+    {
+      "attributes": {
+        "id": 3,
+        "noGhostSprite": true,
+        "particleColor": "",
+        "refillDash": true,
+        "requireDashToBreak": true,
+        "sprite": "intermediate",
+        "x": 1624,
+        "y": 32
+      },
+      "authority": {
+        "acceptedStage": "25K-A",
+        "archiveSha256": "638ad7beac7a24600c7c0733acf12a645795bd8878fd5bc7c88e6e24b17dce39",
+        "mapSha256": "072634ac7290cb765db958c9fca345c7a14d877cf57154dd16ad7322a222c8aa"
+      },
+      "customId": "CollabUtils2/MiniHeart",
+      "entityId": 3,
+      "kind": "entity",
+      "map": "HennyburgrCompEntries/1-Lobby/redboostercomp",
+      "nodes": [],
+      "profileSha256": "327444d6dc782ad7b182e4a944b4b0a6b014f4d595a034ae87418101e9caf910",
+      "provider": "CollabUtils2",
+      "room": "hennyburgr_1"
+    },
+    {
+      "attributes": {
+        "behindMoveBlocks": true,
+        "height": 8,
+        "id": 8,
+        "type": "outline",
+        "width": 40,
+        "x": 80,
+        "y": 152
+      },
+      "authority": {
+        "acceptedStage": "25K-A",
+        "archiveSha256": "638ad7beac7a24600c7c0733acf12a645795bd8878fd5bc7c88e6e24b17dce39",
+        "mapSha256": "f9afb1908a4d7e47ba29b778fab4e924147c2bae3a84686c0e81b76b5105ebc3"
+      },
+      "customId": "MaxHelpingHand/GroupedTriggerSpikesUp",
+      "entityId": 8,
+      "kind": "entity",
+      "map": "HennyburgrCompEntries/1-Lobby/stationmovers",
+      "nodes": [],
+      "profileSha256": "9f03a70919dc36f065b9e5ec4bea47b93b958a5c361c0888a1278c14698c805e",
+      "provider": "MaxHelpingHand",
+      "room": "hennyburgr_01"
+    },
+    {
+      "attributes": {
+        "id": 304,
+        "noGhostSprite": true,
+        "particleColor": "",
+        "refillDash": true,
+        "requireDashToBreak": true,
+        "sprite": "expert",
+        "x": 1672,
+        "y": 56
+      },
+      "authority": {
+        "acceptedStage": "25K-A",
+        "archiveSha256": "638ad7beac7a24600c7c0733acf12a645795bd8878fd5bc7c88e6e24b17dce39",
+        "mapSha256": "f9afb1908a4d7e47ba29b778fab4e924147c2bae3a84686c0e81b76b5105ebc3"
+      },
+      "customId": "CollabUtils2/MiniHeart",
+      "entityId": 304,
+      "kind": "entity",
+      "map": "HennyburgrCompEntries/1-Lobby/stationmovers",
+      "nodes": [],
+      "profileSha256": "80822451e216a5b62d2d4fb4982535c28fdb8e9628b260bcf207cac9bb5ba137",
+      "provider": "CollabUtils2",
+      "room": "hennyburgr_01"
+    },
+    {
+      "attributes": {
+        "height": 200,
+        "id": 181,
+        "offsetXFrom": 1.0,
+        "offsetXTo": -0.5,
+        "offsetYFrom": 0.0,
+        "offsetYTo": 0.0,
+        "onlyOnce": true,
+        "positionMode": "LeftToRight",
+        "width": 104,
+        "x": 160,
+        "xOnly": true,
+        "y": -8,
+        "yOnly": false
+      },
+      "authority": {
+        "acceptedStage": "25K-A",
+        "archiveSha256": "638ad7beac7a24600c7c0733acf12a645795bd8878fd5bc7c88e6e24b17dce39",
+        "mapSha256": "f9afb1908a4d7e47ba29b778fab4e924147c2bae3a84686c0e81b76b5105ebc3"
+      },
+      "customId": "everest/smoothCameraOffsetTrigger",
+      "entityId": 181,
+      "kind": "trigger",
+      "map": "HennyburgrCompEntries/1-Lobby/stationmovers",
+      "nodes": [],
+      "profileSha256": "329ebaa1ddcc0de32be7a65a2aa4a1b889e7198c8cc44904b4b86f8da1953ea0",
+      "provider": "EverestCore",
+      "room": "hennyburgr_01"
+    },
+    {
+      "attributes": {
+        "height": 80,
+        "id": 182,
+        "offsetXFrom": -0.5,
+        "offsetXTo": 2.5,
+        "offsetYFrom": 0.0,
+        "offsetYTo": 0.0,
+        "onlyOnce": true,
+        "positionMode": "RightToLeft",
+        "width": 88,
+        "x": 128,
+        "xOnly": true,
+        "y": 104,
+        "yOnly": false
+      },
+      "authority": {
+        "acceptedStage": "25K-A",
+        "archiveSha256": "638ad7beac7a24600c7c0733acf12a645795bd8878fd5bc7c88e6e24b17dce39",
+        "mapSha256": "f9afb1908a4d7e47ba29b778fab4e924147c2bae3a84686c0e81b76b5105ebc3"
+      },
+      "customId": "everest/smoothCameraOffsetTrigger",
+      "entityId": 182,
+      "kind": "trigger",
+      "map": "HennyburgrCompEntries/1-Lobby/stationmovers",
+      "nodes": [],
+      "profileSha256": "52d142e8001ccf1a6469b40518bf56247532fa006a330fc6de9ed2178a8b3d56",
+      "provider": "EverestCore",
+      "room": "hennyburgr_01"
+    },
+    {
+      "attributes": {
+        "catchupSpeed": 4.0,
+        "height": 48,
+        "id": 183,
+        "revertOnLeave": false,
+        "width": 48,
+        "x": 80,
+        "y": 104
+      },
+      "authority": {
+        "acceptedStage": "25K-A",
+        "archiveSha256": "638ad7beac7a24600c7c0733acf12a645795bd8878fd5bc7c88e6e24b17dce39",
+        "mapSha256": "f9afb1908a4d7e47ba29b778fab4e924147c2bae3a84686c0e81b76b5105ebc3"
+      },
+      "customId": "MaxHelpingHand/CameraCatchupSpeedTrigger",
+      "entityId": 183,
+      "kind": "trigger",
+      "map": "HennyburgrCompEntries/1-Lobby/stationmovers",
+      "nodes": [],
+      "profileSha256": "d2f7516eee7e26a0be71435e431342101618d61cfe65ba06bc4f3e17ad519793",
+      "provider": "MaxHelpingHand",
+      "room": "hennyburgr_01"
+    },
+    {
+      "attributes": {
+        "catchupSpeed": 1.0,
+        "height": 96,
+        "id": 184,
+        "revertOnLeave": false,
+        "width": 16,
+        "x": 360,
+        "y": 88
+      },
+      "authority": {
+        "acceptedStage": "25K-A",
+        "archiveSha256": "638ad7beac7a24600c7c0733acf12a645795bd8878fd5bc7c88e6e24b17dce39",
+        "mapSha256": "f9afb1908a4d7e47ba29b778fab4e924147c2bae3a84686c0e81b76b5105ebc3"
+      },
+      "customId": "MaxHelpingHand/CameraCatchupSpeedTrigger",
+      "entityId": 184,
+      "kind": "trigger",
+      "map": "HennyburgrCompEntries/1-Lobby/stationmovers",
+      "nodes": [],
+      "profileSha256": "bab2abd9d67b82ef4ea05b7b820259f3e7c61ce1650a86a586d1eaba33a0d9de",
+      "provider": "MaxHelpingHand",
+      "room": "hennyburgr_01"
+    },
+    {
+      "attributes": {
+        "height": 40,
+        "id": 249,
+        "offsetXFrom": 1.0,
+        "offsetXTo": 1.5,
+        "offsetYFrom": 0.0,
+        "offsetYTo": 0.0,
+        "onlyOnce": false,
+        "positionMode": "TopToBottom",
+        "width": 56,
+        "x": 704,
+        "xOnly": true,
+        "y": 72,
+        "yOnly": false
+      },
+      "authority": {
+        "acceptedStage": "25K-A",
+        "archiveSha256": "638ad7beac7a24600c7c0733acf12a645795bd8878fd5bc7c88e6e24b17dce39",
+        "mapSha256": "f9afb1908a4d7e47ba29b778fab4e924147c2bae3a84686c0e81b76b5105ebc3"
+      },
+      "customId": "everest/smoothCameraOffsetTrigger",
+      "entityId": 249,
+      "kind": "trigger",
+      "map": "HennyburgrCompEntries/1-Lobby/stationmovers",
+      "nodes": [],
+      "profileSha256": "4b41fa5b66cf80bca95cf3734c4fe5b7457e1b69ede4c6cbd8f9d4adb806c6fc",
+      "provider": "EverestCore",
+      "room": "hennyburgr_01"
+    },
+    {
+      "attributes": {
+        "death_count": -1,
+        "flag": "hennyburgr_switch",
+        "height": 80,
+        "id": 435,
+        "mode": "OnPlayerEnter",
+        "only_once": false,
+        "state": true,
+        "width": 184,
+        "x": 1552,
+        "y": 48
+      },
+      "authority": {
+        "acceptedStage": "25K-A",
+        "archiveSha256": "638ad7beac7a24600c7c0733acf12a645795bd8878fd5bc7c88e6e24b17dce39",
+        "mapSha256": "f9afb1908a4d7e47ba29b778fab4e924147c2bae3a84686c0e81b76b5105ebc3"
+      },
+      "customId": "everest/flagTrigger",
+      "entityId": 435,
+      "kind": "trigger",
+      "map": "HennyburgrCompEntries/1-Lobby/stationmovers",
+      "nodes": [],
+      "profileSha256": "d19a4b21596ee47d5bcf9a4272afb9fde0e926caf25012f4ba63631ec41b3754",
+      "provider": "EverestCore",
+      "room": "hennyburgr_01"
+    },
+    {
+      "attributes": {
+        "id": 9,
+        "levelSet": "KayonaraCollection/1-Collection",
+        "x": 640,
+        "y": 72
+      },
+      "authority": {
+        "acceptedStage": "25K-B",
+        "archiveSha256": "a6c8a1d001926a9167c08dde3d221d72d5deea1c577fd329fb386ae74cd9d7fc",
+        "mapSha256": "98a4257d09d52c7861227899e33a7c57295fc8731b60622a9bbb0853bf2e2f7c"
+      },
+      "customId": "CollabUtils2/RainbowBerry",
+      "entityId": 9,
+      "kind": "entity",
+      "map": "KayonaraCollection/0-Lobbies/1-Collection",
+      "nodes": [],
+      "profileSha256": "ba554ca77b8b19d2618b9e930ff3fce163b81461498762ba11c40af3bd7149ba",
+      "provider": "CollabUtils2",
+      "room": "1"
+    },
+    {
+      "attributes": {
+        "color": "advanced",
+        "height": 56,
+        "id": 12,
+        "levelSet": "KayonaraCollection/1-Collection",
+        "requires": 3,
+        "startHidden": false,
+        "width": 40,
+        "x": 464,
+        "y": 88
+      },
+      "authority": {
+        "acceptedStage": "25K-B",
+        "archiveSha256": "a6c8a1d001926a9167c08dde3d221d72d5deea1c577fd329fb386ae74cd9d7fc",
+        "mapSha256": "98a4257d09d52c7861227899e33a7c57295fc8731b60622a9bbb0853bf2e2f7c"
+      },
+      "customId": "CollabUtils2/MiniHeartDoor",
+      "entityId": 12,
+      "kind": "entity",
+      "map": "KayonaraCollection/0-Lobbies/1-Collection",
+      "nodes": [],
+      "profileSha256": "dbd3db78ecfe7a79df5d82dd5eb5b57e4325a3fa7bc99636eaf45d34b3c41b3a",
+      "provider": "CollabUtils2",
+      "room": "1"
+    },
+    {
+      "attributes": {
+        "height": 48,
+        "id": 4,
+        "levelset": "KayonaraCollection/1-Collection",
+        "width": 32,
+        "x": 152,
+        "y": 120
+      },
+      "authority": {
+        "acceptedStage": "25K-B",
+        "archiveSha256": "a6c8a1d001926a9167c08dde3d221d72d5deea1c577fd329fb386ae74cd9d7fc",
+        "mapSha256": "98a4257d09d52c7861227899e33a7c57295fc8731b60622a9bbb0853bf2e2f7c"
+      },
+      "customId": "CollabUtils2/JournalTrigger",
+      "entityId": 4,
+      "kind": "trigger",
+      "map": "KayonaraCollection/0-Lobbies/1-Collection",
+      "nodes": [],
+      "profileSha256": "55822f62fe4359b97e1ef8af8b100f8c8e8eadbf856f343845f7d8bc22b353ca",
+      "provider": "CollabUtils2",
+      "room": "1"
+    },
+    {
+      "attributes": {
+        "height": 48,
+        "id": 5,
+        "levelset": "KayonaraCollection/1-Collection",
+        "width": 32,
+        "x": 316,
+        "y": 120
+      },
+      "authority": {
+        "acceptedStage": "25K-B",
+        "archiveSha256": "a6c8a1d001926a9167c08dde3d221d72d5deea1c577fd329fb386ae74cd9d7fc",
+        "mapSha256": "98a4257d09d52c7861227899e33a7c57295fc8731b60622a9bbb0853bf2e2f7c"
+      },
+      "customId": "CollabUtils2/JournalTrigger",
+      "entityId": 5,
+      "kind": "trigger",
+      "map": "KayonaraCollection/0-Lobbies/1-Collection",
+      "nodes": [],
+      "profileSha256": "55822f62fe4359b97e1ef8af8b100f8c8e8eadbf856f343845f7d8bc22b353ca",
+      "provider": "CollabUtils2",
+      "room": "1"
+    },
+    {
+      "attributes": {
+        "height": 48,
+        "id": 6,
+        "map": "KayonaraCollection/1-Collection/1-Kayonara",
+        "returnToLobbyMode": "SetReturnToHere",
+        "width": 32,
+        "x": 240,
+        "y": 64
+      },
+      "authority": {
+        "acceptedStage": "25K-B",
+        "archiveSha256": "a6c8a1d001926a9167c08dde3d221d72d5deea1c577fd329fb386ae74cd9d7fc",
+        "mapSha256": "98a4257d09d52c7861227899e33a7c57295fc8731b60622a9bbb0853bf2e2f7c"
+      },
+      "customId": "CollabUtils2/ChapterPanelTrigger",
+      "entityId": 6,
+      "kind": "trigger",
+      "map": "KayonaraCollection/0-Lobbies/1-Collection",
+      "nodes": [],
+      "profileSha256": "36e7f7373d9334a7cf4c55886c589a7c46a426697e3124e8b64189a256b7fd1c",
+      "provider": "CollabUtils2",
+      "room": "1"
+    },
+    {
+      "attributes": {
+        "height": 48,
+        "id": 7,
+        "map": "KayonaraCollection/1-Collection/3-KayonaraCSide",
+        "returnToLobbyMode": "SetReturnToHere",
+        "width": 32,
+        "x": 360,
+        "y": 64
+      },
+      "authority": {
+        "acceptedStage": "25K-B",
+        "archiveSha256": "a6c8a1d001926a9167c08dde3d221d72d5deea1c577fd329fb386ae74cd9d7fc",
+        "mapSha256": "98a4257d09d52c7861227899e33a7c57295fc8731b60622a9bbb0853bf2e2f7c"
+      },
+      "customId": "CollabUtils2/ChapterPanelTrigger",
+      "entityId": 7,
+      "kind": "trigger",
+      "map": "KayonaraCollection/0-Lobbies/1-Collection",
+      "nodes": [],
+      "profileSha256": "1a04d5d8dfbf5462cd034d382035d4db7e613648ea3f29c036f8673bba93f0ec",
+      "provider": "CollabUtils2",
+      "room": "1"
+    },
+    {
+      "attributes": {
+        "height": 48,
+        "id": 8,
+        "map": "KayonaraCollection/1-Collection/2-KayonaraBSide",
+        "returnToLobbyMode": "SetReturnToHere",
+        "width": 32,
+        "x": 120,
+        "y": 64
+      },
+      "authority": {
+        "acceptedStage": "25K-B",
+        "archiveSha256": "a6c8a1d001926a9167c08dde3d221d72d5deea1c577fd329fb386ae74cd9d7fc",
+        "mapSha256": "98a4257d09d52c7861227899e33a7c57295fc8731b60622a9bbb0853bf2e2f7c"
+      },
+      "customId": "CollabUtils2/ChapterPanelTrigger",
+      "entityId": 8,
+      "kind": "trigger",
+      "map": "KayonaraCollection/0-Lobbies/1-Collection",
+      "nodes": [],
+      "profileSha256": "011b852d038daa108bf88f612b938e77f89cefa4cb77e5ed901dea8e15aa1389",
+      "provider": "CollabUtils2",
+      "room": "1"
+    },
+    {
+      "attributes": {
+        "height": 152,
+        "id": 10,
+        "width": 176,
+        "x": 552,
+        "y": 8
+      },
+      "authority": {
+        "acceptedStage": "25K-B",
+        "archiveSha256": "a6c8a1d001926a9167c08dde3d221d72d5deea1c577fd329fb386ae74cd9d7fc",
+        "mapSha256": "98a4257d09d52c7861227899e33a7c57295fc8731b60622a9bbb0853bf2e2f7c"
+      },
+      "customId": "CollabUtils2/RainbowBerryUnlockCutsceneTrigger",
+      "entityId": 10,
+      "kind": "trigger",
+      "map": "KayonaraCollection/0-Lobbies/1-Collection",
+      "nodes": [],
+      "profileSha256": "82da09804d4db42bc7b11820d34209eb8410cb5f419d4a8de2755180f28de5af",
+      "provider": "CollabUtils2",
+      "room": "1"
+    },
+    {
+      "attributes": {
+        "height": 152,
+        "id": 11,
+        "width": 120,
+        "x": 424,
+        "y": 8
+      },
+      "authority": {
+        "acceptedStage": "25K-B",
+        "archiveSha256": "a6c8a1d001926a9167c08dde3d221d72d5deea1c577fd329fb386ae74cd9d7fc",
+        "mapSha256": "98a4257d09d52c7861227899e33a7c57295fc8731b60622a9bbb0853bf2e2f7c"
+      },
+      "customId": "CollabUtils2/MiniHeartDoorUnlockCutsceneTrigger",
+      "entityId": 11,
+      "kind": "trigger",
+      "map": "KayonaraCollection/0-Lobbies/1-Collection",
+      "nodes": [],
+      "profileSha256": "213510a4357e5ba4fa0591fa1baa597ee711e88631243773657d44e63301c77d",
+      "provider": "CollabUtils2",
+      "room": "1"
+    },
+    {
+      "attributes": {
+        "height": 48,
+        "id": 15,
+        "map": "KayonaraCollection/1-Collection/ZZ-HeartSide",
+        "returnToLobbyMode": "SetReturnToHere",
+        "width": 40,
+        "x": 1144,
+        "y": 80
+      },
+      "authority": {
+        "acceptedStage": "25K-B",
+        "archiveSha256": "a6c8a1d001926a9167c08dde3d221d72d5deea1c577fd329fb386ae74cd9d7fc",
+        "mapSha256": "98a4257d09d52c7861227899e33a7c57295fc8731b60622a9bbb0853bf2e2f7c"
+      },
+      "customId": "CollabUtils2/ChapterPanelTrigger",
+      "entityId": 15,
+      "kind": "trigger",
+      "map": "KayonaraCollection/0-Lobbies/1-Collection",
+      "nodes": [],
+      "profileSha256": "45f540e14d54b71e26ecb976c2287428030407cfffd67ca491260701b1edb680",
+      "provider": "CollabUtils2",
+      "room": "1"
+    },
+    {
+      "attributes": {
+        "height": 48,
+        "id": 17,
+        "levelset": "KayonaraCollection/1-Collection",
+        "width": 32,
+        "x": 1072,
+        "y": 96
+      },
+      "authority": {
+        "acceptedStage": "25K-B",
+        "archiveSha256": "a6c8a1d001926a9167c08dde3d221d72d5deea1c577fd329fb386ae74cd9d7fc",
+        "mapSha256": "98a4257d09d52c7861227899e33a7c57295fc8731b60622a9bbb0853bf2e2f7c"
+      },
+      "customId": "CollabUtils2/JournalTrigger",
+      "entityId": 17,
+      "kind": "trigger",
+      "map": "KayonaraCollection/0-Lobbies/1-Collection",
+      "nodes": [],
+      "profileSha256": "55822f62fe4359b97e1ef8af8b100f8c8e8eadbf856f343845f7d8bc22b353ca",
+      "provider": "CollabUtils2",
+      "room": "1"
+    },
+    {
+      "attributes": {
+        "id": 23,
+        "x": 72,
+        "y": 72
+      },
+      "authority": {
+        "acceptedStage": "25K-B",
+        "archiveSha256": "a6c8a1d001926a9167c08dde3d221d72d5deea1c577fd329fb386ae74cd9d7fc",
+        "mapSha256": "0a48b7d87b24cbec7e841148c9be024cd80bca164017218663b75b0e3b841675"
+      },
+      "customId": "CollabUtils2/SilverBerry",
+      "entityId": 23,
+      "kind": "entity",
+      "map": "KayonaraCollection/1-Collection/1-Kayonara",
+      "nodes": [],
+      "profileSha256": "fedaf677ed413d3929da9ea703929bcb0bfba05d732a6623065c6bd7bc2de1fe",
+      "provider": "CollabUtils2",
+      "room": "a0_begin"
+    },
+    {
+      "attributes": {
+        "id": 39,
+        "sprite": "beginner",
+        "x": 1392,
+        "y": 48
+      },
+      "authority": {
+        "acceptedStage": "25K-B",
+        "archiveSha256": "a6c8a1d001926a9167c08dde3d221d72d5deea1c577fd329fb386ae74cd9d7fc",
+        "mapSha256": "0a48b7d87b24cbec7e841148c9be024cd80bca164017218663b75b0e3b841675"
+      },
+      "customId": "CollabUtils2/MiniHeart",
+      "entityId": 39,
+      "kind": "entity",
+      "map": "KayonaraCollection/1-Collection/1-Kayonara",
+      "nodes": [],
+      "profileSha256": "7b52d19c31d07fb1888dfcd46eb6a69ee267d0730fa200cee82a5a540ae6ce92",
+      "provider": "CollabUtils2",
+      "room": "end-granny"
+    },
+    {
+      "attributes": {
+        "id": 206,
+        "x": 256,
+        "y": 120
+      },
+      "authority": {
+        "acceptedStage": "25K-B",
+        "archiveSha256": "a6c8a1d001926a9167c08dde3d221d72d5deea1c577fd329fb386ae74cd9d7fc",
+        "mapSha256": "afd672e97dc70af765f461a2d79c4965452ff10742c3e7b52f6bd7058fdc854f"
+      },
+      "customId": "CollabUtils2/SilverBerry",
+      "entityId": 206,
+      "kind": "entity",
+      "map": "KayonaraCollection/1-Collection/2-KayonaraBSide",
+      "nodes": [],
+      "profileSha256": "fedaf677ed413d3929da9ea703929bcb0bfba05d732a6623065c6bd7bc2de1fe",
+      "provider": "CollabUtils2",
+      "room": "f1"
+    },
+    {
+      "attributes": {
+        "id": 247,
+        "sprite": "intermediate",
+        "x": 2824,
+        "y": 88
+      },
+      "authority": {
+        "acceptedStage": "25K-B",
+        "archiveSha256": "a6c8a1d001926a9167c08dde3d221d72d5deea1c577fd329fb386ae74cd9d7fc",
+        "mapSha256": "afd672e97dc70af765f461a2d79c4965452ff10742c3e7b52f6bd7058fdc854f"
+      },
+      "customId": "CollabUtils2/MiniHeart",
+      "entityId": 247,
+      "kind": "entity",
+      "map": "KayonaraCollection/1-Collection/2-KayonaraBSide",
+      "nodes": [],
+      "profileSha256": "1a2ae692ae5af6380dc86f483708bd1b2d7b0064773c5ac458ddcd90e7fe045d",
+      "provider": "CollabUtils2",
+      "room": "f3"
+    },
+    {
+      "attributes": {
+        "id": 94,
+        "x": 120,
+        "y": 112
+      },
+      "authority": {
+        "acceptedStage": "25K-B",
+        "archiveSha256": "a6c8a1d001926a9167c08dde3d221d72d5deea1c577fd329fb386ae74cd9d7fc",
+        "mapSha256": "50289523809847139b04163db9b824424543ecf09379c7f198f8e18879d1c4d8"
+      },
+      "customId": "CollabUtils2/SilverBerry",
+      "entityId": 94,
+      "kind": "entity",
+      "map": "KayonaraCollection/1-Collection/3-KayonaraCSide",
+      "nodes": [],
+      "profileSha256": "fedaf677ed413d3929da9ea703929bcb0bfba05d732a6623065c6bd7bc2de1fe",
+      "provider": "CollabUtils2",
+      "room": "a0"
+    },
+    {
+      "attributes": {
+        "id": 112,
+        "sprite": "advanced",
+        "x": 792,
+        "y": 240
+      },
+      "authority": {
+        "acceptedStage": "25K-B",
+        "archiveSha256": "a6c8a1d001926a9167c08dde3d221d72d5deea1c577fd329fb386ae74cd9d7fc",
+        "mapSha256": "50289523809847139b04163db9b824424543ecf09379c7f198f8e18879d1c4d8"
+      },
+      "customId": "CollabUtils2/MiniHeart",
+      "entityId": 112,
+      "kind": "entity",
+      "map": "KayonaraCollection/1-Collection/3-KayonaraCSide",
+      "nodes": [],
+      "profileSha256": "683e5151d4a06c3f176e847d2cf578cd60455eeb2ee7a33cfe03a44efe817e43",
+      "provider": "CollabUtils2",
+      "room": "f0SAYONARA"
+    },
+    {
+      "attributes": {
+        "activationMode": "Always",
+        "direction": "Right",
+        "height": 136,
+        "id": 26,
+        "liftOffOfGround": true,
+        "makeWind": true,
+        "strength": 1.5,
+        "width": 56,
+        "x": 72,
+        "y": 32
+      },
+      "authority": {
+        "projectOwnedCanary": "apple-everest/canaries/stage25ke/Content/Maps/AppleEverest/Stage25KE.xml",
+        "sourceSha256": "8c3b00c7a42fa40f320cb2e73bd57bbad931d3aa8494737aec55bbcd8c6fd6a0"
+      },
+      "customId": "YetAnotherHelper/BubbleField",
+      "entityId": 26,
+      "kind": "entity",
+      "map": "AppleEverest/Stage25KE",
+      "nodes": [],
+      "profileSha256": "1f3d096200d3e6e5c27c45777b32d399f238b4c7b9e6b109b91fb4cd12ae00ba",
+      "provider": "YetAnotherHelper",
+      "room": "lvl_canary"
+    },
+    {
+      "attributes": {
+        "id": 34,
+        "winged": false,
+        "x": 144,
+        "y": 152
+      },
+      "authority": {
+        "projectOwnedCanary": "apple-everest/canaries/stage25ke/Content/Maps/AppleEverest/Stage25KE.xml",
+        "sourceSha256": "8c3b00c7a42fa40f320cb2e73bd57bbad931d3aa8494737aec55bbcd8c6fd6a0"
+      },
+      "customId": "LunaticHelper/StrawberryWithReturn",
+      "entityId": 34,
+      "kind": "entity",
+      "map": "AppleEverest/Stage25KE",
+      "nodes": [],
+      "profileSha256": "020ae250ba9989693f4a139073f0da35b7ed1e7587b7c60f6c8622c2197639a4",
+      "provider": "LunaticHelper",
+      "room": "lvl_canary"
+    },
+    {
+      "attributes": {
+        "height": 32,
+        "id": 27,
+        "left": false,
+        "spriteDirectory": "JungleHelper/Moss",
+        "width": 8,
+        "x": 280,
+        "y": 120
+      },
+      "authority": {
+        "projectOwnedCanary": "apple-everest/canaries/stage25ke/Content/Maps/AppleEverest/Stage25KE.xml",
+        "sourceSha256": "8c3b00c7a42fa40f320cb2e73bd57bbad931d3aa8494737aec55bbcd8c6fd6a0"
+      },
+      "customId": "JungleHelper/MossyWall",
+      "entityId": 27,
+      "kind": "entity",
+      "map": "AppleEverest/Stage25KE",
+      "nodes": [],
+      "profileSha256": "ebf0ecb1bb428f4aed8885e9d44c733a36463e73c0fd2a6479b303b1a1a96579",
+      "provider": "JungleHelper",
+      "room": "lvl_canary"
+    },
+    {
+      "attributes": {
+        "alphaFrom": 0,
+        "alphaTo": 1,
+        "behindFg": true,
+        "fade": "LeftToRight",
+        "height": 96,
+        "id": 31,
+        "tag": "stage25ke",
+        "width": 64,
+        "x": 192,
+        "y": 40
+      },
+      "authority": {
+        "projectOwnedCanary": "apple-everest/canaries/stage25ke/Content/Maps/AppleEverest/Stage25KE.xml",
+        "sourceSha256": "8c3b00c7a42fa40f320cb2e73bd57bbad931d3aa8494737aec55bbcd8c6fd6a0"
+      },
+      "customId": "SJ2021/StylegroundMask",
+      "entityId": 31,
+      "kind": "entity",
+      "map": "AppleEverest/Stage25KE",
+      "nodes": [],
+      "profileSha256": "bb7e0899ffcf2b77d0d5319dfd9fd20a573861ff3cf37aa17816dab85e19ea7e",
+      "provider": "StrawberryJam2021",
+      "room": "lvl_canary"
+    },
+    {
+      "attributes": {
+        "baseFrom": -1,
+        "baseTo": -1,
+        "fade": "None",
+        "height": 96,
+        "id": 32,
+        "strengthFrom": 0,
+        "strengthTo": 0,
+        "width": 32,
+        "x": 192,
+        "y": 40
+      },
+      "authority": {
+        "projectOwnedCanary": "apple-everest/canaries/stage25ke/Content/Maps/AppleEverest/Stage25KE.xml",
+        "sourceSha256": "8c3b00c7a42fa40f320cb2e73bd57bbad931d3aa8494737aec55bbcd8c6fd6a0"
+      },
+      "customId": "SJ2021/BloomMask",
+      "entityId": 32,
+      "kind": "entity",
+      "map": "AppleEverest/Stage25KE",
+      "nodes": [],
+      "profileSha256": "1fbe14645928027e0efc1fbf4ca87456ee45eceacad72b497815444420ad1f7f",
+      "provider": "StrawberryJam2021",
+      "room": "lvl_canary"
+    },
+    {
+      "attributes": {
+        "id": 33,
+        "x": 0,
+        "y": 0
+      },
+      "authority": {
+        "projectOwnedCanary": "apple-everest/canaries/stage25ke/Content/Maps/AppleEverest/Stage25KE.xml",
+        "sourceSha256": "8c3b00c7a42fa40f320cb2e73bd57bbad931d3aa8494737aec55bbcd8c6fd6a0"
+      },
+      "customId": "SJ2021/GlowController",
+      "entityId": 33,
+      "kind": "entity",
+      "map": "AppleEverest/Stage25KE",
+      "nodes": [],
+      "profileSha256": "fedaf677ed413d3929da9ea703929bcb0bfba05d732a6623065c6bd7bc2de1fe",
+      "provider": "StrawberryJam2021",
+      "room": "lvl_canary"
+    },
+    {
+      "attributes": {
+        "alpha": 0.699999988079071,
+        "color": "FFFFFF",
+        "duration": 0.20000000298023224,
+        "easer": "CubeInOut",
+        "endFade": 64,
+        "height": 56,
+        "id": 28,
+        "startFade": 32,
+        "width": 40,
+        "x": 16,
+        "y": 112
+      },
+      "authority": {
+        "projectOwnedCanary": "apple-everest/canaries/stage25ke/Content/Maps/AppleEverest/Stage25KE.xml",
+        "sourceSha256": "8c3b00c7a42fa40f320cb2e73bd57bbad931d3aa8494737aec55bbcd8c6fd6a0"
+      },
+      "customId": "ContortHelper/MadelineSpotlightModifierTrigger",
+      "entityId": 28,
+      "kind": "trigger",
+      "map": "AppleEverest/Stage25KE",
+      "nodes": [],
+      "profileSha256": "d30c14407aa8871f10d7bbf5cb384bb4fcb7c6e55397def0bfc77872d78beac2",
+      "provider": "ContortHelper",
+      "room": "lvl_canary"
+    },
+    {
+      "attributes": {
+        "height": 168,
+        "id": 29,
+        "positionMode": "LeftToRight",
+        "revertOnDeath": false,
+        "valueA": 0.800000011920929,
+        "valueB": 1,
+        "variantChange": "BackgroundBrightness",
+        "width": 48,
+        "x": 112,
+        "y": 0
+      },
+      "authority": {
+        "projectOwnedCanary": "apple-everest/canaries/stage25ke/Content/Maps/AppleEverest/Stage25KE.xml",
+        "sourceSha256": "8c3b00c7a42fa40f320cb2e73bd57bbad931d3aa8494737aec55bbcd8c6fd6a0"
+      },
+      "customId": "ExtendedVariantMode/FloatExtendedVariantFadeTrigger",
+      "entityId": 29,
+      "kind": "trigger",
+      "map": "AppleEverest/Stage25KE",
+      "nodes": [],
+      "profileSha256": "ef87e4fa24d9541079cad79edac2b487a0085a903f969c61495198f6af5f6c23",
+      "provider": "ExtendedVariantMode",
+      "room": "lvl_canary"
+    },
+    {
+      "attributes": {
+        "extended": true,
+        "height": 168,
+        "id": 30,
+        "vanilla": true,
+        "width": 16,
+        "x": 176,
+        "y": 0
+      },
+      "authority": {
+        "projectOwnedCanary": "apple-everest/canaries/stage25ke/Content/Maps/AppleEverest/Stage25KE.xml",
+        "sourceSha256": "8c3b00c7a42fa40f320cb2e73bd57bbad931d3aa8494737aec55bbcd8c6fd6a0"
+      },
+      "customId": "ExtendedVariantMode/ResetVariantsTrigger",
+      "entityId": 30,
+      "kind": "trigger",
+      "map": "AppleEverest/Stage25KE",
+      "nodes": [],
+      "profileSha256": "b7ffc493ef6c2cc090bb09792067d98b681b200835ea4ee9d8f8fe3e0f6744fc",
+      "provider": "ExtendedVariantMode",
+      "room": "lvl_canary"
+    },
+    {
+      "attributes": {
+        "id": 41,
+        "surfaceIndex": -1,
+        "texture": "wood",
+        "width": 8,
+        "x": 112,
+        "y": 136
+      },
+      "authority": {
+        "projectOwnedCanary": "apple-everest/canaries/stage25kf/Content/Maps/AppleEverest/Stage25KF.xml",
+        "sourceSha256": "2d99a8ada0a2eebe15ef62ab0d1fdaba9c12e8da0ca0ebfc5ab975a5ffe18d45"
+      },
+      "customId": "VortexHelper/AttachedJumpThru",
+      "entityId": 41,
+      "kind": "entity",
+      "map": "AppleEverest/Stage25KF",
+      "nodes": [],
+      "profileSha256": "c5eb38e40560ffc87ea81bc9fca5ef0a9c4311f3cb64dc53f0e693143ae88fa6",
+      "provider": "VortexHelper",
+      "room": "lvl_canary"
+    },
+    {
+      "attributes": {
+        "bloomStrengthFrom": 0.5,
+        "bloomStrengthTo": 1,
+        "height": 168,
+        "id": 50,
+        "positionMode": "LeftToRight",
+        "width": 64,
+        "x": 0,
+        "y": 0
+      },
+      "authority": {
+        "projectOwnedCanary": "apple-everest/canaries/stage25kf/Content/Maps/AppleEverest/Stage25KF.xml",
+        "sourceSha256": "2d99a8ada0a2eebe15ef62ab0d1fdaba9c12e8da0ca0ebfc5ab975a5ffe18d45"
+      },
+      "customId": "vitellary/bloomstrengthtrigger",
+      "entityId": 50,
+      "kind": "trigger",
+      "map": "AppleEverest/Stage25KF",
+      "nodes": [],
+      "profileSha256": "fe23439a4f9a5f8ee4911ed4d204c3994fef4bd10d3b91750132998d6fdd8cc7",
+      "provider": "CrystallineHelper",
+      "room": "lvl_canary"
+    },
+    {
+      "attributes": {
+        "bloomStrengthFrom": 1.2999999523162842,
+        "bloomStrengthTo": 2,
+        "height": 168,
+        "id": 51,
+        "positionMode": "RightToLeft",
+        "width": 64,
+        "x": 64,
+        "y": 0
+      },
+      "authority": {
+        "projectOwnedCanary": "apple-everest/canaries/stage25kf/Content/Maps/AppleEverest/Stage25KF.xml",
+        "sourceSha256": "2d99a8ada0a2eebe15ef62ab0d1fdaba9c12e8da0ca0ebfc5ab975a5ffe18d45"
+      },
+      "customId": "vitellary/bloomstrengthtrigger",
+      "entityId": 51,
+      "kind": "trigger",
+      "map": "AppleEverest/Stage25KF",
+      "nodes": [],
+      "profileSha256": "3f50b05c9cbad6eb0f340f3021aee171a478b92114596e4ff7611bf9b5dff4ab",
+      "provider": "CrystallineHelper",
+      "room": "lvl_canary"
+    },
+    {
+      "attributes": {
+        "bloomStrengthFrom": 1,
+        "bloomStrengthTo": 1,
+        "height": 168,
+        "id": 52,
+        "positionMode": "NoEffect",
+        "width": 48,
+        "x": 128,
+        "y": 0
+      },
+      "authority": {
+        "projectOwnedCanary": "apple-everest/canaries/stage25kf/Content/Maps/AppleEverest/Stage25KF.xml",
+        "sourceSha256": "2d99a8ada0a2eebe15ef62ab0d1fdaba9c12e8da0ca0ebfc5ab975a5ffe18d45"
+      },
+      "customId": "vitellary/bloomstrengthtrigger",
+      "entityId": 52,
+      "kind": "trigger",
+      "map": "AppleEverest/Stage25KF",
+      "nodes": [],
+      "profileSha256": "93d5f846b805a85953b205bcc24e4f07d17880e8ddb7afebfe0ae845f577151d",
+      "provider": "CrystallineHelper",
+      "room": "lvl_canary"
+    },
+    {
+      "attributes": {
+        "cacheValidEntities": false,
+        "debug": false,
+        "depth": -20000,
+        "entitiesToAffect": "appleEverest/stage25kfDepthTarget",
+        "height": 16,
+        "id": 48,
+        "updateOnEntry": false,
+        "width": 16,
+        "x": 192,
+        "y": 136
+      },
+      "authority": {
+        "projectOwnedCanary": "apple-everest/canaries/stage25kf/Content/Maps/AppleEverest/Stage25KF.xml",
+        "sourceSha256": "2d99a8ada0a2eebe15ef62ab0d1fdaba9c12e8da0ca0ebfc5ab975a5ffe18d45"
+      },
+      "customId": "vitellary/editdepthtrigger",
+      "entityId": 48,
+      "kind": "trigger",
+      "map": "AppleEverest/Stage25KF",
+      "nodes": [],
+      "profileSha256": "a992daa3743e9966faa529f0527fba96e9f70a2ddbd503af1cf0e4d48b0630fc",
+      "provider": "CrystallineHelper",
+      "room": "lvl_canary"
+    },
+    {
+      "attributes": {
+        "activateOnTransition": false,
+        "activationType": "OnHoldableEnter",
+        "delay": 0.4000000059604645,
+        "height": 48,
+        "id": 43,
+        "invertCondition": false,
+        "matchPosition": false,
+        "oneUse": true,
+        "onlyOnEnter": false,
+        "randomize": false,
+        "width": 40,
+        "x": 224,
+        "y": 120
+      },
+      "authority": {
+        "projectOwnedCanary": "apple-everest/canaries/stage25kf/Content/Maps/AppleEverest/Stage25KF.xml",
+        "sourceSha256": "2d99a8ada0a2eebe15ef62ab0d1fdaba9c12e8da0ca0ebfc5ab975a5ffe18d45"
+      },
+      "customId": "vitellary/triggertrigger",
+      "entityId": 43,
+      "kind": "trigger",
+      "map": "AppleEverest/Stage25KF",
+      "nodes": [
+        {
+          "x": 280,
+          "y": 120
+        },
+        {
+          "x": 280,
+          "y": 152
+        }
+      ],
+      "profileSha256": "deec378fa82b79f9d7f2edce6f4de3ea3411004be208ad751eae754a96429034",
+      "provider": "CrystallineHelper",
+      "room": "lvl_canary"
+    },
+    {
+      "attributes": {
+        "flag": "stage25kf_holdable",
+        "height": 24,
+        "id": 45,
+        "mode": "OnPlayerEnter",
+        "only_once": true,
+        "state": true,
+        "width": 24,
+        "x": 272,
+        "y": 144
+      },
+      "authority": {
+        "projectOwnedCanary": "apple-everest/canaries/stage25kf/Content/Maps/AppleEverest/Stage25KF.xml",
+        "sourceSha256": "2d99a8ada0a2eebe15ef62ab0d1fdaba9c12e8da0ca0ebfc5ab975a5ffe18d45"
+      },
+      "customId": "everest/flagTrigger",
+      "entityId": 45,
+      "kind": "trigger",
+      "map": "AppleEverest/Stage25KF",
+      "nodes": [],
+      "profileSha256": "4a6768e4bd20359d4d8a4904db3e57f2f10235235bdc1302cbe7546a413d8b63",
+      "provider": "EverestCore",
+      "room": "lvl_canary"
+    },
+    {
+      "attributes": {
+        "birdId": 0,
+        "controls": "dialog:SJ2021_lobby_gym_tutorial_controls",
+        "direction": "Right",
+        "id": 893,
+        "info": "SJ2021_lobby_gym_tutorial_info",
+        "onlyOnce": false,
+        "x": 88,
+        "y": 144
+      },
+      "authority": {
+        "projectOwnedCanary": "apple-everest/canaries/stage25kh/Content/Maps/AppleEverest/Stage25KH.xml",
+        "sourceSha256": "6cc0475d6f69ad388d21dc0ecb4358d06d45478506a1e8e0fdf07467d46f74de"
+      },
+      "customId": "MaxHelpingHand/CustomTutorialWithNoBird",
+      "entityId": 893,
+      "kind": "entity",
+      "map": "AppleEverest/Stage25KH",
+      "nodes": [],
+      "profileSha256": "ac53e233f0a400b66887c92e98fd91a95dc0df843d9c016f702b9e96775e3d40",
+      "provider": "MaxHelpingHand",
+      "room": "lvl_canary"
+    },
+    {
+      "attributes": {
+        "approachDistance": 16,
+        "approachWhenTalking": false,
+        "dialogId": "StrawberryJam2021_0_Lobbies_1_Beginner_Credits",
+        "endLevel": false,
+        "flipX": false,
+        "flipY": false,
+        "frames": "",
+        "id": 1604,
+        "indicatorOffsetX": 0,
+        "indicatorOffsetY": -40,
+        "onlyIfFlag": "",
+        "onlyOnce": false,
+        "setFlag": "",
+        "sprite": "",
+        "spriteRate": 1,
+        "x": 248,
+        "y": 152
+      },
+      "authority": {
+        "projectOwnedCanary": "apple-everest/canaries/stage25kh/Content/Maps/AppleEverest/Stage25KH.xml",
+        "sourceSha256": "6cc0475d6f69ad388d21dc0ecb4358d06d45478506a1e8e0fdf07467d46f74de"
+      },
+      "customId": "MaxHelpingHand/MoreCustomNPC",
+      "entityId": 1604,
+      "kind": "entity",
+      "map": "AppleEverest/Stage25KH",
+      "nodes": [
+        {
+          "x": 184,
+          "y": 120
+        },
+        {
+          "x": 304,
+          "y": 160
+        }
+      ],
+      "profileSha256": "cc3eb590bf5a71b239fad6b74499017b3bc84f491b1495a272e4638d84dc846b",
+      "provider": "MaxHelpingHand",
+      "room": "lvl_canary"
+    }
+  ],
+  "purpose": "PRESERVE_PREVIOUSLY_ACCEPTED_PROFILES_SEPARATE_FROM_SJ_CENSUS",
+  "schemaVersion": 1,
+  "sources": [
+    {
+      "acceptedStage": "25K-A",
+      "archive": "Hennyburgr-Comp-1.1.0.zip",
+      "archiveSha256": "638ad7beac7a24600c7c0733acf12a645795bd8878fd5bc7c88e6e24b17dce39",
+      "url": "https://gamebanana.com/mmdl/1144148",
+      "version": "1.1.0"
+    },
+    {
+      "acceptedStage": "25K-B",
+      "archive": "Kayonara Collection.zip",
+      "archiveSha256": "a6c8a1d001926a9167c08dde3d221d72d5deea1c577fd329fb386ae74cd9d7fc",
+      "url": "https://gamebanana.com/mmdl/1086296",
+      "version": "1.0.1"
+    }
+  ]
+}

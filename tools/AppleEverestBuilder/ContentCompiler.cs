@@ -270,7 +270,7 @@ internal static class ContentCompiler
             foreach (XmlAttribute attribute in ElementAttributes(element))
             {
                 Add(attribute.Name);
-                if (Value(attribute.Value).Type == 5) Add(attribute.Value);
+                if (AttributeValue(element, attribute).Type == 5) Add(attribute.Value);
             }
             foreach (XmlElement child in element.ChildNodes.OfType<XmlElement>()) Visit(child);
         }
@@ -393,6 +393,9 @@ internal static class ContentCompiler
         string? childRoom = currentRoom;
         if (parent == "levels" && name == "level" && attributes.TryGetValue("name", out object? room) && room is string roomName)
         {
+            // The pinned runtime's LevelData strips this optional legacy
+            // prefix. Progression/session validation must use the same names.
+            if (roomName.StartsWith("lvl_", StringComparison.Ordinal)) roomName = roomName[4..];
             rooms.Add(roomName);
             childRoom = roomName;
         }
@@ -561,7 +564,7 @@ internal static class ContentCompiler
     }
 
     private static void ReadDetailedElement(BinaryReader reader, string[] table, string? parent, string room,
-        int depth, ref int elements, List<MapElementRecord> result)
+        int depth, ref int elements, List<MapElementRecord> result, float roomX = 0f, float roomY = 0f)
     {
         if (depth > 128 || ++elements > 100000) throw new InvalidDataException("map element bounds exceeded");
         string name = Lookup(table, reader.ReadInt16());
@@ -593,6 +596,11 @@ internal static class ContentCompiler
         string currentRoom = parent == "levels" && name == "level" && attributes.TryGetValue("name", out string? roomName)
             ? roomName.StartsWith("lvl_", StringComparison.Ordinal) ? roomName[4..] : roomName
             : room;
+        if (parent == "levels" && name == "level")
+        {
+            _ = TryFloat(attributes, "x", out roomX);
+            _ = TryFloat(attributes, "y", out roomY);
+        }
         int children = reader.ReadInt16();
         if (children < 0) throw new InvalidDataException("map child count is invalid");
         List<(float X, float Y)> nodes = [];
@@ -610,17 +618,19 @@ internal static class ContentCompiler
             }
             else
             {
-                ReadDetailedElement(reader, table, name, currentRoom, depth + 1, ref elements, result);
+                ReadDetailedElement(reader, table, name, currentRoom, depth + 1, ref elements, result, roomX, roomY);
             }
         }
-        string? kind = parent == "entities" ? "entity" : parent == "triggers" ? "trigger" : null;
+        string? kind = parent == "entities" ? "entity" : parent == "triggers" ? "trigger" :
+            parent != null && (parent.Equals("backgrounds", StringComparison.OrdinalIgnoreCase) ||
+                parent.Equals("foregrounds", StringComparison.OrdinalIgnoreCase)) ? "backdrop" : null;
         if (kind != null)
         {
             _ = TryFloat(attributes, "x", out float x);
             _ = TryFloat(attributes, "y", out float y);
             _ = int.TryParse(attributes.GetValueOrDefault("width", "0"), out int width);
             _ = int.TryParse(attributes.GetValueOrDefault("height", "0"), out int height);
-            result.Add(new(kind, name, room, x, y, width, height, attributes, nodes));
+            result.Add(new(kind, name, room, x, y, width, height, attributes, nodes, roomX, roomY));
         }
 
         static int CheckedRleLength(BinaryReader input)
@@ -682,7 +692,7 @@ internal static class ContentCompiler
         writer.Write(checked((byte)(attributes.Length + (text.Length > 0 ? 1 : 0))));
         foreach (XmlAttribute attribute in attributes)
         {
-            (byte type, object parsed) = Value(attribute.Value);
+            (byte type, object parsed) = AttributeValue(element, attribute);
             writer.Write(lookup[attribute.Name]); writer.Write(type); WriteValue(writer, type, parsed, lookup);
         }
         if (text.Length > 0)
@@ -698,21 +708,39 @@ internal static class ContentCompiler
         foreach (XmlElement child in children) WriteElement(writer, child, lookup);
     }
 
+    private static bool FactoryWrapper(XmlElement element) => element.Name is
+        "appleEverestEntity" or "appleEverestTrigger" or "appleEverestBackdrop";
+
+    private static string FactoryIdAttribute(XmlElement element) => element.HasAttribute("appleEverestId") ? "appleEverestId" : "name";
+
     private static string ElementName(XmlElement element)
     {
-        if (element.Name is not ("appleEverestEntity" or "appleEverestTrigger")) return element.Name;
-        string expectedParent = element.Name == "appleEverestEntity" ? "entities" : "triggers";
-        if (element.ParentNode is not XmlElement parent || parent.Name != expectedParent)
-            throw new InvalidDataException($"{element.Name} is only valid directly below {expectedParent}");
-        string name = element.GetAttribute("name");
+        if (!FactoryWrapper(element)) return element.Name;
+        string[] parents = element.Name switch
+        {
+            "appleEverestEntity" => ["entities"],
+            "appleEverestTrigger" => ["triggers"],
+            _ => ["Backgrounds", "Foregrounds"]
+        };
+        if (element.ParentNode is not XmlElement parent || !parents.Contains(parent.Name, StringComparer.Ordinal))
+            throw new InvalidDataException($"{element.Name} is only valid directly below {string.Join("/", parents)}");
+        string name = element.GetAttribute(FactoryIdAttribute(element));
         if (name.Length is < 1 or > 1024 || !name.Contains('/', StringComparison.Ordinal))
             throw new InvalidDataException($"{element.Name} requires a bounded namespaced name");
+        string[] strings = element.GetAttribute("appleEverestStrings").Split(',', StringSplitOptions.RemoveEmptyEntries);
+        if (strings.Distinct(StringComparer.Ordinal).Count() != strings.Length || strings.Any(key =>
+            !element.HasAttribute(key) || key == FactoryIdAttribute(element) || key == "appleEverestStrings"))
+            throw new InvalidDataException("authored factory string-type metadata names an absent/duplicate/reserved attribute");
         return name;
     }
 
     private static IEnumerable<XmlAttribute> ElementAttributes(XmlElement element) =>
-        element.Attributes.OfType<XmlAttribute>().Where(attribute =>
-            element.Name is not ("appleEverestEntity" or "appleEverestTrigger") || attribute.Name != "name");
+        element.Attributes.OfType<XmlAttribute>().Where(attribute => !FactoryWrapper(element) ||
+            attribute.Name != FactoryIdAttribute(element) && attribute.Name != "appleEverestStrings");
+
+    private static (byte Type, object Value) AttributeValue(XmlElement element, XmlAttribute attribute) =>
+        FactoryWrapper(element) && element.GetAttribute("appleEverestStrings").Split(',').Contains(attribute.Name, StringComparer.Ordinal)
+            ? (5, attribute.Value) : Value(attribute.Value);
 
     private static string NormalizeText(XmlElement element)
     {

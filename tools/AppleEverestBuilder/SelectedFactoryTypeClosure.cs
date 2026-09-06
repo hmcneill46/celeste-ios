@@ -194,24 +194,32 @@ internal static class SelectedFactoryTypeClosure
     internal static void ValidateAvailableFactories(SelectedFactoryClosureResult closure,
         IReadOnlyList<ResolvedMod> ordered)
     {
-        HashSet<string> available = new(StringComparer.Ordinal);
-        foreach (ResolvedMod mod in ordered)
-        {
-            foreach (StaticSemanticFactory factory in mod.StaticSemanticLowering?.Factories ?? [])
-                available.Add(factory.Kind + ":" + factory.Id);
-            foreach (AppleCustomEntityFactory factory in mod.Declaration?.CustomEntityFactories ?? [])
-                available.Add(factory.Kind + ":" + factory.Id);
-            foreach (AppleCustomBackdropFactory factory in mod.Declaration?.CustomBackdropFactories ?? [])
-                available.Add("backdrop:" + factory.Id);
-        }
-        string[] missing = closure.Manifest.Factories
-            .Select(factory => factory.Kind + ":" + factory.CustomId)
-            .Where(factory => !available.Contains(factory))
-            .OrderBy(value => value, StringComparer.Ordinal)
-            .ToArray();
+        string[] missing = UnavailableFactories(closure, ordered)
+            .Select(factory => factory.Kind + ":" + factory.CustomId).ToArray();
         if (missing.Length != 0)
             throw new InvalidDataException("selected-factory closure references unavailable factories: " +
                 string.Join(", ", missing));
+    }
+
+    internal static SelectedFactoryClosureFactory[] UnavailableFactories(
+        SelectedFactoryClosureResult closure, IReadOnlyList<ResolvedMod> ordered)
+    {
+        HashSet<(string Owner, string Kind, string Id)> available =
+            ClosureGenerator.CoreGameplayFactories.Select(factory =>
+                (factory.Owner, factory.Kind, factory.Id)).ToHashSet();
+        foreach (ResolvedMod mod in ordered)
+        {
+            foreach (StaticSemanticFactory factory in mod.StaticSemanticLowering?.Factories ?? [])
+                available.Add((mod.Metadata.Name, factory.Kind, factory.Id));
+            foreach (AppleCustomEntityFactory factory in mod.Declaration?.CustomEntityFactories ?? [])
+                available.Add((mod.Metadata.Name, factory.Kind, factory.Id));
+            foreach (AppleCustomBackdropFactory factory in mod.Declaration?.CustomBackdropFactories ?? [])
+                available.Add((mod.Metadata.Name, "backdrop", factory.Id));
+        }
+        return closure.Manifest.Factories
+            .Where(factory => !available.Contains((factory.Provider, factory.Kind, factory.CustomId)))
+            .OrderBy(factory => factory.Kind + ":" + factory.CustomId, StringComparer.Ordinal)
+            .ToArray();
     }
 
     private static void Visit(string id, IReadOnlyDictionary<string, SelectedFactoryClosureNode> nodes,

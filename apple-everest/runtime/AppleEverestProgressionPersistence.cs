@@ -19,6 +19,9 @@ internal static class AppleEverestProgressionPersistence
     private static readonly AppleEverestProgressionReplicaState[] Slots = { new(), new(), new() };
     private static readonly Dictionary<string, AppleEverestProgressionSession>[] SuspendedSessions =
         { new(StringComparer.Ordinal), new(StringComparer.Ordinal), new(StringComparer.Ordinal) };
+    // The project-owned interaction graph uses the normal session snapshot
+    // path, but never a numbered replica or a disk/NSUserDefaults write.
+    private static readonly Dictionary<string, AppleEverestProgressionSession> FactoryCanarySessions = new(StringComparer.Ordinal);
     private static AppleEverestProgressionPreparedWrite pending;
 
     internal static byte[] SerializeVanillaBase(SaveData value) => AppleEverestProgressionRuntime.SerializeVanillaBase(value);
@@ -118,10 +121,12 @@ internal static class AppleEverestProgressionPersistence
     internal static bool SuspendCurrentSession()
     {
         SaveData save = SaveData.Instance;
-        if (save == null || !Numbered(save.FileSlot)) return false;
+        if (save == null) return false;
         AppleEverestProgressionSession session = AppleEverestProgressionRuntime.CaptureSession(save);
         if (session == null) return false;
-        lock (Gate) SuspendedSessions[save.FileSlot][session.Sid] = session;
+        Dictionary<string, AppleEverestProgressionSession> sessions = SessionStore(save, session.Sid);
+        if (sessions == null) return false;
+        lock (Gate) sessions[session.Sid] = session;
         AppleEverestStaticRuntime.Log($"collab-session=suspended slot={save.FileSlot} sid={session.Sid} room={session.Level}");
         return true;
     }
@@ -129,19 +134,21 @@ internal static class AppleEverestProgressionPersistence
     internal static bool HasSuspendedSession(string sid)
     {
         SaveData save = SaveData.Instance;
-        if (save == null || !Numbered(save.FileSlot) || string.IsNullOrEmpty(sid)) return false;
-        lock (Gate) return SuspendedSessions[save.FileSlot].ContainsKey(sid);
+        Dictionary<string, AppleEverestProgressionSession> sessions = SessionStore(save, sid);
+        if (sessions == null) return false;
+        lock (Gate) return sessions.ContainsKey(sid);
     }
 
     internal static bool TryTakeSuspendedSession(string sid, out Session session)
     {
         session = null;
         SaveData save = SaveData.Instance;
-        if (save == null || !Numbered(save.FileSlot) || string.IsNullOrEmpty(sid)) return false;
+        Dictionary<string, AppleEverestProgressionSession> sessions = SessionStore(save, sid);
+        if (sessions == null) return false;
         AppleEverestProgressionSession stored;
         lock (Gate)
         {
-            if (!SuspendedSessions[save.FileSlot].Remove(sid, out stored)) return false;
+            if (!sessions.Remove(sid, out stored)) return false;
         }
         session = AppleEverestProgressionRuntime.RestoreSession(stored);
         if (session != null)
@@ -149,18 +156,29 @@ internal static class AppleEverestProgressionPersistence
             AppleEverestStaticRuntime.Log($"collab-session=continued slot={save.FileSlot} sid={sid} room={session.Level}");
             return true;
         }
-        lock (Gate) SuspendedSessions[save.FileSlot][sid] = stored;
+        lock (Gate) sessions[sid] = stored;
         return false;
     }
 
     internal static void DiscardSuspendedSession(string sid)
     {
         SaveData save = SaveData.Instance;
-        if (save == null || !Numbered(save.FileSlot) || string.IsNullOrEmpty(sid)) return;
+        Dictionary<string, AppleEverestProgressionSession> sessions = SessionStore(save, sid);
+        if (sessions == null) return;
         bool removed;
-        lock (Gate) removed = SuspendedSessions[save.FileSlot].Remove(sid);
+        lock (Gate) removed = sessions.Remove(sid);
         if (removed) AppleEverestStaticRuntime.Log($"collab-session=discarded slot={save.FileSlot} sid={sid}");
     }
+
+    private static Dictionary<string, AppleEverestProgressionSession> SessionStore(SaveData save, string sid)
+    {
+        if (save == null || string.IsNullOrEmpty(sid)) return null;
+        if (Numbered(save.FileSlot)) return SuspendedSessions[save.FileSlot];
+        return save.FileSlot == 4 && AppleEverestStaticRuntime.NonPersistentModSession &&
+            AppleEverestCollabRuntime.IsFactoryInteractionMap(sid) ? FactoryCanarySessions : null;
+    }
+
+    internal static void ResetFactoryCanarySessions() { lock (Gate) FactoryCanarySessions.Clear(); }
 
     internal static bool DeleteSlot(int slot)
     {

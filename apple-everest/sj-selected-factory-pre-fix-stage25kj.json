@@ -1,0 +1,644 @@
+{
+  "acquisitionSha256": "18aba410f7ed56e5ac3405af8325df2f321bc111dff3f4103d2d60593a561bee",
+  "baselineCommit": "fe46b3c97cfc7dd74a907da8871ff9ba2c57d6e3",
+  "claimedGraphCensus": {
+    "blocked": 0,
+    "closed": 73,
+    "selected": 73,
+    "unknown": 0
+  },
+  "claimedGraphSha256": "bfeb335ab3f767d955f50e9ed983d083df6d3641d092fd09f6c3c6516e6ec38a",
+  "evidencePhase": "PRE_FIX_IMMUTABLE",
+  "factories": [
+    {
+      "customId": "FemtoHelper/WindPetals",
+      "kind": "backdrop",
+      "provider": "FemtoHelper",
+      "status": "PROVIDER_REJECTED"
+    },
+    {
+      "customId": "FlaglinesAndSuch/customDreamStars",
+      "kind": "backdrop",
+      "provider": "FlaglinesAndSuch",
+      "status": "PROVIDER_REJECTED"
+    },
+    {
+      "customId": "FlaglinesAndSuch/customGodrays",
+      "kind": "backdrop",
+      "provider": "FlaglinesAndSuch",
+      "status": "PROVIDER_REJECTED"
+    },
+    {
+      "customId": "LunaticHelper/CustomDust",
+      "kind": "backdrop",
+      "provider": "LunaticHelper",
+      "status": "MISSING_ACCEPTED_REGISTRATION"
+    },
+    {
+      "customId": "MaxHelpingHand/HeatWaveNoColorGrade",
+      "kind": "backdrop",
+      "provider": "MaxHelpingHand",
+      "status": "MISSING_ACCEPTED_REGISTRATION"
+    },
+    {
+      "customId": "BrokemiaHelper/caveWall",
+      "kind": "entity",
+      "provider": "BrokemiaHelper",
+      "status": "PROVIDER_REJECTED"
+    },
+    {
+      "customId": "CherryHelper/AssistRect",
+      "kind": "entity",
+      "provider": "CherryHelper",
+      "status": "PROVIDER_REJECTED"
+    },
+    {
+      "customId": "CherryHelper/ItemCrystal",
+      "kind": "entity",
+      "provider": "CherryHelper",
+      "status": "PROVIDER_REJECTED"
+    },
+    {
+      "customId": "CherryHelper/ItemCrystalPedestal",
+      "kind": "entity",
+      "provider": "CherryHelper",
+      "status": "PROVIDER_REJECTED"
+    },
+    {
+      "customId": "CollabUtils2/LobbyMapController",
+      "kind": "entity",
+      "provider": "CollabUtils2",
+      "status": "MISSING_ACCEPTED_REGISTRATION"
+    },
+    {
+      "customId": "CollabUtils2/LobbyMapMarker",
+      "kind": "entity",
+      "provider": "CollabUtils2",
+      "status": "MISSING_ACCEPTED_REGISTRATION"
+    },
+    {
+      "customId": "CollabUtils2/LobbyMapWarp",
+      "kind": "entity",
+      "provider": "CollabUtils2",
+      "status": "MISSING_ACCEPTED_REGISTRATION"
+    },
+    {
+      "customId": "CollabUtils2/MiniHeart",
+      "kind": "entity",
+      "provider": "CollabUtils2",
+      "status": "AVAILABLE_ACCEPTED_REGISTRATION"
+    },
+    {
+      "customId": "CollabUtils2/MiniHeartDoor",
+      "kind": "entity",
+      "provider": "CollabUtils2",
+      "status": "AVAILABLE_ACCEPTED_REGISTRATION"
+    },
+    {
+      "customId": "CollabUtils2/RainbowBerry",
+      "kind": "entity",
+      "provider": "CollabUtils2",
+      "status": "AVAILABLE_ACCEPTED_REGISTRATION"
+    },
+    {
+      "customId": "CollabUtils2/SilverBerry",
+      "kind": "entity",
+      "provider": "CollabUtils2",
+      "status": "AVAILABLE_ACCEPTED_REGISTRATION"
+    },
+    {
+      "customId": "FancyTileEntities/FancySolidTiles",
+      "kind": "entity",
+      "provider": "FancyTileEntities",
+      "status": "MISSING_ACCEPTED_REGISTRATION"
+    },
+    {
+      "customId": "FemtoHelper/CustomParallaxBigWaterfall",
+      "kind": "entity",
+      "provider": "FemtoHelper",
+      "status": "PROVIDER_REJECTED"
+    },
+    {
+      "customId": "FemtoHelper/ParticleEmitter",
+      "kind": "entity",
+      "provider": "FemtoHelper",
+      "status": "PROVIDER_REJECTED"
+    },
+    {
+      "customId": "FrostHelper/CustomFireBarrier",
+      "kind": "entity",
+      "provider": "FrostHelper",
+      "status": "PROVIDER_REJECTED"
+    },
+    {
+      "customId": "FrostHelper/CustomFlutterBird",
+      "kind": "entity",
+      "provider": "FrostHelper",
+      "status": "PROVIDER_REJECTED"
+    },
+    {
+      "customId": "FrostHelper/DecalContainer",
+      "kind": "entity",
+      "provider": "FrostHelper",
+      "status": "PROVIDER_REJECTED"
+    },
+    {
+      "customId": "FrostHelper/EntityMover",
+      "kind": "entity",
+      "provider": "FrostHelper",
+      "status": "PROVIDER_REJECTED"
+    },
+    {
+      "customId": "FrostHelper/IceSpinner",
+      "kind": "entity",
+      "provider": "FrostHelper",
+      "status": "PROVIDER_REJECTED"
+    },
+    {
+      "customId": "FrostHelper/WireLamps",
+      "kind": "entity",
+      "provider": "FrostHelper",
+      "status": "PROVIDER_REJECTED"
+    },
+    {
+      "customId": "HonlyHelper/PettableCat",
+      "kind": "entity",
+      "provider": "HonlyHelper",
+      "status": "PROVIDER_REJECTED"
+    },
+    {
+      "customId": "JungleHelper/MossyWall",
+      "kind": "entity",
+      "provider": "JungleHelper",
+      "status": "AVAILABLE_ACCEPTED_REGISTRATION"
+    },
+    {
+      "customId": "LunaticHelper/InvisibleLightSource",
+      "kind": "entity",
+      "provider": "LunaticHelper",
+      "status": "MISSING_ACCEPTED_REGISTRATION"
+    },
+    {
+      "customId": "LunaticHelper/StrawberryWithReturn",
+      "kind": "entity",
+      "provider": "LunaticHelper",
+      "status": "AVAILABLE_ACCEPTED_REGISTRATION"
+    },
+    {
+      "customId": "MaxHelpingHand/CustomTutorialWithNoBird",
+      "kind": "entity",
+      "provider": "MaxHelpingHand",
+      "status": "AVAILABLE_ACCEPTED_REGISTRATION"
+    },
+    {
+      "customId": "MaxHelpingHand/FlagExitBlock",
+      "kind": "entity",
+      "provider": "MaxHelpingHand",
+      "status": "MISSING_ACCEPTED_REGISTRATION"
+    },
+    {
+      "customId": "MaxHelpingHand/GroupedTriggerSpikesUp",
+      "kind": "entity",
+      "provider": "MaxHelpingHand",
+      "status": "AVAILABLE_ACCEPTED_REGISTRATION"
+    },
+    {
+      "customId": "MaxHelpingHand/MoreCustomNPC",
+      "kind": "entity",
+      "provider": "MaxHelpingHand",
+      "status": "AVAILABLE_ACCEPTED_REGISTRATION"
+    },
+    {
+      "customId": "MaxHelpingHand/ParallaxFadeOutController",
+      "kind": "entity",
+      "provider": "MaxHelpingHand",
+      "status": "MISSING_ACCEPTED_REGISTRATION"
+    },
+    {
+      "customId": "MaxHelpingHand/RainbowSpinnerColorAreaController",
+      "kind": "entity",
+      "provider": "MaxHelpingHand",
+      "status": "MISSING_ACCEPTED_REGISTRATION"
+    },
+    {
+      "customId": "MaxHelpingHand/SetFlagOnSpawnController",
+      "kind": "entity",
+      "provider": "MaxHelpingHand",
+      "status": "MISSING_ACCEPTED_REGISTRATION"
+    },
+    {
+      "customId": "MaxHelpingHand/SidewaysJumpThru",
+      "kind": "entity",
+      "provider": "MaxHelpingHand",
+      "status": "MISSING_ACCEPTED_REGISTRATION"
+    },
+    {
+      "customId": "MaxHelpingHand/StylegroundFadeController",
+      "kind": "entity",
+      "provider": "MaxHelpingHand",
+      "status": "MISSING_ACCEPTED_REGISTRATION"
+    },
+    {
+      "customId": "SJ2021/AllInOneMask",
+      "kind": "entity",
+      "provider": "StrawberryJam2021",
+      "status": "AVAILABLE_ACCEPTED_REGISTRATION"
+    },
+    {
+      "customId": "SJ2021/BloomMask",
+      "kind": "entity",
+      "provider": "StrawberryJam2021",
+      "status": "AVAILABLE_ACCEPTED_REGISTRATION"
+    },
+    {
+      "customId": "SJ2021/GlowController",
+      "kind": "entity",
+      "provider": "StrawberryJam2021",
+      "status": "AVAILABLE_ACCEPTED_REGISTRATION"
+    },
+    {
+      "customId": "SJ2021/StrawberryJamJar",
+      "kind": "entity",
+      "provider": "StrawberryJam2021",
+      "status": "AVAILABLE_ACCEPTED_REGISTRATION"
+    },
+    {
+      "customId": "SJ2021/StylegroundMask",
+      "kind": "entity",
+      "provider": "StrawberryJam2021",
+      "status": "AVAILABLE_ACCEPTED_REGISTRATION"
+    },
+    {
+      "customId": "VivHelper/CustomHangingLamp",
+      "kind": "entity",
+      "provider": "VivHelper",
+      "status": "PROVIDER_REJECTED"
+    },
+    {
+      "customId": "VivHelper/CustomSpinner",
+      "kind": "entity",
+      "provider": "VivHelper",
+      "status": "PROVIDER_REJECTED"
+    },
+    {
+      "customId": "VortexHelper/AttachedJumpThru",
+      "kind": "entity",
+      "provider": "VortexHelper",
+      "status": "AVAILABLE_ACCEPTED_REGISTRATION"
+    },
+    {
+      "customId": "XaphanHelper/Slope",
+      "kind": "entity",
+      "provider": "XaphanHelper",
+      "status": "MISSING_ACCEPTED_REGISTRATION"
+    },
+    {
+      "customId": "YetAnotherHelper/BubbleField",
+      "kind": "entity",
+      "provider": "YetAnotherHelper",
+      "status": "AVAILABLE_ACCEPTED_REGISTRATION"
+    },
+    {
+      "customId": "pandorasBox/coloredBigWaterfall",
+      "kind": "entity",
+      "provider": "PandorasBox",
+      "status": "PROVIDER_REJECTED"
+    },
+    {
+      "customId": "pandorasBox/coloredWater",
+      "kind": "entity",
+      "provider": "PandorasBox",
+      "status": "PROVIDER_REJECTED"
+    },
+    {
+      "customId": "pandorasBox/coloredWaterfall",
+      "kind": "entity",
+      "provider": "PandorasBox",
+      "status": "PROVIDER_REJECTED"
+    },
+    {
+      "customId": "pandorasBox/entityActivator",
+      "kind": "entity",
+      "provider": "PandorasBox",
+      "status": "PROVIDER_REJECTED"
+    },
+    {
+      "customId": "CollabUtils2/ChapterPanelTrigger",
+      "kind": "trigger",
+      "provider": "CollabUtils2",
+      "status": "AVAILABLE_ACCEPTED_REGISTRATION"
+    },
+    {
+      "customId": "CollabUtils2/JournalTrigger",
+      "kind": "trigger",
+      "provider": "CollabUtils2",
+      "status": "AVAILABLE_ACCEPTED_REGISTRATION"
+    },
+    {
+      "customId": "CollabUtils2/MiniHeartDoorUnlockCutsceneTrigger",
+      "kind": "trigger",
+      "provider": "CollabUtils2",
+      "status": "AVAILABLE_ACCEPTED_REGISTRATION"
+    },
+    {
+      "customId": "CollabUtils2/RainbowBerryUnlockCutsceneTrigger",
+      "kind": "trigger",
+      "provider": "CollabUtils2",
+      "status": "AVAILABLE_ACCEPTED_REGISTRATION"
+    },
+    {
+      "customId": "ContortHelper/MadelineSpotlightModifierTrigger",
+      "kind": "trigger",
+      "provider": "ContortHelper",
+      "status": "AVAILABLE_ACCEPTED_REGISTRATION"
+    },
+    {
+      "customId": "DJMapHelper/colorGradeTrigger",
+      "kind": "trigger",
+      "provider": "DJMapHelper",
+      "status": "AVAILABLE_ACCEPTED_REGISTRATION"
+    },
+    {
+      "customId": "ExtendedVariantMode/FloatExtendedVariantFadeTrigger",
+      "kind": "trigger",
+      "provider": "ExtendedVariantMode",
+      "status": "AVAILABLE_ACCEPTED_REGISTRATION"
+    },
+    {
+      "customId": "ExtendedVariantMode/ResetVariantsTrigger",
+      "kind": "trigger",
+      "provider": "ExtendedVariantMode",
+      "status": "AVAILABLE_ACCEPTED_REGISTRATION"
+    },
+    {
+      "customId": "FrostHelper/OnSpawnActivator",
+      "kind": "trigger",
+      "provider": "FrostHelper",
+      "status": "PROVIDER_REJECTED"
+    },
+    {
+      "customId": "HonlyHelper/CameraTargetCrossfadeTrigger",
+      "kind": "trigger",
+      "provider": "HonlyHelper",
+      "status": "PROVIDER_REJECTED"
+    },
+    {
+      "customId": "MaxHelpingHand/CameraCatchupSpeedTrigger",
+      "kind": "trigger",
+      "provider": "MaxHelpingHand",
+      "status": "AVAILABLE_ACCEPTED_REGISTRATION"
+    },
+    {
+      "customId": "MaxHelpingHand/CameraOffsetBorder",
+      "kind": "trigger",
+      "provider": "MaxHelpingHand",
+      "status": "MISSING_ACCEPTED_REGISTRATION"
+    },
+    {
+      "customId": "MaxHelpingHand/ColorGradeFadeTrigger",
+      "kind": "trigger",
+      "provider": "MaxHelpingHand",
+      "status": "MISSING_ACCEPTED_REGISTRATION"
+    },
+    {
+      "customId": "MaxHelpingHand/FlagToggleCameraOffsetTrigger",
+      "kind": "trigger",
+      "provider": "MaxHelpingHand",
+      "status": "MISSING_ACCEPTED_REGISTRATION"
+    },
+    {
+      "customId": "MaxHelpingHand/FlagToggleCameraTargetTrigger",
+      "kind": "trigger",
+      "provider": "MaxHelpingHand",
+      "status": "MISSING_ACCEPTED_REGISTRATION"
+    },
+    {
+      "customId": "MaxHelpingHand/FlagToggleSmoothCameraOffsetTrigger",
+      "kind": "trigger",
+      "provider": "MaxHelpingHand",
+      "status": "MISSING_ACCEPTED_REGISTRATION"
+    },
+    {
+      "customId": "everest/flagTrigger",
+      "kind": "trigger",
+      "provider": "EverestCore",
+      "status": "AVAILABLE_ACCEPTED_REGISTRATION"
+    },
+    {
+      "customId": "everest/smoothCameraOffsetTrigger",
+      "kind": "trigger",
+      "provider": "EverestCore",
+      "status": "AVAILABLE_ACCEPTED_REGISTRATION"
+    },
+    {
+      "customId": "vitellary/bloomstrengthtrigger",
+      "kind": "trigger",
+      "provider": "CrystallineHelper",
+      "status": "AVAILABLE_ACCEPTED_REGISTRATION"
+    },
+    {
+      "customId": "vitellary/editdepthtrigger",
+      "kind": "trigger",
+      "provider": "CrystallineHelper",
+      "status": "AVAILABLE_ACCEPTED_REGISTRATION"
+    },
+    {
+      "customId": "vitellary/triggertrigger",
+      "kind": "trigger",
+      "provider": "CrystallineHelper",
+      "status": "AVAILABLE_ACCEPTED_REGISTRATION"
+    }
+  ],
+  "occurrenceCensus": {
+    "missingRegistrations": 409,
+    "selected": 920,
+    "withRegistrations": 511
+  },
+  "productGenerated": false,
+  "providers": [
+    {
+      "archiveSha256": "c80d7d71cdccef7c9b418e05d53debd197b59717d3cdeade72910ace33d4fbeb",
+      "name": "BrokemiaHelper",
+      "reason": "DEFERRED_DYNAMIC_TARGET: BrokemiaHelper System.Void BrokemiaHelper.MoveBlockBarrier::Initialize() has an unresolved direct Hook expression",
+      "sourceLogicalSha256": "8ca14d6791d481178e2383c965f8f810f6cd442a211ddafbb9cc7186db86602c",
+      "status": "REJECTED_PROVIDER",
+      "version": "1.8.5"
+    },
+    {
+      "archiveSha256": "8ca640f9e14f844507e0bbedc2afcb99ef61bec6957a7558cee90e9fabd2fba7",
+      "name": "CherryHelper",
+      "reason": "custom entity type must be public and concrete: Celeste.Mod.CherryHelper.RottenBerry",
+      "sourceLogicalSha256": "3a157baabcc7b9a0157fdcb8404e0044f0fbf3926df7b7788b29923149d711dc",
+      "status": "REJECTED_PROVIDER",
+      "version": "1.8.2"
+    },
+    {
+      "archiveSha256": "4bcea8a9011edb8b7d27b433c47f1f4a871b8f7a4dd7f2bffac67bb99c7f6ad5",
+      "name": "CollabUtils2",
+      "reason": null,
+      "sourceLogicalSha256": "b987d25608874623453e2c75c441661b906d6fd907948699983c2f12ba14c88e",
+      "status": "ACCEPTED_PROVIDER",
+      "version": "1.13.4"
+    },
+    {
+      "archiveSha256": "d8b42128a808e68d30329baa9299fdb41bf7d24743635dec3137c36bcc87956a",
+      "name": "ContortHelper",
+      "reason": null,
+      "sourceLogicalSha256": "d71860aa6259b612f63ffe5b3189f68a3a7130d6c5e7f49bd2f6edeb64fca45a",
+      "status": "ACCEPTED_PROVIDER",
+      "version": "1.5.5"
+    },
+    {
+      "archiveSha256": "4573f5e45dce0905142cd2b119f4a9a744bdce8ef3199319d1e46b6d1d342747",
+      "name": "CrystallineHelper",
+      "reason": null,
+      "sourceLogicalSha256": "6a5fdd5a7b4ae95b77ebc351a5b663c872c67a5d09347752fbf423e7ae50deb2",
+      "status": "ACCEPTED_PROVIDER",
+      "version": "1.17.2"
+    },
+    {
+      "archiveSha256": "95ab02d657213031b70c3079738b21be399e567ca8a32b1fe8e8effc0778eedb",
+      "name": "DJMapHelper",
+      "reason": null,
+      "sourceLogicalSha256": "bdfe229e6bc24e0addea3983b5f209a6d420a3d9924e3bafa609ee6ce4c2aa95",
+      "status": "ACCEPTED_PROVIDER",
+      "version": "1.13.4"
+    },
+    {
+      "archiveSha256": "4019b362d9ad1b2d3a6a670f833ef6324d735d5791a0bf21b62cf5cfbc0d639d",
+      "name": "ExtendedVariantMode",
+      "reason": null,
+      "sourceLogicalSha256": "0f07fdc4c3d177c90dd9c5fbc57e2cbe46872ce4f248a4259b1168081e768bef",
+      "status": "ACCEPTED_PROVIDER",
+      "version": "0.50.5"
+    },
+    {
+      "archiveSha256": "c37806dc7e7db4a392c8ab79030701f4cf2046109cc19435b607fca7fe41c8d8",
+      "name": "FancyTileEntities",
+      "reason": null,
+      "sourceLogicalSha256": "e62e9cf62cdbe9f4fdeb27f1174aa6fed55ffc40f0485cd870c3f433ced79a29",
+      "status": "ACCEPTED_PROVIDER",
+      "version": "1.6.2"
+    },
+    {
+      "archiveSha256": "5a845805bae30490ed7c9da84410fbe672628b8fe927a830f5f2eb148eb88419",
+      "name": "FemtoHelper",
+      "reason": "DEFERRED_DETOUR_CONFIG: FemtoHelper System.Void Celeste.Mod.FemtoHelper.FemtoModule::Load() uses System.Void MonoMod.RuntimeDetour.Hook::.ctor(System.Reflection.MethodBase,System.Reflection.MethodInfo,System.Object)",
+      "sourceLogicalSha256": "19ff3a3b968c02082344ea11cb7b6df780a47d9118e1cae882d2e880d67257d2",
+      "status": "REJECTED_PROVIDER",
+      "version": "1.15.22"
+    },
+    {
+      "archiveSha256": "fb0fd300f95d77539eb9079aed445c81f263557c1a1715187bd509d39c1eb794",
+      "name": "FlaglinesAndSuch",
+      "reason": "DEFERRED_DYNAMIC_TARGET: FlaglinesAndSuch System.Void FlaglinesAndSuch.StandBox::Load() has an unresolved direct Hook expression",
+      "sourceLogicalSha256": "897ade835828e742c64fefc2f85cc458ab6cbe3ae00c5a509000588b9aeccce2",
+      "status": "REJECTED_PROVIDER",
+      "version": "1.6.80"
+    },
+    {
+      "archiveSha256": "ba6aee8f596eff0f595fd90cb7f136ea13b1e9c2d664fc38f389608b0f9e2c81",
+      "name": "FrostHelper",
+      "reason": "unregistered semantic helper identity for FrostHelper: version=1.80.1; source=9ff388dd81ac09d033c45d6e93a6c194f4a7714711e1cc5032bb30b5e2b89d69",
+      "sourceLogicalSha256": "9ff388dd81ac09d033c45d6e93a6c194f4a7714711e1cc5032bb30b5e2b89d69",
+      "status": "REJECTED_PROVIDER",
+      "version": "1.80.1"
+    },
+    {
+      "archiveSha256": "6a2d0f04a5be3a9c9c3bf66ec7e93701398a64d5a0e72add5df682e860e7d08d",
+      "name": "HonlyHelper",
+      "reason": "custom entity type must be public and concrete: Celeste.Mod.HonlyHelper.FriendKillTrigger",
+      "sourceLogicalSha256": "cb8524306f28c0d04081dd63b5a3ccad4d7fecd5bc71970e06376606439298e3",
+      "status": "REJECTED_PROVIDER",
+      "version": "1.7.5"
+    },
+    {
+      "archiveSha256": "a140e21cbb5fd2dcaac70d4d5e36d49476e414861455ae25dedc0678164406cc",
+      "name": "JungleHelper",
+      "reason": null,
+      "sourceLogicalSha256": "911457d12e30d0912eb2420a39dbde7dc892560cd8a512284dccb89d93ff6e49",
+      "status": "ACCEPTED_PROVIDER",
+      "version": "1.4.10"
+    },
+    {
+      "archiveSha256": "b10e044b1dfa412605bee3ba6bfdd4263591099d331d6c1aab1e9ba65bf6a3e5",
+      "name": "LunaticHelper",
+      "reason": null,
+      "sourceLogicalSha256": "e7cef501937fc1bc07d1ff13e753fe920b4ccbbd4e4db4c0b2c4312de89fdd78",
+      "status": "ACCEPTED_PROVIDER",
+      "version": "1.1.1"
+    },
+    {
+      "archiveSha256": "abfc5d167936410e9b6665018335ee654455e30710caffe01540b232da468fee",
+      "name": "MaxHelpingHand",
+      "reason": null,
+      "sourceLogicalSha256": "5f0d558d6f2cbd02032677e70e5910084acbcd3ddaa7aaa005335d6a8fce4276",
+      "status": "ACCEPTED_PROVIDER",
+      "version": "1.40.9"
+    },
+    {
+      "archiveSha256": "25f9c7d6792983ac697e3780667fb0963233c0c08f6e528f5c6d9fe732cded05",
+      "name": "PandorasBox",
+      "reason": "custom entity type must be public and concrete: Celeste.Mod.PandorasBox.AirBubbles",
+      "sourceLogicalSha256": "7113d897271264cd6bd8089e06112c536970fb016138350a4eeaf98576651e04",
+      "status": "REJECTED_PROVIDER",
+      "version": "1.0.49"
+    },
+    {
+      "archiveSha256": "4e1a2fc12baa3db27da433b93bf26b59f34b3e6b7f760c41d8d127636d020655",
+      "name": "StrawberryJam2021",
+      "reason": null,
+      "sourceLogicalSha256": "d5e68237d8371fa26ed5d804578ce5b1841673ba380d7438fb4fafcd73899063",
+      "status": "ACCEPTED_PROVIDER",
+      "version": "1.0.12"
+    },
+    {
+      "archiveSha256": "9a95f51659ccfcb78404f9610307918d6114fc824298fbb8493651ec7c80215a",
+      "name": "VivHelper",
+      "reason": "DEFERRED_DYNAMIC_TARGET: VivHelper System.Void VivHelper.Tester::Load() has an unresolved direct Hook expression",
+      "sourceLogicalSha256": "81468fa30222a69bb6c648ef6d8ddcace0d51a60172a1a0930bb823b3d3ff199",
+      "status": "REJECTED_PROVIDER",
+      "version": "1.14.10"
+    },
+    {
+      "archiveSha256": "b6280fe2e3c05d355c32a51049854137c41be72d24ec4aec9d997cc7c4394db2",
+      "name": "VortexHelper",
+      "reason": null,
+      "sourceLogicalSha256": "c071d33bb1cc4f0387ea204834e212bd020f3143aea68c9f4e56b9bfa35def1b",
+      "status": "ACCEPTED_PROVIDER",
+      "version": "1.2.19"
+    },
+    {
+      "archiveSha256": "ca868d06eb05f0c5de55126090e5019210e9d83c3dae9394cbcd155acf8eb16f",
+      "name": "XaphanHelper",
+      "reason": null,
+      "sourceLogicalSha256": "530ea4bbad7ac5cd43be692297d6d743e0a81e789d3408f121448759df7643be",
+      "status": "ACCEPTED_PROVIDER",
+      "version": "1.0.79"
+    },
+    {
+      "archiveSha256": "73d64e1b3457e2461d3368a01de9f5f31a58bf24e130f3e35ec7280b24814c2d",
+      "name": "YetAnotherHelper",
+      "reason": null,
+      "sourceLogicalSha256": "e48a8c6b1941ebef23853fdb65b4db487aa9aa3162935b975b5468675de93da6",
+      "status": "ACCEPTED_PROVIDER",
+      "version": "1.2.5"
+    }
+  ],
+  "registrationCensus": {
+    "available": 30,
+    "selected": 73,
+    "unavailable": 43
+  },
+  "schemaVersion": 1,
+  "semanticClosureDisposition": "REGISTRATION_PREFLIGHT_ONLY_NOT_A_NEW_BEHAVIORAL_CLOSURE_PROOF",
+  "semanticClosureEstablished": false,
+  "sourceSha256": {
+    "tools/AppleEverestBuilder/ClosureGenerator.cs": "26b24cad87d3b178e19bb241ee13ddeb5994a428e5175cdc4a78ff676b650714",
+    "tools/AppleEverestBuilder/CompatibilityAnalyzer.cs": "5d5afaa70f4479c808b17ed703468a97f14689ea84f8a31bc984c7d9a62967de",
+    "tools/AppleEverestBuilder/FactoryProfilePreflight.cs": "8fac062628f5726c18c6982e3b312d042192e294ff48e659d643a5a6b161f203",
+    "tools/AppleEverestBuilder/Program.cs": "ebb081a8e9b110610e82b974357701f8968d6b667fc89611b6a8d90a29e4ac34",
+    "tools/AppleEverestBuilder/SelectedFactoryTypeClosure.cs": "68ae686864ddf6d986e1883911655fd325f4fd0af7ec41276ea20312a78b88de",
+    "tools/AppleEverestBuilder/StaticSemanticLowering.cs": "c64978fc3851ceb2b30d5ba8612c1459db369b3b0cf55fb8f1a8e2e565512b63"
+  }
+}

@@ -1,0 +1,2468 @@
+{
+  "actualProductionPreflightSha256": "0702720f42a10a81f1da299449e2a55ac34ef8dac777d036d1c331cf206ae5a3",
+  "agentPolicy": "FOUR_LIFETIME_READ_ONLY_AUDIT_AGENTS_ROOT_ONLY_WRITER_BUILDER_SIGNER",
+  "auditAgents": [
+    {
+      "assignment": "A",
+      "providers": [
+        "MaxHelpingHand",
+        "CollabUtils2",
+        "LunaticHelper"
+      ]
+    },
+    {
+      "assignment": "B",
+      "providers": [
+        "FrostHelper",
+        "FemtoHelper",
+        "FlaglinesAndSuch"
+      ]
+    },
+    {
+      "assignment": "C",
+      "providers": [
+        "CherryHelper",
+        "PandorasBox",
+        "FancyTileEntities",
+        "BrokemiaHelper"
+      ]
+    },
+    {
+      "assignment": "D",
+      "providers": [
+        "HonlyHelper",
+        "VivHelper",
+        "XaphanHelper"
+      ]
+    }
+  ],
+  "authority": "INDEPENDENT_FROZEN_PRE_FIX_AND_ACTUAL_COMPILED_POST_FIX",
+  "builtInProvider": {
+    "authority": "PINNED_EVEREST_BASE_ENTITY_SEMANTICS_WITH_EXACT_PROFILE_GUARDS",
+    "name": "EverestCore",
+    "selectedFactoryIds": [
+      "everest/flagTrigger",
+      "everest/smoothCameraOffsetTrigger"
+    ]
+  },
+  "classificationCounts": {
+    "PACKAGE_ACCEPTED_FACTORY_NOT_REGISTERED": 19,
+    "PACKAGE_IDENTITY_VERSION_MISMATCH": 7,
+    "PROVIDER_PRODUCTION_ANALYSIS_REJECTED": 17
+  },
+  "classificationOccurrenceCounts": {
+    "PACKAGE_ACCEPTED_FACTORY_NOT_REGISTERED": 173,
+    "PACKAGE_IDENTITY_VERSION_MISMATCH": 36,
+    "PROVIDER_PRODUCTION_ANALYSIS_REJECTED": 200
+  },
+  "disagreementsResolved": [
+    "Primary causes use frozen production rejection evidence, not the implementation subsequently chosen.",
+    "Actual LevelData strips lvl_ from room names; generated descriptors and runtime plans now agree.",
+    "Whole compiled implementation bytes are compared; constructor-only IL hashes cannot establish semantic closure.",
+    "Canary camera bounds, callback-only evidence and source-reference metadata were checked against exact engine/helper code."
+  ],
+  "formerlyMissingFactories": [
+    {
+      "customId": "FemtoHelper/WindPetals",
+      "implementationChosen": "BOUNDED_SEMANTIC_LOWERING",
+      "kind": "backdrop",
+      "postFixRegistration": "ACTUAL_GENERATED_AND_COMPILED",
+      "primaryCause": "PROVIDER_PRODUCTION_ANALYSIS_REJECTED",
+      "provider": "FemtoHelper",
+      "requiresNewRuntimeArchitecture": false,
+      "secondaryBlockers": [
+        {
+          "detail": "Both red falling and blue rising profiles guarded; standard flags and SJ mask integration retained; physical fixture samples red profile.",
+          "implementationDisposition": "EXPLICIT_TYPED_IMPLEMENTATION_AND_STATIC_FOLDS",
+          "kind": "SELECTED_CONSTRUCTOR_LIFECYCLE_MODULE_EFFECTS"
+        },
+        {
+          "detail": "particles/petal and particles/bubble; rosegarden/aquatic mask tags.",
+          "implementationDisposition": "EXACT_SELECTED_ASSET_PROJECTION",
+          "kind": "SELECTED_CONTENT_CLOSURE"
+        },
+        {
+          "disposition": "PENDING_SEPARATE_GATE_C",
+          "kind": "EXACT_PRODUCT_PHYSICAL_ACCEPTANCE"
+        }
+      ],
+      "selectedOccurrences": 2,
+      "semanticAcceptance": "SEPARATE_LIFECYCLE_AND_PHYSICAL_GATE",
+      "status": "PROVIDER_REJECTED"
+    },
+    {
+      "customId": "FlaglinesAndSuch/customDreamStars",
+      "implementationChosen": "BOUNDED_SEMANTIC_LOWERING",
+      "kind": "backdrop",
+      "postFixRegistration": "ACTUAL_GENERATED_AND_COMPILED",
+      "primaryCause": "PROVIDER_PRODUCTION_ANALYSIS_REJECTED",
+      "provider": "FlaglinesAndSuch",
+      "requiresNewRuntimeArchitecture": false,
+      "secondaryBlockers": [
+        {
+          "detail": "Exact primitive backdrop and soap mask integration; preserve its own visibility behavior without invented FadeAlpha multiplier.",
+          "implementationDisposition": "EXPLICIT_TYPED_IMPLEMENTATION_AND_STATIC_FOLDS",
+          "kind": "SELECTED_CONSTRUCTOR_LIFECYCLE_MODULE_EFFECTS"
+        },
+        {
+          "detail": "Primitive drawing.",
+          "implementationDisposition": "EXACT_SELECTED_ASSET_PROJECTION",
+          "kind": "SELECTED_CONTENT_CLOSURE"
+        },
+        {
+          "disposition": "PENDING_SEPARATE_GATE_C",
+          "kind": "EXACT_PRODUCT_PHYSICAL_ACCEPTANCE"
+        }
+      ],
+      "selectedOccurrences": 1,
+      "semanticAcceptance": "SEPARATE_LIFECYCLE_AND_PHYSICAL_GATE",
+      "status": "PROVIDER_REJECTED"
+    },
+    {
+      "customId": "FlaglinesAndSuch/customGodrays",
+      "implementationChosen": "BOUNDED_SEMANTIC_LOWERING",
+      "kind": "backdrop",
+      "postFixRegistration": "ACTUAL_GENERATED_AND_COMPILED",
+      "primaryCause": "PROVIDER_PRODUCTION_ANALYSIS_REJECTED",
+      "provider": "FlaglinesAndSuch",
+      "requiresNewRuntimeArchitecture": false,
+      "secondaryBlockers": [
+        {
+          "detail": "Exact lowercase duration fallback yields4/8; standard forestpathOverlay visibility.",
+          "implementationDisposition": "EXPLICIT_TYPED_IMPLEMENTATION_AND_STATIC_FOLDS",
+          "kind": "SELECTED_CONSTRUCTOR_LIFECYCLE_MODULE_EFFECTS"
+        },
+        {
+          "detail": "Primitive geometry.",
+          "implementationDisposition": "EXACT_SELECTED_ASSET_PROJECTION",
+          "kind": "SELECTED_CONTENT_CLOSURE"
+        },
+        {
+          "disposition": "PENDING_SEPARATE_GATE_C",
+          "kind": "EXACT_PRODUCT_PHYSICAL_ACCEPTANCE"
+        }
+      ],
+      "selectedOccurrences": 1,
+      "semanticAcceptance": "SEPARATE_LIFECYCLE_AND_PHYSICAL_GATE",
+      "status": "PROVIDER_REJECTED"
+    },
+    {
+      "customId": "LunaticHelper/CustomDust",
+      "implementationChosen": "BOUNDED_SEMANTIC_LOWERING",
+      "kind": "backdrop",
+      "postFixRegistration": "ACTUAL_GENERATED_AND_COMPILED",
+      "primaryCause": "PACKAGE_ACCEPTED_FACTORY_NOT_REGISTERED",
+      "provider": "LunaticHelper",
+      "requiresNewRuntimeArchitecture": false,
+      "secondaryBlockers": [
+        {
+          "detail": "Explicit Create parser and standard backdrop flags/exclusions; no original module hook remains necessary.",
+          "implementationDisposition": "EXPLICIT_TYPED_IMPLEMENTATION_AND_STATIC_FOLDS",
+          "kind": "SELECTED_CONSTRUCTOR_LIFECYCLE_MODULE_EFFECTS"
+        },
+        {
+          "detail": "Draw.Rect particles.",
+          "implementationDisposition": "EXACT_SELECTED_ASSET_PROJECTION",
+          "kind": "SELECTED_CONTENT_CLOSURE"
+        },
+        {
+          "disposition": "PENDING_SEPARATE_GATE_C",
+          "kind": "EXACT_PRODUCT_PHYSICAL_ACCEPTANCE"
+        }
+      ],
+      "selectedOccurrences": 3,
+      "semanticAcceptance": "SEPARATE_LIFECYCLE_AND_PHYSICAL_GATE",
+      "status": "MISSING_ACCEPTED_REGISTRATION"
+    },
+    {
+      "customId": "MaxHelpingHand/HeatWaveNoColorGrade",
+      "implementationChosen": "BOUNDED_SEMANTIC_LOWERING",
+      "kind": "backdrop",
+      "postFixRegistration": "ACTUAL_GENERATED_AND_COMPILED",
+      "primaryCause": "PACKAGE_ACCEPTED_FACTORY_NOT_REGISTERED",
+      "provider": "MaxHelpingHand",
+      "requiresNewRuntimeArchitecture": false,
+      "secondaryBlockers": [
+        {
+          "detail": "Typed private heat/fade and level fields; all selected profiles disable grade control.",
+          "implementationDisposition": "EXPLICIT_TYPED_IMPLEMENTATION_AND_STATIC_FOLDS",
+          "kind": "SELECTED_CONSTRUCTOR_LIFECYCLE_MODULE_EFFECTS"
+        },
+        {
+          "detail": "Vanilla heatwave particles/distortion.",
+          "implementationDisposition": "EXACT_SELECTED_ASSET_PROJECTION",
+          "kind": "SELECTED_CONTENT_CLOSURE"
+        },
+        {
+          "disposition": "PENDING_SEPARATE_GATE_C",
+          "kind": "EXACT_PRODUCT_PHYSICAL_ACCEPTANCE"
+        }
+      ],
+      "selectedOccurrences": 1,
+      "semanticAcceptance": "SEPARATE_LIFECYCLE_AND_PHYSICAL_GATE",
+      "status": "MISSING_ACCEPTED_REGISTRATION"
+    },
+    {
+      "customId": "BrokemiaHelper/caveWall",
+      "implementationChosen": "BOUNDED_SEMANTIC_LOWERING",
+      "kind": "entity",
+      "postFixRegistration": "ACTUAL_GENERATED_AND_COMPILED",
+      "primaryCause": "PROVIDER_PRODUCTION_ANALYSIS_REJECTED",
+      "provider": "BrokemiaHelper",
+      "requiresNewRuntimeArchitecture": false,
+      "secondaryBlockers": [
+        {
+          "detail": "Typed talk-UI/dead-body hooks; unrelated MoveBlockBarrier reflection remains excluded.",
+          "implementationDisposition": "EXPLICIT_TYPED_IMPLEMENTATION_AND_STATIC_FOLDS",
+          "kind": "SELECTED_CONSTRUCTOR_LIFECYCLE_MODULE_EFFECTS"
+        },
+        {
+          "detail": "Selected percent tile bank and vanilla overlay renderer.",
+          "implementationDisposition": "EXACT_SELECTED_ASSET_PROJECTION",
+          "kind": "SELECTED_CONTENT_CLOSURE"
+        },
+        {
+          "disposition": "PENDING_SEPARATE_GATE_C",
+          "kind": "EXACT_PRODUCT_PHYSICAL_ACCEPTANCE"
+        }
+      ],
+      "selectedOccurrences": 1,
+      "semanticAcceptance": "SEPARATE_LIFECYCLE_AND_PHYSICAL_GATE",
+      "status": "PROVIDER_REJECTED"
+    },
+    {
+      "customId": "CherryHelper/AssistRect",
+      "implementationChosen": "BOUNDED_SEMANTIC_LOWERING",
+      "kind": "entity",
+      "postFixRegistration": "ACTUAL_GENERATED_AND_COMPILED",
+      "primaryCause": "PROVIDER_PRODUCTION_ANALYSIS_REJECTED",
+      "provider": "CherryHelper",
+      "requiresNewRuntimeArchitecture": false,
+      "secondaryBlockers": [
+        {
+          "detail": "Typed dimensions/color; no selected dynamic lookup.",
+          "implementationDisposition": "EXPLICIT_TYPED_IMPLEMENTATION_AND_STATIC_FOLDS",
+          "kind": "SELECTED_CONSTRUCTOR_LIFECYCLE_MODULE_EFFECTS"
+        },
+        {
+          "detail": "Primitive drawing.",
+          "implementationDisposition": "EXACT_SELECTED_ASSET_PROJECTION",
+          "kind": "SELECTED_CONTENT_CLOSURE"
+        },
+        {
+          "disposition": "PENDING_SEPARATE_GATE_C",
+          "kind": "EXACT_PRODUCT_PHYSICAL_ACCEPTANCE"
+        }
+      ],
+      "selectedOccurrences": 47,
+      "semanticAcceptance": "SEPARATE_LIFECYCLE_AND_PHYSICAL_GATE",
+      "status": "PROVIDER_REJECTED"
+    },
+    {
+      "customId": "CherryHelper/ItemCrystal",
+      "implementationChosen": "BOUNDED_SEMANTIC_LOWERING",
+      "kind": "entity",
+      "postFixRegistration": "ACTUAL_GENERATED_AND_COMPILED",
+      "primaryCause": "PROVIDER_PRODUCTION_ANALYSIS_REJECTED",
+      "provider": "CherryHelper",
+      "requiresNewRuntimeArchitecture": false,
+      "secondaryBlockers": [
+        {
+          "detail": "Typed Holdable integration and tracked component; preserve original sprite override and callbacks.",
+          "implementationDisposition": "EXPLICIT_TYPED_IMPLEMENTATION_AND_STATIC_FOLDS",
+          "kind": "SELECTED_CONSTRUCTOR_LIFECYCLE_MODULE_EFFECTS"
+        },
+        {
+          "detail": "SJ idle00-17, fill00, crack00; vanilla confetti/audio.",
+          "implementationDisposition": "EXACT_SELECTED_ASSET_PROJECTION",
+          "kind": "SELECTED_CONTENT_CLOSURE"
+        },
+        {
+          "disposition": "PENDING_SEPARATE_GATE_C",
+          "kind": "EXACT_PRODUCT_PHYSICAL_ACCEPTANCE"
+        }
+      ],
+      "selectedOccurrences": 1,
+      "semanticAcceptance": "SEPARATE_LIFECYCLE_AND_PHYSICAL_GATE",
+      "status": "PROVIDER_REJECTED"
+    },
+    {
+      "customId": "CherryHelper/ItemCrystalPedestal",
+      "implementationChosen": "BOUNDED_SEMANTIC_LOWERING",
+      "kind": "entity",
+      "postFixRegistration": "ACTUAL_GENERATED_AND_COMPILED",
+      "primaryCause": "PROVIDER_PRODUCTION_ANALYSIS_REJECTED",
+      "provider": "CherryHelper",
+      "requiresNewRuntimeArchitecture": false,
+      "secondaryBlockers": [
+        {
+          "detail": "Do not deduplicate source callbacks; tracked custom collider and actual crystal companion.",
+          "implementationDisposition": "EXPLICIT_TYPED_IMPLEMENTATION_AND_STATIC_FOLDS",
+          "kind": "SELECTED_CONSTRUCTOR_LIFECYCLE_MODULE_EFFECTS"
+        },
+        {
+          "detail": "SJ crabPedestal00 and crystal sprite bank.",
+          "implementationDisposition": "EXACT_SELECTED_ASSET_PROJECTION",
+          "kind": "SELECTED_CONTENT_CLOSURE"
+        },
+        {
+          "disposition": "PENDING_SEPARATE_GATE_C",
+          "kind": "EXACT_PRODUCT_PHYSICAL_ACCEPTANCE"
+        }
+      ],
+      "selectedOccurrences": 1,
+      "semanticAcceptance": "SEPARATE_LIFECYCLE_AND_PHYSICAL_GATE",
+      "status": "PROVIDER_REJECTED"
+    },
+    {
+      "customId": "CollabUtils2/LobbyMapController",
+      "implementationChosen": "BOUNDED_SEMANTIC_LOWERING",
+      "kind": "entity",
+      "postFixRegistration": "ACTUAL_GENERATED_AND_COMPILED",
+      "primaryCause": "PACKAGE_ACCEPTED_FACTORY_NOT_REGISTERED",
+      "provider": "CollabUtils2",
+      "requiresNewRuntimeArchitecture": false,
+      "secondaryBlockers": [
+        {
+          "detail": "Typed settings/save state and exact static map metadata replace discovery; required in-level map UI retained.",
+          "implementationDisposition": "EXPLICIT_TYPED_IMPLEMENTATION_AND_STATIC_FOLDS",
+          "kind": "SELECTED_CONSTRUCTOR_LIFECYCLE_MODULE_EFFECTS"
+        },
+        {
+          "detail": "Map texture, GUI icons, mountain/player markers and UI audio.",
+          "implementationDisposition": "EXACT_SELECTED_ASSET_PROJECTION",
+          "kind": "SELECTED_CONTENT_CLOSURE"
+        },
+        {
+          "disposition": "PENDING_SEPARATE_GATE_C",
+          "kind": "EXACT_PRODUCT_PHYSICAL_ACCEPTANCE"
+        }
+      ],
+      "selectedOccurrences": 1,
+      "semanticAcceptance": "SEPARATE_LIFECYCLE_AND_PHYSICAL_GATE",
+      "status": "MISSING_ACCEPTED_REGISTRATION"
+    },
+    {
+      "customId": "CollabUtils2/LobbyMapMarker",
+      "implementationChosen": "BOUNDED_SEMANTIC_LOWERING",
+      "kind": "entity",
+      "postFixRegistration": "ACTUAL_GENERATED_AND_COMPILED",
+      "primaryCause": "PACKAGE_ACCEPTED_FACTORY_NOT_REGISTERED",
+      "provider": "CollabUtils2",
+      "requiresNewRuntimeArchitecture": false,
+      "secondaryBlockers": [
+        {
+          "detail": "No invented direct Update/Render requirement for passive marker.",
+          "implementationDisposition": "EXPLICIT_TYPED_IMPLEMENTATION_AND_STATIC_FOLDS",
+          "kind": "SELECTED_CONSTRUCTOR_LIFECYCLE_MODULE_EFFECTS"
+        },
+        {
+          "detail": "Exact marker icon.",
+          "implementationDisposition": "EXACT_SELECTED_ASSET_PROJECTION",
+          "kind": "SELECTED_CONTENT_CLOSURE"
+        },
+        {
+          "disposition": "PENDING_SEPARATE_GATE_C",
+          "kind": "EXACT_PRODUCT_PHYSICAL_ACCEPTANCE"
+        }
+      ],
+      "selectedOccurrences": 1,
+      "semanticAcceptance": "SEPARATE_LIFECYCLE_AND_PHYSICAL_GATE",
+      "status": "MISSING_ACCEPTED_REGISTRATION"
+    },
+    {
+      "customId": "CollabUtils2/LobbyMapWarp",
+      "implementationChosen": "BOUNDED_SEMANTIC_LOWERING",
+      "kind": "entity",
+      "postFixRegistration": "ACTUAL_GENERATED_AND_COMPILED",
+      "primaryCause": "PACKAGE_ACCEPTED_FACTORY_NOT_REGISTERED",
+      "provider": "CollabUtils2",
+      "requiresNewRuntimeArchitecture": false,
+      "secondaryBlockers": [
+        {
+          "detail": "Typed supported wipe replaces reflected construction; cross-SID path outside selected profiles.",
+          "implementationDisposition": "EXPLICIT_TYPED_IMPLEMENTATION_AND_STATIC_FOLDS",
+          "kind": "SELECTED_CONSTRUCTOR_LIFECYCLE_MODULE_EFFECTS"
+        },
+        {
+          "detail": "Bench/warp presentation and original UI audio.",
+          "implementationDisposition": "EXACT_SELECTED_ASSET_PROJECTION",
+          "kind": "SELECTED_CONTENT_CLOSURE"
+        },
+        {
+          "disposition": "PENDING_SEPARATE_GATE_C",
+          "kind": "EXACT_PRODUCT_PHYSICAL_ACCEPTANCE"
+        }
+      ],
+      "selectedOccurrences": 6,
+      "semanticAcceptance": "SEPARATE_LIFECYCLE_AND_PHYSICAL_GATE",
+      "status": "MISSING_ACCEPTED_REGISTRATION"
+    },
+    {
+      "customId": "FancyTileEntities/FancySolidTiles",
+      "implementationChosen": "BOUNDED_SEMANTIC_LOWERING",
+      "kind": "entity",
+      "postFixRegistration": "ACTUAL_GENERATED_AND_COMPILED",
+      "primaryCause": "PACKAGE_ACCEPTED_FACTORY_NOT_REGISTERED",
+      "provider": "FancyTileEntities",
+      "requiresNewRuntimeArchitecture": false,
+      "secondaryBlockers": [
+        {
+          "detail": "Typed private Autotiler state and exact tile algorithm; room-origin and adjacent-solid context retained.",
+          "implementationDisposition": "EXPLICIT_TYPED_IMPLEMENTATION_AND_STATIC_FOLDS",
+          "kind": "SELECTED_CONSTRUCTOR_LIFECYCLE_MODULE_EFFECTS"
+        },
+        {
+          "detail": "SJ E tiles, grass animation and selected foreground bank.",
+          "implementationDisposition": "EXACT_SELECTED_ASSET_PROJECTION",
+          "kind": "SELECTED_CONTENT_CLOSURE"
+        },
+        {
+          "disposition": "PENDING_SEPARATE_GATE_C",
+          "kind": "EXACT_PRODUCT_PHYSICAL_ACCEPTANCE"
+        }
+      ],
+      "selectedOccurrences": 47,
+      "semanticAcceptance": "SEPARATE_LIFECYCLE_AND_PHYSICAL_GATE",
+      "status": "MISSING_ACCEPTED_REGISTRATION"
+    },
+    {
+      "customId": "FemtoHelper/CustomParallaxBigWaterfall",
+      "implementationChosen": "BOUNDED_SEMANTIC_LOWERING",
+      "kind": "entity",
+      "postFixRegistration": "ACTUAL_GENERATED_AND_COMPILED",
+      "primaryCause": "PROVIDER_PRODUCTION_ANALYSIS_REJECTED",
+      "provider": "FemtoHelper",
+      "requiresNewRuntimeArchitecture": false,
+      "secondaryBlockers": [
+        {
+          "detail": "BG silent/no displacement; FG depth -49900, waterfall_big_main and Vanilla displacement; retain straight FG versus wavy BG rendering.",
+          "implementationDisposition": "EXPLICIT_TYPED_IMPLEMENTATION_AND_STATIC_FOLDS",
+          "kind": "SELECTED_CONSTRUCTOR_LIFECYCLE_MODULE_EFFECTS"
+        },
+        {
+          "detail": "Vanilla waterfall sound and primitive geometry.",
+          "implementationDisposition": "EXACT_SELECTED_ASSET_PROJECTION",
+          "kind": "SELECTED_CONTENT_CLOSURE"
+        },
+        {
+          "disposition": "PENDING_SEPARATE_GATE_C",
+          "kind": "EXACT_PRODUCT_PHYSICAL_ACCEPTANCE"
+        }
+      ],
+      "selectedOccurrences": 24,
+      "semanticAcceptance": "SEPARATE_LIFECYCLE_AND_PHYSICAL_GATE",
+      "status": "PROVIDER_REJECTED"
+    },
+    {
+      "customId": "FemtoHelper/ParticleEmitter",
+      "implementationChosen": "BOUNDED_SEMANTIC_LOWERING",
+      "kind": "entity",
+      "postFixRegistration": "ACTUAL_GENERATED_AND_COMPILED",
+      "primaryCause": "PROVIDER_PRODUCTION_ANALYSIS_REJECTED",
+      "provider": "FemtoHelper",
+      "requiresNewRuntimeArchitecture": false,
+      "secondaryBlockers": [
+        {
+          "detail": "Empty flag/no attachment; source BloomAlpha/BloomRadius casing retains defaults; 10 percent per0.2s remains sparse.",
+          "implementationDisposition": "EXPLICIT_TYPED_IMPLEMENTATION_AND_STATIC_FOLDS",
+          "kind": "SELECTED_CONSTRUCTOR_LIFECYCLE_MODULE_EFFECTS"
+        },
+        {
+          "detail": "particles/bubble.",
+          "implementationDisposition": "EXACT_SELECTED_ASSET_PROJECTION",
+          "kind": "SELECTED_CONTENT_CLOSURE"
+        },
+        {
+          "disposition": "PENDING_SEPARATE_GATE_C",
+          "kind": "EXACT_PRODUCT_PHYSICAL_ACCEPTANCE"
+        }
+      ],
+      "selectedOccurrences": 6,
+      "semanticAcceptance": "SEPARATE_LIFECYCLE_AND_PHYSICAL_GATE",
+      "status": "PROVIDER_REJECTED"
+    },
+    {
+      "customId": "FrostHelper/CustomFireBarrier",
+      "implementationChosen": "BOUNDED_SEMANTIC_LOWERING",
+      "kind": "entity",
+      "postFixRegistration": "ACTUAL_GENERATED_AND_COMPILED",
+      "primaryCause": "PACKAGE_IDENTITY_VERSION_MISMATCH",
+      "provider": "FrostHelper",
+      "requiresNewRuntimeArchitecture": false,
+      "secondaryBlockers": [
+        {
+          "detail": "isIce=false, ignoreCoreMode=true, silent=true; typed geometry/buffer access and unload cleanup.",
+          "implementationDisposition": "EXPLICIT_TYPED_IMPLEMENTATION_AND_STATIC_FOLDS",
+          "kind": "SELECTED_CONSTRUCTOR_LIFECYCLE_MODULE_EFFECTS"
+        },
+        {
+          "detail": "particles/bubble and danger/lava/bubble_a sequence.",
+          "implementationDisposition": "EXACT_SELECTED_ASSET_PROJECTION",
+          "kind": "SELECTED_CONTENT_CLOSURE"
+        },
+        {
+          "disposition": "PENDING_SEPARATE_GATE_C",
+          "kind": "EXACT_PRODUCT_PHYSICAL_ACCEPTANCE"
+        }
+      ],
+      "selectedOccurrences": 1,
+      "semanticAcceptance": "SEPARATE_LIFECYCLE_AND_PHYSICAL_GATE",
+      "status": "PROVIDER_REJECTED"
+    },
+    {
+      "customId": "FrostHelper/CustomFlutterBird",
+      "implementationChosen": "BOUNDED_SEMANTIC_LOWERING",
+      "kind": "entity",
+      "postFixRegistration": "ACTUAL_GENERATED_AND_COMPILED",
+      "primaryCause": "PACKAGE_IDENTITY_VERSION_MISMATCH",
+      "provider": "FrostHelper",
+      "requiresNewRuntimeArchitecture": false,
+      "secondaryBlockers": [
+        {
+          "detail": "Default directory/audio and dontFlyAway=false; typed Persistent-tag insertion replaces selected hook effect.",
+          "implementationDisposition": "EXPLICIT_TYPED_IMPLEMENTATION_AND_STATIC_FOLDS",
+          "kind": "SELECTED_CONSTRUCTOR_LIFECYCLE_MODULE_EFFECTS"
+        },
+        {
+          "detail": "scenery/flutterbird and vanilla bird audio.",
+          "implementationDisposition": "EXACT_SELECTED_ASSET_PROJECTION",
+          "kind": "SELECTED_CONTENT_CLOSURE"
+        },
+        {
+          "disposition": "PENDING_SEPARATE_GATE_C",
+          "kind": "EXACT_PRODUCT_PHYSICAL_ACCEPTANCE"
+        }
+      ],
+      "selectedOccurrences": 2,
+      "semanticAcceptance": "SEPARATE_LIFECYCLE_AND_PHYSICAL_GATE",
+      "status": "PROVIDER_REJECTED"
+    },
+    {
+      "customId": "FrostHelper/DecalContainer",
+      "implementationChosen": "BOUNDED_SEMANTIC_LOWERING",
+      "kind": "entity",
+      "postFixRegistration": "ACTUAL_GENERATED_AND_COMPILED",
+      "primaryCause": "PACKAGE_IDENTITY_VERSION_MISMATCH",
+      "provider": "FrostHelper",
+      "requiresNewRuntimeArchitecture": false,
+      "secondaryBlockers": [
+        {
+          "detail": "Exact generated decal registry, original Decal.Added then typed handlers, tracked successors and pause behavior; no general registry scan.",
+          "implementationDisposition": "EXPLICIT_TYPED_IMPLEMENTATION_AND_STATIC_FOLDS",
+          "kind": "SELECTED_CONSTRUCTOR_LIFECYCLE_MODULE_EFFECTS"
+        },
+        {
+          "detail": "Selected decal ledger with 58 rules, 118 names and 298 frames.",
+          "implementationDisposition": "EXACT_SELECTED_ASSET_PROJECTION",
+          "kind": "SELECTED_CONTENT_CLOSURE"
+        },
+        {
+          "disposition": "PENDING_SEPARATE_GATE_C",
+          "kind": "EXACT_PRODUCT_PHYSICAL_ACCEPTANCE"
+        }
+      ],
+      "selectedOccurrences": 1,
+      "semanticAcceptance": "SEPARATE_LIFECYCLE_AND_PHYSICAL_GATE",
+      "status": "PROVIDER_REJECTED"
+    },
+    {
+      "customId": "FrostHelper/EntityMover",
+      "implementationChosen": "BOUNDED_SEMANTIC_LOWERING",
+      "kind": "entity",
+      "postFixRegistration": "ACTUAL_GENERATED_AND_COMPILED",
+      "primaryCause": "PACKAGE_IDENTITY_VERSION_MISMATCH",
+      "provider": "FrostHelper",
+      "requiresNewRuntimeArchitecture": false,
+      "secondaryBlockers": [
+        {
+          "detail": "Exact Tutorial target, mustCollide=false, absolute mode, Linear, zero duration and empty end sound; no easing expression engine.",
+          "implementationDisposition": "EXPLICIT_TYPED_IMPLEMENTATION_AND_STATIC_FOLDS",
+          "kind": "SELECTED_CONSTRUCTOR_LIFECYCLE_MODULE_EFFECTS"
+        },
+        {
+          "detail": "Existing tutorial companion assets.",
+          "implementationDisposition": "EXACT_SELECTED_ASSET_PROJECTION",
+          "kind": "SELECTED_CONTENT_CLOSURE"
+        },
+        {
+          "disposition": "PENDING_SEPARATE_GATE_C",
+          "kind": "EXACT_PRODUCT_PHYSICAL_ACCEPTANCE"
+        }
+      ],
+      "selectedOccurrences": 1,
+      "semanticAcceptance": "SEPARATE_LIFECYCLE_AND_PHYSICAL_GATE",
+      "status": "PROVIDER_REJECTED"
+    },
+    {
+      "customId": "FrostHelper/IceSpinner",
+      "implementationChosen": "BOUNDED_SEMANTIC_LOWERING",
+      "kind": "entity",
+      "postFixRegistration": "ACTUAL_GENERATED_AND_COMPILED",
+      "primaryCause": "PACKAGE_IDENTITY_VERSION_MISMATCH",
+      "provider": "FrostHelper",
+      "requiresNewRuntimeArchitecture": false,
+      "secondaryBlockers": [
+        {
+          "detail": "Typed shatter hook before original and Summit-return hook at reviewed location; preserve source texture metadata and controller quirks.",
+          "implementationDisposition": "EXPLICIT_TYPED_IMPLEMENTATION_AND_STATIC_FOLDS",
+          "kind": "SELECTED_CONSTRUCTOR_LIFECYCLE_MODULE_EFFECTS"
+        },
+        {
+          "detail": "Frost icecrystal fg00-03/bg and shard; exact packing/offsets retained.",
+          "implementationDisposition": "EXACT_SELECTED_ASSET_PROJECTION",
+          "kind": "SELECTED_CONTENT_CLOSURE"
+        },
+        {
+          "disposition": "PENDING_SEPARATE_GATE_C",
+          "kind": "EXACT_PRODUCT_PHYSICAL_ACCEPTANCE"
+        }
+      ],
+      "selectedOccurrences": 20,
+      "semanticAcceptance": "SEPARATE_LIFECYCLE_AND_PHYSICAL_GATE",
+      "status": "PROVIDER_REJECTED"
+    },
+    {
+      "customId": "FrostHelper/WireLamps",
+      "implementationChosen": "BOUNDED_SEMANTIC_LOWERING",
+      "kind": "entity",
+      "postFixRegistration": "ACTUAL_GENERATED_AND_COMPILED",
+      "primaryCause": "PACKAGE_IDENTITY_VERSION_MISMATCH",
+      "provider": "FrostHelper",
+      "requiresNewRuntimeArchitecture": false,
+      "secondaryBlockers": [
+        {
+          "detail": "attached=false excludes raycast; cull before light updates; exact RGB parsing and scene guards.",
+          "implementationDisposition": "EXPLICIT_TYPED_IMPLEMENTATION_AND_STATIC_FOLDS",
+          "kind": "SELECTED_CONSTRUCTOR_LIFECYCLE_MODULE_EFFECTS"
+        },
+        {
+          "detail": "SJ chimes_a animation.",
+          "implementationDisposition": "EXACT_SELECTED_ASSET_PROJECTION",
+          "kind": "SELECTED_CONTENT_CLOSURE"
+        },
+        {
+          "disposition": "PENDING_SEPARATE_GATE_C",
+          "kind": "EXACT_PRODUCT_PHYSICAL_ACCEPTANCE"
+        }
+      ],
+      "selectedOccurrences": 10,
+      "semanticAcceptance": "SEPARATE_LIFECYCLE_AND_PHYSICAL_GATE",
+      "status": "PROVIDER_REJECTED"
+    },
+    {
+      "customId": "HonlyHelper/PettableCat",
+      "implementationChosen": "BOUNDED_SEMANTIC_LOWERING",
+      "kind": "entity",
+      "postFixRegistration": "ACTUAL_GENERATED_AND_COMPILED",
+      "primaryCause": "PROVIDER_PRODUCTION_ANALYSIS_REJECTED",
+      "provider": "HonlyHelper",
+      "requiresNewRuntimeArchitecture": false,
+      "secondaryBlockers": [
+        {
+          "detail": "Typed player/hair restoration and ordinary coroutine lifecycle.",
+          "implementationDisposition": "EXPLICIT_TYPED_IMPLEMENTATION_AND_STATIC_FOLDS",
+          "kind": "SELECTED_CONSTRUCTOR_LIFECYCLE_MODULE_EFFECTS"
+        },
+        {
+          "detail": "Honly cat frames/sprite bank and event:/HonlyHelper/catsfx.",
+          "implementationDisposition": "EXACT_SELECTED_ASSET_PROJECTION",
+          "kind": "SELECTED_CONTENT_CLOSURE"
+        },
+        {
+          "disposition": "PENDING_SEPARATE_GATE_C",
+          "kind": "EXACT_PRODUCT_PHYSICAL_ACCEPTANCE"
+        }
+      ],
+      "selectedOccurrences": 3,
+      "semanticAcceptance": "SEPARATE_LIFECYCLE_AND_PHYSICAL_GATE",
+      "status": "PROVIDER_REJECTED"
+    },
+    {
+      "customId": "LunaticHelper/InvisibleLightSource",
+      "implementationChosen": "BOUNDED_SEMANTIC_LOWERING",
+      "kind": "entity",
+      "postFixRegistration": "ACTUAL_GENERATED_AND_COMPILED",
+      "primaryCause": "PACKAGE_ACCEPTED_FACTORY_NOT_REGISTERED",
+      "provider": "LunaticHelper",
+      "requiresNewRuntimeArchitecture": false,
+      "secondaryBlockers": [
+        {
+          "detail": "Exact White folds reflected named-color lookup to typed Color.White.",
+          "implementationDisposition": "EXPLICIT_TYPED_IMPLEMENTATION_AND_STATIC_FOLDS",
+          "kind": "SELECTED_CONSTRUCTOR_LIFECYCLE_MODULE_EFFECTS"
+        },
+        {
+          "detail": "No sprite.",
+          "implementationDisposition": "EXACT_SELECTED_ASSET_PROJECTION",
+          "kind": "SELECTED_CONTENT_CLOSURE"
+        },
+        {
+          "disposition": "PENDING_SEPARATE_GATE_C",
+          "kind": "EXACT_PRODUCT_PHYSICAL_ACCEPTANCE"
+        }
+      ],
+      "selectedOccurrences": 2,
+      "semanticAcceptance": "SEPARATE_LIFECYCLE_AND_PHYSICAL_GATE",
+      "status": "MISSING_ACCEPTED_REGISTRATION"
+    },
+    {
+      "customId": "MaxHelpingHand/FlagExitBlock",
+      "implementationChosen": "BOUNDED_SEMANTIC_LOWERING",
+      "kind": "entity",
+      "postFixRegistration": "ACTUAL_GENERATED_AND_COMPILED",
+      "primaryCause": "PACKAGE_ACCEPTED_FACTORY_NOT_REGISTERED",
+      "provider": "MaxHelpingHand",
+      "requiresNewRuntimeArchitecture": false,
+      "secondaryBlockers": [
+        {
+          "detail": "Typed ExitBlock fields; tile7, gradual transition and no close sound.",
+          "implementationDisposition": "EXPLICIT_TYPED_IMPLEMENTATION_AND_STATIC_FOLDS",
+          "kind": "SELECTED_CONSTRUCTOR_LIFECYCLE_MODULE_EFFECTS"
+        },
+        {
+          "detail": "Selected tile7 and vanilla cutout renderer.",
+          "implementationDisposition": "EXACT_SELECTED_ASSET_PROJECTION",
+          "kind": "SELECTED_CONTENT_CLOSURE"
+        },
+        {
+          "disposition": "PENDING_SEPARATE_GATE_C",
+          "kind": "EXACT_PRODUCT_PHYSICAL_ACCEPTANCE"
+        }
+      ],
+      "selectedOccurrences": 7,
+      "semanticAcceptance": "SEPARATE_LIFECYCLE_AND_PHYSICAL_GATE",
+      "status": "MISSING_ACCEPTED_REGISTRATION"
+    },
+    {
+      "customId": "MaxHelpingHand/ParallaxFadeOutController",
+      "implementationChosen": "BOUNDED_SEMANTIC_LOWERING",
+      "kind": "entity",
+      "postFixRegistration": "ACTUAL_GENERATED_AND_COMPILED",
+      "primaryCause": "PACKAGE_ACCEPTED_FACTORY_NOT_REGISTERED",
+      "provider": "MaxHelpingHand",
+      "requiresNewRuntimeArchitecture": false,
+      "secondaryBlockers": [
+        {
+          "detail": "Typed Parallax fade state replaces private access.",
+          "implementationDisposition": "EXPLICIT_TYPED_IMPLEMENTATION_AND_STATIC_FOLDS",
+          "kind": "SELECTED_CONSTRUCTOR_LIFECYCLE_MODULE_EFFECTS"
+        },
+        {
+          "detail": "Existing selected parallax assets.",
+          "implementationDisposition": "EXACT_SELECTED_ASSET_PROJECTION",
+          "kind": "SELECTED_CONTENT_CLOSURE"
+        },
+        {
+          "disposition": "PENDING_SEPARATE_GATE_C",
+          "kind": "EXACT_PRODUCT_PHYSICAL_ACCEPTANCE"
+        }
+      ],
+      "selectedOccurrences": 1,
+      "semanticAcceptance": "SEPARATE_LIFECYCLE_AND_PHYSICAL_GATE",
+      "status": "MISSING_ACCEPTED_REGISTRATION"
+    },
+    {
+      "customId": "MaxHelpingHand/RainbowSpinnerColorAreaController",
+      "implementationChosen": "BOUNDED_SEMANTIC_LOWERING",
+      "kind": "entity",
+      "postFixRegistration": "ACTUAL_GENERATED_AND_COMPILED",
+      "primaryCause": "PACKAGE_ACCEPTED_FACTORY_NOT_REGISTERED",
+      "provider": "MaxHelpingHand",
+      "requiresNewRuntimeArchitecture": false,
+      "secondaryBlockers": [
+        {
+          "detail": "Typed TryHue is outermost before original hue computation; selected unflagged palette.",
+          "implementationDisposition": "EXPLICIT_TYPED_IMPLEMENTATION_AND_STATIC_FOLDS",
+          "kind": "SELECTED_CONSTRUCTOR_LIFECYCLE_MODULE_EFFECTS"
+        },
+        {
+          "detail": "Ordinary rainbow spinner presentation.",
+          "implementationDisposition": "EXACT_SELECTED_ASSET_PROJECTION",
+          "kind": "SELECTED_CONTENT_CLOSURE"
+        },
+        {
+          "disposition": "PENDING_SEPARATE_GATE_C",
+          "kind": "EXACT_PRODUCT_PHYSICAL_ACCEPTANCE"
+        }
+      ],
+      "selectedOccurrences": 1,
+      "semanticAcceptance": "SEPARATE_LIFECYCLE_AND_PHYSICAL_GATE",
+      "status": "MISSING_ACCEPTED_REGISTRATION"
+    },
+    {
+      "customId": "MaxHelpingHand/SetFlagOnSpawnController",
+      "implementationChosen": "BOUNDED_SEMANTIC_LOWERING",
+      "kind": "entity",
+      "postFixRegistration": "ACTUAL_GENERATED_AND_COMPILED",
+      "primaryCause": "PACKAGE_ACCEPTED_FACTORY_NOT_REGISTERED",
+      "provider": "MaxHelpingHand",
+      "requiresNewRuntimeArchitecture": false,
+      "secondaryBlockers": [
+        {
+          "detail": "onlyOnRespawn=false and absent conditional flag exclude original respawn-hook state.",
+          "implementationDisposition": "EXPLICIT_TYPED_IMPLEMENTATION_AND_STATIC_FOLDS",
+          "kind": "SELECTED_CONSTRUCTOR_LIFECYCLE_MODULE_EFFECTS"
+        },
+        {
+          "detail": "No custom asset.",
+          "implementationDisposition": "EXACT_SELECTED_ASSET_PROJECTION",
+          "kind": "SELECTED_CONTENT_CLOSURE"
+        },
+        {
+          "disposition": "PENDING_SEPARATE_GATE_C",
+          "kind": "EXACT_PRODUCT_PHYSICAL_ACCEPTANCE"
+        }
+      ],
+      "selectedOccurrences": 2,
+      "semanticAcceptance": "SEPARATE_LIFECYCLE_AND_PHYSICAL_GATE",
+      "status": "MISSING_ACCEPTED_REGISTRATION"
+    },
+    {
+      "customId": "MaxHelpingHand/SidewaysJumpThru",
+      "implementationChosen": "BOUNDED_SEMANTIC_LOWERING",
+      "kind": "entity",
+      "postFixRegistration": "ACTUAL_GENERATED_AND_COMPILED",
+      "primaryCause": "PACKAGE_ACCEPTED_FACTORY_NOT_REGISTERED",
+      "provider": "MaxHelpingHand",
+      "requiresNewRuntimeArchitecture": false,
+      "secondaryBlockers": [
+        {
+          "detail": "Twelve target methods and25 exact sites frozen through accepted IL worker after existing pinned transforms; wood, both directions, no push, seekers blocked.",
+          "implementationDisposition": "EXPLICIT_TYPED_IMPLEMENTATION_AND_STATIC_FOLDS",
+          "kind": "SELECTED_CONSTRUCTOR_LIFECYCLE_MODULE_EFFECTS"
+        },
+        {
+          "detail": "Wood jumpthru tiles and vanilla movement audio.",
+          "implementationDisposition": "EXACT_SELECTED_ASSET_PROJECTION",
+          "kind": "SELECTED_CONTENT_CLOSURE"
+        },
+        {
+          "disposition": "PENDING_SEPARATE_GATE_C",
+          "kind": "EXACT_PRODUCT_PHYSICAL_ACCEPTANCE"
+        }
+      ],
+      "selectedOccurrences": 8,
+      "semanticAcceptance": "SEPARATE_LIFECYCLE_AND_PHYSICAL_GATE",
+      "status": "MISSING_ACCEPTED_REGISTRATION"
+    },
+    {
+      "customId": "MaxHelpingHand/StylegroundFadeController",
+      "implementationChosen": "BOUNDED_SEMANTIC_LOWERING",
+      "kind": "entity",
+      "postFixRegistration": "ACTUAL_GENERATED_AND_COMPILED",
+      "primaryCause": "PACKAGE_ACCEPTED_FACTORY_NOT_REGISTERED",
+      "provider": "MaxHelpingHand",
+      "requiresNewRuntimeArchitecture": false,
+      "secondaryBlockers": [
+        {
+          "detail": "Typed renderer/Parallax access; exact flag lists and1s fade intervals.",
+          "implementationDisposition": "EXPLICIT_TYPED_IMPLEMENTATION_AND_STATIC_FOLDS",
+          "kind": "SELECTED_CONSTRUCTOR_LIFECYCLE_MODULE_EFFECTS"
+        },
+        {
+          "detail": "Selected stylegrounds and shared render target.",
+          "implementationDisposition": "EXACT_SELECTED_ASSET_PROJECTION",
+          "kind": "SELECTED_CONTENT_CLOSURE"
+        },
+        {
+          "disposition": "PENDING_SEPARATE_GATE_C",
+          "kind": "EXACT_PRODUCT_PHYSICAL_ACCEPTANCE"
+        }
+      ],
+      "selectedOccurrences": 1,
+      "semanticAcceptance": "SEPARATE_LIFECYCLE_AND_PHYSICAL_GATE",
+      "status": "MISSING_ACCEPTED_REGISTRATION"
+    },
+    {
+      "customId": "VivHelper/CustomHangingLamp",
+      "implementationChosen": "BOUNDED_SEMANTIC_LOWERING",
+      "kind": "entity",
+      "postFixRegistration": "ACTUAL_GENERATED_AND_COMPILED",
+      "primaryCause": "PROVIDER_PRODUCTION_ANALYSIS_REJECTED",
+      "provider": "VivHelper",
+      "requiresNewRuntimeArchitecture": false,
+      "secondaryBlockers": [
+        {
+          "detail": "Selected absent suffix and white color fold broader Viv utilities.",
+          "implementationDisposition": "EXPLICIT_TYPED_IMPLEMENTATION_AND_STATIC_FOLDS",
+          "kind": "SELECTED_CONSTRUCTOR_LIFECYCLE_MODULE_EFFECTS"
+        },
+        {
+          "detail": "Three selected lamp PNGs; vanilla lantern audio.",
+          "implementationDisposition": "EXACT_SELECTED_ASSET_PROJECTION",
+          "kind": "SELECTED_CONTENT_CLOSURE"
+        },
+        {
+          "disposition": "PENDING_SEPARATE_GATE_C",
+          "kind": "EXACT_PRODUCT_PHYSICAL_ACCEPTANCE"
+        }
+      ],
+      "selectedOccurrences": 7,
+      "semanticAcceptance": "SEPARATE_LIFECYCLE_AND_PHYSICAL_GATE",
+      "status": "PROVIDER_REJECTED"
+    },
+    {
+      "customId": "VivHelper/CustomSpinner",
+      "implementationChosen": "BOUNDED_SEMANTIC_LOWERING",
+      "kind": "entity",
+      "postFixRegistration": "ACTUAL_GENERATED_AND_COMPILED",
+      "primaryCause": "PROVIDER_PRODUCTION_ANALYSIS_REJECTED",
+      "provider": "VivHelper",
+      "requiresNewRuntimeArchitecture": false,
+      "secondaryBlockers": [
+        {
+          "detail": "White type, unit scales, no attachment/dash-shatter/custom debris; preserve texture and connector ID order.",
+          "implementationDisposition": "EXPLICIT_TYPED_IMPLEMENTATION_AND_STATIC_FOLDS",
+          "kind": "SELECTED_CONSTRUCTOR_LIFECYCLE_MODULE_EFFECTS"
+        },
+        {
+          "detail": "Exact white foreground/background PNGs and vanilla debris.",
+          "implementationDisposition": "EXACT_SELECTED_ASSET_PROJECTION",
+          "kind": "SELECTED_CONTENT_CLOSURE"
+        },
+        {
+          "disposition": "PENDING_SEPARATE_GATE_C",
+          "kind": "EXACT_PRODUCT_PHYSICAL_ACCEPTANCE"
+        }
+      ],
+      "selectedOccurrences": 14,
+      "semanticAcceptance": "SEPARATE_LIFECYCLE_AND_PHYSICAL_GATE",
+      "status": "PROVIDER_REJECTED"
+    },
+    {
+      "customId": "XaphanHelper/Slope",
+      "implementationChosen": "BOUNDED_SEMANTIC_LOWERING",
+      "kind": "entity",
+      "postFixRegistration": "ACTUAL_GENERATED_AND_COMPILED",
+      "primaryCause": "PACKAGE_ACCEPTED_FACTORY_NOT_REGISTERED",
+      "provider": "XaphanHelper",
+      "requiresNewRuntimeArchitecture": false,
+      "secondaryBlockers": [
+        {
+          "detail": "Typed Player/Actor/Solid hooks and exact actor types; remote-drone/Metroid/speed branches excluded by reviewed producer/flag/profile absence.",
+          "implementationDisposition": "EXPLICIT_TYPED_IMPLEMENTATION_AND_STATIC_FOLDS",
+          "kind": "SELECTED_CONSTRUCTOR_LIFECYCLE_MODULE_EFFECTS"
+        },
+        {
+          "detail": "Texture lookup remains required with noRender=true; selected invisible tile and sprite-animation extensions.",
+          "implementationDisposition": "EXACT_SELECTED_ASSET_PROJECTION",
+          "kind": "SELECTED_CONTENT_CLOSURE"
+        },
+        {
+          "disposition": "PENDING_SEPARATE_GATE_C",
+          "kind": "EXACT_PRODUCT_PHYSICAL_ACCEPTANCE"
+        }
+      ],
+      "selectedOccurrences": 14,
+      "semanticAcceptance": "SEPARATE_LIFECYCLE_AND_PHYSICAL_GATE",
+      "status": "MISSING_ACCEPTED_REGISTRATION"
+    },
+    {
+      "customId": "pandorasBox/coloredBigWaterfall",
+      "implementationChosen": "BOUNDED_SEMANTIC_LOWERING",
+      "kind": "entity",
+      "postFixRegistration": "ACTUAL_GENERATED_AND_COMPILED",
+      "primaryCause": "PROVIDER_PRODUCTION_ANALYSIS_REJECTED",
+      "provider": "PandorasBox",
+      "requiresNewRuntimeArchitecture": false,
+      "secondaryBlockers": [
+        {
+          "detail": "Typed color replacement; preserve original omission of base Awake.",
+          "implementationDisposition": "EXPLICIT_TYPED_IMPLEMENTATION_AND_STATIC_FOLDS",
+          "kind": "SELECTED_CONSTRUCTOR_LIFECYCLE_MODULE_EFFECTS"
+        },
+        {
+          "detail": "Vanilla waterfall presentation.",
+          "implementationDisposition": "EXACT_SELECTED_ASSET_PROJECTION",
+          "kind": "SELECTED_CONTENT_CLOSURE"
+        },
+        {
+          "disposition": "PENDING_SEPARATE_GATE_C",
+          "kind": "EXACT_PRODUCT_PHYSICAL_ACCEPTANCE"
+        }
+      ],
+      "selectedOccurrences": 2,
+      "semanticAcceptance": "SEPARATE_LIFECYCLE_AND_PHYSICAL_GATE",
+      "status": "PROVIDER_REJECTED"
+    },
+    {
+      "customId": "pandorasBox/coloredWater",
+      "implementationChosen": "BOUNDED_SEMANTIC_LOWERING",
+      "kind": "entity",
+      "postFixRegistration": "ACTUAL_GENERATED_AND_COMPILED",
+      "primaryCause": "PROVIDER_PRODUCTION_ANALYSIS_REJECTED",
+      "provider": "PandorasBox",
+      "requiresNewRuntimeArchitecture": false,
+      "secondaryBlockers": [
+        {
+          "detail": "Typed private/base Water state; ordinary WaterInteraction and tracker alias retained.",
+          "implementationDisposition": "EXPLICIT_TYPED_IMPLEMENTATION_AND_STATIC_FOLDS",
+          "kind": "SELECTED_CONSTRUCTOR_LIFECYCLE_MODULE_EFFECTS"
+        },
+        {
+          "detail": "Vanilla water surfaces/particles/audio.",
+          "implementationDisposition": "EXACT_SELECTED_ASSET_PROJECTION",
+          "kind": "SELECTED_CONTENT_CLOSURE"
+        },
+        {
+          "disposition": "PENDING_SEPARATE_GATE_C",
+          "kind": "EXACT_PRODUCT_PHYSICAL_ACCEPTANCE"
+        }
+      ],
+      "selectedOccurrences": 54,
+      "semanticAcceptance": "SEPARATE_LIFECYCLE_AND_PHYSICAL_GATE",
+      "status": "PROVIDER_REJECTED"
+    },
+    {
+      "customId": "pandorasBox/coloredWaterfall",
+      "implementationChosen": "BOUNDED_SEMANTIC_LOWERING",
+      "kind": "entity",
+      "postFixRegistration": "ACTUAL_GENERATED_AND_COMPILED",
+      "primaryCause": "PROVIDER_PRODUCTION_ANALYSIS_REJECTED",
+      "provider": "PandorasBox",
+      "requiresNewRuntimeArchitecture": false,
+      "secondaryBlockers": [
+        {
+          "detail": "Preserve source scan and audio-selection order; actual blocking-solid predicate.",
+          "implementationDisposition": "EXPLICIT_TYPED_IMPLEMENTATION_AND_STATIC_FOLDS",
+          "kind": "SELECTED_CONSTRUCTOR_LIFECYCLE_MODULE_EFFECTS"
+        },
+        {
+          "detail": "Vanilla waterfall audio and particles.",
+          "implementationDisposition": "EXACT_SELECTED_ASSET_PROJECTION",
+          "kind": "SELECTED_CONTENT_CLOSURE"
+        },
+        {
+          "disposition": "PENDING_SEPARATE_GATE_C",
+          "kind": "EXACT_PRODUCT_PHYSICAL_ACCEPTANCE"
+        }
+      ],
+      "selectedOccurrences": 30,
+      "semanticAcceptance": "SEPARATE_LIFECYCLE_AND_PHYSICAL_GATE",
+      "status": "PROVIDER_REJECTED"
+    },
+    {
+      "customId": "pandorasBox/entityActivator",
+      "implementationChosen": "BOUNDED_SEMANTIC_LOWERING",
+      "kind": "entity",
+      "postFixRegistration": "ACTUAL_GENERATED_AND_COMPILED",
+      "primaryCause": "PROVIDER_PRODUCTION_ANALYSIS_REJECTED",
+      "provider": "PandorasBox",
+      "requiresNewRuntimeArchitecture": false,
+      "secondaryBlockers": [
+        {
+          "detail": "Typed exact-type target list including nested vanilla and Xaphan child platforms; no subclass assignability substitution.",
+          "implementationDisposition": "EXPLICIT_TYPED_IMPLEMENTATION_AND_STATIC_FOLDS",
+          "kind": "SELECTED_CONSTRUCTOR_LIFECYCLE_MODULE_EFFECTS"
+        },
+        {
+          "detail": "No custom asset.",
+          "implementationDisposition": "EXACT_SELECTED_ASSET_PROJECTION",
+          "kind": "SELECTED_CONTENT_CLOSURE"
+        },
+        {
+          "disposition": "PENDING_SEPARATE_GATE_C",
+          "kind": "EXACT_PRODUCT_PHYSICAL_ACCEPTANCE"
+        }
+      ],
+      "selectedOccurrences": 3,
+      "semanticAcceptance": "SEPARATE_LIFECYCLE_AND_PHYSICAL_GATE",
+      "status": "PROVIDER_REJECTED"
+    },
+    {
+      "customId": "FrostHelper/OnSpawnActivator",
+      "implementationChosen": "BOUNDED_SEMANTIC_LOWERING",
+      "kind": "trigger",
+      "postFixRegistration": "ACTUAL_GENERATED_AND_COMPILED",
+      "primaryCause": "PACKAGE_IDENTITY_VERSION_MISMATCH",
+      "provider": "FrostHelper",
+      "requiresNewRuntimeArchitecture": false,
+      "secondaryBlockers": [
+        {
+          "detail": "All/zero-delay/once ResetVariants targets; whole EntityList.UpdateLists wrapper including early return supplies post-Awake dispatch.",
+          "implementationDisposition": "EXPLICIT_TYPED_IMPLEMENTATION_AND_STATIC_FOLDS",
+          "kind": "SELECTED_CONSTRUCTOR_LIFECYCLE_MODULE_EFFECTS"
+        },
+        {
+          "detail": "No custom asset.",
+          "implementationDisposition": "EXACT_SELECTED_ASSET_PROJECTION",
+          "kind": "SELECTED_CONTENT_CLOSURE"
+        },
+        {
+          "disposition": "PENDING_SEPARATE_GATE_C",
+          "kind": "EXACT_PRODUCT_PHYSICAL_ACCEPTANCE"
+        }
+      ],
+      "selectedOccurrences": 1,
+      "semanticAcceptance": "SEPARATE_LIFECYCLE_AND_PHYSICAL_GATE",
+      "status": "PROVIDER_REJECTED"
+    },
+    {
+      "customId": "HonlyHelper/CameraTargetCrossfadeTrigger",
+      "implementationChosen": "BOUNDED_SEMANTIC_LOWERING",
+      "kind": "trigger",
+      "postFixRegistration": "ACTUAL_GENERATED_AND_COMPILED",
+      "primaryCause": "PROVIDER_PRODUCTION_ANALYSIS_REJECTED",
+      "provider": "HonlyHelper",
+      "requiresNewRuntimeArchitecture": false,
+      "secondaryBlockers": [
+        {
+          "detail": "Typed player trigger-list access replaces private lookup.",
+          "implementationDisposition": "EXPLICIT_TYPED_IMPLEMENTATION_AND_STATIC_FOLDS",
+          "kind": "SELECTED_CONSTRUCTOR_LIFECYCLE_MODULE_EFFECTS"
+        },
+        {
+          "detail": "No custom asset.",
+          "implementationDisposition": "EXACT_SELECTED_ASSET_PROJECTION",
+          "kind": "SELECTED_CONTENT_CLOSURE"
+        },
+        {
+          "disposition": "PENDING_SEPARATE_GATE_C",
+          "kind": "EXACT_PRODUCT_PHYSICAL_ACCEPTANCE"
+        }
+      ],
+      "selectedOccurrences": 3,
+      "semanticAcceptance": "SEPARATE_LIFECYCLE_AND_PHYSICAL_GATE",
+      "status": "PROVIDER_REJECTED"
+    },
+    {
+      "customId": "MaxHelpingHand/CameraOffsetBorder",
+      "implementationChosen": "BOUNDED_SEMANTIC_LOWERING",
+      "kind": "trigger",
+      "postFixRegistration": "ACTUAL_GENERATED_AND_COMPILED",
+      "primaryCause": "PACKAGE_ACCEPTED_FACTORY_NOT_REGISTERED",
+      "provider": "MaxHelpingHand",
+      "requiresNewRuntimeArchitecture": false,
+      "secondaryBlockers": [
+        {
+          "detail": "Typed host hooks; empty flag folds optional gating.",
+          "implementationDisposition": "EXPLICIT_TYPED_IMPLEMENTATION_AND_STATIC_FOLDS",
+          "kind": "SELECTED_CONSTRUCTOR_LIFECYCLE_MODULE_EFFECTS"
+        },
+        {
+          "detail": "No custom asset.",
+          "implementationDisposition": "EXACT_SELECTED_ASSET_PROJECTION",
+          "kind": "SELECTED_CONTENT_CLOSURE"
+        },
+        {
+          "disposition": "PENDING_SEPARATE_GATE_C",
+          "kind": "EXACT_PRODUCT_PHYSICAL_ACCEPTANCE"
+        }
+      ],
+      "selectedOccurrences": 42,
+      "semanticAcceptance": "SEPARATE_LIFECYCLE_AND_PHYSICAL_GATE",
+      "status": "MISSING_ACCEPTED_REGISTRATION"
+    },
+    {
+      "customId": "MaxHelpingHand/ColorGradeFadeTrigger",
+      "implementationChosen": "BOUNDED_SEMANTIC_LOWERING",
+      "kind": "trigger",
+      "postFixRegistration": "ACTUAL_GENERATED_AND_COMPILED",
+      "primaryCause": "PACKAGE_ACCEPTED_FACTORY_NOT_REGISTERED",
+      "provider": "MaxHelpingHand",
+      "requiresNewRuntimeArchitecture": false,
+      "secondaryBlockers": [
+        {
+          "detail": "Typed color-grade state and exact trigger-presence patch; reflection-fall alternative excluded.",
+          "implementationDisposition": "EXPLICIT_TYPED_IMPLEMENTATION_AND_STATIC_FOLDS",
+          "kind": "SELECTED_CONSTRUCTOR_LIFECYCLE_MODULE_EFFECTS"
+        },
+        {
+          "detail": "oldsite/none color-grade LUTs.",
+          "implementationDisposition": "EXACT_SELECTED_ASSET_PROJECTION",
+          "kind": "SELECTED_CONTENT_CLOSURE"
+        },
+        {
+          "disposition": "PENDING_SEPARATE_GATE_C",
+          "kind": "EXACT_PRODUCT_PHYSICAL_ACCEPTANCE"
+        }
+      ],
+      "selectedOccurrences": 18,
+      "semanticAcceptance": "SEPARATE_LIFECYCLE_AND_PHYSICAL_GATE",
+      "status": "MISSING_ACCEPTED_REGISTRATION"
+    },
+    {
+      "customId": "MaxHelpingHand/FlagToggleCameraOffsetTrigger",
+      "implementationChosen": "BOUNDED_SEMANTIC_LOWERING",
+      "kind": "trigger",
+      "postFixRegistration": "ACTUAL_GENERATED_AND_COMPILED",
+      "primaryCause": "PACKAGE_ACCEPTED_FACTORY_NOT_REGISTERED",
+      "provider": "MaxHelpingHand",
+      "requiresNewRuntimeArchitecture": false,
+      "secondaryBlockers": [
+        {
+          "detail": "Typed creator/Attach; Visible and Collidable toggle while Active remains enabled.",
+          "implementationDisposition": "EXPLICIT_TYPED_IMPLEMENTATION_AND_STATIC_FOLDS",
+          "kind": "SELECTED_CONSTRUCTOR_LIFECYCLE_MODULE_EFFECTS"
+        },
+        {
+          "detail": "No custom asset.",
+          "implementationDisposition": "EXACT_SELECTED_ASSET_PROJECTION",
+          "kind": "SELECTED_CONTENT_CLOSURE"
+        },
+        {
+          "disposition": "PENDING_SEPARATE_GATE_C",
+          "kind": "EXACT_PRODUCT_PHYSICAL_ACCEPTANCE"
+        }
+      ],
+      "selectedOccurrences": 10,
+      "semanticAcceptance": "SEPARATE_LIFECYCLE_AND_PHYSICAL_GATE",
+      "status": "MISSING_ACCEPTED_REGISTRATION"
+    },
+    {
+      "customId": "MaxHelpingHand/FlagToggleCameraTargetTrigger",
+      "implementationChosen": "BOUNDED_SEMANTIC_LOWERING",
+      "kind": "trigger",
+      "postFixRegistration": "ACTUAL_GENERATED_AND_COMPILED",
+      "primaryCause": "PACKAGE_ACCEPTED_FACTORY_NOT_REGISTERED",
+      "provider": "MaxHelpingHand",
+      "requiresNewRuntimeArchitecture": false,
+      "secondaryBlockers": [
+        {
+          "detail": "Typed creator/Attach; y-only, NoEffect, empty deletion flag; component updates while disabled.",
+          "implementationDisposition": "EXPLICIT_TYPED_IMPLEMENTATION_AND_STATIC_FOLDS",
+          "kind": "SELECTED_CONSTRUCTOR_LIFECYCLE_MODULE_EFFECTS"
+        },
+        {
+          "detail": "No custom asset.",
+          "implementationDisposition": "EXACT_SELECTED_ASSET_PROJECTION",
+          "kind": "SELECTED_CONTENT_CLOSURE"
+        },
+        {
+          "disposition": "PENDING_SEPARATE_GATE_C",
+          "kind": "EXACT_PRODUCT_PHYSICAL_ACCEPTANCE"
+        }
+      ],
+      "selectedOccurrences": 2,
+      "semanticAcceptance": "SEPARATE_LIFECYCLE_AND_PHYSICAL_GATE",
+      "status": "MISSING_ACCEPTED_REGISTRATION"
+    },
+    {
+      "customId": "MaxHelpingHand/FlagToggleSmoothCameraOffsetTrigger",
+      "implementationChosen": "BOUNDED_SEMANTIC_LOWERING",
+      "kind": "trigger",
+      "postFixRegistration": "ACTUAL_GENERATED_AND_COMPILED",
+      "primaryCause": "PACKAGE_ACCEPTED_FACTORY_NOT_REGISTERED",
+      "provider": "MaxHelpingHand",
+      "requiresNewRuntimeArchitecture": false,
+      "secondaryBlockers": [
+        {
+          "detail": "Typed creator/component plus Everest smooth trigger; selected LeftToRight.",
+          "implementationDisposition": "EXPLICIT_TYPED_IMPLEMENTATION_AND_STATIC_FOLDS",
+          "kind": "SELECTED_CONSTRUCTOR_LIFECYCLE_MODULE_EFFECTS"
+        },
+        {
+          "detail": "No custom asset.",
+          "implementationDisposition": "EXACT_SELECTED_ASSET_PROJECTION",
+          "kind": "SELECTED_CONTENT_CLOSURE"
+        },
+        {
+          "disposition": "PENDING_SEPARATE_GATE_C",
+          "kind": "EXACT_PRODUCT_PHYSICAL_ACCEPTANCE"
+        }
+      ],
+      "selectedOccurrences": 6,
+      "semanticAcceptance": "SEPARATE_LIFECYCLE_AND_PHYSICAL_GATE",
+      "status": "MISSING_ACCEPTED_REGISTRATION"
+    }
+  ],
+  "frostVersionAcceptance": {
+    "automaticVersionInheritance": false,
+    "downgradedOrSpoofed": false,
+    "exactSelectedPackageAcceptedByProduction": true,
+    "previousAcceptedVersion": "1.79.1",
+    "selectedVersion": "1.80.1",
+    "versionAndZipAndDllNegativeControlsRequired": true
+  },
+  "frozenPreFixSha256": "5bcc510320d53790236d40cde816eb2307b63b5106f03e0369a3d6a20736bec8",
+  "independentRootReview": true,
+  "missingAfter": 0,
+  "missingBefore": 43,
+  "newRuntimeArchitecturesRequired": 0,
+  "providers": [
+    {
+      "archiveSha256": "c80d7d71cdccef7c9b418e05d53debd197b59717d3cdeade72910ace33d4fbeb",
+      "dependencies": [
+        {
+          "Name": "Everest",
+          "Version": "1.5901.0"
+        }
+      ],
+      "deviceHelperDllEnabled": false,
+      "deviceImplementationScope": "EXACT_SELECTED_STATIC_SEMANTICS",
+      "dlls": [
+        {
+          "Path": "bin/BrokemiaHelper.dll",
+          "Sha256": "89408eb1fb4ab1f11312f5dcbb579d3747b7b5bf38f7bf2c62359ffe2c1df841"
+        }
+      ],
+      "finalMissingRegistrations": 0,
+      "initialMissingCount": 1,
+      "initialProductionStatus": "REJECTED_PROVIDER",
+      "initialRejectionReason": "DEFERRED_DYNAMIC_TARGET: BrokemiaHelper System.Void BrokemiaHelper.MoveBlockBarrier::Initialize() has an unresolved direct Hook expression",
+      "name": "BrokemiaHelper",
+      "optionalDependencies": [
+        {
+          "Name": "CelesteNet.Client",
+          "Version": "2.0.0"
+        },
+        {
+          "Name": "CommunalHelper",
+          "Version": "1.24.1"
+        }
+      ],
+      "previousAcceptedVersion": null,
+      "publicUrl": "https://gamebanana.com/mmdl/1562484",
+      "selectedFactoryCount": 1,
+      "selectedFactoryIds": [
+        "BrokemiaHelper/caveWall"
+      ],
+      "selectedImplementation": "brokemiahelper-1.8.5-selected-kj-v1",
+      "sourceAuthority": "EXACT_DISTRIBUTED_DLLS_AND_PACKAGE_CONTENT",
+      "sourceLogicalSha256": "8ca14d6791d481178e2383c965f8f810f6cd442a211ddafbb9cc7186db86602c",
+      "sourceLoweringRegistry": "tools/AppleEverestBuilder/StaticSemanticLowering.cs",
+      "version": "1.8.5",
+      "wholePackageCompatibilityEstablished": false,
+      "wholePackageCompatible": false,
+      "zipBytes": 386366
+    },
+    {
+      "archiveSha256": "8ca640f9e14f844507e0bbedc2afcb99ef61bec6957a7558cee90e9fabd2fba7",
+      "dependencies": [
+        {
+          "Name": "EverestCore",
+          "Version": "1.5617.0"
+        }
+      ],
+      "deviceHelperDllEnabled": false,
+      "deviceImplementationScope": "EXACT_SELECTED_STATIC_SEMANTICS",
+      "dlls": [
+        {
+          "Path": "Code/bin/CherryHelper.dll",
+          "Sha256": "dd0951122a93ffce9cfd74e36415dff34473061eacb792cf758168080828a2fa"
+        }
+      ],
+      "finalMissingRegistrations": 0,
+      "initialMissingCount": 3,
+      "initialProductionStatus": "REJECTED_PROVIDER",
+      "initialRejectionReason": "custom entity type must be public and concrete: Celeste.Mod.CherryHelper.RottenBerry",
+      "name": "CherryHelper",
+      "optionalDependencies": [],
+      "previousAcceptedVersion": null,
+      "publicUrl": "https://gamebanana.com/mmdl/1471329",
+      "selectedFactoryCount": 3,
+      "selectedFactoryIds": [
+        "CherryHelper/AssistRect",
+        "CherryHelper/ItemCrystal",
+        "CherryHelper/ItemCrystalPedestal"
+      ],
+      "selectedImplementation": "cherryhelper-1.8.2-selected-kj-v1",
+      "sourceAuthority": "EXACT_DISTRIBUTED_DLLS_AND_PACKAGE_CONTENT",
+      "sourceLogicalSha256": "3a157baabcc7b9a0157fdcb8404e0044f0fbf3926df7b7788b29923149d711dc",
+      "sourceLoweringRegistry": "tools/AppleEverestBuilder/StaticSemanticLowering.cs",
+      "version": "1.8.2",
+      "wholePackageCompatibilityEstablished": false,
+      "wholePackageCompatible": false,
+      "zipBytes": 1344762
+    },
+    {
+      "archiveSha256": "4bcea8a9011edb8b7d27b433c47f1f4a871b8f7a4dd7f2bffac67bb99c7f6ad5",
+      "dependencies": [
+        {
+          "Name": "Everest",
+          "Version": "1.6314.0"
+        }
+      ],
+      "deviceHelperDllEnabled": false,
+      "deviceImplementationScope": "EXACT_SELECTED_STATIC_SEMANTICS",
+      "dlls": [
+        {
+          "Path": "bin/CollabUtils2.dll",
+          "Sha256": "ce7d646252a2fc51f1f513071d97eaa1acedf7ddb0871276c688914e37319f60"
+        }
+      ],
+      "finalMissingRegistrations": 0,
+      "initialMissingCount": 3,
+      "initialProductionStatus": "ACCEPTED_PROVIDER",
+      "initialRejectionReason": null,
+      "name": "CollabUtils2",
+      "optionalDependencies": [],
+      "previousAcceptedVersion": "1.13.4",
+      "publicUrl": "https://gamebanana.com/mmdl/1721882",
+      "selectedFactoryCount": 11,
+      "selectedFactoryIds": [
+        "CollabUtils2/LobbyMapController",
+        "CollabUtils2/LobbyMapMarker",
+        "CollabUtils2/LobbyMapWarp",
+        "CollabUtils2/MiniHeart",
+        "CollabUtils2/MiniHeartDoor",
+        "CollabUtils2/RainbowBerry",
+        "CollabUtils2/SilverBerry",
+        "CollabUtils2/ChapterPanelTrigger",
+        "CollabUtils2/JournalTrigger",
+        "CollabUtils2/MiniHeartDoorUnlockCutsceneTrigger",
+        "CollabUtils2/RainbowBerryUnlockCutsceneTrigger"
+      ],
+      "selectedImplementation": "collabutils2-1.13.4-henny-v1",
+      "sourceAuthority": "EXACT_DISTRIBUTED_DLLS_AND_PACKAGE_CONTENT",
+      "sourceLogicalSha256": "b987d25608874623453e2c75c441661b906d6fd907948699983c2f12ba14c88e",
+      "sourceLoweringRegistry": "tools/AppleEverestBuilder/StaticSemanticLowering.cs",
+      "version": "1.13.4",
+      "wholePackageCompatibilityEstablished": false,
+      "wholePackageCompatible": false,
+      "zipBytes": 5406848
+    },
+    {
+      "archiveSha256": "d8b42128a808e68d30329baa9299fdb41bf7d24743635dec3137c36bcc87956a",
+      "dependencies": [
+        {
+          "Name": "Everest",
+          "Version": "1.2674.0"
+        }
+      ],
+      "deviceHelperDllEnabled": false,
+      "deviceImplementationScope": "EXACT_SELECTED_STATIC_SEMANTICS",
+      "dlls": [
+        {
+          "Path": "ContortHelper.dll",
+          "Sha256": "c3983e67e1b535fbb1e0f0a541e8c78ad8f4cd150f66636c783a83dc5ffb4488"
+        }
+      ],
+      "finalMissingRegistrations": 0,
+      "initialMissingCount": 0,
+      "initialProductionStatus": "ACCEPTED_PROVIDER",
+      "initialRejectionReason": null,
+      "name": "ContortHelper",
+      "optionalDependencies": [],
+      "previousAcceptedVersion": "1.5.5",
+      "publicUrl": "https://gamebanana.com/mmdl/544071",
+      "selectedFactoryCount": 1,
+      "selectedFactoryIds": [
+        "ContortHelper/MadelineSpotlightModifierTrigger"
+      ],
+      "selectedImplementation": "contorthelper-1.5.5-sj-beginner-v1",
+      "sourceAuthority": "EXACT_DISTRIBUTED_DLLS_AND_PACKAGE_CONTENT",
+      "sourceLogicalSha256": "d71860aa6259b612f63ffe5b3189f68a3a7130d6c5e7f49bd2f6edeb64fca45a",
+      "sourceLoweringRegistry": "tools/AppleEverestBuilder/StaticSemanticLowering.cs",
+      "version": "1.5.5",
+      "wholePackageCompatibilityEstablished": false,
+      "wholePackageCompatible": false,
+      "zipBytes": 140727
+    },
+    {
+      "archiveSha256": "4573f5e45dce0905142cd2b119f4a9a744bdce8ef3199319d1e46b6d1d342747",
+      "dependencies": [
+        {
+          "Name": "EverestCore",
+          "Version": "1.5986.0"
+        }
+      ],
+      "deviceHelperDllEnabled": false,
+      "deviceImplementationScope": "EXACT_SELECTED_STATIC_SEMANTICS",
+      "dlls": [
+        {
+          "Path": "Code/bin/vitmod.dll",
+          "Sha256": "456410258fbce4594c3e987d025bf651e1bd3f49d2d676a921d8ea9f27ba052a"
+        }
+      ],
+      "finalMissingRegistrations": 0,
+      "initialMissingCount": 0,
+      "initialProductionStatus": "ACCEPTED_PROVIDER",
+      "initialRejectionReason": null,
+      "name": "CrystallineHelper",
+      "optionalDependencies": [
+        {
+          "Name": "FrostHelper",
+          "Version": "1.21.2"
+        },
+        {
+          "Name": "VivHelper",
+          "Version": "1.5.4"
+        }
+      ],
+      "previousAcceptedVersion": "1.17.2",
+      "publicUrl": "https://gamebanana.com/mmdl/1744902",
+      "selectedFactoryCount": 3,
+      "selectedFactoryIds": [
+        "vitellary/bloomstrengthtrigger",
+        "vitellary/editdepthtrigger",
+        "vitellary/triggertrigger"
+      ],
+      "selectedImplementation": "crystallinehelper-1.17.2-sj-beginner-v1",
+      "sourceAuthority": "EXACT_DISTRIBUTED_DLLS_AND_PACKAGE_CONTENT",
+      "sourceLogicalSha256": "6a5fdd5a7b4ae95b77ebc351a5b663c872c67a5d09347752fbf423e7ae50deb2",
+      "sourceLoweringRegistry": "tools/AppleEverestBuilder/StaticSemanticLowering.cs",
+      "version": "1.17.2",
+      "wholePackageCompatibilityEstablished": false,
+      "wholePackageCompatible": false,
+      "zipBytes": 659877
+    },
+    {
+      "archiveSha256": "95ab02d657213031b70c3079738b21be399e567ca8a32b1fe8e8effc0778eedb",
+      "dependencies": [
+        {
+          "Name": "Everest",
+          "Version": "1.1963.0"
+        }
+      ],
+      "deviceHelperDllEnabled": true,
+      "deviceImplementationScope": "EXACT_HASH_LOCKED_STATIC_IL_ASSEMBLY",
+      "dlls": [
+        {
+          "Path": "DJMapHelper.dll",
+          "Sha256": "0d73202b5e16f26a4c8a286dd6ad600c1601d1904d8f72d909f8acb8469ee446"
+        }
+      ],
+      "finalMissingRegistrations": 0,
+      "initialMissingCount": 0,
+      "initialProductionStatus": "ACCEPTED_PROVIDER",
+      "initialRejectionReason": null,
+      "name": "DJMapHelper",
+      "optionalDependencies": [],
+      "previousAcceptedVersion": "1.13.4",
+      "publicUrl": "https://gamebanana.com/mmdl/1036311",
+      "selectedFactoryCount": 1,
+      "selectedFactoryIds": [
+        "DJMapHelper/colorGradeTrigger"
+      ],
+      "selectedImplementation": null,
+      "sourceAuthority": "EXACT_DISTRIBUTED_DLLS_AND_PACKAGE_CONTENT",
+      "sourceLogicalSha256": "bdfe229e6bc24e0addea3983b5f209a6d420a3d9924e3bafa609ee6ce4c2aa95",
+      "sourceLoweringRegistry": "tools/AppleEverestBuilder/StaticSemanticLowering.cs",
+      "version": "1.13.4",
+      "wholePackageCompatibilityEstablished": false,
+      "wholePackageCompatible": false,
+      "zipBytes": 433079
+    },
+    {
+      "archiveSha256": "4019b362d9ad1b2d3a6a670f833ef6324d735d5791a0bf21b62cf5cfbc0d639d",
+      "dependencies": [
+        {
+          "Name": "Everest",
+          "Version": "1.6458.0"
+        }
+      ],
+      "deviceHelperDllEnabled": false,
+      "deviceImplementationScope": "EXACT_SELECTED_STATIC_SEMANTICS",
+      "dlls": [
+        {
+          "Path": "bin/ExtendedVariantMode.dll",
+          "Sha256": "cb28846f7f7348ddb996f63498c97694616436e97ef34f67880b697ba024fe81"
+        }
+      ],
+      "finalMissingRegistrations": 0,
+      "initialMissingCount": 0,
+      "initialProductionStatus": "ACCEPTED_PROVIDER",
+      "initialRejectionReason": null,
+      "name": "ExtendedVariantMode",
+      "optionalDependencies": [
+        {
+          "Name": "BetterRefillGems",
+          "Version": "1.0.1"
+        },
+        {
+          "Name": "DJMapHelper",
+          "Version": "1.13.2"
+        },
+        {
+          "Name": "IsaGrabBag",
+          "Version": "1.6.12"
+        },
+        {
+          "Name": "JungleHelper",
+          "Version": "1.1.5"
+        }
+      ],
+      "previousAcceptedVersion": "0.50.5",
+      "publicUrl": "https://gamebanana.com/mmdl/1785260",
+      "selectedFactoryCount": 2,
+      "selectedFactoryIds": [
+        "ExtendedVariantMode/FloatExtendedVariantFadeTrigger",
+        "ExtendedVariantMode/ResetVariantsTrigger"
+      ],
+      "selectedImplementation": "extendedvariantmode-0.50.5-sj-beginner-v1",
+      "sourceAuthority": "EXACT_DISTRIBUTED_DLLS_AND_PACKAGE_CONTENT",
+      "sourceLogicalSha256": "0f07fdc4c3d177c90dd9c5fbc57e2cbe46872ce4f248a4259b1168081e768bef",
+      "sourceLoweringRegistry": "tools/AppleEverestBuilder/StaticSemanticLowering.cs",
+      "version": "0.50.5",
+      "wholePackageCompatibilityEstablished": false,
+      "wholePackageCompatible": false,
+      "zipBytes": 498461
+    },
+    {
+      "archiveSha256": "c37806dc7e7db4a392c8ab79030701f4cf2046109cc19435b607fca7fe41c8d8",
+      "dependencies": [
+        {
+          "Name": "Everest",
+          "Version": "1.2824.0"
+        }
+      ],
+      "deviceHelperDllEnabled": false,
+      "deviceImplementationScope": "EXACT_SELECTED_STATIC_SEMANTICS",
+      "dlls": [
+        {
+          "Path": "FancyTileEntities/bin/Debug/net452/FancyTileEntities.dll",
+          "Sha256": "48c4ba952c602c8f40325392edf9975c86ea7a90cd25a3954b0efe7086b6f0a1"
+        }
+      ],
+      "finalMissingRegistrations": 0,
+      "initialMissingCount": 1,
+      "initialProductionStatus": "ACCEPTED_PROVIDER",
+      "initialRejectionReason": null,
+      "name": "FancyTileEntities",
+      "optionalDependencies": [],
+      "previousAcceptedVersion": "1.6.2",
+      "publicUrl": "https://gamebanana.com/mmdl/1569312",
+      "selectedFactoryCount": 1,
+      "selectedFactoryIds": [
+        "FancyTileEntities/FancySolidTiles"
+      ],
+      "selectedImplementation": "fancytileentities-1.6.2-henny-v1",
+      "sourceAuthority": "EXACT_DISTRIBUTED_DLLS_AND_PACKAGE_CONTENT",
+      "sourceLogicalSha256": "e62e9cf62cdbe9f4fdeb27f1174aa6fed55ffc40f0485cd870c3f433ced79a29",
+      "sourceLoweringRegistry": "tools/AppleEverestBuilder/StaticSemanticLowering.cs",
+      "version": "1.6.2",
+      "wholePackageCompatibilityEstablished": false,
+      "wholePackageCompatible": false,
+      "zipBytes": 64653
+    },
+    {
+      "archiveSha256": "5a845805bae30490ed7c9da84410fbe672628b8fe927a830f5f2eb148eb88419",
+      "dependencies": [
+        {
+          "Name": "Everest",
+          "Version": "1.5935.0"
+        }
+      ],
+      "deviceHelperDllEnabled": false,
+      "deviceImplementationScope": "EXACT_SELECTED_STATIC_SEMANTICS",
+      "dlls": [
+        {
+          "Path": "bin/FemtoHelper.dll",
+          "Sha256": "f99b8ec46987b8dd5b0ce018f854d55f07519651d720d63ed7343eaf82963280"
+        }
+      ],
+      "finalMissingRegistrations": 0,
+      "initialMissingCount": 3,
+      "initialProductionStatus": "REJECTED_PROVIDER",
+      "initialRejectionReason": "DEFERRED_DETOUR_CONFIG: FemtoHelper System.Void Celeste.Mod.FemtoHelper.FemtoModule::Load() uses System.Void MonoMod.RuntimeDetour.Hook::.ctor(System.Reflection.MethodBase,System.Reflection.MethodInfo,System.Object)",
+      "name": "FemtoHelper",
+      "optionalDependencies": [
+        {
+          "Name": "auspicioushelper",
+          "Version": "0.3.13"
+        },
+        {
+          "Name": "GravityHelper",
+          "Version": "1.1.38"
+        },
+        {
+          "Name": "CommunalHelper",
+          "Version": "1.17.2"
+        },
+        {
+          "Name": "CavernHelper",
+          "Version": "1.3.6"
+        }
+      ],
+      "previousAcceptedVersion": null,
+      "publicUrl": "https://gamebanana.com/mmdl/1776026",
+      "selectedFactoryCount": 3,
+      "selectedFactoryIds": [
+        "FemtoHelper/WindPetals",
+        "FemtoHelper/CustomParallaxBigWaterfall",
+        "FemtoHelper/ParticleEmitter"
+      ],
+      "selectedImplementation": "femtohelper-1.15.22-selected-kj-v1",
+      "sourceAuthority": "EXACT_DISTRIBUTED_DLLS_AND_PACKAGE_CONTENT",
+      "sourceLogicalSha256": "19ff3a3b968c02082344ea11cb7b6df780a47d9118e1cae882d2e880d67257d2",
+      "sourceLoweringRegistry": "tools/AppleEverestBuilder/StaticSemanticLowering.cs",
+      "version": "1.15.22",
+      "wholePackageCompatibilityEstablished": false,
+      "wholePackageCompatible": false,
+      "zipBytes": 11103153
+    },
+    {
+      "archiveSha256": "fb0fd300f95d77539eb9079aed445c81f263557c1a1715187bd509d39c1eb794",
+      "dependencies": [
+        {
+          "Name": "EverestCore",
+          "Version": "1.5577.0"
+        }
+      ],
+      "deviceHelperDllEnabled": false,
+      "deviceImplementationScope": "EXACT_SELECTED_STATIC_SEMANTICS",
+      "dlls": [
+        {
+          "Path": "bin/FlaglinesAndSuch.dll",
+          "Sha256": "42801778b18505cd4455e59e5c3865f3f0268580d73e256e886b531cd8025ede"
+        }
+      ],
+      "finalMissingRegistrations": 0,
+      "initialMissingCount": 2,
+      "initialProductionStatus": "REJECTED_PROVIDER",
+      "initialRejectionReason": "DEFERRED_DYNAMIC_TARGET: FlaglinesAndSuch System.Void FlaglinesAndSuch.StandBox::Load() has an unresolved direct Hook expression",
+      "name": "FlaglinesAndSuch",
+      "optionalDependencies": [],
+      "previousAcceptedVersion": null,
+      "publicUrl": "https://gamebanana.com/mmdl/1792428",
+      "selectedFactoryCount": 2,
+      "selectedFactoryIds": [
+        "FlaglinesAndSuch/customDreamStars",
+        "FlaglinesAndSuch/customGodrays"
+      ],
+      "selectedImplementation": "flaglinesandsuch-1.6.80-selected-kj-v1",
+      "sourceAuthority": "EXACT_DISTRIBUTED_DLLS_AND_PACKAGE_CONTENT",
+      "sourceLogicalSha256": "897ade835828e742c64fefc2f85cc458ab6cbe3ae00c5a509000588b9aeccce2",
+      "sourceLoweringRegistry": "tools/AppleEverestBuilder/StaticSemanticLowering.cs",
+      "version": "1.6.80",
+      "wholePackageCompatibilityEstablished": false,
+      "wholePackageCompatible": false,
+      "zipBytes": 700428
+    },
+    {
+      "archiveSha256": "ba6aee8f596eff0f595fd90cb7f136ea13b1e9c2d664fc38f389608b0f9e2c81",
+      "dependencies": [
+        {
+          "Name": "Everest",
+          "Version": "1.5986.0"
+        },
+        {
+          "Name": "EverestCore",
+          "Version": "1.5986.0"
+        }
+      ],
+      "deviceHelperDllEnabled": false,
+      "deviceImplementationScope": "EXACT_SELECTED_STATIC_SEMANTICS",
+      "dlls": [
+        {
+          "Path": "Code/FrostHelper/bin/FrostTempleHelper.dll",
+          "Sha256": "723e204638703111c12746badd31b8d37cd41d4978d1a2d98315647406d880af"
+        }
+      ],
+      "finalMissingRegistrations": 0,
+      "initialMissingCount": 7,
+      "initialProductionStatus": "REJECTED_PROVIDER",
+      "initialRejectionReason": "unregistered semantic helper identity for FrostHelper: version=1.80.1; source=9ff388dd81ac09d033c45d6e93a6c194f4a7714711e1cc5032bb30b5e2b89d69",
+      "name": "FrostHelper",
+      "optionalDependencies": [
+        {
+          "Name": "OutbackHelper",
+          "Version": "1.4.0"
+        },
+        {
+          "Name": "CelesteTAS",
+          "Version": "3.4.5"
+        },
+        {
+          "Name": "ShaderHelper",
+          "Version": "0.0.3"
+        },
+        {
+          "Name": "ExtendedVariantMode",
+          "Version": "0.19.8"
+        },
+        {
+          "Name": "ColoredLights",
+          "Version": "1.2.0"
+        }
+      ],
+      "previousAcceptedVersion": "1.79.1",
+      "publicUrl": "https://gamebanana.com/mmdl/1802188",
+      "selectedFactoryCount": 7,
+      "selectedFactoryIds": [
+        "FrostHelper/CustomFireBarrier",
+        "FrostHelper/CustomFlutterBird",
+        "FrostHelper/DecalContainer",
+        "FrostHelper/EntityMover",
+        "FrostHelper/IceSpinner",
+        "FrostHelper/WireLamps",
+        "FrostHelper/OnSpawnActivator"
+      ],
+      "selectedImplementation": "frosthelper-1.80.1-selected-kj-v1",
+      "sourceAuthority": "EXACT_DISTRIBUTED_DLLS_AND_PACKAGE_CONTENT",
+      "sourceLogicalSha256": "9ff388dd81ac09d033c45d6e93a6c194f4a7714711e1cc5032bb30b5e2b89d69",
+      "sourceLoweringRegistry": "tools/AppleEverestBuilder/StaticSemanticLowering.cs",
+      "version": "1.80.1",
+      "wholePackageCompatibilityEstablished": false,
+      "wholePackageCompatible": false,
+      "zipBytes": 1204743
+    },
+    {
+      "archiveSha256": "6a2d0f04a5be3a9c9c3bf66ec7e93701398a64d5a0e72add5df682e860e7d08d",
+      "dependencies": [
+        {
+          "Name": "EverestCore",
+          "Version": "1.4465.0"
+        }
+      ],
+      "deviceHelperDllEnabled": false,
+      "deviceImplementationScope": "EXACT_SELECTED_STATIC_SEMANTICS",
+      "dlls": [
+        {
+          "Path": "Code/bin/HonlyHelper.dll",
+          "Sha256": "110a7d00881f4ad38b587ca51afdb0f03c4d3d0ac20cc46da3e665615932c367"
+        }
+      ],
+      "finalMissingRegistrations": 0,
+      "initialMissingCount": 2,
+      "initialProductionStatus": "REJECTED_PROVIDER",
+      "initialRejectionReason": "custom entity type must be public and concrete: Celeste.Mod.HonlyHelper.FriendKillTrigger",
+      "name": "HonlyHelper",
+      "optionalDependencies": [],
+      "previousAcceptedVersion": null,
+      "publicUrl": "https://gamebanana.com/mmdl/1274211",
+      "selectedFactoryCount": 2,
+      "selectedFactoryIds": [
+        "HonlyHelper/PettableCat",
+        "HonlyHelper/CameraTargetCrossfadeTrigger"
+      ],
+      "selectedImplementation": "honlyhelper-1.7.5-selected-kj-v1",
+      "sourceAuthority": "EXACT_DISTRIBUTED_DLLS_AND_PACKAGE_CONTENT",
+      "sourceLogicalSha256": "cb8524306f28c0d04081dd63b5a3ccad4d7fecd5bc71970e06376606439298e3",
+      "sourceLoweringRegistry": "tools/AppleEverestBuilder/StaticSemanticLowering.cs",
+      "version": "1.7.5",
+      "wholePackageCompatibilityEstablished": false,
+      "wholePackageCompatible": false,
+      "zipBytes": 1042358
+    },
+    {
+      "archiveSha256": "a140e21cbb5fd2dcaac70d4d5e36d49476e414861455ae25dedc0678164406cc",
+      "dependencies": [
+        {
+          "Name": "Everest",
+          "Version": "1.6314.0"
+        },
+        {
+          "Name": "Celeste",
+          "Version": "1.4.0.0"
+        }
+      ],
+      "deviceHelperDllEnabled": false,
+      "deviceImplementationScope": "EXACT_SELECTED_STATIC_SEMANTICS",
+      "dlls": [
+        {
+          "Path": "Code/bin/JungleHelper.dll",
+          "Sha256": "fed840ade7250f05e38b70a81bcfe751ca87ff63274f4b568172868cacf56f8a"
+        }
+      ],
+      "finalMissingRegistrations": 0,
+      "initialMissingCount": 0,
+      "initialProductionStatus": "ACCEPTED_PROVIDER",
+      "initialRejectionReason": null,
+      "name": "JungleHelper",
+      "optionalDependencies": [],
+      "previousAcceptedVersion": "1.4.10",
+      "publicUrl": "https://gamebanana.com/mmdl/1721879",
+      "selectedFactoryCount": 1,
+      "selectedFactoryIds": [
+        "JungleHelper/MossyWall"
+      ],
+      "selectedImplementation": "junglehelper-1.4.10-sj-beginner-v1",
+      "sourceAuthority": "EXACT_DISTRIBUTED_DLLS_AND_PACKAGE_CONTENT",
+      "sourceLogicalSha256": "911457d12e30d0912eb2420a39dbde7dc892560cd8a512284dccb89d93ff6e49",
+      "sourceLoweringRegistry": "tools/AppleEverestBuilder/StaticSemanticLowering.cs",
+      "version": "1.4.10",
+      "wholePackageCompatibilityEstablished": false,
+      "wholePackageCompatible": false,
+      "zipBytes": 7584200
+    },
+    {
+      "archiveSha256": "b10e044b1dfa412605bee3ba6bfdd4263591099d331d6c1aab1e9ba65bf6a3e5",
+      "dependencies": [
+        {
+          "Name": "Everest",
+          "Version": "1.1703.0"
+        }
+      ],
+      "deviceHelperDllEnabled": false,
+      "deviceImplementationScope": "EXACT_SELECTED_STATIC_SEMANTICS",
+      "dlls": [
+        {
+          "Path": "LunaticHelper.dll",
+          "Sha256": "fc08f00296551a6025c5e31422c6edd5e8136e6861459f44ffea909129c6a925"
+        }
+      ],
+      "finalMissingRegistrations": 0,
+      "initialMissingCount": 2,
+      "initialProductionStatus": "ACCEPTED_PROVIDER",
+      "initialRejectionReason": null,
+      "name": "LunaticHelper",
+      "optionalDependencies": [],
+      "previousAcceptedVersion": "1.1.1",
+      "publicUrl": "https://gamebanana.com/mmdl/466257",
+      "selectedFactoryCount": 3,
+      "selectedFactoryIds": [
+        "LunaticHelper/CustomDust",
+        "LunaticHelper/InvisibleLightSource",
+        "LunaticHelper/StrawberryWithReturn"
+      ],
+      "selectedImplementation": "lunatichelper-1.1.1-henny-v1",
+      "sourceAuthority": "EXACT_DISTRIBUTED_DLLS_AND_PACKAGE_CONTENT",
+      "sourceLogicalSha256": "e7cef501937fc1bc07d1ff13e753fe920b4ccbbd4e4db4c0b2c4312de89fdd78",
+      "sourceLoweringRegistry": "tools/AppleEverestBuilder/StaticSemanticLowering.cs",
+      "version": "1.1.1",
+      "wholePackageCompatibilityEstablished": false,
+      "wholePackageCompatible": false,
+      "zipBytes": 931124
+    },
+    {
+      "archiveSha256": "abfc5d167936410e9b6665018335ee654455e30710caffe01540b232da468fee",
+      "dependencies": [
+        {
+          "Name": "Everest",
+          "Version": "1.6418.0"
+        }
+      ],
+      "deviceHelperDllEnabled": false,
+      "deviceImplementationScope": "EXACT_SELECTED_STATIC_SEMANTICS",
+      "dlls": [
+        {
+          "Path": "bin/MaxHelpingHand.dll",
+          "Sha256": "6f463f2c014eb60c4abb61e395eb5065455d4bf469f4c83fce9814fb7bfcdfa6"
+        }
+      ],
+      "finalMissingRegistrations": 0,
+      "initialMissingCount": 12,
+      "initialProductionStatus": "ACCEPTED_PROVIDER",
+      "initialRejectionReason": null,
+      "name": "MaxHelpingHand",
+      "optionalDependencies": [
+        {
+          "Name": "FlaglinesAndSuch",
+          "Version": "1.6.8"
+        },
+        {
+          "Name": "LuaCutscenes",
+          "Version": "0.2.8"
+        },
+        {
+          "Name": "LunaticHelper",
+          "Version": "1.1.1"
+        },
+        {
+          "Name": "OutbackHelper",
+          "Version": "1.7.2"
+        },
+        {
+          "Name": "BounceHelper",
+          "Version": "1.12.0"
+        },
+        {
+          "Name": "FrostHelper",
+          "Version": "1.46.0"
+        },
+        {
+          "Name": "ExtendedCameraDynamics",
+          "Version": "1.0.3"
+        },
+        {
+          "Name": "ExtendedVariantMode",
+          "Version": "0.47.1"
+        },
+        {
+          "Name": "CommunalHelper",
+          "Version": "1.24.0"
+        },
+        {
+          "Name": "EeveeHelper",
+          "Version": "1.12.2"
+        }
+      ],
+      "previousAcceptedVersion": "1.40.9",
+      "publicUrl": "https://gamebanana.com/mmdl/1778093",
+      "selectedFactoryCount": 16,
+      "selectedFactoryIds": [
+        "MaxHelpingHand/HeatWaveNoColorGrade",
+        "MaxHelpingHand/CustomTutorialWithNoBird",
+        "MaxHelpingHand/FlagExitBlock",
+        "MaxHelpingHand/GroupedTriggerSpikesUp",
+        "MaxHelpingHand/MoreCustomNPC",
+        "MaxHelpingHand/ParallaxFadeOutController",
+        "MaxHelpingHand/RainbowSpinnerColorAreaController",
+        "MaxHelpingHand/SetFlagOnSpawnController",
+        "MaxHelpingHand/SidewaysJumpThru",
+        "MaxHelpingHand/StylegroundFadeController",
+        "MaxHelpingHand/CameraCatchupSpeedTrigger",
+        "MaxHelpingHand/CameraOffsetBorder",
+        "MaxHelpingHand/ColorGradeFadeTrigger",
+        "MaxHelpingHand/FlagToggleCameraOffsetTrigger",
+        "MaxHelpingHand/FlagToggleCameraTargetTrigger",
+        "MaxHelpingHand/FlagToggleSmoothCameraOffsetTrigger"
+      ],
+      "selectedImplementation": "maxhelpinghand-1.40.9-henny-v1",
+      "sourceAuthority": "EXACT_DISTRIBUTED_DLLS_AND_PACKAGE_CONTENT",
+      "sourceLogicalSha256": "5f0d558d6f2cbd02032677e70e5910084acbcd3ddaa7aaa005335d6a8fce4276",
+      "sourceLoweringRegistry": "tools/AppleEverestBuilder/StaticSemanticLowering.cs",
+      "version": "1.40.9",
+      "wholePackageCompatibilityEstablished": false,
+      "wholePackageCompatible": false,
+      "zipBytes": 963880
+    },
+    {
+      "archiveSha256": "25f9c7d6792983ac697e3780667fb0963233c0c08f6e528f5c6d9fe732cded05",
+      "dependencies": [
+        {
+          "Name": "Everest",
+          "Version": "1.1888.0"
+        }
+      ],
+      "deviceHelperDllEnabled": false,
+      "deviceImplementationScope": "EXACT_SELECTED_STATIC_SEMANTICS",
+      "dlls": [
+        {
+          "Path": "PandorasBox.dll",
+          "Sha256": "d48168822a646892dc9850ebfcb75376cb80663cef7c2fceb9c36fe3d3af02e7"
+        }
+      ],
+      "finalMissingRegistrations": 0,
+      "initialMissingCount": 4,
+      "initialProductionStatus": "REJECTED_PROVIDER",
+      "initialRejectionReason": "custom entity type must be public and concrete: Celeste.Mod.PandorasBox.AirBubbles",
+      "name": "PandorasBox",
+      "optionalDependencies": [],
+      "previousAcceptedVersion": null,
+      "publicUrl": "https://gamebanana.com/mmdl/1194329",
+      "selectedFactoryCount": 4,
+      "selectedFactoryIds": [
+        "pandorasBox/coloredBigWaterfall",
+        "pandorasBox/coloredWater",
+        "pandorasBox/coloredWaterfall",
+        "pandorasBox/entityActivator"
+      ],
+      "selectedImplementation": "pandorasbox-1.0.49-selected-kj-v1",
+      "sourceAuthority": "EXACT_DISTRIBUTED_DLLS_AND_PACKAGE_CONTENT",
+      "sourceLogicalSha256": "7113d897271264cd6bd8089e06112c536970fb016138350a4eeaf98576651e04",
+      "sourceLoweringRegistry": "tools/AppleEverestBuilder/StaticSemanticLowering.cs",
+      "version": "1.0.49",
+      "wholePackageCompatibilityEstablished": false,
+      "wholePackageCompatible": false,
+      "zipBytes": 245309
+    },
+    {
+      "archiveSha256": "4e1a2fc12baa3db27da433b93bf26b59f34b3e6b7f760c41d8d127636d020655",
+      "dependencies": [
+        {
+          "Name": "Everest",
+          "Version": "1.3847.0"
+        },
+        {
+          "Name": "StrawberryJam2021Assets",
+          "Version": "1.0.1"
+        },
+        {
+          "Name": "StrawberryJam2021AudioA",
+          "Version": "1.0.4"
+        },
+        {
+          "Name": "StrawberryJam2021AudioB",
+          "Version": "1.0.0"
+        },
+        {
+          "Name": "StrawberryJam2021AudioC",
+          "Version": "1.0.1"
+        },
+        {
+          "Name": "AdventureHelper",
+          "Version": "1.5.8"
+        },
+        {
+          "Name": "Anonhelper",
+          "Version": "1.0.9"
+        },
+        {
+          "Name": "Batteries",
+          "Version": "1.1.3"
+        },
+        {
+          "Name": "BGswitch",
+          "Version": "1.2.2"
+        },
+        {
+          "Name": "BounceHelper",
+          "Version": "1.6.2"
+        },
+        {
+          "Name": "BrokemiaHelper",
+          "Version": "1.7.2"
+        },
+        {
+          "Name": "CanyonHelper",
+          "Version": "1.1.4"
+        },
+        {
+          "Name": "CavernHelper",
+          "Version": "1.3.6"
+        },
+        {
+          "Name": "CherryHelper",
+          "Version": "1.7.1"
+        },
+        {
+          "Name": "CollabUtils2",
+          "Version": "1.10.11"
+        },
+        {
+          "Name": "ColoredLights",
+          "Version": "1.1.2"
+        },
+        {
+          "Name": "CommunalHelper",
+          "Version": "1.14.5"
+        },
+        {
+          "Name": "ContortHelper",
+          "Version": "1.5.5"
+        },
+        {
+          "Name": "CrystallineHelper",
+          "Version": "1.14.0"
+        },
+        {
+          "Name": "DisposableTheo",
+          "Version": "1.0.6"
+        },
+        {
+          "Name": "DJMapHelper",
+          "Version": "1.13.2"
+        },
+        {
+          "Name": "EeveeHelper",
+          "Version": "1.5.3"
+        },
+        {
+          "Name": "EmHelper",
+          "Version": "1.2.1"
+        },
+        {
+          "Name": "ExtendedVariantMode",
+          "Version": "0.26.9"
+        },
+        {
+          "Name": "FactoryHelper",
+          "Version": "1.3.6"
+        },
+        {
+          "Name": "FancyTileEntities",
+          "Version": "1.6.2"
+        },
+        {
+          "Name": "FemtoHelper",
+          "Version": "1.9.4"
+        },
+        {
+          "Name": "FlaglinesAndSuch",
+          "Version": "1.6.2"
+        },
+        {
+          "Name": "FrostHelper",
+          "Version": "1.40.3"
+        },
+        {
+          "Name": "FurryHelper",
+          "Version": "1.0.6"
+        },
+        {
+          "Name": "GravityHelper",
+          "Version": "1.1.36"
+        },
+        {
+          "Name": "HonlyHelper",
+          "Version": "1.7.4"
+        },
+        {
+          "Name": "IsaGrabBag",
+          "Version": "1.6.12"
+        },
+        {
+          "Name": "JackalHelper",
+          "Version": "1.6.8"
+        },
+        {
+          "Name": "JungleHelper",
+          "Version": "1.1.4"
+        },
+        {
+          "Name": "LuaCutscenes",
+          "Version": "0.2.7"
+        },
+        {
+          "Name": "LunaticHelper",
+          "Version": "1.1.1"
+        },
+        {
+          "Name": "MaxHelpingHand",
+          "Version": "1.24.10"
+        },
+        {
+          "Name": "memorialHelper",
+          "Version": "1.0.4"
+        },
+        {
+          "Name": "MoreDasheline",
+          "Version": "1.7.0"
+        },
+        {
+          "Name": "OutbackHelper",
+          "Version": "1.7.2"
+        },
+        {
+          "Name": "PandorasBox",
+          "Version": "1.0.46"
+        },
+        {
+          "Name": "SafeRespawnCrumble",
+          "Version": "1.2.0"
+        },
+        {
+          "Name": "Sardine7",
+          "Version": "1.1.4"
+        },
+        {
+          "Name": "ShroomHelper",
+          "Version": "1.2.4"
+        },
+        {
+          "Name": "SorbetHelper",
+          "Version": "1.1.1"
+        },
+        {
+          "Name": "SpirialisHelper",
+          "Version": "1.0.8"
+        },
+        {
+          "Name": "TwigHelper",
+          "Version": "1.5.2"
+        },
+        {
+          "Name": "VivHelper",
+          "Version": "1.11.1"
+        },
+        {
+          "Name": "VortexHelper",
+          "Version": "1.2.11"
+        },
+        {
+          "Name": "XaphanHelper",
+          "Version": "1.0.54"
+        },
+        {
+          "Name": "YetAnotherHelper",
+          "Version": "1.2.4"
+        }
+      ],
+      "deviceHelperDllEnabled": false,
+      "deviceImplementationScope": "EXACT_SELECTED_STATIC_SEMANTICS",
+      "dlls": [
+        {
+          "Path": "Code/StrawberryJam2021.dll",
+          "Sha256": "8d5b9184204e7e7728965bcf95af5f150f6220dafbfe52fdd6c23e50d47e5258"
+        }
+      ],
+      "finalMissingRegistrations": 0,
+      "initialMissingCount": 0,
+      "initialProductionStatus": "ACCEPTED_PROVIDER",
+      "initialRejectionReason": null,
+      "name": "StrawberryJam2021",
+      "optionalDependencies": [
+        {
+          "Name": "SpeedrunTool",
+          "Version": "3.20.4"
+        },
+        {
+          "Name": "CelesteTAS",
+          "Version": "3.25.8"
+        }
+      ],
+      "previousAcceptedVersion": "1.0.12",
+      "publicUrl": "https://gamebanana.com/mmdl/1414214",
+      "selectedFactoryCount": 5,
+      "selectedFactoryIds": [
+        "SJ2021/AllInOneMask",
+        "SJ2021/BloomMask",
+        "SJ2021/GlowController",
+        "SJ2021/StrawberryJamJar",
+        "SJ2021/StylegroundMask"
+      ],
+      "selectedImplementation": "strawberryjam2021-1.0.12-beginner-root-v1",
+      "sourceAuthority": "EXACT_DISTRIBUTED_DLLS_AND_PACKAGE_CONTENT",
+      "sourceLogicalSha256": "d5e68237d8371fa26ed5d804578ce5b1841673ba380d7438fb4fafcd73899063",
+      "sourceLoweringRegistry": "tools/AppleEverestBuilder/StaticSemanticLowering.cs",
+      "version": "1.0.12",
+      "wholePackageCompatibilityEstablished": false,
+      "wholePackageCompatible": false,
+      "zipBytes": 95650820
+    },
+    {
+      "archiveSha256": "9a95f51659ccfcb78404f9610307918d6114fc824298fbb8493651ec7c80215a",
+      "dependencies": [
+        {
+          "Name": "Everest",
+          "Version": "1.3324.0"
+        }
+      ],
+      "deviceHelperDllEnabled": false,
+      "deviceImplementationScope": "EXACT_SELECTED_STATIC_SEMANTICS",
+      "dlls": [
+        {
+          "Path": "dll/VivHelper.dll",
+          "Sha256": "d843355cbce2be03611d46a200cc4b341888ec53deb29e940b18442bbdc4f55f"
+        }
+      ],
+      "finalMissingRegistrations": 0,
+      "initialMissingCount": 2,
+      "initialProductionStatus": "REJECTED_PROVIDER",
+      "initialRejectionReason": "DEFERRED_DYNAMIC_TARGET: VivHelper System.Void VivHelper.Tester::Load() has an unresolved direct Hook expression",
+      "name": "VivHelper",
+      "optionalDependencies": [
+        {
+          "Name": "LoennExtended",
+          "Version": "1.2.0"
+        },
+        {
+          "Name": "GravityHelper",
+          "Version": "1.1.32"
+        },
+        {
+          "Name": "MaxHelpingHand",
+          "Version": "1.27.0"
+        }
+      ],
+      "previousAcceptedVersion": null,
+      "publicUrl": "https://gamebanana.com/mmdl/1374906",
+      "selectedFactoryCount": 2,
+      "selectedFactoryIds": [
+        "VivHelper/CustomHangingLamp",
+        "VivHelper/CustomSpinner"
+      ],
+      "selectedImplementation": "vivhelper-1.14.10-selected-kj-v1",
+      "sourceAuthority": "EXACT_DISTRIBUTED_DLLS_AND_PACKAGE_CONTENT",
+      "sourceLogicalSha256": "81468fa30222a69bb6c648ef6d8ddcace0d51a60172a1a0930bb823b3d3ff199",
+      "sourceLoweringRegistry": "tools/AppleEverestBuilder/StaticSemanticLowering.cs",
+      "version": "1.14.10",
+      "wholePackageCompatibilityEstablished": false,
+      "wholePackageCompatible": false,
+      "zipBytes": 6543567
+    },
+    {
+      "archiveSha256": "b6280fe2e3c05d355c32a51049854137c41be72d24ec4aec9d997cc7c4394db2",
+      "dependencies": [
+        {
+          "Name": "EverestCore",
+          "Version": "1.4465.0"
+        }
+      ],
+      "deviceHelperDllEnabled": false,
+      "deviceImplementationScope": "EXACT_SELECTED_STATIC_SEMANTICS",
+      "dlls": [
+        {
+          "Path": "Code/bin/VortexHelper.dll",
+          "Sha256": "f5a32f02c2699dcdf41bb1af808ead631491571c3d259429761953693bd37f73"
+        }
+      ],
+      "finalMissingRegistrations": 0,
+      "initialMissingCount": 0,
+      "initialProductionStatus": "ACCEPTED_PROVIDER",
+      "initialRejectionReason": null,
+      "name": "VortexHelper",
+      "optionalDependencies": [
+        {
+          "Name": "GravityHelper",
+          "Version": "1.2.10"
+        }
+      ],
+      "previousAcceptedVersion": "1.2.19",
+      "publicUrl": "https://gamebanana.com/mmdl/1368600",
+      "selectedFactoryCount": 1,
+      "selectedFactoryIds": [
+        "VortexHelper/AttachedJumpThru"
+      ],
+      "selectedImplementation": "vortexhelper-1.2.19-sj-beginner-v1",
+      "sourceAuthority": "EXACT_DISTRIBUTED_DLLS_AND_PACKAGE_CONTENT",
+      "sourceLogicalSha256": "c071d33bb1cc4f0387ea204834e212bd020f3143aea68c9f4e56b9bfa35def1b",
+      "sourceLoweringRegistry": "tools/AppleEverestBuilder/StaticSemanticLowering.cs",
+      "version": "1.2.19",
+      "wholePackageCompatibilityEstablished": false,
+      "wholePackageCompatible": false,
+      "zipBytes": 2195976
+    },
+    {
+      "archiveSha256": "ca868d06eb05f0c5de55126090e5019210e9d83c3dae9394cbcd155acf8eb16f",
+      "dependencies": [
+        {
+          "Name": "Everest",
+          "Version": "1.5184.0"
+        }
+      ],
+      "deviceHelperDllEnabled": false,
+      "deviceImplementationScope": "EXACT_SELECTED_STATIC_SEMANTICS",
+      "dlls": [
+        {
+          "Path": "Code/bin/XaphanHelper.dll",
+          "Sha256": "e408dc081cb79d89b3436724b74413a603189cb53e84af5844918df08717273c"
+        }
+      ],
+      "finalMissingRegistrations": 0,
+      "initialMissingCount": 1,
+      "initialProductionStatus": "ACCEPTED_PROVIDER",
+      "initialRejectionReason": null,
+      "name": "XaphanHelper",
+      "optionalDependencies": [],
+      "previousAcceptedVersion": "1.0.79",
+      "publicUrl": "https://gamebanana.com/mmdl/1716933",
+      "selectedFactoryCount": 1,
+      "selectedFactoryIds": [
+        "XaphanHelper/Slope"
+      ],
+      "selectedImplementation": "xaphanhelper-1.0.79-kayonara-v1",
+      "sourceAuthority": "EXACT_DISTRIBUTED_DLLS_AND_PACKAGE_CONTENT",
+      "sourceLogicalSha256": "530ea4bbad7ac5cd43be692297d6d743e0a81e789d3408f121448759df7643be",
+      "sourceLoweringRegistry": "tools/AppleEverestBuilder/StaticSemanticLowering.cs",
+      "version": "1.0.79",
+      "wholePackageCompatibilityEstablished": false,
+      "wholePackageCompatible": false,
+      "zipBytes": 6957784
+    },
+    {
+      "archiveSha256": "73d64e1b3457e2461d3368a01de9f5f31a58bf24e130f3e35ec7280b24814c2d",
+      "dependencies": [
+        {
+          "Name": "Everest",
+          "Version": "1.3471.0"
+        }
+      ],
+      "deviceHelperDllEnabled": false,
+      "deviceImplementationScope": "EXACT_SELECTED_STATIC_SEMANTICS",
+      "dlls": [
+        {
+          "Path": "YetAnotherHelper/bin/Debug/net452/YetAnotherHelper.dll",
+          "Sha256": "f48e16a568edf43913beac0684bd26b7dc12d45be4011a8b214e05db86b78aea"
+        }
+      ],
+      "finalMissingRegistrations": 0,
+      "initialMissingCount": 0,
+      "initialProductionStatus": "ACCEPTED_PROVIDER",
+      "initialRejectionReason": null,
+      "name": "YetAnotherHelper",
+      "optionalDependencies": [],
+      "previousAcceptedVersion": "1.2.5",
+      "publicUrl": "https://gamebanana.com/mmdl/1182393",
+      "selectedFactoryCount": 1,
+      "selectedFactoryIds": [
+        "YetAnotherHelper/BubbleField"
+      ],
+      "selectedImplementation": "yetanotherhelper-1.2.5-sj-beginner-v1",
+      "sourceAuthority": "EXACT_DISTRIBUTED_DLLS_AND_PACKAGE_CONTENT",
+      "sourceLogicalSha256": "e48a8c6b1941ebef23853fdb65b4db487aa9aa3162935b975b5468675de93da6",
+      "sourceLoweringRegistry": "tools/AppleEverestBuilder/StaticSemanticLowering.cs",
+      "version": "1.2.5",
+      "wholePackageCompatibilityEstablished": false,
+      "wholePackageCompatible": false,
+      "zipBytes": 53525
+    }
+  ],
+  "schemaVersion": 1,
+  "stage": "25K-J",
+  "unknownPrimaryCauses": 0
+}

@@ -1,0 +1,7 @@
+- Name: AppleEverestStage25KJInteractions
+  Version: 1.0.0
+  Dependencies:
+    - Name: CollabUtils2
+      Version: 1.13.4
+    - Name: StrawberryJam2021
+      Version: 1.0.12

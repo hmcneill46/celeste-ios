@@ -442,6 +442,29 @@ namespace Celeste.Mod
             "\tpublic static void Rumble(RumbleStrength strength, RumbleLength length, [CallerMemberName] string source = null)\n\t{");
     }
 
+    internal static void PreserveFrozenCollisionRumbleCallers(string managedRoot)
+    {
+        // K-D's two-argument helper ABI otherwise wins overload resolution and
+        // removes the CallerMemberName constants in the I-A frozen baseline.
+        // Name these callers before HookGen stores each body under an alias.
+        string path = Path.Combine(managedRoot, "Celeste", "Player.cs");
+        string source = File.ReadAllText(path);
+        foreach ((string name, int expected) in new[] { ("OnCollideH", 2), ("OnCollideV", 3) })
+        {
+            string pattern = @"\tprivate void " + name + @"\(CollisionData data\)\n\t\{[\s\S]*?\n\t\}";
+            var methods = System.Text.RegularExpressions.Regex.Matches(source, pattern);
+            if (methods.Count != 1) throw new InvalidDataException("frozen collision source identity changed: " + name);
+            var calls = System.Text.RegularExpressions.Regex.Matches(methods[0].Value,
+                @"Input\.Rumble\(RumbleStrength\.[A-Za-z]+, RumbleLength\.[A-Za-z]+\);");
+            if (calls.Count != expected) throw new InvalidDataException("frozen collision rumble count changed: " + name);
+            string body = System.Text.RegularExpressions.Regex.Replace(methods[0].Value,
+                @"Input\.Rumble\((RumbleStrength\.[A-Za-z]+, RumbleLength\.[A-Za-z]+)\);",
+                "Input.Rumble($1, source: nameof(" + name + "));");
+            source = source.Remove(methods[0].Index, methods[0].Length).Insert(methods[0].Index, body);
+        }
+        File.WriteAllText(path, source);
+    }
+
     /// <summary>
     /// Reproduces the small, public Everest ABI surface used by the exact
     /// ChronoHelper binary. These are ordinary source members in the static

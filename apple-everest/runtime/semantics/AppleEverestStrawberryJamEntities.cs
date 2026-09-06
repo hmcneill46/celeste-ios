@@ -14,6 +14,10 @@ internal sealed class AppleEverestSJMaskEntity : Entity
     internal readonly string[] RenderTags;
     internal readonly float AlphaFrom, AlphaTo;
     internal readonly bool HasBloom;
+    internal readonly bool DerivedMask;
+    internal readonly bool BehindForeground;
+    private static long nextAdditionOrder;
+    internal long AdditionOrder;
     internal readonly float BaseFrom, BaseTo, StrengthFrom, StrengthTo;
     internal readonly record struct Slice(Vector2 Position, Rectangle Source, float Amount)
     {
@@ -38,6 +42,7 @@ internal sealed class AppleEverestSJMaskEntity : Entity
             _ => throw new InvalidOperationException("mask fade is outside the frozen Beginner semantics")
         };
         bool all = kind == "all-in-one";
+        DerivedMask = all;
         bool style = all || kind == "styleground";
         if (all && (data.Attr("colorGradeFrom", "(current)") != "(current)" ||
             data.Attr("colorGradeTo", "(current)") != "(current)" ||
@@ -45,6 +50,7 @@ internal sealed class AppleEverestSJMaskEntity : Entity
             throw new InvalidOperationException("colour-grade and lighting masks are outside the frozen slice");
         if (style && !data.Bool(all ? "styleBehindFg" : "behindFg", all))
             throw new InvalidOperationException("foreground-after masks are outside the frozen slice");
+        BehindForeground = data.Bool(all ? "styleBehindFg" : "behindFg", all);
         RenderTags = style ? data.Attr(all ? "stylemaskTag" : "tag", "")
             .Split(',', StringSplitOptions.RemoveEmptyEntries) : Array.Empty<string>();
         AlphaFrom = data.Float(all ? "styleAlphaFrom" : "alphaFrom", 0f);
@@ -56,6 +62,9 @@ internal sealed class AppleEverestSJMaskEntity : Entity
         HasBloom = kind == "bloom" || all &&
             (BaseFrom >= 0f || BaseTo >= 0f || StrengthFrom >= 0f || StrengthTo >= 0f);
     }
+
+    public override void Added(Scene scene)
+    { base.Added(scene); AdditionOrder = nextAdditionOrder++; }
 
     internal Rectangle VisibleRect(Level level) => Rectangle.Intersect(new Rectangle(0, 0, 320, 180),
         new Rectangle((int)(X - level.Camera.X), (int)(Y - level.Camera.Y), (int)Width, (int)Height));

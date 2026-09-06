@@ -66,6 +66,17 @@ internal static class EverestGraphResolver
             }
             foreach (EverestDependency dependency in OptionalDependencies(mod))
                 RequireCompatible(byName, mod, dependency, optional: true);
+            // Typed factory references are required at link/runtime, but do not
+            // invent module-load ordering. Frost's selected Awake callback uses
+            // Max, whose original optional load dependency already points back
+            // to Frost. Neither lowered factory has a module initializer.
+            foreach (StaticSemanticDependency dependency in mod.StaticSemanticLowering?.LinkRequirements ?? [])
+            {
+                RequireCompatible(byName, mod, new EverestDependency { Name = dependency.Name, Version = dependency.Version }, optional: false);
+                ResolvedMod linked = byName[dependency.Name];
+                if (linked.Metadata.Version != dependency.Version || linked.StaticSemanticLowering == null)
+                    throw new InvalidDataException($"unregistered semantic link identity: {mod.Metadata.Name} requires exact {dependency.Name} {dependency.Version}");
+            }
         }
 
         Dictionary<string, int> state = new(StringComparer.Ordinal);
@@ -102,6 +113,10 @@ internal static class EverestGraphResolver
         mod.StaticSemanticLowering?.EffectiveDependencies != null
             ? []
             : mod.Metadata.OptionalDependencies;
+
+    internal static IEnumerable<EverestDependency> RuntimeRequirements(ResolvedMod mod) =>
+        RequiredDependencies(mod).Concat((mod.StaticSemanticLowering?.LinkRequirements ?? [])
+            .Select(value => new EverestDependency { Name = value.Name, Version = value.Version }));
 
     private static void RequireCompatible(
         IReadOnlyDictionary<string, ResolvedMod> byName,

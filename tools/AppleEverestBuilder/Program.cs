@@ -54,6 +54,28 @@ internal static class Program
                         One(options, "--manifest"));
                     Console.WriteLine($"selected={closure.SelectedFactories} closed={closure.FullyClosed} blocked={closure.Blocked} unknown={closure.Unknown}");
                     break;
+                case "preflight-factory-closure": FactoryProfilePreflight.Write(
+                    One(options, "--manifest"), Many(options, "--mod"), One(options, "--output"),
+                    One(options, "--repo-root"), One(options, "--profile"), One(options, "--upstream"),
+                    One(options, "--closure"), One(options, "--assembly"), One(options, "--authored-profiles"),
+                    One(options, "--canonical-managed-root"), One(options, "--dotnet")); break;
+                case "verify-compiled-factory-controls": FactoryPreflightControls.Write(
+                    One(options, "--assembly"), One(options, "--manifest"), One(options, "--authored-profiles"), One(options, "--output")); break;
+                case "verify-factory-package-controls": FactoryPackageIdentity.WriteControls(One(options, "--repo-root"),
+                    One(options, "--selected-archive"), One(options, "--prior-archive"), One(options, "--output")); break;
+                case "verify-aot-factory-product": AotFactoryProductInspection.Write(One(options, "--request"),
+                    One(options, "--manifest"), One(options, "--authored-profiles"), One(options, "--output")); break;
+                case "verify-aot-factory-controls": AotFactoryProductInspection.WriteControls(One(options, "--request"),
+                    One(options, "--manifest"), One(options, "--authored-profiles"), One(options, "--output")); break;
+                case "write-sideways-control-inputs": SidewaysControlInputs.Write(One(options, "--source"), One(options, "--output")); break;
+                case "inspect-compiled-factories":
+                    using (JsonDocument profiles = JsonDocument.Parse(File.ReadAllBytes(One(options, "--authored-profiles"))))
+                    {
+                        var graph = SelectedFactoryTypeClosure.LoadAndValidate(One(options, "--manifest"));
+                        var inspected = CompiledFactoryInspection.Inspect(One(options, "--assembly"), profiles.RootElement, graph.Manifest.Factories);
+                        File.WriteAllText(One(options, "--output"), JsonSerializer.Serialize(inspected, new JsonSerializerOptions { WriteIndented = true }) + "\n");
+                    }
+                    break;
                 case "inspect-factory-types": FactoryTypeInspector.Write(
                     One(options, "--request"), One(options, "--assembly-root"), One(options, "--output")); break;
                 default: throw new InvalidDataException($"unknown command: {args[0]}");
@@ -249,7 +271,7 @@ internal static class Program
             new JsonSerializerOptions { WriteIndented = true }) + "\n");
     }
 
-    private static void Build(string profilePath, string repoRoot, string upstream, string output,
+    internal static void Build(string profilePath, string repoRoot, string upstream, string output,
         IReadOnlyList<string> modPaths, string? factoryClosurePath)
     {
         AppleEverestProfile profile = LoadProfile(profilePath);
@@ -364,5 +386,5 @@ internal static class Program
 
     private static void Run(string command, params string[] args) { _ = Capture(command, args); }
 
-    private static void Help() => Console.WriteLine("AppleEverestBuilder acquire|audit|inspect-map|inspect-map-boundary|inspect-factory-types|census-dll|census-semantics|validate-factory-closure|build|apply|scan-runtime|verify-preserved-assembly|verify-referenced-api|verify-aot-object|verify-profile (closed static-AOT Apple product)");
+    private static void Help() => Console.WriteLine("AppleEverestBuilder acquire|audit|inspect-map|inspect-map-boundary|inspect-factory-types|census-dll|census-semantics|validate-factory-closure|preflight-factory-closure|build|apply|scan-runtime|verify-preserved-assembly|verify-referenced-api|verify-aot-object|verify-profile (closed static-AOT Apple product)");
 }

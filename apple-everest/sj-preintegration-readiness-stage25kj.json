@@ -1,0 +1,46 @@
+{
+  "allPlatformReleaseReady": false,
+  "contentIdCensus": {
+    "acceptedOrVanilla": 920,
+    "blocked": 0,
+    "selectedOccurrences": 920,
+    "unclassified": 0
+  },
+  "developmentIntegrationReady": false,
+  "fullBeginnerSupported": false,
+  "fullStrawberryJamSupported": false,
+  "gates": {},
+  "kgMerged": false,
+  "kiMerged": false,
+  "lastAllThreeDevicePhysicalGreen": "Stage 25K-B build 35",
+  "originalSjGameplayMapsPackaged": false,
+  "physical": {
+    "ios": {
+      "status": "PENDING"
+    },
+    "ipados": {
+      "status": "IPADOS_PHYSICAL_PENDING_HARDWARE_UNAVAILABLE"
+    },
+    "tvos": {
+      "status": "PENDING"
+    }
+  },
+  "productionRegistrationCensus": {
+    "available": 73,
+    "providerRejected": 0,
+    "selected": 73,
+    "unavailable": 0
+  },
+  "readinessMarker": null,
+  "schemaVersion": 1,
+  "semanticClosureCensus": {
+    "blocked": 0,
+    "fullyClosed": 0,
+    "selected": 73,
+    "unknown": 73
+  },
+  "semanticClosureSha256": "427a53e58ffcd3c5e1d9899078dbd9a0130396f9fc089fa023995b33807d49b0",
+  "sharedClosureSha256": "9db1a154790501228199013693e92ba2b68f45add3cec1d4c18ae86185c721e2",
+  "stage": "25K-J",
+  "status": "IN_PROGRESS"
+}

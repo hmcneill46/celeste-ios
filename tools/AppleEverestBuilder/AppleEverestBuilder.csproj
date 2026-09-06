@@ -11,10 +11,12 @@
     <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
   </PropertyGroup>
   <ItemGroup>
+    <EmbeddedResource Include="../../apple-everest/sj-factory-authored-profiles-stage25kj.json" LogicalName="AppleEverest.SelectedFactoryProfiles" />
     <EmbeddedResource Include="StaticSemanticRuntimePatches.cs" LogicalName="AppleEverestBuilder.StaticSemanticRuntimePatches.cs" />
     <PackageReference Include="Mono.Cecil" Version="0.11.6" />
     <PackageReference Include="YamlDotNet" Version="16.1.3" />
     <Compile Remove="tests/**/*.cs" />
+    <Compile Include="../../apple-everest/runtime/AppleEverestDialogFragmentParser.cs" Link="AppleEverestDialogFragmentParser.cs" />
     <EmbeddedResource Include="../../apple-everest/managed-detour-targets-v2.json"
                       LogicalName="AppleEverest.ManagedDetourTargets.json" />
     <EmbeddedResource Include="../../apple-everest/apple-api-surface-v1.json"

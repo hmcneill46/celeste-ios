@@ -32,8 +32,8 @@ internal static class AppleEverestSecondCollabRuntime
     internal static bool CanApproachDoor(HeartGemDoor door, Player player, bool vanilla)
     {
         if (door is not AppleEverestMiniHeartDoor mini) return vanilla;
-        return mini.ForceTrigger || player != null && player.Center.Y > door.Y - mini.DoorHalfHeight &&
-            player.Center.Y < door.Y + mini.DoorHalfHeight;
+        return player != null && Math.Abs(player.X - door.Center.X) < (mini.ForceTrigger ? float.MaxValue : 80f) &&
+            (mini.ForceTrigger || player.Center.Y > door.Y - mini.DoorHalfHeight && player.Center.Y < door.Y + mini.DoorHalfHeight);
     }
 
     internal static void ConfigureHeartDoor(HeartGemDoor door, Solid top, Solid bottom, float openDistance, bool opened)
@@ -72,7 +72,7 @@ internal static class AppleEverestSecondCollabRuntime
     {
         string spriteId = berry switch
         {
-            AppleEverestSilverBerry => "CollabUtils2_silverBerry",
+            AppleEverestSilverBerry => SaveData.Instance.CheckStrawberry(berry.ID) ? "CollabUtils2_ghostSilverBerry" : "CollabUtils2_silverBerry",
             AppleEverestSpeedBerry => "CollabUtils2_speedBerry",
             AppleEverestRainbowBerry => "CollabUtils2_rainbowBerry",
             AppleEverestSecretBerry secret => secret.SpriteId,
@@ -112,7 +112,7 @@ internal sealed class AppleEverestGoldenBerryPlayerRespawnPoint : Entity
     }
 }
 
-internal sealed class AppleEverestMiniHeartDoor : HeartGemDoor
+internal class AppleEverestMiniHeartDoor : HeartGemDoor
 {
     private static readonly Dictionary<string, string> NamedColors = new(StringComparer.OrdinalIgnoreCase)
     {
@@ -161,19 +161,36 @@ internal sealed class AppleEverestMiniHeartDoorUnlockTrigger : Trigger
 
 internal sealed class AppleEverestSilverBerry : Strawberry
 {
+    private static ParticleType silverGlow, silverGhostGlow, originalGoldGlow, originalGhostGlow;
     private readonly bool alwaysSpawn;
     internal AppleEverestSilverBerry(EntityData data, Vector2 offset, EntityID id) : base(data, offset, id)
     {
         Golden = true;
         alwaysSpawn = data.Bool("alwaysSpawn");
+        if (silverGlow == null)
+        {
+            silverGlow = new ParticleType(P_Glow) { Color = Calc.HexToColor("BABBC0"), Color2 = Calc.HexToColor("6A8497") };
+            silverGhostGlow = new ParticleType(P_Glow) { Color = Calc.HexToColor("818E9E"), Color2 = Calc.HexToColor("36585B") };
+            originalGoldGlow = P_GoldGlow;
+            originalGhostGlow = P_GhostGlow;
+        }
     }
 
     public override void Added(Scene scene)
     {
         base.Added(scene);
         Level level = scene as Level;
-        if (!alwaysSpawn && !SaveData.Instance.CheatMode &&
-            !AppleEverestProgressionRuntime.Completed(level.Session.Area, SaveData.Instance)) RemoveSelf();
+        if ((level.Session.FurthestSeenLevel != level.Session.Level && level.Session.Deaths != 0) ||
+            (!alwaysSpawn && !SaveData.Instance.CheatMode &&
+            !AppleEverestProgressionRuntime.Completed(level.Session.Area, SaveData.Instance))) RemoveSelf();
+    }
+    public override void Update()
+    {
+        P_GoldGlow = silverGlow;
+        P_GhostGlow = silverGhostGlow;
+        base.Update();
+        P_GoldGlow = originalGoldGlow;
+        P_GhostGlow = originalGhostGlow;
     }
 }
 

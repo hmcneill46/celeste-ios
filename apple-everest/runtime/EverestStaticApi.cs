@@ -331,8 +331,11 @@ public static partial class Everest
                 OnRegisterStates?.Invoke(player);
             internal static void RaiseOnSpawn(global::Celeste.Player player) => OnSpawn?.Invoke(player);
             internal static void RaiseOnDie(global::Celeste.Player player) => OnDie?.Invoke(player);
-            internal static void RaiseOnAfterUpdate(global::Celeste.Player player) =>
+            internal static void RaiseOnAfterUpdate(global::Celeste.Player player)
+            {
+                global::Celeste.Mod.AppleEverestCollabRuntime.AfterPlayerUpdate(player);
                 OnAfterUpdate?.Invoke(player);
+            }
         }
 
         public static partial class Level

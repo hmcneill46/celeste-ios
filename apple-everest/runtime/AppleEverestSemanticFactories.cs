@@ -265,6 +265,7 @@ internal sealed class AppleEverestGroupedTriggerSpikesUp : Entity
     private bool triggered;
     private float delayTimer;
     private float lerp;
+    private bool blockingLedge;
 
     internal AppleEverestGroupedTriggerSpikesUp(EntityData data, Vector2 offset)
         : base(data.Position + offset)
@@ -275,7 +276,7 @@ internal sealed class AppleEverestGroupedTriggerSpikesUp : Entity
         killIfSameDirection = data.Bool("killIfSameDirection", triggerIfSameDirection);
         Collider = new Hitbox(size, 3f, 0f, -3f);
         Add(new SafeGroundBlocker());
-        Add(new LedgeBlocker(player => lerp >= 1f && PlayerOverlapsSpan(player)));
+        Add(new LedgeBlocker(UpSafeBlockCheck));
         Add(new PlayerCollider(OnCollide));
         Add(new StaticMover
         {
@@ -307,8 +308,7 @@ internal sealed class AppleEverestGroupedTriggerSpikesUp : Entity
     public override void Update()
     {
         base.Update();
-        if (!triggered) return;
-        if (delayTimer > 0f)
+        if (triggered && delayTimer > 0f)
         {
             delayTimer -= Engine.DeltaTime;
             if (delayTimer <= 0f)
@@ -319,10 +319,28 @@ internal sealed class AppleEverestGroupedTriggerSpikesUp : Entity
                     Audio.Play("event:/game/03_resort/fluff_tendril_emerge", Position + spikePositions[spikePositions.Length / 2]);
             }
         }
-        else
+        else if (triggered)
         {
             lerp = Calc.Approach(lerp, 1f, 8f * Engine.DeltaTime);
         }
+        else
+        {
+            lerp = Calc.Approach(lerp, 0f, 4f * Engine.DeltaTime);
+            if (lerp <= 0f) triggered = false;
+        }
+        if (blockingLedge == (lerp >= 1f)) return;
+        blockingLedge = !blockingLedge;
+        if (blockingLedge)
+        {
+            Add(new LedgeBlocker());
+            return;
+        }
+        foreach (Component component in this)
+            if (component is LedgeBlocker)
+            {
+                Remove(component);
+                break;
+            }
     }
 
     public override void Render()
@@ -352,8 +370,14 @@ internal sealed class AppleEverestGroupedTriggerSpikesUp : Entity
         }
     }
 
-    private bool PlayerOverlapsSpan(Player player) =>
-        player.Right >= Left && player.Left <= Right;
+    private bool UpSafeBlockCheck(Player player)
+    {
+        int facingOffset = 8 * (int)player.Facing;
+        int minimum = (int)((player.Left + facingOffset - Left) / 4f);
+        int maximum = (int)((player.Right + facingOffset - Left) / 4f);
+        if (maximum < 0 || minimum >= spikePositions.Length) return false;
+        return lerp >= 1f;
+    }
 }
 
 internal sealed class AppleEverestNoDashArea : Entity
@@ -1023,11 +1047,33 @@ internal sealed class AppleEverestCrystalShatterTrigger : Trigger
 
 internal sealed class AppleEverestFlagTrigger : Trigger
 {
+    private enum Modes { OnPlayerEnter, OnPlayerLeave, OnLevelStart }
     private readonly string flag;
     private readonly bool state;
+    private readonly Modes mode;
+    private readonly bool onlyOnce;
+    private readonly int deathCount;
+    private bool triggered;
     internal AppleEverestFlagTrigger(EntityData data, Vector2 offset) : base(data, offset)
-    { flag = data.Attr("flag"); state = data.Bool("state", true); }
-    public override void OnEnter(Player player) { base.OnEnter(player); if (flag.Length != 0) SceneAs<Level>().Session.SetFlag(flag, state); }
+    {
+        flag = data.Attr("flag"); state = data.Bool("state");
+        mode = data.Enum("mode", Modes.OnPlayerEnter);
+        onlyOnce = data.Bool("only_once", false);
+        deathCount = data.Int("death_count", -1);
+    }
+    public override void Awake(Scene scene)
+    { base.Awake(scene); if (mode == Modes.OnLevelStart) SetFlag(); }
+    // The source overrides intentionally do not change PlayerIsInside.
+    public override void OnEnter(Player player) { if (mode == Modes.OnPlayerEnter) SetFlag(); }
+    public override void OnLeave(Player player) { if (mode == Modes.OnPlayerLeave) SetFlag(); }
+    private void SetFlag()
+    {
+        if (triggered) return;
+        Session session = SceneAs<Level>().Session;
+        if (deathCount >= 0 && session.DeathsInCurrentLevel != deathCount) return;
+        session.SetFlag(flag, state);
+        if (onlyOnce) triggered = true;
+    }
 }
 
 internal sealed class AppleEverestSmoothCameraOffsetTrigger : Trigger
@@ -1035,13 +1081,23 @@ internal sealed class AppleEverestSmoothCameraOffsetTrigger : Trigger
     private readonly Vector2 from;
     private readonly Vector2 to;
     private readonly PositionModes mode;
+    private readonly bool onlyOnce, xOnly, yOnly;
     internal AppleEverestSmoothCameraOffsetTrigger(EntityData data, Vector2 offset) : base(data, offset)
     {
         from = new Vector2(data.Float("offsetXFrom") * 48f, data.Float("offsetYFrom") * 32f);
         to = new Vector2(data.Float("offsetXTo") * 48f, data.Float("offsetYTo") * 32f);
         _ = Enum.TryParse(data.Attr("positionMode", "NoEffect"), out mode);
+        onlyOnce = data.Bool("onlyOnce");
+        xOnly = data.Bool("xOnly");
+        yOnly = data.Bool("yOnly");
     }
-    public override void OnStay(Player player) => SceneAs<Level>().CameraOffset = Vector2.Lerp(from, to, GetPositionLerp(player, mode));
+    public override void OnStay(Player player)
+    {
+        base.OnStay(player);
+        if (!yOnly) SceneAs<Level>().CameraOffset.X = MathHelper.Lerp(from.X, to.X, GetPositionLerp(player, mode));
+        if (!xOnly) SceneAs<Level>().CameraOffset.Y = MathHelper.Lerp(from.Y, to.Y, GetPositionLerp(player, mode));
+    }
+    public override void OnLeave(Player player) { base.OnLeave(player); if (onlyOnce) RemoveSelf(); }
 }
 
 internal sealed class AppleEverestCameraCatchupTrigger : Trigger

@@ -19,13 +19,61 @@ internal static class AppleEverestCollabRuntime
     private static bool hasPreviousArea;
     private static string forcedMapSid;
     private static string forcedJournalLevelSet;
+    private static string returnMode;
+    private static bool allowSaving;
+    internal static AppleEverestCollabSession Route => null;
+    internal static bool IsOpen => overworldWrapper != null;
+    private static AppleEverestCollabSession restartRoute;
+    private static int restartArea = -1;
+    private static bool pauseTimerOnNextLobbyLoad;
+    private static Level waitingForLobbyInput;
+
+    internal static void RememberRestartRoute(Session session)
+    {
+        restartRoute = Route?.Copy();
+        restartArea = session.Area.ID;
+    }
+
+    internal static AppleEverestCollabSession TakeRestartRoute(Session session)
+    {
+        AppleEverestCollabSession retained = restartArea == session.Area.ID ? restartRoute : null;
+        restartRoute = null;
+        restartArea = -1;
+        // Exact same-area teleport preservation from the LevelLoader hook.
+        if (Engine.Scene is Level previous && previous.Session != session && previous.Session.Area.ID == session.Area.ID)
+            retained = Route?.Copy();
+        return retained;
+    }
+
+    internal static void AfterPlayerUpdate(Player player)
+    {
+        if (waitingForLobbyInput != null && player.Scene == waitingForLobbyInput && player.InControl &&
+            (Input.MoveX.Value != 0 || Input.MoveY.Value != 0 || Input.Grab.Check || Input.Jump.Check || Input.Dash.Check || Input.CrouchDash.Check))
+        {
+            waitingForLobbyInput.TimerStopped = false;
+            waitingForLobbyInput = null;
+        }
+    }
 
     internal static bool IsSubordinate(AreaKey area) =>
         AppleEverestProgressionRuntime.Sid(area) is string sid && Maps.ContainsKey(sid);
 
     internal static void OnLevelLoaded(Level level)
     {
+        restartRoute = null;
+        restartArea = -1;
+        waitingForLobbyInput = pauseTimerOnNextLobbyLoad ? level : null;
+        pauseTimerOnNextLobbyLoad = false;
+        if (waitingForLobbyInput != null) level.TimerStopped = true;
         string sid = AppleEverestProgressionRuntime.Sid(level.Session.Area);
+        if (Route != null && Route.LobbySID == null && sid != null && Maps.TryGetValue(sid, out var direct))
+        {
+            Route.LobbySID = direct.LobbySid;
+            Route.LobbyRoom = direct.ReturnRoom;
+            Route.LobbySpawnPointX = direct.ReturnX;
+            Route.LobbySpawnPointY = direct.ReturnY;
+            Route.SaveAndReturnToLobbyAllowed = direct.AllowSaving;
+        }
         AppleEverestCollabDescriptor collab = GeneratedAppleEverestCollabManifest.Collabs
             .SingleOrDefault(value => value.LobbySid == sid);
         if (collab == null || SaveData.Instance == null) return;
@@ -38,9 +86,13 @@ internal static class AppleEverestCollabRuntime
         }
     }
 
-    internal static void OpenChapterPanel(Player player, string sid)
+    internal static void OpenChapterPanel(Player player, string sid, string mode = "SetReturnToHere", bool saving = true)
     {
-        if (!Maps.ContainsKey(sid)) return;
+        if (player?.Scene is not Level || IsOpen || player.StateMachine.State == 11) return;
+        AreaData area = ResolveArea(sid);
+        if (!Dialog.Has(area.Name + "_collabcredits") && area.Mode[0].Checkpoints?.Length > 0) saving = false;
+        returnMode = mode;
+        allowSaving = saving;
         OpenOverworld(player, sid, journalLevelSet: null, chapter: true);
     }
 
@@ -49,8 +101,7 @@ internal static class AppleEverestCollabRuntime
         AppleEverestCollabDescriptor collab = GeneratedAppleEverestCollabManifest.Collabs.SingleOrDefault(value =>
             value.Maps.Any(map => AppleEverestProgressionRuntime.TryDescriptor(map.Sid, out var descriptor) &&
                                   descriptor.LevelSet == levelSet));
-        if (collab == null) return;
-        string areaSid = collab.Maps.OrderBy(value => value.Order).First().Sid;
+        string areaSid = collab?.Maps.OrderBy(value => value.Order).FirstOrDefault()?.Sid;
         OpenOverworld(player, areaSid, levelSet, chapter: false);
     }
 
@@ -103,7 +154,7 @@ internal static class AppleEverestCollabRuntime
         AppleEverestProgressionPersistence.HasSuspendedSession(forcedMapSid);
 
     private static bool UsesSyntheticBookmarks(string sid) =>
-        sid != null && Maps.TryGetValue(sid, out AppleEverestCollabMapDescriptor map) && map.AllowSaving &&
+        sid != null && (sid == forcedMapSid ? allowSaving : Maps.TryGetValue(sid, out AppleEverestCollabMapDescriptor map) && map.AllowSaving) &&
         AppleEverestProgressionRuntime.TryDescriptor(sid, out AppleEverestMapProgressionDescriptor descriptor) &&
         descriptor.Checkpoints.Length == 0;
 
@@ -186,15 +237,19 @@ internal static class AppleEverestCollabRuntime
     internal static void AddPauseMenuItem(Level level, TextMenu menu)
     {
         string sid = AppleEverestProgressionRuntime.Sid(level.Session.Area);
-        if (sid == null || !Maps.TryGetValue(sid, out AppleEverestCollabMapDescriptor map)) return;
+        bool saving;
+        if (Route?.LobbySID != null) saving = Route.SaveAndReturnToLobbyAllowed;
+        else if (sid != null && Maps.TryGetValue(sid, out AppleEverestCollabMapDescriptor map)) saving = map.AllowSaving;
+        else return;
         TextMenu.Item item = null;
-        menu.Add(item = new TextMenu.Button(Dialog.Clean("collabutils2_returntolobby")).Pressed(() =>
+        item = new TextMenu.Button(Dialog.Clean("collabutils2_returntolobby")).Pressed(() =>
         {
             int returnIndex = menu.IndexOf(item);
             level.PauseMainMenuOpen = false;
             menu.RemoveSelf();
-            OpenReturnToLobbyConfirmMenu(level, returnIndex, map.AllowSaving);
-        }));
+            OpenReturnToLobbyConfirmMenu(level, returnIndex, saving);
+        });
+        menu.AppleEverestReplaceReturnButton(Dialog.Clean("menu_pause_return"), item);
         (item as TextMenu.Button).ConfirmSfx = "event:/ui/main/message_confirm";
     }
 
@@ -206,14 +261,14 @@ internal static class AppleEverestCollabRuntime
         level.TimerStopped = true;
         level.RegisterAreaComplete();
         level.PauseLock = true;
-        UserIO.SaveHandler(file: true, settings: false);
-        // Match CollabUtils2's ReturnToLobbyHelper: wait for the durable save,
-        // then let Level select the current map's authored wipe.  Returning
-        // directly skipped Station Stratosphere's black AngledWipe entirely.
-        // Do not pause the Level here; ScreenWipe is designed to advance while
-        // the mini-heart sequence keeps gameplay frozen.
-        level.Add(new AppleEverestCollabTransition(() =>
-            level.DoScreenWipe(false, () => ReturnNow(level), false)));
+        BeginCompletedReturn(level);
+    }
+
+    internal static void BeginCompletedReturn(Level level)
+    {
+        // The authored wipe runs in the completing level. The destination
+        // session and completion progress are committed together afterward.
+        level.DoScreenWipe(false, () => ReturnNow(level), false);
     }
 
     private static void OpenReturnToLobbyConfirmMenu(Level level, int returnIndex, bool allowSaving)
@@ -265,46 +320,93 @@ internal static class AppleEverestCollabRuntime
 
     private static void ReturnToLobby(Level level, TextMenu menu, bool save)
     {
+        Engine.TimeRate = 1f;
         menu.Focused = false;
-        menu.RemoveSelf();
-        level.PauseMainMenuOpen = false;
-        level.Paused = true;
-        level.PauseLock = true;
+        Audio.SetMusic(null);
+        Audio.BusStopAll("bus:/gameplay_sfx", immediate: true);
         if (save)
         {
             level.Session.InArea = true;
             level.Session.Deaths++;
             level.Session.DeathsInCurrentLevel++;
             SaveData.Instance?.AddDeath(level.Session.Area);
-            AppleEverestProgressionPersistence.SuspendCurrentSession();
-            UserIO.SaveHandler(file: true, settings: false);
         }
-        level.Add(new AppleEverestCollabTransition(() =>
-            level.DoScreenWipe(false, () => ReturnNow(level), false)));
+        level.DoScreenWipe(false, () =>
+        {
+            if (save) AppleEverestProgressionPersistence.SuspendCurrentSession();
+            ReturnNow(level);
+        }, false);
+        foreach (LevelEndingHook hook in level.Tracker.GetComponents<LevelEndingHook>())
+            hook.OnEnd?.Invoke();
     }
 
     private static void ReturnNow(Level level)
     {
         string sid = AppleEverestProgressionRuntime.Sid(level.Session.Area);
-        if (sid == null || !Maps.TryGetValue(sid, out AppleEverestCollabMapDescriptor map)) return;
+        string lobby, room;
+        Vector2 spawn;
+        if (Route?.LobbySID != null)
+        {
+            lobby = Route.LobbySID; room = Route.LobbyRoom;
+            spawn = new Vector2(Route.LobbySpawnPointX, Route.LobbySpawnPointY);
+        }
+        else if (sid != null && Maps.TryGetValue(sid, out AppleEverestCollabMapDescriptor map))
+        {
+            lobby = map.LobbySid; room = map.ReturnRoom;
+            spawn = new Vector2(map.ReturnX, map.ReturnY);
+        }
+        else return;
         level.EndPauseEffects();
         Audio.SetMusic(null);
         Audio.BusStopAll("bus:/gameplay_sfx", immediate: true);
-        AppleEverestProgressionRuntime.LaunchPersistentAt(map.LobbySid, map.ReturnRoom,
-            new Vector2(map.ReturnX, map.ReturnY));
+        Engine.Scene = new ReturnScene(lobby, room, spawn);
     }
+
+    private sealed class ReturnScene : Scene
+    {
+        private readonly string sid, room;
+        private readonly Vector2 spawn;
+        internal ReturnScene(string sid, string room, Vector2 spawn)
+        { this.sid = sid; this.room = room; this.spawn = spawn; }
+        public override void Begin()
+        {
+            base.Begin();
+            Add(new HudRenderer());
+            SaveLoadIcon.Show(this);
+            Entity routine = new();
+            routine.Add(new Coroutine(Return()));
+            Add(routine);
+        }
+        private IEnumerator Return()
+        {
+            Session next = new(new AreaKey(ResolveArea(sid).ID))
+            {
+                FirstLevel = false, StartedFromBeginning = false,
+                Level = room, RespawnPoint = spawn
+            };
+            SaveData.Instance.StartSession(next);
+            UserIO.SaveHandler(file: true, settings: true);
+            while (UserIO.Saving) yield return null;
+            while (SaveLoadIcon.OnScreen) yield return null;
+            pauseTimerOnNextLobbyLoad = true;
+            LevelEnter.Go(next, fromSaveData: false);
+        }
+    }
+
+    private static AreaData ResolveArea(string sid) => sid != null && AppleEverestProgressionRuntime.TryDescriptor(sid, out var descriptor)
+        ? AreaData.Get(descriptor.RuntimeAreaId) : AreaData.Get(0);
 
     private static void OpenOverworld(Player player, string areaSid, string journalLevelSet, bool chapter)
     {
         if (player?.Scene is not Level level || overworldWrapper != null || player.StateMachine.State == 11 ||
-            SaveData.Instance == null || !AppleEverestProgressionRuntime.TryDescriptor(areaSid, out var descriptor))
+            SaveData.Instance == null)
             return;
 
         player.Drop();
         player.StateMachine.State = 11;
         previousArea = SaveData.Instance.LastArea;
         hasPreviousArea = true;
-        SaveData.Instance.LastArea = new AreaKey(descriptor.RuntimeAreaId);
+        SaveData.Instance.LastArea = new AreaKey(ResolveArea(areaSid).ID);
         SaveData.Instance.LastArea_Safe = SaveData.Instance.LastArea;
         forcedMapSid = chapter ? areaSid : null;
         forcedJournalLevelSet = journalLevelSet;
@@ -331,6 +433,10 @@ internal static class AppleEverestCollabRuntime
         overworldWrapper.Add(new Coroutine(WrappedOverworldRoutine(level, overworldWrapper)));
     }
 
+    internal static bool IsFactoryInteractionMap(string sid) => sid != null &&
+        Maps.TryGetValue(sid, out AppleEverestCollabMapDescriptor map) &&
+        map.LobbySid == "AppleEverestStage25KJ/0-Lobbies/1-Fixture";
+
     private static IEnumerator StartSelectedMap(OuiChapterPanel panel, string sid, string checkpoint)
     {
         panel.Add(new Coroutine(panel.EaseOut(removeChildren: false)));
@@ -343,10 +449,13 @@ internal static class AppleEverestCollabRuntime
         Audio.SetMusic(null);
         Audio.SetAmbience(null);
         yield return 0.35f;
+        AppleEverestCollabSession route = CaptureReturnRoute(Engine.Scene as Level);
         if (Engine.Scene is Level current) CloseOverworld(current, resetPlayer: false);
-        if (SaveData.Instance == null || SaveData.Instance.FileSlot is < 0 or > 2 ||
-            !AppleEverestProgressionRuntime.TryDescriptor(sid, out AppleEverestMapProgressionDescriptor descriptor))
+        bool authoredDebug = AppleEverestStaticRuntime.NonPersistentModSession && SaveData.Instance?.FileSlot == 4 &&
+            IsFactoryInteractionMap(sid);
+        if (SaveData.Instance == null || (SaveData.Instance.FileSlot is < 0 or > 2) && !authoredDebug)
             yield break;
+        AppleEverestProgressionRuntime.TryDescriptor(sid, out AppleEverestMapProgressionDescriptor descriptor);
         bool continueSession = checkpoint == ContinueCheckpoint;
         Session session = null;
         if (continueSession)
@@ -357,16 +466,39 @@ internal static class AppleEverestCollabRuntime
         // descriptor, matching Everest before Session initializes its level,
         // intro, inventory and restart semantics.
         string sessionCheckpoint = ResolveSessionCheckpoint(checkpoint);
-        session ??= new Session(new AreaKey(descriptor.RuntimeAreaId), sessionCheckpoint);
+        session ??= new Session(new AreaKey(ResolveArea(sid).ID), sessionCheckpoint);
         AppleEverestStaticRuntime.Log($"collab-map=session-ready sid={sid} choice={(continueSession ? "continue" : "start-over")} room={session.Level} checkpoint={session.StartCheckpoint ?? "<none>"} beginning={session.StartedFromBeginning}");
         SaveData.Instance.StartSession(session);
+        route.CopyTo(Route);
         AppleEverestStaticRuntime.Log($"collab-map=session-started sid={sid} choice={(continueSession ? "continue" : "start-over")}");
         UserIO.SaveHandler(file: true, settings: false);
         AppleEverestStaticRuntime.Log($"collab-map=save-started sid={sid} choice={(continueSession ? "continue" : "start-over")}");
         while (UserIO.Saving) yield return null;
         AppleEverestStaticRuntime.Log($"collab-map=handoff sid={sid} choice={(continueSession ? "continue" : "start-over")} room={session.Level}");
-        EnterSelectedMap(session, descriptor, continueSession);
+        if (descriptor != null) EnterSelectedMap(session, descriptor, continueSession);
+        else LevelEnter.Go(session, fromSaveData: false);
         AppleEverestStaticRuntime.Log($"collab-map=launch sid={sid} choice={(continueSession ? "continue" : "start-over")} room={session.Level}");
+    }
+
+    private static AppleEverestCollabSession CaptureReturnRoute(Level level)
+    {
+        AppleEverestCollabSession route = Route?.Copy() ?? new AppleEverestCollabSession();
+        route.SaveAndReturnToLobbyAllowed = allowSaving;
+        if (returnMode == "SetReturnToHere")
+        {
+            route.LobbySID = level.Session.Area.SID;
+            route.LobbyRoom = level.Session.LevelData.Name;
+            Player player = level.Tracker.GetEntity<Player>();
+            Vector2 spawn = level.GetSpawnPoint(player != null ? player.Position : level.Camera.Position + new Vector2(160f, 90f));
+            route.LobbySpawnPointX = spawn.X; route.LobbySpawnPointY = spawn.Y;
+        }
+        else if (returnMode == "RemoveReturn")
+        {
+            route.LobbySID = route.LobbyRoom = null;
+            route.LobbySpawnPointX = route.LobbySpawnPointY = 0f;
+        }
+        else if (returnMode != "DoNotChangeReturn") throw new InvalidOperationException("unsupported Collab return mode");
+        return route;
     }
 
     private static string ResolveSessionCheckpoint(string checkpoint)
@@ -525,19 +657,23 @@ internal sealed class AppleEverestChapterPanelTrigger : Trigger
 {
     private readonly string sid;
     private readonly string interactFlag;
+    private readonly string returnMode;
+    private readonly bool allowSaving;
     private readonly TalkComponent talk;
     internal AppleEverestChapterPanelTrigger(EntityData data, Vector2 offset) : base(data, offset)
     {
         sid = data.Attr("map");
         interactFlag = data.Attr("interactFlag");
+        returnMode = data.Attr("returnToLobbyMode", "SetReturnToHere");
+        allowSaving = data.Bool("allowSaving", true);
         Vector2 drawAt = data.Nodes.Length > 0 ? data.Nodes[0] - data.Position : new Vector2(data.Width / 2f, data.Height / 2f);
         Add(talk = new TalkComponent(new Rectangle(0, 0, data.Width, data.Height), drawAt,
-            player => AppleEverestCollabRuntime.OpenChapterPanel(player, sid)) { PlayerMustBeFacing = false });
+            player => AppleEverestCollabRuntime.OpenChapterPanel(player, sid, returnMode, allowSaving)) { PlayerMustBeFacing = false });
     }
     public override void Update()
     {
         base.Update();
-        talk.Enabled = string.IsNullOrWhiteSpace(interactFlag) || SceneAs<Level>().Session.GetFlag(interactFlag);
+        talk.Enabled = !AppleEverestCollabRuntime.IsOpen && (string.IsNullOrEmpty(interactFlag) || SceneAs<Level>().Session.GetFlag(interactFlag));
     }
 }
 
@@ -551,6 +687,11 @@ internal sealed class AppleEverestJournalTrigger : Trigger
         Vector2 drawAt = data.Nodes.Length > 0 ? data.Nodes[0] - data.Position : new Vector2(data.Width / 2f, data.Height / 2f);
         Add(talk = new TalkComponent(new Rectangle(0, 0, data.Width, data.Height), drawAt,
             player => AppleEverestCollabRuntime.OpenJournal(player, levelSet)) { PlayerMustBeFacing = false });
+    }
+    public override void Update()
+    {
+        base.Update();
+        talk.Enabled = !AppleEverestCollabRuntime.IsOpen;
     }
 }
 

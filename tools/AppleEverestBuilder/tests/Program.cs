@@ -96,8 +96,11 @@ try
     passed += ModInteropTests.Run(repository, temporary);
     passed += ModuleDurabilityTests.Run(repository, temporary);
     passed += StrawberryJamStateTests.Run();
+    passed += CoreSessionStateTests.Run();
+    passed += CollabSaveStateTests.Run();
     passed += LevelSetProgressionTests.Run(repository, temporary);
     passed += CollabStaticTests.Run(repository, temporary);
+    passed += SelectedCanaryContentTests.Run(temporary);
     passed += SelectedFactoryTypeClosureTests.Run();
     passed += DialogFragmentParserTests.Run();
 
@@ -1778,6 +1781,13 @@ try
         "tracked H-D behavior canary contains no third-party binary or source fixture");
 
     Console.WriteLine($"PASS: AppleEverestBuilder deterministic tests ({passed})");
+}
+catch (Exception exception)
+{
+    // Return a normal failing exit status; avoid macOS crash-report hangs for
+    // an ordinary assertion failure, while still running temporary cleanup.
+    Console.Error.WriteLine(exception);
+    Environment.ExitCode = 1;
 }
 finally
 {

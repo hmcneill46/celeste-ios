@@ -225,7 +225,9 @@ internal sealed record MapElementRecord(
     int Width,
     int Height,
     IReadOnlyDictionary<string, string> Attributes,
-    IReadOnlyList<(float X, float Y)> Nodes);
+    IReadOnlyList<(float X, float Y)> Nodes,
+    float RoomX = 0,
+    float RoomY = 0);
 internal sealed record CollabMapRecord(
     string Sid,
     string LobbySid,
@@ -460,9 +462,10 @@ internal sealed record StaticAotCompatibilityPlan(string Id, string Owner, strin
     string SourceSha256, string DllPath, string DllSha256, bool AllowNonPublicCustomFactories);
 
 internal sealed record StaticSemanticFactory(string Kind, string Id, string RuntimeFactory,
-    string? ConstructorExpression = null);
+    string? ConstructorExpression = null, bool GuardSelectedProfile = false);
 
 internal sealed record StaticSemanticDependency(string Name, string Version);
+internal sealed record StaticSemanticTracking(string Type, string[] Aliases, bool Component = false);
 
 internal sealed record StaticSemanticModulePlan(
     AppleStaticDeclaration Declaration,
@@ -480,4 +483,7 @@ internal sealed record StaticSemanticLoweringPlan(
     IReadOnlyList<StaticSemanticDependency>? EffectiveDependencies,
     IReadOnlyList<string>? ContentPrefixes,
     StaticSemanticModulePlan? Module,
-    IReadOnlyList<string>? RuntimeFiles = null);
+    IReadOnlyList<string>? RuntimeFiles = null,
+    IReadOnlyList<StaticSemanticTracking>? Tracking = null,
+    IReadOnlyList<StaticSemanticDependency>? LinkRequirements = null,
+    IReadOnlyList<string>? PooledEntityTypes = null);

@@ -28,7 +28,6 @@ internal static class CollabManifestGenerator
             if (id.Length is < 1 or > 96 || id.Any(ch => !(char.IsLetterOrDigit(ch) || ch is '_' or '-')))
                 throw new InvalidDataException($"invalid CollabUtils2 collab ID for {mod.Metadata.Name}");
 
-            Dictionary<string, string> dialog = ReadDialog(mod.Input);
             ContentMountRecord[] mounts = content.Where(item => item.Owner == mod.Metadata.Name &&
                     item.LogicalPath.StartsWith("Maps/" + id + "/", StringComparison.Ordinal) &&
                     item.LogicalPath.EndsWith(".bin", StringComparison.Ordinal))
@@ -39,6 +38,7 @@ internal static class CollabManifestGenerator
             // closure and must not be inferred from the unmounted source files.
             if (mounts.Length == 0 && mod.StaticSemanticLowering?.ContentPrefixes != null)
                 continue;
+            Dictionary<string, string> dialog = ReadDialog(mod.Input);
             MapProgressionRecord[] owned = mounts.Select(item =>
                     maps.Single(map => map.Sid == item.LogicalPath["Maps/".Length..^4]))
                 .OrderBy(map => map.Sid, StringComparer.Ordinal).ToArray();
@@ -48,17 +48,20 @@ internal static class CollabManifestGenerator
                 throw new InvalidDataException($"{mod.Metadata.Name} must expose exactly one bounded CollabUtils2 lobby");
             MapProgressionRecord lobby = lobbies[0];
             MapProgressionRecord[] subordinate = owned.Where(map => map != lobby).ToArray();
-            if (subordinate.Length < 2)
+            bool selectedBeginner = IsPinnedBeginnerSelection(mod, owned, mounts);
+            if (!selectedBeginner && subordinate.Length < 2)
                 throw new InvalidDataException($"{mod.Metadata.Name} collab must expose at least two subordinate maps");
 
             ContentMountRecord lobbyMount = mounts.Single(item => item.LogicalPath == "Maps/" + lobby.Sid + ".bin");
             MapElementRecord[] elements = ContentCompiler.InspectElements(StagedPath(contentRoot, lobbyMount)).ToArray();
             MapElementRecord[] panels = elements.Where(item =>
-                item.Kind == "trigger" && item.Id == "CollabUtils2/ChapterPanelTrigger").ToArray();
+                item.Kind == "trigger" && item.Id == "CollabUtils2/ChapterPanelTrigger" ||
+                selectedBeginner && item.Kind == "entity" && item.Id == "SJ2021/StrawberryJamJar").ToArray();
             string[] targets = panels.Select(panel => panel.Attributes.GetValueOrDefault("map", ""))
                 .OrderBy(value => value, StringComparer.Ordinal).ToArray();
             string[] expected = subordinate.Select(map => map.Sid).OrderBy(value => value, StringComparer.Ordinal).ToArray();
-            if (!targets.SequenceEqual(expected, StringComparer.Ordinal))
+            if (selectedBeginner) ValidateBeginnerEntrances(panels);
+            else if (!targets.SequenceEqual(expected, StringComparer.Ordinal))
                 throw new InvalidDataException($"{mod.Metadata.Name} lobby chapter-panel targets do not exactly match its subordinate maps");
 
             MapElementRecord[] journals = elements.Where(item =>
@@ -78,7 +81,8 @@ internal static class CollabManifestGenerator
             string journalLevelSet = commonLevelSet;
 
             MapElementRecord[] players = elements.Where(item => item.Kind == "entity" && item.Id == "player").ToArray();
-            CollabMapRecord[] mapRecords = panels.OrderBy(panel => panel.X).Select((panel, index) =>
+            CollabMapRecord[] mapRecords = panels.Where(panel => expected.Contains(panel.Attributes.GetValueOrDefault("map", ""), StringComparer.Ordinal))
+                .OrderBy(panel => panel.X).Select((panel, index) =>
             {
                 string sid = panel.Attributes["map"];
                 MapProgressionRecord map = subordinate.Single(value => value.Sid == sid);
@@ -86,29 +90,21 @@ internal static class CollabManifestGenerator
                 MapElementRecord[] roomPlayers = players.Where(value => value.Room == panel.Room).ToArray();
                 if (roomPlayers.Length == 0)
                     throw new InvalidDataException($"{mod.Metadata.Name} chapter panel has no lobby return spawn in room {panel.Room}");
-                // CollabUtils2 records Level.GetSpawnPoint(player.Position) when the panel is
-                // opened.  At build time the player can only be inside the authored trigger,
-                // so use its centre and require the nearest room spawn to be unambiguous.
-                // This generalises the former one-spawn assumption without baking in a
-                // particular lobby or panel layout.
-                double centerX = panel.X + panel.Width / 2d;
-                double centerY = panel.Y + panel.Height / 2d;
+                // This is only the direct-start recovery route. Live chapter
+                // launches capture Level.GetSpawnPoint(player.Position). Match
+                // ClosestTo's Single arithmetic and first-authored tie order.
+                float centerX = panel.X + panel.Width / 2f;
+                float centerY = panel.Y + panel.Height / 2f;
                 var rankedPlayers = roomPlayers.Select(value => new
                     {
                         Player = value,
-                        Distance = Math.Pow(value.X - centerX, 2d) + Math.Pow(value.Y - centerY, 2d)
+                        Distance = (value.X - centerX) * (value.X - centerX) + (value.Y - centerY) * (value.Y - centerY)
                     })
                     .OrderBy(value => value.Distance)
-                    .ThenBy(value => value.Player.X)
-                    .ThenBy(value => value.Player.Y)
                     .ToArray();
-                if (rankedPlayers.Length > 1 && rankedPlayers[0].Distance == rankedPlayers[1].Distance)
-                    throw new InvalidDataException($"{mod.Metadata.Name} chapter panel has ambiguous nearest lobby return spawns in room {panel.Room}");
                 MapElementRecord player = rankedPlayers[0].Player;
-                // EntityData.Bool() defaults an absent field to false.  Older
-                // collabs such as Kayonara predate the editor-side true
-                // default and intentionally omit this attribute.
-                bool allowSaving = ParseBool(panel.Attributes, "allowSaving", false);
+                // Exact CollabUtils2 1.13.4 ChapterPanelTrigger default.
+                bool allowSaving = ParseBool(panel.Attributes, "allowSaving", true);
                 string returnMode = panel.Attributes.GetValueOrDefault("returnToLobbyMode", "SetReturnToHere");
                 if (returnMode != "SetReturnToHere")
                     throw new InvalidDataException($"{mod.Metadata.Name} uses unsupported chapter-panel return semantics");
@@ -120,7 +116,7 @@ internal static class CollabManifestGenerator
                     sid, lobby.Sid, Dialog(dialog, DialogKey(sid), DisplayName(sid)),
                     Dialog(dialog, DialogKey(sid) + "_author", "Unknown author"), index,
                     mount.SourceSha256, mount.Sha256, map.CompatibilityId, map.LevelSet, map.Rooms,
-                    allowSaving, returnMode, panel.Room, player.X, player.Y, map.Strawberries,
+                    allowSaving, returnMode, panel.Room, player.X + player.RoomX, player.Y + player.RoomY, map.Strawberries,
                     map.Heart, map.CompletionAvailable, miniHeartCount, specialBerries);
             }).ToArray();
 
@@ -135,11 +131,15 @@ internal static class CollabManifestGenerator
                     item.Attributes.GetValueOrDefault("levelSet", commonLevelSet),
                     item.Attributes.GetValueOrDefault("doorID", ""),
                     item.Attributes.GetValueOrDefault("color", "18668F"), contributingMaps)).ToArray();
+            if (selectedBeginner && doors.Length != 1)
+                throw new InvalidDataException("selected Beginner must retain its one authored mini-heart door");
             foreach (CollabMiniHeartDoorRecord door in doors)
             {
                 if (door.LevelSet != commonLevelSet)
                     throw new InvalidDataException($"{mod.Metadata.Name} mini-heart door targets an unrelated LevelSet");
-                if (door.Requires > contributingMaps.Length)
+                if (selectedBeginner && (door.EntityId != 657 || door.Requires != 21))
+                    throw new InvalidDataException("selected Beginner door metadata differs");
+                if (!selectedBeginner && door.Requires > contributingMaps.Length)
                     throw new InvalidDataException($"{mod.Metadata.Name} mini-heart door threshold exceeds authored contributing maps");
             }
             CollabSpecialBerryRecord[] lobbySpecialBerries = SpecialBerries(elements, commonLevelSet);
@@ -157,6 +157,38 @@ internal static class CollabManifestGenerator
         string manifest = Manifest(collabs);
         string sha = Hashing.BytesSha256(Encoding.UTF8.GetBytes(manifest));
         return new(Source(collabs, sha), manifest, collabs, sha);
+    }
+
+    private static bool IsPinnedBeginnerSelection(ResolvedMod mod, MapProgressionRecord[] owned, ContentMountRecord[] mounts)
+    {
+        if (mod.Metadata.Name != "StrawberryJam2021") return false;
+        if (mod.StaticSemanticLowering?.Id != "strawberryjam2021-1.0.12-beginner-root-v1")
+            throw new InvalidDataException("partial collab selection requires the exact reviewed SJ provider identity");
+        Dictionary<string, string> expected = new(StringComparer.Ordinal)
+        {
+            ["StrawberryJam2021/0-Lobbies/1-Beginner"] = "a4e3e20a2f0cc878fe43b32fb8025d7650b20cc6265f69e37bf3110a7cdf47c2",
+            ["StrawberryJam2021/1-Beginner/Bing_Over_Google"] = "e770a8d193f217d09a6e153fbe272813d26a04d972df947ac812aa5cfe66f347"
+        };
+        if (owned.Length != 2 || owned.Any(map => !expected.ContainsKey(map.Sid)) || mounts.Any(mount =>
+            expected.GetValueOrDefault(mount.LogicalPath["Maps/".Length..^4]) != mount.SourceSha256))
+            throw new InvalidDataException("partial SJ collab selection differs from the two reviewed original identities");
+        return true;
+    }
+
+    private static void ValidateBeginnerEntrances(MapElementRecord[] entrances)
+    {
+        // Metadata-only source catalog: never create placeholder playable areas
+        // for the other 20 jars, gym or heart-side. K-J mounts none of these maps.
+        using Stream stream = typeof(SelectedFactoryProfiles).Assembly.GetManifestResourceStream("AppleEverest.SelectedFactoryProfiles")!;
+        using System.Text.Json.JsonDocument profiles = System.Text.Json.JsonDocument.Parse(stream);
+        string[] expected = profiles.RootElement.GetProperty("occurrences").EnumerateArray()
+            .Where(row => row.GetProperty("customId").GetString() is "SJ2021/StrawberryJamJar" or "CollabUtils2/ChapterPanelTrigger")
+            .Select(row => row.GetProperty("attributes").GetProperty("map").GetString()!)
+            .Order(StringComparer.Ordinal).ToArray();
+        string[] actual = entrances.Select(row => row.Attributes.GetValueOrDefault("map", "")).Order(StringComparer.Ordinal).ToArray();
+        if (expected.Length != 23 || expected.Distinct(StringComparer.Ordinal).Count() != 23 ||
+            entrances.Count(row => row.Id == "SJ2021/StrawberryJamJar") != 21 || !actual.SequenceEqual(expected, StringComparer.Ordinal))
+            throw new InvalidDataException("selected Beginner entrance metadata must retain the exact 21 jars and two panels");
     }
 
     private static string Manifest(IEnumerable<CollabDescriptorRecord> collabs) =>
@@ -240,26 +272,21 @@ internal static class CollabManifestGenerator
     private static Dictionary<string, string> ReadDialog(ModInput input)
     {
         FileRecord? record = input.Files.SingleOrDefault(value => value.Path == "Dialog/English.txt");
-        if (record == null) return new(StringComparer.Ordinal);
+        if (record == null) return new(StringComparer.OrdinalIgnoreCase);
         if (record.Bytes is < 1 or > 1024 * 1024) throw new InvalidDataException("collab English dialog exceeds bounds");
-        Dictionary<string, string> result = new(StringComparer.Ordinal);
-        foreach (string raw in File.ReadAllLines(Path.Combine(input.StagingRoot, record.Path), new UTF8Encoding(false, true)))
-        {
-            string line = raw.Trim();
-            if (line.Length == 0 || line.StartsWith('#')) continue;
-            int equals = line.IndexOf('=');
-            if (equals <= 0) continue;
-            string key = line[..equals].Trim();
-            string value = line[(equals + 1)..].Trim();
-            if (key.Length > 256 || value.Length > 1024 || !result.TryAdd(key, value))
-                throw new InvalidDataException("invalid or duplicate collab English dialog key");
-        }
-        return result;
+        return global::Celeste.Mod.AppleEverestDialogFragmentParser.Parse(
+            File.ReadAllText(Path.Combine(input.StagingRoot, record.Path), new UTF8Encoding(false, true)),
+            new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase))
+            .ToDictionary(pair => pair.Key, pair => pair.Value.Cleaned, StringComparer.OrdinalIgnoreCase);
     }
 
-    private static string Dialog(IReadOnlyDictionary<string, string> values, string key, string fallback) =>
-        values.TryGetValue(key, out string? value) && value.Length != 0 ? value : fallback;
-    private static string DialogKey(string sid) => sid.Replace('/', '_').Replace('-', '_');
+    private static string Dialog(IReadOnlyDictionary<string, string> values, string key, string fallback)
+    {
+        string value = values.TryGetValue(key, out string? text) && !string.IsNullOrWhiteSpace(text) ? text : fallback;
+        if (key.Length > 256 || value.Length > 1024) throw new InvalidDataException("collab presentation text exceeds bounds");
+        return value;
+    }
+    private static string DialogKey(string sid) => sid.Replace('/', '_').Replace('-', '_').Replace('+', '_').Replace(' ', '_');
     private static bool ParseBool(IReadOnlyDictionary<string, string> values, string key, bool fallback) =>
         !values.TryGetValue(key, out string? raw) ? fallback : bool.TryParse(raw, out bool value)
             ? value : throw new InvalidDataException($"invalid collab boolean attribute: {key}");

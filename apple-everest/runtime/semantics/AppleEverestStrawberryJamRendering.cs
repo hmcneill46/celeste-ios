@@ -53,9 +53,12 @@ internal static class AppleEverestSJMaskRendering
             source.RemoveAt(i);
         }
     }
-    private static AppleEverestSJMaskEntity[] Masks(Level level) => level.Entities.OfType<AppleEverestSJMaskEntity>().ToArray();
+    // Source AllInOne.Added enqueues derived masks after the authored entities.
+    // Tracker order is independent of EntityList's rendering-depth sort.
+    private static AppleEverestSJMaskEntity[] Masks(Level level) => level.Entities.OfType<AppleEverestSJMaskEntity>()
+        .OrderBy(mask => mask.DerivedMask).ThenBy(mask => mask.AdditionOrder).ToArray();
 
-    internal static void Render(Level level, bool foreground)
+    internal static void Render(Level level, bool foreground, bool behind = true)
     {
         AppleEverestSJMaskEntity[] masks = Masks(level);
         GraphicsDevice graphics = Engine.Graphics.GraphicsDevice;
@@ -75,7 +78,7 @@ internal static class AppleEverestSJMaskRendering
         graphics.SetRenderTargets(targets);
         Draw.SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp,
             DepthStencilState.None, RasterizerState.CullNone, null, level.Camera.Matrix);
-        foreach (AppleEverestSJMaskEntity mask in masks)
+        foreach (AppleEverestSJMaskEntity mask in masks.Where(mask => !foreground || mask.BehindForeground == behind))
             foreach (string tag in mask.RenderTags)
             {
                 Group group = groups.FirstOrDefault(value => value.Tag == tag && value.Foreground == foreground);

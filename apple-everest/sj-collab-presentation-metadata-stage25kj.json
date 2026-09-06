@@ -1,0 +1,495 @@
+{
+  "archiveSha256": "4e1a2fc12baa3db27da433b93bf26b59f34b3e6b7f760c41d8d127636d020655",
+  "assetsArchiveSha256": "26fab85f20fff89d1adcba2ef926c3447d9996057c7dfc78e5d97f9d96ed7e45",
+  "maps": [
+    {
+      "icon": "areas/SJ2021/meters/2-med",
+      "mapSha256": "e770a8d193f217d09a6e153fbe272813d26a04d972df947ac812aa5cfe66f347",
+      "sid": "StrawberryJam2021/1-Beginner/Bing_Over_Google",
+      "silverBerries": [
+        {
+          "id": 581,
+          "room": "00- intro"
+        }
+      ]
+    },
+    {
+      "icon": "areas/SJ2021/meters/2-med",
+      "mapSha256": "39be3444bca7b5d247d87ace69953081891b7860ac306ad70150879d92b27e8c",
+      "sid": "StrawberryJam2021/1-Beginner/Ceph",
+      "silverBerries": [
+        {
+          "id": 1115,
+          "room": "1"
+        }
+      ]
+    },
+    {
+      "icon": "areas/SJ2021/meters/3-hard",
+      "mapSha256": "106115ab0d696c404a2edcc78962c4ad184c2a095a28d29167a11dd192a9e987",
+      "sid": "StrawberryJam2021/1-Beginner/Circumplex",
+      "silverBerries": [
+        {
+          "id": 63,
+          "room": "01"
+        }
+      ]
+    },
+    {
+      "icon": "areas/SJ2021/meters/2-med",
+      "mapSha256": "9267d7495273ada8017c7fc9469c3cb3afc8dfd1995663f0504056a77253bf08",
+      "sid": "StrawberryJam2021/1-Beginner/CoupCritik",
+      "silverBerries": [
+        {
+          "id": 555,
+          "room": "01"
+        }
+      ]
+    },
+    {
+      "icon": "areas/SJ2021/meters/2-med",
+      "mapSha256": "aa7089d133c6df267ed8702a70402b3e8521bd62eefe4b373dd0fd144feb8591",
+      "sid": "StrawberryJam2021/1-Beginner/Eclipse",
+      "silverBerries": [
+        {
+          "id": 162,
+          "room": "a_02"
+        }
+      ]
+    },
+    {
+      "icon": "areas/SJ2021/meters/3-hard",
+      "mapSha256": "b1b6ab411e05a16eb4abf3b128297be445ef45fcfb4a8b2aebbfe21c7b580581",
+      "sid": "StrawberryJam2021/1-Beginner/Flagpole1up",
+      "silverBerries": [
+        {
+          "id": 252,
+          "room": "a01"
+        }
+      ]
+    },
+    {
+      "icon": "areas/SJ2021/meters/3-hard",
+      "mapSha256": "2a01683faa53203064a2912a81bb931171175ba8b418fe67856fa57ff8cf6965",
+      "sid": "StrawberryJam2021/1-Beginner/HankyMueller",
+      "silverBerries": [
+        {
+          "id": 278,
+          "room": "Intro B"
+        }
+      ]
+    },
+    {
+      "icon": "areas/SJ2021/meters/3-hard",
+      "mapSha256": "5487797ad5ea9742b0c61bba6ed127e1000c459da70fec76c030a9ec2ed774a4",
+      "sid": "StrawberryJam2021/1-Beginner/Jadeturtle",
+      "silverBerries": [
+        {
+          "id": 1045,
+          "room": "a-00"
+        }
+      ]
+    },
+    {
+      "icon": "areas/SJ2021/meters/1-easy",
+      "mapSha256": "d0e0928aa1e3a471a1e1c4ebf8d2c778d1ba528a768acddce39f82e768dae486",
+      "sid": "StrawberryJam2021/1-Beginner/NotYourBadeline",
+      "silverBerries": [
+        {
+          "id": 53,
+          "room": "a_01"
+        }
+      ]
+    },
+    {
+      "icon": "areas/SJ2021/meters/3-hard",
+      "mapSha256": "45051295883dd37fe1c45ecb94c9819c869e1c3a8121e9fd2072b5a88d3ae1d0",
+      "sid": "StrawberryJam2021/1-Beginner/Owen-Shirrell",
+      "silverBerries": [
+        {
+          "id": 187,
+          "room": "00 - Overpass"
+        }
+      ]
+    },
+    {
+      "icon": "areas/SJ2021/meters/2-med",
+      "mapSha256": "130f297479f4b97a46f6398834ce127b3f0ef1374c5cca391209483ce0371398",
+      "sid": "StrawberryJam2021/1-Beginner/Quinnigan",
+      "silverBerries": [
+        {
+          "id": 1786,
+          "room": "q00"
+        }
+      ]
+    },
+    {
+      "icon": "areas/SJ2021/meters/1-easy",
+      "mapSha256": "8ddfe671414f42fd0e997c5b25718cd4c7227b6678ba4c403b3d5d0ebc97618b",
+      "sid": "StrawberryJam2021/1-Beginner/asteriskblue",
+      "silverBerries": [
+        {
+          "id": 1329,
+          "room": "a-01"
+        }
+      ]
+    },
+    {
+      "icon": "areas/SJ2021/meters/1-easy",
+      "mapSha256": "2392d1e1068d68eebd6179bc0d046539868e13806a238cee00f780a766b83b18",
+      "sid": "StrawberryJam2021/1-Beginner/cellularAutomaton",
+      "silverBerries": [
+        {
+          "id": 797,
+          "room": "01"
+        }
+      ]
+    },
+    {
+      "icon": "areas/SJ2021/meters/1-easy",
+      "mapSha256": "e52e08cd9c53f07e71fd4a07997cda7778b351cb8d3b9c5e7c529206270ce649",
+      "sid": "StrawberryJam2021/1-Beginner/coffe",
+      "silverBerries": [
+        {
+          "id": 60,
+          "room": "c-01"
+        }
+      ]
+    },
+    {
+      "icon": "areas/SJ2021/meters/2-med",
+      "mapSha256": "5881ba93d5867bde52f523769d39d32ecf94e052f32c92dfb61d8fc264db43a1",
+      "sid": "StrawberryJam2021/1-Beginner/frozenflygone",
+      "silverBerries": [
+        {
+          "id": 786,
+          "room": "SS2-0"
+        }
+      ]
+    },
+    {
+      "icon": "areas/SJ2021/meters/1-easy",
+      "mapSha256": "cd1eb1fc18d396c0fd4fc445b526ca24c9e58fd502855ff2f51dd28cc2b8bb9a",
+      "sid": "StrawberryJam2021/1-Beginner/hyperlife",
+      "silverBerries": [
+        {
+          "id": 235,
+          "room": "a-01"
+        }
+      ]
+    },
+    {
+      "icon": "areas/SJ2021/meters/2-med",
+      "mapSha256": "c285c6d6df22566ce5872088c36468f0c561c287a6552da98fdfc085b6ad9f66",
+      "sid": "StrawberryJam2021/1-Beginner/joltik",
+      "silverBerries": [
+        {
+          "id": 1462,
+          "room": "a_01"
+        }
+      ]
+    },
+    {
+      "icon": "areas/SJ2021/meters/2-med",
+      "mapSha256": "725326a39186b82f98cdde398f26da52d57bce9a3fb004000d5133ef6fb39b9f",
+      "sid": "StrawberryJam2021/1-Beginner/mosscairn",
+      "silverBerries": [
+        {
+          "id": 2544,
+          "room": "intro"
+        }
+      ]
+    },
+    {
+      "icon": "areas/SJ2021/meters/2-med",
+      "mapSha256": "2deea6850e773debf81b13357d2808bb0760937957d0eb45f532ed7e51c6dfb1",
+      "sid": "StrawberryJam2021/1-Beginner/skeleton",
+      "silverBerries": [
+        {
+          "id": 1109,
+          "room": "skeleton_01"
+        }
+      ]
+    },
+    {
+      "icon": "areas/SJ2021/meters/2-med",
+      "mapSha256": "6ad3172d496e8b5b4ce71f1128fe231b162d534419dc823d2af2cea27fc241d9",
+      "sid": "StrawberryJam2021/1-Beginner/snas",
+      "silverBerries": [
+        {
+          "id": 467,
+          "room": "1"
+        }
+      ]
+    },
+    {
+      "icon": "areas/SJ2021/meters/3-hard",
+      "mapSha256": "e6485fc35bd6484d3fbea246a6a2e1403f3376695a79674067b6044d39581b6a",
+      "sid": "StrawberryJam2021/1-Beginner/voliver9",
+      "silverBerries": [
+        {
+          "id": 160,
+          "room": "a-01"
+        }
+      ]
+    }
+  ],
+  "metadataOnly": true,
+  "schemaVersion": 1,
+  "stickerMetadataPath": "Maps/StrawberryJam2021/0-Lobbies/1-Beginner.meta.yaml",
+  "stickerMetadataSha256": "d8110177870130c4a0003a310b0f2f06eb2836e5ecbd53f97658ee46a6db450f",
+  "stickers": [
+    {
+      "finishedMaps": [
+        "StrawberryJam2021/1-Beginner/asteriskblue"
+      ],
+      "path": "SJ2021/1-Beginner/Asterisk",
+      "pngBytes": 86843,
+      "pngSha256": "0d30d4bf05aaa4308e0d3195cc89e759a64c8db820495db3136376e4dc721e74",
+      "rotation": 14.0,
+      "scale": 0.89,
+      "x": 120.0,
+      "y": 222.0
+    },
+    {
+      "finishedMaps": [
+        "StrawberryJam2021/1-Beginner/Bing_Over_Google"
+      ],
+      "path": "SJ2021/1-Beginner/BingOverGoogle",
+      "pngBytes": 69972,
+      "pngSha256": "7b8c9ba57f74ba05b957621cec955db161b342d19e69c7b6a4dc8091792366ac",
+      "rotation": -5.0,
+      "scale": 0.826,
+      "x": 650.0,
+      "y": 245.0
+    },
+    {
+      "finishedMaps": [
+        "StrawberryJam2021/1-Beginner/cellularAutomaton"
+      ],
+      "path": "SJ2021/1-Beginner/CellularAutomaton",
+      "pngBytes": 48977,
+      "pngSha256": "5981a9837588519a8ac472573fb7ec92c6a3e68788dfe56a7c4bb3105ac51adf",
+      "rotation": 10.0,
+      "scale": 0.95,
+      "x": 128.0,
+      "y": 480.0
+    },
+    {
+      "finishedMaps": [
+        "StrawberryJam2021/1-Beginner/Ceph"
+      ],
+      "path": "SJ2021/1-Beginner/Ceph",
+      "pngBytes": 44558,
+      "pngSha256": "5f93727ae1cdfd8f35cd844cc3d57f422ff4ef6dbc37597c11e164485758a183",
+      "rotation": -5.0,
+      "scale": 1.0,
+      "x": 365.0,
+      "y": 820.0
+    },
+    {
+      "finishedMaps": [
+        "StrawberryJam2021/1-Beginner/Circumplex"
+      ],
+      "path": "SJ2021/1-Beginner/Circumplex",
+      "pngBytes": 48565,
+      "pngSha256": "5d80729a0cf40a8b9cc674672b99610c32da3730aff8812bfb91f9727086e390",
+      "rotation": 20.0,
+      "scale": 0.93,
+      "x": 600.0,
+      "y": 560.0
+    },
+    {
+      "finishedMaps": [
+        "StrawberryJam2021/1-Beginner/coffe"
+      ],
+      "path": "SJ2021/1-Beginner/Coffe",
+      "pngBytes": 68690,
+      "pngSha256": "6dbcb7021617ddaac149356acb47f94fcc83576f6b969f56c046930c78a5ca66",
+      "rotation": 5.0,
+      "scale": 1.26,
+      "x": 380.0,
+      "y": 170.0
+    },
+    {
+      "finishedMaps": [
+        "StrawberryJam2021/1-Beginner/CoupCritik"
+      ],
+      "path": "SJ2021/1-Beginner/CoupCritik",
+      "pngBytes": 70530,
+      "pngSha256": "cf8b1ea2f6f1cca80ec618ba90d74db46eb99ba8782b6b6338001a7e0a8fec8c",
+      "rotation": -5.0,
+      "scale": 0.73,
+      "x": 1500.0,
+      "y": 160.0
+    },
+    {
+      "finishedMaps": [
+        "StrawberryJam2021/1-Beginner/Eclipse"
+      ],
+      "path": "SJ2021/1-Beginner/Eclipse",
+      "pngBytes": 94769,
+      "pngSha256": "1addae70a08dbd89136c4aa69507dc857c4e951865b1bb6d19fa596c5606c71a",
+      "rotation": 0.0,
+      "scale": 0.83,
+      "x": 1030.0,
+      "y": 660.0
+    },
+    {
+      "finishedMaps": [
+        "StrawberryJam2021/1-Beginner/Flagpole1up"
+      ],
+      "path": "SJ2021/1-Beginner/Flagpole",
+      "pngBytes": 72333,
+      "pngSha256": "6089198397e8728b36ab10b82e1bf734868ca09a6f666985f157836bdab4e9e5",
+      "rotation": -6.0,
+      "scale": 0.72,
+      "x": 1495.0,
+      "y": 450.0
+    },
+    {
+      "finishedMaps": [
+        "StrawberryJam2021/1-Beginner/frozenflygone"
+      ],
+      "path": "SJ2021/1-Beginner/frozenflygone",
+      "pngBytes": 24746,
+      "pngSha256": "753877b2a3412d0fc802dc58196e7e63554c77c822192861297b924ca0dcd598",
+      "rotation": -70.0,
+      "scale": 1.25,
+      "x": 835.0,
+      "y": 545.0
+    },
+    {
+      "finishedMaps": [
+        "StrawberryJam2021/1-Beginner/HankyMueller"
+      ],
+      "path": "SJ2021/1-Beginner/HankyMueller",
+      "pngBytes": 70745,
+      "pngSha256": "19361c29dcf3585e1f21afa4f279dbb729d029b03adba369dcc07b688964edae",
+      "rotation": -5.0,
+      "scale": 0.87,
+      "x": 1275.0,
+      "y": 550.0
+    },
+    {
+      "finishedMaps": [
+        "StrawberryJam2021/1-Beginner/hyperlife"
+      ],
+      "path": "SJ2021/1-Beginner/Hyperlife",
+      "pngBytes": 101896,
+      "pngSha256": "6f497ee43820045ccd74b2c52cdb61168b4ecfca18dfc56346cd5a6473758bb2",
+      "rotation": -5.0,
+      "scale": 1.0,
+      "x": 1272.0,
+      "y": 200.0
+    },
+    {
+      "finishedMaps": [
+        "StrawberryJam2021/1-Beginner/Jadeturtle"
+      ],
+      "path": "SJ2021/1-Beginner/Jadeturtle",
+      "pngBytes": 47470,
+      "pngSha256": "d5a1e1bd38bf130aab0f8739f3c233526d0c3f79899de18911e3921d59627d3e",
+      "rotation": 10.0,
+      "scale": 0.95,
+      "x": 1510.0,
+      "y": 730.0
+    },
+    {
+      "finishedMaps": [
+        "StrawberryJam2021/1-Beginner/joltik"
+      ],
+      "path": "SJ2021/1-Beginner/Joltik",
+      "pngBytes": 44707,
+      "pngSha256": "88edfa76f9bc7193d29f0868ce08523ad76b2410df6da6ed2b8ecfee817c07c2",
+      "rotation": 0.0,
+      "scale": 1.17,
+      "x": 150.0,
+      "y": 765.0
+    },
+    {
+      "finishedMaps": [
+        "StrawberryJam2021/1-Beginner/mosscairn"
+      ],
+      "path": "SJ2021/1-Beginner/mosscairn",
+      "pngBytes": 9830,
+      "pngSha256": "a3834a74557b10369c20a043cc463411cc57e0e15f0e2c9a47559d835e3ddf67",
+      "rotation": -10.0,
+      "scale": 1.1,
+      "x": 1300.0,
+      "y": 820.0
+    },
+    {
+      "finishedMaps": [
+        "StrawberryJam2021/1-Beginner/NotYourBadeline"
+      ],
+      "path": "SJ2021/1-Beginner/NotYourBadeline",
+      "pngBytes": 79087,
+      "pngSha256": "abd355ea8e2c05c4ab93f0c913735ad43bff3922166b1ebc6d51db2e50fda82d",
+      "rotation": 8.0,
+      "scale": 0.92,
+      "x": 564.0,
+      "y": 827.0
+    },
+    {
+      "finishedMaps": [
+        "StrawberryJam2021/1-Beginner/Owen-Shirrell"
+      ],
+      "path": "SJ2021/1-Beginner/OwenShirrell",
+      "pngBytes": 24274,
+      "pngSha256": "80ae1a2fb800e596acab228dc9d91e9f1211f2ce138504bf3ba4a1d4be7b92dc",
+      "rotation": -5.0,
+      "scale": 0.77,
+      "x": 808.0,
+      "y": 820.0
+    },
+    {
+      "finishedMaps": [
+        "StrawberryJam2021/1-Beginner/Quinnigan"
+      ],
+      "path": "SJ2021/1-Beginner/Quinnigan",
+      "pngBytes": 102404,
+      "pngSha256": "169f8851acada1c66c78a9e60a67003f39c23dad28c0be4784e9e60021652aa1",
+      "rotation": 90.0,
+      "scale": 0.87,
+      "x": 1034.0,
+      "y": 230.0
+    },
+    {
+      "finishedMaps": [
+        "StrawberryJam2021/1-Beginner/skeleton"
+      ],
+      "path": "SJ2021/1-Beginner/Skeleton",
+      "pngBytes": 66528,
+      "pngSha256": "a68e8451735f21a7385e2e19d5bc9138c434af73c6ca70ce80c155bc2e9f3f06",
+      "rotation": 15.0,
+      "scale": 0.84,
+      "x": 822.0,
+      "y": 115.0
+    },
+    {
+      "finishedMaps": [
+        "StrawberryJam2021/1-Beginner/snas"
+      ],
+      "path": "SJ2021/1-Beginner/Snas",
+      "pngBytes": 43014,
+      "pngSha256": "9b0691319e392a84edbeb582d4e747502d6dad283d4ea14ee111470f9e6a7e12",
+      "rotation": -16.0,
+      "scale": 0.98,
+      "x": 340.0,
+      "y": 580.0
+    },
+    {
+      "finishedMaps": [
+        "StrawberryJam2021/1-Beginner/voliver9"
+      ],
+      "path": "SJ2021/1-Beginner/voliver9",
+      "pngBytes": 68066,
+      "pngSha256": "287794b21d05c63e97c5f7cf5f04330b7cb5cb4a43e569484545fed9b9e46120",
+      "rotation": -2.0,
+      "scale": 0.93,
+      "x": 1040.0,
+      "y": 880.0
+    }
+  ]
+}

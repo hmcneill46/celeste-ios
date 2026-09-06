@@ -201,4 +201,5 @@
   </Target>
 
   <Import Project="..\Local.Build.props" Condition="Exists('..\Local.Build.props')" />
+  <Import Project="../../scripts/AppleEverestAotProvenance.targets" />
 </Project>

@@ -46,7 +46,7 @@ internal static class CollabStaticTests
         File.WriteAllText(Path.Combine(staged, "Dialog", "English.txt"),
             "modname_FixtureCollab= Fixture Collab\n" +
             "FixtureCollab_0_Lobbies_lobby= Fixture Lobby\n" +
-            "FixtureCollab_1_Lobby_a= Map A\nFixtureCollab_1_Lobby_a_author= Author A\n" +
+            "fixturecollab_1_lobby_a=\n    Map A\nFixtureCollab_1_Lobby_a_author= Author A\n" +
             "FixtureCollab_1_Lobby_b= Map B\nFixtureCollab_1_Lobby_b_author= Author B\n", new UTF8Encoding(false));
         string lobbyXml = Path.Combine(root, "lobby.xml");
         File.WriteAllText(lobbyXml,
@@ -55,7 +55,7 @@ internal static class CollabStaticTests
             "<appleEverestEntity name=\"CollabUtils2/MiniHeartDoor\" id=\"6\" x=\"128\" y=\"64\" width=\"40\" height=\"56\" requires=\"2\" levelSet=\"FixtureCollab/1-Lobby\" color=\"advanced\" />" +
             "<appleEverestEntity name=\"CollabUtils2/RainbowBerry\" id=\"7\" x=\"160\" y=\"48\" levelSet=\"FixtureCollab/1-Lobby\" /></entities><triggers>" +
             "<appleEverestTrigger name=\"CollabUtils2/ChapterPanelTrigger\" id=\"2\" x=\"16\" y=\"64\" width=\"24\" height=\"32\" map=\"FixtureCollab/1-Lobby/a\" allowSaving=\"true\" returnToLobbyMode=\"SetReturnToHere\" />" +
-            "<appleEverestTrigger name=\"CollabUtils2/ChapterPanelTrigger\" id=\"3\" x=\"280\" y=\"64\" width=\"24\" height=\"32\" map=\"FixtureCollab/1-Lobby/b\" returnToLobbyMode=\"SetReturnToHere\" />" +
+            "<appleEverestTrigger name=\"CollabUtils2/ChapterPanelTrigger\" id=\"3\" x=\"280\" y=\"64\" width=\"24\" height=\"32\" map=\"FixtureCollab/1-Lobby/b\" allowSaving=\"false\" returnToLobbyMode=\"SetReturnToHere\" />" +
             "<appleEverestTrigger name=\"CollabUtils2/JournalTrigger\" id=\"4\" x=\"148\" y=\"128\" width=\"24\" height=\"32\" levelset=\"FixtureCollab/1-Lobby\" vanillaJournal=\"false\" showOnlyDiscovered=\"false\" />" +
             "<appleEverestTrigger name=\"CollabUtils2/JournalTrigger\" id=\"5\" x=\"148\" y=\"16\" width=\"24\" height=\"32\" levelset=\"FixtureCollab/1-Lobby\" vanillaJournal=\"false\" showOnlyDiscovered=\"false\" />" +
             "</triggers><solids /><bg /></level></levels><Filler /><Style><Backgrounds /><Foregrounds /></Style>" +
@@ -177,7 +177,7 @@ internal static class CollabStaticTests
         Pass(collab.Maps[0].AllowSaving && !collab.Maps[1].AllowSaving &&
              collab.Maps.All(value => value.ReturnMode == "SetReturnToHere" &&
                  value.ReturnRoom == "room" && value.ReturnX == 160f && value.ReturnY == 96f),
-            "package-defined save/return authority preserves EntityData's false default");
+            "package-defined save/return authority preserves explicit saving policies");
         Pass(collab.JournalLevelSet == "FixtureCollab/1-Lobby" && !collab.JournalVanilla &&
              !collab.JournalShowOnlyDiscovered, "multiple ordinary journal stations with identical semantics are frozen once");
         Pass(collab.MiniHeartDoors.Count == 1 && collab.MiniHeartDoors[0].Requires == 2 &&
@@ -210,7 +210,7 @@ internal static class CollabStaticTests
              runtime.Contains("EndsWith(\"/ZZ-HeartSide\", StringComparison.Ordinal)", StringComparison.Ordinal),
             "ordinary collab journals exclude separately gated heart sides and use authored SID order");
         Pass(runtime.Contains("collabutils2_returntolobby", StringComparison.Ordinal) &&
-             runtime.Contains("LaunchPersistentAt", StringComparison.Ordinal),
+             runtime.Contains("Engine.Scene = new ReturnScene(lobby, room, spawn)", StringComparison.Ordinal),
             "subordinate pause route uses generated return authority");
         Pass(runtime.Contains("OpenReturnToLobbyConfirmMenu", StringComparison.Ordinal) &&
              runtime.Contains("collabutils2_returntolobby_confirm_save", StringComparison.Ordinal) &&
@@ -222,7 +222,7 @@ internal static class CollabStaticTests
              runtime.Contains("ReturnToLobby(level, menu, save: false)", StringComparison.Ordinal),
             "return-to-lobby exposes both save-enabled and compact no-save confirmation choices");
         Pass(runtime.Contains("if (allowSaving)", StringComparison.Ordinal) &&
-             runtime.Contains("OpenReturnToLobbyConfirmMenu(level, returnIndex, map.AllowSaving)", StringComparison.Ordinal) &&
+             runtime.Contains("OpenReturnToLobbyConfirmMenu(level, returnIndex, saving)", StringComparison.Ordinal) &&
              !runtime.Contains("else\n            {\n                level.Paused = true;\n                level.PauseLock = true;\n                level.Add(new AppleEverestCollabTransition(() => ReturnNow(level)));", StringComparison.Ordinal),
             "every chapter panel confirms return while its authored saving policy selects the menu shape");
         Pass(runtime.Contains("level.Pause(returnIndex, minimal: false)", StringComparison.Ordinal) &&
@@ -266,7 +266,7 @@ internal static class CollabStaticTests
         Pass(runtime.Contains("ResolveSessionCheckpoint(checkpoint)", StringComparison.Ordinal) &&
              runtime.Contains("return string.IsNullOrEmpty(checkpoint) ? null : checkpoint", StringComparison.Ordinal) &&
              !runtime.Contains("descriptor?.Presentation?.StartLevel", StringComparison.Ordinal) &&
-             runtime.Contains("new Session(new AreaKey(descriptor.RuntimeAreaId), sessionCheckpoint)", StringComparison.Ordinal) &&
+             runtime.Contains("new Session(new AreaKey(ResolveArea(sid).ID), sessionCheckpoint)", StringComparison.Ordinal) &&
              runtime.Contains("checkpoint={session.StartCheckpoint ?? \"<none>\"} beginning={session.StartedFromBeginning}", StringComparison.Ordinal),
             "collab Start preserves beginning semantics and the effective authored intro while named photos remain explicit checkpoints");
         Pass(runtime.Contains("CompleteMapAndReturn", StringComparison.Ordinal) &&

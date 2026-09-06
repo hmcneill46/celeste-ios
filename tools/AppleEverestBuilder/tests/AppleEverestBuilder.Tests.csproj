@@ -15,6 +15,9 @@
     <Compile Include="../../../apple-everest/runtime/AppleEverestBoundedYaml.cs" Link="AppleEverestBoundedYaml.cs" />
     <Compile Include="../../../apple-everest/runtime/AppleEverestModuleYaml.cs" Link="AppleEverestModuleYaml.cs" />
     <Compile Include="../../../apple-everest/runtime/semantics/AppleEverestStrawberryJamState.cs" Link="AppleEverestStrawberryJamState.cs" />
+    <Compile Include="../../../apple-everest/runtime/AppleEverestCollabSession.cs" Link="Runtime/AppleEverestCollabSession.cs" />
+    <Compile Include="../../../apple-everest/runtime/semantics/AppleEverestCollabState.cs" Link="AppleEverestCollabState.cs" />
+    <Compile Include="../../../apple-everest/runtime/semantics/AppleEverestCoreState.cs" Link="AppleEverestCoreState.cs" />
     <Compile Include="../../../apple-everest/runtime/AppleEverestModuleSnapshotCodec.cs" Link="AppleEverestModuleSnapshotCodec.cs" />
     <Compile Include="../../../apple-everest/runtime/AppleEverestModuleCompression.cs" Link="AppleEverestModuleCompression.cs" />
     <Compile Include="../../../apple-everest/runtime/AppleEverestModuleReplicaAuthority.cs" Link="AppleEverestModuleReplicaAuthority.cs" />
@@ -22,7 +25,6 @@
     <Compile Include="../../../apple-everest/runtime/AppleEverestProgressionCompression.cs" Link="AppleEverestProgressionCompression.cs" />
     <Compile Include="../../../apple-everest/runtime/AppleEverestProgressionReplicaAuthority.cs" Link="AppleEverestProgressionReplicaAuthority.cs" />
     <Compile Include="../../../apple-everest/runtime/AppleEverestCustomAudioLifecycle.cs" Link="AppleEverestCustomAudioLifecycle.cs" />
-    <Compile Include="../../../apple-everest/runtime/AppleEverestDialogFragmentParser.cs" Link="AppleEverestDialogFragmentParser.cs" />
     <Compile Remove="HookSemantics/**/*.cs" />
     <Compile Remove="PinnedOrdering/**/*.cs" />
   </ItemGroup>

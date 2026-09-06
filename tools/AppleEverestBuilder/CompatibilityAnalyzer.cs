@@ -50,12 +50,14 @@ internal static class CompatibilityAnalyzer
         StaticAotCompatibilityPlan? staticAot = semantic == null ? StaticAotCompatibility.Resolve(input, metadata) : null;
         IReadOnlyList<CustomAudioBankPlan> customAudio = !configuredFixture
             ? CustomAudioManifest.Resolve(input, metadata) : [];
+        Func<string, bool>? presentationContent = configuredFixture ? null : SelectedPresentationContent.Resolve(input, metadata);
         List<string> managed = semantic == null
             ? input.Files.Where(file => IsManaged(file.Path)).Select(file => file.Path).ToList()
             : [];
         List<string> content = configuredFixture ? [] : input.Files.Where(file =>
         {
             if (!IsContent(file.Path)) return false;
+            if (presentationContent != null) return presentationContent(file.Path);
             bool selectedBank = customAudio.Any(plan => plan.SourcePath == file.Path);
             if (selectedBank) return true;
             if (customAudio.Count > 0 && (file.Path.EndsWith(".bank", StringComparison.OrdinalIgnoreCase) ||

@@ -1,0 +1,63 @@
+<?xml version='1.0' encoding='utf-8'?>
+<Map>
+  <levels>
+    <level name="lvl_canary" x="0" y="0" width="480" height="256" music="event:/music/lvl1/main" ambience="event:/env/amb/01_main" windPattern="None" dark="false">
+      <entities>
+        <player id="1" x="24" y="240" />
+        <appleEverestEntity appleEverestId="VivHelper/CustomHangingLamp" appleEverestStrings="AudioPath,LightColor,directory" AnimationSpeed="0.20000000298023224" AudioPath="event:/game/02_old_site/lantern_hit" BloomAlpha="0.4000000059604645" BloomRadius="48" DrawOutline="true" LightAlpha="0.800000011920929" LightColor="White" LightFadeIn="24" LightFadeOut="48" WeightMultiplier="1" directory="VivHelper/customHangingLamp" height="24" id="100" x="232" y="200" />
+        <appleEverestEntity appleEverestId="VivHelper/CustomSpinner" appleEverestStrings="BorderColor,Color,Directory,HitboxType,ShatterColor,ShatterFlag,Subdirectory,Type" AttachToSolid="false" BorderColor="19302C" Color="72C471" CustomDebris="false" DebrisToScale="true" Depth="-8500" Directory="VivHelper/customSpinner/white" HitboxType="C:6;0,0|R:16,4;-8,*1@-4" ImageScale="1" Scale="1" ShatterColor="White" ShatterFlag="" Subdirectory="white" Type="White" id="101" shatterOnDash="false" x="280" y="224" />
+        <appleEverestEntity appleEverestId="pandorasBox/coloredBigWaterfall" appleEverestStrings="color,layer" color="446666" height="160" id="102" layer="BG" width="32" x="64" y="80" />
+        <appleEverestEntity appleEverestId="pandorasBox/coloredWater" appleEverestStrings="color" color="LightSkyBlue" hasBottom="false" height="32" id="103" width="56" x="144" y="208" />
+        <appleEverestEntity appleEverestId="pandorasBox/coloredWaterfall" appleEverestStrings="color" color="LightSkyBlue" id="104" x="160" y="128" />
+        <appleEverestEntity appleEverestId="VivHelper/CustomSpinner" appleEverestStrings="BorderColor,Color,Directory,HitboxType,ShatterColor,ShatterFlag,Subdirectory,Type" AttachToSolid="false" BorderColor="19302C" Color="72C471" CustomDebris="false" DebrisToScale="true" Depth="-8500" Directory="VivHelper/customSpinner/white" HitboxType="C:6;0,0|R:16,4;-8,*1@-4" ImageScale="1" Scale="1" ShatterColor="White" ShatterFlag="" Subdirectory="white" Type="White" id="2000" shatterOnDash="false" x="300" y="224" />
+      </entities>
+      <triggers />
+      <bgdecals />
+      <fgdecals />
+      <solids>000000000000000000000000000000000000000000000000000000000000
+000000000000000000000000000000000000000000000000000000000000
+000000000000000000000000000000000000000000000000000000000000
+000000000000000000000000000000000000000000000000000000000000
+000000000000000000000000000000000000000000000000000000000000
+000000000000000000000000000000000000000000000000000000000000
+000000000000000000000000000000000000000000000000000000000000
+000000000000000000000000000000000000000000000000000000000000
+000000000000000000000000000000000000000000000000000000000000
+000000000000000000000000000000000000000000000000000000000000
+000000000000000000000000000000000000000000000000000000000000
+000000000000000000000000000000000000000000000000000000000000
+000000000000000000000000000000000000000000000000000000000000
+000000000000000000000000000000000000000000000000000000000000
+000000000000000000000000000000000000000000000000000000000000
+000000000000000000000000000000000000000000000000000000000000
+000000000000000000000000000000000000000000000000000000000000
+000000000000000000000000000000000000000000000000000000000000
+000000000000000000000000000000000000000000000000000000000000
+000000000000000000000000000000000000000000000000000000000000
+000000000000000000000000000000000000000000000000000000000000
+000000000000000000000000000000000000000000000000000000000000
+000000000000000000000000000000000000000000000000000000000000
+000000000000000000000000000000000000000000000000000000000000
+000000000000000000000000000999990000000000000000000000000000
+000000000000000000000000000000000000000000000000000000000000
+000000000000000000000000000000000000000000000000000000000000
+000000000000000000000000000000000000000000000000000000000000
+000000000000000000000000000000000000000000000000000000000000
+000000000000000000000000000000000000000000000000000000000000
+999999999999999999999999999999999999999999999999999999999999
+999999999999999999999999999999999999999999999999999999999999</solids>
+      <bg />
+      <fgtiles />
+      <bgtiles />
+      <objtiles />
+    </level>
+  </levels>
+  <Filler />
+  <Style color="10152c">
+    <Backgrounds />
+    <Foregrounds />
+  </Style>
+  <meta IntroType="None" ForegroundTiles="Graphics/SJ2021xmls/BeginnerLobby/ForegroundTiles.xml" AnimatedTiles="Graphics/SJ2021xmls/BeginnerLobby/AnimatedTiles.xml" Sprites="Graphics/SJ2021xmls/BeginnerLobby/Sprites.xml">
+    <mode StartLevel="canary" Inventory="Default" />
+  </meta>
+</Map>

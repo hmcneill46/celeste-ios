@@ -35,6 +35,21 @@ internal static class CustomAudioManifest
 
     private static readonly RegisteredBank[] Registry =
     [
+        new("CollabUtils2", "1.13.4",
+            "4bcea8a9011edb8b7d27b433c47f1f4a871b8f7a4dd7f2bffac67bb99c7f6ad5",
+            "b987d25608874623453e2c75c441661b906d6fd907948699983c2f12ba14c88e",
+            "Audio/SC2020_global_collectibles.bank", "81c19f256382718b1b8ea7bcab0944b6ed204e1eb7cf048fd699ba4f0d2a5777",
+            "Audio/SC2020_global_collectibles.guids.txt", "33b184e9eff8213689ebd6f10d34b12926ecd6df3c68e45f58edfabede559293",
+            new Guid("e0fed2a5-965a-4c2f-93dc-bef8d92874ba"), "bank:/SC2020_global_collectibles", 656, 35,
+            ["event:/SC2020_heartShard_get", "event:/SC2020_heartShard_pulse", "event:/SC2020_silverBerry_get",
+             "event:/SC2020_silverBerry_death", "event:/SC2020_rainbowBerry_get"]),
+        new("HonlyHelper", "1.7.5",
+            "6a2d0f04a5be3a9c9c3bf66ec7e93701398a64d5a0e72add5df682e860e7d08d",
+            "cb8524306f28c0d04081dd63b5a3ccad4d7fecd5bc71970e06376606439298e3",
+            "Audio/HonlyHelper.bank", "6164aa671dda3c9bee425545b7d556c74b9a0245e88f8d8c9acd652b90b62172",
+            "Audio/HonlyHelper.guids.txt", "148c994feb915ce8d419030b5bb17aa068ae5681a0824a650726e5c885d520d7",
+            new Guid("1b9737d7-462d-4ee3-8697-91f1ba21e925"), "bank:/HonlyHelper", 14, 9,
+            ["event:/HonlyHelper/catsfx"]),
         new(StaticAotCompatibility.ChronoName, StaticAotCompatibility.ChronoVersion,
             ChronoArchiveSha256, StaticAotCompatibility.ChronoSourceSha256,
             BankSourcePath, BankSha256, GuidSourcePath, GuidSha256,

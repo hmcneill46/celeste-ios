@@ -24,6 +24,8 @@ CLEAN=0
 REUSE_BUILD=0
 CONFIGURED_FIXTURE=0
 FACTORY_CLOSURE=""
+FACTORY_PREFLIGHT=""
+AUTHORED_FACTORY_PROFILES=""
 MODS=()
 
 usage() {
@@ -47,6 +49,10 @@ Options:
   --reuse-build            package an already-marked completed AOT build
   --configured-fixture     build one exact hash-locked configured-detour fixture
   --factory-closure JSON   validate selected factory closure before generation
+  --factory-preflight JSON package-backed selected graph; requires authored profiles
+  --authored-factory-profiles JSON exact extracted selected profiles for preflight
+  --work-root DIRECTORY    isolated ignored build root below .build/apple-everest
+  --output DIRECTORY       isolated product root below artifacts/apple-everest
   -h, --help               show this help
 EOF
 }
@@ -66,10 +72,36 @@ while (($#)); do
     --reuse-build) REUSE_BUILD=1; shift ;;
     --configured-fixture) CONFIGURED_FIXTURE=1; shift ;;
     --factory-closure) FACTORY_CLOSURE="$2"; shift 2 ;;
+    --factory-preflight) FACTORY_PREFLIGHT="$2"; shift 2 ;;
+    --authored-factory-profiles) AUTHORED_FACTORY_PROFILES="$2"; shift 2 ;;
+    --work-root) WORK_ROOT="$2"; shift 2 ;;
+    --output) OUTPUT="$2"; shift 2 ;;
     -h|--help) usage; exit 0 ;;
     *) echo "error: unknown option: $1" >&2; exit 2 ;;
   esac
 done
+WORK_ROOT="$(python3 - "$REPO_ROOT/.build/apple-everest" "$WORK_ROOT" <<'PY'
+import pathlib,sys
+base,value=map(lambda value:pathlib.Path(value).resolve(),sys.argv[1:])
+if value==base or not value.is_relative_to(base):raise SystemExit('work root must be below .build/apple-everest')
+print(value)
+PY
+)"
+OUTPUT="$(python3 - "$REPO_ROOT/artifacts/apple-everest" "$OUTPUT" <<'PY'
+import pathlib,sys
+base,value=map(lambda value:pathlib.Path(value).resolve(),sys.argv[1:])
+if value==base or not value.is_relative_to(base):raise SystemExit('output must be below artifacts/apple-everest')
+print(value)
+PY
+)"
+CLOSURE="$WORK_ROOT/shared-closure"
+if [[ -n "$FACTORY_PREFLIGHT" || -n "$AUTHORED_FACTORY_PROFILES" ]]; then
+  (( ! REUSE_BUILD )) || { echo "error: package-backed factory products require a fresh AOT build" >&2; exit 2; }
+  [[ -f "$FACTORY_PREFLIGHT" && -f "$AUTHORED_FACTORY_PROFILES" ]] || {
+    echo "error: factory preflight requires both graph and authored profile files" >&2; exit 2; }
+  FACTORY_PREFLIGHT="$(python3 -c 'import pathlib,sys;print(pathlib.Path(sys.argv[1]).resolve())' "$FACTORY_PREFLIGHT")"
+  AUTHORED_FACTORY_PROFILES="$(python3 -c 'import pathlib,sys;print(pathlib.Path(sys.argv[1]).resolve())' "$AUTHORED_FACTORY_PROFILES")"
+fi
 if [[ -n "$FACTORY_CLOSURE" ]]; then
   [[ -f "$FACTORY_CLOSURE" ]] || { echo "error: factory closure does not exist" >&2; exit 2; }
   FACTORY_CLOSURE="$(python3 -c 'import pathlib,sys; print(pathlib.Path(sys.argv[1]).resolve())' "$FACTORY_CLOSURE")"
@@ -193,17 +225,53 @@ if ((include_dj_frozen_il_canary)); then
 fi
 mod_args=()
 for mod in "${MODS[@]}"; do mod_args+=(--mod "$mod"); done
-factory_closure_args=()
-[[ -z "$FACTORY_CLOSURE" ]] || factory_closure_args=(--factory-closure "$FACTORY_CLOSURE")
+build_args=(build --profile "$PROFILE" --repo-root "$REPO_ROOT" --upstream "$UPSTREAM" --output "$CLOSURE")
+[[ -z "$FACTORY_CLOSURE" ]] || build_args+=(--factory-closure "$FACTORY_CLOSURE")
 if ((CONFIGURED_FIXTURE)); then
   ((${#MODS[@]} == 1)) || { echo "error: --configured-fixture requires exactly one --mod" >&2; exit 2; }
   (cd /private/tmp && "$DOTNET8" run --project "$BUILDER_PROJECT" -- build-configured-fixture \
     --profile "$PROFILE" --repo-root "$REPO_ROOT" --upstream "$UPSTREAM" --output "$CLOSURE" \
     --mod "${MODS[0]}")
 else
-  (cd /private/tmp && "$DOTNET8" run --project "$BUILDER_PROJECT" -- build \
-    --profile "$PROFILE" --repo-root "$REPO_ROOT" --upstream "$UPSTREAM" --output "$CLOSURE" \
-    "${factory_closure_args[@]}" "${mod_args[@]}")
+  (cd /private/tmp && "$DOTNET8" run --project "$BUILDER_PROJECT" -- "${build_args[@]}" "${mod_args[@]}")
+fi
+
+python3 - "$CLOSURE/compatibility-manifest.json" "$REPO_ROOT/apple-everest/sj-factory-authored-profiles-stage25kj.json" "$FACTORY_PREFLIGHT" <<'PY'
+import json,pathlib,sys
+closure=json.loads(pathlib.Path(sys.argv[1]).read_text())
+profiles=json.loads(pathlib.Path(sys.argv[2]).read_text())
+names={row['name'] for row in closure['selectedMods']}
+selected={row['provider'] for row in profiles['factories']}-{'EverestCore'}
+required=selected<=names or bool(names & {'AppleEverestStage25KJCanary','AppleEverestStage25KJInteractions'})
+if required and not sys.argv[3]:raise SystemExit('K-J selected factory inputs require package-backed compiled preflight before any product')
+PY
+
+if [[ -n "$FACTORY_PREFLIGHT" ]]; then
+  preflight_runtime="$WORK_ROOT/preflight-runtime"
+  safe_replace "$preflight_runtime" .apple-everest-preflight-runtime
+  cp -cR "$REPO_ROOT/.build/celeste-ios/current/managed" "$preflight_runtime"
+  touch "$preflight_runtime/.apple-everest-preflight-runtime"
+  (cd /private/tmp && "$DOTNET8" run --project "$BUILDER_PROJECT" -- apply \
+    --closure "$CLOSURE" --managed-root "$preflight_runtime")
+  (cd "$REPO_ROOT" && dotnet build "$preflight_runtime/Celeste.Modern.csproj" -c Release --nologo \
+    -p:CelesteAppleRepoRoot="$REPO_ROOT" -p:CelesteManagedGeneratedRoot="$preflight_runtime" \
+    -p:AppleEverestStaticIlDotnet="$DOTNET9")
+  preflight_assembly="$preflight_runtime/bin/Release/net10.0-ios26.5/Celeste.dll"
+  [[ -f "$preflight_assembly" ]] || { echo "error: compiled preflight target absent" >&2; exit 1; }
+  (cd "$REPO_ROOT" && dotnet exec --fx-version 10.0.10 \
+    "$REPO_ROOT/tools/AppleEverestBuilder/bin/Debug/net8.0/AppleEverestBuilder.dll" \
+    preflight-factory-closure --manifest "$FACTORY_PREFLIGHT" --authored-profiles "$AUTHORED_FACTORY_PROFILES" \
+    --assembly "$preflight_assembly" --closure "$CLOSURE" --repo-root "$REPO_ROOT" \
+    --profile "$PROFILE" --upstream "$UPSTREAM" --canonical-managed-root "$REPO_ROOT/.build/celeste-ios/current/managed" \
+    --dotnet "$(command -v dotnet)" --output "$WORK_ROOT/production-preflight.json" "${mod_args[@]}")
+  if [[ -d "$CLOSURE/content/Content/Maps/AppleEverestStage25KJ/FactoryProfiles" ]]; then
+    python3 "$SCRIPT_DIR/inspect-apple-everest-stage25kj-canary-profiles.py" \
+      --closure "$CLOSURE" --output "$WORK_ROOT/compiled-canary-profiles.json"
+    (cd "$REPO_ROOT" && dotnet exec --fx-version 10.0.10 \
+      "$REPO_ROOT/tools/AppleEverestBuilder/bin/Debug/net8.0/AppleEverestBuilder.dll" \
+      inspect-compiled-factories --assembly "$preflight_assembly" --manifest "$FACTORY_PREFLIGHT" \
+      --authored-profiles "$WORK_ROOT/compiled-canary-profiles.json" --output "$WORK_ROOT/compiled-canary-guards.json")
+  fi
 fi
 
 prepare_platform() {
@@ -320,11 +388,18 @@ package_app() {
   touch "$product/.apple-everest-canary-platform"
   ditto --norsrc "$app" "$product/Payload/$name.app"
   (cd "$product" && ditto -c -k --norsrc --keepParent Payload "$name.ipa")
-  python3 - "$CLOSURE/compatibility-manifest.json" "$product/$name.ipa" "$product/build-manifest.json" "$platform" "$SIGNING" <<'PY'
-import hashlib,json,pathlib,sys
+  python3 - "$CLOSURE/compatibility-manifest.json" "$product/$name.ipa" "$product/build-manifest.json" "$platform" "$SIGNING" "$REPO_ROOT" "$WORK_ROOT/build/$platform/aot-provenance/receipt.json" "$FACTORY_PREFLIGHT" <<'PY'
+import hashlib,json,pathlib,subprocess,sys
 closure=json.loads(pathlib.Path(sys.argv[1]).read_text()); ipa=pathlib.Path(sys.argv[2])
+source={"sourceCommit":subprocess.check_output(["git","-C",sys.argv[6],"rev-parse","HEAD"],text=True).strip(),
+        "sourceTreeDirty":bool(subprocess.check_output(["git","-C",sys.argv[6],"status","--porcelain"],text=True).strip())}
+if sys.argv[8]:
+    receipt=json.loads(pathlib.Path(sys.argv[7]).read_text())
+    if receipt["phase"] != "AFTER_NATIVE_LINK" or any(receipt[key] != value for key,value in source.items()):
+        raise SystemExit("source revision changed between AOT compilation and product packaging")
 pathlib.Path(sys.argv[3]).write_text(json.dumps({"schemaVersion":1,"platform":sys.argv[4],"configuration":"Release",
  "rid":sys.argv[4]+"-arm64","signing":sys.argv[5],"fullAOT":True,"fullTrim":True,"useInterpreter":False,"jit":False,
+ **source,
  "sharedClosureSha256":closure["sharedClosureSha256"],"ipaBytes":ipa.stat().st_size,
  "ipaSha256":hashlib.sha256(ipa.read_bytes()).hexdigest()},indent=2,sort_keys=True)+"\n")
 PY
@@ -342,6 +417,19 @@ scan_product_runtime() {
   fi
   (cd /private/tmp && "$DOTNET8" run --project "$BUILDER_PROJECT" -- \
     scan-runtime --assembly "$app/Celeste.dll")
+  if [[ -n "$FACTORY_PREFLIGHT" ]]; then
+    python3 "$REPO_ROOT/scripts/verify-apple-everest-aot-factory-product.py" \
+      --app "$app" --build "$platform_build" --manifest "$FACTORY_PREFLIGHT" \
+      --authored-profiles "$AUTHORED_FACTORY_PROFILES" --output "$platform_build/linked-selected-factories.json"
+    python3 - "$app" <<'PY'
+import pathlib,sys
+root=pathlib.Path(sys.argv[1])
+for path in root.rglob('*'):
+    if path.is_file() and '/maps/strawberryjam2021/' in ('/'+path.relative_to(root).as_posix().lower()):
+        raise SystemExit('real Strawberry Jam map content entered a factory-only product')
+print('PASS: actual product has no original Strawberry Jam map content')
+PY
+  fi
   if [[ -d "$CLOSURE/assemblies" ]]; then
     while IFS= read -r -d '' assembly; do
       [[ -f "$app/$(basename "$assembly")" ]] || {
@@ -365,16 +453,31 @@ scan_product_runtime() {
   fi
 }
 
+record_product_disk() {
+  python3 - "$WORK_ROOT" "$1" <<'PY'
+import datetime,json,pathlib,shutil,sys
+root=pathlib.Path(sys.argv[1])
+record={'phase':sys.argv[2],'utc':datetime.datetime.now(datetime.timezone.utc).isoformat(),
+        'freeGiB':round(shutil.disk_usage(root).free/2**30,3)}
+with (root/'disk-measurements.jsonl').open('a') as stream: stream.write(json.dumps(record,sort_keys=True)+'\n')
+print('disk:',record['phase'],record['freeGiB'],'GiB free')
+PY
+}
+
 if [[ "$PLATFORM" != tvos ]]; then
   ios_artifacts="$WORK_ROOT/build/ios"
+  ios_aot_proof=""
+  if [[ -n "$FACTORY_PREFLIGHT" ]]; then ios_aot_proof="$ios_artifacts/aot-provenance"; fi
   if ((!REUSE_BUILD)); then
-    dotnet publish "$REPO_ROOT/modern-ios/CelesteIOSRuntimeHost/CelesteIOSRuntimeHost.csproj" -c Release -r ios-arm64 -m:1 -p:BuildInParallel=false --self-contained true \
+    record_product_disk before-ios-aot
+    (cd "$REPO_ROOT" && dotnet publish "$REPO_ROOT/modern-ios/CelesteIOSRuntimeHost/CelesteIOSRuntimeHost.csproj" -c Release -r ios-arm64 -m:1 -p:BuildInParallel=false --self-contained true \
       --artifacts-path "$ios_artifacts" -p:IOSProductMode=Celeste -p:EnableFmodDeviceFoundation=true \
       -p:CelesteIOSRuntimeRoot="$WORK_ROOT/ios-runtime" -p:CelesteAppleRepoRoot="$REPO_ROOT" \
       -p:AppBundleManifest="$ios_manifest" \
+      -p:AppleEverestAotProofRoot="$ios_aot_proof" \
       -p:ApplicationId="$IOS_BUNDLE_ID" -p:ApplicationTitle="Celeste Everest Canary" \
       -p:ArchiveOnBuild=false -p:UseInterpreter=false -p:RunAOTCompilation=true -p:MtouchLink=Full \
-      -p:TrimMode=full -p:MtouchUseLlvm=true -p:PublishTrimmed=true "${signing_args[@]}"
+      -p:TrimMode=full -p:MtouchUseLlvm=true -p:PublishTrimmed=true "${signing_args[@]}")
   fi
   ios_app="$(locate_app "$ios_artifacts" "$IOS_BUNDLE_ID")"
   scan_product_runtime "$ios_app" "$ios_artifacts"
@@ -383,17 +486,22 @@ fi
 
 if [[ "$PLATFORM" != ios ]]; then
   tvos_artifacts="$WORK_ROOT/build/tvos"
+  tvos_aot_proof=""
+  if [[ -n "$FACTORY_PREFLIGHT" ]]; then tvos_aot_proof="$tvos_artifacts/aot-provenance"; fi
   if ((!REUSE_BUILD)); then
-    dotnet publish "$REPO_ROOT/tvos/CelesteTvOSRuntimeHost/CelesteTvOSRuntimeHost.csproj" -c Release -r tvos-arm64 -m:1 -p:BuildInParallel=false \
+    record_product_disk before-tvos-aot
+    (cd "$REPO_ROOT" && dotnet publish "$REPO_ROOT/tvos/CelesteTvOSRuntimeHost/CelesteTvOSRuntimeHost.csproj" -c Release -r tvos-arm64 -m:1 -p:BuildInParallel=false \
       --artifacts-path "$tvos_artifacts" -p:CelesteLaunchMode=CelesteAudio -p:Stage5BAudioScenario=normal \
       -p:PersistenceEnabled=true -p:PersistenceStorageNamespace=tests -p:CelesteRuntimeRoot="$WORK_ROOT/tvos-runtime" \
       -p:AppBundleManifest="$tvos_manifest" \
+      -p:AppleEverestAotProofRoot="$tvos_aot_proof" \
       -p:CelesteBrandingEnabled=true -p:ApplicationId="$TVOS_BUNDLE_ID" -p:ApplicationTitle="Celeste Everest Canary" \
-      -p:UseInterpreter=false -p:RunAOTCompilation=true -p:PublishTrimmed=true -p:TrimMode=full -p:MtouchLink=Full "${signing_args[@]}"
+      -p:UseInterpreter=false -p:RunAOTCompilation=true -p:PublishTrimmed=true -p:TrimMode=full -p:MtouchLink=Full "${signing_args[@]}")
   fi
   tvos_app="$(locate_app "$tvos_artifacts" "$TVOS_BUNDLE_ID")"
   scan_product_runtime "$tvos_app" "$tvos_artifacts"
   package_app tvos "$tvos_app" Celeste-Everest-Canary-tvOS
 fi
 
+record_product_disk after-products
 printf 'PASS: separate-identity full-AOT Apple Everest canary product(s) built\n'

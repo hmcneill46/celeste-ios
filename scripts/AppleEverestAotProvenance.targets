@@ -1,0 +1,19 @@
+<Project>
+  <!-- Host-only audit around the existing Apple SDK compiler, enabled only by
+       the selected-factory product command. Nothing is copied to the app. -->
+  <Target Name="AppleEverestBeforeAot" BeforeTargets="_AOTCompile"
+          Condition="'$(AppleEverestAotProofRoot)' != '' and '$(_RunAotCompiler)' == 'true'">
+    <MakeDir Directories="$(AppleEverestAotProofRoot)" />
+    <WriteItemsToFile Items="@(_AssembliesToAOT)" ItemName="_AssembliesToAOT"
+                      File="$(AppleEverestAotProofRoot)/compiler-items.xml" IncludeMetadata="true" Overwrite="true" />
+    <Exec Command="python3 &quot;$(MSBuildThisFileDirectory)record-apple-everest-aot-provenance.py&quot; before --root &quot;$(AppleEverestAotProofRoot)&quot; --compiler &quot;$(_XamarinAOTCompiler)&quot; --native-main &quot;@(_MainFile)&quot;" />
+  </Target>
+  <Target Name="AppleEverestAfterAot" AfterTargets="_AOTCompile"
+          Condition="'$(AppleEverestAotProofRoot)' != '' and '$(_RunAotCompiler)' == 'true'">
+    <Exec Command="python3 &quot;$(MSBuildThisFileDirectory)record-apple-everest-aot-provenance.py&quot; after --root &quot;$(AppleEverestAotProofRoot)&quot;" />
+  </Target>
+  <Target Name="AppleEverestAfterNativeLink" AfterTargets="_LinkNativeExecutable"
+          Condition="'$(AppleEverestAotProofRoot)' != '' and '$(_RunAotCompiler)' == 'true'">
+    <Exec Command="python3 &quot;$(MSBuildThisFileDirectory)record-apple-everest-aot-provenance.py&quot; native --root &quot;$(AppleEverestAotProofRoot)&quot; --native &quot;$(_IntermediateNativeLibraryDir)$(_NativeExecutableName)&quot;" />
+  </Target>
+</Project>

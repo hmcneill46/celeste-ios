@@ -1,7 +1,8 @@
 # Apple Everest real-mod compatibility
 
 This is a technical test matrix for the experimental shared Apple static-AOT
-builder. It lists only exact public inputs inspected through Stage 25K-H. It is not
+builder. It lists exact public inputs and the separate Stage 25K-J implementation
+work. It is not
 a promise that similarly named, newer, older, or dependent mods work. The
 normal iOS and tvOS products do not contain these mods.
 
@@ -30,22 +31,45 @@ Status vocabulary:
 | [CaeruleaHelper](https://github.com/azure-bluet/CaeruleaHelper) | 1.11.1; ZIP `6a064951…3807`; DLL `3c5b79a5…973a`; source `036bc9ad…4d07`; MIT | One direct `ILHook` plus eight ordinary HookGen `IL.*` targets | **SUPPORTED_WITH_STATIC_TRANSFORM** | iOS, iPadOS, tvOS | EverestCore ≥ 1.5577.0 | The direct construction fits `STATIC_DIRECT_ILHOOK_FREEZE`: exact static `DashCoroutine.MoveNext` target, static manipulator, no `DetourConfig`, immediate apply, and module-lifetime storage with teardown-only disposal. The real No Dash Speed Reset behavior is frozen source-free; the constructor, field, disposal, Cecil, `MonoMod.Cil`, and runtime ILHook backend are absent on device. This exact profile is immutable-active. |
 | [MaxHelpingHand](https://gamebanana.com/mods/53687) | 1.40.9; ZIP `abfc5d16…8fee`; DLL `6f463f2c…dfa6` | Two exact selected semantic factory profiles | **SUPPORTED_WITH_STATIC_TRANSFORM** | iOS, iPadOS, tvOS | Everest `stable-1.6458.0` | Stage 25K-H supports only the Beginner-lobby profiles of `CustomTutorialWithNoBird` and `MoreCustomNPC`. Pinned Everest `CustomBirdTutorial`/`CustomNPC` behavior and the selected Max hook, pointer IL, private fields, and Talk ILHook outcome are flattened into guarded typed entities. This is not general MaxHelpingHand support. |
 
-## Selected-factory type closure
+## Three independent selected-factory gates
 
-Stage 25K-H records the exact K-G lobby/Bing selection in
-[`apple-everest/selected-factory-type-closure-stage25kh.json`](../apple-everest/selected-factory-type-closure-stage25kh.json).
-The earlier content-ID result of 920 accepted or vanilla occurrences, zero
-blocked, and zero unclassified remains historically accurate, but it was not a
-sufficient integration gate. The strengthened pre-fix model reports 73
-selected factories, 71 closed, and two blocked because their Everest base
-entities and reachable helper behavior were absent. The post-fix graph reports
-73 closed, zero blocked, and zero unknown across 191 transitive base edges.
+Stage 25K-I correctly stopped before product generation. The K-H structural
+graph's 73/73 claim did not establish production implementations: the independent
+package-backed check found only 30 available registrations, with 43 absent and
+409 of 920 authored occurrences uncovered. K-J independently reproduced that
+failure from exact public packages; its frozen evidence is
+[`sj-selected-factory-pre-fix-stage25kj.json`](../apple-everest/sj-selected-factory-pre-fix-stage25kj.json).
+K-I remains diagnostic history and is not an ancestor of this feature.
 
-The current profile-specific readiness marker is
-`READY_FOR_K_I_REAL_SJ_INTEGRATION_RETRY`. No real Strawberry Jam map or asset
-is packaged by this stage. Stage 25K-I must retry the two unchanged maps from
-the accepted K-H tip under both the content-ID and selected-type closure gates.
-Full Strawberry Jam remains unsupported.
+Future integration requires all three gates:
+
+| Gate | Required authority | Integration target |
+| --- | --- | --- |
+| A: content IDs | Original host-side content census and exact provider ownership | 920 accepted/vanilla, zero blocked or unclassified |
+| B: production registration | Exact supplied ZIP/DLL/version, regenerated production registry, independently compiled implementation and actual profile guards | 73 available, zero missing |
+| C: selected semantics | Source review, required constructor/lifecycle/hook/content closure, actual canary dispatch and representative physical acceptance | 73 closed, zero blocked or unknown |
+
+The K-J production check currently establishes A and B. C remains pending
+the exact K-J device canaries; earlier K-H physical passes do not establish it.
+The 43 starting failures comprise 19 accepted-package missing registrations,
+seven FrostHelper identity mismatches and 17 provider-analysis rejections.
+Selected bounded implementations do not establish whole-helper compatibility.
+FrostHelper 1.80.1 has its own explicit identity; it is neither downgraded nor
+accepted through automatic version inheritance.
+
+Release products inspect actual linked IL before Apple replaces packaged method
+bodies with AOT stubs. Compiler-boundary hashes, exact native code definitions,
+metadata/initialized-data preservation and native section/load-command checks
+bind that evidence to each signed app. Packaged ret stubs cannot prove executable
+factory closure. Human lifecycle and semantic acceptance remain separate.
+
+K-J packages only project-owned maps and their reviewed asset projection. No
+original Strawberry Jam gameplay map may enter its Apple products or macOS
+reference. Only a completed three-gate K-J acceptance may emit
+`READY_FOR_K_K_REAL_SJ_INTEGRATION_RETRY`; K-K then owns the unchanged lobby/Bing
+retry. The historical K-I readiness marker is insufficient. Full Beginner and
+full Strawberry Jam support remain unproved. Stage 25K-B build 35 remains the
+last all-three-device physical GREEN while an iPad is unavailable.
 
 ## Bounded build-time frozen IL
 
@@ -385,3 +409,6 @@ The complete 55-occurrence mapping and four-bank GUID census are in
 [`apple-everest/sj-crystalline-vortex-stage25kf.json`](../apple-everest/sj-crystalline-vortex-stage25kf.json)
 and
 [`apple-everest/sj-multibank-audio-stage25kf.json`](../apple-everest/sj-multibank-audio-stage25kf.json).
+
+
+K-J final acceptance uses a frozen source revision and separately hashed product/test artifacts. The tracked ledgers preserve the source audit and its observed compiler evidence; they do not import a later device PASS into an earlier product. Cross-checkout source/profile comparisons preserve full local compiler reports and exact within-build DLL checks. Final readiness requires a new exact-product receipt and a fresh clean clone at the same frozen source revision. The K-J verifier can publish that final verdict into an ignored acceptance evidence directory without changing the revision embedded in the tested assemblies.

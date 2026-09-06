@@ -44,9 +44,11 @@ internal static class StaticIlFreeze
     internal const string DirectWorkerVersion = "apple-everest-static-il-worker-v3";
 
     internal static int SchemaVersionFor(IEnumerable<FrozenIlTransformPlan> plans) =>
+        plans.Any(plan => plan.Mechanism == SelectedSidewaysIlPlans.Mechanism) ? 4 :
         plans.Any(plan => plan.Mechanism == "DIRECT_ILHOOK") ? 3 : 2;
 
     internal static string WorkerVersionFor(IEnumerable<FrozenIlTransformPlan> plans) =>
+        plans.Any(plan => plan.Mechanism == SelectedSidewaysIlPlans.Mechanism) ? "apple-everest-static-il-worker-v4" :
         plans.Any(plan => plan.Mechanism == "DIRECT_ILHOOK") ? DirectWorkerVersion : WorkerVersion;
 
     private static readonly FrozenIlTransformPlan[] DashTogglePlans =
@@ -142,13 +144,15 @@ internal static class StaticIlFreeze
     // LittleEpic graph. The real distributed manipulators execute on the Mac;
     // only their fingerprinted target bodies and reviewed static delegate
     // calls enter the Apple products. Horizontal and vertical collision each
-    // preserve the distributed Feather-then-Theo registration sequence.
+    // preserve the distributed Feather-then-Theo registration sequence. Freeze
+    // the stored original body beneath the accepted HookGen dispatch wrapper;
+    // canonical identities and before/after/diff locks remain unchanged.
     private static readonly FrozenIlTransformPlan[] DJMapHelperPlans =
     [
         new("DJMapHelper:player-h-feather", StaticAotCompatibility.DJName,
             StaticAotCompatibility.DJDllPath, StaticAotCompatibility.DJDllSha256,
             "IL.Celeste.Player", "OnCollideH",
-            "System.Void Celeste.Player::OnCollideH(Celeste.CollisionData)",
+            "System.Void Celeste.Player::AppleEverestOriginal_OnCollideH(Celeste.CollisionData)",
             "System.Void Celeste.Player::OnCollideH(Celeste.CollisionData)",
             "Celeste.Mod.DJMapHelper.Entities.FeatherBarrier", "AddCollideCheck", true, 0,
             "71468bceff7398edb3f4a093087b6bcedf0bc9476a10e09ff9be65574f22f2b9",
@@ -158,7 +162,7 @@ internal static class StaticIlFreeze
         new("DJMapHelper:player-h-theo", StaticAotCompatibility.DJName,
             StaticAotCompatibility.DJDllPath, StaticAotCompatibility.DJDllSha256,
             "IL.Celeste.Player", "OnCollideH",
-            "System.Void Celeste.Player::OnCollideH(Celeste.CollisionData)",
+            "System.Void Celeste.Player::AppleEverestOriginal_OnCollideH(Celeste.CollisionData)",
             "System.Void Celeste.Player::OnCollideH(Celeste.CollisionData)",
             "Celeste.Mod.DJMapHelper.Entities.TheoCrystalBarrier", "AddCollideCheck", true, 1,
             "f0659cb0f07350663fbf5ac9ab68cf4d53b2674db66c1422568d5b50f2246ee4",
@@ -168,7 +172,7 @@ internal static class StaticIlFreeze
         new("DJMapHelper:player-v-feather", StaticAotCompatibility.DJName,
             StaticAotCompatibility.DJDllPath, StaticAotCompatibility.DJDllSha256,
             "IL.Celeste.Player", "OnCollideV",
-            "System.Void Celeste.Player::OnCollideV(Celeste.CollisionData)",
+            "System.Void Celeste.Player::AppleEverestOriginal_OnCollideV(Celeste.CollisionData)",
             "System.Void Celeste.Player::OnCollideV(Celeste.CollisionData)",
             "Celeste.Mod.DJMapHelper.Entities.FeatherBarrier", "AddCollideCheck", true, 0,
             "40e6847041906b2c83a493f5477a19c24d2bb8d2cbce4c40780c67df40866271",
@@ -178,7 +182,7 @@ internal static class StaticIlFreeze
         new("DJMapHelper:player-v-theo", StaticAotCompatibility.DJName,
             StaticAotCompatibility.DJDllPath, StaticAotCompatibility.DJDllSha256,
             "IL.Celeste.Player", "OnCollideV",
-            "System.Void Celeste.Player::OnCollideV(Celeste.CollisionData)",
+            "System.Void Celeste.Player::AppleEverestOriginal_OnCollideV(Celeste.CollisionData)",
             "System.Void Celeste.Player::OnCollideV(Celeste.CollisionData)",
             "Celeste.Mod.DJMapHelper.Entities.TheoCrystalBarrier", "AddCollideCheck", true, 1,
             "d07b75bd9c0e47ef8d27b3bdf3a9feb04a03414ca4b9d70760b6318d3b84fb50",
@@ -1226,7 +1230,8 @@ internal static class StaticIlFreeze
                 plan.AfterSha256, plan.DiffSha256, string.Join(',', plan.ExpectedDelegateTargets)) +
                 (plan.Mechanism == "DIRECT_ILHOOK" ? "\0" + string.Join("\0", plan.Mechanism,
                     plan.ConstructorSignature, plan.TargetExpression, plan.ManipulatorExpression,
-                    plan.Config, plan.ApplyByDefault, plan.Storage, plan.Lifetime) : ""))) + "\n"));
+                    plan.Config, plan.ApplyByDefault, plan.Storage, plan.Lifetime) :
+                 plan.Mechanism == SelectedSidewaysIlPlans.Mechanism ? "\0" + string.Join("\0", plan.Mechanism, plan.Lifetime) : ""))) + "\n"));
 
     internal static string Targets(IReadOnlyList<FrozenIlTransformPlan> plans)
     {
@@ -1249,9 +1254,9 @@ internal static class StaticIlFreeze
             string temp = "$(IntermediateOutputPath)apple-everest-static-il/target-" + index + ".dll";
             string manifest = "$(IntermediateOutputPath)apple-everest-static-il/transform-" + index + ".json";
             xml.Append("    <Exec Command=\"&quot;$(AppleEverestDotNetHost)&quot; &quot;$(AppleEverestStaticIlHost)/AppleEverestIlWorker.dll&quot; --target &quot;$(AppleEverestIntermediateAssembly)&quot; --output &quot;")
-                .Append(temp).Append("&quot; --plan &quot;$(AppleEverestStaticIlHost)/frozen-il-plan.json&quot; --target-method &quot;")
-                .Append(Escape(plan.TargetMethod))
-                .Append("&quot; --manifest &quot;").Append(manifest)
+                .Append(temp).Append("&quot; --plan &quot;$(AppleEverestStaticIlHost)/frozen-il-plan.json&quot; --target-method ")
+                .Append(Escape("'" + plan.TargetMethod.Replace("'", "'\"'\"'", StringComparison.Ordinal) + "'"))
+                .Append(" --manifest &quot;").Append(manifest)
                 .Append("&quot; --runtime-dir &quot;$(IntermediateOutputPath)&quot; --runtime-dir &quot;$(TargetDir)&quot; --runtime-dir &quot;$(MSBuildProjectDirectory)/AppleEverestAssemblies&quot; --runtime-dir &quot;$(AppleEverestStaticIlHost)&quot; @(ReferenceCopyLocalPaths-&gt;'--runtime-dir &quot;%(RootDir)%(Directory)&quot;', ' ')\" />\n")
                 .Append("    <Copy SourceFiles=\"").Append(temp).AppendLine("\" DestinationFiles=\"$(AppleEverestIntermediateAssembly)\" />");
         }

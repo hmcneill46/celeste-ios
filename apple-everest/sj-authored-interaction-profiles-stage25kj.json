@@ -1,0 +1,409 @@
+{
+  "schemaVersion": 1,
+  "authority": "PROJECT_OWNED_AUTHORED_MECHANISM_FIXTURE_SEPARATE_FROM_ORIGINAL_920",
+  "originalGameplayMapsCopied": false,
+  "authoredAdditionalProfiles": 8,
+  "occurrences": [
+    {
+      "kind": "entity",
+      "customId": "CollabUtils2/LobbyMapController",
+      "provider": "CollabUtils2",
+      "map": "AppleEverestStage25KJ/0-Lobbies/1-Fixture",
+      "room": "canary",
+      "entityId": 100,
+      "attributes": {
+        "customMarkers": "",
+        "gymIcon": "CollabUtils2/lobbies/gym",
+        "heartGateIcon": "CollabUtils2/lobbies/heartgate",
+        "heartSideIcon": "CollabUtils2/lobbies/heartside",
+        "id": 100,
+        "journalIcon": "CollabUtils2/lobbies/journal",
+        "mapIcon": "CollabUtils2/lobbies/map",
+        "mapTexture": "AppleEverestStage25KJ/map",
+        "rainbowBerryIcon": "CollabUtils2/lobbies/rainbowBerry",
+        "showGyms": true,
+        "showHeartCount": true,
+        "showHeartGate": true,
+        "showHeartSide": true,
+        "showJournals": true,
+        "showMaps": true,
+        "showRainbowBerry": true,
+        "showWarps": true,
+        "totalMaps": 2,
+        "warpIcon": "CollabUtils2/lobbies/warp",
+        "x": 8,
+        "y": 8
+      },
+      "nodes": [],
+      "profileSha256": "c303ee48b70af631de2c2f11974de04305683947705dad84a6739cfa6b127b29",
+      "basisSourceProfileSha256": "4a7c17df1bbb2721bf66981592fb88d49962c72a9b499f839aee85ec97639058",
+      "disposition": "AUTHORED_MECHANISM_PROOF",
+      "reviewedChanges": {
+        "mapTexture": "AppleEverestStage25KJ/map",
+        "totalMaps": 2,
+        "customMarkers": "",
+        "mapIcon": "CollabUtils2/lobbies/map"
+      }
+    },
+    {
+      "kind": "entity",
+      "customId": "CollabUtils2/LobbyMapMarker",
+      "provider": "CollabUtils2",
+      "map": "AppleEverestStage25KJ/0-Lobbies/1-Fixture",
+      "room": "canary",
+      "entityId": 101,
+      "attributes": {
+        "icon": "CollabUtils2/lobbies/memorial",
+        "id": 101,
+        "x": 240,
+        "y": 216
+      },
+      "nodes": [],
+      "profileSha256": "fc332a8c660a833a8c719f69858179bf0651a9a43130784f012caca3fe201e70",
+      "basisSourceProfileSha256": "fc332a8c660a833a8c719f69858179bf0651a9a43130784f012caca3fe201e70",
+      "disposition": "REUSED_EXACT_ORIGINAL_PROFILE",
+      "reviewedChanges": {}
+    },
+    {
+      "kind": "entity",
+      "customId": "CollabUtils2/LobbyMapWarp",
+      "provider": "CollabUtils2",
+      "map": "AppleEverestStage25KJ/0-Lobbies/1-Fixture",
+      "room": "canary",
+      "entityId": 102,
+      "attributes": {
+        "activateSpriteFlipX": false,
+        "depth": 2000,
+        "dialogKey": "STAGE25KJ_WARP_1",
+        "icon": "",
+        "id": 102,
+        "interactOffsetY": -16,
+        "playActivateSprite": true,
+        "playerFacing": "Right",
+        "warpId": "1",
+        "warpSpriteFlipX": false,
+        "warpSpritePath": "decals/SJ2021/BeginnerLobby/wooden_bench",
+        "wipeType": "Celeste.DreamWipe",
+        "x": 64,
+        "y": 240
+      },
+      "nodes": [],
+      "profileSha256": "b0b868f6dcda04912791b1340b381c41081981af22fe0e83e24153061d76f1ad",
+      "basisSourceProfileSha256": "327a962cb3d948da9b4530fd79f3da5772a8d99dbc0c03e1077ebe71bd795130",
+      "disposition": "AUTHORED_MECHANISM_PROOF",
+      "reviewedChanges": {
+        "warpId": "1",
+        "dialogKey": "STAGE25KJ_WARP_1"
+      }
+    },
+    {
+      "kind": "entity",
+      "customId": "CollabUtils2/LobbyMapWarp",
+      "provider": "CollabUtils2",
+      "map": "AppleEverestStage25KJ/0-Lobbies/1-Fixture",
+      "room": "canary",
+      "entityId": 103,
+      "attributes": {
+        "activateSpriteFlipX": false,
+        "depth": 2000,
+        "dialogKey": "STAGE25KJ_WARP_2",
+        "icon": "",
+        "id": 103,
+        "interactOffsetY": -16,
+        "playActivateSprite": true,
+        "playerFacing": "Right",
+        "warpId": "2",
+        "warpSpriteFlipX": false,
+        "warpSpritePath": "decals/SJ2021/BeginnerLobby/wooden_bench",
+        "wipeType": "Celeste.DreamWipe",
+        "x": 304,
+        "y": 240
+      },
+      "nodes": [],
+      "profileSha256": "acc68753d00066860f9bc02ddb2897e611c824317be6e4402ca93a059ffdfa0d",
+      "basisSourceProfileSha256": "327a962cb3d948da9b4530fd79f3da5772a8d99dbc0c03e1077ebe71bd795130",
+      "disposition": "AUTHORED_MECHANISM_PROOF",
+      "reviewedChanges": {
+        "warpId": "2",
+        "dialogKey": "STAGE25KJ_WARP_2"
+      }
+    },
+    {
+      "kind": "trigger",
+      "customId": "CollabUtils2/ChapterPanelTrigger",
+      "provider": "CollabUtils2",
+      "map": "AppleEverestStage25KJ/0-Lobbies/1-Fixture",
+      "room": "canary",
+      "entityId": 104,
+      "attributes": {
+        "allowSaving": false,
+        "height": 64,
+        "id": 104,
+        "map": "AppleEverestStage25KJ/1-Fixture/1-FinishA",
+        "returnToLobbyMode": "SetReturnToHere",
+        "width": 32,
+        "x": 96,
+        "y": 176
+      },
+      "nodes": [],
+      "profileSha256": "822bce7981ec64e5be25aceac6aa6a6bf34e59645cf219462425d4fd00e5069a",
+      "basisSourceProfileSha256": "bb604ad78b3dafb59cf4dbd2778721f06314dd8e759768268cfa20c67748b66b",
+      "disposition": "AUTHORED_MECHANISM_PROOF",
+      "reviewedChanges": {
+        "map": "AppleEverestStage25KJ/1-Fixture/1-FinishA"
+      }
+    },
+    {
+      "kind": "trigger",
+      "customId": "CollabUtils2/ChapterPanelTrigger",
+      "provider": "CollabUtils2",
+      "map": "AppleEverestStage25KJ/0-Lobbies/1-Fixture",
+      "room": "canary",
+      "entityId": 105,
+      "attributes": {
+        "allowSaving": true,
+        "height": 136,
+        "id": 105,
+        "map": "AppleEverestStage25KJ/1-Fixture/2-FinishB",
+        "returnToLobbyMode": "SetReturnToHere",
+        "width": 32,
+        "x": 160,
+        "y": 104
+      },
+      "nodes": [],
+      "profileSha256": "3226e78e37ee78a1f6e504b6df5c44ea1deabf0222e7430a78a6703af8a41bd1",
+      "basisSourceProfileSha256": "e4d9088006a9bb4d9bce638588bacf23b5c4225f975c72aac5aa5c6082223a26",
+      "disposition": "AUTHORED_MECHANISM_PROOF",
+      "reviewedChanges": {
+        "map": "AppleEverestStage25KJ/1-Fixture/2-FinishB"
+      }
+    },
+    {
+      "kind": "trigger",
+      "customId": "CollabUtils2/JournalTrigger",
+      "provider": "CollabUtils2",
+      "map": "AppleEverestStage25KJ/0-Lobbies/1-Fixture",
+      "room": "canary",
+      "entityId": 106,
+      "attributes": {
+        "height": 60,
+        "id": 106,
+        "levelset": "AppleEverestStage25KJ/1-Fixture",
+        "showOnlyDiscovered": false,
+        "vanillaJournal": false,
+        "width": 32,
+        "x": 224,
+        "y": 180
+      },
+      "nodes": [],
+      "profileSha256": "1f13682c82a1217a827cc55e23b1e3b110e3a20263c63d206c0dac2716030286",
+      "basisSourceProfileSha256": "f1e087e55296d667ce7f91225b6f17e7865be5e483355992c544c370367dc9f1",
+      "disposition": "AUTHORED_MECHANISM_PROOF",
+      "reviewedChanges": {
+        "levelset": "AppleEverestStage25KJ/1-Fixture"
+      }
+    },
+    {
+      "kind": "entity",
+      "customId": "CollabUtils2/MiniHeartDoor",
+      "provider": "CollabUtils2",
+      "map": "AppleEverestStage25KJ/0-Lobbies/1-Fixture",
+      "room": "canary",
+      "entityId": 107,
+      "attributes": {
+        "color": "beginner",
+        "doorID": "",
+        "height": 68,
+        "id": 107,
+        "levelSet": "AppleEverestStage25KJ/1-Fixture",
+        "requires": 2,
+        "startHidden": false,
+        "width": 48,
+        "x": 384,
+        "y": 172
+      },
+      "nodes": [],
+      "profileSha256": "3c5c4ac8b130762f22523cd938ac30688c8611fdc0c2cf33fd96599f4db37eeb",
+      "basisSourceProfileSha256": "17616126a0c04255e055b7876fecb284a2331c6f5c6a1ecf3a78e17e1954f6b6",
+      "disposition": "AUTHORED_MECHANISM_PROOF",
+      "reviewedChanges": {
+        "levelSet": "AppleEverestStage25KJ/1-Fixture",
+        "requires": 2
+      }
+    },
+    {
+      "kind": "trigger",
+      "customId": "CollabUtils2/MiniHeartDoorUnlockCutsceneTrigger",
+      "provider": "CollabUtils2",
+      "map": "AppleEverestStage25KJ/0-Lobbies/1-Fixture",
+      "room": "canary",
+      "entityId": 108,
+      "attributes": {
+        "doorID": "",
+        "height": 168,
+        "id": 108,
+        "width": 232,
+        "x": 288,
+        "y": 72
+      },
+      "nodes": [],
+      "profileSha256": "5da4992795f43757dcd008b37547888da48b2e37b79a0ba8d0f66b688be5ef63",
+      "basisSourceProfileSha256": "5da4992795f43757dcd008b37547888da48b2e37b79a0ba8d0f66b688be5ef63",
+      "disposition": "REUSED_EXACT_ORIGINAL_PROFILE",
+      "reviewedChanges": {}
+    },
+    {
+      "kind": "entity",
+      "customId": "CollabUtils2/RainbowBerry",
+      "provider": "CollabUtils2",
+      "map": "AppleEverestStage25KJ/0-Lobbies/1-Fixture",
+      "room": "canary",
+      "entityId": 109,
+      "attributes": {
+        "id": 109,
+        "levelSet": "AppleEverestStage25KJ/1-Fixture",
+        "x": 528,
+        "y": 216
+      },
+      "nodes": [],
+      "profileSha256": "5f9e58d25c72193f6982b96428ea42c2eb163dc76d76aa8324ab4d9879d7a9c3",
+      "basisSourceProfileSha256": "8149ae88acdc989306cdf4315fe88d572cc1283c812991c0e9efef4d81e37343",
+      "disposition": "AUTHORED_MECHANISM_PROOF",
+      "reviewedChanges": {
+        "levelSet": "AppleEverestStage25KJ/1-Fixture"
+      }
+    },
+    {
+      "kind": "trigger",
+      "customId": "CollabUtils2/RainbowBerryUnlockCutsceneTrigger",
+      "provider": "CollabUtils2",
+      "map": "AppleEverestStage25KJ/0-Lobbies/1-Fixture",
+      "room": "canary",
+      "entityId": 110,
+      "attributes": {
+        "height": 240,
+        "id": 110,
+        "width": 200,
+        "x": 440,
+        "y": 0
+      },
+      "nodes": [],
+      "profileSha256": "c47c834f177cdda46a9c38c5e7885effdf97c1172a53cf3bdf6dbf80515f672b",
+      "basisSourceProfileSha256": "c47c834f177cdda46a9c38c5e7885effdf97c1172a53cf3bdf6dbf80515f672b",
+      "disposition": "REUSED_EXACT_ORIGINAL_PROFILE",
+      "reviewedChanges": {}
+    },
+    {
+      "kind": "entity",
+      "customId": "CollabUtils2/SilverBerry",
+      "provider": "CollabUtils2",
+      "map": "AppleEverestStage25KJ/1-Fixture/1-FinishA",
+      "room": "canary",
+      "entityId": 100,
+      "attributes": {
+        "id": 100,
+        "x": 64,
+        "y": 144
+      },
+      "nodes": [],
+      "profileSha256": "fedaf677ed413d3929da9ea703929bcb0bfba05d732a6623065c6bd7bc2de1fe",
+      "basisSourceProfileSha256": "fedaf677ed413d3929da9ea703929bcb0bfba05d732a6623065c6bd7bc2de1fe",
+      "disposition": "REUSED_EXACT_ORIGINAL_PROFILE",
+      "reviewedChanges": {}
+    },
+    {
+      "kind": "entity",
+      "customId": "CollabUtils2/MiniHeart",
+      "provider": "CollabUtils2",
+      "map": "AppleEverestStage25KJ/1-Fixture/1-FinishA",
+      "room": "canary",
+      "entityId": 101,
+      "attributes": {
+        "id": 101,
+        "noGhostSprite": true,
+        "sprite": "beginner",
+        "x": 256,
+        "y": 128
+      },
+      "nodes": [],
+      "profileSha256": "7919d377fc3fadae118be35dd0dcc5aa9be73ed9916a8649f07f21c4346c183e",
+      "basisSourceProfileSha256": "7919d377fc3fadae118be35dd0dcc5aa9be73ed9916a8649f07f21c4346c183e",
+      "disposition": "REUSED_EXACT_ORIGINAL_PROFILE",
+      "reviewedChanges": {}
+    },
+    {
+      "kind": "entity",
+      "customId": "CollabUtils2/SilverBerry",
+      "provider": "CollabUtils2",
+      "map": "AppleEverestStage25KJ/1-Fixture/2-FinishB",
+      "room": "canary",
+      "entityId": 100,
+      "attributes": {
+        "id": 100,
+        "x": 64,
+        "y": 144
+      },
+      "nodes": [],
+      "profileSha256": "fedaf677ed413d3929da9ea703929bcb0bfba05d732a6623065c6bd7bc2de1fe",
+      "basisSourceProfileSha256": "fedaf677ed413d3929da9ea703929bcb0bfba05d732a6623065c6bd7bc2de1fe",
+      "disposition": "REUSED_EXACT_ORIGINAL_PROFILE",
+      "reviewedChanges": {}
+    },
+    {
+      "kind": "entity",
+      "customId": "CollabUtils2/MiniHeart",
+      "provider": "CollabUtils2",
+      "map": "AppleEverestStage25KJ/1-Fixture/2-FinishB",
+      "room": "canary",
+      "entityId": 101,
+      "attributes": {
+        "id": 101,
+        "noGhostSprite": true,
+        "sprite": "beginner",
+        "x": 256,
+        "y": 128
+      },
+      "nodes": [],
+      "profileSha256": "7919d377fc3fadae118be35dd0dcc5aa9be73ed9916a8649f07f21c4346c183e",
+      "basisSourceProfileSha256": "7919d377fc3fadae118be35dd0dcc5aa9be73ed9916a8649f07f21c4346c183e",
+      "disposition": "REUSED_EXACT_ORIGINAL_PROFILE",
+      "reviewedChanges": {}
+    }
+  ],
+  "stickers": [
+    {
+      "Path": "AppleEverestStage25KJ/finishA",
+      "X": 450.0,
+      "Y": 350.0,
+      "Rotation": -10.0,
+      "Scale": 2.0,
+      "FinishedMaps": [
+        "AppleEverestStage25KJ/1-Fixture/1-FinishA"
+      ],
+      "assetSha256": "3f4556c66f2ca8e0ddc90f2b5caec9e2f157601de488d160d600fa2d4901ebb4"
+    },
+    {
+      "Path": "AppleEverestStage25KJ/finishB",
+      "X": 950.0,
+      "Y": 350.0,
+      "Rotation": 12.0,
+      "Scale": 2.0,
+      "FinishedMaps": [
+        "AppleEverestStage25KJ/1-Fixture/2-FinishB"
+      ],
+      "assetSha256": "31889477a52380628c96f193171240152346f99eaa5801f050ab8761ad42ea29"
+    },
+    {
+      "Path": "AppleEverestStage25KJ/finishA",
+      "X": 800.0,
+      "Y": 700.0,
+      "Rotation": -10.0,
+      "Scale": 2.0,
+      "FinishedMaps": [
+        "AppleEverestStage25KJ/1-Fixture/Absent"
+      ],
+      "assetSha256": "3f4556c66f2ca8e0ddc90f2b5caec9e2f157601de488d160d600fa2d4901ebb4"
+    }
+  ],
+  "stickerMetadataSha256": "30b92fa24090a9f63d31da6fa9e9a11b04ea61fc59991b28fcfc5b7a78a4eb0d"
+}

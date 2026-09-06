@@ -4,8 +4,8 @@
 namespace Microsoft.Xna.Framework { }
 namespace Microsoft.Xna.Framework.Input
 {
-    public enum Buttons { Back = 32 }
-    public enum Keys { Tab = 9 }
+    public enum Buttons { Back = 32, RightStick = 128, RightThumbstickUp = 16777216, RightThumbstickDown = 33554432, RightThumbstickLeft = 67108864, RightThumbstickRight = 134217728 }
+    public enum Keys { Tab = 9, LeftShift = 160 }
 }
 namespace Monocle
 {
@@ -19,6 +19,10 @@ namespace Celeste
 }
 namespace Celeste.Mod
 {
+    internal static class GeneratedAppleEverestModuleRegistry
+    {
+        internal const string CoreSessionSchema = "ae9843c8fa67f56bc55f2bbfa877a2f83bb84847cf9c7b493491f5049fd950a2";
+    }
     internal class EverestModuleSettings { }
     internal class EverestModuleSaveData { public int Index; }
     internal class EverestModuleSession { public int Index; }

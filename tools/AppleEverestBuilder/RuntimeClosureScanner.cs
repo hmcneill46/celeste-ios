@@ -265,7 +265,9 @@ internal static class RuntimeClosureScanner
                 // Celeste.dll. They perform no reflection or runtime member
                 // discovery; unknown field names fail closed in the bounded
                 // AppleEverestStaticFieldAccess switch.
-                "DynData`1" => method.Name is ".ctor" or "get_Data" or "get_Item" or "set_Item" or "Get" or "Set",
+                // Get<T> calls this private typed switch wrapper in the same
+                // generated facade. It does not discover runtime members.
+                "DynData`1" => method.Name is ".ctor" or "get_Data" or "get_Item" or "set_Item" or "Get" or "Set" or "GetValue",
                 "GetDelegate`2" => method.Name is ".ctor" or "Invoke",
                 _ => false
             };

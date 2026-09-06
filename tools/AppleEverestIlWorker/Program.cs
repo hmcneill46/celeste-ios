@@ -71,10 +71,14 @@ internal static class Program
                 ?? throw new InvalidDataException("frozen-IL plan is empty");
             bool legacy = document.SchemaVersion == 2 && document.Worker == "apple-everest-static-il-worker-v2";
             bool direct = document.SchemaVersion == 3 && document.Worker == "apple-everest-static-il-worker-v3";
-            if (!legacy && !direct)
+            bool semantic = document.SchemaVersion == 4 && document.Worker == "apple-everest-static-il-worker-v4";
+            if (!legacy && !direct && !semantic)
                 throw new InvalidDataException("unsupported frozen-IL plan schema/worker");
-            if (document.Transforms.Any(transform => transform.Mechanism == "DIRECT_ILHOOK") != direct)
+            if (!semantic && document.Transforms.Any(transform => transform.Mechanism == "DIRECT_ILHOOK") != direct)
                 throw new InvalidDataException("direct-ILHook plans require the exact v3 worker schema");
+            if (document.Transforms.Any(transform => transform.Mechanism == SelectedSidewaysIlLowering.Mechanism) != semantic ||
+                document.Transforms.Any(transform => transform.Mechanism is not ("HOOKGEN_IL_EVENT" or "DIRECT_ILHOOK" or SelectedSidewaysIlLowering.Mechanism)))
+                throw new InvalidDataException("selected semantic transforms require the exact v4 worker schema");
             string actualPlanSha256 = PlanSha256(document.Transforms);
             if (!string.Equals(document.PlanSha256, actualPlanSha256, StringComparison.OrdinalIgnoreCase))
                 throw new InvalidDataException($"frozen-IL plan hash mismatch: expected {document.PlanSha256}; actual {actualPlanSha256}");
@@ -98,6 +102,29 @@ internal static class Program
             if (duplicateManipulators.Length != 0)
                 throw new InvalidDataException("duplicate frozen-IL manipulator registration: " +
                     string.Join(',', duplicateManipulators));
+            // Validate original package bytes even on the already-frozen path.
+            foreach (Transform transform in transforms)
+            {
+                string original = Path.Combine(Path.GetDirectoryName(options.Plan)!, "fixtures", transform.Owner + ".original.dll");
+                if (FileSha256(original) != transform.AssemblySha256)
+                    throw new InvalidDataException("manipulator fixture hash mismatch: " + transform.Owner);
+                if (transform.Mechanism != SelectedSidewaysIlLowering.Mechanism) continue;
+                var selectedProfile = SelectedSidewaysIlLowering.Profiles.Single(value =>
+                    value.Target == transform.TargetMethod && value.Canonical == transform.CanonicalTargetMethod);
+                string originalMethod = selectedProfile.Movement ? "addSidewaysJumpthrusInHorizontalMoveMethods" : "modCollideChecks";
+                if (transform.Owner != "MaxHelpingHand" || transform.AssemblySha256 != SelectedSidewaysIlLowering.PackageDllSha256 ||
+                    transform.ManipulatorType != "Celeste.Mod.MaxHelpingHand.Entities.SidewaysJumpThru" ||
+                    transform.ManipulatorMethod != originalMethod || !transform.ManipulatorIsStatic ||
+                    transform.Lifetime != SelectedSidewaysIlLowering.Lifetime ||
+                    !transform.ExpectedDelegateTargets.Order(StringComparer.Ordinal).SequenceEqual(SelectedSidewaysIlLowering.ExpectedHelpers(selectedProfile)))
+                    throw new InvalidDataException("selected sideways original provenance/lifetime/helper census is not exact");
+                using ModuleDefinition package = ModuleDefinition.ReadModule(original);
+                MethodDefinition sourceMethod = package.Types.Single(value => value.FullName == transform.ManipulatorType)
+                    .Methods.Single(value => value.Name == originalMethod);
+                if (!sourceMethod.IsStatic || !sourceMethod.HasBody || sourceMethod.ReturnType.FullName != "System.Void" ||
+                    !sourceMethod.Parameters.Select(value => value.ParameterType.FullName).SequenceEqual(new[] { "MonoMod.Cil.ILContext" }))
+                    throw new InvalidDataException("selected sideways source manipulator signature/body drift");
+            }
             InstallResolver(options, transforms);
 
             DefaultAssemblyResolver cecilResolver = new();
@@ -144,27 +171,41 @@ internal static class Program
                 string modPath = Path.Combine(Path.GetDirectoryName(options.Plan)!, "fixtures", transform.Owner + ".original.dll");
                 if (FileSha256(modPath) != transform.AssemblySha256)
                     throw new InvalidDataException("manipulator fixture hash mismatch: " + transform.Owner);
-                Assembly mod = Assembly.LoadFrom(Path.GetFullPath(modPath));
-                Type manipulatorType = mod.GetType(transform.ManipulatorType, throwOnError: true, ignoreCase: false)!;
-                MethodInfo manipulatorMethod = manipulatorType.GetMethod(transform.ManipulatorMethod,
-                    BindingFlags.Static | BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic,
-                    binder: null, types: new[] { typeof(ILContext) }, modifiers: null)
-                    ?? throw new InvalidDataException("exact manipulator not found");
-                if (manipulatorMethod.IsStatic != transform.ManipulatorIsStatic || manipulatorMethod.ReturnType != typeof(void))
-                    throw new InvalidDataException("manipulator static/instance signature drifted");
-                object? instance = manipulatorMethod.IsStatic ? null : Activator.CreateInstance(manipulatorType)
-                    ?? throw new InvalidDataException("instance manipulator owner could not be constructed");
-                if (Delegate.CreateDelegate(typeof(ILContext.Manipulator), instance, manipulatorMethod,
-                        throwOnBindFailure: true) is not ILContext.Manipulator manipulator)
-                    throw new InvalidDataException("exact manipulator delegate could not be created");
-                Dictionary<string, int> directCallsBefore = ExpectedDirectCallCounts(target,
-                    transform.ExpectedDelegateTargets);
                 DelegateLowering[] lowerings;
-                using (ILContext context = new(target))
+                if (transform.Mechanism == SelectedSidewaysIlLowering.Mechanism)
                 {
-                    context.Invoke(manipulator);
-                    lowerings = LowerEmitDelegates(target, module, transform.ExpectedDelegateTargets,
-                        directCallsBefore);
+                    if (transform.Owner != "MaxHelpingHand" || transform.AssemblySha256 != SelectedSidewaysIlLowering.PackageDllSha256 ||
+                        transform.Lifetime != SelectedSidewaysIlLowering.Lifetime)
+                        throw new InvalidDataException("selected sideways provenance/lifetime is not exact");
+                    var profile = SelectedSidewaysIlLowering.Profiles.Single(value => value.Target == target.FullName && value.Canonical == canonicalTarget);
+                    if (!transform.ExpectedDelegateTargets.Order(StringComparer.Ordinal).SequenceEqual(SelectedSidewaysIlLowering.ExpectedHelpers(profile)))
+                        throw new InvalidDataException("selected sideways helper census is not exact");
+                    lowerings = SelectedSidewaysIlLowering.Apply(target, canonicalTarget).Select(method =>
+                        new DelegateLowering("typed-selected-semantic", RuntimeMethodIdentity(method), method.Parameters.Count)).ToArray();
+                }
+                else
+                {
+                    Assembly mod = Assembly.LoadFrom(Path.GetFullPath(modPath));
+                    Type manipulatorType = mod.GetType(transform.ManipulatorType, throwOnError: true, ignoreCase: false)!;
+                    MethodInfo manipulatorMethod = manipulatorType.GetMethod(transform.ManipulatorMethod,
+                        BindingFlags.Static | BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic,
+                        binder: null, types: new[] { typeof(ILContext) }, modifiers: null)
+                        ?? throw new InvalidDataException("exact manipulator not found");
+                    if (manipulatorMethod.IsStatic != transform.ManipulatorIsStatic || manipulatorMethod.ReturnType != typeof(void))
+                        throw new InvalidDataException("manipulator static/instance signature drifted");
+                    object? instance = manipulatorMethod.IsStatic ? null : Activator.CreateInstance(manipulatorType)
+                        ?? throw new InvalidDataException("instance manipulator owner could not be constructed");
+                    if (Delegate.CreateDelegate(typeof(ILContext.Manipulator), instance, manipulatorMethod,
+                            throwOnBindFailure: true) is not ILContext.Manipulator manipulator)
+                        throw new InvalidDataException("exact manipulator delegate could not be created");
+                    Dictionary<string, int> directCallsBefore = ExpectedDirectCallCounts(target,
+                        transform.ExpectedDelegateTargets);
+                    using (ILContext context = new(target))
+                    {
+                        context.Invoke(manipulator);
+                        lowerings = LowerEmitDelegates(target, module, transform.ExpectedDelegateTargets,
+                            directCallsBefore);
+                    }
                 }
 
                 ValidateBody(target);
@@ -527,7 +568,8 @@ internal static class Program
             string.Join(',', transform.ExpectedDelegateTargets)) +
             (transform.Mechanism == "DIRECT_ILHOOK" ? "\0" + string.Join("\0", transform.Mechanism,
                 transform.ConstructorSignature, transform.TargetExpression, transform.ManipulatorExpression,
-                transform.Config, transform.ApplyByDefault, transform.Storage, transform.Lifetime) : ""))) + "\n");
+                transform.Config, transform.ApplyByDefault, transform.Storage, transform.Lifetime) :
+             transform.Mechanism == SelectedSidewaysIlLowering.Mechanism ? "\0" + string.Join("\0", transform.Mechanism, transform.Lifetime) : ""))) + "\n");
     private static string FileSha256(string path) => Sha256(File.ReadAllBytes(path));
     private static string Sha256(byte[] bytes)
     {

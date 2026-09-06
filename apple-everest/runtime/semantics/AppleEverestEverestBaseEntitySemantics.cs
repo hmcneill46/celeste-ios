@@ -9,10 +9,9 @@ namespace Celeste.Mod;
 // Frozen composition of Everest stable-1.6458.0 CustomBirdTutorial and
 // MaxHelpingHand 1.40.9 CustomTutorialWithNoBird for the exact Beginner-lobby
 // profile.  The distributed type removes BirdNPC.Sprite and suppresses the
-// StartleAndFlyAway coroutine, so carrying the desktop inheritance hierarchy
-// would add no selected observable behavior.  This entity keeps the remaining
-// light, immediate tutorial activation, bubble lifecycle and right pointer.
-internal sealed class AppleEverestCustomTutorialWithNoBird : Entity
+// StartleAndFlyAway coroutine. Retain Actor updates/tracking and BirdNPC's
+// riding and scene-end behavior after removal of its sprite.
+internal sealed class AppleEverestCustomTutorialWithNoBird : Actor
 {
     private readonly EntityID entityId;
     private readonly string birdId;
@@ -53,6 +52,12 @@ internal sealed class AppleEverestCustomTutorialWithNoBird : Entity
         TriggerShowTutorial();
         AppleEverestStaticRuntime.Log("stage25kh-tutorial=PASS activation=immediate bird=absent pointer=Right bird-id=" + birdId);
     }
+
+    public override bool IsRiding(Solid solid) =>
+        Scene.CollideCheck(new Rectangle((int)X - 4, (int)Y, 8, 2), solid);
+
+    public override void SceneEnd(Scene scene)
+    { Engine.TimeRate = 1f; base.SceneEnd(scene); }
 
     internal void TriggerShowTutorial()
     {

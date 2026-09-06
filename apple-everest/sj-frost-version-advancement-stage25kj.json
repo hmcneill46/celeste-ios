@@ -1,0 +1,165 @@
+{
+  "allSevenDesktopTypesExistInBothVersions": true,
+  "archiveComparison": {
+    "added": [
+      "Graphics/Atlases/Gameplay/editor/FrostHelper/RainbowChannelAttacher.png",
+      "Loenn/entities/rainbowChannels.lua",
+      "Loenn/triggers/indirectFlagTrigger.lua"
+    ],
+    "allPreExistingGraphicsByteIdentical": true,
+    "changed": [
+      "Code/FrostHelper/bin/FrostTempleHelper.dll",
+      "Loenn/entities/rainbowifyController.lua",
+      "Loenn/lang/en_gb.lang",
+      "everest.yaml"
+    ],
+    "newFileCount": 974,
+    "oldFileCount": 971,
+    "removed": []
+  },
+  "automaticAcceptanceInheritance": false,
+  "missingBeforeMeans": "MISSING_ACCEPTED_APPLE_PRODUCTION_REGISTRATIONS_NOT_ABSENT_DESKTOP_TYPES",
+  "moduleReview": {
+    "added": [
+      "AnyEntityAddedHook.UnloadHooks",
+      "RainbowChannels.UnloadHooks"
+    ],
+    "attributedMethodsAfter": 99,
+    "attributedMethodsBefore": 97,
+    "everestAndCoreMinimum": "1.5986.0",
+    "globalTransitiveEquivalenceEstablished": false,
+    "noNewOnLoadHookPreloadOnLoadContentEntries": true
+  },
+  "negativeControlAuthority": "FactoryPackageIdentity.WriteControls uses the production identity validator",
+  "olderNoDashAreaLaneRetainedSeparately": true,
+  "packages": [
+    {
+      "distributedDllPath": "Code/FrostHelper/bin/FrostTempleHelper.dll",
+      "distributedDllSha256": "e1314eca75af6670569a58689c267746151d1ba428e8808607dde23499654971",
+      "version": "1.79.1",
+      "zipSha256": "4dc648dcdb3a86936b83af6f30aa80ee1f4740fd9e7808aee01cb7045a683434"
+    },
+    {
+      "distributedDllPath": "Code/FrostHelper/bin/FrostTempleHelper.dll",
+      "distributedDllSha256": "723e204638703111c12746badd31b8d37cd41d4978d1a2d98315647406d880af",
+      "version": "1.80.1",
+      "zipSha256": "ba6aee8f596eff0f595fd90cb7f136ea13b1e9c2d664fc38f389608b0f9e2c81"
+    }
+  ],
+  "physicalAcceptance": "SEPARATE_SEMANTIC_LEDGER_GATE",
+  "productionAcceptance": "EXACT_1_80_1_ZIP_DLL_VERSION_SELECTED_PROFILES_REGISTERED_AND_COMPILED",
+  "schemaVersion": 1,
+  "scope": "EXPLICIT_SELECTED_SEVEN_FACTORY_VERSION_ADVANCEMENT",
+  "sourceComparison": {
+    "changedSharedHelpers": [
+      {
+        "newDecompiledTextSha256": "904fc38d08635479bc2a9e3c295c0f9397c9bb48d9193a088eb7e28dbde6a196",
+        "oldDecompiledTextSha256": "2010f660ddf43ff784c420cf168711803882eab2158f0965ce1ddee366dabd27",
+        "selectedDisposition": "Adds separator overload; existing selected comma parsing retained.",
+        "type": "FrostHelper.ColorHelper"
+      },
+      {
+        "newDecompiledTextSha256": "58ae4f17643b85c38a91bafaf3095d56999aa72551e20d0608a25aa49ecdb78d",
+        "oldDecompiledTextSha256": "2a628ff18f00a13be3fba33445ed66705fede740241731d0cf96ee8beab3561b",
+        "selectedDisposition": "Expression dictionary initializer changes; selected Linear resolves before expression/Lua fallback. No expression-subsystem equivalence claim.",
+        "type": "FrostHelper.EaseHelper"
+      },
+      {
+        "newDecompiledTextSha256": "c587f39b805158fd324eee20eed41b976cbf1b3289e51467090aed904976b171",
+        "oldDecompiledTextSha256": "ed75e7e097a3b9c11f878dd5c08b645bfc3b8b98fd244b58f74c048c55d5dd81",
+        "selectedDisposition": "Adds unresolved-type notification; exact selected tutorial type resolves.",
+        "type": "FrostHelper.Helpers.EntityFilter"
+      },
+      {
+        "newDecompiledTextSha256": "db4b234acada91cbf65056de6a8d72a322b945cd37cdfc8e7756f2591e634ec8",
+        "oldDecompiledTextSha256": "7eaa84fc67af93a6e2639951e51e77827e51f2dcbaa0312b3a208f0fe4ddc436",
+        "selectedDisposition": "Optional comma separator and parser overload added; selected parsing retains comma behavior.",
+        "type": "FrostHelper.Extensions"
+      }
+    ],
+    "equalSharedHelpers": [
+      {
+        "sameDecompiledTextSha256BothVersions": "7383ad12a1aa2e9910fbfc1381456de7785193366179237101c14d703951c113",
+        "type": "FrostHelper.FrostModule"
+      },
+      {
+        "sameDecompiledTextSha256BothVersions": "4bb5ae9d0734813664059867584842d942d7535537690465823c1a4ebdc05190",
+        "type": "FrostHelper.AttributeHelper"
+      },
+      {
+        "sameDecompiledTextSha256BothVersions": "dde049c8ce59e3c27f90f0fadc7c98f34da2fc2382960847348dff422a0acc4d",
+        "type": "FrostHelper.Components.PostAwakeHook"
+      },
+      {
+        "sameDecompiledTextSha256BothVersions": "0c72183158417ae2216a42042491951c930d271a59f09576684d0a8c658bc199",
+        "type": "FrostHelper.Helpers.EntityMoveHelper"
+      }
+    ],
+    "factories": [
+      {
+        "customId": "FrostHelper/CustomFireBarrier",
+        "distributedType": "FrostHelper.CustomFireBarrier",
+        "newDecompiledTextSha256": "ae0046edda8ac819ff60ee19c4f6731541d8d99870d94f37d131dad349e63b2e",
+        "oldDecompiledTextSha256": "ae0046edda8ac819ff60ee19c4f6731541d8d99870d94f37d131dad349e63b2e",
+        "selectedSemanticReview": "sj-factory-source-review-stage25kj.tsv: FrostHelper/CustomFireBarrier",
+        "textEqual": true
+      },
+      {
+        "customId": "FrostHelper/CustomFlutterBird",
+        "distributedType": "FrostHelper.CustomFlutterBird",
+        "newDecompiledTextSha256": "1311788682e8dc7015332f35676e9ef9aa79009432b6ce3b3cecd9f916d17431",
+        "oldDecompiledTextSha256": "1311788682e8dc7015332f35676e9ef9aa79009432b6ce3b3cecd9f916d17431",
+        "selectedSemanticReview": "sj-factory-source-review-stage25kj.tsv: FrostHelper/CustomFlutterBird",
+        "textEqual": true
+      },
+      {
+        "customId": "FrostHelper/DecalContainer",
+        "distributedType": "FrostHelper.DecalContainerMaker",
+        "newDecompiledTextSha256": "6fde10f503164339aab1c9eeae196fa257439b78fc2479d0e74d8b23f2ce090c",
+        "oldDecompiledTextSha256": "6fde10f503164339aab1c9eeae196fa257439b78fc2479d0e74d8b23f2ce090c",
+        "selectedSemanticReview": "sj-factory-source-review-stage25kj.tsv: FrostHelper/DecalContainer",
+        "textEqual": true
+      },
+      {
+        "customId": "FrostHelper/EntityMover",
+        "distributedType": "FrostHelper.EntityMover",
+        "newDecompiledTextSha256": "233dc8efde5e59edc3925b7c64348f6a08ec24bad8700f21a5469ffc87fe0f93",
+        "oldDecompiledTextSha256": "233dc8efde5e59edc3925b7c64348f6a08ec24bad8700f21a5469ffc87fe0f93",
+        "selectedSemanticReview": "sj-factory-source-review-stage25kj.tsv: FrostHelper/EntityMover",
+        "textEqual": true
+      },
+      {
+        "customId": "FrostHelper/IceSpinner",
+        "distributedType": "FrostHelper.CustomSpinner",
+        "newDecompiledTextSha256": "d9cb02d815708907aa8a6deb6898b1b72579eb400ba804e647e77acb887e8b59",
+        "oldDecompiledTextSha256": "d9cb02d815708907aa8a6deb6898b1b72579eb400ba804e647e77acb887e8b59",
+        "selectedSemanticReview": "sj-factory-source-review-stage25kj.tsv: FrostHelper/IceSpinner",
+        "textEqual": true
+      },
+      {
+        "customId": "FrostHelper/OnSpawnActivator",
+        "distributedType": "FrostHelper.Triggers.Activator.OnSpawnActivator",
+        "newDecompiledTextSha256": "d06d6c918b5ae3ccd65a8cd0ffc1f4642ddf4909b62069f3a64849c61b18623c",
+        "oldDecompiledTextSha256": "d06d6c918b5ae3ccd65a8cd0ffc1f4642ddf4909b62069f3a64849c61b18623c",
+        "selectedSemanticReview": "sj-factory-source-review-stage25kj.tsv: FrostHelper/OnSpawnActivator",
+        "textEqual": true
+      },
+      {
+        "customId": "FrostHelper/WireLamps",
+        "differences": [
+          "Default-color field changed.",
+          "Raycast and Render gained non-Level guards."
+        ],
+        "distributedType": "FrostHelper.WireLamps",
+        "newDecompiledTextSha256": "f4ee29d2e45caaccaea6bae96cc2c853e0a1fef6a3421b746956e9a4f6da0fc0",
+        "oldDecompiledTextSha256": "7e71bf120bedf0fe11db3eaa2942e2cdde17523507115a12fb4440f45f774aa0",
+        "selectedDisposition": "Selected attached=false Level rendering retains the same math. Culling must precede light-position updates.",
+        "textEqual": false
+      }
+    ],
+    "hashMeaning": "RAW_UTF8_DECOMPILED_TEXT_NOT_IL_OR_METHOD_BYTE_IDENTITY",
+    "tool": "ilspycmd 11.0.0.9375"
+  },
+  "stage": "25K-J",
+  "wholePackageEquivalenceClaim": false
+}

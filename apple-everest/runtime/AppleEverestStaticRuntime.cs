@@ -37,6 +37,7 @@ public static class AppleEverestStaticRuntime
     private static string currentOwner = "AppleEverestCore";
     private static ModeProperties originalPrologueMode;
     private static SaveData saveDataBeforeModSession;
+    private static (Loaded Module, object SaveData, object Session)[] moduleDataBeforeModSession;
     private static bool suppressedModSessionSaveLogged;
     internal static bool NonPersistentModSession { get; private set; }
 
@@ -147,6 +148,7 @@ public static class AppleEverestStaticRuntime
                 atlas = MTN.Checkpoints;
                 checkpoints++;
             }
+            else if (descriptor.Atlas == "ColorGrades") atlas = GFX.ColorGrades;
             else
             {
                 throw new InvalidOperationException($"unsupported static Everest atlas: {descriptor.Atlas}");
@@ -391,11 +393,57 @@ public static class AppleEverestStaticRuntime
         Log($"content-map=launch path={path} room={(room ?? session.Level)} debug-save-created={createdDebugSave.ToString().ToLowerInvariant()}");
     }
 
+    internal static void LaunchRegisteredFactoryCanary(string sid, string room, bool continueSmoke = false)
+    {
+        if (!AppleEverestFactoryCanary.IsRegisteredFixture(sid, room) ||
+            !AppleEverestProgressionRuntime.TryDescriptor(sid, out var descriptor) ||
+            !descriptor.Rooms.Any(value => (value.StartsWith("lvl_", StringComparison.Ordinal) ? value.Substring(4) : value) == room))
+            throw new InvalidOperationException("registered authored factory canary is absent");
+        bool alreadyDebug = NonPersistentModSession;
+        BeginNonPersistentModSession();
+        // Each registration room gets a fresh fixture context. The original
+        // player's vanilla/module objects remain preserved until exit.
+        AppleEverestProgressionPersistence.ResetFactoryCanarySessions();
+        if (alreadyDebug) SaveData.InitializeDebugMode(loadExisting: false);
+        Input.MenuConfirm.ConsumePress(); Input.Jump.ConsumePress();
+        AreaKey area = new(descriptor.RuntimeAreaId);
+        MapData map = AreaData.Get(area).Mode[0].MapData;
+        LevelData data = map.Levels.Single(value => value.Name == room);
+        if (data.Spawns.Count == 0) throw new InvalidOperationException("factory canary has no authored spawn");
+        Session session = new(area)
+        {
+            Level = room, FirstLevel = false, StartedFromBeginning = false,
+            RespawnPoint = data.Spawns[0]
+        };
+        AppleEverestFactoryCanary.Begin(session, sid, room, continueSmoke);
+        Engine.Scene = new LevelLoader(session) { PlayerIntroTypeOverride = Player.IntroTypes.None };
+        Log("factory-canary=launch sid=" + sid + " room=" + room + " isolated=true");
+    }
+
+    internal static void LaunchFactoryInteractionLobby()
+    {
+        const string sid = "AppleEverestStage25KJ/0-Lobbies/1-Fixture";
+        if (!GeneratedAppleEverestCollabManifest.Collabs.Any(value => value.LobbySid == sid) ||
+            !AppleEverestProgressionRuntime.TryDescriptor(sid, out var descriptor))
+            throw new InvalidOperationException("authored Collab interaction graph is absent");
+        bool alreadyDebug = NonPersistentModSession;
+        BeginNonPersistentModSession();
+        AppleEverestProgressionPersistence.ResetFactoryCanarySessions();
+        if (alreadyDebug) SaveData.InitializeDebugMode(loadExisting: false);
+        AppleEverestFactoryCanary.End();
+        Input.MenuConfirm.ConsumePress(); Input.Jump.ConsumePress();
+        Engine.Scene = new LevelLoader(new Session(new AreaKey(descriptor.RuntimeAreaId)))
+            { PlayerIntroTypeOverride = Player.IntroTypes.None };
+        Log("factory-interaction=launch original-gameplay-maps=false isolated=true");
+    }
+
     private static bool BeginNonPersistentModSession()
     {
         if (NonPersistentModSession) return false;
+        AppleEverestProgressionPersistence.ResetFactoryCanarySessions();
 
         saveDataBeforeModSession = SaveData.Instance;
+        moduleDataBeforeModSession = LoadedModules.Select(loaded => (loaded, loaded.SaveData, loaded.Session)).ToArray();
         bool createdWithoutExistingSave = saveDataBeforeModSession == null;
 
         // A static mod map is an explicitly bounded compatibility surface, not
@@ -422,9 +470,23 @@ public static class AppleEverestStaticRuntime
     internal static Overworld.StartMode CompleteNonPersistentModSession(Overworld.StartMode requestedStartMode)
     {
         if (!NonPersistentModSession) return requestedStartMode;
+        // Collab chapter/journal panels wrap an in-level Overworld with -1.
+        // They have not exited the isolated canary session.
+        if ((int)requestedStartMode == -1) return requestedStartMode;
 
         SaveData.Instance = saveDataBeforeModSession;
         saveDataBeforeModSession = null;
+        if (moduleDataBeforeModSession != null)
+            foreach (var previous in moduleDataBeforeModSession)
+            {
+                previous.Module.SaveData = previous.SaveData;
+                previous.Module.Session = previous.Session;
+                previous.Module.Module.SetStaticState(previous.Module.Settings as EverestModuleSettings,
+                    previous.SaveData as EverestModuleSaveData, previous.Session as EverestModuleSession);
+            }
+        moduleDataBeforeModSession = null;
+        AppleEverestProgressionPersistence.ResetFactoryCanarySessions();
+        AppleEverestFactoryCanary.End();
         NonPersistentModSession = false;
         suppressedModSessionSaveLogged = false;
         if (originalPrologueMode != null) AreaData.Areas[0].Mode[0] = originalPrologueMode;
@@ -807,8 +869,10 @@ internal static class AppleEverestLab
     private static void PopulateOptions(TextMenu menu)
     {
         menu.Add(new TextMenu.SubHeader("APPLE EVEREST STATIC LAB"));
+        AppleEverestFactoryCanary.AddOptions(menu);
         foreach (AppleEverestCollabDescriptor collab in GeneratedAppleEverestCollabManifest.Collabs)
         {
+            if (collab.Id == "AppleEverestStage25KJ") continue;
             AppleEverestCollabDescriptor selectedCollab = collab;
             menu.Add(new TextMenu.Button("Play Real Collab Lobby: " + collab.DisplayName)
                 .Pressed(() => AppleEverestProgressionRuntime.LaunchPersistent(selectedCollab.LobbySid)));
@@ -818,6 +882,7 @@ internal static class AppleEverestLab
             menu.Add(new TextMenu.SubHeader("LEVELSET: " + levelSet.LevelSet));
             foreach (string mapSid in levelSet.MapSids)
             {
+                if (mapSid.StartsWith("AppleEverestStage25KJ/", StringComparison.Ordinal)) continue;
                 string selectedSid = mapSid;
                 string label = Path.GetFileName(selectedSid);
                 menu.Add(new TextMenu.Button("Play Map: " + label)
@@ -827,6 +892,7 @@ internal static class AppleEverestLab
         menu.Add(new TextMenu.SubHeader("STATIC DEBUG MAPS"));
         foreach (string mapPath in GeneratedAppleEverestContentManifest.MapPaths)
         {
+            if (mapPath.StartsWith("AppleEverestStage25KJ/", StringComparison.Ordinal)) continue;
             string selectedMap = mapPath;
             string label = Path.GetFileName(selectedMap);
             menu.Add(new TextMenu.Button("Play Static Mod Map (Debug): " + label)

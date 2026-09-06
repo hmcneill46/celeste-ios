@@ -70,89 +70,96 @@ internal sealed class AppleEverestEditDepthTrigger : Trigger
 
 internal sealed class AppleEverestTriggerTrigger : Trigger
 {
-    private const int TriggerEntityIdOffset = 10000000;
     private readonly int sourceEntityId;
-    private readonly int expectedRumbleId;
-    private readonly int expectedFlagEntityId;
     private readonly Vector2[] nodes;
     private readonly List<Trigger> targets = new();
-    private bool activating;
+    private readonly List<Entity> entitiesInside = new();
+    private bool activating, deactivating, activated;
 
     internal AppleEverestTriggerTrigger(EntityData data, Vector2 offset, EntityID entityId) : base(data, offset)
     {
         sourceEntityId = data.ID;
-        if (entityId.ID != TriggerEntityIdOffset + sourceEntityId)
-            throw new InvalidOperationException("unreviewed Celeste trigger entity ID convention");
         nodes = data.NodesOffset(offset);
-        if (sourceEntityId == 1140 && data.Position == new Vector2(456f, 2067f))
-        {
-            expectedRumbleId = 1142;
-            expectedFlagEntityId = TriggerEntityIdOffset + 1141;
-        }
-        else if (sourceEntityId == 43)
-        {
-            expectedRumbleId = 44;
-            expectedFlagEntityId = TriggerEntityIdOffset + 45;
-        }
-        else
-        {
-            throw new InvalidOperationException("unreviewed CrystallineHelper trigger-trigger entity identity");
-        }
-
         if (nodes.Length != 2 || !data.Bool("oneUse", false) ||
             data.Attr("activationType", "Flag") != "OnHoldableEnter" ||
-            Math.Abs(data.Float("delay", 0f) - 0.4f) > 0.0001f ||
-            data.Bool("randomize", false) || data.Bool("matchPosition", true) ||
-            data.Bool("activateOnTransition", false) || data.Bool("invertCondition", false) ||
-            data.Bool("invertFlag", false) || data.Bool("onlyOnEnter", false))
+            data.Float("delay", 0f) != 0.4f || data.Bool("randomize", false) ||
+            data.Bool("matchPosition", true) || data.Bool("activateOnTransition", false) ||
+            data.Bool("invertCondition", false) || data.Bool("invertFlag", false) || data.Bool("onlyOnEnter", false))
             throw new InvalidOperationException("unreviewed CrystallineHelper trigger-trigger behavior profile");
-
-        Add(new HoldableCollider(OnHoldable));
+        Add(new HoldableCollider(holdable => entitiesInside.Add(holdable.Entity)));
+        Add(new TransitionListener { OnOut = _ => DeactivateTriggers(Scene?.Tracker.GetEntity<Player>()) });
     }
 
     public override void Awake(Scene scene)
     {
         base.Awake(scene);
-        Trigger rumble = null;
-        Trigger flag = null;
-        foreach (Entity entity in scene.Entities)
+        foreach (Vector2 node in nodes)
         {
-            if (entity is not Trigger trigger || ReferenceEquals(trigger, this)) continue;
-            AppleEverestStaticIdentity identity = entity.Get<AppleEverestStaticIdentity>();
-            if (identity?.EntityId.ID == expectedFlagEntityId && identity.CustomId == "everest/flagTrigger" &&
-                Contains(trigger, nodes[1])) flag = trigger;
-            if (entity is RumbleTrigger && Contains(trigger, nodes[0])) rumble = trigger;
+            Dictionary<Trigger, bool> previous = new();
+            foreach (Trigger trigger in scene.Tracker.GetEntities<Trigger>())
+            { previous.Add(trigger, trigger.Collidable); trigger.Collidable = true; }
+            Trigger target = scene.CollideFirst<Trigger>(node);
+            foreach (Trigger trigger in scene.Tracker.GetEntities<Trigger>()) trigger.Collidable = previous[trigger];
+            target ??= scene.Tracker.GetNearestEntity<Trigger>(node);
+            if (target != this && target != null) { targets.Add(target); target.Collidable = false; }
         }
-        if (rumble == null || flag == null)
-            throw new InvalidOperationException("CrystallineHelper trigger-trigger exact targets were not found");
-        targets.Add(rumble);
-        targets.Add(flag);
-        foreach (Trigger target in targets) target.Collidable = false;
-        AppleEverestStaticRuntime.Log($"crystalline-trigger-targets=PASS source={sourceEntityId} rumble={expectedRumbleId} flag={expectedFlagEntityId - TriggerEntityIdOffset} typed=true");
+        // The selected graph contains these two target classes in this order.
+        // Perform the source's unfiltered selection before checking the bound;
+        // entity IDs and absolute positions are not selection criteria.
+        if (targets.Count != 2 || targets[0].GetType() != typeof(RumbleTrigger) ||
+            targets[1].GetType() != typeof(AppleEverestFlagTrigger))
+            throw new InvalidOperationException("CrystallineHelper trigger-trigger targets are outside the selected closure");
+        AppleEverestStaticRuntime.Log($"crystalline-trigger-targets=PASS source={sourceEntityId} targets=2 typed=true");
     }
 
-    private static bool Contains(Trigger trigger, Vector2 point) =>
-        point.X >= trigger.Left && point.X <= trigger.Right &&
-        point.Y >= trigger.Top && point.Y <= trigger.Bottom;
-
-    private void OnHoldable(Holdable holdable)
+    public override void Update()
     {
-        if (activating || Scene == null) return;
+        base.Update();
+        Player player = Scene.Tracker.GetEntity<Player>();
+        if (player == null) return;
+        // Retain duplicates and removal order from the original overlap list.
+        List<Entity> outside = new();
+        foreach (Entity entity in entitiesInside) if (!entity.CollideCheck(this)) outside.Add(entity);
+        foreach (Entity entity in outside) entitiesInside.Remove(entity);
+        // OnHoldableEnter forces the source's Global condition-check boolean
+        // true. It is unrelated to Tags.Global or transition persistence.
+        TryActivate(player);
+        TryDeactivate(player);
+        if (activated) RemoveSelf();
+    }
+
+    private void TryActivate(Player player)
+    {
+        if (activating || (activated && !deactivating) || entitiesInside.Count == 0) return;
         activating = true;
-        Add(Alarm.Create(Alarm.AlarmMode.Oneshot, Activate, 0.4f, start: true));
+        Add(Alarm.Create(Alarm.AlarmMode.Oneshot, () =>
+        { activating = false; ActivateTriggers(player); }, 0.4f, start: true));
     }
-
-    private void Activate()
+    private void TryDeactivate(Player player)
     {
-        Player player = Scene?.Tracker.GetEntity<Player>();
-        if (player == null) { activating = false; return; }
+        if (deactivating || (!activated && !activating) || entitiesInside.Count > 0) return;
+        deactivating = true;
+        Add(Alarm.Create(Alarm.AlarmMode.Oneshot, () =>
+        { deactivating = false; DeactivateTriggers(player); }, 0.4f, start: true));
+    }
+    private void CleanTriggers() => targets.RemoveAll(trigger => trigger.Scene == null);
+    private void ActivateTriggers(Player player)
+    {
+        DeactivateTriggers(player);
+        CleanTriggers();
+        activated = true;
         foreach (Trigger target in targets)
         {
             if (target.PlayerIsInside) target.OnLeave(player);
             target.OnEnter(player);
         }
         AppleEverestStaticRuntime.Log($"crystalline-trigger-trigger=PASS source={sourceEntityId} activation=OnHoldableEnter delay=0.4 targets=2 one-use=true");
-        RemoveSelf();
+    }
+    private void DeactivateTriggers(Player player)
+    {
+        CleanTriggers();
+        activated = false;
+        foreach (Trigger target in targets) if (target.PlayerIsInside) target.OnLeave(player);
     }
 }
 

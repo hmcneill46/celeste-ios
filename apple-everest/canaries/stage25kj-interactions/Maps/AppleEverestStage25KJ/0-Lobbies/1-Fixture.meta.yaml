@@ -1,0 +1,22 @@
+Stickers:
+  - Path: AppleEverestStage25KJ/finishA
+    X: 450.0
+    Y: 350.0
+    Rotation: -10.0
+    Scale: 2.0
+    FinishedMaps:
+      - AppleEverestStage25KJ/1-Fixture/1-FinishA
+  - Path: AppleEverestStage25KJ/finishB
+    X: 950.0
+    Y: 350.0
+    Rotation: 12.0
+    Scale: 2.0
+    FinishedMaps:
+      - AppleEverestStage25KJ/1-Fixture/2-FinishB
+  - Path: AppleEverestStage25KJ/finishA
+    X: 800.0
+    Y: 700.0
+    Rotation: -10.0
+    Scale: 2.0
+    FinishedMaps:
+      - AppleEverestStage25KJ/1-Fixture/Absent

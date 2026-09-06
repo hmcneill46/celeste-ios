@@ -8,8 +8,11 @@ namespace AppleEverestBuilder;
 
 internal static class ClosureGenerator
 {
+    private const string CoreSessionSchema = "ae9843c8fa67f56bc55f2bbfa877a2f83bb84847cf9c7b493491f5049fd950a2";
+    private static bool NeedsSelectedCoreSession(IReadOnlyList<ResolvedMod> mods) =>
+        mods.Any(mod => mod.StaticSemanticLowering?.RuntimeFiles?.Contains("AppleEverestCoreState.cs", StringComparer.Ordinal) == true);
     private static readonly JsonSerializerOptions Json = new() { PropertyNameCaseInsensitive = true };
-    private static readonly (string Kind, string Id, string Owner)[] CoreGameplayFactories =
+    internal static readonly (string Kind, string Id, string Owner)[] CoreGameplayFactories =
     {
         ("entity", "everest/coreMessage", "EverestCore"),
         ("trigger", "everest/changeInventoryTrigger", "EverestCore"),
@@ -35,7 +38,7 @@ internal static class ClosureGenerator
         bool hasSemanticRuntime = ordered.Any(mod => mod.StaticSemanticLowering?.RuntimeFiles?.Count > 0);
         foreach (string source in Directory.EnumerateFiles(runtimeRoot, "*.cs").OrderBy(Path.GetFileName, StringComparer.Ordinal))
             File.Copy(source, Path.Combine(managed, Path.GetFileName(source)), overwrite: false);
-        foreach (string name in ordered.SelectMany(mod => mod.StaticSemanticLowering?.RuntimeFiles ?? [])
+        foreach (string name in ordered.SelectMany(mod => mod.StaticSemanticLowering?.RuntimeFiles ?? []).Append("AppleEverestSelectedProfileGuard.cs")
                      .Distinct(StringComparer.Ordinal).OrderBy(name => name, StringComparer.Ordinal))
         {
             if (Path.GetFileName(name) != name || !name.EndsWith(".cs", StringComparison.Ordinal))
@@ -161,6 +164,9 @@ internal static class ClosureGenerator
                 owner = factoryOwners[value.kind + "\0" + value.id].Owner })
             .ToArray();
 
+        if (mapGameplayIds.Any(value => value.kind == "entity" && value.id == "MaxHelpingHand/SidewaysJumpThru"))
+            frozenIlTransforms = SelectedSidewaysIlPlans.Append(ordered, frozenIlTransforms);
+
         (string durabilitySource, IReadOnlyDictionary<string, GeneratedDurabilityAdapter> durabilityAdapters) =
             DurabilityAdapterGenerator.Generate(codeModules);
         string durabilityClosureSha256 = Hashing.BytesSha256(Encoding.UTF8.GetBytes(string.Join("\n",
@@ -168,6 +174,9 @@ internal static class ClosureGenerator
                 item.Mod.Metadata.Name + "\t" + item.Mod.Metadata.Version + "\t" + item.Mod.Input.SourceSha256 + "\t" +
                 (durabilityAdapters.TryGetValue(item.Mod.Metadata.Name, out GeneratedDurabilityAdapter? adapter)
                     ? adapter.Schema : "none")))));
+        if (NeedsSelectedCoreSession(ordered))
+            durabilityClosureSha256 = Hashing.BytesSha256(Encoding.UTF8.GetBytes(durabilityClosureSha256 +
+                "\nEverest\t" + profile.Everest.Tag + "\t" + profile.Everest.Sha256Commit + "\t" + CoreSessionSchema));
         File.WriteAllText(Path.Combine(managed, "GeneratedAppleEverestModuleDurabilityAdapters.cs"),
             durabilitySource, new UTF8Encoding(false));
         File.WriteAllText(Path.Combine(managed, "GeneratedAppleEverestModuleRegistry.cs"),
@@ -329,7 +338,9 @@ internal static class ClosureGenerator
                 plan.AfterSha256,
                 plan.DiffSha256,
                 plan.ExpectedDelegateTargets,
-                runtimeUnload = "unsupported-immutable-active"
+                plan.Mechanism,
+                plan.Lifetime,
+                runtimeUnload = plan.Mechanism == SelectedSidewaysIlPlans.Mechanism ? "typed-level-lifetime-predicate" : "unsupported-immutable-active"
             }).ToArray(),
             customEntityFactoryCount = customFactories.Count(value => value.Kind == "entity") +
                                        ordered.Where(mod => mod.StaticSemanticLowering != null)
@@ -343,7 +354,8 @@ internal static class ClosureGenerator
                                         CoreGameplayFactories.Count(value => value.Kind == "trigger"),
             staticSemanticFactoryCount = ordered.Where(mod => mod.StaticSemanticLowering != null)
                 .SelectMany(mod => mod.StaticSemanticLowering!.Factories).Count(),
-            customBackdropFactoryCount = backdropFactories.Length,
+            customBackdropFactoryCount = backdropFactories.Length + ordered.Sum(mod =>
+                mod.StaticSemanticLowering?.Factories.Count(factory => factory.Kind == "backdrop") ?? 0),
             moduleSettingCount = codeModules.Sum(item => item.Declaration.SettingsProperties.Length),
             moduleDurabilityAdapterCount = durabilityAdapters.Count,
             moduleDurabilityFormat = "per-slot-aggregate-ab-v1",
@@ -395,7 +407,7 @@ internal static class ClosureGenerator
                 staticConfiguredDetours = mod.StaticConfiguredDetours?.Id,
                 staticConfiguredPlanSha256 = mod.StaticConfiguredDetours?.PlanSha256,
                 modInteropRegistrations = mod.ModInteropRegistrations.Select(registration => registration.RegisteredType).ToArray(),
-                frozenIlTransforms = mod.FrozenIlTransforms.Select(plan => plan.PlanId).ToArray(),
+                frozenIlTransforms = frozenIlTransforms.Where(plan => plan.Owner == mod.Metadata.Name).Select(plan => plan.PlanId).ToArray(),
                 customAudioBanks = mod.CustomAudioBanks.Select(bank => bank.BankPath).ToArray(),
                 managedFiles = mod.ManagedFiles,
                 contentFiles = mod.ContentFiles
@@ -588,6 +600,9 @@ internal static class ClosureGenerator
             Path.Combine(managedRoot, "Celeste", "HeartGemDoor.cs"),
             Path.Combine(managedRoot, "Celeste", "Strawberry.cs"));
         StaticSemanticRuntimePatches.Apply(managedRoot);
+        if (File.ReadAllText(Path.Combine(destination, "GeneratedAppleEverestContentManifest.cs"))
+            .Contains("AppleEverestStage25KJ/FactoryProfiles/", StringComparison.Ordinal))
+            FactoryCanaryInstrumentation.Apply(managedRoot);
         PatchTracker(Path.Combine(managedRoot, "Monocle", "Tracker.cs"));
         PatchPooler(Path.Combine(managedRoot, "Monocle", "Pooler.cs"));
         PatchProject(Path.Combine(managedRoot, "Celeste.Modern.csproj"), closureRoot);
@@ -604,6 +619,7 @@ internal static class ClosureGenerator
         "GameLoader:content-ready:v1",
         "GameLoader+Audio:static-custom-fmod-existing-system:v1",
         "MenuOptions:diagnostic-submenu:v2",
+        "FactoryCanaries:registered-isolated-rooms-and-actual-lifecycle-dispatch:v1",
         "Tracker.Initialize:typed-gameplay-registry:v3",
         "Level.LoadLevel:typed-custom-factory-registry:v1",
         "MapData.ParseBackdrop:everest-event-and-typed-custom-backdrop-registry:v2",
@@ -743,10 +759,14 @@ internal static class ClosureGenerator
         Directory.CreateDirectory(fixtures);
         foreach (string owner in plans.Select(plan => plan.Owner).Distinct(StringComparer.Ordinal))
         {
-            ResolvedMod fixture = mods.Single(mod => mod.Metadata.Name == owner &&
-                mod.FrozenIlTransforms.Count > 0);
+            ResolvedMod fixture = mods.Single(mod => mod.Metadata.Name == owner);
+            FrozenIlTransformPlan[] ownerPlans = plans.Where(plan => plan.Owner == owner).ToArray();
+            if (ownerPlans.Select(plan => plan.AssemblyPath + "\0" + plan.AssemblySha256).Distinct(StringComparer.Ordinal).Count() != 1)
+                throw new InvalidDataException("static-IL owner provenance is ambiguous: " + owner);
             string source = Path.Combine(fixture.Input.StagingRoot,
-                fixture.DeclaredAssemblyPath!.Replace('/', Path.DirectorySeparatorChar));
+                ownerPlans[0].AssemblyPath.Replace('/', Path.DirectorySeparatorChar));
+            if (Hashing.FileSha256(source) != ownerPlans[0].AssemblySha256)
+                throw new InvalidDataException("static-IL original package DLL hash mismatch: " + owner);
             File.Copy(source, Path.Combine(fixtures, owner + ".original.dll"), overwrite: false);
         }
         File.WriteAllText(Path.Combine(managedRoot, "AppleEverestStaticIl.targets"),
@@ -1023,8 +1043,8 @@ internal static class ClosureGenerator
         "\t\t\tif (SaveQuitDisabled || global::Celeste.Mod.AppleEverestStaticRuntime.NonPersistentModSession || (player != null && player.StateMachine.State == 18))");
 
     private static void PatchCollabPauseMenu(string path) => ReplaceOnce(path,
-        "\t\tif (!minimal && Celeste.PlayMode != Celeste.PlayModes.Event)\n\t\t{",
-        "\t\tglobal::Celeste.Mod.AppleEverestCollabRuntime.AddPauseMenuItem(this, menu);\n\t\tif (!minimal && Celeste.PlayMode != Celeste.PlayModes.Event)\n\t\t{");
+        "\t\tif (startIndex > 0)\n\t\t{",
+        "\t\tglobal::Celeste.Mod.AppleEverestCollabRuntime.AddPauseMenuItem(this, menu);\n\t\tif (startIndex > 0)\n\t\t{");
 
     private static void PatchCollabOverworldUi(
         string overworldPath, string chapterPanelPath, string chapterSelectPath, string journalPath)
@@ -1221,6 +1241,7 @@ internal static class ClosureGenerator
 
     private static void PreparePinnedEverestManagedTargets(string managedRoot)
     {
+        StaticAotCompatibility.PreserveFrozenCollisionRumbleCallers(managedRoot);
         // The pinned Everest Commands patch adds a level-set-aware overload.
         // The closed Apple product supports only the canonical Celeste class,
         // so its exact reviewed ABI delegates to vanilla for that class and
@@ -1295,7 +1316,17 @@ internal static class ClosureGenerator
             "\tpublic static bool TryDelete(int slot)\n\t{\n\t\tbool vanilla = UserIO.Delete(GetFilename(slot));\n\t\tbool progression = vanilla && global::Celeste.Mod.AppleEverestProgressionPersistence.DeleteSlot(slot);\n\t\tbool modules = vanilla && global::Celeste.Mod.AppleEverestModulePersistence.DeleteSlot(slot);\n\t\treturn vanilla && progression && modules;\n\t}");
         ReplaceOnce(saveData,
             "\tprivate void AppleEverestOriginal_StartSession(Session session)\n\t{\n\t\tLastArea = session.Area;\n\t\tLastArea_Safe = LastArea;\n\t\tCurrentSession = session;",
-            "\tprivate void AppleEverestOriginal_StartSession(Session session)\n\t{\n\t\tSession appleEverestPreviousSession = CurrentSession;\n\t\tLastArea = session.Area;\n\t\tLastArea_Safe = LastArea;\n\t\tCurrentSession = session;\n\t\tif (!object.ReferenceEquals(appleEverestPreviousSession, session))\n\t\t\tglobal::Celeste.Mod.AppleEverestModulePersistence.ResetSessionForNewVanillaSession(FileSlot);");
+            "\tprivate void AppleEverestOriginal_StartSession(Session session)\n\t{\n\t\tSession appleEverestPreviousSession = CurrentSession;\n\t\tLastArea = session.Area;\n\t\tLastArea_Safe = LastArea;\n\t\tCurrentSession = session;\n\t\tif (!object.ReferenceEquals(appleEverestPreviousSession, session))\n\t\t{\n\t\t\tvar appleEverestRoute = global::Celeste.Mod.AppleEverestCollabRuntime.TakeRestartRoute(session);\n\t\t\tglobal::Celeste.Mod.AppleEverestModulePersistence.ResetSessionForNewVanillaSession(FileSlot);\n\t\t\tappleEverestRoute?.CopyTo(global::Celeste.Mod.AppleEverestCollabRuntime.Route);\n\t\t}");
+
+        ReplaceOnce(Path.Combine(managedRoot, "Celeste", "TextMenu.cs"),
+            "\tpublic TextMenu Add(Item item)\n\t{",
+            "\tinternal void AppleEverestReplaceReturnButton(string label, Item replacement)\n\t{\n" +
+            "\t\tint index = items.FindIndex(item => item is Button button && button.Label == label);\n" +
+            "\t\tAdd(replacement);\n\t\titems.Remove(replacement);\n" +
+            "\t\tif (index < 0) index = items.Count - 1;\n\t\tif (index >= 0)\n\t\t{\n\t\t\tItem previous = items[index];\n\t\t\titems.RemoveAt(index);\n" +
+            "\t\t\tRemove(previous.ValueWiggler);\n\t\t\tRemove(previous.SelectWiggler);\n\t\t\tprevious.Container = null;\n\t\t}\n" +
+            "\t\telse index = 0;\n" +
+            "\t\titems.Insert(index, replacement);\n\t\tRecalculateSize();\n\t}\n\n\tpublic TextMenu Add(Item item)\n\t{");
 
         string fileSelect = Path.Combine(managedRoot, "Celeste", "OuiFileSelect.cs");
         ReplaceOnce(fileSelect,
@@ -1337,20 +1368,19 @@ internal static class ClosureGenerator
         string levelExit = Path.Combine(managedRoot, "Celeste", "LevelExit.cs");
         ReplaceOnce(levelExit,
             "\t\tthis.session = session;\n\t\tthis.mode = mode;\n\t\tthis.snow = snow;",
-            "\t\tthis.session = session;\n\t\tthis.mode = mode == Mode.Completed && global::Celeste.Mod.AppleEverestProgressionRuntime.IsCustom(session.Area) ? Mode.SaveAndQuit : mode;\n\t\tthis.snow = snow;");
+            "\t\tthis.session = session;\n\t\tif (mode is Mode.Restart or Mode.GoldenBerryRestart) global::Celeste.Mod.AppleEverestCollabRuntime.RememberRestartRoute(session);\n\t\tthis.mode = mode == Mode.Completed && global::Celeste.Mod.AppleEverestProgressionRuntime.IsCustom(session.Area) ? Mode.SaveAndQuit : mode;\n\t\tthis.snow = snow;");
     }
 
     private static void PatchSecondCollabSemantics(string heartDoor, string strawberry)
     {
         ReplaceOnce(heartDoor,
-            "\t\t\treturn SaveData.Instance.TotalHeartGems;",
-            "\t\t\treturn global::Celeste.Mod.AppleEverestSecondCollabRuntime.HeartGems(this, SaveData.Instance.TotalHeartGems);");
-        ReplaceOnce(heartDoor,
-            "\t\tif ((base.Scene as Level).Session.GetFlag(\"opened_heartgem_door_\" + Requires))",
-            "\t\tif ((base.Scene as Level).Session.GetFlag(global::Celeste.Mod.AppleEverestSecondCollabRuntime.DoorFlag(this, \"opened_heartgem_door_\" + Requires)))");
+            "\tpublic int HeartGems\n\t{\n\t\tget\n\t\t{",
+            "\tpublic int HeartGems\n\t{\n\t\tget\n\t\t{\n" +
+            "\t\t\tif (this is global::Celeste.Mod.AppleEverestMiniHeartDoor) return global::Celeste.Mod.AppleEverestSecondCollabRuntime.HeartGems(this, 0);");
         ReplaceOnce(heartDoor,
             "\t\tlevel.Session.SetFlag(\"opened_heartgem_door_\" + Requires);",
-            "\t\tlevel.Session.SetFlag(global::Celeste.Mod.AppleEverestSecondCollabRuntime.DoorFlag(this, \"opened_heartgem_door_\" + Requires));");
+            "\t\tlevel.Session.SetFlag(\"opened_heartgem_door_\" + Requires);\n" +
+            "\t\tif (this is global::Celeste.Mod.AppleEverestMiniHeartDoor) level.Session.SetFlag(global::Celeste.Mod.AppleEverestSecondCollabRuntime.DoorFlag(this, \"opened_heartgem_door_\" + Requires));");
         ReplaceOnce(heartDoor,
             "\t\telse\n\t\t{\n\t\t\tAdd(new Coroutine(Routine()));\n\t\t}\n\t}\n\n\tpublic override void Awake(Scene scene)",
             "\t\telse\n\t\t{\n\t\t\tAdd(new Coroutine(Routine()));\n\t\t}\n" +
@@ -1465,13 +1495,22 @@ internal static class ClosureGenerator
             .AppendLine("internal static class GeneratedAppleEverestModuleRegistry")
             .AppendLine("{")
             .AppendLine($"    internal const string Profile = \"{Escape(profile.Profile)}\";")
+            .AppendLine($"    internal const string CoreSessionSchema = \"{CoreSessionSchema}\";")
             .AppendLine($"    internal const string DurabilityClosureSha256 = \"{Escape(durabilityClosureSha256)}\";")
             .AppendLine("    internal static readonly AppleEverestModuleDescriptor[] Modules =")
             .AppendLine("    {");
+        if (NeedsSelectedCoreSession(resolved))
+        {
+            if (profile.Everest.Tag != "stable-1.6458.0")
+                throw new InvalidDataException("selected CoreModule session requires the reviewed Everest identity");
+            result.AppendLine("        new AppleEverestModuleDescriptor(\"Everest\", \"1.6458.0\", Array.Empty<string>(), new[] { \"FrostHelper\" },")
+                .AppendLine("            static () => new AppleEverestCoreModule(), null, null, null,")
+                .AppendLine("            static () => new AppleEverestCoreSession(), AppleEverestCoreDurability.Adapter),");
+        }
         foreach ((ResolvedMod mod, AppleStaticDeclaration declaration) in modules)
         {
-            string dependencies = StringArray(EverestGraphResolver.RequiredDependencies(mod).Select(dep => dep.Name));
-            string requiredBy = StringArray(resolved.Where(candidate => EverestGraphResolver.RequiredDependencies(candidate).Any(dependency =>
+            string dependencies = StringArray(EverestGraphResolver.RuntimeRequirements(mod).Select(dep => dep.Name));
+            string requiredBy = StringArray(resolved.Where(candidate => EverestGraphResolver.RuntimeRequirements(candidate).Any(dependency =>
                     dependency.Name == mod.Metadata.Name)).Select(candidate => candidate.Metadata.Name));
             result.Append("        new AppleEverestModuleDescriptor(\"").Append(Escape(mod.Metadata.Name)).Append("\", \"")
                 .Append(Escape(mod.Metadata.Version)).Append("\", ").Append(dependencies).Append(", ")
@@ -1575,6 +1614,7 @@ internal static class ClosureGenerator
             const string gui = "Graphics/Atlases/Gui/";
             const string journal = "Graphics/Atlases/Journal/";
             const string checkpoints = "Graphics/Atlases/Checkpoints/";
+            const string grades = "Graphics/ColorGrading/";
             string prefix;
             if (sourcePath.StartsWith(gameplay, StringComparison.Ordinal))
             {
@@ -1595,6 +1635,11 @@ internal static class ClosureGenerator
             {
                 atlas = "Checkpoints";
                 prefix = checkpoints;
+            }
+            else if (sourcePath.StartsWith(grades, StringComparison.Ordinal))
+            {
+                atlas = "ColorGrades";
+                prefix = grades;
             }
             else
             {
@@ -1736,7 +1781,7 @@ internal static class ClosureGenerator
         return result.AppendLine("    };").AppendLine("}").ToString();
     }
 
-    private static string GameplayRegistrySource(IReadOnlyList<(ResolvedMod Mod, AppleStaticDeclaration Declaration)> modules,
+    internal static string GameplayRegistrySource(IReadOnlyList<(ResolvedMod Mod, AppleStaticDeclaration Declaration)> modules,
         IReadOnlyList<ResolvedMod> ordered)
     {
         string[] entities = modules
@@ -1746,10 +1791,30 @@ internal static class ClosureGenerator
             .ToArray();
         string[] pooled = modules
             .SelectMany(item => item.Declaration.PooledEntityTypes)
+            .Concat(ordered.SelectMany(mod => mod.StaticSemanticLowering?.PooledEntityTypes ?? []))
             .Distinct(StringComparer.Ordinal)
             .OrderBy(value => value, StringComparer.Ordinal)
             .ToArray();
         StringBuilder result = new("using System;\nusing System.Collections.Generic;\nusing Monocle;\n\nnamespace Celeste.Mod;\n\ninternal static class GeneratedAppleEverestGameplayRegistry\n{\n");
+        result.Append("    internal static bool CountsAsMapStrawberry(string id) => id == \"strawberry\"");
+        foreach (string id in ordered.SelectMany(mod => mod.StaticSemanticLowering?.Factories ?? [])
+                     .Where(StaticSemanticLowering.CountsAsStrawberry).Select(factory => factory.Id)
+                     .Distinct(StringComparer.Ordinal).OrderBy(id => id, StringComparer.Ordinal))
+            result.Append(" || id == \"").Append(Escape(id)).Append('"');
+        result.AppendLine(";");
+        result.Append("    internal static bool IsSelectedMiniHeartFollower(Strawberry berry) => berry.GetType() == typeof(Strawberry)");
+        var selectedBerryTypes = new Dictionary<string, string>(StringComparer.Ordinal)
+        {
+            ["CollabUtils2/SilverBerry"] = "AppleEverestSilverBerry",
+            ["CollabUtils2/RainbowBerry"] = "AppleEverestCollabRainbowBerry",
+            ["MaxHelpingHand/SecretBerry"] = "AppleEverestSecretBerry",
+            ["LunaticHelper/StrawberryWithReturn"] = "AppleEverestBubbleReturnBerry"
+        };
+        foreach (string id in ordered.SelectMany(mod => mod.StaticSemanticLowering?.Factories ?? []).Select(f => f.Id)
+                     .Distinct(StringComparer.Ordinal).OrderBy(id => id, StringComparer.Ordinal))
+            if (selectedBerryTypes.TryGetValue(id, out string? berryType))
+                result.Append(" || berry.GetType() == typeof(").Append(berryType).Append(')');
+        result.AppendLine(";");
         result.AppendLine("    private static readonly Type[] TrackedEntities =")
             .AppendLine("    {");
         foreach (string type in entities)
@@ -1789,6 +1854,27 @@ internal static class ClosureGenerator
             .AppendLine("                    trackedAs.Add(inheritedBase);")
             .AppendLine("            Tracker.TrackedEntityTypes.Add(type, trackedAs);")
             .AppendLine("            Tracker.StoredEntityTypes.Add(type);")
+            .AppendLine("        }");
+        foreach (StaticSemanticTracking tracking in ordered.SelectMany(mod => mod.StaticSemanticLowering?.Tracking ?? [])
+                     .OrderBy(item => item.Type, StringComparer.Ordinal))
+            result.Append("        RegisterSemanticTrackerType(typeof(global::").Append(tracking.Type)
+                .Append("), new Type[] { ")
+                .Append(string.Join(", ", tracking.Aliases.Select(alias => "typeof(global::" + alias + ")")))
+                .Append(" }, ").Append(tracking.Component ? "true" : "false").AppendLine(");");
+        result.AppendLine("        RegisterSemanticTrackerType(typeof(AppleEverestFlagTrigger), Array.Empty<Type>(), false);");
+        result.AppendLine("    }")
+            .AppendLine("    private static void RegisterSemanticTrackerType(Type type, Type[] aliases, bool component)")
+            .AppendLine("    {")
+            .AppendLine("        var registrations = component ? Tracker.TrackedComponentTypes : Tracker.TrackedEntityTypes;")
+            .AppendLine("        var stored = component ? Tracker.StoredComponentTypes : Tracker.StoredEntityTypes;")
+            .AppendLine("        if (!registrations.TryGetValue(type, out List<Type> trackedAs))")
+            .AppendLine("            registrations.Add(type, trackedAs = new List<Type>());")
+            .AppendLine("        if (!trackedAs.Contains(type)) trackedAs.Add(type);")
+            .AppendLine("        stored.Add(type);")
+            .AppendLine("        foreach (Type alias in aliases)")
+            .AppendLine("        {")
+            .AppendLine("            if (!trackedAs.Contains(alias)) trackedAs.Add(alias);")
+            .AppendLine("            stored.Add(alias);")
             .AppendLine("        }")
             .AppendLine("    }")
             .AppendLine()
@@ -1811,106 +1897,95 @@ internal static class ClosureGenerator
             .AppendLine("        return false;")
             .AppendLine("    }")
             .AppendLine()
-            .AppendLine("    internal static bool TryCreateEntity(string id, global::Celeste.EntityData data, global::Microsoft.Xna.Framework.Vector2 offset, global::Celeste.EntityID entityId, out Entity entity)")
-            .AppendLine("    {")
-            .AppendLine("        switch (id)")
-            .AppendLine("        {");
-        foreach ((ResolvedMod mod, AppleStaticDeclaration declaration) in modules)
-            foreach (AppleCustomEntityFactory factory in declaration.CustomEntityFactories.Where(value => value.Kind == "entity"))
-                AppendFactoryCase(result, mod.Metadata.Name, factory);
-        foreach (ResolvedMod mod in ordered.Where(value => value.StaticSemanticLowering != null))
-            foreach (StaticSemanticFactory factory in mod.StaticSemanticLowering!.Factories.Where(value => value.Kind == "entity"))
-                AppendSemanticFactoryCase(result, mod.Metadata.Name, factory);
-        result.AppendLine("            case \"everest/coreMessage\":")
-            .AppendLine("                entity = new global::Celeste.Mod.Entities.CustomCoreMessage(data, offset);")
-            .AppendLine("                entity.Add(new AppleEverestStaticIdentity(id, entityId));")
-            .AppendLine("                AppleEverestStaticRuntime.RecordCustomFactoryUse(\"EverestCore\", \"everest/coreMessage\", \"entity\");")
-            .AppendLine("                return true;");
-        result.AppendLine("        }")
-            .AppendLine("        entity = null;")
-            .AppendLine("        return false;")
-            .AppendLine("    }")
-            .AppendLine()
-            .AppendLine("    internal static bool TryCreateTrigger(string id, global::Celeste.EntityData data, global::Microsoft.Xna.Framework.Vector2 offset, global::Celeste.EntityID entityId, out Entity entity)")
-            .AppendLine("    {")
-            .AppendLine("        switch (id)")
-            .AppendLine("        {");
-        foreach ((ResolvedMod mod, AppleStaticDeclaration declaration) in modules)
-            foreach (AppleCustomEntityFactory factory in declaration.CustomEntityFactories.Where(value => value.Kind == "trigger"))
-                AppendFactoryCase(result, mod.Metadata.Name, factory);
-        foreach (ResolvedMod mod in ordered.Where(value => value.StaticSemanticLowering != null))
-            foreach (StaticSemanticFactory factory in mod.StaticSemanticLowering!.Factories.Where(value => value.Kind == "trigger"))
-                AppendSemanticFactoryCase(result, mod.Metadata.Name, factory);
-        result.AppendLine("            case \"everest/changeInventoryTrigger\":")
-            .AppendLine("            case \"everest/coreModeTrigger\":")
-            .AppendLine("            case \"everest/crystalShatterTrigger\":")
-            .AppendLine("            case \"everest/flagTrigger\":")
-            .AppendLine("            case \"everest/smoothCameraOffsetTrigger\":")
-            .AppendLine("                entity = AppleEverestSemanticFactories.CreateTrigger(id, data, offset, entityId);")
-            .AppendLine("                entity.Add(new AppleEverestStaticIdentity(id, entityId));")
-            .AppendLine("                AppleEverestStaticRuntime.RecordCustomFactoryUse(\"EverestCore\", id, \"trigger\");")
-            .AppendLine("                return true;");
-        result.AppendLine("        }")
-            .AppendLine("        entity = null;")
-            .AppendLine("        return false;")
-            .AppendLine("    }")
-            .AppendLine()
-            .AppendLine("    internal static bool TryCreateBackdrop(string id, global::Celeste.BinaryPacker.Element data, out global::Celeste.Backdrop backdrop)")
-            .AppendLine("    {")
-            .AppendLine("        switch (id)")
-            .AppendLine("        {");
-        foreach ((ResolvedMod mod, AppleStaticDeclaration declaration) in modules)
-        {
-            foreach (AppleCustomBackdropFactory factory in declaration.CustomBackdropFactories)
-            {
-                string expression = factory.Factory == "constructor"
-                    ? $"new global::{factory.Type}(data)"
-                    : $"global::{factory.Type}.{factory.Method}(data)";
-                result.Append("            case \"").Append(Escape(factory.Id)).AppendLine("\":")
-                    .Append("                backdrop = ").Append(expression).AppendLine(";")
-                    .Append("                AppleEverestStaticRuntime.RecordCustomFactoryUse(\"").Append(Escape(mod.Metadata.Name))
-                    .Append("\", \"").Append(Escape(factory.Id)).AppendLine("\", \"backdrop\");")
-                    .AppendLine("                return true;");
-            }
-        }
-        result.AppendLine("        }")
-            .AppendLine("        backdrop = null;")
-            .AppendLine("        return false;")
-            .AppendLine("    }")
-            .AppendLine("}");
+            ;
+        AppendGameplayFactories(result, ordered, modules);
+        result.AppendLine("}");
         return result.ToString();
     }
 
-    private static void AppendFactoryCase(StringBuilder result, string owner, AppleCustomEntityFactory factory)
-    {
-        string arguments = factory.Constructor switch
-        {
-            "entity-data-vector2" => "data, offset",
-            "entity-data-vector2-entity-id" => "data, offset, entityId",
-            "entity-id-entity-data-vector2" => "entityId, data, offset",
-            _ => throw new InvalidDataException($"unsupported generated custom factory constructor: {factory.Constructor}")
-        };
-        result.Append("            case \"").Append(Escape(factory.Id)).AppendLine("\":")
-            .Append("                entity = new global::").Append(factory.Type).Append('(').Append(arguments).AppendLine(");")
-            .AppendLine("                entity.Add(new AppleEverestStaticIdentity(id, entityId));")
-            .Append("                AppleEverestStaticRuntime.RecordCustomFactoryUse(\"").Append(Escape(owner)).Append("\", \"")
-            .Append(Escape(factory.Id)).Append("\", \"").Append(factory.Kind).AppendLine("\");")
-            .AppendLine("                return true;");
-    }
+    private sealed record GeneratedFactory(string Owner, string Kind, string Id, string Expression, bool Guard);
 
-    private static void AppendSemanticFactoryCase(StringBuilder result, string owner, StaticSemanticFactory factory)
+    private static void AppendGameplayFactories(StringBuilder result, IReadOnlyList<ResolvedMod> ordered,
+        IReadOnlyList<(ResolvedMod Mod, AppleStaticDeclaration Declaration)> modules)
     {
-        result.Append("            case \"").Append(Escape(factory.Id)).AppendLine("\":");
-        if (factory.ConstructorExpression != null)
-            result.Append("                entity = ").Append(factory.ConstructorExpression).AppendLine(";");
-        else
-            result.Append("                entity = AppleEverestSemanticFactories.Create")
-                .Append(factory.Kind == "entity" ? "Entity" : "Trigger")
-                .AppendLine("(id, data, offset, entityId);");
-        result.AppendLine("                entity.Add(new AppleEverestStaticIdentity(id, entityId));");
-        result.Append("                AppleEverestStaticRuntime.RecordCustomFactoryUse(\"").Append(Escape(owner)).Append("\", \"")
-            .Append(Escape(factory.Id)).Append("\", \"").Append(factory.Kind).AppendLine("\");")
-            .AppendLine("                return true;");
+        List<GeneratedFactory> factories = [];
+        foreach ((ResolvedMod mod, AppleStaticDeclaration declaration) in modules)
+        {
+            foreach (AppleCustomEntityFactory factory in declaration.CustomEntityFactories)
+            {
+                string arguments = factory.Constructor switch
+                {
+                    "entity-data-vector2" => "data, offset",
+                    "entity-data-vector2-entity-id" => "data, offset, entityId",
+                    "entity-id-entity-data-vector2" => "entityId, data, offset",
+                    _ => throw new InvalidDataException("unsupported generated factory constructor: " + factory.Constructor)
+                };
+                factories.Add(new(mod.Metadata.Name, factory.Kind, factory.Id,
+                    "new global::" + factory.Type + "(" + arguments + ")", SelectedFactoryProfiles.Contains(factory.Kind, factory.Id)));
+            }
+            foreach (AppleCustomBackdropFactory factory in declaration.CustomBackdropFactories)
+                factories.Add(new(mod.Metadata.Name, "backdrop", factory.Id,
+                    factory.Factory == "constructor" ? "new global::" + factory.Type + "(data)" :
+                        "global::" + factory.Type + "." + factory.Method + "(data)", SelectedFactoryProfiles.Contains("backdrop", factory.Id)));
+        }
+        foreach (ResolvedMod mod in ordered.Where(value => value.StaticSemanticLowering != null))
+            foreach (StaticSemanticFactory factory in mod.StaticSemanticLowering!.Factories)
+            {
+                string expression = factory.ConstructorExpression ?? SelectedFactoryProfiles.ExplicitConstructor(factory.Kind, factory.Id)
+                    ?? $"AppleEverestSemanticFactories.Create{(factory.Kind == "entity" ? "Entity" : "Trigger")}(id, data, offset, entityId)";
+                if (factory.Kind == "backdrop" && factory.ConstructorExpression == null)
+                    throw new InvalidDataException("semantic backdrop requires an explicit production constructor: " + factory.Id);
+                factories.Add(new(mod.Metadata.Name, factory.Kind, factory.Id, expression,
+                    factory.GuardSelectedProfile || SelectedFactoryProfiles.Contains(factory.Kind, factory.Id)));
+            }
+        foreach (var factory in CoreGameplayFactories)
+            factories.Add(new(factory.Owner, factory.Kind, factory.Id,
+                SelectedFactoryProfiles.ExplicitConstructor(factory.Kind, factory.Id)
+                    ?? throw new InvalidDataException("missing explicit built-in constructor: " + factory.Id),
+                SelectedFactoryProfiles.Contains(factory.Kind, factory.Id)));
+        if (factories.GroupBy(factory => factory.Kind + ":" + factory.Id).Any(group => group.Count() != 1))
+            throw new InvalidDataException("duplicate generated gameplay factory");
+        result.AppendLine("    internal delegate Entity EntityFactory(global::Celeste.EntityData data, global::Microsoft.Xna.Framework.Vector2 offset, global::Celeste.EntityID entityId);")
+            .AppendLine("    internal delegate global::Celeste.Backdrop BackdropFactory(global::Celeste.BinaryPacker.Element data);");
+        foreach (string kind in new[] { "entity", "trigger", "backdrop" })
+        {
+            string title = char.ToUpperInvariant(kind[0]) + kind[1..];
+            bool backdrop = kind == "backdrop";
+            string type = backdrop ? "global::Celeste.Backdrop" : "Entity";
+            string signature = backdrop ? "global::Celeste.BinaryPacker.Element data" :
+                "global::Celeste.EntityData data, global::Microsoft.Xna.Framework.Vector2 offset, global::Celeste.EntityID entityId";
+            string arguments = backdrop ? "data" : "data, offset, entityId";
+            result.Append("    internal static ").Append(backdrop ? "BackdropFactory" : "EntityFactory").Append(" Select").Append(title)
+                .AppendLine("(string id) => id switch")
+                .AppendLine("    {");
+            foreach (GeneratedFactory factory in factories.Where(factory => factory.Kind == kind).OrderBy(factory => factory.Id, StringComparer.Ordinal))
+                result.Append("        ").Append(JsonSerializer.Serialize(factory.Id)).Append(" => ").Append(SelectedFactoryProfiles.EntryMethod(kind, factory.Id)).AppendLine(",");
+            result.AppendLine("        _ => null").AppendLine("    };");
+            result.Append("    internal static bool TryCreate").Append(title).Append("(string id, ").Append(signature)
+                .Append(", out ").Append(type).AppendLine(" value)")
+                .AppendLine("    {")
+                .Append("        var factory = Select").Append(title).AppendLine("(id);")
+                .Append("        value = factory == null ? null : factory(").Append(arguments).AppendLine(");")
+                .AppendLine("        return factory != null;").AppendLine("    }");
+            foreach (GeneratedFactory factory in factories.Where(factory => factory.Kind == kind).OrderBy(factory => factory.Id, StringComparer.Ordinal))
+            {
+                result.Append("    private static ").Append(type).Append(' ').Append(SelectedFactoryProfiles.EntryMethod(kind, factory.Id))
+                    .Append('(').Append(signature).AppendLine(")").AppendLine("    {")
+                    .Append("        const string id = ").Append(JsonSerializer.Serialize(factory.Id)).AppendLine(";");
+                if (factory.Guard)
+                    result.Append("        AppleEverestSelectedProfileGuard.").Append(backdrop ? "Backdrop" : "Entity").AppendLine("(id, data);");
+                if (SelectedFactoryProfiles.Contains(factory.Kind, factory.Id))
+                    result.Append("        AppleEverestFactoryCanary.Constructing(id, ").Append(JsonSerializer.Serialize(kind))
+                        .Append(", ").Append(backdrop ? "-1" : "data.ID").AppendLine(");");
+                result.Append("        ").Append(type).Append(" value = ").Append(factory.Expression).AppendLine(";");
+                if (!backdrop) result.AppendLine("        value.Add(new AppleEverestStaticIdentity(id, entityId));");
+                if (SelectedFactoryProfiles.Contains(factory.Kind, factory.Id))
+                    result.Append("        AppleEverestFactoryCanary.Created(value, id, ").Append(JsonSerializer.Serialize(kind))
+                        .Append(", ").Append(backdrop ? "-1" : "data.ID").AppendLine(");");
+                result.Append("        AppleEverestStaticRuntime.RecordCustomFactoryUse(").Append(JsonSerializer.Serialize(factory.Owner)).Append(", id, ")
+                    .Append(JsonSerializer.Serialize(kind)).AppendLine(");").AppendLine("        return value;").AppendLine("    }");
+            }
+        }
     }
 
     private static string RootsSource(IReadOnlyList<(ResolvedMod Mod, AppleStaticDeclaration Declaration)> modules,

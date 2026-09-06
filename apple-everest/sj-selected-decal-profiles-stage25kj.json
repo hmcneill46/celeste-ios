@@ -1,0 +1,4291 @@
+{
+  "affectedOccurrences": 1171,
+  "assets": [
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/JungleHelper/Jungle0-general/PlantGrass.png",
+      "provider": "JungleHelper",
+      "sha256": "e6c71e1f3e02f79d495c47e7b6e7768f4f133ee19b205825d16e8e9ffe8f97f4"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/JungleHelper/Jungle0-general/PlantGrassShort.png",
+      "provider": "JungleHelper",
+      "sha256": "e0839a786c9efd95504f21cd5f6c6286f03c2d499fb2ecf0b519a535cbd8bb76"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/JungleHelper/Jungle0-general/PlantFiddlegrass.png",
+      "provider": "JungleHelper",
+      "sha256": "de8a392b1b9cffd792f1344ba6b6a260a8dcab8fa5b8012cf3d8e2f0e03560be"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/JungleHelper/Jungle3-ruins/VineCHang.png",
+      "provider": "JungleHelper",
+      "sha256": "5fdc3f304285a68db15ae4cdba5e7cea60797bba91a002a7771babd938934b1f"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/JungleHelper/Jungle3-ruins/VineCHangB.png",
+      "provider": "JungleHelper",
+      "sha256": "c03ca788e876449d0479a65a42f5af91b064b4d487673ea07df7d28a68d3e78d"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/JungleHelper/Jungle3-ruins/VineCHangC.png",
+      "provider": "JungleHelper",
+      "sha256": "418096ebcde94130101a6872fd34f98afcaed7e24f6c630c243ba4d36bfab0e0"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/jizo_game_a.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "ca5b0b79cab8deefc1dea42341a4032ebce029d8bcd246769a289c2d06a8f614"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/jizo_game_b.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "7f31ce22cb79acb119927e810ca6b20c8d19aa61540c16475ba67ed01a9a45ba"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/jizo_game_c.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "99cbda221da0f8e853e1e644627a80903e4957796dde3d8334feb9cdc22f1ea5"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/jizo_hat.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "f458808ea4dce751caf2e146cf1881cd6e974e006cb1ee41b268ef0bf06817f8"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/jizo_large.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "d7865e97f03ff30aa5dfa0a926d841545586b57cb86d2958f3ca3a0965936f11"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/jizo_larger.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "5c20f49bce1ca9bfb7d120bf56b3744b22bfde4e3c6a43a76114647c8ebf2530"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/jizo_largest_clothed.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "483c81ee3330b93ac2a982fd21303be434c25a8d658f568595fcc6bc46e43638"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/jizo_largest_snake.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "88aec424cd08beffcfd69d7983c81fe01e012fe9806b5c8837623132487c2f3d"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/jizo_largest_watcher.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "cd6e4efa2976b34b2f40e29aea60e8d166bfef16949267d96afbdd3a968862e6"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/jizo_medium.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "ba72f0a3cf2db5ac997ac2a28ad773880df30d1d1565e617a8bc6328d8f185a9"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/jizo_small.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "9c1f23d1cd6e2c966ec858bcd5d99038c30f8a2d8ef608b7a96c8c72c28b4ee8"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/mosscairn/fg/ivy/rimHorizA.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "18f8be2fb05b856eee8b8f8d3575f2518b995dc622b2baf232eac574890e8809"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/mosscairn/fg/ivy/dimDiagB.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "4a592f5c8810619bef4a54458f8b4ca3f3f0306652b57089c939437b5c124053"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/mosscairn/fg/ivy/dimHorizA.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "49facd52ab795b81320635c655890dabdd6dbe28d35562147bf2c38166266e20"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/mosscairn/fg/ivy/dimHorizB.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "a35a0a7fdeade1e30ee0d7f5d2fffeacb67c5648bbc78201b95aab3bdf1d3a96"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/bg_jizo_medium.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "dfd9bcb1997b8fbec7edd79a75e3ded7371fedee1d3030f81556affa564da72b"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/bg_jizo_small.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "ceda8c1099c363adabccf826ae84c2b4d19d492462c633f79401c194df97e468"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/mosscairn/fg/ivy/leafAB.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "ddd7b08b8ab50c1db51d2ba5013830112a98c4da5a554ab67f3762af377faa09"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/mosscairn/fg/ivy/leafAC.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "01c3bbf24355bd8ad0e9138fec9b76b2c1ab1f3b36c1a817edb42a71ab9ee13c"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/mosscairn/fg/ivy/leafAD.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "c1e87c94ec2f967e3904fe841528a1c8d7a467ca08032cc16b73ae473ef55eb0"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/mosscairn/fg/ivy/leafAE.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "16d7538897574443df9e48740093f27920a72032197f8c660dfd33983520d5b3"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/mosscairn/fg/ivy/leafAF.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "76a0ffcdefb07d95ff513b40b9af4b6a05553f01ac5b211139cf135ed35083ca"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/mosscairn/fg/ivy/leafBB.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "a1a67c4139f31f292ab424122e2a13ef7cea74f1c6120f442af4606d3124349c"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/mosscairn/fg/ivy/leafBC.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "1f468ec64c8f8eb123d6aef44742804bd355d8649a83182be8da6bd6988e8046"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/mosscairn/fg/ivy/leafBD.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "f5020c5a26651cc1458a45f9de019bd21c1d46c499376f4b01ff669df397a681"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/mosscairn/fg/ivy/leafBE.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "85d678aa51ef5887dcf5316001e1fdcd496355cc19df6ed6e38c0481cc32b22c"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/mosscairn/fg/ivy/leafBF.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "bd2c2ee21b4b0ba79133a56717c6cb7483d349c7c8676c26cda92ac5e955b842"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/mosscairn/fg/ivy/leafBigADim.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "642f8e93545b8852ca62a63b2968b6890b09c0b2e8d19359669d98770e359f32"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/mosscairn/fg/ivy/leafCA.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "5abe13bb3cc01aa576461a2fcc00db436afde4fb48f351f2d5f42502ee4e27cd"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/mosscairn/fg/ivy/leafCD.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "b0d21ed7cb80421eede059c8299a2130d517c44bee5cf456af1451d71ff144d5"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/mosscairn/fg/ivy/leafCF.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "a955407a95a2400496e73deff1600493220bfa895ce23414c3c6d7fabd9e3ad0"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/mosscairn/fg/ivy/leafDD.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "ae49aef33c7861c2d3008c1da9fb601755198f9157e88e81a4728e09d3376d92"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/mosscairn/fg/ivy/leafDE.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "9bd914b180a36b9eaaec1557ff79005405994cc9c4de3fcc5993e60315802bde"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/mosscairn/fg/ivy/leafDF.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "87258f3c9d51b229576a7830db8d3ab26ce0f98f615a5cf81251234d979f94e7"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/mosscairn/fg/ivy/leafStemA.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "b6747dfcece7386469d2cdbe31d1472372969d9adadb05861f9e9cb43d283fef"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/mosscairn/fg/ivy/lightDiagA.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "7391bee69630d5c9189dfa2f5c988a97237bc1e20da1fbb78910f67660d2dbc9"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/mosscairn/fg/ivy/lightDiagB.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "4e0f53c2fb838ad3117b683adabe46ec7d492d78040e1b2357d719e4d46af0be"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/mosscairn/fg/ivy/lightVertA.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "5d0483361ebe0d7f0aec41096838c9a11d657b8b18c4a5a2b4b84450ec1af38f"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/cave/coral/coral_00.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "aecace2bbc17c3994934a8b31c935359c36dd5b09a465ea9e76ea6243e8bd68c"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/cave/coral/coral_01.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "a3f0aed969d69cb44450d48a0a892e8623610a00ae2e32448794de23c7c5d090"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/cave/coral/coral_02.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "01a8518ae633ae577ff4604e5ee059393cd802a7b285e9e041f24eb6e66e838c"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/cave/coral/coral_03.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "01a8518ae633ae577ff4604e5ee059393cd802a7b285e9e041f24eb6e66e838c"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/cave/coral/coral_04.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "938792fc9daabdf31cd2824d5634b70c911d8bfe1263c4ed8794dfea9a818cb3"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/cave/coral/coral_05.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "938792fc9daabdf31cd2824d5634b70c911d8bfe1263c4ed8794dfea9a818cb3"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/cave/coral/coral_06.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "01a8c9cc5a31a59396a2f55fd9b47cf9e536c2c607c941406facdbbd1cd523a2"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/cave/coral/coral_07.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "01a8c9cc5a31a59396a2f55fd9b47cf9e536c2c607c941406facdbbd1cd523a2"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/cave/coral/coral_08.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "e025ace30229ab9694f37c8a9aa9aeca315f1b383283159dec09ed0e1275cb32"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/cave/coral/coral_09.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "71b852fa6ac07b264fc035c46f66b219a26b4c3e8a921219ec231b36466f7c48"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/cave/coral/coral_10.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "e6882a68d0049272a0da77a043cbcbd44d74d28bc650136ef466e0923049259a"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/cave/coral/coral_11.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "3e0fcbe50b05b3936c3cbe6750bea6dfe68e32f87a7e318e81ef1a78b65e1f90"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/cave/coral/coral_12.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "e9c6d91e66d21bfd5cb03afda181fb0ce69fbfdaf17a9587099860f3af761f9f"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/cave/coral/coral_b00.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "aecace2bbc17c3994934a8b31c935359c36dd5b09a465ea9e76ea6243e8bd68c"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/cave/coral/coral_b01.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "a3f0aed969d69cb44450d48a0a892e8623610a00ae2e32448794de23c7c5d090"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/cave/coral/coral_b02.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "01a8518ae633ae577ff4604e5ee059393cd802a7b285e9e041f24eb6e66e838c"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/cave/coral/coral_b03.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "01a8518ae633ae577ff4604e5ee059393cd802a7b285e9e041f24eb6e66e838c"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/cave/coral/coral_b04.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "938792fc9daabdf31cd2824d5634b70c911d8bfe1263c4ed8794dfea9a818cb3"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/cave/coral/coral_b05.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "938792fc9daabdf31cd2824d5634b70c911d8bfe1263c4ed8794dfea9a818cb3"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/cave/coral/coral_b06.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "01a8c9cc5a31a59396a2f55fd9b47cf9e536c2c607c941406facdbbd1cd523a2"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/cave/coral/coral_b07.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "01a8c9cc5a31a59396a2f55fd9b47cf9e536c2c607c941406facdbbd1cd523a2"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/cave/coral/coral_b08.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "e025ace30229ab9694f37c8a9aa9aeca315f1b383283159dec09ed0e1275cb32"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/cave/coral/coral_b09.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "71b852fa6ac07b264fc035c46f66b219a26b4c3e8a921219ec231b36466f7c48"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/cave/coral/coral_b10.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "e6882a68d0049272a0da77a043cbcbd44d74d28bc650136ef466e0923049259a"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/cave/coral/coral_b11.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "3e0fcbe50b05b3936c3cbe6750bea6dfe68e32f87a7e318e81ef1a78b65e1f90"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/cave/coral/coral_b12.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "e9c6d91e66d21bfd5cb03afda181fb0ce69fbfdaf17a9587099860f3af761f9f"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/cave/coral/coral_c00.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "742e8c4ed2b2c08e60473f32d22b212eea607f66505ccb15dc85a718498c6e54"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/cave/coral/coral_c01.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "687d78aaa1900682986f2e8d1cf235d1ece2eb6483dd5c6053410a13afc181a6"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/cave/coral/coral_c02.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "3762546e10e664f38017f912ba352d8ba6006f99adcf2e4be8525e842573df74"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/cave/coral/coral_c03.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "3762546e10e664f38017f912ba352d8ba6006f99adcf2e4be8525e842573df74"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/cave/coral/coral_c04.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "18ba85a471c2eda891f546bcb010fe1512454ae383d901248e66df7f28eba1a0"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/cave/coral/coral_c05.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "18ba85a471c2eda891f546bcb010fe1512454ae383d901248e66df7f28eba1a0"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/cave/coral/coral_c06.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "fd66d14c2706ddd45b69910c0f39cbc11a4404f1ee495c9e2b5f88a60d598c75"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/cave/coral/coral_c07.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "fd66d14c2706ddd45b69910c0f39cbc11a4404f1ee495c9e2b5f88a60d598c75"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/cave/coral/coral_c08.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "9037f7d0ab8360a5c43f631d35d9fda8d4886662c6ed2e545dfdc308a396dd9a"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/cave/coral/coral_c09.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "f3cbefe94030695e3c16cc1536417c9e352432debcc4180520ba600f3b537b67"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/cave/coral/coral_c10.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "965b7bda03dd51b48c18f3cb545083f46de38b3d989eabb8392f9932577b3d8c"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/cave/coral/coral_c11.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "0c154305cb74ff92bfd8c0c1e8c347b40960f8da4448f0e0cc4aed2e3a4b80d9"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/cave/coral/coral_c12.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "77ae8bc3c4d72519f20b190d32f0d258b8fe9208a935bd029390c2c90f136fcf"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/cave/coral/coral_d00.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "8300e14b0b8697663ea1111ef0a7e1ac5689176654078ad464d4815bf12baf89"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/cave/coral/coral_d01.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "ebbe57253eedf681644fff0f9824becc5d6800da2e62cc49d185f11d1b0d3730"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/cave/coral/coral_d02.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "1a66813c60acdaeaaeb54480de789b636004c3a1d3cf6d719a827d01ef68912e"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/cave/coral/coral_d03.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "1a66813c60acdaeaaeb54480de789b636004c3a1d3cf6d719a827d01ef68912e"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/cave/coral/coral_d04.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "8dc2630a5e87120d7586d6d148fc79b519727a6f70392afd122da92438dd6099"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/cave/coral/coral_d05.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "8dc2630a5e87120d7586d6d148fc79b519727a6f70392afd122da92438dd6099"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/cave/coral/coral_d06.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "8cac87235e260ae5df384166f9642fd460e6b5f6f59459ee0df764466db7fe16"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/cave/coral/coral_d07.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "8cac87235e260ae5df384166f9642fd460e6b5f6f59459ee0df764466db7fe16"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/cave/coral/coral_d08.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "c7428610d83341a46128adb45a741f32a19f890bb7c90822d80016a39610f77f"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/cave/coral/coral_d09.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "02d766aa58962a720c9eaa8873acc88a0837f3ae05b06a3fb73696612df9058a"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/cave/coral/coral_d10.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "d90ad3ea0da02e9290c1b930d074f447082167017c4bdf7c4007cc83c0051d99"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/cave/coral/coral_d11.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "7f98d229ad6ceea76b85a40e8bdf526bd1da9c7a13fe5e577044b51f5bf4d702"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/cave/coral/coral_d12.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "6c7326f18f094827637f4c7d3072d7040bb4b4800f9da2dd86bd5524e21b61a0"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/Bamboo/depth_bamboo_top_b.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "7b779c54d26fba0554251b6e6c56072ff5e8cbcff22de5bb5f3d04eb8dfa01e2"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/tileblend/bg/beginner_lobby_cave_bg.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "5e09b6c23a101a15e52dd4d763be1ccf56a8d5ef78df1c6470df26badb3385f7"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/tileblend/bg/beginner_lobby_cave_bg_a.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "a4e2b9472e20c0867b2c5b7e85b569e71dc2f06601a61ea0ceae47a7b3b3c470"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/tileblend/bg/bgBrickRuined_a.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "32d200aa92683d5c78dc806de12583b3f3730d91512eda3f62f82a8a835a6a7f"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/tileblend/bg/quinnigan.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "8f829345be080a92dba8216fec6113aa4bab13bdbf8936b358118ce7108989fd"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/cave/stalagtite_a.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "a2fc302b8539cceb0588e50df37910c0b4d4d56a515cdb2cbe70a1b4dfdf2377"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/cave/stalagtite_b.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "9a46bab6dd87af9eb0fde3cb1f134efe0808d60c816359db6fb4040fc5470b77"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/cave/stalagtite_c.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "8d5717d4c94f4fcbe74152d73c94871130ffed8bcf492276b9c3e6570419a1cd"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/cave/stalagtite_d.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "671b86a4d74ba56c5519f4841d276f1c0ef3df7a8f62ac9bfe89d3b8d3d82f8b"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/waterfall/hangplantA.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "01147ae443074719deca29999cd545144ee9defd065d5213138e427106cdde8c"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/waterfall/hangplantB.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "5c15355eccb2cd6078bd17a0a14c5331f51476adcf005e5af2f3b5f525261f92"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/waterfall/hangplantC.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "e0869476059b262841c5e740dbc4872ce71b07a9fe2375c69490d7e29d4ed64b"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/waterfall/hangplantD.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "2f475c82881fb70148cb90872f5c4c8dd4ee3b7b11e6464bebd8a79903df8ef9"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/waterfall/waterrockA.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "59497dabc5d13524446f99297189b39e2feded9d24bd45947b7229add4ef6f37"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/waterfall/waterrockAalt.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "d3dcf43b763f000b205b8e5add1b66025766b9bd3af98e040fa41c20acca30a7"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/waterfall/waterrockB.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "17eab4a4477f0c84152106a7c96e487845897e4fa9b35dbc49c6b2a119efb866"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/waterfall/waterrockBalt.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "5dfca73806caa1bac6805033261a4be39e874396317e1a0f91b774550108e130"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/waterfall/waterrockC.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "1cacbd358ac348d32492a12fbaa6310bd5dfed8aa425e5cc4fae6c17c8510732"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/waterfall/waterrockCalt.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "f7f6ad869a4526300390c3206c26c4e4d71d05058b4843cc762c89641cbb8d75"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/waterfall/waterrockD.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "f78c1351a83800983110a73e9c45c70251bd4bd9b063065d456ac4416a4c1036"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/waterfall/waterrockDalt.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "7282634537ee599e25ca687dbb0635bb96a4a0c70e62bfb3ce48d57404875fe6"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/waterfall/waterrockE.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "176f0cc1adf9194ccca23ed73fdea12b39c7585e947f32a0ac04146727081990"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/waterfall/waterrockEalt.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "fee3db78c96d4fa679504a929f5ee34c753f731689c660eefc66d8c6fdd8dcd1"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/waterfall/watergrassA.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "f14a108548c5e37d52ec6d864e46130097abcafcdf46e2409c4f5b2fc0e6b1fa"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/waterfall/watergrassB.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "3101354fa2fbe554e8b23047b3a2ee0e67c9dafb0ce6ffa06166eef671667723"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/waterfall/watergrassC.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "5e9fe16b74179508aed95e9969621a4854341661f5fd67ad3cd948db6c339679"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/waterfall/watergrassD.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "d0c4134f2529dee56b8668f83361b47e245592464f87d758c2a198d279e5672e"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/waterfall/watergrassE.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "783cb8c29b6adb703616b4255f5599cd4406b0d4777336188461f4b161691e4d"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/waterfall/waterflowerA.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "1ec5e6992cd52ba6bec56d1559e5943f1e67e244c73479d3a8684371623cc1f9"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/waterfall/waterflowerB.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "771bdd80092cb0b002f910014cea63c0934a93c8422031a82015b0e8c0ba8ecc"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/waterfall/waterflowerC.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "ec674fb6fa4faf54c2f825c4d44ff75244364c8c939071092f137f4f964fb1a4"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/waterfall/waterflowerD.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "d5f26f182b931d76cc6250afb787551d29d5a83e47ab8b56e2bbc3ff65df99df"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/waves/waveA00.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "b7ef20f9733da34fb186c8d134bfc8cffb5bc8bb674166d4217b18447a9c3868"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/waves/waveA01.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "250541d3f4057741b71ed5fe5dd57c47feb5f8d150281b963bd96345a5108ffb"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/waves/waveA02.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "cab1d08e202f19f8208b2b44bd73a18aa18f32345758e751510e2a5c3dc866ea"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/waves/waveA03.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "1a500cd693cf8a86f025a5339e4a65acbc150e4574581139045837840ea8ac4a"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/waves/waveA04.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "44867a9b2176686418e6a754027205462454e6410d635141fa0736a494afceb5"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/waves/waveA05.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "38045f6252ede55964c07f41e6f2d3aaa2071589bee3307d406e99356b9de3e2"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/waves/waveA06.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "ea0001f6be0f8d0d81eb56d89d3eae3e7de79e61ee9a88148ff942dd7bc2a14f"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/waves/waveA07.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "171bf148d02ea6d43fcec92598fe441420bd17f79baef7e1fc807713440e2473"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/waves/waveA08.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "3d168fc8a22cf6c7b5b49f631ec095480ccf89e8d2a6618fd55f8654a3a28435"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/waves/waveA09.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "4517399eb77bd2636dffbe6597cef1270fd5b6c5544fcd0ca1a5321bb432c1a1"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/waves/waveA10.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "4517399eb77bd2636dffbe6597cef1270fd5b6c5544fcd0ca1a5321bb432c1a1"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/waves/waveA11.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "4517399eb77bd2636dffbe6597cef1270fd5b6c5544fcd0ca1a5321bb432c1a1"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/waves/waveA12.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "4517399eb77bd2636dffbe6597cef1270fd5b6c5544fcd0ca1a5321bb432c1a1"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/waves/waveA13.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "4517399eb77bd2636dffbe6597cef1270fd5b6c5544fcd0ca1a5321bb432c1a1"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/waves/waveA14.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "4517399eb77bd2636dffbe6597cef1270fd5b6c5544fcd0ca1a5321bb432c1a1"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/waves/waveA15.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "4517399eb77bd2636dffbe6597cef1270fd5b6c5544fcd0ca1a5321bb432c1a1"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/waves/waveA16.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "4517399eb77bd2636dffbe6597cef1270fd5b6c5544fcd0ca1a5321bb432c1a1"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/waves/waveA17.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "4517399eb77bd2636dffbe6597cef1270fd5b6c5544fcd0ca1a5321bb432c1a1"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/waves/waveA18.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "4517399eb77bd2636dffbe6597cef1270fd5b6c5544fcd0ca1a5321bb432c1a1"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/waves/waveA19.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "4517399eb77bd2636dffbe6597cef1270fd5b6c5544fcd0ca1a5321bb432c1a1"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/waves/waveA20.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "4517399eb77bd2636dffbe6597cef1270fd5b6c5544fcd0ca1a5321bb432c1a1"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/waves/waveA21.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "4517399eb77bd2636dffbe6597cef1270fd5b6c5544fcd0ca1a5321bb432c1a1"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/waves/waveA22.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "4517399eb77bd2636dffbe6597cef1270fd5b6c5544fcd0ca1a5321bb432c1a1"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/waves/waveA23.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "4517399eb77bd2636dffbe6597cef1270fd5b6c5544fcd0ca1a5321bb432c1a1"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/pinwheel00.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "9a2d2a92c3635fcd9fc05239beb1908bd6803b4e92302997a707c0950dfa5559"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/pinwheel01.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "dab1ea2fce472d9e94cee6af6022fc4ac7462527ca2586595b21cc5e3e4a9860"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/pinwheel02.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "167b10e140748539f7dba2a3f30edc26e6ddc954a0ad6522b32e22f7104b5377"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/pinwheel03.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "51899f1b659a4b25011c8714d93af359a8b4e335fea322f33fc2904937e1dbf9"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/pinwheel04.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "b1a9234ebbf6eac885a092d794473d60fb974ea4162a01be3c1ed6543b2075de"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/pinwheel05.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "eff5c81e9a479d8d9635cab2631324131513a565865724b764b1eb648bbd29f7"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/pinwheel06.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "14fdb82b66be9b47adc0928cdb261fbd10b987b14e4952fe7dcef0f9bd59365e"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/pinwheel07.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "b2eec8241f7733f277c272d19a2dcfe88372b14d306da04fff8bc4b8fe3c7e92"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/small_pinwheel00.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "e015a1aea6030e34d259c26bb931221bd18b1b1734f0d323df58182445f01cb6"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/small_pinwheel01.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "e45604a4a7ee7921523a345f7ec037152779631769738789f6823bc83452fd5f"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/small_pinwheel02.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "398d3b52d077c00fbb001f39c4446dcb79242fb2de93f028f66f681abbf99098"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/small_pinwheel03.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "34d98307a5ce0cfcc576fb67f2ad5ffef247c2e45627b0da1da3ce6cca101a1a"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/roofCenter.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "79fba342ab307c11a90d19761658f2a4e008793a16bf93d00c44dbe3199ec152"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/g_roofCenter.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "1112bb6465870df89afea51e402309f9cd2957959a969fa62a7a531f7b8f278d"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/prologue/carved-edge-left.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "93c3e6612f88903e0913cfeba5a35689f2dcbe6cff1900571e34e1f2b25c8e94"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/prologue/carved-edge-right.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "b54a7d4173f00fa3b450fe489cbb6403de8ecbbb91f88a108662e8acd9e98ed4"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/waterfall/waterbrickA.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "9986a721118998d9e1ec4eabdcd39f31887eb934d0cfd6fa29b117ac6236c8ad"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/waterfall/waterbrickAalt.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "eae97e7ed11152af31811c4a76a19f3c41c6febb43f14038ba461ddcc5a2a652"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/waterfall/waterbrickB.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "46366d35aadd9457a207c073c531b78006c8805b6c1a1f2bf34f3b5345a0bad5"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/waterfall/waterbrickBalt.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "be76439655b8de39c03f6142e7ba946c330f50e0c0cd1d4382573fa49e6b71d6"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/waterfall/waterbrickC.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "bcc94f4aa3baadb04ce89da410017d8322639c5bb205ca0a44681455ebff1713"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/waterfall/waterbrickCalt.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "14ed3a0fd963b6682358e67e4859fa4b8ccad76f5c507d4a4fe4678f0d90e7ee"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/waterfall/waterbrickD.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "4795b2d4204c58e39ed226bf05087288b68fe8c75588873c3a3fd943b316d766"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/waterfall/waterbrickDalt.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "3e5ccb6e7c0c2694b699475446aea52def86bfa1bf395f0598b7242cb58f2ae9"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/waterfall/waterbrickE.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "3a47187855fca4145f396a853847a5a25e017d9fb4f7d533d6c64d9e4eebb79c"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/waterfall/waterbrickEalt.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "82d10c2bf0f84aafdc325acc63098d4aaeb5b77296e8e5b64fc2ef025475f239"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/waterfall/weirdmossA.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "ff79937a25686f4d1b99aaa990c6d4c60b95a9e592bbe4c0a175e19ba3133458"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/waterfall/weirdmossD.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "57fbbaac0cfb574c5f6f3e9b6beb8dc81049480012b48220c44c55cd87718791"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/waterfall/weirdmossE.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "68c9a2ca1a49dd6239b0c57663038f9d22f0548a5ab5f43afc4818234b60b00b"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/waterfall/weirdmossB.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "c5c3b74c514edaaac766ccf9be0d494abf2fe4fe102167e7b22e3b750d15840a"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/waterfall/weirdmossC.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "2457079bfdab5572c5587c0be2f00b84c71ce167f644488df3a05e0398ef3301"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/Circumplex/floor soap a/floor soap a 00.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "00adef84ec6af8e8d85c0bb0c43e3c138026d05827bb64b16b2d29cc68e1c7d7"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/Circumplex/floor soap a/floor soap a 01.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "40a70a4bb8dc5ce0941f870ddca8f46cdcf8fe9d06016320708ffaa7e2165864"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/Circumplex/floor soap a/floor soap a 02.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "1ccb6794742b255d0dfea407f32f035166616a1e75aea22f43983eb69594f377"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/Circumplex/floor soap b/floor soap b 00.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "bdde3f1bc03959b3c6e3548d731faeb16afcd90d2d692b894f2b44e9139d3018"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/Circumplex/floor soap b/floor soap b 01.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "b24d6472d7b16ee68c0729bf834edf6358d9f957fcc035bbfd7fbb31405d7bfb"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/Circumplex/floor soap b/floor soap b 02.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "3cbd171966511b872cb41aada3e9bfdc2b8e3d2d3596ad0ed6e6591dcd585555"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/Circumplex/soap bubbles a/soap bubbles a 00.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "dbe9bb4a6bcfb93e6448df656c9e0b717a1b3c3596e22337a7e11971e893052d"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/Circumplex/soap bubbles a/soap bubbles a 01.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "cc538b8bb2c0bb385cc764f0f68de0a7e658dd8049c9b84765539f2adb32440f"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/Circumplex/soap bubbles a/soap bubbles a 02.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "21cbf54862ea91eab92dd9cc76a59d97066e6f354ff7ce6707149fb75bf9dcb7"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/Circumplex/soap bubbles c/soap bubbles c 00.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "305203fc1b7b3af64fc002e8edaf08d21cae5852534d53f89fb4589f83eccfe3"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/Circumplex/soap bubbles c/soap bubbles c 01.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "ded66f884a52fa9ee79803467201ff9ee553cb6cb501d108cd54282ce5858074"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/Circumplex/soap bubbles c/soap bubbles c 02.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "c83e9379f52b04ad547a7352223e1cc55f923cdafbfe1481095848b5990c430e"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/Circumplex/soap bubbles e/soap bubbles e 00.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "552a20cb5f5c2214a4b1e9c99c477c6e3edf9c30796d6393bc5cacbbe571457a"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/Circumplex/soap bubbles e/soap bubbles e 01.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "9f9f081915484c01c440ace71b6e02f4c367f0df08e123585381d24d8c918895"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/Circumplex/soap bubbles e/soap bubbles e 02.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "6c622d6e5d37c88f69da886c8c9e66fed9ad1dfcc46f76f0282cda9ea0b2354b"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/Hanky/flower_a_alt.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "273411e40894f580d07676f10acced64a1cd79b59c36b53dead419d6d4669866"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/snolls/animals/runaway/rabbit00.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "54acacd9509e70bd0e09387126f7eb9ad3c1182989cfe6579976889c70109f9c"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/snolls/animals/runaway/rabbit01.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "f77c50b34066de9176232ba366cb05da26161f4160a4c4424ec6c9446baea94e"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/snolls/animals/runaway/rabbit02.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "ef9efb9ba73d96c81b21615581415d66b25b623e524ee4c3e4ff324a8b4b1026"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/snolls/animals/runaway/rabbit03.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "b25fc0f897c2e77d07b347f7bb573dd966c815e5abcef31e80460b03a45443d7"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/snolls/animals/runaway/rabbit04.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "abc1ff64e4bae17bbc85acd9bfa4f6fe752108ac5ed7db3e1513d2f23d613b68"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/snolls/animals/runaway/rabbit05.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "bffd09ab3b656e909f15e6f1a714180bb1a3ae82c646119d5dbb6c85563a0ecc"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/snolls/animals/runaway/rabbit06.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "b8f8b12f3bac6db85a297ae1f9c8bac28618347be10122af49e34ab47753c5a6"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/snolls/animals/runaway/rabbit07.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "a8a6790268f5b12c216d4ccea948e5fbdbb32d074f24a522eeb9d1877e6ee742"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/snolls/animals/runaway/rabbit08.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "6ce2da5b39640afd2b47358cbffd3309c4a4bc281f79588d3eef246877cc3748"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/snolls/animals/runaway/rabbit09.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "78093d2b5c2248d842087c59d879dd7fa6c54b792daaea486dc844d71d0c83b9"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/snolls/animals/runaway/rabbit10.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "ba94ca84a25634c8bc147272882f3af59998bee6cb9384e95dbbc9ef2f9ef2d0"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/snolls/animals/runaway/rabbit11.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "19e6bdcd6a9bb26ecd7b32477fe3d7bd40efa317513de7087f57fe48e3af4c86"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/snolls/animals/runaway/rabbit12.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "dfe29843b3a12a4aaca7be889d8765aab9b3097275a25e64dac4caa3436851b7"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/snolls/animals/runaway/rabbit13.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "e05cb9a14b98ef20a7961ec541be4a0e5bd5d8c23deee74fda6c8dc8cbea11c1"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/snolls/animals/runaway/rabbit14.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "a5d4f2e61e9256f467272bd6badc1166f4ccc1c23029f00ec6c90b3b7cd4c441"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/snolls/animals/runaway/rabbit15.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "25be5b16ceb5343bcc418808c3e156fd201f24f4c16ab4a02956dc3b45c312d1"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/snolls/animals/runaway/rabbit16.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "f2db6d8827061e8b21652e67aafe2f054c7862b4f5a5cdf351d29457c778615c"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/snolls/animals/runaway/rabbit17.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "ecb52afd3437703d887fca1ad7e584fcb3aaef56e3f35fd72e2837b185136ede"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/snolls/animals/runaway/rabbit18.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "1b21c11b544cd815329bce70bc70a71a9bcd10714a6a1a9e035348b6c4ddffef"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/snolls/animals/runaway/rabbit19.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "952e648239f818dda3f29d326c13b75669da4d3c8949be93d8898f8167f8227d"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/snolls/animals/runaway/rabbit20.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "8a61752f372ed62f42a44e42d8dd63687af74e863bbdc853f49dfd074bf00cf0"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/snolls/animals/runaway/rabbit21.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "1ed961fdd93d70895b1a15a19a43f6f6e1d88e1e261d76644812d7192bd0c4a6"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/snolls/animals/hover/bug/fly/a/fly00.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "30ee9dae3e3395588f76218f7908b3b967e8890b6c86fadad479a5f460cf410f"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/snolls/animals/hover/bug/fly/a/fly01.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "28aea6886678294705b85f009970ad2985bb2493f81f5a909e5b937b6350d3b5"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/snolls/animals/hover/bug/fly/a/fly02.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "8eeacad8f0a56336d4f4313772f40336f7a98bf336dd24207f4cd5be5ae86682"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/snolls/animals/hover/bug/fly/a/fly03.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "e8ff290b8661b2ebb71cc73991a35b05d990aed13156fd02ba2ae8862e5fbe19"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/snolls/animals/hover/bug/fly/e/fly00.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "30ee9dae3e3395588f76218f7908b3b967e8890b6c86fadad479a5f460cf410f"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/snolls/animals/hover/bug/fly/e/fly01.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "28aea6886678294705b85f009970ad2985bb2493f81f5a909e5b937b6350d3b5"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/snolls/animals/hover/bug/fly/e/fly02.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "8eeacad8f0a56336d4f4313772f40336f7a98bf336dd24207f4cd5be5ae86682"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/snolls/animals/hover/bug/fly/e/fly03.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "e8ff290b8661b2ebb71cc73991a35b05d990aed13156fd02ba2ae8862e5fbe19"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/snolls/animals/misc/spider/b/hanging_spider_a00.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "df33943446a4d8aeb163438a7236785022b00a7cfa5bc5d804732ea536c5d5ab"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/snolls/animals/misc/spider/b/hanging_spider_a01.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "562d660b66fc69943b87330fb0d807bb5adb5221e17341004402043aa9380750"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/snolls/animals/misc/spider/b/hanging_spider_a02.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "52a0c8b7811b9e09288a0df3fc23475528bba0086e70d8847be941c71daf8983"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/snolls/animals/misc/spider/b/hanging_spider_a03.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "be9b57aceebcfcec383dc998e0c89d2efe907c440010a5f458ed9af27acc9c90"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/snolls/animals/misc/spider/b/hanging_spider_a04.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "1bbf1d248ccc6cb60663a0b4723e7c1db34d3bee65728574275b9f9704aace29"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/snolls/animals/misc/spider/b/hanging_spider_a05.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "7dff52a2c0a1b5b7767da29218ff0cf9939a03a377d53d20080bf1ae67d706b6"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/snolls/animals/misc/spider/b/hanging_spider_a06.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "938147852e6c7a69170ca284f07f6cb5ffab4880c7d0f940566899fc1b54a948"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/snolls/animals/misc/spider/b/hanging_spider_a07.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "2823201cccb50652143fd272f04a80c4a7021127d8727367e2e3fdc265784b39"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/snolls/animals/misc/spider/b/hanging_spider_a08.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "dd583ab0a99ecea375a59686a0638b567beae138721655b10c306faee5bfa15d"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/snolls/animals/misc/spider/b/hanging_spider_a09.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "38bf49a6217884b63aa191e7f0bfb2318df470dada8693d81ae3214c3073fac8"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/snolls/animals/misc/spider/b/hanging_spider_a10.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "3e33eac6e48054b9653ef9bdebab95c1f433ded84b419518f6242633cf9afd7a"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/snolls/animals/misc/spider/b/hanging_spider_a11.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "116847b149886a156c010af4cd14bacbc938cbb91f98fbcd60913df2f7b61b0e"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/snolls/animals/misc/spider/b/hanging_spider_a12.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "4f24c4f4dc88492c580609e326d0c55377529a6ad4dfce8c9d0a261623335126"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/snolls/animals/misc/spider/b/hanging_spider_a13.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "b945d4364e776bcf6b571e8ed8ab52c5ce0af9a358114dac62b77da38f9f63cf"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/snolls/animals/misc/spider/b/hanging_spider_a14.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "453d85e6750ee46b439755f95ccf59513dd3e840f3633bbf80459e747ecbfaa1"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/snolls/animals/misc/spider/b/hanging_spider_a15.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "d1c7165d61602ab7126336390b1abfcf53b2f44efc97a56063a93f2561a86755"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/snolls/animals/misc/spider/b/hanging_spider_a16.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "fce035442c51664b884eff80d94608668614bb455693517d4b75a4deda9aa3b9"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/snolls/animals/misc/spider/b/hanging_spider_a17.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "fbbaa66ca582c24f3f42e26c85d50dcc91f51a2fa57f680900ec395243228b57"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/snolls/animals/misc/spider/b/hanging_spider_a18.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "18b4d776244e655fb5b58f4b21ed83a588ec28b9de9368a1c65966351004c622"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/snolls/animals/misc/spider/b/hanging_spider_a19.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "f6c1a1809a56836b37976e3bd00c25a195c252675fd5244807ebf9840b55c5dd"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/snolls/animals/misc/spider/b/hanging_spider_a20.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "f792ba61a509a943d305502e0b42dc410ab992565e0766794c495cd143f111bc"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/snolls/animals/misc/spider/b/hanging_spider_a21.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "0b42ab15c786da7b25defa3eb898ecaa24757e5d9636ac3b0a667ca81e774658"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/snolls/animals/misc/spider/b/hanging_spider_a22.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "1bab16f862ff415f7d80e70ca926990b066949dad64b7be87dc2a767e540e656"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/snolls/animals/misc/spider/b/hanging_spider_a23.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "c6ff03884f7681f34325d2a74cee6e202a494fc078e93792c10f7993d580dc34"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/snolls/animals/misc/spider/b/hanging_spider_a24.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "6fb88b0fa4aa6899a2c5a6965310199131362f232f734e149cd13e1377cbf1e5"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/snolls/animals/misc/spider/b/hanging_spider_a25.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "fa3ef7dd89df620d6b7a3d20e7ae511f39c469937ee8868a8845e68783821400"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/snolls/animals/misc/spider/b/hanging_spider_a26.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "0995109fd4d09822b7c527cdadeeebeb52a9230b394b0bf03a162d8da2dd660b"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/snolls/animals/misc/spider/b/hanging_spider_a27.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "08cf90cd7ac35ded47abc708dfcdd043e50278fd7d357323a77bc238f41ff504"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/snolls/animals/misc/spider/b/hanging_spider_a28.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "5ed21f83867f0e938730c8d0886857a841d600da42c7d2df2343440c70cb89e8"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/snolls/animals/misc/spider/b/hanging_spider_a29.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "61eedc6f183ddad750bdd3b4cffc5c8047036567555f2b99593a7bf5920969da"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/snolls/animals/misc/spider/b/hanging_spider_a30.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "41da53e5cdfe3f0ed7dd84da1d5f307838d66bbc259bee9392012b6875374800"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/snolls/animals/misc/spider/b/hanging_spider_a31.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "6475a5427a34185abcb40a5d6646db72eb45a9182c28bc3d7d03d35fe75d755b"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/snolls/animals/misc/spider/b/hanging_spider_a32.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "e80a001056d081caa038ebdc75555ff934588eaab67c8f063e2d17b536429022"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/snolls/animals/misc/spider/b/hanging_spider_a33.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "e2582f87c389fefac69e1fbf94177b204f4981ad7a7d6c3a240d8cba74c53892"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/snolls/animals/misc/spider/b/hanging_spider_a34.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "63a174f332f0ea49d70b8690dd56e1e69cd54e547f64021d1519e72b0d9c4345"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/snolls/animals/misc/spider/b/hanging_spider_a35.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "30ef51a6416bae37575e8d750d4e3fa46c97cb033d61b74e9c0af901dde3a15d"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/snolls/animals/misc/spider/b/hanging_spider_a36.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "1d4683f92c63174f329d19d6b7cabe178e5c1f4eb4e10d5485df0e9946fb87cf"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/snolls/animals/misc/spider/b/hanging_spider_a37.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "ba8d62bcee87733f598d1e53117c72871ea4561f266a48d73cfe2821257c69cc"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/snolls/animals/misc/spider/b/hanging_spider_a38.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "e2b9a9055d8cf7cd58427afd6a6982cc869118aaa2a7b5d2f3082cbe4a3b18c2"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/snolls/animals/misc/spider/b/hanging_spider_a39.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "a2a809998bf39ad2fb4ccc8329934ebf9003b1f86109a9c19cbd61f2c18893eb"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/snolls/animals/misc/spider/b/hanging_spider_a40.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "1a9ba25592d29beaf51969ddd74de4a48bc341dd314b850fde94fc41c3d1ed96"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/snolls/animals/misc/spider/b/hanging_spider_a41.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "0169312fbe029795b83b757468c9160c0c71f24a647b630d90d634688fdfab36"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/snolls/animals/misc/spider/b/hanging_spider_a42.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "91d3b2752ee3dbeaed0644c89b8cb1f6479bfd57e82fed8621532b535d8c4a8d"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/snolls/animals/misc/spider/b/hanging_spider_a43.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "c3c66a94837ca5675b31d936ea756e33e3b7d886328324702da611172c24b9f0"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/snolls/animals/misc/spider/b/hanging_spider_a44.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "b4eea28f25b562a88eafeb84a363a600467a08c79397fee71a2afe007161379c"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/snolls/animals/misc/spider/b/hanging_spider_a45.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "42f9f5d06041def60497a3dd51490ce71e92741e817deb49b9a49a59eb403a1c"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/snolls/animals/misc/spider/b/hanging_spider_a46.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "717beb178c052ea78eb95184de6272f7ede9fa3669d42d6b8fcb3eb48fe181e9"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/snolls/animals/misc/spider/b/hanging_spider_a47.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "587c7c73209f7c5b96ff22bd26d1c6e12adafc5db69d05c5a76491c1b7d5d2c0"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/snolls/animals/misc/spider/b/hanging_spider_a48.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "46ed128b3f050f8459c5080bd4d5420bf2840a3b45a396c388bed9db839e4af0"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/snolls/animals/misc/spider/b/hanging_spider_a49.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "b49f876debaa3cb6b35fe501db0edd23f93185ac8abcd0b080eca1be7ed5ff4d"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/snolls/animals/misc/spider/b/hanging_spider_a50.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "d67e85889f26c36dde6f68d5af5792d08fb1b770199f4dad9d3ee21267800140"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/snolls/animals/misc/spider/b/hanging_spider_a51.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "61d2db9630359e54dfb1377da5461f838f3a49abb6c82181c28d2f07d0249ace"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/snolls/animals/misc/spider/b/hanging_spider_a52.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "68114bf5fc2038c0bcc79ae897ee6544455d3a12267af8dd1667df5e776c8116"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/snolls/animals/misc/spider/b/hanging_spider_a53.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "068bf0f147904f132ff7f8a3f5e088197231fdfe1f97b589e64caa8840d38ef9"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/snolls/animals/misc/spider/b/hanging_spider_a54.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "23ac1980f1be9ce09f452be7359d73275ecb98661c2f20e089ac9204fb9cb9ac"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/snolls/animals/misc/spider/b/hanging_spider_a55.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "db9cb2ce5f25a619bfb1b9def8cffc4057b3be3e21339f766c9fce818a6b6221"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/snolls/animals/misc/spider/b/hanging_spider_a56.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "83f86318d6805a71af6f33227cfdc40ac449dad5c541cd391b41c9483b56da63"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/snolls/animals/misc/spider/b/hanging_spider_a57.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "7fcc2986861e1fb3493583fc890ac2560714cd6164076afecec010db495f9471"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/snolls/animals/hover/bug/bee/c/bee00.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "04f9cb31506f3c66c25a970a6084875f40cd3ee3ec5221ad716a21bbe30a78fd"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/snolls/animals/hover/bug/bee/c/bee01.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "75d793fa4d31cc1390db303910a7668e11756f1701eaf8e1b6896dca6872af02"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/snolls/animals/hover/bug/bee/c/bee02.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "3de6b2ae60e16e281c3ae91097845e3a0355e1be1e1875da71b89e0f4e1f29e9"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/mosscairn/scenes/curtain_side_a.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "c1cb08cd6782f314572d6cc6cc28a60dc693e4bf0acdee5926a6e9b0eb1b55e8"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/mosscairn/fg/woodDropShadowA.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "4baa64e2342165ef57f63ab8c7a7259fdbfb870baa401d730ec768ce1c0e3ecc"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/mosscairn/fg/woodDropShadowB.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "79c80905683716de416d5813ed6379cb57248d1a329cf4b5ad625b35c445a6e9"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/mosscairn/fg/woodDropShadowWide.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "5d78de56e461e30725e2d61b171114fd25107f744457661b44a3f72d44fa39b9"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/Quinnigan/tile_roses/top_a00.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "5ff916a1a653e29de9c1155db86e538417ecc4b85655577e45ab1a7188b15bff"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/Quinnigan/tile_roses/top_a01.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "61db7c381c0e5858c9bb892d293c1f829ca1ea84aee69b336635379079bfc691"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/Quinnigan/tile_roses/top_a02.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "fbc836208e14fb4a88184849dbdf997b576d9f4cf19a22f6a50db3d0b4734a40"
+    },
+    {
+      "path": "Graphics/Atlases/Gameplay/decals/SJ2021/Quinnigan/tile_roses/top_a03.png",
+      "provider": "StrawberryJam2021",
+      "sha256": "70fd3dcc7621d971e875fe0bdb556ec4975dbd0011f7af51311e85715020a59a"
+    }
+  ],
+  "originalLayersWritten": false,
+  "originalMapAnalysisOnly": true,
+  "rules": [
+    {
+      "decals": [
+        {
+          "name": "junglehelper/jungle0-general/plantgrass",
+          "occurrences": 4,
+          "scales": [
+            [
+              -1,
+              -1
+            ],
+            [
+              -1,
+              1
+            ],
+            [
+              1,
+              1
+            ]
+          ],
+          "texture": "JungleHelper/Jungle0-general/PlantGrass.png"
+        }
+      ],
+      "path": "JungleHelper/Jungle0-general/PlantGrass",
+      "properties": [
+        {
+          "attributes": {
+            "amplitude": "4",
+            "easeDown": "false",
+            "offset": "1",
+            "sliceSinIncrement": "0.05",
+            "sliceSize": "1",
+            "speed": "4"
+          },
+          "name": "banner"
+        }
+      ],
+      "provider": "JungleHelper",
+      "registrySha256": "8aae4bae60ae8ff1692e124e30facb87e71e26a8777daba930d27d12be9923bf",
+      "sourceArchiveSha256": "a140e21cbb5fd2dcaac70d4d5e36d49476e414861455ae25dedc0678164406cc",
+      "xmlIndex": 0
+    },
+    {
+      "decals": [
+        {
+          "name": "junglehelper/jungle0-general/plantgrassshort",
+          "occurrences": 1,
+          "scales": [
+            [
+              1,
+              1
+            ]
+          ],
+          "texture": "JungleHelper/Jungle0-general/PlantGrassShort.png"
+        }
+      ],
+      "path": "JungleHelper/Jungle0-general/PlantGrassShort",
+      "properties": [
+        {
+          "attributes": {
+            "amplitude": "2",
+            "easeDown": "false",
+            "offset": "1",
+            "sliceSinIncrement": "0.05",
+            "sliceSize": "1",
+            "speed": "2"
+          },
+          "name": "banner"
+        }
+      ],
+      "provider": "JungleHelper",
+      "registrySha256": "8aae4bae60ae8ff1692e124e30facb87e71e26a8777daba930d27d12be9923bf",
+      "sourceArchiveSha256": "a140e21cbb5fd2dcaac70d4d5e36d49476e414861455ae25dedc0678164406cc",
+      "xmlIndex": 1
+    },
+    {
+      "decals": [
+        {
+          "name": "junglehelper/jungle0-general/plantfiddlegrass",
+          "occurrences": 1,
+          "scales": [
+            [
+              1,
+              1
+            ]
+          ],
+          "texture": "JungleHelper/Jungle0-general/PlantFiddlegrass.png"
+        }
+      ],
+      "path": "JungleHelper/Jungle0-general/PlantFiddlegrass",
+      "properties": [
+        {
+          "attributes": {
+            "amplitude": "2.5",
+            "easeDown": "false",
+            "offset": "0",
+            "sliceSinIncrement": "0.05",
+            "sliceSize": "1",
+            "speed": "3"
+          },
+          "name": "banner"
+        }
+      ],
+      "provider": "JungleHelper",
+      "registrySha256": "8aae4bae60ae8ff1692e124e30facb87e71e26a8777daba930d27d12be9923bf",
+      "sourceArchiveSha256": "a140e21cbb5fd2dcaac70d4d5e36d49476e414861455ae25dedc0678164406cc",
+      "xmlIndex": 2
+    },
+    {
+      "decals": [
+        {
+          "name": "junglehelper/jungle3-ruins/vinechang",
+          "occurrences": 2,
+          "scales": [
+            [
+              -1,
+              1
+            ]
+          ],
+          "texture": "JungleHelper/Jungle3-ruins/VineCHang.png"
+        }
+      ],
+      "path": "JungleHelper/Jungle3-ruins/VineCHang",
+      "properties": [
+        {
+          "attributes": {
+            "amplitude": "3",
+            "easeDown": "True",
+            "offset": "0",
+            "sliceSinIncrement": "0.05",
+            "sliceSize": "1",
+            "speed": "2"
+          },
+          "name": "banner"
+        }
+      ],
+      "provider": "JungleHelper",
+      "registrySha256": "8aae4bae60ae8ff1692e124e30facb87e71e26a8777daba930d27d12be9923bf",
+      "sourceArchiveSha256": "a140e21cbb5fd2dcaac70d4d5e36d49476e414861455ae25dedc0678164406cc",
+      "xmlIndex": 8
+    },
+    {
+      "decals": [
+        {
+          "name": "junglehelper/jungle3-ruins/vinechangb",
+          "occurrences": 2,
+          "scales": [
+            [
+              -1,
+              1
+            ],
+            [
+              1,
+              1
+            ]
+          ],
+          "texture": "JungleHelper/Jungle3-ruins/VineCHangB.png"
+        }
+      ],
+      "path": "JungleHelper/Jungle3-ruins/VineCHangB",
+      "properties": [
+        {
+          "attributes": {
+            "amplitude": "3",
+            "easeDown": "True",
+            "offset": "0",
+            "sliceSinIncrement": "0.05",
+            "sliceSize": "1",
+            "speed": "2"
+          },
+          "name": "banner"
+        }
+      ],
+      "provider": "JungleHelper",
+      "registrySha256": "8aae4bae60ae8ff1692e124e30facb87e71e26a8777daba930d27d12be9923bf",
+      "sourceArchiveSha256": "a140e21cbb5fd2dcaac70d4d5e36d49476e414861455ae25dedc0678164406cc",
+      "xmlIndex": 9
+    },
+    {
+      "decals": [
+        {
+          "name": "junglehelper/jungle3-ruins/vinechangc",
+          "occurrences": 1,
+          "scales": [
+            [
+              1,
+              1
+            ]
+          ],
+          "texture": "JungleHelper/Jungle3-ruins/VineCHangC.png"
+        }
+      ],
+      "path": "JungleHelper/Jungle3-ruins/VineCHangC",
+      "properties": [
+        {
+          "attributes": {
+            "amplitude": "3",
+            "easeDown": "True",
+            "offset": "0",
+            "sliceSinIncrement": "0.05",
+            "sliceSize": "1",
+            "speed": "2"
+          },
+          "name": "banner"
+        }
+      ],
+      "provider": "JungleHelper",
+      "registrySha256": "8aae4bae60ae8ff1692e124e30facb87e71e26a8777daba930d27d12be9923bf",
+      "sourceArchiveSha256": "a140e21cbb5fd2dcaac70d4d5e36d49476e414861455ae25dedc0678164406cc",
+      "xmlIndex": 10
+    },
+    {
+      "decals": [
+        {
+          "name": "sj2021/beginnerlobby/jizo_game_a",
+          "occurrences": 1,
+          "scales": [
+            [
+              1,
+              1
+            ]
+          ],
+          "texture": "SJ2021/BeginnerLobby/jizo_game_a.png"
+        },
+        {
+          "name": "sj2021/beginnerlobby/jizo_game_b",
+          "occurrences": 1,
+          "scales": [
+            [
+              -1,
+              1
+            ]
+          ],
+          "texture": "SJ2021/BeginnerLobby/jizo_game_b.png"
+        },
+        {
+          "name": "sj2021/beginnerlobby/jizo_game_c",
+          "occurrences": 1,
+          "scales": [
+            [
+              -1,
+              1
+            ]
+          ],
+          "texture": "SJ2021/BeginnerLobby/jizo_game_c.png"
+        },
+        {
+          "name": "sj2021/beginnerlobby/jizo_hat",
+          "occurrences": 1,
+          "scales": [
+            [
+              -1,
+              1
+            ]
+          ],
+          "texture": "SJ2021/BeginnerLobby/jizo_hat.png"
+        },
+        {
+          "name": "sj2021/beginnerlobby/jizo_large",
+          "occurrences": 7,
+          "scales": [
+            [
+              -1,
+              1
+            ],
+            [
+              1,
+              1
+            ]
+          ],
+          "texture": "SJ2021/BeginnerLobby/jizo_large.png"
+        },
+        {
+          "name": "sj2021/beginnerlobby/jizo_larger",
+          "occurrences": 1,
+          "scales": [
+            [
+              -1,
+              1
+            ]
+          ],
+          "texture": "SJ2021/BeginnerLobby/jizo_larger.png"
+        },
+        {
+          "name": "sj2021/beginnerlobby/jizo_largest_clothed",
+          "occurrences": 2,
+          "scales": [
+            [
+              -1,
+              1
+            ],
+            [
+              1,
+              1
+            ]
+          ],
+          "texture": "SJ2021/BeginnerLobby/jizo_largest_clothed.png"
+        },
+        {
+          "name": "sj2021/beginnerlobby/jizo_largest_snake",
+          "occurrences": 2,
+          "scales": [
+            [
+              -1,
+              1
+            ],
+            [
+              1,
+              1
+            ]
+          ],
+          "texture": "SJ2021/BeginnerLobby/jizo_largest_snake.png"
+        },
+        {
+          "name": "sj2021/beginnerlobby/jizo_largest_watcher",
+          "occurrences": 2,
+          "scales": [
+            [
+              -1,
+              1
+            ],
+            [
+              1,
+              1
+            ]
+          ],
+          "texture": "SJ2021/BeginnerLobby/jizo_largest_watcher.png"
+        },
+        {
+          "name": "sj2021/beginnerlobby/jizo_medium",
+          "occurrences": 2,
+          "scales": [
+            [
+              1,
+              1
+            ]
+          ],
+          "texture": "SJ2021/BeginnerLobby/jizo_medium.png"
+        },
+        {
+          "name": "sj2021/beginnerlobby/jizo_small",
+          "occurrences": 4,
+          "scales": [
+            [
+              -1,
+              1
+            ],
+            [
+              1,
+              1
+            ]
+          ],
+          "texture": "SJ2021/BeginnerLobby/jizo_small.png"
+        }
+      ],
+      "path": "SJ2021/BeginnerLobby/jizo*",
+      "properties": [
+        {
+          "attributes": {
+            "height": "32",
+            "width": "16",
+            "x": "0",
+            "y": "0"
+          },
+          "name": "staticMover"
+        }
+      ],
+      "provider": "StrawberryJam2021",
+      "registrySha256": "1d29554379da3b969741cf6b2854354d63e95522532de6373bfd4b117a18226b",
+      "sourceArchiveSha256": "4e1a2fc12baa3db27da433b93bf26b59f34b3e6b7f760c41d8d127636d020655",
+      "xmlIndex": 62
+    },
+    {
+      "decals": [
+        {
+          "name": "sj2021/mosscairn/fg/ivy/rimhoriza",
+          "occurrences": 1,
+          "scales": [
+            [
+              1,
+              1
+            ]
+          ],
+          "texture": "SJ2021/mosscairn/fg/ivy/rimHorizA.png"
+        }
+      ],
+      "path": "SJ2021/mosscairn/fg/ivy/rim*",
+      "properties": [
+        {
+          "attributes": {
+            "value": "-900101"
+          },
+          "name": "depth"
+        }
+      ],
+      "provider": "StrawberryJam2021",
+      "registrySha256": "1d29554379da3b969741cf6b2854354d63e95522532de6373bfd4b117a18226b",
+      "sourceArchiveSha256": "4e1a2fc12baa3db27da433b93bf26b59f34b3e6b7f760c41d8d127636d020655",
+      "xmlIndex": 124
+    },
+    {
+      "decals": [
+        {
+          "name": "sj2021/mosscairn/fg/ivy/dimdiagb",
+          "occurrences": 2,
+          "scales": [
+            [
+              -1,
+              1
+            ],
+            [
+              1,
+              1
+            ]
+          ],
+          "texture": "SJ2021/mosscairn/fg/ivy/dimDiagB.png"
+        },
+        {
+          "name": "sj2021/mosscairn/fg/ivy/dimhoriza",
+          "occurrences": 1,
+          "scales": [
+            [
+              -1,
+              1
+            ]
+          ],
+          "texture": "SJ2021/mosscairn/fg/ivy/dimHorizA.png"
+        },
+        {
+          "name": "sj2021/mosscairn/fg/ivy/dimhorizb",
+          "occurrences": 1,
+          "scales": [
+            [
+              -1,
+              1
+            ]
+          ],
+          "texture": "SJ2021/mosscairn/fg/ivy/dimHorizB.png"
+        }
+      ],
+      "path": "SJ2021/mosscairn/fg/ivy/dim*",
+      "properties": [
+        {
+          "attributes": {
+            "value": "-900004"
+          },
+          "name": "depth"
+        }
+      ],
+      "provider": "StrawberryJam2021",
+      "registrySha256": "1d29554379da3b969741cf6b2854354d63e95522532de6373bfd4b117a18226b",
+      "sourceArchiveSha256": "4e1a2fc12baa3db27da433b93bf26b59f34b3e6b7f760c41d8d127636d020655",
+      "xmlIndex": 125
+    },
+    {
+      "decals": [
+        {
+          "name": "sj2021/beginnerlobby/bg_jizo_medium",
+          "occurrences": 3,
+          "scales": [
+            [
+              -1,
+              1
+            ],
+            [
+              1,
+              1
+            ]
+          ],
+          "texture": "SJ2021/BeginnerLobby/bg_jizo_medium.png"
+        },
+        {
+          "name": "sj2021/beginnerlobby/bg_jizo_small",
+          "occurrences": 4,
+          "scales": [
+            [
+              -1,
+              1
+            ],
+            [
+              1,
+              1
+            ]
+          ],
+          "texture": "SJ2021/BeginnerLobby/bg_jizo_small.png"
+        }
+      ],
+      "path": "SJ2021/BeginnerLobby/bg_jizo*",
+      "properties": [
+        {
+          "attributes": {
+            "height": "32",
+            "width": "16",
+            "x": "0",
+            "y": "0"
+          },
+          "name": "staticMover"
+        }
+      ],
+      "provider": "StrawberryJam2021",
+      "registrySha256": "1d29554379da3b969741cf6b2854354d63e95522532de6373bfd4b117a18226b",
+      "sourceArchiveSha256": "4e1a2fc12baa3db27da433b93bf26b59f34b3e6b7f760c41d8d127636d020655",
+      "xmlIndex": 63
+    },
+    {
+      "decals": [
+        {
+          "name": "sj2021/mosscairn/fg/ivy/leafab",
+          "occurrences": 1,
+          "scales": [
+            [
+              1,
+              1
+            ]
+          ],
+          "texture": "SJ2021/mosscairn/fg/ivy/leafAB.png"
+        },
+        {
+          "name": "sj2021/mosscairn/fg/ivy/leafac",
+          "occurrences": 1,
+          "scales": [
+            [
+              1,
+              -1
+            ]
+          ],
+          "texture": "SJ2021/mosscairn/fg/ivy/leafAC.png"
+        },
+        {
+          "name": "sj2021/mosscairn/fg/ivy/leafad",
+          "occurrences": 1,
+          "scales": [
+            [
+              1,
+              1
+            ]
+          ],
+          "texture": "SJ2021/mosscairn/fg/ivy/leafAD.png"
+        },
+        {
+          "name": "sj2021/mosscairn/fg/ivy/leafae",
+          "occurrences": 1,
+          "scales": [
+            [
+              -1,
+              1
+            ]
+          ],
+          "texture": "SJ2021/mosscairn/fg/ivy/leafAE.png"
+        },
+        {
+          "name": "sj2021/mosscairn/fg/ivy/leafaf",
+          "occurrences": 2,
+          "scales": [
+            [
+              -1,
+              1
+            ],
+            [
+              1,
+              1
+            ]
+          ],
+          "texture": "SJ2021/mosscairn/fg/ivy/leafAF.png"
+        },
+        {
+          "name": "sj2021/mosscairn/fg/ivy/leafbb",
+          "occurrences": 1,
+          "scales": [
+            [
+              -1,
+              1
+            ]
+          ],
+          "texture": "SJ2021/mosscairn/fg/ivy/leafBB.png"
+        },
+        {
+          "name": "sj2021/mosscairn/fg/ivy/leafbc",
+          "occurrences": 2,
+          "scales": [
+            [
+              -1,
+              1
+            ],
+            [
+              1,
+              1
+            ]
+          ],
+          "texture": "SJ2021/mosscairn/fg/ivy/leafBC.png"
+        },
+        {
+          "name": "sj2021/mosscairn/fg/ivy/leafbd",
+          "occurrences": 2,
+          "scales": [
+            [
+              -1,
+              1
+            ],
+            [
+              1,
+              1
+            ]
+          ],
+          "texture": "SJ2021/mosscairn/fg/ivy/leafBD.png"
+        },
+        {
+          "name": "sj2021/mosscairn/fg/ivy/leafbe",
+          "occurrences": 4,
+          "scales": [
+            [
+              -1,
+              -1
+            ],
+            [
+              1,
+              1
+            ]
+          ],
+          "texture": "SJ2021/mosscairn/fg/ivy/leafBE.png"
+        },
+        {
+          "name": "sj2021/mosscairn/fg/ivy/leafbf",
+          "occurrences": 4,
+          "scales": [
+            [
+              -1,
+              -1
+            ],
+            [
+              -1,
+              1
+            ],
+            [
+              1,
+              1
+            ]
+          ],
+          "texture": "SJ2021/mosscairn/fg/ivy/leafBF.png"
+        },
+        {
+          "name": "sj2021/mosscairn/fg/ivy/leafbigadim",
+          "occurrences": 2,
+          "scales": [
+            [
+              1,
+              1
+            ]
+          ],
+          "texture": "SJ2021/mosscairn/fg/ivy/leafBigADim.png"
+        },
+        {
+          "name": "sj2021/mosscairn/fg/ivy/leafca",
+          "occurrences": 1,
+          "scales": [
+            [
+              1,
+              1
+            ]
+          ],
+          "texture": "SJ2021/mosscairn/fg/ivy/leafCA.png"
+        },
+        {
+          "name": "sj2021/mosscairn/fg/ivy/leafcd",
+          "occurrences": 1,
+          "scales": [
+            [
+              -1,
+              1
+            ]
+          ],
+          "texture": "SJ2021/mosscairn/fg/ivy/leafCD.png"
+        },
+        {
+          "name": "sj2021/mosscairn/fg/ivy/leafcf",
+          "occurrences": 1,
+          "scales": [
+            [
+              -1,
+              1
+            ]
+          ],
+          "texture": "SJ2021/mosscairn/fg/ivy/leafCF.png"
+        },
+        {
+          "name": "sj2021/mosscairn/fg/ivy/leafdd",
+          "occurrences": 1,
+          "scales": [
+            [
+              1,
+              1
+            ]
+          ],
+          "texture": "SJ2021/mosscairn/fg/ivy/leafDD.png"
+        },
+        {
+          "name": "sj2021/mosscairn/fg/ivy/leafde",
+          "occurrences": 1,
+          "scales": [
+            [
+              1,
+              1
+            ]
+          ],
+          "texture": "SJ2021/mosscairn/fg/ivy/leafDE.png"
+        },
+        {
+          "name": "sj2021/mosscairn/fg/ivy/leafdf",
+          "occurrences": 2,
+          "scales": [
+            [
+              -1,
+              1
+            ],
+            [
+              1,
+              1
+            ]
+          ],
+          "texture": "SJ2021/mosscairn/fg/ivy/leafDF.png"
+        },
+        {
+          "name": "sj2021/mosscairn/fg/ivy/leafstema",
+          "occurrences": 1,
+          "scales": [
+            [
+              1,
+              1
+            ]
+          ],
+          "texture": "SJ2021/mosscairn/fg/ivy/leafStemA.png"
+        }
+      ],
+      "path": "SJ2021/mosscairn/fg/ivy/leaf*",
+      "properties": [
+        {
+          "attributes": {
+            "value": "-900008"
+          },
+          "name": "depth"
+        }
+      ],
+      "provider": "StrawberryJam2021",
+      "registrySha256": "1d29554379da3b969741cf6b2854354d63e95522532de6373bfd4b117a18226b",
+      "sourceArchiveSha256": "4e1a2fc12baa3db27da433b93bf26b59f34b3e6b7f760c41d8d127636d020655",
+      "xmlIndex": 127
+    },
+    {
+      "decals": [
+        {
+          "name": "sj2021/mosscairn/fg/ivy/lightdiaga",
+          "occurrences": 1,
+          "scales": [
+            [
+              -1,
+              1
+            ]
+          ],
+          "texture": "SJ2021/mosscairn/fg/ivy/lightDiagA.png"
+        },
+        {
+          "name": "sj2021/mosscairn/fg/ivy/lightdiagb",
+          "occurrences": 1,
+          "scales": [
+            [
+              -1,
+              1
+            ]
+          ],
+          "texture": "SJ2021/mosscairn/fg/ivy/lightDiagB.png"
+        },
+        {
+          "name": "sj2021/mosscairn/fg/ivy/lightverta",
+          "occurrences": 1,
+          "scales": [
+            [
+              -1,
+              1
+            ]
+          ],
+          "texture": "SJ2021/mosscairn/fg/ivy/lightVertA.png"
+        }
+      ],
+      "path": "SJ2021/mosscairn/fg/ivy/light*",
+      "properties": [
+        {
+          "attributes": {
+            "value": "-900006"
+          },
+          "name": "depth"
+        }
+      ],
+      "provider": "StrawberryJam2021",
+      "registrySha256": "1d29554379da3b969741cf6b2854354d63e95522532de6373bfd4b117a18226b",
+      "sourceArchiveSha256": "4e1a2fc12baa3db27da433b93bf26b59f34b3e6b7f760c41d8d127636d020655",
+      "xmlIndex": 126
+    },
+    {
+      "decals": [
+        {
+          "name": "sj2021/beginnerlobby/cave/coral/coral_",
+          "occurrences": 2,
+          "scales": [
+            [
+              1,
+              -1
+            ],
+            [
+              1,
+              1
+            ]
+          ],
+          "texture": "SJ2021/BeginnerLobby/cave/coral/coral_00.png"
+        },
+        {
+          "name": "sj2021/beginnerlobby/cave/coral/coral_b",
+          "occurrences": 4,
+          "scales": [
+            [
+              -1,
+              -1
+            ],
+            [
+              -1,
+              1
+            ],
+            [
+              1,
+              -1
+            ]
+          ],
+          "texture": "SJ2021/BeginnerLobby/cave/coral/coral_b00.png"
+        },
+        {
+          "name": "sj2021/beginnerlobby/cave/coral/coral_c",
+          "occurrences": 4,
+          "scales": [
+            [
+              -1,
+              -1
+            ],
+            [
+              -1,
+              1
+            ],
+            [
+              1,
+              1
+            ]
+          ],
+          "texture": "SJ2021/BeginnerLobby/cave/coral/coral_c00.png"
+        },
+        {
+          "name": "sj2021/beginnerlobby/cave/coral/coral_d",
+          "occurrences": 4,
+          "scales": [
+            [
+              -1,
+              1
+            ],
+            [
+              1,
+              -1
+            ]
+          ],
+          "texture": "SJ2021/BeginnerLobby/cave/coral/coral_d00.png"
+        }
+      ],
+      "path": "SJ2021/BeginnerLobby/cave/coral/*",
+      "properties": [
+        {
+          "attributes": {
+            "hiddenFrames": "0",
+            "hideFrames": "8-12",
+            "hiderange": "48",
+            "idleFrames": "2-7",
+            "showFrames": "1",
+            "showRange": "48"
+          },
+          "name": "scared"
+        }
+      ],
+      "provider": "StrawberryJam2021",
+      "registrySha256": "1d29554379da3b969741cf6b2854354d63e95522532de6373bfd4b117a18226b",
+      "sourceArchiveSha256": "4e1a2fc12baa3db27da433b93bf26b59f34b3e6b7f760c41d8d127636d020655",
+      "xmlIndex": 41
+    },
+    {
+      "decals": [
+        {
+          "name": "sj2021/beginnerlobby/bamboo/depth_bamboo_top_b",
+          "occurrences": 4,
+          "scales": [
+            [
+              -1,
+              1
+            ],
+            [
+              1,
+              1
+            ]
+          ],
+          "texture": "SJ2021/BeginnerLobby/Bamboo/depth_bamboo_top_b.png"
+        }
+      ],
+      "path": "SJ2021/BeginnerLobby/bamboo/depth*",
+      "properties": [
+        {
+          "attributes": {
+            "value": "15000"
+          },
+          "name": "depth"
+        }
+      ],
+      "provider": "StrawberryJam2021",
+      "registrySha256": "1d29554379da3b969741cf6b2854354d63e95522532de6373bfd4b117a18226b",
+      "sourceArchiveSha256": "4e1a2fc12baa3db27da433b93bf26b59f34b3e6b7f760c41d8d127636d020655",
+      "xmlIndex": 30
+    },
+    {
+      "decals": [
+        {
+          "name": "sj2021/beginnerlobby/tileblend/bg/beginner_lobby_cave_bg",
+          "occurrences": 10,
+          "scales": [
+            [
+              1,
+              1
+            ],
+            [
+              4,
+              1
+            ],
+            [
+              5,
+              1
+            ]
+          ],
+          "texture": "SJ2021/BeginnerLobby/tileblend/bg/beginner_lobby_cave_bg.png"
+        },
+        {
+          "name": "sj2021/beginnerlobby/tileblend/bg/beginner_lobby_cave_bg_a",
+          "occurrences": 1,
+          "scales": [
+            [
+              1,
+              1
+            ]
+          ],
+          "texture": "SJ2021/BeginnerLobby/tileblend/bg/beginner_lobby_cave_bg_a.png"
+        },
+        {
+          "name": "sj2021/beginnerlobby/tileblend/bg/bgbrickruined_a",
+          "occurrences": 7,
+          "scales": [
+            [
+              1,
+              1
+            ]
+          ],
+          "texture": "SJ2021/BeginnerLobby/tileblend/bg/bgBrickRuined_a.png"
+        },
+        {
+          "name": "sj2021/beginnerlobby/tileblend/bg/quinnigan",
+          "occurrences": 4,
+          "scales": [
+            [
+              1,
+              1
+            ]
+          ],
+          "texture": "SJ2021/BeginnerLobby/tileblend/bg/quinnigan.png"
+        }
+      ],
+      "path": "SJ2021/BeginnerLobby/tileblend/bg/*",
+      "properties": [
+        {
+          "attributes": {
+            "value": "10010"
+          },
+          "name": "depth"
+        }
+      ],
+      "provider": "StrawberryJam2021",
+      "registrySha256": "1d29554379da3b969741cf6b2854354d63e95522532de6373bfd4b117a18226b",
+      "sourceArchiveSha256": "4e1a2fc12baa3db27da433b93bf26b59f34b3e6b7f760c41d8d127636d020655",
+      "xmlIndex": 42
+    },
+    {
+      "decals": [
+        {
+          "name": "sj2021/beginnerlobby/cave/stalagtite_a",
+          "occurrences": 52,
+          "scales": [
+            [
+              -1,
+              -1
+            ],
+            [
+              -1,
+              1
+            ],
+            [
+              1,
+              -1
+            ],
+            [
+              1,
+              1
+            ]
+          ],
+          "texture": "SJ2021/BeginnerLobby/cave/stalagtite_a.png"
+        },
+        {
+          "name": "sj2021/beginnerlobby/cave/stalagtite_b",
+          "occurrences": 124,
+          "scales": [
+            [
+              -1,
+              -1
+            ],
+            [
+              -1,
+              1
+            ],
+            [
+              1,
+              -1
+            ],
+            [
+              1,
+              1
+            ]
+          ],
+          "texture": "SJ2021/BeginnerLobby/cave/stalagtite_b.png"
+        },
+        {
+          "name": "sj2021/beginnerlobby/cave/stalagtite_c",
+          "occurrences": 153,
+          "scales": [
+            [
+              -1,
+              -1
+            ],
+            [
+              -1,
+              1
+            ],
+            [
+              1,
+              -1
+            ],
+            [
+              1,
+              1
+            ]
+          ],
+          "texture": "SJ2021/BeginnerLobby/cave/stalagtite_c.png"
+        },
+        {
+          "name": "sj2021/beginnerlobby/cave/stalagtite_d",
+          "occurrences": 59,
+          "scales": [
+            [
+              -1,
+              1
+            ],
+            [
+              1,
+              -1
+            ],
+            [
+              1,
+              1
+            ]
+          ],
+          "texture": "SJ2021/BeginnerLobby/cave/stalagtite_d.png"
+        }
+      ],
+      "path": "SJ2021/BeginnerLobby/cave/stalagtite*",
+      "properties": [
+        {
+          "attributes": {
+            "height": "32",
+            "width": "48",
+            "x": "-24",
+            "y": "-16"
+          },
+          "name": "staticMover"
+        }
+      ],
+      "provider": "StrawberryJam2021",
+      "registrySha256": "1d29554379da3b969741cf6b2854354d63e95522532de6373bfd4b117a18226b",
+      "sourceArchiveSha256": "4e1a2fc12baa3db27da433b93bf26b59f34b3e6b7f760c41d8d127636d020655",
+      "xmlIndex": 61
+    },
+    {
+      "decals": [
+        {
+          "name": "sj2021/beginnerlobby/waterfall/hangplanta",
+          "occurrences": 6,
+          "scales": [
+            [
+              -1,
+              1
+            ],
+            [
+              1,
+              1
+            ]
+          ],
+          "texture": "SJ2021/BeginnerLobby/waterfall/hangplantA.png"
+        },
+        {
+          "name": "sj2021/beginnerlobby/waterfall/hangplantb",
+          "occurrences": 8,
+          "scales": [
+            [
+              -1,
+              1
+            ],
+            [
+              1,
+              1
+            ]
+          ],
+          "texture": "SJ2021/BeginnerLobby/waterfall/hangplantB.png"
+        },
+        {
+          "name": "sj2021/beginnerlobby/waterfall/hangplantc",
+          "occurrences": 11,
+          "scales": [
+            [
+              -1,
+              1
+            ],
+            [
+              1,
+              1
+            ]
+          ],
+          "texture": "SJ2021/BeginnerLobby/waterfall/hangplantC.png"
+        },
+        {
+          "name": "sj2021/beginnerlobby/waterfall/hangplantd",
+          "occurrences": 6,
+          "scales": [
+            [
+              1,
+              1
+            ]
+          ],
+          "texture": "SJ2021/BeginnerLobby/waterfall/hangplantD.png"
+        }
+      ],
+      "path": "SJ2021/BeginnerLobby/waterfall/hangplan*",
+      "properties": [
+        {
+          "attributes": {
+            "easeDown": "true"
+          },
+          "name": "banner"
+        },
+        {
+          "attributes": {
+            "height": "2",
+            "width": "16",
+            "x": "-8",
+            "y": "-10"
+          },
+          "name": "staticMover"
+        }
+      ],
+      "provider": "StrawberryJam2021",
+      "registrySha256": "1d29554379da3b969741cf6b2854354d63e95522532de6373bfd4b117a18226b",
+      "sourceArchiveSha256": "4e1a2fc12baa3db27da433b93bf26b59f34b3e6b7f760c41d8d127636d020655",
+      "xmlIndex": 60
+    },
+    {
+      "decals": [
+        {
+          "name": "sj2021/beginnerlobby/waterfall/waterrocka",
+          "occurrences": 7,
+          "scales": [
+            [
+              -1,
+              1
+            ],
+            [
+              1,
+              1
+            ]
+          ],
+          "texture": "SJ2021/BeginnerLobby/waterfall/waterrockA.png"
+        },
+        {
+          "name": "sj2021/beginnerlobby/waterfall/waterrockaalt",
+          "occurrences": 3,
+          "scales": [
+            [
+              -1,
+              1
+            ],
+            [
+              1,
+              1
+            ]
+          ],
+          "texture": "SJ2021/BeginnerLobby/waterfall/waterrockAalt.png"
+        },
+        {
+          "name": "sj2021/beginnerlobby/waterfall/waterrockb",
+          "occurrences": 6,
+          "scales": [
+            [
+              -1,
+              1
+            ],
+            [
+              1,
+              1
+            ]
+          ],
+          "texture": "SJ2021/BeginnerLobby/waterfall/waterrockB.png"
+        },
+        {
+          "name": "sj2021/beginnerlobby/waterfall/waterrockbalt",
+          "occurrences": 1,
+          "scales": [
+            [
+              1,
+              1
+            ]
+          ],
+          "texture": "SJ2021/BeginnerLobby/waterfall/waterrockBalt.png"
+        },
+        {
+          "name": "sj2021/beginnerlobby/waterfall/waterrockc",
+          "occurrences": 6,
+          "scales": [
+            [
+              -1,
+              1
+            ],
+            [
+              1,
+              1
+            ]
+          ],
+          "texture": "SJ2021/BeginnerLobby/waterfall/waterrockC.png"
+        },
+        {
+          "name": "sj2021/beginnerlobby/waterfall/waterrockcalt",
+          "occurrences": 2,
+          "scales": [
+            [
+              -1,
+              1
+            ]
+          ],
+          "texture": "SJ2021/BeginnerLobby/waterfall/waterrockCalt.png"
+        },
+        {
+          "name": "sj2021/beginnerlobby/waterfall/waterrockd",
+          "occurrences": 4,
+          "scales": [
+            [
+              -1,
+              1
+            ],
+            [
+              1,
+              1
+            ]
+          ],
+          "texture": "SJ2021/BeginnerLobby/waterfall/waterrockD.png"
+        },
+        {
+          "name": "sj2021/beginnerlobby/waterfall/waterrockdalt",
+          "occurrences": 3,
+          "scales": [
+            [
+              -1,
+              1
+            ],
+            [
+              1,
+              1
+            ]
+          ],
+          "texture": "SJ2021/BeginnerLobby/waterfall/waterrockDalt.png"
+        },
+        {
+          "name": "sj2021/beginnerlobby/waterfall/waterrocke",
+          "occurrences": 5,
+          "scales": [
+            [
+              -1,
+              1
+            ],
+            [
+              1,
+              1
+            ]
+          ],
+          "texture": "SJ2021/BeginnerLobby/waterfall/waterrockE.png"
+        },
+        {
+          "name": "sj2021/beginnerlobby/waterfall/waterrockealt",
+          "occurrences": 4,
+          "scales": [
+            [
+              1,
+              -1
+            ],
+            [
+              1,
+              1
+            ]
+          ],
+          "texture": "SJ2021/BeginnerLobby/waterfall/waterrockEalt.png"
+        }
+      ],
+      "path": "SJ2021/BeginnerLobby/waterfall/waterroc*",
+      "properties": [
+        {
+          "attributes": {
+            "height": "32",
+            "width": "32",
+            "x": "0",
+            "y": "0"
+          },
+          "name": "staticMover"
+        }
+      ],
+      "provider": "StrawberryJam2021",
+      "registrySha256": "1d29554379da3b969741cf6b2854354d63e95522532de6373bfd4b117a18226b",
+      "sourceArchiveSha256": "4e1a2fc12baa3db27da433b93bf26b59f34b3e6b7f760c41d8d127636d020655",
+      "xmlIndex": 64
+    },
+    {
+      "decals": [
+        {
+          "name": "sj2021/beginnerlobby/waterfall/watergrassa",
+          "occurrences": 11,
+          "scales": [
+            [
+              -1,
+              -1
+            ],
+            [
+              1,
+              -1
+            ],
+            [
+              1,
+              1
+            ]
+          ],
+          "texture": "SJ2021/BeginnerLobby/waterfall/watergrassA.png"
+        },
+        {
+          "name": "sj2021/beginnerlobby/waterfall/watergrassb",
+          "occurrences": 13,
+          "scales": [
+            [
+              -1,
+              -1
+            ],
+            [
+              -1,
+              1
+            ],
+            [
+              1,
+              -1
+            ],
+            [
+              1,
+              1
+            ]
+          ],
+          "texture": "SJ2021/BeginnerLobby/waterfall/watergrassB.png"
+        },
+        {
+          "name": "sj2021/beginnerlobby/waterfall/watergrassc",
+          "occurrences": 5,
+          "scales": [
+            [
+              1,
+              1
+            ]
+          ],
+          "texture": "SJ2021/BeginnerLobby/waterfall/watergrassC.png"
+        },
+        {
+          "name": "sj2021/beginnerlobby/waterfall/watergrassd",
+          "occurrences": 12,
+          "scales": [
+            [
+              -1,
+              -1
+            ],
+            [
+              -1,
+              1
+            ],
+            [
+              1,
+              1
+            ]
+          ],
+          "texture": "SJ2021/BeginnerLobby/waterfall/watergrassD.png"
+        },
+        {
+          "name": "sj2021/beginnerlobby/waterfall/watergrasse",
+          "occurrences": 13,
+          "scales": [
+            [
+              -1,
+              -1
+            ],
+            [
+              1,
+              1
+            ]
+          ],
+          "texture": "SJ2021/BeginnerLobby/waterfall/watergrassE.png"
+        }
+      ],
+      "path": "SJ2021/BeginnerLobby/waterfall/watergras*",
+      "properties": [
+        {
+          "attributes": {},
+          "name": "banner"
+        },
+        {
+          "attributes": {
+            "height": "2",
+            "width": "16",
+            "x": "-8",
+            "y": "8"
+          },
+          "name": "staticMover"
+        }
+      ],
+      "provider": "StrawberryJam2021",
+      "registrySha256": "1d29554379da3b969741cf6b2854354d63e95522532de6373bfd4b117a18226b",
+      "sourceArchiveSha256": "4e1a2fc12baa3db27da433b93bf26b59f34b3e6b7f760c41d8d127636d020655",
+      "xmlIndex": 59
+    },
+    {
+      "decals": [
+        {
+          "name": "sj2021/beginnerlobby/waterfall/waterflowera",
+          "occurrences": 8,
+          "scales": [
+            [
+              -1,
+              1
+            ],
+            [
+              1,
+              1
+            ]
+          ],
+          "texture": "SJ2021/BeginnerLobby/waterfall/waterflowerA.png"
+        },
+        {
+          "name": "sj2021/beginnerlobby/waterfall/waterflowerb",
+          "occurrences": 4,
+          "scales": [
+            [
+              -1,
+              1
+            ],
+            [
+              1,
+              1
+            ]
+          ],
+          "texture": "SJ2021/BeginnerLobby/waterfall/waterflowerB.png"
+        },
+        {
+          "name": "sj2021/beginnerlobby/waterfall/waterflowerc",
+          "occurrences": 10,
+          "scales": [
+            [
+              -1,
+              1
+            ],
+            [
+              1,
+              1
+            ]
+          ],
+          "texture": "SJ2021/BeginnerLobby/waterfall/waterflowerC.png"
+        },
+        {
+          "name": "sj2021/beginnerlobby/waterfall/waterflowerd",
+          "occurrences": 2,
+          "scales": [
+            [
+              1,
+              1
+            ]
+          ],
+          "texture": "SJ2021/BeginnerLobby/waterfall/waterflowerD.png"
+        }
+      ],
+      "path": "SJ2021/BeginnerLobby/waterfall/waterflower*",
+      "properties": [
+        {
+          "attributes": {},
+          "name": "staticMover"
+        },
+        {
+          "attributes": {
+            "alpha": "0.5",
+            "radius": "10"
+          },
+          "name": "bloom"
+        }
+      ],
+      "provider": "StrawberryJam2021",
+      "registrySha256": "1d29554379da3b969741cf6b2854354d63e95522532de6373bfd4b117a18226b",
+      "sourceArchiveSha256": "4e1a2fc12baa3db27da433b93bf26b59f34b3e6b7f760c41d8d127636d020655",
+      "xmlIndex": 58
+    },
+    {
+      "decals": [
+        {
+          "name": "sj2021/beginnerlobby/waves/wavea",
+          "occurrences": 12,
+          "scales": [
+            [
+              -1,
+              1
+            ],
+            [
+              1,
+              1
+            ]
+          ],
+          "texture": "SJ2021/BeginnerLobby/waves/waveA00.png"
+        }
+      ],
+      "path": "SJ2021/BeginnerLobby/waves/waveA",
+      "properties": [
+        {
+          "attributes": {
+            "value": "10001"
+          },
+          "name": "depth"
+        },
+        {
+          "attributes": {},
+          "name": "randomizeFrame"
+        }
+      ],
+      "provider": "StrawberryJam2021",
+      "registrySha256": "1d29554379da3b969741cf6b2854354d63e95522532de6373bfd4b117a18226b",
+      "sourceArchiveSha256": "4e1a2fc12baa3db27da433b93bf26b59f34b3e6b7f760c41d8d127636d020655",
+      "xmlIndex": 29
+    },
+    {
+      "decals": [
+        {
+          "name": "sj2021/beginnerlobby/pinwheel",
+          "occurrences": 11,
+          "scales": [
+            [
+              1,
+              1
+            ]
+          ],
+          "texture": "SJ2021/BeginnerLobby/pinwheel00.png"
+        }
+      ],
+      "path": "SJ2021/BeginnerLobby/pinwheel",
+      "properties": [
+        {
+          "attributes": {
+            "value": "10"
+          },
+          "name": "animationSpeed"
+        },
+        {
+          "attributes": {},
+          "name": "randomizeFrame"
+        }
+      ],
+      "provider": "StrawberryJam2021",
+      "registrySha256": "1d29554379da3b969741cf6b2854354d63e95522532de6373bfd4b117a18226b",
+      "sourceArchiveSha256": "4e1a2fc12baa3db27da433b93bf26b59f34b3e6b7f760c41d8d127636d020655",
+      "xmlIndex": 31
+    },
+    {
+      "decals": [
+        {
+          "name": "sj2021/beginnerlobby/small_pinwheel",
+          "occurrences": 25,
+          "scales": [
+            [
+              1,
+              1
+            ]
+          ],
+          "texture": "SJ2021/BeginnerLobby/small_pinwheel00.png"
+        }
+      ],
+      "path": "SJ2021/BeginnerLobby/small_pinwheel",
+      "properties": [
+        {
+          "attributes": {
+            "value": "12"
+          },
+          "name": "animationSpeed"
+        },
+        {
+          "attributes": {},
+          "name": "randomizeFrame"
+        }
+      ],
+      "provider": "StrawberryJam2021",
+      "registrySha256": "1d29554379da3b969741cf6b2854354d63e95522532de6373bfd4b117a18226b",
+      "sourceArchiveSha256": "4e1a2fc12baa3db27da433b93bf26b59f34b3e6b7f760c41d8d127636d020655",
+      "xmlIndex": 32
+    },
+    {
+      "decals": [
+        {
+          "name": "sj2021/beginnerlobby/roofcenter",
+          "occurrences": 99,
+          "scales": [
+            [
+              -1,
+              1
+            ]
+          ],
+          "texture": "SJ2021/BeginnerLobby/roofCenter.png"
+        }
+      ],
+      "path": "SJ2021/BeginnerLobby/roofCenter",
+      "properties": [
+        {
+          "attributes": {
+            "height": "6",
+            "index": "14",
+            "width": "24",
+            "x": "-12",
+            "y": "-4"
+          },
+          "name": "solid"
+        }
+      ],
+      "provider": "StrawberryJam2021",
+      "registrySha256": "1d29554379da3b969741cf6b2854354d63e95522532de6373bfd4b117a18226b",
+      "sourceArchiveSha256": "4e1a2fc12baa3db27da433b93bf26b59f34b3e6b7f760c41d8d127636d020655",
+      "xmlIndex": 33
+    },
+    {
+      "decals": [
+        {
+          "name": "sj2021/beginnerlobby/g_roofcenter",
+          "occurrences": 60,
+          "scales": [
+            [
+              -1,
+              1
+            ]
+          ],
+          "texture": "SJ2021/BeginnerLobby/g_roofCenter.png"
+        }
+      ],
+      "path": "SJ2021/BeginnerLobby/g_roofCenter",
+      "properties": [
+        {
+          "attributes": {
+            "height": "6",
+            "index": "14",
+            "width": "24",
+            "x": "-12",
+            "y": "-4"
+          },
+          "name": "solid"
+        }
+      ],
+      "provider": "StrawberryJam2021",
+      "registrySha256": "1d29554379da3b969741cf6b2854354d63e95522532de6373bfd4b117a18226b",
+      "sourceArchiveSha256": "4e1a2fc12baa3db27da433b93bf26b59f34b3e6b7f760c41d8d127636d020655",
+      "xmlIndex": 37
+    },
+    {
+      "decals": [
+        {
+          "name": "sj2021/beginnerlobby/prologue/carved-edge-left",
+          "occurrences": 11,
+          "scales": [
+            [
+              -1,
+              1
+            ],
+            [
+              1,
+              1
+            ]
+          ],
+          "texture": "SJ2021/BeginnerLobby/prologue/carved-edge-left.png"
+        }
+      ],
+      "path": "SJ2021/BeginnerLobby/prologue/carved-edge-left",
+      "properties": [
+        {
+          "attributes": {
+            "height": "13",
+            "index": "5",
+            "width": "8",
+            "x": "-8",
+            "y": "-8"
+          },
+          "name": "solid"
+        }
+      ],
+      "provider": "StrawberryJam2021",
+      "registrySha256": "1d29554379da3b969741cf6b2854354d63e95522532de6373bfd4b117a18226b",
+      "sourceArchiveSha256": "4e1a2fc12baa3db27da433b93bf26b59f34b3e6b7f760c41d8d127636d020655",
+      "xmlIndex": 39
+    },
+    {
+      "decals": [
+        {
+          "name": "sj2021/beginnerlobby/prologue/carved-edge-right",
+          "occurrences": 23,
+          "scales": [
+            [
+              -1,
+              1
+            ],
+            [
+              1,
+              1
+            ]
+          ],
+          "texture": "SJ2021/BeginnerLobby/prologue/carved-edge-right.png"
+        }
+      ],
+      "path": "SJ2021/BeginnerLobby/prologue/carved-edge-right",
+      "properties": [
+        {
+          "attributes": {
+            "height": "13",
+            "index": "5",
+            "width": "8",
+            "x": "-4",
+            "y": "-8"
+          },
+          "name": "solid"
+        }
+      ],
+      "provider": "StrawberryJam2021",
+      "registrySha256": "1d29554379da3b969741cf6b2854354d63e95522532de6373bfd4b117a18226b",
+      "sourceArchiveSha256": "4e1a2fc12baa3db27da433b93bf26b59f34b3e6b7f760c41d8d127636d020655",
+      "xmlIndex": 40
+    },
+    {
+      "decals": [
+        {
+          "name": "sj2021/beginnerlobby/waterfall/waterbricka",
+          "occurrences": 17,
+          "scales": [
+            [
+              -1,
+              1
+            ],
+            [
+              1,
+              1
+            ]
+          ],
+          "texture": "SJ2021/BeginnerLobby/waterfall/waterbrickA.png"
+        }
+      ],
+      "path": "SJ2021/BeginnerLobby/waterfall/waterbrickA",
+      "properties": [
+        {
+          "attributes": {
+            "height": "8",
+            "width": "16",
+            "x": "-8",
+            "y": "-8"
+          },
+          "name": "staticMover"
+        }
+      ],
+      "provider": "StrawberryJam2021",
+      "registrySha256": "1d29554379da3b969741cf6b2854354d63e95522532de6373bfd4b117a18226b",
+      "sourceArchiveSha256": "4e1a2fc12baa3db27da433b93bf26b59f34b3e6b7f760c41d8d127636d020655",
+      "xmlIndex": 43
+    },
+    {
+      "decals": [
+        {
+          "name": "sj2021/beginnerlobby/waterfall/waterbrickaalt",
+          "occurrences": 20,
+          "scales": [
+            [
+              -1,
+              1
+            ],
+            [
+              1,
+              1
+            ]
+          ],
+          "texture": "SJ2021/BeginnerLobby/waterfall/waterbrickAalt.png"
+        }
+      ],
+      "path": "SJ2021/BeginnerLobby/waterfall/waterbrickAalt",
+      "properties": [
+        {
+          "attributes": {
+            "height": "8",
+            "width": "16",
+            "x": "-8",
+            "y": "-8"
+          },
+          "name": "staticMover"
+        }
+      ],
+      "provider": "StrawberryJam2021",
+      "registrySha256": "1d29554379da3b969741cf6b2854354d63e95522532de6373bfd4b117a18226b",
+      "sourceArchiveSha256": "4e1a2fc12baa3db27da433b93bf26b59f34b3e6b7f760c41d8d127636d020655",
+      "xmlIndex": 44
+    },
+    {
+      "decals": [
+        {
+          "name": "sj2021/beginnerlobby/waterfall/waterbrickb",
+          "occurrences": 32,
+          "scales": [
+            [
+              -1,
+              1
+            ],
+            [
+              1,
+              1
+            ]
+          ],
+          "texture": "SJ2021/BeginnerLobby/waterfall/waterbrickB.png"
+        }
+      ],
+      "path": "SJ2021/BeginnerLobby/waterfall/waterbrickB",
+      "properties": [
+        {
+          "attributes": {
+            "height": "8",
+            "width": "16",
+            "x": "-8",
+            "y": "-8"
+          },
+          "name": "staticMover"
+        }
+      ],
+      "provider": "StrawberryJam2021",
+      "registrySha256": "1d29554379da3b969741cf6b2854354d63e95522532de6373bfd4b117a18226b",
+      "sourceArchiveSha256": "4e1a2fc12baa3db27da433b93bf26b59f34b3e6b7f760c41d8d127636d020655",
+      "xmlIndex": 45
+    },
+    {
+      "decals": [
+        {
+          "name": "sj2021/beginnerlobby/waterfall/waterbrickbalt",
+          "occurrences": 27,
+          "scales": [
+            [
+              1,
+              1
+            ]
+          ],
+          "texture": "SJ2021/BeginnerLobby/waterfall/waterbrickBalt.png"
+        }
+      ],
+      "path": "SJ2021/BeginnerLobby/waterfall/waterbrickBalt",
+      "properties": [
+        {
+          "attributes": {
+            "height": "8",
+            "width": "16",
+            "x": "-8",
+            "y": "-8"
+          },
+          "name": "staticMover"
+        }
+      ],
+      "provider": "StrawberryJam2021",
+      "registrySha256": "1d29554379da3b969741cf6b2854354d63e95522532de6373bfd4b117a18226b",
+      "sourceArchiveSha256": "4e1a2fc12baa3db27da433b93bf26b59f34b3e6b7f760c41d8d127636d020655",
+      "xmlIndex": 46
+    },
+    {
+      "decals": [
+        {
+          "name": "sj2021/beginnerlobby/waterfall/waterbrickc",
+          "occurrences": 19,
+          "scales": [
+            [
+              -1,
+              1
+            ],
+            [
+              1,
+              1
+            ]
+          ],
+          "texture": "SJ2021/BeginnerLobby/waterfall/waterbrickC.png"
+        }
+      ],
+      "path": "SJ2021/BeginnerLobby/waterfall/waterbrickC",
+      "properties": [
+        {
+          "attributes": {
+            "height": "8",
+            "width": "8",
+            "x": "-8",
+            "y": "-8"
+          },
+          "name": "staticMover"
+        }
+      ],
+      "provider": "StrawberryJam2021",
+      "registrySha256": "1d29554379da3b969741cf6b2854354d63e95522532de6373bfd4b117a18226b",
+      "sourceArchiveSha256": "4e1a2fc12baa3db27da433b93bf26b59f34b3e6b7f760c41d8d127636d020655",
+      "xmlIndex": 47
+    },
+    {
+      "decals": [
+        {
+          "name": "sj2021/beginnerlobby/waterfall/waterbrickcalt",
+          "occurrences": 11,
+          "scales": [
+            [
+              -1,
+              1
+            ],
+            [
+              1,
+              1
+            ]
+          ],
+          "texture": "SJ2021/BeginnerLobby/waterfall/waterbrickCalt.png"
+        }
+      ],
+      "path": "SJ2021/BeginnerLobby/waterfall/waterbrickCalt",
+      "properties": [
+        {
+          "attributes": {
+            "height": "8",
+            "width": "8",
+            "x": "-8",
+            "y": "-8"
+          },
+          "name": "staticMover"
+        }
+      ],
+      "provider": "StrawberryJam2021",
+      "registrySha256": "1d29554379da3b969741cf6b2854354d63e95522532de6373bfd4b117a18226b",
+      "sourceArchiveSha256": "4e1a2fc12baa3db27da433b93bf26b59f34b3e6b7f760c41d8d127636d020655",
+      "xmlIndex": 48
+    },
+    {
+      "decals": [
+        {
+          "name": "sj2021/beginnerlobby/waterfall/waterbrickd",
+          "occurrences": 15,
+          "scales": [
+            [
+              1,
+              1
+            ]
+          ],
+          "texture": "SJ2021/BeginnerLobby/waterfall/waterbrickD.png"
+        }
+      ],
+      "path": "SJ2021/BeginnerLobby/waterfall/waterbrickD",
+      "properties": [
+        {
+          "attributes": {
+            "height": "8",
+            "width": "8",
+            "x": "-8",
+            "y": "-8"
+          },
+          "name": "staticMover"
+        }
+      ],
+      "provider": "StrawberryJam2021",
+      "registrySha256": "1d29554379da3b969741cf6b2854354d63e95522532de6373bfd4b117a18226b",
+      "sourceArchiveSha256": "4e1a2fc12baa3db27da433b93bf26b59f34b3e6b7f760c41d8d127636d020655",
+      "xmlIndex": 49
+    },
+    {
+      "decals": [
+        {
+          "name": "sj2021/beginnerlobby/waterfall/waterbrickdalt",
+          "occurrences": 16,
+          "scales": [
+            [
+              -1,
+              1
+            ],
+            [
+              1,
+              1
+            ]
+          ],
+          "texture": "SJ2021/BeginnerLobby/waterfall/waterbrickDalt.png"
+        }
+      ],
+      "path": "SJ2021/BeginnerLobby/waterfall/waterbrickDalt",
+      "properties": [
+        {
+          "attributes": {
+            "height": "8",
+            "width": "8",
+            "x": "-8",
+            "y": "-8"
+          },
+          "name": "staticMover"
+        }
+      ],
+      "provider": "StrawberryJam2021",
+      "registrySha256": "1d29554379da3b969741cf6b2854354d63e95522532de6373bfd4b117a18226b",
+      "sourceArchiveSha256": "4e1a2fc12baa3db27da433b93bf26b59f34b3e6b7f760c41d8d127636d020655",
+      "xmlIndex": 50
+    },
+    {
+      "decals": [
+        {
+          "name": "sj2021/beginnerlobby/waterfall/waterbricke",
+          "occurrences": 17,
+          "scales": [
+            [
+              1,
+              1
+            ]
+          ],
+          "texture": "SJ2021/BeginnerLobby/waterfall/waterbrickE.png"
+        }
+      ],
+      "path": "SJ2021/BeginnerLobby/waterfall/waterbrickE",
+      "properties": [
+        {
+          "attributes": {
+            "height": "8",
+            "width": "8",
+            "x": "-8",
+            "y": "-8"
+          },
+          "name": "staticMover"
+        }
+      ],
+      "provider": "StrawberryJam2021",
+      "registrySha256": "1d29554379da3b969741cf6b2854354d63e95522532de6373bfd4b117a18226b",
+      "sourceArchiveSha256": "4e1a2fc12baa3db27da433b93bf26b59f34b3e6b7f760c41d8d127636d020655",
+      "xmlIndex": 51
+    },
+    {
+      "decals": [
+        {
+          "name": "sj2021/beginnerlobby/waterfall/waterbrickealt",
+          "occurrences": 9,
+          "scales": [
+            [
+              1,
+              1
+            ]
+          ],
+          "texture": "SJ2021/BeginnerLobby/waterfall/waterbrickEalt.png"
+        }
+      ],
+      "path": "SJ2021/BeginnerLobby/waterfall/waterbrickEalt",
+      "properties": [
+        {
+          "attributes": {
+            "height": "8",
+            "width": "8",
+            "x": "-8",
+            "y": "-8"
+          },
+          "name": "staticMover"
+        }
+      ],
+      "provider": "StrawberryJam2021",
+      "registrySha256": "1d29554379da3b969741cf6b2854354d63e95522532de6373bfd4b117a18226b",
+      "sourceArchiveSha256": "4e1a2fc12baa3db27da433b93bf26b59f34b3e6b7f760c41d8d127636d020655",
+      "xmlIndex": 52
+    },
+    {
+      "decals": [
+        {
+          "name": "sj2021/beginnerlobby/waterfall/weirdmossa",
+          "occurrences": 15,
+          "scales": [
+            [
+              1,
+              1
+            ]
+          ],
+          "texture": "SJ2021/BeginnerLobby/waterfall/weirdmossA.png"
+        }
+      ],
+      "path": "SJ2021/BeginnerLobby/waterfall/weirdmossA",
+      "properties": [
+        {
+          "attributes": {
+            "height": "16",
+            "width": "16",
+            "x": "-8",
+            "y": "-8"
+          },
+          "name": "staticMover"
+        }
+      ],
+      "provider": "StrawberryJam2021",
+      "registrySha256": "1d29554379da3b969741cf6b2854354d63e95522532de6373bfd4b117a18226b",
+      "sourceArchiveSha256": "4e1a2fc12baa3db27da433b93bf26b59f34b3e6b7f760c41d8d127636d020655",
+      "xmlIndex": 53
+    },
+    {
+      "decals": [
+        {
+          "name": "sj2021/beginnerlobby/waterfall/weirdmossd",
+          "occurrences": 12,
+          "scales": [
+            [
+              -1,
+              1
+            ],
+            [
+              1,
+              1
+            ]
+          ],
+          "texture": "SJ2021/BeginnerLobby/waterfall/weirdmossD.png"
+        }
+      ],
+      "path": "SJ2021/BeginnerLobby/waterfall/weirdmossD",
+      "properties": [
+        {
+          "attributes": {
+            "height": "16",
+            "width": "16",
+            "x": "-8",
+            "y": "-8"
+          },
+          "name": "staticMover"
+        }
+      ],
+      "provider": "StrawberryJam2021",
+      "registrySha256": "1d29554379da3b969741cf6b2854354d63e95522532de6373bfd4b117a18226b",
+      "sourceArchiveSha256": "4e1a2fc12baa3db27da433b93bf26b59f34b3e6b7f760c41d8d127636d020655",
+      "xmlIndex": 54
+    },
+    {
+      "decals": [
+        {
+          "name": "sj2021/beginnerlobby/waterfall/weirdmosse",
+          "occurrences": 7,
+          "scales": [
+            [
+              -1,
+              1
+            ],
+            [
+              1,
+              1
+            ]
+          ],
+          "texture": "SJ2021/BeginnerLobby/waterfall/weirdmossE.png"
+        }
+      ],
+      "path": "SJ2021/BeginnerLobby/waterfall/weirdmossE",
+      "properties": [
+        {
+          "attributes": {
+            "height": "16",
+            "width": "16",
+            "x": "-8",
+            "y": "-8"
+          },
+          "name": "staticMover"
+        }
+      ],
+      "provider": "StrawberryJam2021",
+      "registrySha256": "1d29554379da3b969741cf6b2854354d63e95522532de6373bfd4b117a18226b",
+      "sourceArchiveSha256": "4e1a2fc12baa3db27da433b93bf26b59f34b3e6b7f760c41d8d127636d020655",
+      "xmlIndex": 55
+    },
+    {
+      "decals": [
+        {
+          "name": "sj2021/beginnerlobby/waterfall/weirdmossb",
+          "occurrences": 15,
+          "scales": [
+            [
+              -1,
+              1
+            ],
+            [
+              1,
+              1
+            ]
+          ],
+          "texture": "SJ2021/BeginnerLobby/waterfall/weirdmossB.png"
+        }
+      ],
+      "path": "SJ2021/BeginnerLobby/waterfall/weirdmossB",
+      "properties": [
+        {
+          "attributes": {
+            "height": "8",
+            "width": "16",
+            "x": "-8",
+            "y": "-8"
+          },
+          "name": "staticMover"
+        }
+      ],
+      "provider": "StrawberryJam2021",
+      "registrySha256": "1d29554379da3b969741cf6b2854354d63e95522532de6373bfd4b117a18226b",
+      "sourceArchiveSha256": "4e1a2fc12baa3db27da433b93bf26b59f34b3e6b7f760c41d8d127636d020655",
+      "xmlIndex": 56
+    },
+    {
+      "decals": [
+        {
+          "name": "sj2021/beginnerlobby/waterfall/weirdmossc",
+          "occurrences": 7,
+          "scales": [
+            [
+              -1,
+              1
+            ],
+            [
+              1,
+              1
+            ]
+          ],
+          "texture": "SJ2021/BeginnerLobby/waterfall/weirdmossC.png"
+        }
+      ],
+      "path": "SJ2021/BeginnerLobby/waterfall/weirdmossC",
+      "properties": [
+        {
+          "attributes": {
+            "height": "8",
+            "width": "16",
+            "x": "-8",
+            "y": "-8"
+          },
+          "name": "staticMover"
+        }
+      ],
+      "provider": "StrawberryJam2021",
+      "registrySha256": "1d29554379da3b969741cf6b2854354d63e95522532de6373bfd4b117a18226b",
+      "sourceArchiveSha256": "4e1a2fc12baa3db27da433b93bf26b59f34b3e6b7f760c41d8d127636d020655",
+      "xmlIndex": 57
+    },
+    {
+      "decals": [
+        {
+          "name": "sj2021/circumplex/floor soap a/floor soap a ",
+          "occurrences": 1,
+          "scales": [
+            [
+              1,
+              1
+            ]
+          ],
+          "texture": "SJ2021/Circumplex/floor soap a/floor soap a 00.png"
+        }
+      ],
+      "path": "SJ2021/Circumplex/floor soap a/floor soap a ",
+      "properties": [
+        {
+          "attributes": {
+            "value": "5"
+          },
+          "name": "animationSpeed"
+        }
+      ],
+      "provider": "StrawberryJam2021",
+      "registrySha256": "1d29554379da3b969741cf6b2854354d63e95522532de6373bfd4b117a18226b",
+      "sourceArchiveSha256": "4e1a2fc12baa3db27da433b93bf26b59f34b3e6b7f760c41d8d127636d020655",
+      "xmlIndex": 65
+    },
+    {
+      "decals": [
+        {
+          "name": "sj2021/circumplex/floor soap b/floor soap b ",
+          "occurrences": 1,
+          "scales": [
+            [
+              1,
+              1
+            ]
+          ],
+          "texture": "SJ2021/Circumplex/floor soap b/floor soap b 00.png"
+        }
+      ],
+      "path": "SJ2021/Circumplex/floor soap b/floor soap b ",
+      "properties": [
+        {
+          "attributes": {
+            "value": "5"
+          },
+          "name": "animationSpeed"
+        }
+      ],
+      "provider": "StrawberryJam2021",
+      "registrySha256": "1d29554379da3b969741cf6b2854354d63e95522532de6373bfd4b117a18226b",
+      "sourceArchiveSha256": "4e1a2fc12baa3db27da433b93bf26b59f34b3e6b7f760c41d8d127636d020655",
+      "xmlIndex": 66
+    },
+    {
+      "decals": [
+        {
+          "name": "sj2021/circumplex/soap bubbles a/soap bubbles a ",
+          "occurrences": 1,
+          "scales": [
+            [
+              1,
+              1
+            ]
+          ],
+          "texture": "SJ2021/Circumplex/soap bubbles a/soap bubbles a 00.png"
+        }
+      ],
+      "path": "SJ2021/Circumplex/soap bubbles a/soap bubbles a ",
+      "properties": [
+        {
+          "attributes": {
+            "value": "5"
+          },
+          "name": "animationSpeed"
+        }
+      ],
+      "provider": "StrawberryJam2021",
+      "registrySha256": "1d29554379da3b969741cf6b2854354d63e95522532de6373bfd4b117a18226b",
+      "sourceArchiveSha256": "4e1a2fc12baa3db27da433b93bf26b59f34b3e6b7f760c41d8d127636d020655",
+      "xmlIndex": 67
+    },
+    {
+      "decals": [
+        {
+          "name": "sj2021/circumplex/soap bubbles c/soap bubbles c ",
+          "occurrences": 1,
+          "scales": [
+            [
+              1,
+              1
+            ]
+          ],
+          "texture": "SJ2021/Circumplex/soap bubbles c/soap bubbles c 00.png"
+        }
+      ],
+      "path": "SJ2021/Circumplex/soap bubbles c/soap bubbles c ",
+      "properties": [
+        {
+          "attributes": {
+            "value": "5"
+          },
+          "name": "animationSpeed"
+        }
+      ],
+      "provider": "StrawberryJam2021",
+      "registrySha256": "1d29554379da3b969741cf6b2854354d63e95522532de6373bfd4b117a18226b",
+      "sourceArchiveSha256": "4e1a2fc12baa3db27da433b93bf26b59f34b3e6b7f760c41d8d127636d020655",
+      "xmlIndex": 69
+    },
+    {
+      "decals": [
+        {
+          "name": "sj2021/circumplex/soap bubbles e/soap bubbles e ",
+          "occurrences": 1,
+          "scales": [
+            [
+              1,
+              1
+            ]
+          ],
+          "texture": "SJ2021/Circumplex/soap bubbles e/soap bubbles e 00.png"
+        }
+      ],
+      "path": "SJ2021/Circumplex/soap bubbles e/soap bubbles e ",
+      "properties": [
+        {
+          "attributes": {
+            "value": "5"
+          },
+          "name": "animationSpeed"
+        }
+      ],
+      "provider": "StrawberryJam2021",
+      "registrySha256": "1d29554379da3b969741cf6b2854354d63e95522532de6373bfd4b117a18226b",
+      "sourceArchiveSha256": "4e1a2fc12baa3db27da433b93bf26b59f34b3e6b7f760c41d8d127636d020655",
+      "xmlIndex": 71
+    },
+    {
+      "decals": [
+        {
+          "name": "sj2021/hanky/flower_a_alt",
+          "occurrences": 1,
+          "scales": [
+            [
+              -1,
+              1
+            ]
+          ],
+          "texture": "SJ2021/Hanky/flower_a_alt.png"
+        }
+      ],
+      "path": "SJ2021/Hanky/flower_a_alt",
+      "properties": [
+        {
+          "attributes": {
+            "alpha": ".75",
+            "color": "FFFFFF",
+            "endFade": "5",
+            "offsetX": "0",
+            "offsetY": "-5",
+            "startfade": "2"
+          },
+          "name": "light"
+        }
+      ],
+      "provider": "StrawberryJam2021",
+      "registrySha256": "1d29554379da3b969741cf6b2854354d63e95522532de6373bfd4b117a18226b",
+      "sourceArchiveSha256": "4e1a2fc12baa3db27da433b93bf26b59f34b3e6b7f760c41d8d127636d020655",
+      "xmlIndex": 83
+    },
+    {
+      "decals": [
+        {
+          "name": "sj2021/snolls/animals/runaway/rabbit",
+          "occurrences": 1,
+          "scales": [
+            [
+              1,
+              1
+            ]
+          ],
+          "texture": "SJ2021/snolls/animals/runaway/rabbit00.png"
+        }
+      ],
+      "path": "SJ2021/snolls/animals/runaway/rabbit",
+      "properties": [
+        {
+          "attributes": {
+            "hiddenFrames": "21",
+            "hideFrames": "11,12,13,14,15,16,17,18,19,20",
+            "hideRange": "35",
+            "idleFrames": "0*9,10*2,0*19,6,7,8,9,0*18,6,8,9,0*2",
+            "showFrames": "0",
+            "showRange": "320"
+          },
+          "name": "scared"
+        }
+      ],
+      "provider": "StrawberryJam2021",
+      "registrySha256": "1d29554379da3b969741cf6b2854354d63e95522532de6373bfd4b117a18226b",
+      "sourceArchiveSha256": "4e1a2fc12baa3db27da433b93bf26b59f34b3e6b7f760c41d8d127636d020655",
+      "xmlIndex": 86
+    },
+    {
+      "decals": [
+        {
+          "name": "sj2021/snolls/animals/hover/bug/fly/a/fly",
+          "occurrences": 1,
+          "scales": [
+            [
+              1,
+              1
+            ]
+          ],
+          "texture": "SJ2021/snolls/animals/hover/bug/fly/a/fly00.png"
+        }
+      ],
+      "path": "SJ2021/snolls/animals/hover/bug/fly/a/fly",
+      "properties": [
+        {
+          "attributes": {
+            "hideRange": "0",
+            "idleFrames": "0,2,3,2,0,2,0,1"
+          },
+          "name": "scared"
+        },
+        {
+          "attributes": {},
+          "name": "floaty"
+        },
+        {
+          "attributes": {
+            "amount": "0.02"
+          },
+          "name": "parallax"
+        }
+      ],
+      "provider": "StrawberryJam2021",
+      "registrySha256": "1d29554379da3b969741cf6b2854354d63e95522532de6373bfd4b117a18226b",
+      "sourceArchiveSha256": "4e1a2fc12baa3db27da433b93bf26b59f34b3e6b7f760c41d8d127636d020655",
+      "xmlIndex": 92
+    },
+    {
+      "decals": [
+        {
+          "name": "sj2021/snolls/animals/hover/bug/fly/e/fly",
+          "occurrences": 1,
+          "scales": [
+            [
+              1,
+              1
+            ]
+          ],
+          "texture": "SJ2021/snolls/animals/hover/bug/fly/e/fly00.png"
+        }
+      ],
+      "path": "SJ2021/snolls/animals/hover/bug/fly/e/fly",
+      "properties": [
+        {
+          "attributes": {
+            "hideRange": "0",
+            "idleFrames": "1,2,0,3,0,2,0,2,3,0"
+          },
+          "name": "scared"
+        },
+        {
+          "attributes": {
+            "value": "11"
+          },
+          "name": "animationSpeed"
+        },
+        {
+          "attributes": {
+            "amount": "0.008"
+          },
+          "name": "parallax"
+        },
+        {
+          "attributes": {},
+          "name": "floaty"
+        }
+      ],
+      "provider": "StrawberryJam2021",
+      "registrySha256": "1d29554379da3b969741cf6b2854354d63e95522532de6373bfd4b117a18226b",
+      "sourceArchiveSha256": "4e1a2fc12baa3db27da433b93bf26b59f34b3e6b7f760c41d8d127636d020655",
+      "xmlIndex": 96
+    },
+    {
+      "decals": [
+        {
+          "name": "sj2021/snolls/animals/misc/spider/b/hanging_spider_a",
+          "occurrences": 1,
+          "scales": [
+            [
+              1,
+              -1
+            ]
+          ],
+          "texture": "SJ2021/snolls/animals/misc/spider/b/hanging_spider_a00.png"
+        }
+      ],
+      "path": "SJ2021/snolls/animals/misc/spider/b/hanging_spider_a",
+      "properties": [
+        {
+          "attributes": {
+            "hiddenFrames": "57",
+            "hideFrames": "20*4,21,24,27,30,33,36,39,42,45,48,51-56",
+            "hideRange": "108",
+            "idleFrames": "20",
+            "showFrames": "57-34,31,28,25-21,20*3",
+            "showRange": "250"
+          },
+          "name": "scared"
+        }
+      ],
+      "provider": "StrawberryJam2021",
+      "registrySha256": "1d29554379da3b969741cf6b2854354d63e95522532de6373bfd4b117a18226b",
+      "sourceArchiveSha256": "4e1a2fc12baa3db27da433b93bf26b59f34b3e6b7f760c41d8d127636d020655",
+      "xmlIndex": 100
+    },
+    {
+      "decals": [
+        {
+          "name": "sj2021/snolls/animals/hover/bug/bee/c/bee",
+          "occurrences": 1,
+          "scales": [
+            [
+              1,
+              1
+            ]
+          ],
+          "texture": "SJ2021/snolls/animals/hover/bug/bee/c/bee00.png"
+        }
+      ],
+      "path": "SJ2021/snolls/animals/hover/bug/bee/c/bee",
+      "properties": [
+        {
+          "attributes": {
+            "hiddenFrames": "0,2",
+            "hideFrames": "1",
+            "hideRange": "16",
+            "idleFrames": "0,1,2,0,2,0,1,2,0,2,1",
+            "showFrames": "1",
+            "showRange": "24"
+          },
+          "name": "scared"
+        },
+        {
+          "attributes": {
+            "amount": "0.05"
+          },
+          "name": "parallax"
+        },
+        {
+          "attributes": {},
+          "name": "floaty"
+        }
+      ],
+      "provider": "StrawberryJam2021",
+      "registrySha256": "1d29554379da3b969741cf6b2854354d63e95522532de6373bfd4b117a18226b",
+      "sourceArchiveSha256": "4e1a2fc12baa3db27da433b93bf26b59f34b3e6b7f760c41d8d127636d020655",
+      "xmlIndex": 107
+    },
+    {
+      "decals": [
+        {
+          "name": "sj2021/mosscairn/scenes/curtain_side_a",
+          "occurrences": 2,
+          "scales": [
+            [
+              -1,
+              1
+            ],
+            [
+              1,
+              1
+            ]
+          ],
+          "texture": "SJ2021/mosscairn/scenes/curtain_side_a.png"
+        }
+      ],
+      "path": "SJ2021/mosscairn/scenes/curtain_side_a",
+      "properties": [
+        {
+          "attributes": {
+            "amplitude": "2",
+            "easeDown": "true",
+            "offset": "0",
+            "sliceSinIncrement": "0.05",
+            "sliceSize": "2",
+            "speed": "2"
+          },
+          "name": "banner"
+        }
+      ],
+      "provider": "StrawberryJam2021",
+      "registrySha256": "1d29554379da3b969741cf6b2854354d63e95522532de6373bfd4b117a18226b",
+      "sourceArchiveSha256": "4e1a2fc12baa3db27da433b93bf26b59f34b3e6b7f760c41d8d127636d020655",
+      "xmlIndex": 113
+    },
+    {
+      "decals": [
+        {
+          "name": "sj2021/mosscairn/fg/wooddropshadowa",
+          "occurrences": 2,
+          "scales": [
+            [
+              1,
+              1
+            ]
+          ],
+          "texture": "SJ2021/mosscairn/fg/woodDropShadowA.png"
+        }
+      ],
+      "path": "SJ2021/mosscairn/fg/woodDropShadowA",
+      "properties": [
+        {
+          "attributes": {
+            "value": "-10010"
+          },
+          "name": "depth"
+        }
+      ],
+      "provider": "StrawberryJam2021",
+      "registrySha256": "1d29554379da3b969741cf6b2854354d63e95522532de6373bfd4b117a18226b",
+      "sourceArchiveSha256": "4e1a2fc12baa3db27da433b93bf26b59f34b3e6b7f760c41d8d127636d020655",
+      "xmlIndex": 155
+    },
+    {
+      "decals": [
+        {
+          "name": "sj2021/mosscairn/fg/wooddropshadowb",
+          "occurrences": 1,
+          "scales": [
+            [
+              -1,
+              1
+            ]
+          ],
+          "texture": "SJ2021/mosscairn/fg/woodDropShadowB.png"
+        }
+      ],
+      "path": "SJ2021/mosscairn/fg/woodDropShadowB",
+      "properties": [
+        {
+          "attributes": {
+            "value": "-10010"
+          },
+          "name": "depth"
+        }
+      ],
+      "provider": "StrawberryJam2021",
+      "registrySha256": "1d29554379da3b969741cf6b2854354d63e95522532de6373bfd4b117a18226b",
+      "sourceArchiveSha256": "4e1a2fc12baa3db27da433b93bf26b59f34b3e6b7f760c41d8d127636d020655",
+      "xmlIndex": 156
+    },
+    {
+      "decals": [
+        {
+          "name": "sj2021/mosscairn/fg/wooddropshadowwide",
+          "occurrences": 5,
+          "scales": [
+            [
+              -1,
+              1
+            ],
+            [
+              1,
+              1
+            ]
+          ],
+          "texture": "SJ2021/mosscairn/fg/woodDropShadowWide.png"
+        }
+      ],
+      "path": "SJ2021/mosscairn/fg/woodDropShadowWide",
+      "properties": [
+        {
+          "attributes": {
+            "value": "-10010"
+          },
+          "name": "depth"
+        }
+      ],
+      "provider": "StrawberryJam2021",
+      "registrySha256": "1d29554379da3b969741cf6b2854354d63e95522532de6373bfd4b117a18226b",
+      "sourceArchiveSha256": "4e1a2fc12baa3db27da433b93bf26b59f34b3e6b7f760c41d8d127636d020655",
+      "xmlIndex": 157
+    },
+    {
+      "decals": [
+        {
+          "name": "sj2021/quinnigan/tile_roses/top_a",
+          "occurrences": 13,
+          "scales": [
+            [
+              1,
+              1
+            ]
+          ],
+          "texture": "SJ2021/Quinnigan/tile_roses/top_a00.png"
+        }
+      ],
+      "path": "SJ2021/Quinnigan/tile_roses/top_a",
+      "properties": [
+        {
+          "attributes": {
+            "value": "6"
+          },
+          "name": "animationSpeed"
+        }
+      ],
+      "provider": "StrawberryJam2021",
+      "registrySha256": "1d29554379da3b969741cf6b2854354d63e95522532de6373bfd4b117a18226b",
+      "sourceArchiveSha256": "4e1a2fc12baa3db27da433b93bf26b59f34b3e6b7f760c41d8d127636d020655",
+      "xmlIndex": 258
+    }
+  ],
+  "schemaVersion": 1,
+  "selectedDecalNames": 118,
+  "selectedPngFrames": 298,
+  "selectedRules": 58
+}

@@ -1,0 +1,9 @@
+modname_AppleEverestStage25KJ=Stage 25K-J Interaction Fixture
+STAGE25KJ_WARP_1=WEST BENCH
+STAGE25KJ_WARP_2=EAST BENCH
+AppleEverestStage25KJ_0_Lobbies_1_Fixture=FACTORY LOBBY
+AppleEverestStage25KJ_0_Lobbies_1_Fixture_author=Project-owned canary
+AppleEverestStage25KJ_1_Fixture_1_FinishA=FINISH A
+AppleEverestStage25KJ_1_Fixture_1_FinishA_author=Project-owned canary
+AppleEverestStage25KJ_1_Fixture_2_FinishB=FINISH B
+AppleEverestStage25KJ_1_Fixture_2_FinishB_author=Project-owned canary

@@ -98,6 +98,27 @@ internal static class AppleEverestCustomAudioRuntime
                 Require(bank.getID(out Guid bankId), descriptor.Owner, "getID");
                 if (bankId != descriptor.BankId)
                     throw new InvalidOperationException($"custom FMOD bank GUID mismatch: owner={descriptor.Owner}");
+                if (descriptor.Owner == "CollabUtils2")
+                {
+                    // The export also contains vanilla bus/snapshot references.
+                    // Enumerate actual bank members rather than treating every
+                    // embedded GUID byte sequence as an event definition.
+                    Require(bank.getEventList(out EventDescription[] members), descriptor.Owner, "bank.getEventList");
+                    HashSet<Guid> actualEvents = new();
+                    int actualSnapshots = 0;
+                    foreach (EventDescription member in members)
+                    {
+                        Require(member.isSnapshot(out bool snapshot), descriptor.Owner, "event.isSnapshot");
+                        Require(member.getID(out Guid id), descriptor.Owner, "event.getID");
+                        if (snapshot) actualSnapshots++;
+                        else if (!actualEvents.Add(id)) throw new InvalidOperationException("duplicate Collab bank event");
+                    }
+                    if (!actualEvents.SetEquals(descriptor.Guids.Where(g => g.Kind == "event").Select(g => g.Id)))
+                        throw new InvalidOperationException("Collab bank actual event membership differs from its pinned event set");
+                    Require(bank.getBusCount(out int actualBuses), descriptor.Owner, "bank.getBusCount");
+                    Require(bank.getVCACount(out int actualVcas), descriptor.Owner, "bank.getVCACount");
+                    AppleEverestStaticRuntime.Log($"custom-bank-members=PASS owner=CollabUtils2 events={actualEvents.Count} snapshots={actualSnapshots} buses={actualBuses} vcas={actualVcas} authority=native-bank-enumeration");
+                }
 
                 // This exact ChronoHelper release ships a bank plus the FMOD
                 // Studio GUID export, but no companion strings bank. FMOD can

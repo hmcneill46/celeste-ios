@@ -31,7 +31,6 @@ internal sealed class AppleEverestAttachedJumpThru : JumpThru
         triggerToken = new StaticMover { OnAttach = platform => Depth = platform.Depth + 1 };
         Add(new StaticMover
         {
-            OnAttach = platform => { attachedPlatform = platform; Depth = platform.Depth + 1; },
             OnMove = MoveWithPlatform,
             OnShake = OnShake,
             SolidChecker = IsRiding,
@@ -43,8 +42,12 @@ internal sealed class AppleEverestAttachedJumpThru : JumpThru
     public override void Awake(Scene scene)
     {
         base.Awake(scene);
-        SurfaceSoundIndex = authoredSurfaceIndex > 0 ? authoredSurfaceIndex : 5;
-        MTexture tiles = GFX.Game["objects/jumpthru/" + texture];
+        AreaData area = AreaData.Get(scene);
+        string previous = area.Jumpthru;
+        if (!string.IsNullOrEmpty(texture) && texture != "default") area.Jumpthru = texture;
+        SurfaceSoundIndex = authoredSurfaceIndex > 0 ? authoredSurfaceIndex : previous.ToLower() switch
+            { "dream" => 32, "temple" or "templeb" => 8, "core" => 3, _ => 5 };
+        MTexture tiles = GFX.Game["objects/jumpthru/" + area.Jumpthru];
         int tileColumns = tiles.Width / 8;
         for (int index = 0; index < columns; index++)
         {
@@ -56,6 +59,11 @@ internal sealed class AppleEverestAttachedJumpThru : JumpThru
                     : Calc.Choose(Calc.Random, 0, 1);
             Add(new Image(tiles.GetSubtexture(column * 8, row * 8, 8, 8)) { X = index * 8 });
         }
+        // The distributed subclass repeats the ordinary JumpThru attachment
+        // pass after constructing its images; preserve that second pass.
+        foreach (StaticMover mover in scene.Tracker.GetComponents<StaticMover>())
+            if (mover.IsRiding(this) && mover.Platform == null)
+            { staticMovers.Add(mover); mover.Platform = this; mover.OnAttach?.Invoke(this); }
     }
 
     private bool IsRiding(Solid solid)
@@ -63,6 +71,7 @@ internal sealed class AppleEverestAttachedJumpThru : JumpThru
         if (!CollideCheck(solid, Position + Vector2.UnitX) &&
             !CollideCheck(solid, Position - Vector2.UnitX)) return false;
         attachedPlatform = solid;
+        triggerToken.Platform = solid;
         visibleWhenDisabled = solid is CassetteBlock;
         return true;
     }
@@ -121,4 +130,20 @@ internal sealed class AppleEverestAttachedJumpThru : JumpThru
     }
 
     private void TriggerPlatform() => attachedPlatform?.OnStaticMoverTrigger(triggerToken);
+
+    public override void MoveHExact(int move)
+    {
+        if (Collidable)
+            foreach (Actor actor in Scene.Tracker.GetEntities<Actor>())
+                if (actor.IsRiding(this))
+                {
+                    Collidable = false;
+                    if (actor.TreatNaive) actor.NaiveMove(Vector2.UnitX * move);
+                    else actor.MoveHExact(move);
+                    actor.LiftSpeed = LiftSpeed;
+                    Collidable = true;
+                }
+        X += move;
+        MoveStaticMovers(Vector2.UnitX * move);
+    }
 }
