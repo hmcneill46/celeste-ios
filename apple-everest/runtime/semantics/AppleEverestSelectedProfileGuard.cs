@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Runtime.CompilerServices;
 using Microsoft.Xna.Framework;
 namespace Celeste.Mod;
 internal static class AppleEverestSelectedProfileGuard
@@ -830,15 +831,52 @@ internal static class AppleEverestSelectedProfileGuard
         },
     };
 
+    private sealed class BerryNormalization
+    {
+        internal readonly Dictionary<string, object> Authored;
+        internal readonly int Checkpoint, Order;
+        internal BerryNormalization(Dictionary<string, object> authored, int checkpoint, int order)
+        { Authored = authored; Checkpoint = checkpoint; Order = order; }
+    }
+    private static readonly ConditionalWeakTable<EntityData, BerryNormalization> NormalizedBerries = new();
+
+    // MapData assigns tracker coordinates before the factory sees the berry.
+    // Validate the authored profile first and retain the exact assignment for
+    // this EntityData instance; arbitrary authored coordinates remain rejected.
+    internal static void RecordBerryNormalization(EntityData data, int checkpoint, int order)
+    {
+        if (data.Name != "LunaticHelper/StrawberryWithReturn") return;
+        Entity(data.Name, data);
+        if (checkpoint < 0 || order < 0) throw Outside(data.Name);
+        var authored = new Dictionary<string, object>(AuthoredValues(data), StringComparer.Ordinal);
+        NormalizedBerries.Remove(data);
+        NormalizedBerries.Add(data, new BerryNormalization(authored, checkpoint, order));
+    }
+
+    private static Dictionary<string, object> AuthoredValues(EntityData data)
+    {
+        if (!NormalizedBerries.TryGetValue(data, out BerryNormalization normalized)) return data.Values;
+        if (data.Name != "LunaticHelper/StrawberryWithReturn" || data.Values == null ||
+            !data.Values.TryGetValue("checkpointID", out object checkpoint) || checkpoint is not int y || y != normalized.Checkpoint ||
+            !data.Values.TryGetValue("order", out object order) || order is not int x || x != normalized.Order)
+            throw Outside(data.Name);
+        var values = new Dictionary<string, object>(data.Values, StringComparer.Ordinal);
+        foreach (string key in new[] { "checkpointID", "order" })
+            if (normalized.Authored.TryGetValue(key, out object value)) values[key] = value;
+            else values.Remove(key);
+        return values;
+    }
+
     internal static void Entity(string id, EntityData data)
     {
         string key = (Profiles.ContainsKey("entity:" + id) ? "entity:" : "trigger:") + id;
         if (data.Name != id || data.Origin != Vector2.Zero || !Profiles.TryGetValue(key, out Profile[] profiles))
             throw Outside(id);
+        Dictionary<string, object> values = AuthoredValues(data);
         foreach (Profile profile in profiles)
         {
             if (data.Width != profile.Width || data.Height != profile.Height ||
-                !Matches(profile.Values, data.Values) || (data.Nodes?.Length ?? 0) != profile.Nodes.Length) continue;
+                !Matches(profile.Values, values) || (data.Nodes?.Length ?? 0) != profile.Nodes.Length) continue;
             bool nodesMatch = true;
             for (int i = 0; i < profile.Nodes.Length; i++)
                 if (data.Nodes[i] - data.Position != profile.Nodes[i]) { nodesMatch = false; break; }

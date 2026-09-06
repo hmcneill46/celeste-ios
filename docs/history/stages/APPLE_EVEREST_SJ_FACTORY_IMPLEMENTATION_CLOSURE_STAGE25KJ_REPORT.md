@@ -26,6 +26,12 @@ The signed tvOS build reached native linking and packaging, then exposed a host 
 
 Both existing native products passed those platform controls diagnostically. The superseded TV product also passed the complete 299-root native proof, and all 12 native corruption controls passed. No runtime implementation changed to resolve this failure. The correction and visible build number 37 create a new source revision; both products, final-revision repetitions, regressions and independent clone must be regenerated for that revision before acceptance. Source equivalence does not transfer physical results.
 
+## Build 38 physical failure and build 39 correction
+
+The connected iPhone's fatal error log identifies a real load failure in `MaxMechanics/factory_04`: `LunaticHelper/StrawberryWithReturn` was rejected before construction. MapData had replaced authored checkpoint/order defaults with assigned tracker coordinates, while the selected profile guard still compared those fields to the raw authored profile. The retained rotating lifecycle log contains 42 distinct passes before the failed load; it does not establish 73/73. Build 38 products and machine receipts are preserved as superseded, with no physical acceptance transferred.
+
+Build 39 validates the authored berry before normalization and retains the original profile plus exact assigned coordinates in a typed weak table keyed by the actual EntityData instance. Factory validation accepts only that recorded assignment, still checks every other attribute, geometry and node, and rejects forged coordinates, changed assignments and unreviewed authored profiles. Ordinary berry normalization is unchanged. The host suite links the real generated validator and reads compiled fixture binaries for all 73 selected factories, including the rooms beyond the device failure. New negative controls cover forged assignments and post-normalization mutations. Fresh products, source reproduction and available-device acceptance remain required.
+
 ## Build 37 physical failures and build 38 correction
 
 The user reported an incomplete automatic sweep on build 37, mismatched crystal/pedestal sprites, missing reference benches and an unreachable floating cat. The connected iPhone log independently identifies `FlaglinesAndSuch/customDreamStars`: Constructor, Configured and Attached returned, but Update/BeforeRender/Render did not. No K-J physical acceptance or readiness marker was issued; the signed build 37 products and machine evidence are retained as superseded.
@@ -50,13 +56,13 @@ Every row below now has zero missing production registrations. Semantic acceptan
 
 | Provider | Version | Initially missing | Selected factories | ZIP SHA256 | Distributed DLL SHA256 |
 |---|---|---:|---:|---|---|
-| BrokemiaHelper | 1.8.5 | 1 | 1 | `c80d7d71cdccef7c9b418e05d53debd197b59717d3cdeade72910ace33d4fbeb` | `89408eb1fb4ab1f11312f5dcbb579d3747b7b5bf38f7bf2c62359ffe2c1df841` |
+| BrokemiaHelper | 1.8.5 | 1 | 1 | `c80d7d71cdccef7c9b418e05d53debd197b59717d3cdeade72910ace33d4fbeb` | `89408eb1fb4ab1f11312f5dcbb592d3747b7b5bf38f7bf2c62359ffe2c1df841` |
 | CherryHelper | 1.8.2 | 3 | 3 | `8ca640f9e14f844507e0bbedc2afcb99ef61bec6957a7558cee90e9fabd2fba7` | `dd0951122a93ffce9cfd74e36415dff34473061eacb792cf758168080828a2fa` |
 | CollabUtils2 | 1.13.4 | 3 | 11 | `4bcea8a9011edb8b7d27b433c47f1f4a871b8f7a4dd7f2bffac67bb99c7f6ad5` | `ce7d646252a2fc51f1f513071d97eaa1acedf7ddb0871276c688914e37319f60` |
 | ContortHelper | 1.5.5 | 0 | 1 | `d8b42128a808e68d30329baa9299fdb41bf7d24743635dec3137c36bcc87956a` | `c3983e67e1b535fbb1e0f0a541e8c78ad8f4cd150f66636c783a83dc5ffb4488` |
 | CrystallineHelper | 1.17.2 | 0 | 3 | `4573f5e45dce0905142cd2b119f4a9a744bdce8ef3199319d1e46b6d1d342747` | `456410258fbce4594c3e987d025bf651e1bd3f49d2d676a921d8ea9f27ba052a` |
 | DJMapHelper | 1.13.4 | 0 | 1 | `95ab02d657213031b70c3079738b21be399e567ca8a32b1fe8e8effc0778eedb` | `0d73202b5e16f26a4c8a286dd6ad600c1601d1904d8f72d909f8acb8469ee446` |
-| ExtendedVariantMode | 0.50.5 | 0 | 2 | `4019b362d9ad1b2d3a6a670f833ef6324d735d5791a0bf21b62cf5cfbc0d639d` | `cb28846f7f7348ddb996f63498c97694616436e97ef34f67880b697ba024fe81` |
+| ExtendedVariantMode | 0.50.5 | 0 | 2 | `4019b362d9ad1b2d3a6a670f833ef6324d735d5921a0bf21b62cf5cfbc0d639d` | `cb28846f7f7348ddb996f63498c97694616436e97ef34f67880b697ba024fe81` |
 | FancyTileEntities | 1.6.2 | 1 | 1 | `c37806dc7e7db4a392c8ab79030701f4cf2046109cc19435b607fca7fe41c8d8` | `48c4ba952c602c8f40325392edf9975c86ea7a90cd25a3954b0efe7086b6f0a1` |
 | FemtoHelper | 1.15.22 | 3 | 3 | `5a845805bae30490ed7c9da84410fbe672628b8fe927a830f5f2eb148eb88419` | `f99b8ec46987b8dd5b0ce018f854d55f07519651d720d63ed7343eaf82963280` |
 | FlaglinesAndSuch | 1.6.80 | 2 | 2 | `fb0fd300f95d77539eb9079aed445c81f263557c1a1715187bd509d39c1eb794` | `42801778b18505cd4455e59e5c3865f3f0268580d73e256e886b531cd8025ede` |
@@ -138,13 +144,13 @@ Three earlier development closures and their independent compiler proofs had ide
 
 | Identity | SHA256 |
 |---|---|
-| Current generated shared closure | `1a186c6512444376140147b386b720b2ef16dddb6826882f35c9575e176b2c40` |
+| Current generated shared closure | `01d433c8d03dd0fc9a88ebed48ee014b5ef448a435b6224968dc1e399d42931e` |
 | Complete registry | `6e5b89f7d952aa98e72640abce0c75522567fb9d48f8b027e3db54f5cf9da72f` |
 | Selected gameplay registry | `8ed2794ec88b7ba140ace3763da73eb7eb37023c703a797030ace99e41587a59` |
-| Managed tree | `f3c827801fe8842db9f23b41667f8c0ac33cfa2f9868eb7151cbd8e9e8cbd63f` |
+| Managed tree | `8482c33d4c42eb869166c7fea8eabfe695276cc9feb46b9a880a2d2da1f189ae` |
 | Content tree | `e2d70939ef44f8172e45e5110a016488d2ca30106a7b0fe118292ea7b9ffa9e0` |
 | Frozen IL plan | `65067304c7daa8e58cd0d0f50695fbe472eaa1a01b52076ce1ce52c89468ee3b` |
-| Semantic ledger (pending physical) | `e3ef14411a3823656fd4fd74c5fdddb7a7314434d3a9b7d4057658001980be02` |
+| Semantic ledger (pending physical) | `bc011a5e9a67dfcb4270d28b1cfe59679cc4cf165fc243662e5bd7c358010ac7` |
 
 Three identical earlier development run snapshot hashes: `e5cd4dd01e58e6cca37ffe72d06dd57dbaa43d92b1739132b713bf173f7d73d6` (each run; 2138 files).
 
@@ -154,17 +160,17 @@ Apple strips executable managed bodies to ret stubs after AOT. The product verif
 
 A development iOS product passed the linked/native/stripping checks and ten initial isolated corruption controls. Additional registration-source and incomplete-receipt controls are implemented; the final fresh dual-platform build and those controls are pending. The signed app verifier checks codesign; isolated negative controls do not pretend to rebuild/sign each corrupt product or establish device semantics.
 
-Current product candidate is 0.1.1 build 38. Builds 36 and 37 are superseded and have no transferable device acceptance. Final signed iOS/tvOS IPA sizes/hashes and exact source identities will come from their product manifests. iOS must remain arm64, minimum 15 and device families [1,2]; tvOS must retain native TV family [3]. Release/full trim/full AOT, UseInterpreter=false and no JIT are mandatory.
+Current product candidate is 0.1.1 build 39. Builds 36–38 are superseded and have no transferable device acceptance. Final signed iOS/tvOS IPA sizes/hashes and exact source identities will come from their product manifests. iOS must remain arm64, minimum 15 and device families [1,2]; tvOS must retain native TV family [3]. Release/full trim/full AOT, UseInterpreter=false and no JIT are mandatory.
 
 ## Validation and physical acceptance
 
-Current successful tests: AppleEverestBuilder 579; typed HookGen semantics 50; pinned desktop HookGen and direct-hook order/lifetime; input profiles 56; Save Manager pairing 31, protocol 66, continuity 57; soft reload 21; K-D 46; K-E 62; I-B 75. H-C freshly passes its expected historical YELLOW verifier (120 checks); that is not a K-J readiness result.
+Current successful tests: AppleEverestBuilder 592; typed HookGen semantics 50; pinned desktop HookGen and direct-hook order/lifetime; input profiles 56; Save Manager pairing 31, protocol 66, continuity 57; soft reload 21; K-D 46; K-E 62; I-B 75. H-C freshly passes its expected historical YELLOW verifier (120 checks); that is not a K-J readiness result.
 
 Historical scripts and accepted records remain immutable. Current-checkout K-C stops on its obsolete pre-KH tvos-port SHA; K-F stops on its old hardcoded trigger-ID check. K-J preserves source node-order/nearest selection and validates exactly RumbleTrigger then AppleEverestFlagTrigger, allowing the authored fixture to be relocated. K-F’s later audio/privacy/ref invariants require separate current checks because its historical run stops early.
 
 Other historical verifier attempts are reported by actual exit/status, not presented as fresh passes: K-A expects the older shared build number; K-B expects the older closure; H-D requires its historical ignored direct-composition evidence; H-B/F-B2 expect older catalog breadth; E/D expect older transformer models. Historical accepted counts remain historical evidence (K-B 80, K-A 82, H-D 163, H-C 120, H-B 144, H-A 190, F-B2 94, F-A 143, E 130, D 144).
 
-The permanent K-J verifier passed 573 checks in its pending-acceptance mode. Sideways passed the 17 initial transform records, fresh replay, 12 idempotent selected methods and 11 negative controls. The current builder rerun passed 579 tests after the final host-control additions. Final signed product controls, clean recursive final-SHA clone and final regression receipts remain pending. An ordinary verifier PASS while C is pending does not publish readiness.
+The permanent K-J verifier passed 573 checks in its pending-acceptance mode. Sideways passed the 17 initial transform records, fresh replay, 12 idempotent selected methods and 11 negative controls. The current builder rerun passed 592 tests after the final host-control additions. Final signed product controls, clean recursive final-SHA clone and final regression receipts remain pending. An ordinary verifier PASS while C is pending does not publish readiness.
 
 iPhone: pending exact K-J product. Apple TV: pending exact K-J product; manual Xcode installation is supported. iPad: IPADOS_PHYSICAL_PENDING_HARDWARE_UNAVAILABLE unless hardware is connected. Earlier user acceptance belongs to K-H and is not reused as K-J evidence. Stage 25K-B build 35 remains the last all-three-device physical GREEN.
 
@@ -246,7 +252,7 @@ No third-party ZIP/DLL, original gameplay BIN, bank, IPA/app, save payload, devi
 64. **Runtime detour?** No RuntimeDetour backend on device.
 65. **Live ILHook?** No.
 66. **Three closures identical?** Three earlier development runs were identical. Exact final frozen-revision repetitions are pending.
-67. **Shared closure SHA?** 1a186c6512444376140147b386b720b2ef16dddb6826882f35c9575e176b2c40.
+67. **Shared closure SHA?** 01d433c8d03dd0fc9a88ebed48ee014b5ef448a435b6224968dc1e399d42931e.
 68. **iPhone exact-final physical?** Pending exact final K-J iPhone product.
 69. **iPad?** Physical pending; hardware unavailable. Universal native iPad product requirements retained.
 70. **Apple TV?** Pending exact K-J Apple TV product.
@@ -256,7 +262,7 @@ No third-party ZIP/DLL, original gameplay BIN, bank, IPA/app, save payload, devi
 74. **JIT absent?** Required; full-AOT startup with interpreter disabled.
 75. **Real SJ maps packaged?** No.
 76. **Must be NO.** NO.
-77. **Current builder tests?** 579 passed again after the final host-control additions.
+77. **Current builder tests?** 592 passed again after the final host-control additions.
 78. **HookGen?** Pinned desktop HookGen/direct-hook tests and 50 typed semantic checks passed.
 79. **K-H functional regressions?** Included in current builder/source scope; exact device tutorial/NPC regressions pending.
 80. **K-F/K-E/K-D/K-C?** Current K-D 46 and K-E 62 passed; K-C/K-F historical checks stop at documented obsolete assumptions and are not counted as fresh passes.

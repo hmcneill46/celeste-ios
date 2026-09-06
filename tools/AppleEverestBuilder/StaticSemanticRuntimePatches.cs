@@ -211,6 +211,10 @@ internal static class StaticSemanticRuntimePatches
                 "\t\tif (global::Celeste.Mod.AppleEverestRainbowSpinnerColorArea.TryHue(this, position, out Color appleEverestHue)) return appleEverestHue;");
         if (File.Exists(Path.Combine(target, "AppleEverestSelectedProfileGuard.cs")))
         {
+            Change(Path.Combine(managedRoot, "Celeste", "MapData.cs"),
+                "\t\tstrawberry.Values[\"checkpointID\"] = y;",
+                "\t\tglobal::Celeste.Mod.AppleEverestSelectedProfileGuard.RecordBerryNormalization(strawberry, y, x);\n" +
+                "\t\tstrawberry.Values[\"checkpointID\"] = y;");
             string scene = Path.Combine(managedRoot, "Monocle", "Scene.cs");
             Change(scene, "return (int)((TimeActive - Engine.DeltaTime) / interval) < (int)(TimeActive / interval);",
                 "return (int)(((double)TimeActive - Engine.DeltaTime) / interval) < (int)((double)TimeActive / interval);");

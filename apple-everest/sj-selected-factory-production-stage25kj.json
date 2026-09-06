@@ -5,25 +5,25 @@
   "authority": "EXACT_PUBLIC_PACKAGES_PRODUCTION_REGENERATION_FRESH_COMPILATION_EXACT_DLL_BYTES_COMPILED_SELECTORS_ACTUAL_PROFILE_GUARDS",
   "compilation": {
     "AllImplementationBytesCompared": true,
-    "AppliedManagedLogicalSha256": "c67a8b5fbd498f806c1961a2e9707a42c039508a7199ebacec9f8eb1e2bf1ac9",
-    "AppliedManagedSourceLogicalSha256": "a3e8cc0960fa40ad4791439064e8f9b822dfd3baac70b05ae270331faaa3f69d",
+    "AppliedManagedLogicalSha256": "48b690f84e0104f691c92decfdd34836455ab1d4a7b61f9bfd82ab544606c0ce",
+    "AppliedManagedSourceLogicalSha256": "55fb953156f5b136872432104fbe4bb5d65ff0cab8bdcaee7f07cb6eafae0523",
     "CanonicalManagedLogicalSha256": "ab386f605572569cbcda81e408b22531f5af42e06b305ee07a701e39486a55bb",
-    "CompiledDllLogicalSha256": "ad7eceda6665aa3c29869b1bb346d48b7f5b49fc6f7a58067141adcb0cdd94c3",
+    "CompiledDllLogicalSha256": "f8c6606236636c1d9a3f34f54c95268687844e44198ae96d64daba33d2747604",
     "CompiledDlls": [
       {
-        "Bytes": 4920320,
+        "Bytes": 4920832,
         "Path": "Celeste.dll",
-        "Sha256": "6b64330a92935365a5bd895c488721270ff3a9a386e44ace27531ec9856900d4"
+        "Sha256": "c3b25f207062d4987bb4157faa06bea77770789b5f543f8f70164dc243590965"
       },
       {
         "Bytes": 8704,
         "Path": "CelesteAppleInput.dll",
-        "Sha256": "05f8a009faa181b4961ca6375e7845450ce69632c6a5bb33438172fe0e1eb29a"
+        "Sha256": "f224fef8c00e856d145b0df9aa363eee97a033477fa730ae3ddbee69b294c01c"
       },
       {
         "Bytes": 107520,
         "Path": "CelesteIOSFoundation.dll",
-        "Sha256": "1cbcef44e0abe21bfa988d3c0c5fd43a712d360789b0e3123f1fddf69aec72b7"
+        "Sha256": "21d57327c6a8b47da898f520112ad6e78c582cf29967895ffe8eb0f5fbc97cce"
       },
       {
         "Bytes": 194048,
@@ -38,25 +38,25 @@
       {
         "Bytes": 781312,
         "Path": "FNA.dll",
-        "Sha256": "eadb818bbf94512ff2f85deee0a045a6dc8a8d1652344fe13884f25123387a25"
+        "Sha256": "0f6c003931468c5911e62054dc287cb7c8a34e4cee85cb5df5ce1005e13a8cc7"
       }
     ],
     "FreshProductionCompilation": true,
     "FreshRawDlls": [
       {
-        "Bytes": 4920320,
+        "Bytes": 4920832,
         "Path": "Celeste.dll",
-        "Sha256": "de3c742ff556ecc13fe6693cedf886af1d599bacdd12fd9eb7c8a222adec1043"
+        "Sha256": "f8f51f3eb36bac2d0345daafd62e636ec706c405ad6358027c24829870f3854f"
       },
       {
         "Bytes": 8704,
         "Path": "CelesteAppleInput.dll",
-        "Sha256": "cb08d47e281db963107a4cdc483cd6279d1bea636787c77d799dba7ab5966728"
+        "Sha256": "d315ef79a6347fd935806e3a4761789536c991e739b8c6dc3b13129cd6612453"
       },
       {
         "Bytes": 107520,
         "Path": "CelesteIOSFoundation.dll",
-        "Sha256": "a923221ba22857a19ec1116148d827b63584819b1496bfdec7d8421c036b800e"
+        "Sha256": "0c5c5897fee39b1f75e07cff2ebf06d5141d4e87fb8b08c4428180d6909808f4"
       },
       {
         "Bytes": 194048,
@@ -71,7 +71,7 @@
       {
         "Bytes": 781312,
         "Path": "FNA.dll",
-        "Sha256": "837da6384a731149b8a27ac3ade9da2cfd9249d0122853e42fb260cf7632d19d"
+        "Sha256": "a56b46d4c24f7f075af5797f4094e096554cc6711a8755a2157a761e7356c6bc"
       }
     ],
     "IgnoredBuildFields": [
@@ -80,19 +80,19 @@
     ],
     "InspectedRawDlls": [
       {
-        "Bytes": 4920320,
+        "Bytes": 4920832,
         "Path": "Celeste.dll",
-        "Sha256": "e6039534ffea8c5d5ee0629edacb323695148efe6dddbf64f902a4c51aeefd3a"
+        "Sha256": "3311f800d64dbd45a2ad28707a1ccf74aa1581bbd600c3b2c6750a3cd98f3121"
       },
       {
         "Bytes": 8704,
         "Path": "CelesteAppleInput.dll",
-        "Sha256": "cb08d47e281db963107a4cdc483cd6279d1bea636787c77d799dba7ab5966728"
+        "Sha256": "d315ef79a6347fd935806e3a4761789536c991e739b8c6dc3b13129cd6612453"
       },
       {
         "Bytes": 107520,
         "Path": "CelesteIOSFoundation.dll",
-        "Sha256": "a923221ba22857a19ec1116148d827b63584819b1496bfdec7d8421c036b800e"
+        "Sha256": "0c5c5897fee39b1f75e07cff2ebf06d5141d4e87fb8b08c4428180d6909808f4"
       },
       {
         "Bytes": 194048,
@@ -107,12 +107,12 @@
       {
         "Bytes": 781312,
         "Path": "FNA.dll",
-        "Sha256": "837da6384a731149b8a27ac3ade9da2cfd9249d0122853e42fb260cf7632d19d"
+        "Sha256": "a56b46d4c24f7f075af5797f4094e096554cc6711a8755a2157a761e7356c6bc"
       }
     ],
     "Scope": "UNTRIMMED_PRODUCTION_MANAGED_CLOSURE_FINAL_PLATFORM_TRIM_AND_NATIVE_AOT_ARE_SEPARATE_GATES"
   },
-  "compiledAssemblySha256": "e6039534ffea8c5d5ee0629edacb323695148efe6dddbf64f902a4c51aeefd3a",
+  "compiledAssemblySha256": "3311f800d64dbd45a2ad28707a1ccf74aa1581bbd600c3b2c6750a3cd98f3121",
   "contentIdCensus": {
     "acceptedOrVanilla": 920,
     "blocked": 0,
@@ -130,7 +130,7 @@
       ],
       "CustomId": "FemtoHelper/WindPetals",
       "EntryMethod": "Celeste.Backdrop Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_backdrop_72f7a1f94b4e5de8(Celeste.BinaryPacker/Element)",
-      "GuardSha256": "24e27d7f4e6035d4f784df78ef1b5a93006746c1d50b5d30130bc88d5fc8bee0",
+      "GuardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
       "Kind": "backdrop",
       "Linked": true,
       "ProductionCallers": [
@@ -177,7 +177,7 @@
       ],
       "CustomId": "FlaglinesAndSuch/customDreamStars",
       "EntryMethod": "Celeste.Backdrop Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_backdrop_f846fbe539453c07(Celeste.BinaryPacker/Element)",
-      "GuardSha256": "24e27d7f4e6035d4f784df78ef1b5a93006746c1d50b5d30130bc88d5fc8bee0",
+      "GuardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
       "Kind": "backdrop",
       "Linked": true,
       "ProductionCallers": [
@@ -224,7 +224,7 @@
       ],
       "CustomId": "FlaglinesAndSuch/customGodrays",
       "EntryMethod": "Celeste.Backdrop Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_backdrop_a6d57201da361d8f(Celeste.BinaryPacker/Element)",
-      "GuardSha256": "24e27d7f4e6035d4f784df78ef1b5a93006746c1d50b5d30130bc88d5fc8bee0",
+      "GuardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
       "Kind": "backdrop",
       "Linked": true,
       "ProductionCallers": [
@@ -271,7 +271,7 @@
       ],
       "CustomId": "LunaticHelper/CustomDust",
       "EntryMethod": "Celeste.Backdrop Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_backdrop_6918cd44543f28e0(Celeste.BinaryPacker/Element)",
-      "GuardSha256": "24e27d7f4e6035d4f784df78ef1b5a93006746c1d50b5d30130bc88d5fc8bee0",
+      "GuardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
       "Kind": "backdrop",
       "Linked": true,
       "ProductionCallers": [
@@ -318,7 +318,7 @@
       ],
       "CustomId": "MaxHelpingHand/HeatWaveNoColorGrade",
       "EntryMethod": "Celeste.Backdrop Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_backdrop_5dd0ff4176ce86d8(Celeste.BinaryPacker/Element)",
-      "GuardSha256": "24e27d7f4e6035d4f784df78ef1b5a93006746c1d50b5d30130bc88d5fc8bee0",
+      "GuardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
       "Kind": "backdrop",
       "Linked": true,
       "ProductionCallers": [
@@ -366,7 +366,7 @@
       ],
       "CustomId": "BrokemiaHelper/caveWall",
       "EntryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_entity_d3be8f45a3e64ff7(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-      "GuardSha256": "24e27d7f4e6035d4f784df78ef1b5a93006746c1d50b5d30130bc88d5fc8bee0",
+      "GuardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
       "Kind": "entity",
       "Linked": true,
       "ProductionCallers": [
@@ -437,7 +437,7 @@
       ],
       "CustomId": "CherryHelper/AssistRect",
       "EntryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_entity_e976946a4aecc993(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-      "GuardSha256": "24e27d7f4e6035d4f784df78ef1b5a93006746c1d50b5d30130bc88d5fc8bee0",
+      "GuardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
       "Kind": "entity",
       "Linked": true,
       "ProductionCallers": [
@@ -508,7 +508,7 @@
       ],
       "CustomId": "CherryHelper/ItemCrystal",
       "EntryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_entity_bd853e5ba5d4bc95(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-      "GuardSha256": "24e27d7f4e6035d4f784df78ef1b5a93006746c1d50b5d30130bc88d5fc8bee0",
+      "GuardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
       "Kind": "entity",
       "Linked": true,
       "ProductionCallers": [
@@ -576,7 +576,7 @@
       ],
       "CustomId": "CherryHelper/ItemCrystalPedestal",
       "EntryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_entity_a965c6b982b72966(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-      "GuardSha256": "24e27d7f4e6035d4f784df78ef1b5a93006746c1d50b5d30130bc88d5fc8bee0",
+      "GuardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
       "Kind": "entity",
       "Linked": true,
       "ProductionCallers": [
@@ -643,7 +643,7 @@
       ],
       "CustomId": "CollabUtils2/LobbyMapController",
       "EntryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_entity_5a362867c3f9914f(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-      "GuardSha256": "24e27d7f4e6035d4f784df78ef1b5a93006746c1d50b5d30130bc88d5fc8bee0",
+      "GuardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
       "Kind": "entity",
       "Linked": true,
       "ProductionCallers": [
@@ -710,7 +710,7 @@
       ],
       "CustomId": "CollabUtils2/LobbyMapMarker",
       "EntryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_entity_2a0446d88a3a2da9(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-      "GuardSha256": "24e27d7f4e6035d4f784df78ef1b5a93006746c1d50b5d30130bc88d5fc8bee0",
+      "GuardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
       "Kind": "entity",
       "Linked": true,
       "ProductionCallers": [
@@ -777,7 +777,7 @@
       ],
       "CustomId": "CollabUtils2/LobbyMapWarp",
       "EntryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_entity_303ef0da9ef736e0(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-      "GuardSha256": "24e27d7f4e6035d4f784df78ef1b5a93006746c1d50b5d30130bc88d5fc8bee0",
+      "GuardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
       "Kind": "entity",
       "Linked": true,
       "ProductionCallers": [
@@ -844,7 +844,7 @@
       ],
       "CustomId": "CollabUtils2/MiniHeart",
       "EntryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_entity_a4c69fdeab1b1161(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-      "GuardSha256": "24e27d7f4e6035d4f784df78ef1b5a93006746c1d50b5d30130bc88d5fc8bee0",
+      "GuardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
       "Kind": "entity",
       "Linked": true,
       "ProductionCallers": [
@@ -912,7 +912,7 @@
       ],
       "CustomId": "CollabUtils2/MiniHeartDoor",
       "EntryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_entity_ba6529f52e7e5dc8(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-      "GuardSha256": "24e27d7f4e6035d4f784df78ef1b5a93006746c1d50b5d30130bc88d5fc8bee0",
+      "GuardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
       "Kind": "entity",
       "Linked": true,
       "ProductionCallers": [
@@ -981,7 +981,7 @@
       ],
       "CustomId": "CollabUtils2/RainbowBerry",
       "EntryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_entity_ce183ed12139667b(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-      "GuardSha256": "24e27d7f4e6035d4f784df78ef1b5a93006746c1d50b5d30130bc88d5fc8bee0",
+      "GuardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
       "Kind": "entity",
       "Linked": true,
       "ProductionCallers": [
@@ -1049,7 +1049,7 @@
       ],
       "CustomId": "CollabUtils2/SilverBerry",
       "EntryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_entity_50ce1aea560f1bd6(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-      "GuardSha256": "24e27d7f4e6035d4f784df78ef1b5a93006746c1d50b5d30130bc88d5fc8bee0",
+      "GuardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
       "Kind": "entity",
       "Linked": true,
       "ProductionCallers": [
@@ -1117,7 +1117,7 @@
       ],
       "CustomId": "FancyTileEntities/FancySolidTiles",
       "EntryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_entity_628c6927da0adc78(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-      "GuardSha256": "24e27d7f4e6035d4f784df78ef1b5a93006746c1d50b5d30130bc88d5fc8bee0",
+      "GuardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
       "Kind": "entity",
       "Linked": true,
       "ProductionCallers": [
@@ -1191,7 +1191,7 @@
       ],
       "CustomId": "FemtoHelper/CustomParallaxBigWaterfall",
       "EntryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_entity_916487af82677601(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-      "GuardSha256": "24e27d7f4e6035d4f784df78ef1b5a93006746c1d50b5d30130bc88d5fc8bee0",
+      "GuardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
       "Kind": "entity",
       "Linked": true,
       "ProductionCallers": [
@@ -1258,7 +1258,7 @@
       ],
       "CustomId": "FemtoHelper/ParticleEmitter",
       "EntryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_entity_b289acd2506c856f(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-      "GuardSha256": "24e27d7f4e6035d4f784df78ef1b5a93006746c1d50b5d30130bc88d5fc8bee0",
+      "GuardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
       "Kind": "entity",
       "Linked": true,
       "ProductionCallers": [
@@ -1325,7 +1325,7 @@
       ],
       "CustomId": "FrostHelper/CustomFireBarrier",
       "EntryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_entity_b84eb7a5562c3517(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-      "GuardSha256": "24e27d7f4e6035d4f784df78ef1b5a93006746c1d50b5d30130bc88d5fc8bee0",
+      "GuardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
       "Kind": "entity",
       "Linked": true,
       "ProductionCallers": [
@@ -1392,7 +1392,7 @@
       ],
       "CustomId": "FrostHelper/CustomFlutterBird",
       "EntryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_entity_c04ab29f4d2a778a(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-      "GuardSha256": "24e27d7f4e6035d4f784df78ef1b5a93006746c1d50b5d30130bc88d5fc8bee0",
+      "GuardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
       "Kind": "entity",
       "Linked": true,
       "ProductionCallers": [
@@ -1460,7 +1460,7 @@
       ],
       "CustomId": "FrostHelper/DecalContainer",
       "EntryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_entity_6027fbd5deab70c0(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-      "GuardSha256": "24e27d7f4e6035d4f784df78ef1b5a93006746c1d50b5d30130bc88d5fc8bee0",
+      "GuardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
       "Kind": "entity",
       "Linked": true,
       "ProductionCallers": [
@@ -1528,7 +1528,7 @@
       ],
       "CustomId": "FrostHelper/EntityMover",
       "EntryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_entity_ecaa7b1af6199825(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-      "GuardSha256": "24e27d7f4e6035d4f784df78ef1b5a93006746c1d50b5d30130bc88d5fc8bee0",
+      "GuardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
       "Kind": "entity",
       "Linked": true,
       "ProductionCallers": [
@@ -1595,7 +1595,7 @@
       ],
       "CustomId": "FrostHelper/IceSpinner",
       "EntryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_entity_49c17d433ac53d8f(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-      "GuardSha256": "24e27d7f4e6035d4f784df78ef1b5a93006746c1d50b5d30130bc88d5fc8bee0",
+      "GuardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
       "Kind": "entity",
       "Linked": true,
       "ProductionCallers": [
@@ -1662,7 +1662,7 @@
       ],
       "CustomId": "FrostHelper/WireLamps",
       "EntryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_entity_355967621d00c100(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-      "GuardSha256": "24e27d7f4e6035d4f784df78ef1b5a93006746c1d50b5d30130bc88d5fc8bee0",
+      "GuardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
       "Kind": "entity",
       "Linked": true,
       "ProductionCallers": [
@@ -1729,7 +1729,7 @@
       ],
       "CustomId": "HonlyHelper/PettableCat",
       "EntryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_entity_53705f3887d72707(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-      "GuardSha256": "24e27d7f4e6035d4f784df78ef1b5a93006746c1d50b5d30130bc88d5fc8bee0",
+      "GuardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
       "Kind": "entity",
       "Linked": true,
       "ProductionCallers": [
@@ -1801,7 +1801,7 @@
       ],
       "CustomId": "JungleHelper/MossyWall",
       "EntryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_entity_b53e81d6f01a69c6(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-      "GuardSha256": "24e27d7f4e6035d4f784df78ef1b5a93006746c1d50b5d30130bc88d5fc8bee0",
+      "GuardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
       "Kind": "entity",
       "Linked": true,
       "ProductionCallers": [
@@ -1872,7 +1872,7 @@
       ],
       "CustomId": "LunaticHelper/InvisibleLightSource",
       "EntryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_entity_df4abc3d394a9e91(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-      "GuardSha256": "24e27d7f4e6035d4f784df78ef1b5a93006746c1d50b5d30130bc88d5fc8bee0",
+      "GuardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
       "Kind": "entity",
       "Linked": true,
       "ProductionCallers": [
@@ -1939,7 +1939,7 @@
       ],
       "CustomId": "LunaticHelper/StrawberryWithReturn",
       "EntryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_entity_e32989277aa3f07c(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-      "GuardSha256": "24e27d7f4e6035d4f784df78ef1b5a93006746c1d50b5d30130bc88d5fc8bee0",
+      "GuardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
       "Kind": "entity",
       "Linked": true,
       "ProductionCallers": [
@@ -2007,7 +2007,7 @@
       ],
       "CustomId": "MaxHelpingHand/CustomTutorialWithNoBird",
       "EntryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_entity_984a9e718e563b59(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-      "GuardSha256": "24e27d7f4e6035d4f784df78ef1b5a93006746c1d50b5d30130bc88d5fc8bee0",
+      "GuardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
       "Kind": "entity",
       "Linked": true,
       "ProductionCallers": [
@@ -2075,7 +2075,7 @@
       ],
       "CustomId": "MaxHelpingHand/FlagExitBlock",
       "EntryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_entity_38c792650603a6a8(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-      "GuardSha256": "24e27d7f4e6035d4f784df78ef1b5a93006746c1d50b5d30130bc88d5fc8bee0",
+      "GuardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
       "Kind": "entity",
       "Linked": true,
       "ProductionCallers": [
@@ -2145,7 +2145,7 @@
       ],
       "CustomId": "MaxHelpingHand/GroupedTriggerSpikesUp",
       "EntryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_entity_8d531fa5f291d5d7(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-      "GuardSha256": "24e27d7f4e6035d4f784df78ef1b5a93006746c1d50b5d30130bc88d5fc8bee0",
+      "GuardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
       "Kind": "entity",
       "Linked": true,
       "ProductionCallers": [
@@ -2212,7 +2212,7 @@
       ],
       "CustomId": "MaxHelpingHand/MoreCustomNPC",
       "EntryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_entity_29e88bcf09cded3b(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-      "GuardSha256": "24e27d7f4e6035d4f784df78ef1b5a93006746c1d50b5d30130bc88d5fc8bee0",
+      "GuardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
       "Kind": "entity",
       "Linked": true,
       "ProductionCallers": [
@@ -2280,7 +2280,7 @@
       ],
       "CustomId": "MaxHelpingHand/ParallaxFadeOutController",
       "EntryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_entity_57642f2ce7054edc(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-      "GuardSha256": "24e27d7f4e6035d4f784df78ef1b5a93006746c1d50b5d30130bc88d5fc8bee0",
+      "GuardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
       "Kind": "entity",
       "Linked": true,
       "ProductionCallers": [
@@ -2347,7 +2347,7 @@
       ],
       "CustomId": "MaxHelpingHand/RainbowSpinnerColorAreaController",
       "EntryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_entity_2374782bc644bca1(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-      "GuardSha256": "24e27d7f4e6035d4f784df78ef1b5a93006746c1d50b5d30130bc88d5fc8bee0",
+      "GuardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
       "Kind": "entity",
       "Linked": true,
       "ProductionCallers": [
@@ -2414,7 +2414,7 @@
       ],
       "CustomId": "MaxHelpingHand/SetFlagOnSpawnController",
       "EntryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_entity_e0131e8940c2d761(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-      "GuardSha256": "24e27d7f4e6035d4f784df78ef1b5a93006746c1d50b5d30130bc88d5fc8bee0",
+      "GuardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
       "Kind": "entity",
       "Linked": true,
       "ProductionCallers": [
@@ -2481,7 +2481,7 @@
       ],
       "CustomId": "MaxHelpingHand/SidewaysJumpThru",
       "EntryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_entity_f362206ab31ec9a1(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-      "GuardSha256": "24e27d7f4e6035d4f784df78ef1b5a93006746c1d50b5d30130bc88d5fc8bee0",
+      "GuardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
       "Kind": "entity",
       "Linked": true,
       "ProductionCallers": [
@@ -2548,7 +2548,7 @@
       ],
       "CustomId": "MaxHelpingHand/StylegroundFadeController",
       "EntryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_entity_46bc3b0f61721f13(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-      "GuardSha256": "24e27d7f4e6035d4f784df78ef1b5a93006746c1d50b5d30130bc88d5fc8bee0",
+      "GuardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
       "Kind": "entity",
       "Linked": true,
       "ProductionCallers": [
@@ -2619,7 +2619,7 @@
       ],
       "CustomId": "SJ2021/AllInOneMask",
       "EntryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_entity_0ea249055b58e496(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-      "GuardSha256": "24e27d7f4e6035d4f784df78ef1b5a93006746c1d50b5d30130bc88d5fc8bee0",
+      "GuardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
       "Kind": "entity",
       "Linked": true,
       "ProductionCallers": [
@@ -2686,7 +2686,7 @@
       ],
       "CustomId": "SJ2021/BloomMask",
       "EntryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_entity_bb9d452f95470d13(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-      "GuardSha256": "24e27d7f4e6035d4f784df78ef1b5a93006746c1d50b5d30130bc88d5fc8bee0",
+      "GuardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
       "Kind": "entity",
       "Linked": true,
       "ProductionCallers": [
@@ -2753,7 +2753,7 @@
       ],
       "CustomId": "SJ2021/GlowController",
       "EntryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_entity_a9bcc5b459704410(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-      "GuardSha256": "24e27d7f4e6035d4f784df78ef1b5a93006746c1d50b5d30130bc88d5fc8bee0",
+      "GuardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
       "Kind": "entity",
       "Linked": true,
       "ProductionCallers": [
@@ -2820,7 +2820,7 @@
       ],
       "CustomId": "SJ2021/StrawberryJamJar",
       "EntryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_entity_42aa2cea811a4344(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-      "GuardSha256": "24e27d7f4e6035d4f784df78ef1b5a93006746c1d50b5d30130bc88d5fc8bee0",
+      "GuardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
       "Kind": "entity",
       "Linked": true,
       "ProductionCallers": [
@@ -2887,7 +2887,7 @@
       ],
       "CustomId": "SJ2021/StylegroundMask",
       "EntryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_entity_ff30f71473c6809f(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-      "GuardSha256": "24e27d7f4e6035d4f784df78ef1b5a93006746c1d50b5d30130bc88d5fc8bee0",
+      "GuardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
       "Kind": "entity",
       "Linked": true,
       "ProductionCallers": [
@@ -2954,7 +2954,7 @@
       ],
       "CustomId": "VivHelper/CustomHangingLamp",
       "EntryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_entity_de24ab73150828de(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-      "GuardSha256": "24e27d7f4e6035d4f784df78ef1b5a93006746c1d50b5d30130bc88d5fc8bee0",
+      "GuardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
       "Kind": "entity",
       "Linked": true,
       "ProductionCallers": [
@@ -3021,7 +3021,7 @@
       ],
       "CustomId": "VivHelper/CustomSpinner",
       "EntryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_entity_5f1e3ee79912f5bc(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-      "GuardSha256": "24e27d7f4e6035d4f784df78ef1b5a93006746c1d50b5d30130bc88d5fc8bee0",
+      "GuardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
       "Kind": "entity",
       "Linked": true,
       "ProductionCallers": [
@@ -3088,7 +3088,7 @@
       ],
       "CustomId": "VortexHelper/AttachedJumpThru",
       "EntryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_entity_89e210dbae7b98a5(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-      "GuardSha256": "24e27d7f4e6035d4f784df78ef1b5a93006746c1d50b5d30130bc88d5fc8bee0",
+      "GuardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
       "Kind": "entity",
       "Linked": true,
       "ProductionCallers": [
@@ -3157,7 +3157,7 @@
       ],
       "CustomId": "XaphanHelper/Slope",
       "EntryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_entity_a9f11de7515c9963(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-      "GuardSha256": "24e27d7f4e6035d4f784df78ef1b5a93006746c1d50b5d30130bc88d5fc8bee0",
+      "GuardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
       "Kind": "entity",
       "Linked": true,
       "ProductionCallers": [
@@ -3230,7 +3230,7 @@
       ],
       "CustomId": "YetAnotherHelper/BubbleField",
       "EntryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_entity_ac601ae872ff72d9(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-      "GuardSha256": "24e27d7f4e6035d4f784df78ef1b5a93006746c1d50b5d30130bc88d5fc8bee0",
+      "GuardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
       "Kind": "entity",
       "Linked": true,
       "ProductionCallers": [
@@ -3297,7 +3297,7 @@
       ],
       "CustomId": "pandorasBox/coloredBigWaterfall",
       "EntryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_entity_f31538d24c54e3f5(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-      "GuardSha256": "24e27d7f4e6035d4f784df78ef1b5a93006746c1d50b5d30130bc88d5fc8bee0",
+      "GuardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
       "Kind": "entity",
       "Linked": true,
       "ProductionCallers": [
@@ -3365,7 +3365,7 @@
       ],
       "CustomId": "pandorasBox/coloredWater",
       "EntryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_entity_a02fca3a7f9d32f2(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-      "GuardSha256": "24e27d7f4e6035d4f784df78ef1b5a93006746c1d50b5d30130bc88d5fc8bee0",
+      "GuardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
       "Kind": "entity",
       "Linked": true,
       "ProductionCallers": [
@@ -3437,7 +3437,7 @@
       ],
       "CustomId": "pandorasBox/coloredWaterfall",
       "EntryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_entity_de6479082d46f302(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-      "GuardSha256": "24e27d7f4e6035d4f784df78ef1b5a93006746c1d50b5d30130bc88d5fc8bee0",
+      "GuardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
       "Kind": "entity",
       "Linked": true,
       "ProductionCallers": [
@@ -3509,7 +3509,7 @@
       ],
       "CustomId": "pandorasBox/entityActivator",
       "EntryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_entity_1af271094557f224(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-      "GuardSha256": "24e27d7f4e6035d4f784df78ef1b5a93006746c1d50b5d30130bc88d5fc8bee0",
+      "GuardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
       "Kind": "entity",
       "Linked": true,
       "ProductionCallers": [
@@ -3577,7 +3577,7 @@
       ],
       "CustomId": "CollabUtils2/ChapterPanelTrigger",
       "EntryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_trigger_8990317cc403bd7e(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-      "GuardSha256": "24e27d7f4e6035d4f784df78ef1b5a93006746c1d50b5d30130bc88d5fc8bee0",
+      "GuardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
       "Kind": "trigger",
       "Linked": true,
       "ProductionCallers": [
@@ -3645,7 +3645,7 @@
       ],
       "CustomId": "CollabUtils2/JournalTrigger",
       "EntryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_trigger_fb7a7a2c02b41d67(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-      "GuardSha256": "24e27d7f4e6035d4f784df78ef1b5a93006746c1d50b5d30130bc88d5fc8bee0",
+      "GuardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
       "Kind": "trigger",
       "Linked": true,
       "ProductionCallers": [
@@ -3713,7 +3713,7 @@
       ],
       "CustomId": "CollabUtils2/MiniHeartDoorUnlockCutsceneTrigger",
       "EntryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_trigger_95ab032485d2aa3a(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-      "GuardSha256": "24e27d7f4e6035d4f784df78ef1b5a93006746c1d50b5d30130bc88d5fc8bee0",
+      "GuardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
       "Kind": "trigger",
       "Linked": true,
       "ProductionCallers": [
@@ -3781,7 +3781,7 @@
       ],
       "CustomId": "CollabUtils2/RainbowBerryUnlockCutsceneTrigger",
       "EntryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_trigger_e71114611a979a62(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-      "GuardSha256": "24e27d7f4e6035d4f784df78ef1b5a93006746c1d50b5d30130bc88d5fc8bee0",
+      "GuardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
       "Kind": "trigger",
       "Linked": true,
       "ProductionCallers": [
@@ -3849,7 +3849,7 @@
       ],
       "CustomId": "ContortHelper/MadelineSpotlightModifierTrigger",
       "EntryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_trigger_2f846cf738017762(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-      "GuardSha256": "24e27d7f4e6035d4f784df78ef1b5a93006746c1d50b5d30130bc88d5fc8bee0",
+      "GuardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
       "Kind": "trigger",
       "Linked": true,
       "ProductionCallers": [
@@ -3917,7 +3917,7 @@
       ],
       "CustomId": "DJMapHelper/colorGradeTrigger",
       "EntryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_trigger_03026125973981db(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-      "GuardSha256": "24e27d7f4e6035d4f784df78ef1b5a93006746c1d50b5d30130bc88d5fc8bee0",
+      "GuardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
       "Kind": "trigger",
       "Linked": true,
       "ProductionCallers": [
@@ -3985,7 +3985,7 @@
       ],
       "CustomId": "ExtendedVariantMode/FloatExtendedVariantFadeTrigger",
       "EntryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_trigger_5c492fc646697c25(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-      "GuardSha256": "24e27d7f4e6035d4f784df78ef1b5a93006746c1d50b5d30130bc88d5fc8bee0",
+      "GuardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
       "Kind": "trigger",
       "Linked": true,
       "ProductionCallers": [
@@ -4053,7 +4053,7 @@
       ],
       "CustomId": "ExtendedVariantMode/ResetVariantsTrigger",
       "EntryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_trigger_85f8cc9f7f188660(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-      "GuardSha256": "24e27d7f4e6035d4f784df78ef1b5a93006746c1d50b5d30130bc88d5fc8bee0",
+      "GuardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
       "Kind": "trigger",
       "Linked": true,
       "ProductionCallers": [
@@ -4121,7 +4121,7 @@
       ],
       "CustomId": "FrostHelper/OnSpawnActivator",
       "EntryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_trigger_4d9990e2e797a1bb(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-      "GuardSha256": "24e27d7f4e6035d4f784df78ef1b5a93006746c1d50b5d30130bc88d5fc8bee0",
+      "GuardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
       "Kind": "trigger",
       "Linked": true,
       "ProductionCallers": [
@@ -4189,7 +4189,7 @@
       ],
       "CustomId": "HonlyHelper/CameraTargetCrossfadeTrigger",
       "EntryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_trigger_3615799e7fae7921(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-      "GuardSha256": "24e27d7f4e6035d4f784df78ef1b5a93006746c1d50b5d30130bc88d5fc8bee0",
+      "GuardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
       "Kind": "trigger",
       "Linked": true,
       "ProductionCallers": [
@@ -4257,7 +4257,7 @@
       ],
       "CustomId": "MaxHelpingHand/CameraCatchupSpeedTrigger",
       "EntryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_trigger_4d1b8b57fe863f94(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-      "GuardSha256": "24e27d7f4e6035d4f784df78ef1b5a93006746c1d50b5d30130bc88d5fc8bee0",
+      "GuardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
       "Kind": "trigger",
       "Linked": true,
       "ProductionCallers": [
@@ -4325,7 +4325,7 @@
       ],
       "CustomId": "MaxHelpingHand/CameraOffsetBorder",
       "EntryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_trigger_06466e2eb27981e2(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-      "GuardSha256": "24e27d7f4e6035d4f784df78ef1b5a93006746c1d50b5d30130bc88d5fc8bee0",
+      "GuardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
       "Kind": "trigger",
       "Linked": true,
       "ProductionCallers": [
@@ -4393,7 +4393,7 @@
       ],
       "CustomId": "MaxHelpingHand/ColorGradeFadeTrigger",
       "EntryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_trigger_b967d1965331ca15(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-      "GuardSha256": "24e27d7f4e6035d4f784df78ef1b5a93006746c1d50b5d30130bc88d5fc8bee0",
+      "GuardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
       "Kind": "trigger",
       "Linked": true,
       "ProductionCallers": [
@@ -4461,7 +4461,7 @@
       ],
       "CustomId": "MaxHelpingHand/FlagToggleCameraOffsetTrigger",
       "EntryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_trigger_654ff1d7396f4468(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-      "GuardSha256": "24e27d7f4e6035d4f784df78ef1b5a93006746c1d50b5d30130bc88d5fc8bee0",
+      "GuardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
       "Kind": "trigger",
       "Linked": true,
       "ProductionCallers": [
@@ -4529,7 +4529,7 @@
       ],
       "CustomId": "MaxHelpingHand/FlagToggleCameraTargetTrigger",
       "EntryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_trigger_cef21a429380b7a3(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-      "GuardSha256": "24e27d7f4e6035d4f784df78ef1b5a93006746c1d50b5d30130bc88d5fc8bee0",
+      "GuardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
       "Kind": "trigger",
       "Linked": true,
       "ProductionCallers": [
@@ -4597,7 +4597,7 @@
       ],
       "CustomId": "MaxHelpingHand/FlagToggleSmoothCameraOffsetTrigger",
       "EntryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_trigger_457555b7d7500357(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-      "GuardSha256": "24e27d7f4e6035d4f784df78ef1b5a93006746c1d50b5d30130bc88d5fc8bee0",
+      "GuardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
       "Kind": "trigger",
       "Linked": true,
       "ProductionCallers": [
@@ -4665,7 +4665,7 @@
       ],
       "CustomId": "everest/flagTrigger",
       "EntryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_trigger_66e0af1936d3ca6f(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-      "GuardSha256": "24e27d7f4e6035d4f784df78ef1b5a93006746c1d50b5d30130bc88d5fc8bee0",
+      "GuardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
       "Kind": "trigger",
       "Linked": true,
       "ProductionCallers": [
@@ -4733,7 +4733,7 @@
       ],
       "CustomId": "everest/smoothCameraOffsetTrigger",
       "EntryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_trigger_7a5988650f6cccc2(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-      "GuardSha256": "24e27d7f4e6035d4f784df78ef1b5a93006746c1d50b5d30130bc88d5fc8bee0",
+      "GuardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
       "Kind": "trigger",
       "Linked": true,
       "ProductionCallers": [
@@ -4801,7 +4801,7 @@
       ],
       "CustomId": "vitellary/bloomstrengthtrigger",
       "EntryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_trigger_5110c8e9eeed1821(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-      "GuardSha256": "24e27d7f4e6035d4f784df78ef1b5a93006746c1d50b5d30130bc88d5fc8bee0",
+      "GuardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
       "Kind": "trigger",
       "Linked": true,
       "ProductionCallers": [
@@ -4869,7 +4869,7 @@
       ],
       "CustomId": "vitellary/editdepthtrigger",
       "EntryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_trigger_d13ce7e5bbdaa203(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-      "GuardSha256": "24e27d7f4e6035d4f784df78ef1b5a93006746c1d50b5d30130bc88d5fc8bee0",
+      "GuardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
       "Kind": "trigger",
       "Linked": true,
       "ProductionCallers": [
@@ -4937,7 +4937,7 @@
       ],
       "CustomId": "vitellary/triggertrigger",
       "EntryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_trigger_9d4ddb540f21a426(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-      "GuardSha256": "24e27d7f4e6035d4f784df78ef1b5a93006746c1d50b5d30130bc88d5fc8bee0",
+      "GuardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
       "Kind": "trigger",
       "Linked": true,
       "ProductionCallers": [
@@ -5803,5 +5803,5 @@
   "schemaVersion": 3,
   "semanticClosureDisposition": "SEPARATE_SOURCE_LIFECYCLE_CANARY_AND_PHYSICAL_EVIDENCE_REQUIRED",
   "semanticClosureEstablished": false,
-  "sharedClosureSha256": "1a186c6512444376140147b386b720b2ef16dddb6826882f35c9575e176b2c40"
+  "sharedClosureSha256": "01d433c8d03dd0fc9a88ebed48ee014b5ef448a435b6224968dc1e399d42931e"
 }

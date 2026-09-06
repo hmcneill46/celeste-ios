@@ -1,10 +1,10 @@
 # Stage 25K-J device checks
 
-This build tests project-owned factory fixtures. It contains no original Strawberry Jam gameplay map. Build 38 is the replacement K-J candidate; acceptance below remains pending until tested on the exact signed products. Build 37 failed the physical sweep at the masked star background and exposed map-sprite and cat-placement defects. Builds 36 and 37 have no transferable K-J physical acceptance.
+This build tests project-owned factory fixtures. It contains no original Strawberry Jam gameplay map. Build 39 is the replacement K-J candidate; acceptance below remains pending until tested on the exact signed products. Build 38 stopped at MaxMechanics/factory_04 because the return berry's profile guard rejected checkpoint/order values assigned by the map loader. Build 37 failed at the masked star background and exposed map-sprite and cat-placement defects. Builds 36–38 have no transferable K-J physical acceptance.
 
 ## Start here
 
-1. Open **Celeste Everest Canary** and confirm the Options version is **0.1.1 (38)**.
+1. Open **Celeste Everest Canary** and confirm the Options version is **0.1.1 (39)**.
 2. Open **EVEREST / PORT OPTIONS**, then find **STAGE 25K-J FACTORY CANARIES**.
 3. Choose **Run All Factory Lifecycle Checks**. Leave the game running while it visits the rooms. The final message must say **K-J FACTORY LIFECYCLE 73/73**. Report any incomplete message, frozen room, crash or missing texture. The detailed log records actual constructor and lifecycle dispatches; a host registration count alone is insufficient.
 4. Use the individual room buttons for the checks below. Their labels combine the group and room, for example **Frost / factory_05**. Return through Pause when finished. These fixtures use an isolated temporary save; ordinary player saves are restored on exit.
