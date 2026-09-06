@@ -2,7 +2,7 @@ using AppleEverestBuilder;
 
 internal static class SelectedCanaryContentTests
 {
-    internal static int Run(string temporary)
+    internal static int Run(string repository, string temporary)
     {
         string root = Path.Combine(temporary, "typed-canary-content");
         Directory.CreateDirectory(root);
@@ -36,6 +36,13 @@ internal static class SelectedCanaryContentTests
             catch (InvalidDataException) { rejected = true; }
             if (!rejected) throw new Exception("invalid authored factory compiler metadata was accepted");
         }
-        return 5;
+        string crystal = Path.Combine(repository, "apple-everest/canaries/stage25kj/Content/Maps/AppleEverestStage25KJ/FactoryProfiles/CrystalCave.xml");
+        string crystalLogical = ContentCompiler.Stage(crystal, "Content/Maps/Fixture/CrystalCave.xml", output);
+        var cat = ContentCompiler.InspectElements(Path.Combine(output, crystalLogical)).Single(e => e.Id == "HonlyHelper/PettableCat");
+        // The pinned helper's idle sprite is 8px tall and its TalkComponent is
+        // Rectangle(-30, 0, 64, 8). Its bottom must meet this fixture's floor.
+        if (float.Parse(cat.Attributes["y"], System.Globalization.CultureInfo.InvariantCulture) + 8 != 272)
+            throw new Exception("cat's sprite and talk area do not meet the playable floor");
+        return 6;
     }
 }

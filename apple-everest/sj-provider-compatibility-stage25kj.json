@@ -1,5 +1,5 @@
 {
-  "actualProductionPreflightSha256": "0702720f42a10a81f1da299449e2a55ac34ef8dac777d036d1c331cf206ae5a3",
+  "actualProductionPreflightSha256": "14b759d305aa3e90dd34415dda9a7caa6bbfbd9b87d0abee0339fa15022340bc",
   "agentPolicy": "FOUR_LIFETIME_READ_ONLY_AUDIT_AGENTS_ROOT_ONLY_WRITER_BUILDER_SIGNER",
   "auditAgents": [
     {
@@ -268,7 +268,7 @@
       "requiresNewRuntimeArchitecture": false,
       "secondaryBlockers": [
         {
-          "detail": "Typed Holdable integration and tracked component; preserve original sprite override and callbacks.",
+          "detail": "Typed Holdable integration and tracked component; preserve original sprite override and callbacks; map-scoped crab sprites override helper defaults only while the selected map is active.",
           "implementationDisposition": "EXPLICIT_TYPED_IMPLEMENTATION_AND_STATIC_FOLDS",
           "kind": "SELECTED_CONSTRUCTOR_LIFECYCLE_MODULE_EFFECTS"
         },

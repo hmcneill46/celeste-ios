@@ -56,7 +56,7 @@ GROUPS={
 SHARED_ROOMS={'CrystalCave':(640,288),'WaterGarden':(480,256),'CameraCorridor':(1280,480)}
 PLACEMENTS={
  'BrokemiaHelper/caveWall':(280,48), 'CherryHelper/ItemCrystal':(104,272),
- 'CherryHelper/ItemCrystalPedestal':(520,264), 'HonlyHelper/PettableCat':(400,256),
+ 'CherryHelper/ItemCrystalPedestal':(520,264), 'HonlyHelper/PettableCat':(400,264),
  'CherryHelper/AssistRect':(176,224), 'FancyTileEntities/FancySolidTiles':(184,264),
  'pandorasBox/coloredBigWaterfall':(64,80), 'pandorasBox/coloredWater':(144,208),
  'pandorasBox/coloredWaterfall':(160,128), 'VivHelper/CustomHangingLamp':(232,200),
@@ -194,7 +194,7 @@ def isolated_companions(custom_id,level,entities,triggers,rows,primary):
  if custom_id=='MaxHelpingHand/GroupedTriggerSpikesUp':tiles(level,160,floor-8,40,8)
  if custom_id=='VortexHelper/AttachedJumpThru':tiles(level,152,floor-40,8,32)
  if custom_id=='MaxHelpingHand/SidewaysJumpThru':
-  ET.SubElement(entities,'flyFeather',{'id':'3200','x':'96','y':str(floor-32)})
+  ET.SubElement(entities,'infiniteStar',{'id':'3200','x':'96','y':str(floor-32)})
   source=next(r for r in rows if r['customId']==custom_id and r['entityId']==179 and '0-Lobbies' in r['map'])
   entity_id=2000+len(additions)
   a,n=add_factory(entities,source,(224,floor-source['attributes']['height']),entity_id)

@@ -30,6 +30,7 @@ public static class AppleEverestStaticRuntime
     private static readonly HashSet<string> ObservedModInteropExports = new(StringComparer.Ordinal);
     private static readonly Dictionary<string, string> StaticSpriteOwners = new(StringComparer.OrdinalIgnoreCase);
     private static SpriteBank StaticSpriteBank;
+    internal static SpriteBank SelectedMapSpriteBank;
     private static bool started;
     private static bool startupCompleted;
     private static bool contentReady;
@@ -230,6 +231,12 @@ public static class AppleEverestStaticRuntime
 
     internal static void CreateStaticModSpriteOn(Sprite sprite, string spriteId)
     {
+        if (SelectedMapSpriteBank != null && SelectedMapSpriteBank.Has(spriteId))
+        {
+            SelectedMapSpriteBank.CreateOn(sprite, spriteId);
+            Log("content-sprite=PASS id=" + spriteId + " scope=selected-map");
+            return;
+        }
         if (StaticSpriteBank != null && StaticSpriteBank.Has(spriteId))
         {
             StaticSpriteBank.CreateOn(sprite, spriteId);

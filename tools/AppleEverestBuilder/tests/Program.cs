@@ -100,7 +100,7 @@ try
     passed += CollabSaveStateTests.Run();
     passed += LevelSetProgressionTests.Run(repository, temporary);
     passed += CollabStaticTests.Run(repository, temporary);
-    passed += SelectedCanaryContentTests.Run(temporary);
+    passed += SelectedCanaryContentTests.Run(repository, temporary);
     passed += SelectedFactoryTypeClosureTests.Run();
     passed += DialogFragmentParserTests.Run();
 

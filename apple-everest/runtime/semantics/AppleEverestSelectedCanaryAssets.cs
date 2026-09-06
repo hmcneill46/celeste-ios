@@ -18,6 +18,7 @@ internal static class AppleEverestSelectedCanaryAssets
 
     internal static void PrepareLevel(Session session)
     {
+        AppleEverestStaticRuntime.SelectedMapSpriteBank = null;
         string sid = AppleEverestProgressionRuntime.Sid(session.Area);
         bool selected = sid != null && (sid.StartsWith("AppleEverest/Stage25KJ", StringComparison.Ordinal) ||
             sid.StartsWith("AppleEverestStage25KJ/", StringComparison.Ordinal));
@@ -45,6 +46,10 @@ internal static class AppleEverestSelectedCanaryAssets
                 definition.AttrVector2("posX", "posY", Vector2.Zero), definition.AttrVector2("origX", "origY", Vector2.Zero),
                 GFX.Game.GetAtlasSubtextures(definition.Attr("path")));
         GFX.AnimatedTilesBank = animations;
+        // This exact map bank overrides two complete Cherry sprite definitions.
+        // Apply it after helper defaults, as Everest's map Sprites metadata does;
+        // other maps continue to use the original helper sprite bank.
+        AppleEverestStaticRuntime.SelectedMapSpriteBank = new SpriteBank(GFX.Game, Prefix + "Sprites.xml");
         active = true;
     }
 }

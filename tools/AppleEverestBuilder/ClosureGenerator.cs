@@ -1580,6 +1580,10 @@ internal static class ClosureGenerator
                      .ThenBy(value => value.SourcePath, StringComparer.Ordinal))
         {
             if (!IsSpriteBankXml(contentRoot, mount)) continue;
+            // Selected map metadata is applied when that map loads, after the
+            // helper defaults. It must not become a process-wide sprite bank.
+            if (mount.Owner == "StrawberryJam2021" &&
+                mount.SourcePath == "Graphics/SJ2021xmls/BeginnerLobby/Sprites.xml") continue;
             result.Append("        new AppleEverestSpriteBankDescriptor(\"").Append(Escape(mount.Owner))
                 .Append("\", \"").Append(Escape(mount.LogicalPath)).AppendLine("\"),");
         }

@@ -256,7 +256,7 @@ internal static class ContentCompiler
         WriteChunk(stream, "IEND", Array.Empty<byte>());
     }
 
-    private static void CompileMap(string xmlPath, string output, string package)
+    internal static void CompileMap(string xmlPath, string output, string package)
     {
         XmlDocument document = new() { PreserveWhitespace = false };
         document.Load(xmlPath);

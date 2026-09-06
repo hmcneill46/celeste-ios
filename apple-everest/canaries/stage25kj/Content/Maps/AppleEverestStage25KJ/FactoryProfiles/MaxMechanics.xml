@@ -607,7 +607,7 @@
       <entities>
         <player id="1" x="24" y="240" />
         <appleEverestEntity appleEverestId="MaxHelpingHand/SidewaysJumpThru" appleEverestStrings="texture" animationDelay="0" height="32" id="111" left="false" letSeekersThrough="false" pushPlayer="false" surfaceIndex="-1" texture="wood" x="160" y="208" />
-        <flyFeather id="3200" x="96" y="208" />
+        <infiniteStar id="3200" x="96" y="208" />
         <appleEverestEntity appleEverestId="MaxHelpingHand/SidewaysJumpThru" appleEverestStrings="texture" animationDelay="0" height="40" id="2008" left="true" letSeekersThrough="false" pushPlayer="false" surfaceIndex="-1" texture="wood" x="224" y="200" />
       </entities>
       <triggers>

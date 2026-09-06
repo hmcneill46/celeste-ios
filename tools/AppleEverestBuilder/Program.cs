@@ -24,6 +24,10 @@ internal static class Program
                 case "audit-configured-fixture": AuditConfiguredFixture(
                     One(options, "--mod"), One(options, "--output")); break;
                 case "inspect-map": InspectMap(One(options, "--map"), One(options, "--output")); break;
+                case "project-desktop-reference": DesktopReferenceProjection.Write(One(options, "--dll"),
+                    One(options, "--game"), One(options, "--output"), One(options, "--evidence")); break;
+                case "compile-authored-reference-map": ContentCompiler.CompileMap(One(options, "--xml"),
+                    One(options, "--output"), One(options, "--sid")); break;
                 case "inspect-map-boundary": InspectMapBoundary(
                     One(options, "--map"), One(options, "--output")); break;
                 case "census-dll": AssemblyMechanismCensus.Write(

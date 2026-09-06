@@ -5,25 +5,25 @@
   "authority": "EXACT_PUBLIC_PACKAGES_PRODUCTION_REGENERATION_FRESH_COMPILATION_EXACT_DLL_BYTES_COMPILED_SELECTORS_ACTUAL_PROFILE_GUARDS",
   "compilation": {
     "AllImplementationBytesCompared": true,
-    "AppliedManagedLogicalSha256": "36c73f0ee8f6c96eaf4dbae21d258f28bd567252f030aa345ce4becd25640eee",
-    "AppliedManagedSourceLogicalSha256": "082e6c0503aeabf94bddcbe14992769bf5b09b4dd07356157ccd1eb6d4173fd8",
+    "AppliedManagedLogicalSha256": "c67a8b5fbd498f806c1961a2e9707a42c039508a7199ebacec9f8eb1e2bf1ac9",
+    "AppliedManagedSourceLogicalSha256": "a3e8cc0960fa40ad4791439064e8f9b822dfd3baac70b05ae270331faaa3f69d",
     "CanonicalManagedLogicalSha256": "ab386f605572569cbcda81e408b22531f5af42e06b305ee07a701e39486a55bb",
-    "CompiledDllLogicalSha256": "0b94df0c3ca6780179b913972c5846db68265f7a48334cd422558aa5bc81f2fe",
+    "CompiledDllLogicalSha256": "ad7eceda6665aa3c29869b1bb346d48b7f5b49fc6f7a58067141adcb0cdd94c3",
     "CompiledDlls": [
       {
-        "Bytes": 4919808,
+        "Bytes": 4920320,
         "Path": "Celeste.dll",
-        "Sha256": "a0dbd67163c70f4295d795f19b09cfeebc231dce67c025d180f68540fe13bd5c"
+        "Sha256": "6b64330a92935365a5bd895c488721270ff3a9a386e44ace27531ec9856900d4"
       },
       {
         "Bytes": 8704,
         "Path": "CelesteAppleInput.dll",
-        "Sha256": "1f597e7895f7d8f52d0523619bcef69f56a6976d8a07530124ae1c34f1b1ab8f"
+        "Sha256": "05f8a009faa181b4961ca6375e7845450ce69632c6a5bb33438172fe0e1eb29a"
       },
       {
         "Bytes": 107520,
         "Path": "CelesteIOSFoundation.dll",
-        "Sha256": "1cfa3901c870ae56f935902c548924393bb70fd069b58855b1bd2b3542880f29"
+        "Sha256": "1cbcef44e0abe21bfa988d3c0c5fd43a712d360789b0e3123f1fddf69aec72b7"
       },
       {
         "Bytes": 194048,
@@ -38,25 +38,25 @@
       {
         "Bytes": 781312,
         "Path": "FNA.dll",
-        "Sha256": "d6585412a7e01c304809665526c325c98378391df6505826de172ff691eda099"
+        "Sha256": "eadb818bbf94512ff2f85deee0a045a6dc8a8d1652344fe13884f25123387a25"
       }
     ],
     "FreshProductionCompilation": true,
     "FreshRawDlls": [
       {
-        "Bytes": 4919808,
+        "Bytes": 4920320,
         "Path": "Celeste.dll",
-        "Sha256": "2b3bd8c294cecce9f7983f92aaa963bf0d8616eea9bda605e921f4ed3785e6c0"
+        "Sha256": "de3c742ff556ecc13fe6693cedf886af1d599bacdd12fd9eb7c8a222adec1043"
       },
       {
         "Bytes": 8704,
         "Path": "CelesteAppleInput.dll",
-        "Sha256": "dc512e7e8adb2d0cb666aedd8e7960ebd42b068f0d75a05f0dd825a371781f09"
+        "Sha256": "cb08d47e281db963107a4cdc483cd6279d1bea636787c77d799dba7ab5966728"
       },
       {
         "Bytes": 107520,
         "Path": "CelesteIOSFoundation.dll",
-        "Sha256": "0d2d643b0e1df88417288e88558dab552f69dc20d7a053175d83f9123550f770"
+        "Sha256": "a923221ba22857a19ec1116148d827b63584819b1496bfdec7d8421c036b800e"
       },
       {
         "Bytes": 194048,
@@ -71,7 +71,7 @@
       {
         "Bytes": 781312,
         "Path": "FNA.dll",
-        "Sha256": "c71b11c4f4971a80917c5855ea8668d71eb5f258b713f508c3247dd0b474db92"
+        "Sha256": "837da6384a731149b8a27ac3ade9da2cfd9249d0122853e42fb260cf7632d19d"
       }
     ],
     "IgnoredBuildFields": [
@@ -80,19 +80,19 @@
     ],
     "InspectedRawDlls": [
       {
-        "Bytes": 4919808,
+        "Bytes": 4920320,
         "Path": "Celeste.dll",
-        "Sha256": "3870629b42736f6433fc7a742038f39864a2fefd90861da32d9c6355fb9e0014"
+        "Sha256": "e6039534ffea8c5d5ee0629edacb323695148efe6dddbf64f902a4c51aeefd3a"
       },
       {
         "Bytes": 8704,
         "Path": "CelesteAppleInput.dll",
-        "Sha256": "dc512e7e8adb2d0cb666aedd8e7960ebd42b068f0d75a05f0dd825a371781f09"
+        "Sha256": "cb08d47e281db963107a4cdc483cd6279d1bea636787c77d799dba7ab5966728"
       },
       {
         "Bytes": 107520,
         "Path": "CelesteIOSFoundation.dll",
-        "Sha256": "0d2d643b0e1df88417288e88558dab552f69dc20d7a053175d83f9123550f770"
+        "Sha256": "a923221ba22857a19ec1116148d827b63584819b1496bfdec7d8421c036b800e"
       },
       {
         "Bytes": 194048,
@@ -107,12 +107,12 @@
       {
         "Bytes": 781312,
         "Path": "FNA.dll",
-        "Sha256": "c71b11c4f4971a80917c5855ea8668d71eb5f258b713f508c3247dd0b474db92"
+        "Sha256": "837da6384a731149b8a27ac3ade9da2cfd9249d0122853e42fb260cf7632d19d"
       }
     ],
     "Scope": "UNTRIMMED_PRODUCTION_MANAGED_CLOSURE_FINAL_PLATFORM_TRIM_AND_NATIVE_AOT_ARE_SEPARATE_GATES"
   },
-  "compiledAssemblySha256": "3870629b42736f6433fc7a742038f39864a2fefd90861da32d9c6355fb9e0014",
+  "compiledAssemblySha256": "e6039534ffea8c5d5ee0629edacb323695148efe6dddbf64f902a4c51aeefd3a",
   "contentIdCensus": {
     "acceptedOrVanilla": 920,
     "blocked": 0,
@@ -5803,5 +5803,5 @@
   "schemaVersion": 3,
   "semanticClosureDisposition": "SEPARATE_SOURCE_LIFECYCLE_CANARY_AND_PHYSICAL_EVIDENCE_REQUIRED",
   "semanticClosureEstablished": false,
-  "sharedClosureSha256": "9db1a154790501228199013693e92ba2b68f45add3cec1d4c18ae86185c721e2"
+  "sharedClosureSha256": "1a186c6512444376140147b386b720b2ef16dddb6826882f35c9575e176b2c40"
 }

@@ -493,8 +493,11 @@ internal static class StaticSemanticRuntimePatches
                 "\t\t\tif (entity.Active)\n\t\t\t{\n\t\t\t\tentity.Update();",
                 "\t\t\tif (entity is global::Celeste.PlayerPlayback playback) playback.AppleEverestSJPreUpdate();\n" +
                 "\t\t\tif (entity.Active)\n\t\t\t{\n\t\t\t\tentity.Update();");
-            Change(level, "\t\tglobal::Celeste.Mod.AppleEverestCollabRuntime.OnLevelLoaded(this);",
-                "\t\tglobal::Celeste.Mod.AppleEverestCollabRuntime.OnLevelLoaded(this);\n" +
+            // Loading finishes before Level.Begin creates the gameplay buffers.
+            // Consume masked backdrops only after that creation: its initial
+            // Unload must not discard the newly loaded level's groups.
+            Change(level, "\t\tGameplayBuffers.Create();",
+                "\t\tGameplayBuffers.Create();\n" +
                 "\t\tglobal::Celeste.Mod.AppleEverestSJMaskRendering.OnLevelLoaded(this);");
             Change(level, "\t\tDistort.Render((RenderTarget2D)GameplayBuffers.Gameplay,",
                 "\t\tglobal::Celeste.Mod.AppleEverestSJMaskRendering.Render(this, false);\n" +

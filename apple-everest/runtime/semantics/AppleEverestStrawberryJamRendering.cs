@@ -61,6 +61,9 @@ internal static class AppleEverestSJMaskRendering
     internal static void Render(Level level, bool foreground, bool behind = true)
     {
         AppleEverestSJMaskEntity[] masks = Masks(level);
+        // Every selected foreground mask is behind the foreground. The later
+        // pass must not update/render those same backdrops a second time.
+        if (foreground && !masks.Any(mask => mask.BehindForeground == behind)) return;
         GraphicsDevice graphics = Engine.Graphics.GraphicsDevice;
         RenderTargetBinding[] targets = graphics.GetRenderTargets();
         foreach (Group group in groups.Where(group => group.Foreground == foreground))

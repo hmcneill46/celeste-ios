@@ -1,10 +1,10 @@
 # Stage 25K-J device checks
 
-This build tests project-owned factory fixtures. It contains no original Strawberry Jam gameplay map. Build 37 is the K-J candidate; acceptance below remains pending until tested on the exact signed products. Build 36 was superseded after correcting the host's tvOS platform verification; it has no transferable K-J physical acceptance.
+This build tests project-owned factory fixtures. It contains no original Strawberry Jam gameplay map. Build 38 is the replacement K-J candidate; acceptance below remains pending until tested on the exact signed products. Build 37 failed the physical sweep at the masked star background and exposed map-sprite and cat-placement defects. Builds 36 and 37 have no transferable K-J physical acceptance.
 
 ## Start here
 
-1. Open **Celeste Everest Canary** and confirm the Options version is **0.1.1 (37)**.
+1. Open **Celeste Everest Canary** and confirm the Options version is **0.1.1 (38)**.
 2. Open **EVEREST / PORT OPTIONS**, then find **STAGE 25K-J FACTORY CANARIES**.
 3. Choose **Run All Factory Lifecycle Checks**. Leave the game running while it visits the rooms. The final message must say **K-J FACTORY LIFECYCLE 73/73**. Report any incomplete message, frozen room, crash or missing texture. The detailed log records actual constructor and lifecycle dispatches; a host registration count alone is insufficient.
 4. Use the individual room buttons for the checks below. Their labels combine the group and room, for example **Frost / factory_05**. Return through Pause when finished. These fixtures use an isolated temporary save; ordinary player saves are restored on exit.
@@ -15,7 +15,7 @@ The automatic sweep covers initialization for all 73 factories. It does not prov
 
 | Button | What to do and expect |
 |---|---|
-| **CrystalCave / canary** | Walk through the blue dashed AssistRect: it is a translucent guide and does not collide. Stand on the narrow grass tile between matching grass neighbors and inspect its animated grass. Pick up/drop the crystal, carry it into the cave and place it in the crab pedestal. Expect attraction, filling and confetti. Enter/leave the cave to see its fade. Pet the cat: hear the cat sound, see the petting animation, then regain ordinary Madeline, hair and controls. Retry inside the cave and confirm normal recovery. |
+| **CrystalCave / canary** | Walk through the blue dashed AssistRect: it is a translucent guide and does not collide. Stand on the narrow grass tile between matching grass neighbors and inspect its animated grass. Pick up/drop the crab (the map's intended crystal reskin), carry it into the cave and place it in the crab pedestal. Expect attraction, filling and confetti. Enter/leave the cave to see its fade. Stand beside the cat on the floor and press Talk (Up on the default keyboard/controller binding): hear the cat sound, see the petting animation, then regain ordinary Madeline, hair and controls. Retry inside the cave and confirm normal recovery. |
 | **WaterGarden / canary** | Enter and jump out of the blue pool; check swimming, splash and moving surface. The small waterfall meets the water with ripples, splash and sound. The larger muted waterfall draws behind gameplay. Jump into the lamp to make it swing; inspect its sound and moving light. The two green spinners have a connector. Touch a spinner, die and respawn. |
 | **CameraCorridor / canary** | Walk right off the west platform over the invisible slope, then walk back. Its invisible appearance is authored. Hold Down while travelling right to check the slide pose. Climb the steps and move vertically through the camera region near the middle; its anchor should change smoothly and clear on exit. Reach the east spring and return. The temporary status message reports each spring's actual Active/Visible/Collidable flags: west starts `1/1/1`, east `0/0/0`; the states reverse at the east end and recover on return. Component flags are also recorded in the log. |
 
@@ -26,7 +26,7 @@ The automatic sweep covers initialization for all 73 factories. It does not prov
 | **MaxMechanics / factory_05** | Approach the tutorial and jump onto its zip mover. The tutorial actor and its interface must follow the moving platform. Finish or leave the tutorial and confirm player control/time recover. |
 | **MaxMechanics / factory_06** | Walk through the flag-controlled wall from left to right, then back. The opening/closing follows the surrounding flag regions. Test its solid side and verify it does not appear through the player while occupied. |
 | **MaxMechanics / factory_07** | Approach the grouped spikes, trigger them, retreat and retry. Check their delay, grouped activation and normal death/respawn. |
-| **MaxMechanics / factory_08** | Jump onto the NPC's platform and talk. Finish, repeat and skip the dialogue. Check the actual portrait, formatted text and ornate dialogue frame, plus recovery of player control. This exact original profile uses the original dialogue; the separate K-H regression below has the short PASS text. |
+| **MaxMechanics / factory_08** | Jump onto the NPC's platform and talk. Finish, repeat and skip the dialogue. Check the original Beginner lobby credits, ornate dialogue frame and recovery of player control. This original credits dialogue has no portrait. The separate K-H regression below checks the animated portrait and short PASS text. |
 | **MaxMechanics / factory_12** | Test both vertical one-way platforms from each side: walking, jumping, climbing, wall jumping and dashing. One face blocks and the other permits passage. Use the feather and hit a blocking face to exercise the composed horizontal-collision behavior. |
 | **MaxMechanics / factory_10** | Compare the Rainbow spinner inside the selected color region with the one outside. Check their color behavior, then leave/reload to check cleanup. |
 | **MaxMechanics / factory_14** | Walk right through and beyond the wide camera-catchup region. Its camera response changes inside and reverts outside. |
@@ -77,8 +77,12 @@ Report each device separately. A useful result includes **73/73**, the shared ro
 
 iPad physical acceptance remains pending when hardware is unavailable. The universal iOS product still needs device families `[1,2]`, arm64, minimum iOS 15 and full AOT. Stage 25K-B build 35 remains the last all-three-device physical GREEN unless all three device classes pass K-J.
 
-## Optional macOS comparison
+## macOS comparison
 
-The dedicated K-J reference contains only six authored maps, eight exact desktop helpers and a small exact source-asset projection. It has separate temporary saves. It mounts no SJ DLL or original SJ gameplay map. Compare CrystalCave, WaterGarden, CameraCorridor and the three-map Collab fixture there. It is not an all-73 reference certification.
+The dedicated reference contains all nine K-J provider groups, the additional Sideways room, the three-map Collab fixture and the K-E/K-F/K-H visual regressions: 16 authored maps. It uses 20 exact desktop helper packages. The SJ masks, glow controller and jam jar use the original package's selected desktop IL, with its original hooks; a small generated module initializes those classes. Their method bodies, locals and exception handlers are checked unchanged. No Apple lowering is used as its own reference, and no original SJ gameplay map is mounted.
 
-The reference console supports, for example, `load AppleEverestStage25KJ/FactoryProfiles/CrystalCave canary` and `load AppleEverestStage25KJ/0-Lobbies/1-Fixture canary`. The slope's invisible rendering and the source template fallback are intentional source behavior.
+Run **Open Stage 25K-J Reference.command** in the prepared reference folder, then open **Mod Options → STAGE 25K-J REFERENCE ROOMS** and choose the matching group/room. The console also accepts short commands: `kj CrystalCave`, `kj WaterGarden`, `kj CameraCorridor`, `kj Frost factory_05`, `kj Atmosphere factory_02`, `kj Lobby`, `kj Sideways`, `kj Effects`, `kj Audio`, and `kj Dialogue`. The long `load` commands still work. The reference has separate temporary saves.
+
+CrystalCave intentionally has an animated red crab and the simple crab pedestal, using the map's sprite overrides. Its cat sits on the floor and is reachable with Talk. Both lobby benches use the wooden bench asset. The invisible slope and the tile template fallback are intentional source behavior.
+
+Use **Effects**, **Audio**, and **Dialogue** for the K-E/K-F/K-H comparisons. The K-E Apple module-state marker is omitted on desktop because it inspects the static Apple runtime; all gameplay entities remain, and GlowController receives its explicit empty-list default to avoid the desktop null-values bug. The K-F depth trigger names the reference probe's CLR type, as required by the original helper. The K-F audio and green depth-test rectangle are the same project-owned probes, using the original desktop audio/helper paths. The lifecycle counter, iOS touch/rotation, tvOS platform checks and Apple Save Manager are device checks and have no macOS counterpart. The original-profile Collab construction rooms still point at absent original chapters; use **Lobby** for the playable Collab sequence.

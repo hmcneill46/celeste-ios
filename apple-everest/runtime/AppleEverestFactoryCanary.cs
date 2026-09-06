@@ -182,13 +182,15 @@ internal static class AppleEverestFactoryCanary
             if (!roomReported && frames >= 600 && !stalled)
             {
                 stalled = true; smoke = false;
-                foreach (Definition definition in expected.Where(definition => !Observed.Values.Any(value => value.Definition == definition && value.Reported)))
+                Definition[] pending = expected.Where(definition => !Observed.Values.Any(value => value.Definition == definition && value.Reported)).ToArray();
+                foreach (Definition definition in pending)
                 {
                     Observation item = Observed.Values.SingleOrDefault(value => value.Definition == definition);
                     AppleEverestStaticRuntime.Log("factory-canary-lifecycle=PENDING id=" + definition.Id + " observed=" +
                         (item == null ? "constructor-not-returned" : string.Join(",", item.Returned)) + " in-flight=" + item?.InFlight);
                 }
-                AppleEverestStaticRuntime.ShowStatus("K-J LIFECYCLE CHECK INCOMPLETE\nSee factory canary log");
+                AppleEverestStaticRuntime.ShowStatus("K-J INCOMPLETE " + PassedFactories.Count + "/73: " + room +
+                    "\n" + string.Join(", ", pending.Select(value => value.Id)));
             }
             if (roomReported && smoke)
             {
