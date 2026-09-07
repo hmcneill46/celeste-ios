@@ -247,6 +247,9 @@ if required and not sys.argv[3]:raise SystemExit('K-J selected factory inputs re
 PY
 
 if [[ -n "$FACTORY_PREFLIGHT" ]]; then
+  python3 "$SCRIPT_DIR/verify-apple-everest-chapter-icons.py" \
+    --closure "$CLOSURE" --content-root "$REPO_ROOT/.build/celeste-ios/current/content/Content" \
+    --output "$WORK_ROOT/chapter-icon-proof.json"
   preflight_runtime="$WORK_ROOT/preflight-runtime"
   safe_replace "$preflight_runtime" .apple-everest-preflight-runtime
   cp -cR "$REPO_ROOT/.build/celeste-ios/current/managed" "$preflight_runtime"

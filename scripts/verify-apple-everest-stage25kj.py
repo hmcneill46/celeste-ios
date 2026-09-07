@@ -188,6 +188,9 @@ def main():
     for folder, field in [('managed', 'managedLogicalSha256'), ('content/Content', 'contentLogicalSha256')]:
         require(logical(closure / folder) == manifest[field], 'actual ' + folder + ' tree matches closure manifest')
     require(sha(closure / 'managed/GeneratedAppleEverestGameplayRegistry.cs') == production['actualFactoryRegistrySha256'], 'actual generated gameplay registry hash')
+    run(['python3', str(ROOT / 'scripts/verify-apple-everest-chapter-icons.py'),
+        '--closure', str(closure), '--content-root', str(ROOT / '.build/celeste-ios/current/content/Content'),
+        '--output', str(out / 'chapter-icons.json')], 'chapter-icons')
     for row in semantic['sharedSourceEffects']:
         require(sha(ROOT / row['path']) == row['sha256'], 'current shared source ' + row['path'])
     for factory in semantic['factories']:
@@ -283,6 +286,9 @@ def main():
             folder = args.products.resolve() / platform
             apps = list((folder / 'Payload').glob('*.app')); ipas = list(folder.glob('*.ipa'))
             require(len(apps) == len(ipas) == 1, 'one exact '+platform+' app and IPA')
+            run(['python3', str(ROOT / 'scripts/verify-apple-everest-chapter-icons.py'),
+                '--closure', str(closure), '--content-root', str(apps[0] / 'Content'), '--packaged',
+                '--output', str(out / (platform + '-chapter-icons.json'))], platform + '-chapter-icons')
             pm = read(folder / 'build-manifest.json')
             require(sha(ipas[0]) == pm['ipaSha256'] and ipas[0].stat().st_size == pm['ipaBytes']
                 and pm['sharedClosureSha256'] == manifest['sharedClosureSha256'], 'exact '+platform+' IPA identity')

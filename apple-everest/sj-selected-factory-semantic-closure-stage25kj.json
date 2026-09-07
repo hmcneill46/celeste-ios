@@ -91,7 +91,7 @@
           }
         ],
         "entryMethod": "Celeste.Backdrop Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_backdrop_72f7a1f94b4e5de8(Celeste.BinaryPacker/Element)",
-        "fullImplementationByteComparison": "11bdf75d3e2c07de18b39c7d8dfb39aefe71d39f085d522c5fea3cee81993ad1",
+        "fullImplementationByteComparison": "c2088679b6b8b62fef6ff72532c3a9c1374115965d8ef6492f2ec8496c40a1a2",
         "guardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
         "productionCallers": [
           "Celeste.Backdrop Celeste.MapData::ParseBackdrop(Celeste.BinaryPacker/Element,Celeste.BinaryPacker/Element)"
@@ -204,7 +204,7 @@
           }
         ],
         "entryMethod": "Celeste.Backdrop Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_backdrop_f846fbe539453c07(Celeste.BinaryPacker/Element)",
-        "fullImplementationByteComparison": "11bdf75d3e2c07de18b39c7d8dfb39aefe71d39f085d522c5fea3cee81993ad1",
+        "fullImplementationByteComparison": "c2088679b6b8b62fef6ff72532c3a9c1374115965d8ef6492f2ec8496c40a1a2",
         "guardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
         "productionCallers": [
           "Celeste.Backdrop Celeste.MapData::ParseBackdrop(Celeste.BinaryPacker/Element,Celeste.BinaryPacker/Element)"
@@ -322,7 +322,7 @@
           }
         ],
         "entryMethod": "Celeste.Backdrop Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_backdrop_a6d57201da361d8f(Celeste.BinaryPacker/Element)",
-        "fullImplementationByteComparison": "11bdf75d3e2c07de18b39c7d8dfb39aefe71d39f085d522c5fea3cee81993ad1",
+        "fullImplementationByteComparison": "c2088679b6b8b62fef6ff72532c3a9c1374115965d8ef6492f2ec8496c40a1a2",
         "guardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
         "productionCallers": [
           "Celeste.Backdrop Celeste.MapData::ParseBackdrop(Celeste.BinaryPacker/Element,Celeste.BinaryPacker/Element)"
@@ -426,7 +426,7 @@
           }
         ],
         "entryMethod": "Celeste.Backdrop Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_backdrop_6918cd44543f28e0(Celeste.BinaryPacker/Element)",
-        "fullImplementationByteComparison": "11bdf75d3e2c07de18b39c7d8dfb39aefe71d39f085d522c5fea3cee81993ad1",
+        "fullImplementationByteComparison": "c2088679b6b8b62fef6ff72532c3a9c1374115965d8ef6492f2ec8496c40a1a2",
         "guardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
         "productionCallers": [
           "Celeste.Backdrop Celeste.MapData::ParseBackdrop(Celeste.BinaryPacker/Element,Celeste.BinaryPacker/Element)"
@@ -533,7 +533,7 @@
           }
         ],
         "entryMethod": "Celeste.Backdrop Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_backdrop_5dd0ff4176ce86d8(Celeste.BinaryPacker/Element)",
-        "fullImplementationByteComparison": "11bdf75d3e2c07de18b39c7d8dfb39aefe71d39f085d522c5fea3cee81993ad1",
+        "fullImplementationByteComparison": "c2088679b6b8b62fef6ff72532c3a9c1374115965d8ef6492f2ec8496c40a1a2",
         "guardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
         "productionCallers": [
           "Celeste.Backdrop Celeste.MapData::ParseBackdrop(Celeste.BinaryPacker/Element,Celeste.BinaryPacker/Element)"
@@ -659,7 +659,7 @@
           }
         ],
         "entryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_entity_d3be8f45a3e64ff7(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-        "fullImplementationByteComparison": "11bdf75d3e2c07de18b39c7d8dfb39aefe71d39f085d522c5fea3cee81993ad1",
+        "fullImplementationByteComparison": "c2088679b6b8b62fef6ff72532c3a9c1374115965d8ef6492f2ec8496c40a1a2",
         "guardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
         "productionCallers": [
           "System.Boolean Celeste.Level::AppleEverestOriginal_LoadCustomEntity(Celeste.EntityData,Celeste.Level)"
@@ -784,7 +784,7 @@
           }
         ],
         "entryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_entity_e976946a4aecc993(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-        "fullImplementationByteComparison": "11bdf75d3e2c07de18b39c7d8dfb39aefe71d39f085d522c5fea3cee81993ad1",
+        "fullImplementationByteComparison": "c2088679b6b8b62fef6ff72532c3a9c1374115965d8ef6492f2ec8496c40a1a2",
         "guardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
         "productionCallers": [
           "System.Boolean Celeste.Level::AppleEverestOriginal_LoadCustomEntity(Celeste.EntityData,Celeste.Level)"
@@ -918,7 +918,7 @@
           }
         ],
         "entryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_entity_bd853e5ba5d4bc95(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-        "fullImplementationByteComparison": "11bdf75d3e2c07de18b39c7d8dfb39aefe71d39f085d522c5fea3cee81993ad1",
+        "fullImplementationByteComparison": "c2088679b6b8b62fef6ff72532c3a9c1374115965d8ef6492f2ec8496c40a1a2",
         "guardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
         "productionCallers": [
           "System.Boolean Celeste.Level::AppleEverestOriginal_LoadCustomEntity(Celeste.EntityData,Celeste.Level)"
@@ -1036,7 +1036,7 @@
           }
         ],
         "entryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_entity_a965c6b982b72966(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-        "fullImplementationByteComparison": "11bdf75d3e2c07de18b39c7d8dfb39aefe71d39f085d522c5fea3cee81993ad1",
+        "fullImplementationByteComparison": "c2088679b6b8b62fef6ff72532c3a9c1374115965d8ef6492f2ec8496c40a1a2",
         "guardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
         "productionCallers": [
           "System.Boolean Celeste.Level::AppleEverestOriginal_LoadCustomEntity(Celeste.EntityData,Celeste.Level)"
@@ -1172,7 +1172,7 @@
           }
         ],
         "entryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_entity_5a362867c3f9914f(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-        "fullImplementationByteComparison": "11bdf75d3e2c07de18b39c7d8dfb39aefe71d39f085d522c5fea3cee81993ad1",
+        "fullImplementationByteComparison": "c2088679b6b8b62fef6ff72532c3a9c1374115965d8ef6492f2ec8496c40a1a2",
         "guardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
         "productionCallers": [
           "System.Boolean Celeste.Level::AppleEverestOriginal_LoadCustomEntity(Celeste.EntityData,Celeste.Level)"
@@ -1291,7 +1291,7 @@
           }
         ],
         "entryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_entity_2a0446d88a3a2da9(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-        "fullImplementationByteComparison": "11bdf75d3e2c07de18b39c7d8dfb39aefe71d39f085d522c5fea3cee81993ad1",
+        "fullImplementationByteComparison": "c2088679b6b8b62fef6ff72532c3a9c1374115965d8ef6492f2ec8496c40a1a2",
         "guardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
         "productionCallers": [
           "System.Boolean Celeste.Level::AppleEverestOriginal_LoadCustomEntity(Celeste.EntityData,Celeste.Level)"
@@ -1420,7 +1420,7 @@
           }
         ],
         "entryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_entity_303ef0da9ef736e0(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-        "fullImplementationByteComparison": "11bdf75d3e2c07de18b39c7d8dfb39aefe71d39f085d522c5fea3cee81993ad1",
+        "fullImplementationByteComparison": "c2088679b6b8b62fef6ff72532c3a9c1374115965d8ef6492f2ec8496c40a1a2",
         "guardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
         "productionCallers": [
           "System.Boolean Celeste.Level::AppleEverestOriginal_LoadCustomEntity(Celeste.EntityData,Celeste.Level)"
@@ -1546,7 +1546,7 @@
           }
         ],
         "entryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_entity_a4c69fdeab1b1161(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-        "fullImplementationByteComparison": "11bdf75d3e2c07de18b39c7d8dfb39aefe71d39f085d522c5fea3cee81993ad1",
+        "fullImplementationByteComparison": "c2088679b6b8b62fef6ff72532c3a9c1374115965d8ef6492f2ec8496c40a1a2",
         "guardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
         "productionCallers": [
           "System.Boolean Celeste.Level::AppleEverestOriginal_LoadCustomEntity(Celeste.EntityData,Celeste.Level)"
@@ -1673,7 +1673,7 @@
           }
         ],
         "entryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_entity_ba6529f52e7e5dc8(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-        "fullImplementationByteComparison": "11bdf75d3e2c07de18b39c7d8dfb39aefe71d39f085d522c5fea3cee81993ad1",
+        "fullImplementationByteComparison": "c2088679b6b8b62fef6ff72532c3a9c1374115965d8ef6492f2ec8496c40a1a2",
         "guardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
         "productionCallers": [
           "System.Boolean Celeste.Level::AppleEverestOriginal_LoadCustomEntity(Celeste.EntityData,Celeste.Level)"
@@ -1793,7 +1793,7 @@
           }
         ],
         "entryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_entity_ce183ed12139667b(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-        "fullImplementationByteComparison": "11bdf75d3e2c07de18b39c7d8dfb39aefe71d39f085d522c5fea3cee81993ad1",
+        "fullImplementationByteComparison": "c2088679b6b8b62fef6ff72532c3a9c1374115965d8ef6492f2ec8496c40a1a2",
         "guardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
         "productionCallers": [
           "System.Boolean Celeste.Level::AppleEverestOriginal_LoadCustomEntity(Celeste.EntityData,Celeste.Level)"
@@ -1912,7 +1912,7 @@
           }
         ],
         "entryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_entity_50ce1aea560f1bd6(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-        "fullImplementationByteComparison": "11bdf75d3e2c07de18b39c7d8dfb39aefe71d39f085d522c5fea3cee81993ad1",
+        "fullImplementationByteComparison": "c2088679b6b8b62fef6ff72532c3a9c1374115965d8ef6492f2ec8496c40a1a2",
         "guardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
         "productionCallers": [
           "System.Boolean Celeste.Level::AppleEverestOriginal_LoadCustomEntity(Celeste.EntityData,Celeste.Level)"
@@ -2042,7 +2042,7 @@
           }
         ],
         "entryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_entity_628c6927da0adc78(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-        "fullImplementationByteComparison": "11bdf75d3e2c07de18b39c7d8dfb39aefe71d39f085d522c5fea3cee81993ad1",
+        "fullImplementationByteComparison": "c2088679b6b8b62fef6ff72532c3a9c1374115965d8ef6492f2ec8496c40a1a2",
         "guardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
         "productionCallers": [
           "System.Boolean Celeste.Level::AppleEverestOriginal_LoadCustomEntity(Celeste.EntityData,Celeste.Level)"
@@ -2209,7 +2209,7 @@
           }
         ],
         "entryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_entity_916487af82677601(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-        "fullImplementationByteComparison": "11bdf75d3e2c07de18b39c7d8dfb39aefe71d39f085d522c5fea3cee81993ad1",
+        "fullImplementationByteComparison": "c2088679b6b8b62fef6ff72532c3a9c1374115965d8ef6492f2ec8496c40a1a2",
         "guardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
         "productionCallers": [
           "System.Boolean Celeste.Level::AppleEverestOriginal_LoadCustomEntity(Celeste.EntityData,Celeste.Level)"
@@ -2372,7 +2372,7 @@
           }
         ],
         "entryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_entity_b289acd2506c856f(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-        "fullImplementationByteComparison": "11bdf75d3e2c07de18b39c7d8dfb39aefe71d39f085d522c5fea3cee81993ad1",
+        "fullImplementationByteComparison": "c2088679b6b8b62fef6ff72532c3a9c1374115965d8ef6492f2ec8496c40a1a2",
         "guardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
         "productionCallers": [
           "System.Boolean Celeste.Level::AppleEverestOriginal_LoadCustomEntity(Celeste.EntityData,Celeste.Level)"
@@ -2498,7 +2498,7 @@
           }
         ],
         "entryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_entity_b84eb7a5562c3517(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-        "fullImplementationByteComparison": "11bdf75d3e2c07de18b39c7d8dfb39aefe71d39f085d522c5fea3cee81993ad1",
+        "fullImplementationByteComparison": "c2088679b6b8b62fef6ff72532c3a9c1374115965d8ef6492f2ec8496c40a1a2",
         "guardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
         "productionCallers": [
           "System.Boolean Celeste.Level::AppleEverestOriginal_LoadCustomEntity(Celeste.EntityData,Celeste.Level)"
@@ -2618,7 +2618,7 @@
           }
         ],
         "entryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_entity_c04ab29f4d2a778a(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-        "fullImplementationByteComparison": "11bdf75d3e2c07de18b39c7d8dfb39aefe71d39f085d522c5fea3cee81993ad1",
+        "fullImplementationByteComparison": "c2088679b6b8b62fef6ff72532c3a9c1374115965d8ef6492f2ec8496c40a1a2",
         "guardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
         "productionCallers": [
           "System.Boolean Celeste.Level::AppleEverestOriginal_LoadCustomEntity(Celeste.EntityData,Celeste.Level)"
@@ -2739,7 +2739,7 @@
           }
         ],
         "entryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_entity_6027fbd5deab70c0(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-        "fullImplementationByteComparison": "11bdf75d3e2c07de18b39c7d8dfb39aefe71d39f085d522c5fea3cee81993ad1",
+        "fullImplementationByteComparison": "c2088679b6b8b62fef6ff72532c3a9c1374115965d8ef6492f2ec8496c40a1a2",
         "guardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
         "productionCallers": [
           "System.Boolean Celeste.Level::AppleEverestOriginal_LoadCustomEntity(Celeste.EntityData,Celeste.Level)"
@@ -2873,7 +2873,7 @@
           }
         ],
         "entryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_entity_ecaa7b1af6199825(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-        "fullImplementationByteComparison": "11bdf75d3e2c07de18b39c7d8dfb39aefe71d39f085d522c5fea3cee81993ad1",
+        "fullImplementationByteComparison": "c2088679b6b8b62fef6ff72532c3a9c1374115965d8ef6492f2ec8496c40a1a2",
         "guardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
         "productionCallers": [
           "System.Boolean Celeste.Level::AppleEverestOriginal_LoadCustomEntity(Celeste.EntityData,Celeste.Level)"
@@ -2999,7 +2999,7 @@
           }
         ],
         "entryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_entity_49c17d433ac53d8f(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-        "fullImplementationByteComparison": "11bdf75d3e2c07de18b39c7d8dfb39aefe71d39f085d522c5fea3cee81993ad1",
+        "fullImplementationByteComparison": "c2088679b6b8b62fef6ff72532c3a9c1374115965d8ef6492f2ec8496c40a1a2",
         "guardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
         "productionCallers": [
           "System.Boolean Celeste.Level::AppleEverestOriginal_LoadCustomEntity(Celeste.EntityData,Celeste.Level)"
@@ -3131,7 +3131,7 @@
           }
         ],
         "entryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_entity_355967621d00c100(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-        "fullImplementationByteComparison": "11bdf75d3e2c07de18b39c7d8dfb39aefe71d39f085d522c5fea3cee81993ad1",
+        "fullImplementationByteComparison": "c2088679b6b8b62fef6ff72532c3a9c1374115965d8ef6492f2ec8496c40a1a2",
         "guardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
         "productionCallers": [
           "System.Boolean Celeste.Level::AppleEverestOriginal_LoadCustomEntity(Celeste.EntityData,Celeste.Level)"
@@ -3264,7 +3264,7 @@
           }
         ],
         "entryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_entity_53705f3887d72707(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-        "fullImplementationByteComparison": "11bdf75d3e2c07de18b39c7d8dfb39aefe71d39f085d522c5fea3cee81993ad1",
+        "fullImplementationByteComparison": "c2088679b6b8b62fef6ff72532c3a9c1374115965d8ef6492f2ec8496c40a1a2",
         "guardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
         "productionCallers": [
           "System.Boolean Celeste.Level::AppleEverestOriginal_LoadCustomEntity(Celeste.EntityData,Celeste.Level)"
@@ -3389,7 +3389,7 @@
           }
         ],
         "entryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_entity_b53e81d6f01a69c6(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-        "fullImplementationByteComparison": "11bdf75d3e2c07de18b39c7d8dfb39aefe71d39f085d522c5fea3cee81993ad1",
+        "fullImplementationByteComparison": "c2088679b6b8b62fef6ff72532c3a9c1374115965d8ef6492f2ec8496c40a1a2",
         "guardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
         "productionCallers": [
           "System.Boolean Celeste.Level::AppleEverestOriginal_LoadCustomEntity(Celeste.EntityData,Celeste.Level)"
@@ -3522,7 +3522,7 @@
           }
         ],
         "entryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_entity_df4abc3d394a9e91(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-        "fullImplementationByteComparison": "11bdf75d3e2c07de18b39c7d8dfb39aefe71d39f085d522c5fea3cee81993ad1",
+        "fullImplementationByteComparison": "c2088679b6b8b62fef6ff72532c3a9c1374115965d8ef6492f2ec8496c40a1a2",
         "guardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
         "productionCallers": [
           "System.Boolean Celeste.Level::AppleEverestOriginal_LoadCustomEntity(Celeste.EntityData,Celeste.Level)"
@@ -3644,7 +3644,7 @@
           }
         ],
         "entryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_entity_e32989277aa3f07c(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-        "fullImplementationByteComparison": "11bdf75d3e2c07de18b39c7d8dfb39aefe71d39f085d522c5fea3cee81993ad1",
+        "fullImplementationByteComparison": "c2088679b6b8b62fef6ff72532c3a9c1374115965d8ef6492f2ec8496c40a1a2",
         "guardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
         "productionCallers": [
           "System.Boolean Celeste.Level::AppleEverestOriginal_LoadCustomEntity(Celeste.EntityData,Celeste.Level)"
@@ -3768,7 +3768,7 @@
           }
         ],
         "entryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_entity_984a9e718e563b59(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-        "fullImplementationByteComparison": "11bdf75d3e2c07de18b39c7d8dfb39aefe71d39f085d522c5fea3cee81993ad1",
+        "fullImplementationByteComparison": "c2088679b6b8b62fef6ff72532c3a9c1374115965d8ef6492f2ec8496c40a1a2",
         "guardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
         "productionCallers": [
           "System.Boolean Celeste.Level::AppleEverestOriginal_LoadCustomEntity(Celeste.EntityData,Celeste.Level)"
@@ -3896,7 +3896,7 @@
           }
         ],
         "entryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_entity_38c792650603a6a8(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-        "fullImplementationByteComparison": "11bdf75d3e2c07de18b39c7d8dfb39aefe71d39f085d522c5fea3cee81993ad1",
+        "fullImplementationByteComparison": "c2088679b6b8b62fef6ff72532c3a9c1374115965d8ef6492f2ec8496c40a1a2",
         "guardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
         "productionCallers": [
           "System.Boolean Celeste.Level::AppleEverestOriginal_LoadCustomEntity(Celeste.EntityData,Celeste.Level)"
@@ -4024,7 +4024,7 @@
           }
         ],
         "entryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_entity_8d531fa5f291d5d7(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-        "fullImplementationByteComparison": "11bdf75d3e2c07de18b39c7d8dfb39aefe71d39f085d522c5fea3cee81993ad1",
+        "fullImplementationByteComparison": "c2088679b6b8b62fef6ff72532c3a9c1374115965d8ef6492f2ec8496c40a1a2",
         "guardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
         "productionCallers": [
           "System.Boolean Celeste.Level::AppleEverestOriginal_LoadCustomEntity(Celeste.EntityData,Celeste.Level)"
@@ -4166,7 +4166,7 @@
           }
         ],
         "entryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_entity_29e88bcf09cded3b(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-        "fullImplementationByteComparison": "11bdf75d3e2c07de18b39c7d8dfb39aefe71d39f085d522c5fea3cee81993ad1",
+        "fullImplementationByteComparison": "c2088679b6b8b62fef6ff72532c3a9c1374115965d8ef6492f2ec8496c40a1a2",
         "guardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
         "productionCallers": [
           "System.Boolean Celeste.Level::AppleEverestOriginal_LoadCustomEntity(Celeste.EntityData,Celeste.Level)"
@@ -4284,7 +4284,7 @@
           }
         ],
         "entryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_entity_57642f2ce7054edc(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-        "fullImplementationByteComparison": "11bdf75d3e2c07de18b39c7d8dfb39aefe71d39f085d522c5fea3cee81993ad1",
+        "fullImplementationByteComparison": "c2088679b6b8b62fef6ff72532c3a9c1374115965d8ef6492f2ec8496c40a1a2",
         "guardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
         "productionCallers": [
           "System.Boolean Celeste.Level::AppleEverestOriginal_LoadCustomEntity(Celeste.EntityData,Celeste.Level)"
@@ -4410,7 +4410,7 @@
           }
         ],
         "entryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_entity_2374782bc644bca1(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-        "fullImplementationByteComparison": "11bdf75d3e2c07de18b39c7d8dfb39aefe71d39f085d522c5fea3cee81993ad1",
+        "fullImplementationByteComparison": "c2088679b6b8b62fef6ff72532c3a9c1374115965d8ef6492f2ec8496c40a1a2",
         "guardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
         "productionCallers": [
           "System.Boolean Celeste.Level::AppleEverestOriginal_LoadCustomEntity(Celeste.EntityData,Celeste.Level)"
@@ -4531,7 +4531,7 @@
           }
         ],
         "entryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_entity_e0131e8940c2d761(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-        "fullImplementationByteComparison": "11bdf75d3e2c07de18b39c7d8dfb39aefe71d39f085d522c5fea3cee81993ad1",
+        "fullImplementationByteComparison": "c2088679b6b8b62fef6ff72532c3a9c1374115965d8ef6492f2ec8496c40a1a2",
         "guardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
         "productionCallers": [
           "System.Boolean Celeste.Level::AppleEverestOriginal_LoadCustomEntity(Celeste.EntityData,Celeste.Level)"
@@ -4657,7 +4657,7 @@
           }
         ],
         "entryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_entity_f362206ab31ec9a1(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-        "fullImplementationByteComparison": "11bdf75d3e2c07de18b39c7d8dfb39aefe71d39f085d522c5fea3cee81993ad1",
+        "fullImplementationByteComparison": "c2088679b6b8b62fef6ff72532c3a9c1374115965d8ef6492f2ec8496c40a1a2",
         "guardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
         "productionCallers": [
           "System.Boolean Celeste.Level::AppleEverestOriginal_LoadCustomEntity(Celeste.EntityData,Celeste.Level)"
@@ -4788,7 +4788,7 @@
           }
         ],
         "entryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_entity_46bc3b0f61721f13(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-        "fullImplementationByteComparison": "11bdf75d3e2c07de18b39c7d8dfb39aefe71d39f085d522c5fea3cee81993ad1",
+        "fullImplementationByteComparison": "c2088679b6b8b62fef6ff72532c3a9c1374115965d8ef6492f2ec8496c40a1a2",
         "guardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
         "productionCallers": [
           "System.Boolean Celeste.Level::AppleEverestOriginal_LoadCustomEntity(Celeste.EntityData,Celeste.Level)"
@@ -4930,7 +4930,7 @@
           }
         ],
         "entryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_entity_0ea249055b58e496(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-        "fullImplementationByteComparison": "11bdf75d3e2c07de18b39c7d8dfb39aefe71d39f085d522c5fea3cee81993ad1",
+        "fullImplementationByteComparison": "c2088679b6b8b62fef6ff72532c3a9c1374115965d8ef6492f2ec8496c40a1a2",
         "guardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
         "productionCallers": [
           "System.Boolean Celeste.Level::AppleEverestOriginal_LoadCustomEntity(Celeste.EntityData,Celeste.Level)"
@@ -5067,7 +5067,7 @@
           }
         ],
         "entryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_entity_bb9d452f95470d13(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-        "fullImplementationByteComparison": "11bdf75d3e2c07de18b39c7d8dfb39aefe71d39f085d522c5fea3cee81993ad1",
+        "fullImplementationByteComparison": "c2088679b6b8b62fef6ff72532c3a9c1374115965d8ef6492f2ec8496c40a1a2",
         "guardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
         "productionCallers": [
           "System.Boolean Celeste.Level::AppleEverestOriginal_LoadCustomEntity(Celeste.EntityData,Celeste.Level)"
@@ -5200,7 +5200,7 @@
           }
         ],
         "entryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_entity_a9bcc5b459704410(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-        "fullImplementationByteComparison": "11bdf75d3e2c07de18b39c7d8dfb39aefe71d39f085d522c5fea3cee81993ad1",
+        "fullImplementationByteComparison": "c2088679b6b8b62fef6ff72532c3a9c1374115965d8ef6492f2ec8496c40a1a2",
         "guardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
         "productionCallers": [
           "System.Boolean Celeste.Level::AppleEverestOriginal_LoadCustomEntity(Celeste.EntityData,Celeste.Level)"
@@ -5322,7 +5322,7 @@
           }
         ],
         "entryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_entity_42aa2cea811a4344(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-        "fullImplementationByteComparison": "11bdf75d3e2c07de18b39c7d8dfb39aefe71d39f085d522c5fea3cee81993ad1",
+        "fullImplementationByteComparison": "c2088679b6b8b62fef6ff72532c3a9c1374115965d8ef6492f2ec8496c40a1a2",
         "guardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
         "productionCallers": [
           "System.Boolean Celeste.Level::AppleEverestOriginal_LoadCustomEntity(Celeste.EntityData,Celeste.Level)"
@@ -5473,7 +5473,7 @@
           }
         ],
         "entryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_entity_ff30f71473c6809f(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-        "fullImplementationByteComparison": "11bdf75d3e2c07de18b39c7d8dfb39aefe71d39f085d522c5fea3cee81993ad1",
+        "fullImplementationByteComparison": "c2088679b6b8b62fef6ff72532c3a9c1374115965d8ef6492f2ec8496c40a1a2",
         "guardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
         "productionCallers": [
           "System.Boolean Celeste.Level::AppleEverestOriginal_LoadCustomEntity(Celeste.EntityData,Celeste.Level)"
@@ -5641,7 +5641,7 @@
           }
         ],
         "entryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_entity_de24ab73150828de(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-        "fullImplementationByteComparison": "11bdf75d3e2c07de18b39c7d8dfb39aefe71d39f085d522c5fea3cee81993ad1",
+        "fullImplementationByteComparison": "c2088679b6b8b62fef6ff72532c3a9c1374115965d8ef6492f2ec8496c40a1a2",
         "guardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
         "productionCallers": [
           "System.Boolean Celeste.Level::AppleEverestOriginal_LoadCustomEntity(Celeste.EntityData,Celeste.Level)"
@@ -5778,7 +5778,7 @@
           }
         ],
         "entryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_entity_5f1e3ee79912f5bc(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-        "fullImplementationByteComparison": "11bdf75d3e2c07de18b39c7d8dfb39aefe71d39f085d522c5fea3cee81993ad1",
+        "fullImplementationByteComparison": "c2088679b6b8b62fef6ff72532c3a9c1374115965d8ef6492f2ec8496c40a1a2",
         "guardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
         "productionCallers": [
           "System.Boolean Celeste.Level::AppleEverestOriginal_LoadCustomEntity(Celeste.EntityData,Celeste.Level)"
@@ -5903,7 +5903,7 @@
           }
         ],
         "entryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_entity_89e210dbae7b98a5(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-        "fullImplementationByteComparison": "11bdf75d3e2c07de18b39c7d8dfb39aefe71d39f085d522c5fea3cee81993ad1",
+        "fullImplementationByteComparison": "c2088679b6b8b62fef6ff72532c3a9c1374115965d8ef6492f2ec8496c40a1a2",
         "guardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
         "productionCallers": [
           "System.Boolean Celeste.Level::AppleEverestOriginal_LoadCustomEntity(Celeste.EntityData,Celeste.Level)"
@@ -6041,7 +6041,7 @@
           }
         ],
         "entryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_entity_a9f11de7515c9963(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-        "fullImplementationByteComparison": "11bdf75d3e2c07de18b39c7d8dfb39aefe71d39f085d522c5fea3cee81993ad1",
+        "fullImplementationByteComparison": "c2088679b6b8b62fef6ff72532c3a9c1374115965d8ef6492f2ec8496c40a1a2",
         "guardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
         "productionCallers": [
           "System.Boolean Celeste.Level::AppleEverestOriginal_LoadCustomEntity(Celeste.EntityData,Celeste.Level)"
@@ -6175,7 +6175,7 @@
           }
         ],
         "entryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_entity_ac601ae872ff72d9(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-        "fullImplementationByteComparison": "11bdf75d3e2c07de18b39c7d8dfb39aefe71d39f085d522c5fea3cee81993ad1",
+        "fullImplementationByteComparison": "c2088679b6b8b62fef6ff72532c3a9c1374115965d8ef6492f2ec8496c40a1a2",
         "guardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
         "productionCallers": [
           "System.Boolean Celeste.Level::AppleEverestOriginal_LoadCustomEntity(Celeste.EntityData,Celeste.Level)"
@@ -6301,7 +6301,7 @@
           }
         ],
         "entryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_entity_f31538d24c54e3f5(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-        "fullImplementationByteComparison": "11bdf75d3e2c07de18b39c7d8dfb39aefe71d39f085d522c5fea3cee81993ad1",
+        "fullImplementationByteComparison": "c2088679b6b8b62fef6ff72532c3a9c1374115965d8ef6492f2ec8496c40a1a2",
         "guardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
         "productionCallers": [
           "System.Boolean Celeste.Level::AppleEverestOriginal_LoadCustomEntity(Celeste.EntityData,Celeste.Level)"
@@ -6429,7 +6429,7 @@
           }
         ],
         "entryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_entity_a02fca3a7f9d32f2(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-        "fullImplementationByteComparison": "11bdf75d3e2c07de18b39c7d8dfb39aefe71d39f085d522c5fea3cee81993ad1",
+        "fullImplementationByteComparison": "c2088679b6b8b62fef6ff72532c3a9c1374115965d8ef6492f2ec8496c40a1a2",
         "guardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
         "productionCallers": [
           "System.Boolean Celeste.Level::AppleEverestOriginal_LoadCustomEntity(Celeste.EntityData,Celeste.Level)"
@@ -6602,7 +6602,7 @@
           }
         ],
         "entryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_entity_de6479082d46f302(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-        "fullImplementationByteComparison": "11bdf75d3e2c07de18b39c7d8dfb39aefe71d39f085d522c5fea3cee81993ad1",
+        "fullImplementationByteComparison": "c2088679b6b8b62fef6ff72532c3a9c1374115965d8ef6492f2ec8496c40a1a2",
         "guardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
         "productionCallers": [
           "System.Boolean Celeste.Level::AppleEverestOriginal_LoadCustomEntity(Celeste.EntityData,Celeste.Level)"
@@ -6734,7 +6734,7 @@
           }
         ],
         "entryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_entity_1af271094557f224(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-        "fullImplementationByteComparison": "11bdf75d3e2c07de18b39c7d8dfb39aefe71d39f085d522c5fea3cee81993ad1",
+        "fullImplementationByteComparison": "c2088679b6b8b62fef6ff72532c3a9c1374115965d8ef6492f2ec8496c40a1a2",
         "guardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
         "productionCallers": [
           "System.Boolean Celeste.Level::AppleEverestOriginal_LoadCustomEntity(Celeste.EntityData,Celeste.Level)"
@@ -6860,7 +6860,7 @@
           }
         ],
         "entryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_trigger_8990317cc403bd7e(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-        "fullImplementationByteComparison": "11bdf75d3e2c07de18b39c7d8dfb39aefe71d39f085d522c5fea3cee81993ad1",
+        "fullImplementationByteComparison": "c2088679b6b8b62fef6ff72532c3a9c1374115965d8ef6492f2ec8496c40a1a2",
         "guardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
         "productionCallers": [
           "System.Void Celeste.Level::AppleEverestOriginal_LoadLevel(Celeste.Player/IntroTypes,System.Boolean)"
@@ -6985,7 +6985,7 @@
           }
         ],
         "entryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_trigger_fb7a7a2c02b41d67(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-        "fullImplementationByteComparison": "11bdf75d3e2c07de18b39c7d8dfb39aefe71d39f085d522c5fea3cee81993ad1",
+        "fullImplementationByteComparison": "c2088679b6b8b62fef6ff72532c3a9c1374115965d8ef6492f2ec8496c40a1a2",
         "guardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
         "productionCallers": [
           "System.Void Celeste.Level::AppleEverestOriginal_LoadLevel(Celeste.Player/IntroTypes,System.Boolean)"
@@ -7107,7 +7107,7 @@
           }
         ],
         "entryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_trigger_95ab032485d2aa3a(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-        "fullImplementationByteComparison": "11bdf75d3e2c07de18b39c7d8dfb39aefe71d39f085d522c5fea3cee81993ad1",
+        "fullImplementationByteComparison": "c2088679b6b8b62fef6ff72532c3a9c1374115965d8ef6492f2ec8496c40a1a2",
         "guardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
         "productionCallers": [
           "System.Void Celeste.Level::AppleEverestOriginal_LoadLevel(Celeste.Player/IntroTypes,System.Boolean)"
@@ -7228,7 +7228,7 @@
           }
         ],
         "entryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_trigger_e71114611a979a62(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-        "fullImplementationByteComparison": "11bdf75d3e2c07de18b39c7d8dfb39aefe71d39f085d522c5fea3cee81993ad1",
+        "fullImplementationByteComparison": "c2088679b6b8b62fef6ff72532c3a9c1374115965d8ef6492f2ec8496c40a1a2",
         "guardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
         "productionCallers": [
           "System.Void Celeste.Level::AppleEverestOriginal_LoadLevel(Celeste.Player/IntroTypes,System.Boolean)"
@@ -7361,7 +7361,7 @@
           }
         ],
         "entryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_trigger_2f846cf738017762(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-        "fullImplementationByteComparison": "11bdf75d3e2c07de18b39c7d8dfb39aefe71d39f085d522c5fea3cee81993ad1",
+        "fullImplementationByteComparison": "c2088679b6b8b62fef6ff72532c3a9c1374115965d8ef6492f2ec8496c40a1a2",
         "guardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
         "productionCallers": [
           "System.Void Celeste.Level::AppleEverestOriginal_LoadLevel(Celeste.Player/IntroTypes,System.Boolean)"
@@ -7485,7 +7485,7 @@
           }
         ],
         "entryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_trigger_03026125973981db(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-        "fullImplementationByteComparison": "11bdf75d3e2c07de18b39c7d8dfb39aefe71d39f085d522c5fea3cee81993ad1",
+        "fullImplementationByteComparison": "c2088679b6b8b62fef6ff72532c3a9c1374115965d8ef6492f2ec8496c40a1a2",
         "guardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
         "productionCallers": [
           "System.Void Celeste.Level::AppleEverestOriginal_LoadLevel(Celeste.Player/IntroTypes,System.Boolean)"
@@ -7611,7 +7611,7 @@
           }
         ],
         "entryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_trigger_5c492fc646697c25(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-        "fullImplementationByteComparison": "11bdf75d3e2c07de18b39c7d8dfb39aefe71d39f085d522c5fea3cee81993ad1",
+        "fullImplementationByteComparison": "c2088679b6b8b62fef6ff72532c3a9c1374115965d8ef6492f2ec8496c40a1a2",
         "guardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
         "productionCallers": [
           "System.Void Celeste.Level::AppleEverestOriginal_LoadLevel(Celeste.Player/IntroTypes,System.Boolean)"
@@ -7736,7 +7736,7 @@
           }
         ],
         "entryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_trigger_85f8cc9f7f188660(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-        "fullImplementationByteComparison": "11bdf75d3e2c07de18b39c7d8dfb39aefe71d39f085d522c5fea3cee81993ad1",
+        "fullImplementationByteComparison": "c2088679b6b8b62fef6ff72532c3a9c1374115965d8ef6492f2ec8496c40a1a2",
         "guardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
         "productionCallers": [
           "System.Void Celeste.Level::AppleEverestOriginal_LoadLevel(Celeste.Player/IntroTypes,System.Boolean)"
@@ -7865,7 +7865,7 @@
           }
         ],
         "entryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_trigger_4d9990e2e797a1bb(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-        "fullImplementationByteComparison": "11bdf75d3e2c07de18b39c7d8dfb39aefe71d39f085d522c5fea3cee81993ad1",
+        "fullImplementationByteComparison": "c2088679b6b8b62fef6ff72532c3a9c1374115965d8ef6492f2ec8496c40a1a2",
         "guardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
         "productionCallers": [
           "System.Void Celeste.Level::AppleEverestOriginal_LoadLevel(Celeste.Player/IntroTypes,System.Boolean)"
@@ -8001,7 +8001,7 @@
           }
         ],
         "entryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_trigger_3615799e7fae7921(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-        "fullImplementationByteComparison": "11bdf75d3e2c07de18b39c7d8dfb39aefe71d39f085d522c5fea3cee81993ad1",
+        "fullImplementationByteComparison": "c2088679b6b8b62fef6ff72532c3a9c1374115965d8ef6492f2ec8496c40a1a2",
         "guardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
         "productionCallers": [
           "System.Void Celeste.Level::AppleEverestOriginal_LoadLevel(Celeste.Player/IntroTypes,System.Boolean)"
@@ -8126,7 +8126,7 @@
           }
         ],
         "entryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_trigger_4d1b8b57fe863f94(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-        "fullImplementationByteComparison": "11bdf75d3e2c07de18b39c7d8dfb39aefe71d39f085d522c5fea3cee81993ad1",
+        "fullImplementationByteComparison": "c2088679b6b8b62fef6ff72532c3a9c1374115965d8ef6492f2ec8496c40a1a2",
         "guardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
         "productionCallers": [
           "System.Void Celeste.Level::AppleEverestOriginal_LoadLevel(Celeste.Player/IntroTypes,System.Boolean)"
@@ -8259,7 +8259,7 @@
           }
         ],
         "entryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_trigger_06466e2eb27981e2(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-        "fullImplementationByteComparison": "11bdf75d3e2c07de18b39c7d8dfb39aefe71d39f085d522c5fea3cee81993ad1",
+        "fullImplementationByteComparison": "c2088679b6b8b62fef6ff72532c3a9c1374115965d8ef6492f2ec8496c40a1a2",
         "guardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
         "productionCallers": [
           "System.Void Celeste.Level::AppleEverestOriginal_LoadLevel(Celeste.Player/IntroTypes,System.Boolean)"
@@ -8425,7 +8425,7 @@
           }
         ],
         "entryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_trigger_b967d1965331ca15(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-        "fullImplementationByteComparison": "11bdf75d3e2c07de18b39c7d8dfb39aefe71d39f085d522c5fea3cee81993ad1",
+        "fullImplementationByteComparison": "c2088679b6b8b62fef6ff72532c3a9c1374115965d8ef6492f2ec8496c40a1a2",
         "guardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
         "productionCallers": [
           "System.Void Celeste.Level::AppleEverestOriginal_LoadLevel(Celeste.Player/IntroTypes,System.Boolean)"
@@ -8567,7 +8567,7 @@
           }
         ],
         "entryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_trigger_654ff1d7396f4468(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-        "fullImplementationByteComparison": "11bdf75d3e2c07de18b39c7d8dfb39aefe71d39f085d522c5fea3cee81993ad1",
+        "fullImplementationByteComparison": "c2088679b6b8b62fef6ff72532c3a9c1374115965d8ef6492f2ec8496c40a1a2",
         "guardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
         "productionCallers": [
           "System.Void Celeste.Level::AppleEverestOriginal_LoadLevel(Celeste.Player/IntroTypes,System.Boolean)"
@@ -8704,7 +8704,7 @@
           }
         ],
         "entryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_trigger_cef21a429380b7a3(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-        "fullImplementationByteComparison": "11bdf75d3e2c07de18b39c7d8dfb39aefe71d39f085d522c5fea3cee81993ad1",
+        "fullImplementationByteComparison": "c2088679b6b8b62fef6ff72532c3a9c1374115965d8ef6492f2ec8496c40a1a2",
         "guardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
         "productionCallers": [
           "System.Void Celeste.Level::AppleEverestOriginal_LoadLevel(Celeste.Player/IntroTypes,System.Boolean)"
@@ -8829,7 +8829,7 @@
           }
         ],
         "entryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_trigger_457555b7d7500357(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-        "fullImplementationByteComparison": "11bdf75d3e2c07de18b39c7d8dfb39aefe71d39f085d522c5fea3cee81993ad1",
+        "fullImplementationByteComparison": "c2088679b6b8b62fef6ff72532c3a9c1374115965d8ef6492f2ec8496c40a1a2",
         "guardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
         "productionCallers": [
           "System.Void Celeste.Level::AppleEverestOriginal_LoadLevel(Celeste.Player/IntroTypes,System.Boolean)"
@@ -8960,7 +8960,7 @@
           }
         ],
         "entryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_trigger_66e0af1936d3ca6f(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-        "fullImplementationByteComparison": "11bdf75d3e2c07de18b39c7d8dfb39aefe71d39f085d522c5fea3cee81993ad1",
+        "fullImplementationByteComparison": "c2088679b6b8b62fef6ff72532c3a9c1374115965d8ef6492f2ec8496c40a1a2",
         "guardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
         "productionCallers": [
           "System.Void Celeste.Level::AppleEverestOriginal_LoadLevel(Celeste.Player/IntroTypes,System.Boolean)"
@@ -9187,7 +9187,7 @@
           }
         ],
         "entryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_trigger_7a5988650f6cccc2(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-        "fullImplementationByteComparison": "11bdf75d3e2c07de18b39c7d8dfb39aefe71d39f085d522c5fea3cee81993ad1",
+        "fullImplementationByteComparison": "c2088679b6b8b62fef6ff72532c3a9c1374115965d8ef6492f2ec8496c40a1a2",
         "guardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
         "productionCallers": [
           "System.Void Celeste.Level::AppleEverestOriginal_LoadLevel(Celeste.Player/IntroTypes,System.Boolean)"
@@ -9332,7 +9332,7 @@
           }
         ],
         "entryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_trigger_5110c8e9eeed1821(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-        "fullImplementationByteComparison": "11bdf75d3e2c07de18b39c7d8dfb39aefe71d39f085d522c5fea3cee81993ad1",
+        "fullImplementationByteComparison": "c2088679b6b8b62fef6ff72532c3a9c1374115965d8ef6492f2ec8496c40a1a2",
         "guardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
         "productionCallers": [
           "System.Void Celeste.Level::AppleEverestOriginal_LoadLevel(Celeste.Player/IntroTypes,System.Boolean)"
@@ -9465,7 +9465,7 @@
           }
         ],
         "entryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_trigger_d13ce7e5bbdaa203(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-        "fullImplementationByteComparison": "11bdf75d3e2c07de18b39c7d8dfb39aefe71d39f085d522c5fea3cee81993ad1",
+        "fullImplementationByteComparison": "c2088679b6b8b62fef6ff72532c3a9c1374115965d8ef6492f2ec8496c40a1a2",
         "guardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
         "productionCallers": [
           "System.Void Celeste.Level::AppleEverestOriginal_LoadLevel(Celeste.Player/IntroTypes,System.Boolean)"
@@ -9623,7 +9623,7 @@
           }
         ],
         "entryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_trigger_9d4ddb540f21a426(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-        "fullImplementationByteComparison": "11bdf75d3e2c07de18b39c7d8dfb39aefe71d39f085d522c5fea3cee81993ad1",
+        "fullImplementationByteComparison": "c2088679b6b8b62fef6ff72532c3a9c1374115965d8ef6492f2ec8496c40a1a2",
         "guardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
         "productionCallers": [
           "System.Void Celeste.Level::AppleEverestOriginal_LoadLevel(Celeste.Player/IntroTypes,System.Boolean)"
@@ -9662,25 +9662,25 @@
   ],
   "fullProductionCompilation": {
     "AllImplementationBytesCompared": true,
-    "AppliedManagedLogicalSha256": "683c2ffdf96182bbfacd71019e52715cc2fbc726fccf1af34431024dfa167b84",
-    "AppliedManagedSourceLogicalSha256": "e363fd94e0110159e3ec595e109c8545ce4acc1ddcfc5cc9b33dab844d522156",
+    "AppliedManagedLogicalSha256": "386bb37dbd2ac736697377cf751d5dbc710c56ab498fdbbf428a8547f39dfcf0",
+    "AppliedManagedSourceLogicalSha256": "d44e0e8cc6b9979cd71d7110dab29a427a1cd77ca84eaabdb679d6e05343ac15",
     "CanonicalManagedLogicalSha256": "ab386f605572569cbcda81e408b22531f5af42e06b305ee07a701e39486a55bb",
-    "CompiledDllLogicalSha256": "11bdf75d3e2c07de18b39c7d8dfb39aefe71d39f085d522c5fea3cee81993ad1",
+    "CompiledDllLogicalSha256": "c2088679b6b8b62fef6ff72532c3a9c1374115965d8ef6492f2ec8496c40a1a2",
     "CompiledDlls": [
       {
         "Bytes": 4923392,
         "Path": "Celeste.dll",
-        "Sha256": "d9ef35f485c5ad729c2817f7efa10c92abc7144c09a77e1ca508b8ddf49e5384"
+        "Sha256": "606a40674421615e8e6c45bbb113ca310940f433f9c109481b8a81e12887030c"
       },
       {
         "Bytes": 8704,
         "Path": "CelesteAppleInput.dll",
-        "Sha256": "512a6a899b146722412acaf46de5b509c2b9e8f763b49019e4684a34038c6c84"
+        "Sha256": "3f63a64629fe34c981ae38ebc2d8ea875b38c1fa513af558bb5359ecc6ea0b1a"
       },
       {
         "Bytes": 107520,
         "Path": "CelesteIOSFoundation.dll",
-        "Sha256": "c647206c1e7c861974252c84478f1bf655db034542cb0dc71fa9b179eef099dc"
+        "Sha256": "cab33906a0feb93e4c8e0f451acef770b3308f5ae7e4c7a0efe0c8896f7f48de"
       },
       {
         "Bytes": 194048,
@@ -9695,7 +9695,7 @@
       {
         "Bytes": 781312,
         "Path": "FNA.dll",
-        "Sha256": "9b9da968324ab4017379d070f6c441fee3de1908befffc96d2414d086b31e309"
+        "Sha256": "409c505e7bf4049ac0ef2f1916eac11f2eb0c3a45060c422cf31c7f9ac4b2264"
       }
     ],
     "FreshProductionCompilation": true,
@@ -9703,17 +9703,17 @@
       {
         "Bytes": 4923392,
         "Path": "Celeste.dll",
-        "Sha256": "5e28c9773d36879b42438a91077c6e5a8d5c9d3047c4a40179e8a2cb393f6fd5"
+        "Sha256": "59af940e6813814e56c2b5003dea8877504fbf01622b77d500898f085d4afdb9"
       },
       {
         "Bytes": 8704,
         "Path": "CelesteAppleInput.dll",
-        "Sha256": "fd8f1c807500c833c28e468f9ff0068ff354ff00a523f6049cdb182501a4fa54"
+        "Sha256": "41166672b09758631a8496a4e5d78e781b258054d6b96f2ad4c553b0c5cfe903"
       },
       {
         "Bytes": 107520,
         "Path": "CelesteIOSFoundation.dll",
-        "Sha256": "b16b80bff6c6006e8b1e27c929606d87b9ea9b4edaa68fc0a6a5bd108425a278"
+        "Sha256": "470e8824f176b5c67adfe7cd52a746b9dc685f14df416557a3f834a42b3cd4df"
       },
       {
         "Bytes": 194048,
@@ -9728,7 +9728,7 @@
       {
         "Bytes": 781312,
         "Path": "FNA.dll",
-        "Sha256": "569cdcbb9fd887af52e65949eaaf673c169426ee2aefc3bb676613b27c7e94f0"
+        "Sha256": "1a9a3f115ce184b6e49ef2da94b6f7965f422e7784397802fa7c1d345eeec3b3"
       }
     ],
     "IgnoredBuildFields": [
@@ -9739,17 +9739,17 @@
       {
         "Bytes": 4923392,
         "Path": "Celeste.dll",
-        "Sha256": "e0398c6deb4af4946790830c1c49504492b8bbe0ee5551e287a59c19ccc05568"
+        "Sha256": "53dfc88bacea112add7297f0eefa20a3ca377c6017c5affbe669565469f8a800"
       },
       {
         "Bytes": 8704,
         "Path": "CelesteAppleInput.dll",
-        "Sha256": "fd8f1c807500c833c28e468f9ff0068ff354ff00a523f6049cdb182501a4fa54"
+        "Sha256": "41166672b09758631a8496a4e5d78e781b258054d6b96f2ad4c553b0c5cfe903"
       },
       {
         "Bytes": 107520,
         "Path": "CelesteIOSFoundation.dll",
-        "Sha256": "b16b80bff6c6006e8b1e27c929606d87b9ea9b4edaa68fc0a6a5bd108425a278"
+        "Sha256": "470e8824f176b5c67adfe7cd52a746b9dc685f14df416557a3f834a42b3cd4df"
       },
       {
         "Bytes": 194048,
@@ -9764,7 +9764,7 @@
       {
         "Bytes": 781312,
         "Path": "FNA.dll",
-        "Sha256": "569cdcbb9fd887af52e65949eaaf673c169426ee2aefc3bb676613b27c7e94f0"
+        "Sha256": "1a9a3f115ce184b6e49ef2da94b6f7965f422e7784397802fa7c1d345eeec3b3"
       }
     ],
     "Scope": "UNTRIMMED_PRODUCTION_MANAGED_CLOSURE_FINAL_PLATFORM_TRIM_AND_NATIVE_AOT_ARE_SEPARATE_GATES"
@@ -23693,7 +23693,7 @@
     }
   },
   "schemaVersion": 1,
-  "sharedClosureSha256": "5b3157fd8c83fe350683f293c9f176b1416bef9de771ee1a90d5954547056843",
+  "sharedClosureSha256": "21c6480c3a852322b7a4efc54e58c447561f455abb54f2e67c1f8d885869247f",
   "sharedSourceEffects": [
     {
       "path": "tools/AppleEverestBuilder/ClosureGenerator.cs",

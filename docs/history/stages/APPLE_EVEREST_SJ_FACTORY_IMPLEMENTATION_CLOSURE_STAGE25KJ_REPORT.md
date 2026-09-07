@@ -62,6 +62,14 @@ The reference expands to 16 authored maps and 20 exact desktop helpers, plus the
 
 Pre-fix: 73 selected; 30 available; 43 unavailable. Of 920 occurrences, 511 had production registrations and 409 did not. All 43 have an individual primary cause: 19 accepted-package missing registrations (173 occurrences), 7 Frost version/identity mismatches (36), and 17 provider-analysis rejections (200). Other primary-cause buckets are zero; implementation choices are a separate axis. All 43 are implemented with bounded static semantics. No new general runtime architecture is introduced. Secondary implementation, module-effect, asset and physical obligations are recorded per factory.
 
+## Build 40 startup failure and build 41 correction
+
+The user installed build 40 on the iPhone 12 and reported a freeze before the main menu. The connected device confirmed version 0.1.1 (40). Its error log records `KeyNotFoundException` for `areas/0` in `OuiChapterSelect.Added`, on the overworld loading thread. The explicit fixture icon introduced in build 40 did not exist in the canonical GUI atlas. This is a port candidate regression, not physical acceptance or a save-data failure. The build 40 signed products and machine receipts remain archived with this failure; Apple TV was not tested.
+
+Build 41 changes the three owned Collab fixture maps and their generator to the existing canonical `areas/intro` house icon. The reference receives the same metadata. A new chapter-icon gate binds the generated descriptors and progression manifest, reads the actual locked GUI atlas, verifies mounted GUI assets, and resolves every registered map icon. It runs before production compilation and again against both packaged apps. Its missing-key and missing-fallback controls reject. The new gate also rejects the actual signed build 40 for the same missing icon recorded by the phone. No save reset is required.
+
+Build 40 passed 600 machine checks and the 597 builder tests but still failed physical startup. Build 41 requires fresh exact-product machine evidence and a connected-device startup check before another testing handoff; grouped gameplay acceptance remains separate.
+
 ## Exact providers and selected scope
 
 Every row below now has zero missing production registrations. Semantic acceptance remains a separate pending device gate for every provider. ZIP and distributed-DLL identities come from the actual supplied public archives. Whole-package compatibility is not claimed. DJMapHelper retains its exact transformed assembly; other selected desktop helper effects are implemented by typed static code and explicit selected module/hook folds.
@@ -172,7 +180,7 @@ Apple strips executable managed bodies to ret stubs after AOT. The product verif
 
 A development iOS product passed the linked/native/stripping checks and ten initial isolated corruption controls. Additional registration-source and incomplete-receipt controls are implemented; the final fresh dual-platform build and those controls are pending. The signed app verifier checks codesign; isolated negative controls do not pretend to rebuild/sign each corrupt product or establish device semantics.
 
-Current product candidate is 0.1.1 build 40. Builds 36–39 are superseded. Build 39 has an iPhone 12 initialization pass but unresolved semantics; its physical results do not transfer to build 40. Final signed iOS/tvOS IPA sizes/hashes and exact source identities will come from their product manifests. iOS must remain arm64, minimum 15 and device families [1,2]; tvOS must retain native TV family [3]. Release/full trim/full AOT, UseInterpreter=false and no JIT are mandatory.
+Current product candidate is 0.1.1 build 41. Builds 36–40 are superseded. Build 39 has an iPhone 12 initialization pass but unresolved semantics; its physical results do not transfer to build 41. Final signed iOS/tvOS IPA sizes/hashes and exact source identities will come from their product manifests. iOS must remain arm64, minimum 15 and device families [1,2]; tvOS must retain native TV family [3]. Release/full trim/full AOT, UseInterpreter=false and no JIT are mandatory.
 
 ## Validation and physical acceptance
 
