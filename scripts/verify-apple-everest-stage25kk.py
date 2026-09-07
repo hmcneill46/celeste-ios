@@ -63,7 +63,7 @@ def main():
     output = args.output.resolve()
     if output.is_relative_to(ROOT) and subprocess.run(['git', '-C', str(ROOT), 'check-ignore', '-q', str(output)]).returncode:
         raise ValueError('machine output must be ignored or external')
-    if git('ls-files', '--', str(output)):
+    if output.is_relative_to(ROOT) and git('ls-files', '--', str(output)):
         raise ValueError('machine verification cannot overwrite tracked evidence')
     output.parent.mkdir(parents=True, exist_ok=True)
     checks = []
