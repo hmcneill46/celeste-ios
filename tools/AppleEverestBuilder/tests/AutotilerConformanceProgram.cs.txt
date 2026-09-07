@@ -1,0 +1,228 @@
+using System.Security.Cryptography;
+using System.Text;
+using System.Text.Json;
+using System.Xml;
+using Celeste;
+using Monocle;
+using Microsoft.Xna.Framework;
+using Pinned;
+using Conformance;
+
+internal static class Program
+{
+    private static int assertions;
+    private static string Json<T>(T value) => JsonSerializer.Serialize(value);
+    private static string Hash(string value) => Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(value))).ToLowerInvariant();
+    private static void Equal<T>(T apple,T desktop,string label)
+    {
+        assertions++;
+        string a=Json(apple),b=Json(desktop);
+        if(a!=b) throw new Exception(label+"\nApple: "+a+"\nPinned: "+b);
+    }
+    private static void Require(bool value,string label) { assertions++;if(!value)throw new Exception(label); }
+    private static VirtualMap<char> Grid(string text,int width,int height)
+    {
+        var result=new VirtualMap<char>(width,height,'0');
+        string[] rows=text.Split('\n');
+        for(int y=0;y<Math.Min(rows.Length,height);y++)
+            for(int x=0;x<Math.Min(rows[y].Length,width);x++)
+                result[x,y]=rows[y][x];
+        return result;
+    }
+    private static void Check(Autotiler apple,ReferenceAutotiler reference,VirtualMap<char> map,
+        int x,int y,Rectangle fill,char id,int flags,string label)
+    {
+        Equal(apple.Probe(map,x,y,fill,id,(flags&1)!=0,(flags&2)!=0,(flags&4)!=0),
+            reference.Probe(map,x,y,fill,id,(flags&1)!=0,(flags&2)!=0,(flags&4)!=0),label);
+    }
+    private static void Reject(Action action,string label,List<string> controls)
+    {
+        try { action(); } catch(InvalidOperationException) { controls.Add(label);assertions++;return; }
+        catch(KeyNotFoundException) { controls.Add(label);assertions++;return; }
+        throw new Exception("negative control accepted: "+label);
+    }
+
+    public static void Main(string[] args)
+    {
+        var request=JsonDocument.Parse(File.ReadAllText(args[0])).RootElement;
+        string fg=request.GetProperty("foreground").GetString(),bg=request.GetProperty("background").GetString();
+        int width=request.GetProperty("width").GetInt32(),height=request.GetProperty("height").GetInt32();
+        GFX.AnimatedTilesBank=request.GetProperty("animations").Deserialize<Dictionary<string,int>>();
+        foreach(var pair in request.GetProperty("textureDimensions").Deserialize<Dictionary<string,int[]>>())GFX.Game.Dimensions.Add(pair.Key,pair.Value);
+        foreach(string key in request.GetProperty("missingTextures").Deserialize<string[]>())GFX.Game.Missing.Add(key);
+        var wrapped=new Tileset(new MTexture("wrap-probe",16,24),8,8);
+        Equal(wrapped[5,7].Key,"wrap-probe#1,1","pinned two-dimensional tileset wrap");
+        Equal(wrapped[17].Key,"wrap-probe#1,2","pinned linear tileset wrap");
+        Require(wrapped[-1]==null,"pinned negative linear tile index");
+        var ordinaryReports=new List<object>();
+        foreach(string field in new[]{"foreground","background","vanillaForeground","vanillaBackground"})
+        {
+            string filename=request.GetProperty(field).GetString();
+            SurfaceIndex.TileToIndex.Clear();SurfaceIndex.TileToIndex['G']=0;
+            var a=new Autotiler(filename);var appleSounds=SurfaceIndex.TileToIndex.OrderBy(p=>p.Key).ToArray();
+            SurfaceIndex.TileToIndex.Clear();SurfaceIndex.TileToIndex['G']=0;
+            var b=new ReferenceAutotiler(filename);var desktopSounds=SurfaceIndex.TileToIndex.OrderBy(p=>p.Key).ToArray();
+            Equal(appleSounds,desktopSounds,"isolated original/copy sound registration from identical accepted baseline "+field);
+            Definition[] definitions=a.Snapshot();
+            Equal(definitions,b.Snapshot(),"complete parsed rules/variants/overlays "+field);
+            if(field is "foreground" or "background")
+            {
+                var unused=definitions.Single(d=>d.Id=='y');
+                var fallbackKeys=unused.Rules.SelectMany(rule=>rule.Textures).Concat(unused.Center.Textures).Concat(unused.Padding.Textures).ToArray();
+                Require(fallbackKeys.All(key=>new[]{"__fallback#0,0","__fallback#0,1","__fallback#1,0","__fallback#1,1"}.Contains(key)),"original unused template wraps only pinned fallback pixels");
+                var copied=definitions.Single(d=>d.Id==(field=="foreground"?'N':'|'));
+                Require(copied.Rules.SelectMany(rule=>rule.Textures).All(key=>!key.StartsWith("__fallback")),"visible copied template retains its own original sheet");
+            }
+            int ordinary=0,start=assertions;
+            foreach(var definition in definitions.Where(d=>d.Width==3))
+            {
+                ordinary++;
+                var grid=new VirtualMap<char>(9,9,'0');
+                for(int mask=0;mask<512;mask++)
+                {
+                    for(int y=-1;y<=1;y++)for(int x=-1;x<=1;x++)
+                        grid[4+x,4+y]=(mask&(1<<((y+1)*3+x+1)))!=0?definition.Id:'0';
+                    Check(a,b,grid,4,4,Rectangle.Empty,'0',1,field+" 3x3 "+definition.Id+" "+mask);
+                }
+                for(int y=-1;y<=1;y++)for(int x=-1;x<=1;x++)grid[4+x,4+y]=definition.Id;
+                for(int mask=0;mask<16;mask++)
+                {
+                    var cross=new[]{(2,4),(6,4),(4,2),(4,6)};
+                    for(int n=0;n<4;n++)grid[cross[n].Item1,cross[n].Item2]=(mask&(1<<n))!=0?definition.Id:'0';
+                    Check(a,b,grid,4,4,Rectangle.Empty,'0',1,field+" padding cross "+definition.Id+" "+mask);
+                }
+                grid[0,0]=definition.Id;
+                a.LevelBounds.Clear();b.LevelBounds.Clear();a.LevelBounds.Add(new Rectangle(0,0,9,9));b.LevelBounds.Add(new Rectangle(0,0,9,9));
+                for(int flags=0;flags<8;flags++)Check(a,b,grid,0,0,Rectangle.Empty,'0',flags,field+" edge "+definition.Id);
+            }
+            ordinaryReports.Add(new {source=field,definitions=definitions.Length,ordinary3x3=ordinary,comparisons=assertions-start,
+                parsedRuleSha256=Hash(Json(definitions))});
+        }
+
+        var apple=new Autotiler(fg);var desktop=new ReferenceAutotiler(fg);
+        var solids=Grid(request.GetProperty("solids").GetString(),width,height);
+        var background=Grid(request.GetProperty("bg").GetString(),width,height);
+        apple.LevelBounds.Add(new Rectangle(0,0,width,height));desktop.LevelBounds.Add(new Rectangle(0,0,width,height));
+        var realCells=new List<(int X,int Y)>();
+        for(int y=0;y<height;y++)for(int x=0;x<width;x++)if(solids[x,y]=='J')realCells.Add((x,y));
+        Require(realCells.Count==26,"exact authored J census");
+        var xml=new XmlDocument();xml.Load(fg);
+        var j=(XmlElement)xml.SelectSingleNode("/Data/Tileset[@id='J']");
+        var sourceRules=j.ChildNodes.OfType<XmlElement>().ToArray();
+        var realReports=new List<object>();
+        foreach(var cell in realCells)
+        {
+            var ar=apple.Probe(solids,cell.X,cell.Y,Rectangle.Empty,'0',true,false,true);
+            var dr=desktop.Probe(solids,cell.X,cell.Y,Rectangle.Empty,'0',true,false,true);
+            Equal(ar,dr,"real J cell "+cell);
+            Require(ar!=null&&ar.Textures.Length>0,"real J has a concrete result "+cell);
+            int sourceRule=Array.FindIndex(sourceRules,e=>new string(e.GetAttribute("mask").Where(c=>c!='-'&&!char.IsWhiteSpace(c)).ToArray()).ToLowerInvariant()==ar.Mask);
+            Require(sourceRule>=0,"real J matches an original authored rule");
+            string neighborhood=string.Join("/",Enumerable.Range(-2,5).Select(dy=>new string(Enumerable.Range(-2,5).Select(dx=>solids[cell.X+dx,cell.Y+dy]).ToArray())));
+            realReports.Add(new {x=cell.X,y=cell.Y,neighborhood,sourceSetIndex=sourceRule,apple=ar,desktop=dr});
+        }
+        var center=apple.Probe(solids,446,263,Rectangle.Empty,'0',true,false,true);
+        var corner=apple.Probe(solids,448,263,Rectangle.Empty,'0',true,false,true);
+        Require(center.Mask=="center" && center.Textures.Single().EndsWith("#5,14"),"K-K center expectation");
+        Require(corner.Textures.Single().EndsWith("#10,3") && corner.Mask!=center.Mask,"K-K decisive counterexample");
+
+        int syntheticStart=assertions;
+        Random cases=new(2525);var synthetic=new VirtualMap<char>(9,9,'0');
+        foreach(char ignored in new[]{'7','0','J','N'})
+        {
+            for(int y=0;y<9;y++)for(int x=0;x<9;x++)synthetic[x,y]='J';
+            for(int bit=0;bit<25;bit++)
+            {
+                int x=2+bit%5,y=2+bit/5;synthetic[x,y]=ignored;synthetic[4,4]='J';
+                for(int flags=0;flags<8;flags++)Check(apple,desktop,synthetic,4,4,Rectangle.Empty,'0',flags,"ignored/wildcard "+ignored+" "+bit);
+                synthetic[x,y]='J';
+            }
+        }
+        for(int sample=0;sample<2048;sample++)
+        {
+            for(int y=0;y<9;y++)for(int x=0;x<9;x++)synthetic[x,y]="JJJ70N"[cases.Next(6)];
+            synthetic[4,4]='J';Check(apple,desktop,synthetic,4,4,Rectangle.Empty,'0',sample%8,"synthetic neighborhood "+sample);
+        }
+        for(int flags=0;flags<8;flags++)
+        {
+            for(int y=0;y<9;y++)for(int x=0;x<9;x++)synthetic[x,y]='J';
+            foreach(var cell in new[]{(0,0),(0,8),(8,0),(8,8)})Check(apple,desktop,synthetic,cell.Item1,cell.Item2,Rectangle.Empty,'0',flags,"J edges");
+            Check(apple,desktop,null,4,4,new Rectangle(2,2,5,5),'J',flags,"null/forced box");
+            Check(apple,desktop,synthetic,4,4,new Rectangle(3,3,3,3),'J',flags,"forced overlay");
+        }
+        for(int mask=0;mask<16;mask++)
+        {
+            for(int y=0;y<9;y++)for(int x=0;x<9;x++)synthetic[x,y]='J';
+            var cross=new[]{(1,4),(7,4),(4,1),(4,7)};
+            for(int n=0;n<4;n++)synthetic[cross[n].Item1,cross[n].Item2]=(mask&(1<<n))!=0?'J':'0';
+            Check(apple,desktop,synthetic,4,4,Rectangle.Empty,'0',1,"distance-three padding "+mask);
+        }
+        void Bounds(Rectangle bounds)
+        {
+            apple.LevelBounds.Clear();desktop.LevelBounds.Clear();apple.LevelBounds.Add(bounds);desktop.LevelBounds.Add(bounds);
+            for(int y=0;y<9;y++)for(int x=0;x<9;x++)synthetic[x,y]='J';
+        }
+        Bounds(new Rectangle(3,0,3,9));synthetic[5,4]='0';
+        Check(apple,desktop,synthetic,4,4,Rectangle.Empty,'0',1,"unshifted edge absent without promotion");
+        Check(apple,desktop,synthetic,4,4,Rectangle.Empty,'0',3,"unshifted edge promotes outside checked coordinate");
+        Require(apple.Probe(synthetic,4,4,Rectangle.Empty,'0',true,true,false).Mask=="center","unshifted edge promotion reached center");
+        Bounds(new Rectangle(3,0,3,9));synthetic[3,4]='0';
+        Check(apple,desktop,synthetic,4,4,Rectangle.Empty,'0',3,"unshifted edge retains inside checked coordinate");
+        Require(apple.Probe(synthetic,4,4,Rectangle.Empty,'0',true,true,false).Mask!="center","inside checked coordinate stays absent");
+        Bounds(new Rectangle(2,2,5,5));synthetic[7,4]='0';
+        Check(apple,desktop,synthetic,4,4,Rectangle.Empty,'0',1,"distance-three cross respects room bound");
+        Check(apple,desktop,synthetic,4,4,Rectangle.Empty,'0',5,"distance-three cross promotes outside room");
+        Require(apple.Probe(synthetic,4,4,Rectangle.Empty,'0',true,false,false).Mask=="padding","outside padding absent");
+        Require(apple.Probe(synthetic,4,4,Rectangle.Empty,'0',true,false,true).Mask=="center","outside padding promoted");
+
+        var generatedReports=new List<object>();
+        int roomX=request.GetProperty("roomX").GetInt32()/8,roomY=request.GetProperty("roomY").GetInt32()/8;
+        var prepared=LoaderTerrain.Prepare(new TerrainMap {
+            TileBounds=new Rectangle(roomX-8,roomY-8,width+16,height+16),Filler=Array.Empty<Rectangle>(),
+            Levels=new[]{new TerrainLevel {TileBounds=new Rectangle(roomX,roomY,width,height),
+                Bg=request.GetProperty("bg").GetString(),Solids=request.GetProperty("solids").GetString()}}});
+        apple.LevelBounds.Clear();desktop.LevelBounds.Clear();
+        apple.LevelBounds.AddRange(prepared.Bounds);desktop.LevelBounds.AddRange(prepared.Bounds);
+        foreach(int seed in new[]{request.GetProperty("seed").GetInt32(),0,2525})
+        {
+            var abg=new Autotiler(bg);var dbg=new ReferenceAutotiler(bg);
+            Calc.Random=new Random(seed);
+            string appleBg=Autotiler.View(abg.GenerateMap(prepared.Background,false));var appleFg=apple.GenerateMap(prepared.Foreground,true);
+            string av=Autotiler.View(appleFg);int aNext=Calc.Random.Next();
+            Calc.Random=new Random(seed);
+            string desktopBg=ReferenceAutotiler.View(dbg.GenerateMap(prepared.Background,false));var desktopFg=desktop.GenerateMap(prepared.Foreground,true);
+            string dv=ReferenceAutotiler.View(desktopFg);int dNext=Calc.Random.Next();
+            Equal(appleBg,desktopBg,"seeded BG generation");Equal(av,dv,"seeded FG and overlay generation");Equal(aNext,dNext,"final RNG state");
+            generatedReports.Add(new {seed,backgroundSha256=Hash(appleBg),foregroundSha256=Hash(av),nextRandom=aNext,
+                cells=realCells.Select(c=>new {x=c.X,y=c.Y,apple=appleFg.TileGrid.Tiles[c.X+8,c.Y+8].Key,desktop=desktopFg.TileGrid.Tiles[c.X+8,c.Y+8].Key}).ToArray()});
+            Calc.Random=new Random(seed);var am=new VirtualMap<char>(120,120,'0');string ao=Autotiler.View(apple.GenerateOverlay('J',45,45,20,20,am));int an=Calc.Random.Next();
+            Calc.Random=new Random(seed);var dm=new VirtualMap<char>(120,120,'0');string dO=ReferenceAutotiler.View(desktop.GenerateOverlay('J',45,45,20,20,dm));int dn=Calc.Random.Next();
+            Equal(ao,dO,"cross-segment forced overlay");Equal(an,dn,"overlay RNG");
+            Calc.Random=new Random(seed);string aBox=Autotiler.View(apple.GenerateBox('J',13,11));an=Calc.Random.Next();
+            Calc.Random=new Random(seed);string dBox=ReferenceAutotiler.View(desktop.GenerateBox('J',13,11));dn=Calc.Random.Next();
+            Equal(aBox,dBox,"forced box generation");Equal(an,dn,"box RNG");
+        }
+
+        var rejected=new List<string>();string temporary=Path.Combine(Path.GetDirectoryName(args[0]),"negative.xml");
+        void Invalid(string label,Action<XmlElement> change)
+        {
+            var doc=new XmlDocument();doc.Load(fg);change((XmlElement)doc.SelectSingleNode("/Data/Tileset[@id='J']"));doc.Save(temporary);
+            Reject(()=>new Autotiler(temporary),label,rejected);
+        }
+        foreach(string dimension in new[]{"0","2","7","-1","six"})Invalid("unsupported width "+dimension,e=>e.SetAttribute("scanWidth",dimension));
+        Invalid("dimension mismatch",e=>e.SetAttribute("scanHeight","3"));
+        Invalid("short mask",e=>((XmlElement)e.SelectSingleNode("set")).SetAttribute("mask","111"));
+        Invalid("long mask",e=>((XmlElement)e.SelectSingleNode("set")).SetAttribute("mask",new string('1',26)));
+        Invalid("custom filter",e=>((XmlElement)e.SelectSingleNode("set")).SetAttribute("mask",new string('y',25)));
+        Invalid("custom fill",e=>((XmlElement)e.SelectSingleNode("set")).SetAttribute("mask","fill1"));
+        Invalid("ignore exceptions",e=>e.SetAttribute("ignoreExceptions","7"));
+        Invalid("mixed copy dimensions",e=>e.SetAttribute("copy","3"));
+        var omitted=new XmlDocument();omitted.Load(fg);var missing=omitted.SelectSingleNode("/Data/Tileset[@id='J']");missing.ParentNode.RemoveChild(missing);omitted.Save(temporary);
+        Reject(()=>new Autotiler(temporary).Probe(solids,446,263,Rectangle.Empty,'0',true,false,true),"omitted required J",rejected);
+        File.WriteAllText(args[1],JsonSerializer.Serialize(new {status="PASS",assertions,ordinary=ordinaryReports,
+            realCellCount=realCells.Count,realCells=realReports,syntheticComparisons=assertions-syntheticStart,
+            seededGeneration=generatedReports,rejectedControls=rejected,
+            deliberateStrictness="Short masks rejected instead of pinned implicit zero fill; unsupported profiles fail closed."},new JsonSerializerOptions{WriteIndented=true})+"\n");
+        Console.WriteLine($"PASS: {assertions} exact terrain assertions, all 26 real J cells, three seeded BG/FG/overlay runs, {rejected.Count} rejected profiles");
+    }
+}

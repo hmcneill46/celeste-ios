@@ -26,7 +26,8 @@ internal static class ClosureGenerator
         AppleEverestProfile profile,
         IReadOnlyList<ResolvedMod> ordered,
         string repositoryRoot,
-        string outputRoot)
+        string outputRoot,
+        SelectedContentPlan? contentPlan = null)
     {
         string managed = Path.Combine(outputRoot, "managed");
         string content = Path.Combine(outputRoot, "content", "Content");
@@ -48,6 +49,15 @@ internal static class ClosureGenerator
 
         List<(ResolvedMod Mod, AppleStaticDeclaration Declaration)> codeModules = [];
         List<ContentMountRecord> stagedContent = [];
+        foreach (SelectedContentPlan.Entry entry in contentPlan?.EverestContent ?? [])
+        {
+            string source = Path.Combine(repositoryRoot, ".build", "apple-everest", "upstream", "Everest", "Celeste.Mod.mm", "Content", entry.Path);
+            if (profile.Everest.Sha256Commit != "4bbde91b8dbaaddef2ceec75ca0cd6d59b3b8d00" ||
+                Hashing.FileSha256(source) != entry.Sha256)
+                throw new InvalidDataException("selected Everest core content differs from pinned source");
+            string logical = ContentCompiler.Stage(source, NormalizeContentPath("Everest", entry.Path), content);
+            stagedContent.Add(new ContentMountRecord("Everest", -1, entry.Path, logical, entry.Sha256, entry.Sha256));
+        }
         List<FrozenAssemblyRecord> frozenAssemblies = [];
         List<(CustomAudioBankPlan Plan, int ModuleOrdinal, int BankOrdinal)> unorderedCustomAudioBanks = [];
         IReadOnlyList<FrozenIlTransformPlan> frozenIlTransforms = ComposeFrozenIlTransforms(ordered);
@@ -85,11 +95,13 @@ internal static class ClosureGenerator
                     }
                 }
             }
-            foreach (string relative in mod.ContentFiles)
+            foreach (string relative in contentPlan?.Files(mod) ?? mod.ContentFiles)
             {
                 string source = Path.Combine(mod.Input.StagingRoot, relative.Replace('/', Path.DirectorySeparatorChar));
                 string stagedPath = NormalizeContentPath(mod.Metadata.Name, relative);
-                string logical = StaticSemanticLowering.StageContent(mod.StaticSemanticLowering, source, relative, stagedPath, content);
+                string logical = contentPlan?.Preserve(mod.Metadata.Name, relative) == true
+                    ? ContentCompiler.Stage(source, stagedPath, content, preserveOriginalMap: true)
+                    : StaticSemanticLowering.StageContent(mod.StaticSemanticLowering, source, relative, stagedPath, content);
                 stagedContent.Add(new ContentMountRecord(mod.Metadata.Name, modOrder, relative, logical,
                     Hashing.FileSha256(Path.Combine(content, logical.Replace('/', Path.DirectorySeparatorChar))),
                     Hashing.FileSha256(source)));
@@ -183,8 +195,6 @@ internal static class ClosureGenerator
             RegistrySource(profile, codeModules, ordered, durabilityAdapters, durabilityClosureSha256), new UTF8Encoding(false));
         File.WriteAllText(Path.Combine(managed, "GeneratedAppleEverestGameplayRegistry.cs"),
             GameplayRegistrySource(codeModules, ordered), new UTF8Encoding(false));
-        File.WriteAllText(Path.Combine(managed, "GeneratedAppleEverestContentManifest.cs"),
-            ContentManifestSource(ordered, stagedContent, content), new UTF8Encoding(false));
         HashSet<string> staticallyLoweredStrawberryEntities = ordered
             .Where(mod => mod.StaticSemanticLowering != null)
             .SelectMany(mod => mod.StaticSemanticLowering!.Factories)
@@ -198,6 +208,13 @@ internal static class ClosureGenerator
                 Path.Combine(content, value.LogicalPath.Replace('/', Path.DirectorySeparatorChar)),
                 value.LogicalPath, value.SourceSha256, staticallyLoweredStrawberryEntities))
             .OrderBy(value => value.Sid, StringComparer.Ordinal).ToArray();
+        MapBindingsGenerator.Binding[] mapBindings = MapBindingsGenerator.Bind(progressionMaps, stagedContent, contentPlan);
+        File.WriteAllText(Path.Combine(managed, "GeneratedAppleEverestMapBindings.cs"),
+            MapBindingsGenerator.Source(mapBindings, ordered), new UTF8Encoding(false));
+        File.WriteAllText(Path.Combine(outputRoot, "map-bindings.json"),
+            JsonSerializer.Serialize(mapBindings, new JsonSerializerOptions { WriteIndented = true }) + "\n");
+        File.WriteAllText(Path.Combine(managed, "GeneratedAppleEverestContentManifest.cs"),
+            ContentManifestSource(ordered, stagedContent, content, mapBindings), new UTF8Encoding(false));
         CollabGeneration collab = CollabManifestGenerator.Generate(ordered, stagedContent, content, progressionMaps);
         File.WriteAllText(Path.Combine(managed, "GeneratedAppleEverestCollabManifest.cs"),
             collab.Source, new UTF8Encoding(false));
@@ -410,7 +427,7 @@ internal static class ClosureGenerator
                 frozenIlTransforms = frozenIlTransforms.Where(plan => plan.Owner == mod.Metadata.Name).Select(plan => plan.PlanId).ToArray(),
                 customAudioBanks = mod.CustomAudioBanks.Select(bank => bank.BankPath).ToArray(),
                 managedFiles = mod.ManagedFiles,
-                contentFiles = mod.ContentFiles
+                contentFiles = (contentPlan?.Files(mod) ?? mod.ContentFiles).ToArray()
             }).ToArray(),
             resolvedOrder = ordered.Select(mod => mod.Metadata.Name).ToArray(),
             managedFileCount = managedInventory.Count,
@@ -797,7 +814,7 @@ internal static class ClosureGenerator
 
     private static void PatchLevel(string path) => ReplaceOnce(path,
         "\t\tCalc.PopRandom();\n\t}\n\n\tpublic void UnloadLevel()",
-        "\t\tCalc.PopRandom();\n\t\tglobal::Celeste.Mod.Everest.Events.Level.RaiseOnLoadLevel(this, playerIntro, isFromLoader);\n\t\tglobal::Celeste.Mod.AppleEverestCollabRuntime.OnLevelLoaded(this);\n\t}\n\n\tpublic void UnloadLevel()");
+        "\t\tCalc.PopRandom();\n\t\tglobal::Celeste.Mod.Everest.Events.Level.RaiseOnLoadLevel(this, playerIntro, isFromLoader);\n\t\tglobal::Celeste.Mod.AppleEverestCollabRuntime.OnLevelLoaded(this);\n\t\tglobal::Celeste.Mod.AppleEverestStaticRuntime.ObserveTextureUsage(\"level-loaded\", this);\n\t}\n\n\tpublic void UnloadLevel()");
 
     private static void PatchLevelDataRoomNames(string path) => ReplaceOnce(path,
         "\t\t\tcase \"name\":\n\t\t\t\tName = attribute.Value.ToString().Substring(4);\n\t\t\t\tbreak;",
@@ -1541,7 +1558,7 @@ internal static class ClosureGenerator
     }
 
     private static string ContentManifestSource(IReadOnlyList<ResolvedMod> mods,
-        IReadOnlyList<ContentMountRecord> staged, string contentRoot)
+        IReadOnlyList<ContentMountRecord> staged, string contentRoot, IReadOnlyList<MapBindingsGenerator.Binding> mapBindings)
     {
         StringBuilder result = new("namespace Celeste.Mod;\n\ninternal static class GeneratedAppleEverestContentManifest\n{\n    internal static readonly string[] Entries =\n    {\n");
         foreach (string item in staged.Select(value => value.LogicalPath).Distinct(StringComparer.Ordinal).OrderBy(value => value, StringComparer.Ordinal))
@@ -1561,7 +1578,8 @@ internal static class ClosureGenerator
         result.AppendLine("    };")
             .AppendLine("    internal static readonly AppleEverestStaticAssetDescriptor[] StaticAssets =")
             .AppendLine("    {");
-        foreach (ContentMountRecord mount in staged.OrderBy(value => value.Order)
+        // Core atlas content is mounted below, but has no ordinary mod owner.
+        foreach (ContentMountRecord mount in staged.Where(value => value.Order >= 0).OrderBy(value => value.Order)
                      .ThenBy(value => value.SourcePath, StringComparer.Ordinal))
         {
             string extension = Path.GetExtension(mount.SourcePath);
@@ -1582,8 +1600,8 @@ internal static class ClosureGenerator
             if (!IsSpriteBankXml(contentRoot, mount)) continue;
             // Selected map metadata is applied when that map loads, after the
             // helper defaults. It must not become a process-wide sprite bank.
-            if (mount.Owner == "StrawberryJam2021" &&
-                mount.SourcePath == "Graphics/SJ2021xmls/BeginnerLobby/Sprites.xml") continue;
+            if (mapBindings.Any(map => map.Sprites == mount.LogicalPath) ||
+                mount.Owner == "StrawberryJam2021" && mount.SourcePath == "Graphics/SJ2021xmls/BeginnerLobby/Sprites.xml") continue;
             result.Append("        new AppleEverestSpriteBankDescriptor(\"").Append(Escape(mount.Owner))
                 .Append("\", \"").Append(Escape(mount.LogicalPath)).AppendLine("\"),");
         }

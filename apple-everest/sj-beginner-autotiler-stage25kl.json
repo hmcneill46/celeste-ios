@@ -1,0 +1,1511 @@
+{
+  "status": "PASS",
+  "assertions": 89347,
+  "ordinary": [
+    {
+      "source": "foreground",
+      "definitions": 80,
+      "ordinary3x3": 79,
+      "comparisons": 42344,
+      "parsedRuleSha256": "20c93cfdcab941034b25b5b8948ccd3dd9993d8bd4ea6fb94e6e326c37450d2c"
+    },
+    {
+      "source": "background",
+      "definitions": 43,
+      "ordinary3x3": 43,
+      "comparisons": 23048,
+      "parsedRuleSha256": "2f74bffbfc69700b040e623120da7a5fed784a21665eaceb45d2bffad26aa261"
+    },
+    {
+      "source": "vanillaForeground",
+      "definitions": 24,
+      "ordinary3x3": 24,
+      "comparisons": 12864,
+      "parsedRuleSha256": "676d7593335bb908f0f59044b105832f17bda083bf1bf4054dc9fe0ac671db76"
+    },
+    {
+      "source": "vanillaBackground",
+      "definitions": 15,
+      "ordinary3x3": 15,
+      "comparisons": 8040,
+      "parsedRuleSha256": "b5190f3c1cb366461fe7c86702577417babdbdbb4d6b4bbcd1d9b88b1bfbf333"
+    }
+  ],
+  "realCellCount": 26,
+  "realCells": [
+    {
+      "x": 446,
+      "y": 263,
+      "neighborhood": "%%ZZ[/%%ZZ[/%%JJJ/%§§§J/%%%%%",
+      "sourceSetIndex": 63,
+      "apple": {
+        "Mask": "center",
+        "Textures": [
+          "tilesets/SJ2021/mosscairn/grayExtended#5,14"
+        ],
+        "Overlays": [],
+        "HasOverlays": false
+      },
+      "desktop": {
+        "Mask": "center",
+        "Textures": [
+          "tilesets/SJ2021/mosscairn/grayExtended#5,14"
+        ],
+        "Overlays": [],
+        "HasOverlays": false
+      }
+    },
+    {
+      "x": 447,
+      "y": 263,
+      "neighborhood": "%ZZ[0/%ZZ[[/%JJJ§/§§§J§/%%%%%",
+      "sourceSetIndex": 61,
+      "apple": {
+        "Mask": "x111x111111111111111x111x",
+        "Textures": [
+          "tilesets/SJ2021/mosscairn/grayExtended#5,0",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,1",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,2",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,3",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,4",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,5",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,6",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,7",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,8",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,9",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,10",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,11",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,12",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,13",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,14"
+        ],
+        "Overlays": [],
+        "HasOverlays": false
+      },
+      "desktop": {
+        "Mask": "x111x111111111111111x111x",
+        "Textures": [
+          "tilesets/SJ2021/mosscairn/grayExtended#5,0",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,1",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,2",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,3",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,4",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,5",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,6",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,7",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,8",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,9",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,10",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,11",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,12",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,13",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,14"
+        ],
+        "Overlays": [],
+        "HasOverlays": false
+      }
+    },
+    {
+      "x": 448,
+      "y": 263,
+      "neighborhood": "ZZ[00/ZZ[[[/JJJ§§/§§J§§/%%%%%",
+      "sourceSetIndex": 28,
+      "apple": {
+        "Mask": "xx10xx111111111x111xxx1xx",
+        "Textures": [
+          "tilesets/SJ2021/mosscairn/grayExtended#10,3"
+        ],
+        "Overlays": [],
+        "HasOverlays": false
+      },
+      "desktop": {
+        "Mask": "xx10xx111111111x111xxx1xx",
+        "Textures": [
+          "tilesets/SJ2021/mosscairn/grayExtended#10,3"
+        ],
+        "Overlays": [],
+        "HasOverlays": false
+      }
+    },
+    {
+      "x": 453,
+      "y": 263,
+      "neighborhood": "00000/[[[99/§§JJJ/§§§JJ/%%%%%",
+      "sourceSetIndex": 8,
+      "apple": {
+        "Mask": "xx0xxx111x11111x111xxx1xx",
+        "Textures": [
+          "tilesets/SJ2021/mosscairn/grayExtended#6,0",
+          "tilesets/SJ2021/mosscairn/grayExtended#7,0",
+          "tilesets/SJ2021/mosscairn/grayExtended#8,0",
+          "tilesets/SJ2021/mosscairn/grayExtended#9,0"
+        ],
+        "Overlays": [],
+        "HasOverlays": false
+      },
+      "desktop": {
+        "Mask": "xx0xxx111x11111x111xxx1xx",
+        "Textures": [
+          "tilesets/SJ2021/mosscairn/grayExtended#6,0",
+          "tilesets/SJ2021/mosscairn/grayExtended#7,0",
+          "tilesets/SJ2021/mosscairn/grayExtended#8,0",
+          "tilesets/SJ2021/mosscairn/grayExtended#9,0"
+        ],
+        "Overlays": [],
+        "HasOverlays": false
+      }
+    },
+    {
+      "x": 454,
+      "y": 263,
+      "neighborhood": "00000/[[999/§JJJJ/§§JJJ/%%%%%",
+      "sourceSetIndex": 8,
+      "apple": {
+        "Mask": "xx0xxx111x11111x111xxx1xx",
+        "Textures": [
+          "tilesets/SJ2021/mosscairn/grayExtended#6,0",
+          "tilesets/SJ2021/mosscairn/grayExtended#7,0",
+          "tilesets/SJ2021/mosscairn/grayExtended#8,0",
+          "tilesets/SJ2021/mosscairn/grayExtended#9,0"
+        ],
+        "Overlays": [],
+        "HasOverlays": false
+      },
+      "desktop": {
+        "Mask": "xx0xxx111x11111x111xxx1xx",
+        "Textures": [
+          "tilesets/SJ2021/mosscairn/grayExtended#6,0",
+          "tilesets/SJ2021/mosscairn/grayExtended#7,0",
+          "tilesets/SJ2021/mosscairn/grayExtended#8,0",
+          "tilesets/SJ2021/mosscairn/grayExtended#9,0"
+        ],
+        "Overlays": [],
+        "HasOverlays": false
+      }
+    },
+    {
+      "x": 455,
+      "y": 263,
+      "neighborhood": "00000/[9999/JJJJJ/§JJJJ/%%%%%",
+      "sourceSetIndex": 8,
+      "apple": {
+        "Mask": "xx0xxx111x11111x111xxx1xx",
+        "Textures": [
+          "tilesets/SJ2021/mosscairn/grayExtended#6,0",
+          "tilesets/SJ2021/mosscairn/grayExtended#7,0",
+          "tilesets/SJ2021/mosscairn/grayExtended#8,0",
+          "tilesets/SJ2021/mosscairn/grayExtended#9,0"
+        ],
+        "Overlays": [],
+        "HasOverlays": false
+      },
+      "desktop": {
+        "Mask": "xx0xxx111x11111x111xxx1xx",
+        "Textures": [
+          "tilesets/SJ2021/mosscairn/grayExtended#6,0",
+          "tilesets/SJ2021/mosscairn/grayExtended#7,0",
+          "tilesets/SJ2021/mosscairn/grayExtended#8,0",
+          "tilesets/SJ2021/mosscairn/grayExtended#9,0"
+        ],
+        "Overlays": [],
+        "HasOverlays": false
+      }
+    },
+    {
+      "x": 456,
+      "y": 263,
+      "neighborhood": "00000/99999/JJJJJ/JJJJJ/%%%%%",
+      "sourceSetIndex": 8,
+      "apple": {
+        "Mask": "xx0xxx111x11111x111xxx1xx",
+        "Textures": [
+          "tilesets/SJ2021/mosscairn/grayExtended#6,0",
+          "tilesets/SJ2021/mosscairn/grayExtended#7,0",
+          "tilesets/SJ2021/mosscairn/grayExtended#8,0",
+          "tilesets/SJ2021/mosscairn/grayExtended#9,0"
+        ],
+        "Overlays": [],
+        "HasOverlays": false
+      },
+      "desktop": {
+        "Mask": "xx0xxx111x11111x111xxx1xx",
+        "Textures": [
+          "tilesets/SJ2021/mosscairn/grayExtended#6,0",
+          "tilesets/SJ2021/mosscairn/grayExtended#7,0",
+          "tilesets/SJ2021/mosscairn/grayExtended#8,0",
+          "tilesets/SJ2021/mosscairn/grayExtended#9,0"
+        ],
+        "Overlays": [],
+        "HasOverlays": false
+      }
+    },
+    {
+      "x": 457,
+      "y": 263,
+      "neighborhood": "00000/99999/JJJJJ/JJJJJ/%%%%%",
+      "sourceSetIndex": 8,
+      "apple": {
+        "Mask": "xx0xxx111x11111x111xxx1xx",
+        "Textures": [
+          "tilesets/SJ2021/mosscairn/grayExtended#6,0",
+          "tilesets/SJ2021/mosscairn/grayExtended#7,0",
+          "tilesets/SJ2021/mosscairn/grayExtended#8,0",
+          "tilesets/SJ2021/mosscairn/grayExtended#9,0"
+        ],
+        "Overlays": [],
+        "HasOverlays": false
+      },
+      "desktop": {
+        "Mask": "xx0xxx111x11111x111xxx1xx",
+        "Textures": [
+          "tilesets/SJ2021/mosscairn/grayExtended#6,0",
+          "tilesets/SJ2021/mosscairn/grayExtended#7,0",
+          "tilesets/SJ2021/mosscairn/grayExtended#8,0",
+          "tilesets/SJ2021/mosscairn/grayExtended#9,0"
+        ],
+        "Overlays": [],
+        "HasOverlays": false
+      }
+    },
+    {
+      "x": 458,
+      "y": 263,
+      "neighborhood": "00000/99999/JJJJJ/JJJJJ/%%%%%",
+      "sourceSetIndex": 8,
+      "apple": {
+        "Mask": "xx0xxx111x11111x111xxx1xx",
+        "Textures": [
+          "tilesets/SJ2021/mosscairn/grayExtended#6,0",
+          "tilesets/SJ2021/mosscairn/grayExtended#7,0",
+          "tilesets/SJ2021/mosscairn/grayExtended#8,0",
+          "tilesets/SJ2021/mosscairn/grayExtended#9,0"
+        ],
+        "Overlays": [],
+        "HasOverlays": false
+      },
+      "desktop": {
+        "Mask": "xx0xxx111x11111x111xxx1xx",
+        "Textures": [
+          "tilesets/SJ2021/mosscairn/grayExtended#6,0",
+          "tilesets/SJ2021/mosscairn/grayExtended#7,0",
+          "tilesets/SJ2021/mosscairn/grayExtended#8,0",
+          "tilesets/SJ2021/mosscairn/grayExtended#9,0"
+        ],
+        "Overlays": [],
+        "HasOverlays": false
+      }
+    },
+    {
+      "x": 459,
+      "y": 263,
+      "neighborhood": "00000/99999/JJJJJ/JJJJJ/%%%%%",
+      "sourceSetIndex": 8,
+      "apple": {
+        "Mask": "xx0xxx111x11111x111xxx1xx",
+        "Textures": [
+          "tilesets/SJ2021/mosscairn/grayExtended#6,0",
+          "tilesets/SJ2021/mosscairn/grayExtended#7,0",
+          "tilesets/SJ2021/mosscairn/grayExtended#8,0",
+          "tilesets/SJ2021/mosscairn/grayExtended#9,0"
+        ],
+        "Overlays": [],
+        "HasOverlays": false
+      },
+      "desktop": {
+        "Mask": "xx0xxx111x11111x111xxx1xx",
+        "Textures": [
+          "tilesets/SJ2021/mosscairn/grayExtended#6,0",
+          "tilesets/SJ2021/mosscairn/grayExtended#7,0",
+          "tilesets/SJ2021/mosscairn/grayExtended#8,0",
+          "tilesets/SJ2021/mosscairn/grayExtended#9,0"
+        ],
+        "Overlays": [],
+        "HasOverlays": false
+      }
+    },
+    {
+      "x": 460,
+      "y": 263,
+      "neighborhood": "00000/99999/JJJJ§/JJJJ§/%%%%%",
+      "sourceSetIndex": 8,
+      "apple": {
+        "Mask": "xx0xxx111x11111x111xxx1xx",
+        "Textures": [
+          "tilesets/SJ2021/mosscairn/grayExtended#6,0",
+          "tilesets/SJ2021/mosscairn/grayExtended#7,0",
+          "tilesets/SJ2021/mosscairn/grayExtended#8,0",
+          "tilesets/SJ2021/mosscairn/grayExtended#9,0"
+        ],
+        "Overlays": [],
+        "HasOverlays": false
+      },
+      "desktop": {
+        "Mask": "xx0xxx111x11111x111xxx1xx",
+        "Textures": [
+          "tilesets/SJ2021/mosscairn/grayExtended#6,0",
+          "tilesets/SJ2021/mosscairn/grayExtended#7,0",
+          "tilesets/SJ2021/mosscairn/grayExtended#8,0",
+          "tilesets/SJ2021/mosscairn/grayExtended#9,0"
+        ],
+        "Overlays": [],
+        "HasOverlays": false
+      }
+    },
+    {
+      "x": 461,
+      "y": 263,
+      "neighborhood": "00000/9999[/JJJ§§/JJJ§§/%%%%%",
+      "sourceSetIndex": 8,
+      "apple": {
+        "Mask": "xx0xxx111x11111x111xxx1xx",
+        "Textures": [
+          "tilesets/SJ2021/mosscairn/grayExtended#6,0",
+          "tilesets/SJ2021/mosscairn/grayExtended#7,0",
+          "tilesets/SJ2021/mosscairn/grayExtended#8,0",
+          "tilesets/SJ2021/mosscairn/grayExtended#9,0"
+        ],
+        "Overlays": [],
+        "HasOverlays": false
+      },
+      "desktop": {
+        "Mask": "xx0xxx111x11111x111xxx1xx",
+        "Textures": [
+          "tilesets/SJ2021/mosscairn/grayExtended#6,0",
+          "tilesets/SJ2021/mosscairn/grayExtended#7,0",
+          "tilesets/SJ2021/mosscairn/grayExtended#8,0",
+          "tilesets/SJ2021/mosscairn/grayExtended#9,0"
+        ],
+        "Overlays": [],
+        "HasOverlays": false
+      }
+    },
+    {
+      "x": 465,
+      "y": 263,
+      "neighborhood": "00000/[[[[[/§§JJJ/§§§JJ/%%%%%",
+      "sourceSetIndex": 8,
+      "apple": {
+        "Mask": "xx0xxx111x11111x111xxx1xx",
+        "Textures": [
+          "tilesets/SJ2021/mosscairn/grayExtended#6,0",
+          "tilesets/SJ2021/mosscairn/grayExtended#7,0",
+          "tilesets/SJ2021/mosscairn/grayExtended#8,0",
+          "tilesets/SJ2021/mosscairn/grayExtended#9,0"
+        ],
+        "Overlays": [],
+        "HasOverlays": false
+      },
+      "desktop": {
+        "Mask": "xx0xxx111x11111x111xxx1xx",
+        "Textures": [
+          "tilesets/SJ2021/mosscairn/grayExtended#6,0",
+          "tilesets/SJ2021/mosscairn/grayExtended#7,0",
+          "tilesets/SJ2021/mosscairn/grayExtended#8,0",
+          "tilesets/SJ2021/mosscairn/grayExtended#9,0"
+        ],
+        "Overlays": [],
+        "HasOverlays": false
+      }
+    },
+    {
+      "x": 466,
+      "y": 263,
+      "neighborhood": "00000/[[[[§/§JJJ§/§§JJ§/%%%%%",
+      "sourceSetIndex": 8,
+      "apple": {
+        "Mask": "xx0xxx111x11111x111xxx1xx",
+        "Textures": [
+          "tilesets/SJ2021/mosscairn/grayExtended#6,0",
+          "tilesets/SJ2021/mosscairn/grayExtended#7,0",
+          "tilesets/SJ2021/mosscairn/grayExtended#8,0",
+          "tilesets/SJ2021/mosscairn/grayExtended#9,0"
+        ],
+        "Overlays": [],
+        "HasOverlays": false
+      },
+      "desktop": {
+        "Mask": "xx0xxx111x11111x111xxx1xx",
+        "Textures": [
+          "tilesets/SJ2021/mosscairn/grayExtended#6,0",
+          "tilesets/SJ2021/mosscairn/grayExtended#7,0",
+          "tilesets/SJ2021/mosscairn/grayExtended#8,0",
+          "tilesets/SJ2021/mosscairn/grayExtended#9,0"
+        ],
+        "Overlays": [],
+        "HasOverlays": false
+      }
+    },
+    {
+      "x": 467,
+      "y": 263,
+      "neighborhood": "00000/[[[§§/JJJ§§/§JJ§§/%%%%%",
+      "sourceSetIndex": 8,
+      "apple": {
+        "Mask": "xx0xxx111x11111x111xxx1xx",
+        "Textures": [
+          "tilesets/SJ2021/mosscairn/grayExtended#6,0",
+          "tilesets/SJ2021/mosscairn/grayExtended#7,0",
+          "tilesets/SJ2021/mosscairn/grayExtended#8,0",
+          "tilesets/SJ2021/mosscairn/grayExtended#9,0"
+        ],
+        "Overlays": [],
+        "HasOverlays": false
+      },
+      "desktop": {
+        "Mask": "xx0xxx111x11111x111xxx1xx",
+        "Textures": [
+          "tilesets/SJ2021/mosscairn/grayExtended#6,0",
+          "tilesets/SJ2021/mosscairn/grayExtended#7,0",
+          "tilesets/SJ2021/mosscairn/grayExtended#8,0",
+          "tilesets/SJ2021/mosscairn/grayExtended#9,0"
+        ],
+        "Overlays": [],
+        "HasOverlays": false
+      }
+    },
+    {
+      "x": 448,
+      "y": 264,
+      "neighborhood": "ZZ[[[/JJJ§§/§§J§§/%%%%%/%%%%%",
+      "sourceSetIndex": 63,
+      "apple": {
+        "Mask": "center",
+        "Textures": [
+          "tilesets/SJ2021/mosscairn/grayExtended#5,14"
+        ],
+        "Overlays": [],
+        "HasOverlays": false
+      },
+      "desktop": {
+        "Mask": "center",
+        "Textures": [
+          "tilesets/SJ2021/mosscairn/grayExtended#5,14"
+        ],
+        "Overlays": [],
+        "HasOverlays": false
+      }
+    },
+    {
+      "x": 454,
+      "y": 264,
+      "neighborhood": "[[999/§JJJJ/§§JJJ/%%%%%/%%%%%",
+      "sourceSetIndex": 62,
+      "apple": {
+        "Mask": "padding",
+        "Textures": [
+          "tilesets/SJ2021/mosscairn/grayExtended#5,0",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,1",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,2",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,3",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,4",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,5",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,6",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,7",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,8",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,9",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,10",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,11",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,12",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,13",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,14"
+        ],
+        "Overlays": [],
+        "HasOverlays": false
+      },
+      "desktop": {
+        "Mask": "padding",
+        "Textures": [
+          "tilesets/SJ2021/mosscairn/grayExtended#5,0",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,1",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,2",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,3",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,4",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,5",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,6",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,7",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,8",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,9",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,10",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,11",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,12",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,13",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,14"
+        ],
+        "Overlays": [],
+        "HasOverlays": false
+      }
+    },
+    {
+      "x": 455,
+      "y": 264,
+      "neighborhood": "[9999/JJJJJ/§JJJJ/%%%%%/%%%%%",
+      "sourceSetIndex": 62,
+      "apple": {
+        "Mask": "padding",
+        "Textures": [
+          "tilesets/SJ2021/mosscairn/grayExtended#5,0",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,1",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,2",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,3",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,4",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,5",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,6",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,7",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,8",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,9",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,10",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,11",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,12",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,13",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,14"
+        ],
+        "Overlays": [],
+        "HasOverlays": false
+      },
+      "desktop": {
+        "Mask": "padding",
+        "Textures": [
+          "tilesets/SJ2021/mosscairn/grayExtended#5,0",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,1",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,2",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,3",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,4",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,5",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,6",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,7",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,8",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,9",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,10",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,11",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,12",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,13",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,14"
+        ],
+        "Overlays": [],
+        "HasOverlays": false
+      }
+    },
+    {
+      "x": 456,
+      "y": 264,
+      "neighborhood": "99999/JJJJJ/JJJJJ/%%%%%/%%%%%",
+      "sourceSetIndex": 62,
+      "apple": {
+        "Mask": "padding",
+        "Textures": [
+          "tilesets/SJ2021/mosscairn/grayExtended#5,0",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,1",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,2",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,3",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,4",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,5",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,6",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,7",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,8",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,9",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,10",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,11",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,12",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,13",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,14"
+        ],
+        "Overlays": [],
+        "HasOverlays": false
+      },
+      "desktop": {
+        "Mask": "padding",
+        "Textures": [
+          "tilesets/SJ2021/mosscairn/grayExtended#5,0",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,1",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,2",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,3",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,4",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,5",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,6",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,7",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,8",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,9",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,10",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,11",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,12",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,13",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,14"
+        ],
+        "Overlays": [],
+        "HasOverlays": false
+      }
+    },
+    {
+      "x": 457,
+      "y": 264,
+      "neighborhood": "99999/JJJJJ/JJJJJ/%%%%%/%%%%%",
+      "sourceSetIndex": 62,
+      "apple": {
+        "Mask": "padding",
+        "Textures": [
+          "tilesets/SJ2021/mosscairn/grayExtended#5,0",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,1",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,2",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,3",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,4",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,5",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,6",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,7",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,8",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,9",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,10",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,11",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,12",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,13",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,14"
+        ],
+        "Overlays": [],
+        "HasOverlays": false
+      },
+      "desktop": {
+        "Mask": "padding",
+        "Textures": [
+          "tilesets/SJ2021/mosscairn/grayExtended#5,0",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,1",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,2",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,3",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,4",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,5",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,6",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,7",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,8",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,9",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,10",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,11",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,12",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,13",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,14"
+        ],
+        "Overlays": [],
+        "HasOverlays": false
+      }
+    },
+    {
+      "x": 458,
+      "y": 264,
+      "neighborhood": "99999/JJJJJ/JJJJJ/%%%%%/%%%%%",
+      "sourceSetIndex": 62,
+      "apple": {
+        "Mask": "padding",
+        "Textures": [
+          "tilesets/SJ2021/mosscairn/grayExtended#5,0",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,1",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,2",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,3",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,4",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,5",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,6",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,7",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,8",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,9",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,10",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,11",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,12",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,13",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,14"
+        ],
+        "Overlays": [],
+        "HasOverlays": false
+      },
+      "desktop": {
+        "Mask": "padding",
+        "Textures": [
+          "tilesets/SJ2021/mosscairn/grayExtended#5,0",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,1",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,2",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,3",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,4",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,5",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,6",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,7",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,8",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,9",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,10",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,11",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,12",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,13",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,14"
+        ],
+        "Overlays": [],
+        "HasOverlays": false
+      }
+    },
+    {
+      "x": 459,
+      "y": 264,
+      "neighborhood": "99999/JJJJJ/JJJJJ/%%%%%/%%%%%",
+      "sourceSetIndex": 62,
+      "apple": {
+        "Mask": "padding",
+        "Textures": [
+          "tilesets/SJ2021/mosscairn/grayExtended#5,0",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,1",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,2",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,3",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,4",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,5",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,6",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,7",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,8",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,9",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,10",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,11",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,12",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,13",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,14"
+        ],
+        "Overlays": [],
+        "HasOverlays": false
+      },
+      "desktop": {
+        "Mask": "padding",
+        "Textures": [
+          "tilesets/SJ2021/mosscairn/grayExtended#5,0",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,1",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,2",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,3",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,4",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,5",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,6",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,7",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,8",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,9",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,10",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,11",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,12",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,13",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,14"
+        ],
+        "Overlays": [],
+        "HasOverlays": false
+      }
+    },
+    {
+      "x": 460,
+      "y": 264,
+      "neighborhood": "99999/JJJJ§/JJJJ§/%%%%%/%%%%%",
+      "sourceSetIndex": 62,
+      "apple": {
+        "Mask": "padding",
+        "Textures": [
+          "tilesets/SJ2021/mosscairn/grayExtended#5,0",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,1",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,2",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,3",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,4",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,5",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,6",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,7",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,8",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,9",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,10",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,11",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,12",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,13",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,14"
+        ],
+        "Overlays": [],
+        "HasOverlays": false
+      },
+      "desktop": {
+        "Mask": "padding",
+        "Textures": [
+          "tilesets/SJ2021/mosscairn/grayExtended#5,0",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,1",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,2",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,3",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,4",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,5",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,6",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,7",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,8",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,9",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,10",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,11",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,12",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,13",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,14"
+        ],
+        "Overlays": [],
+        "HasOverlays": false
+      }
+    },
+    {
+      "x": 461,
+      "y": 264,
+      "neighborhood": "9999[/JJJ§§/JJJ§§/%%%%%/%%%%%",
+      "sourceSetIndex": 62,
+      "apple": {
+        "Mask": "padding",
+        "Textures": [
+          "tilesets/SJ2021/mosscairn/grayExtended#5,0",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,1",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,2",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,3",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,4",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,5",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,6",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,7",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,8",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,9",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,10",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,11",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,12",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,13",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,14"
+        ],
+        "Overlays": [],
+        "HasOverlays": false
+      },
+      "desktop": {
+        "Mask": "padding",
+        "Textures": [
+          "tilesets/SJ2021/mosscairn/grayExtended#5,0",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,1",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,2",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,3",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,4",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,5",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,6",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,7",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,8",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,9",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,10",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,11",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,12",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,13",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,14"
+        ],
+        "Overlays": [],
+        "HasOverlays": false
+      }
+    },
+    {
+      "x": 466,
+      "y": 264,
+      "neighborhood": "[[[[§/§JJJ§/§§JJ§/%%%%%/%%%%%",
+      "sourceSetIndex": 62,
+      "apple": {
+        "Mask": "padding",
+        "Textures": [
+          "tilesets/SJ2021/mosscairn/grayExtended#5,0",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,1",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,2",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,3",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,4",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,5",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,6",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,7",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,8",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,9",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,10",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,11",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,12",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,13",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,14"
+        ],
+        "Overlays": [],
+        "HasOverlays": false
+      },
+      "desktop": {
+        "Mask": "padding",
+        "Textures": [
+          "tilesets/SJ2021/mosscairn/grayExtended#5,0",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,1",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,2",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,3",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,4",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,5",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,6",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,7",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,8",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,9",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,10",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,11",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,12",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,13",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,14"
+        ],
+        "Overlays": [],
+        "HasOverlays": false
+      }
+    },
+    {
+      "x": 467,
+      "y": 264,
+      "neighborhood": "[[[§§/JJJ§§/§JJ§§/%%%%%/%%%%%",
+      "sourceSetIndex": 62,
+      "apple": {
+        "Mask": "padding",
+        "Textures": [
+          "tilesets/SJ2021/mosscairn/grayExtended#5,0",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,1",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,2",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,3",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,4",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,5",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,6",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,7",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,8",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,9",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,10",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,11",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,12",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,13",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,14"
+        ],
+        "Overlays": [],
+        "HasOverlays": false
+      },
+      "desktop": {
+        "Mask": "padding",
+        "Textures": [
+          "tilesets/SJ2021/mosscairn/grayExtended#5,0",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,1",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,2",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,3",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,4",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,5",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,6",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,7",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,8",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,9",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,10",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,11",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,12",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,13",
+          "tilesets/SJ2021/mosscairn/grayExtended#5,14"
+        ],
+        "Overlays": [],
+        "HasOverlays": false
+      }
+    }
+  ],
+  "syntheticComparisons": 2955,
+  "seededGeneration": [
+    {
+      "seed": 3349,
+      "backgroundSha256": "aae65631566840f1db227c47f120750a61f4712f62b1241ef6fcee1933951918",
+      "foregroundSha256": "4beb1cba67216c751a419665b905aa23610d3b0ce02f575a27b8f32b62778941",
+      "nextRandom": 1368395689,
+      "cells": [
+        {
+          "x": 446,
+          "y": 263,
+          "apple": "tilesets/SJ2021/mosscairn/grayExtended#5,14",
+          "desktop": "tilesets/SJ2021/mosscairn/grayExtended#5,14"
+        },
+        {
+          "x": 447,
+          "y": 263,
+          "apple": "tilesets/SJ2021/mosscairn/grayExtended#5,7",
+          "desktop": "tilesets/SJ2021/mosscairn/grayExtended#5,7"
+        },
+        {
+          "x": 448,
+          "y": 263,
+          "apple": "tilesets/SJ2021/mosscairn/grayExtended#10,3",
+          "desktop": "tilesets/SJ2021/mosscairn/grayExtended#10,3"
+        },
+        {
+          "x": 453,
+          "y": 263,
+          "apple": "tilesets/SJ2021/mosscairn/grayExtended#8,0",
+          "desktop": "tilesets/SJ2021/mosscairn/grayExtended#8,0"
+        },
+        {
+          "x": 454,
+          "y": 263,
+          "apple": "tilesets/SJ2021/mosscairn/grayExtended#9,0",
+          "desktop": "tilesets/SJ2021/mosscairn/grayExtended#9,0"
+        },
+        {
+          "x": 455,
+          "y": 263,
+          "apple": "tilesets/SJ2021/mosscairn/grayExtended#6,0",
+          "desktop": "tilesets/SJ2021/mosscairn/grayExtended#6,0"
+        },
+        {
+          "x": 456,
+          "y": 263,
+          "apple": "tilesets/SJ2021/mosscairn/grayExtended#6,0",
+          "desktop": "tilesets/SJ2021/mosscairn/grayExtended#6,0"
+        },
+        {
+          "x": 457,
+          "y": 263,
+          "apple": "tilesets/SJ2021/mosscairn/grayExtended#7,0",
+          "desktop": "tilesets/SJ2021/mosscairn/grayExtended#7,0"
+        },
+        {
+          "x": 458,
+          "y": 263,
+          "apple": "tilesets/SJ2021/mosscairn/grayExtended#7,0",
+          "desktop": "tilesets/SJ2021/mosscairn/grayExtended#7,0"
+        },
+        {
+          "x": 459,
+          "y": 263,
+          "apple": "tilesets/SJ2021/mosscairn/grayExtended#9,0",
+          "desktop": "tilesets/SJ2021/mosscairn/grayExtended#9,0"
+        },
+        {
+          "x": 460,
+          "y": 263,
+          "apple": "tilesets/SJ2021/mosscairn/grayExtended#7,0",
+          "desktop": "tilesets/SJ2021/mosscairn/grayExtended#7,0"
+        },
+        {
+          "x": 461,
+          "y": 263,
+          "apple": "tilesets/SJ2021/mosscairn/grayExtended#9,0",
+          "desktop": "tilesets/SJ2021/mosscairn/grayExtended#9,0"
+        },
+        {
+          "x": 465,
+          "y": 263,
+          "apple": "tilesets/SJ2021/mosscairn/grayExtended#8,0",
+          "desktop": "tilesets/SJ2021/mosscairn/grayExtended#8,0"
+        },
+        {
+          "x": 466,
+          "y": 263,
+          "apple": "tilesets/SJ2021/mosscairn/grayExtended#8,0",
+          "desktop": "tilesets/SJ2021/mosscairn/grayExtended#8,0"
+        },
+        {
+          "x": 467,
+          "y": 263,
+          "apple": "tilesets/SJ2021/mosscairn/grayExtended#6,0",
+          "desktop": "tilesets/SJ2021/mosscairn/grayExtended#6,0"
+        },
+        {
+          "x": 448,
+          "y": 264,
+          "apple": "tilesets/SJ2021/mosscairn/grayExtended#5,14",
+          "desktop": "tilesets/SJ2021/mosscairn/grayExtended#5,14"
+        },
+        {
+          "x": 454,
+          "y": 264,
+          "apple": "tilesets/SJ2021/mosscairn/grayExtended#5,0",
+          "desktop": "tilesets/SJ2021/mosscairn/grayExtended#5,0"
+        },
+        {
+          "x": 455,
+          "y": 264,
+          "apple": "tilesets/SJ2021/mosscairn/grayExtended#5,3",
+          "desktop": "tilesets/SJ2021/mosscairn/grayExtended#5,3"
+        },
+        {
+          "x": 456,
+          "y": 264,
+          "apple": "tilesets/SJ2021/mosscairn/grayExtended#5,11",
+          "desktop": "tilesets/SJ2021/mosscairn/grayExtended#5,11"
+        },
+        {
+          "x": 457,
+          "y": 264,
+          "apple": "tilesets/SJ2021/mosscairn/grayExtended#5,14",
+          "desktop": "tilesets/SJ2021/mosscairn/grayExtended#5,14"
+        },
+        {
+          "x": 458,
+          "y": 264,
+          "apple": "tilesets/SJ2021/mosscairn/grayExtended#5,2",
+          "desktop": "tilesets/SJ2021/mosscairn/grayExtended#5,2"
+        },
+        {
+          "x": 459,
+          "y": 264,
+          "apple": "tilesets/SJ2021/mosscairn/grayExtended#5,6",
+          "desktop": "tilesets/SJ2021/mosscairn/grayExtended#5,6"
+        },
+        {
+          "x": 460,
+          "y": 264,
+          "apple": "tilesets/SJ2021/mosscairn/grayExtended#5,4",
+          "desktop": "tilesets/SJ2021/mosscairn/grayExtended#5,4"
+        },
+        {
+          "x": 461,
+          "y": 264,
+          "apple": "tilesets/SJ2021/mosscairn/grayExtended#5,13",
+          "desktop": "tilesets/SJ2021/mosscairn/grayExtended#5,13"
+        },
+        {
+          "x": 466,
+          "y": 264,
+          "apple": "tilesets/SJ2021/mosscairn/grayExtended#5,6",
+          "desktop": "tilesets/SJ2021/mosscairn/grayExtended#5,6"
+        },
+        {
+          "x": 467,
+          "y": 264,
+          "apple": "tilesets/SJ2021/mosscairn/grayExtended#5,3",
+          "desktop": "tilesets/SJ2021/mosscairn/grayExtended#5,3"
+        }
+      ]
+    },
+    {
+      "seed": 0,
+      "backgroundSha256": "7073b9f40261e8aa705b7ed119a71913ba47df16ec13e85222c69589df224229",
+      "foregroundSha256": "90f7755716ce942c90b28a083840f5707cdcfe9426e7c17cfe71b0fd9e02c669",
+      "nextRandom": 1256959234,
+      "cells": [
+        {
+          "x": 446,
+          "y": 263,
+          "apple": "tilesets/SJ2021/mosscairn/grayExtended#5,14",
+          "desktop": "tilesets/SJ2021/mosscairn/grayExtended#5,14"
+        },
+        {
+          "x": 447,
+          "y": 263,
+          "apple": "tilesets/SJ2021/mosscairn/grayExtended#5,1",
+          "desktop": "tilesets/SJ2021/mosscairn/grayExtended#5,1"
+        },
+        {
+          "x": 448,
+          "y": 263,
+          "apple": "tilesets/SJ2021/mosscairn/grayExtended#10,3",
+          "desktop": "tilesets/SJ2021/mosscairn/grayExtended#10,3"
+        },
+        {
+          "x": 453,
+          "y": 263,
+          "apple": "tilesets/SJ2021/mosscairn/grayExtended#7,0",
+          "desktop": "tilesets/SJ2021/mosscairn/grayExtended#7,0"
+        },
+        {
+          "x": 454,
+          "y": 263,
+          "apple": "tilesets/SJ2021/mosscairn/grayExtended#6,0",
+          "desktop": "tilesets/SJ2021/mosscairn/grayExtended#6,0"
+        },
+        {
+          "x": 455,
+          "y": 263,
+          "apple": "tilesets/SJ2021/mosscairn/grayExtended#8,0",
+          "desktop": "tilesets/SJ2021/mosscairn/grayExtended#8,0"
+        },
+        {
+          "x": 456,
+          "y": 263,
+          "apple": "tilesets/SJ2021/mosscairn/grayExtended#9,0",
+          "desktop": "tilesets/SJ2021/mosscairn/grayExtended#9,0"
+        },
+        {
+          "x": 457,
+          "y": 263,
+          "apple": "tilesets/SJ2021/mosscairn/grayExtended#7,0",
+          "desktop": "tilesets/SJ2021/mosscairn/grayExtended#7,0"
+        },
+        {
+          "x": 458,
+          "y": 263,
+          "apple": "tilesets/SJ2021/mosscairn/grayExtended#7,0",
+          "desktop": "tilesets/SJ2021/mosscairn/grayExtended#7,0"
+        },
+        {
+          "x": 459,
+          "y": 263,
+          "apple": "tilesets/SJ2021/mosscairn/grayExtended#7,0",
+          "desktop": "tilesets/SJ2021/mosscairn/grayExtended#7,0"
+        },
+        {
+          "x": 460,
+          "y": 263,
+          "apple": "tilesets/SJ2021/mosscairn/grayExtended#6,0",
+          "desktop": "tilesets/SJ2021/mosscairn/grayExtended#6,0"
+        },
+        {
+          "x": 461,
+          "y": 263,
+          "apple": "tilesets/SJ2021/mosscairn/grayExtended#8,0",
+          "desktop": "tilesets/SJ2021/mosscairn/grayExtended#8,0"
+        },
+        {
+          "x": 465,
+          "y": 263,
+          "apple": "tilesets/SJ2021/mosscairn/grayExtended#7,0",
+          "desktop": "tilesets/SJ2021/mosscairn/grayExtended#7,0"
+        },
+        {
+          "x": 466,
+          "y": 263,
+          "apple": "tilesets/SJ2021/mosscairn/grayExtended#7,0",
+          "desktop": "tilesets/SJ2021/mosscairn/grayExtended#7,0"
+        },
+        {
+          "x": 467,
+          "y": 263,
+          "apple": "tilesets/SJ2021/mosscairn/grayExtended#8,0",
+          "desktop": "tilesets/SJ2021/mosscairn/grayExtended#8,0"
+        },
+        {
+          "x": 448,
+          "y": 264,
+          "apple": "tilesets/SJ2021/mosscairn/grayExtended#5,14",
+          "desktop": "tilesets/SJ2021/mosscairn/grayExtended#5,14"
+        },
+        {
+          "x": 454,
+          "y": 264,
+          "apple": "tilesets/SJ2021/mosscairn/grayExtended#5,9",
+          "desktop": "tilesets/SJ2021/mosscairn/grayExtended#5,9"
+        },
+        {
+          "x": 455,
+          "y": 264,
+          "apple": "tilesets/SJ2021/mosscairn/grayExtended#5,8",
+          "desktop": "tilesets/SJ2021/mosscairn/grayExtended#5,8"
+        },
+        {
+          "x": 456,
+          "y": 264,
+          "apple": "tilesets/SJ2021/mosscairn/grayExtended#5,5",
+          "desktop": "tilesets/SJ2021/mosscairn/grayExtended#5,5"
+        },
+        {
+          "x": 457,
+          "y": 264,
+          "apple": "tilesets/SJ2021/mosscairn/grayExtended#5,11",
+          "desktop": "tilesets/SJ2021/mosscairn/grayExtended#5,11"
+        },
+        {
+          "x": 458,
+          "y": 264,
+          "apple": "tilesets/SJ2021/mosscairn/grayExtended#5,4",
+          "desktop": "tilesets/SJ2021/mosscairn/grayExtended#5,4"
+        },
+        {
+          "x": 459,
+          "y": 264,
+          "apple": "tilesets/SJ2021/mosscairn/grayExtended#5,13",
+          "desktop": "tilesets/SJ2021/mosscairn/grayExtended#5,13"
+        },
+        {
+          "x": 460,
+          "y": 264,
+          "apple": "tilesets/SJ2021/mosscairn/grayExtended#5,13",
+          "desktop": "tilesets/SJ2021/mosscairn/grayExtended#5,13"
+        },
+        {
+          "x": 461,
+          "y": 264,
+          "apple": "tilesets/SJ2021/mosscairn/grayExtended#5,0",
+          "desktop": "tilesets/SJ2021/mosscairn/grayExtended#5,0"
+        },
+        {
+          "x": 466,
+          "y": 264,
+          "apple": "tilesets/SJ2021/mosscairn/grayExtended#5,3",
+          "desktop": "tilesets/SJ2021/mosscairn/grayExtended#5,3"
+        },
+        {
+          "x": 467,
+          "y": 264,
+          "apple": "tilesets/SJ2021/mosscairn/grayExtended#5,2",
+          "desktop": "tilesets/SJ2021/mosscairn/grayExtended#5,2"
+        }
+      ]
+    },
+    {
+      "seed": 2525,
+      "backgroundSha256": "f2052a2dbfae19e4b8a543f8e7dca53639d625f3e4cf008b1857eaa9b4d8714c",
+      "foregroundSha256": "035a1ffea0110cd3126b3887bf3cb4e245e40b6eb3f0576322f8b3777b051612",
+      "nextRandom": 1194776725,
+      "cells": [
+        {
+          "x": 446,
+          "y": 263,
+          "apple": "tilesets/SJ2021/mosscairn/grayExtended#5,14",
+          "desktop": "tilesets/SJ2021/mosscairn/grayExtended#5,14"
+        },
+        {
+          "x": 447,
+          "y": 263,
+          "apple": "tilesets/SJ2021/mosscairn/grayExtended#5,10",
+          "desktop": "tilesets/SJ2021/mosscairn/grayExtended#5,10"
+        },
+        {
+          "x": 448,
+          "y": 263,
+          "apple": "tilesets/SJ2021/mosscairn/grayExtended#10,3",
+          "desktop": "tilesets/SJ2021/mosscairn/grayExtended#10,3"
+        },
+        {
+          "x": 453,
+          "y": 263,
+          "apple": "tilesets/SJ2021/mosscairn/grayExtended#8,0",
+          "desktop": "tilesets/SJ2021/mosscairn/grayExtended#8,0"
+        },
+        {
+          "x": 454,
+          "y": 263,
+          "apple": "tilesets/SJ2021/mosscairn/grayExtended#8,0",
+          "desktop": "tilesets/SJ2021/mosscairn/grayExtended#8,0"
+        },
+        {
+          "x": 455,
+          "y": 263,
+          "apple": "tilesets/SJ2021/mosscairn/grayExtended#6,0",
+          "desktop": "tilesets/SJ2021/mosscairn/grayExtended#6,0"
+        },
+        {
+          "x": 456,
+          "y": 263,
+          "apple": "tilesets/SJ2021/mosscairn/grayExtended#9,0",
+          "desktop": "tilesets/SJ2021/mosscairn/grayExtended#9,0"
+        },
+        {
+          "x": 457,
+          "y": 263,
+          "apple": "tilesets/SJ2021/mosscairn/grayExtended#9,0",
+          "desktop": "tilesets/SJ2021/mosscairn/grayExtended#9,0"
+        },
+        {
+          "x": 458,
+          "y": 263,
+          "apple": "tilesets/SJ2021/mosscairn/grayExtended#9,0",
+          "desktop": "tilesets/SJ2021/mosscairn/grayExtended#9,0"
+        },
+        {
+          "x": 459,
+          "y": 263,
+          "apple": "tilesets/SJ2021/mosscairn/grayExtended#9,0",
+          "desktop": "tilesets/SJ2021/mosscairn/grayExtended#9,0"
+        },
+        {
+          "x": 460,
+          "y": 263,
+          "apple": "tilesets/SJ2021/mosscairn/grayExtended#7,0",
+          "desktop": "tilesets/SJ2021/mosscairn/grayExtended#7,0"
+        },
+        {
+          "x": 461,
+          "y": 263,
+          "apple": "tilesets/SJ2021/mosscairn/grayExtended#8,0",
+          "desktop": "tilesets/SJ2021/mosscairn/grayExtended#8,0"
+        },
+        {
+          "x": 465,
+          "y": 263,
+          "apple": "tilesets/SJ2021/mosscairn/grayExtended#8,0",
+          "desktop": "tilesets/SJ2021/mosscairn/grayExtended#8,0"
+        },
+        {
+          "x": 466,
+          "y": 263,
+          "apple": "tilesets/SJ2021/mosscairn/grayExtended#9,0",
+          "desktop": "tilesets/SJ2021/mosscairn/grayExtended#9,0"
+        },
+        {
+          "x": 467,
+          "y": 263,
+          "apple": "tilesets/SJ2021/mosscairn/grayExtended#8,0",
+          "desktop": "tilesets/SJ2021/mosscairn/grayExtended#8,0"
+        },
+        {
+          "x": 448,
+          "y": 264,
+          "apple": "tilesets/SJ2021/mosscairn/grayExtended#5,14",
+          "desktop": "tilesets/SJ2021/mosscairn/grayExtended#5,14"
+        },
+        {
+          "x": 454,
+          "y": 264,
+          "apple": "tilesets/SJ2021/mosscairn/grayExtended#5,11",
+          "desktop": "tilesets/SJ2021/mosscairn/grayExtended#5,11"
+        },
+        {
+          "x": 455,
+          "y": 264,
+          "apple": "tilesets/SJ2021/mosscairn/grayExtended#5,13",
+          "desktop": "tilesets/SJ2021/mosscairn/grayExtended#5,13"
+        },
+        {
+          "x": 456,
+          "y": 264,
+          "apple": "tilesets/SJ2021/mosscairn/grayExtended#5,11",
+          "desktop": "tilesets/SJ2021/mosscairn/grayExtended#5,11"
+        },
+        {
+          "x": 457,
+          "y": 264,
+          "apple": "tilesets/SJ2021/mosscairn/grayExtended#5,10",
+          "desktop": "tilesets/SJ2021/mosscairn/grayExtended#5,10"
+        },
+        {
+          "x": 458,
+          "y": 264,
+          "apple": "tilesets/SJ2021/mosscairn/grayExtended#5,0",
+          "desktop": "tilesets/SJ2021/mosscairn/grayExtended#5,0"
+        },
+        {
+          "x": 459,
+          "y": 264,
+          "apple": "tilesets/SJ2021/mosscairn/grayExtended#5,3",
+          "desktop": "tilesets/SJ2021/mosscairn/grayExtended#5,3"
+        },
+        {
+          "x": 460,
+          "y": 264,
+          "apple": "tilesets/SJ2021/mosscairn/grayExtended#5,4",
+          "desktop": "tilesets/SJ2021/mosscairn/grayExtended#5,4"
+        },
+        {
+          "x": 461,
+          "y": 264,
+          "apple": "tilesets/SJ2021/mosscairn/grayExtended#5,8",
+          "desktop": "tilesets/SJ2021/mosscairn/grayExtended#5,8"
+        },
+        {
+          "x": 466,
+          "y": 264,
+          "apple": "tilesets/SJ2021/mosscairn/grayExtended#5,13",
+          "desktop": "tilesets/SJ2021/mosscairn/grayExtended#5,13"
+        },
+        {
+          "x": 467,
+          "y": 264,
+          "apple": "tilesets/SJ2021/mosscairn/grayExtended#5,0",
+          "desktop": "tilesets/SJ2021/mosscairn/grayExtended#5,0"
+        }
+      ]
+    }
+  ],
+  "rejectedControls": [
+    "unsupported width 0",
+    "unsupported width 2",
+    "unsupported width 7",
+    "unsupported width -1",
+    "unsupported width six",
+    "dimension mismatch",
+    "short mask",
+    "long mask",
+    "custom filter",
+    "custom fill",
+    "ignore exceptions",
+    "mixed copy dimensions",
+    "omitted required J"
+  ],
+  "deliberateStrictness": "Short masks rejected instead of pinned implicit zero fill; unsupported profiles fail closed.",
+  "canonicalAutotilerSha256": "b0db319cab002cecbd8155c19b4462af0f1c6a75df38e6348a25a09e8d450a0b",
+  "pinnedEverestAutotilerSha256": "cb331f7b766976c306675d8928e46632d1b6a6b17df5d0ab8eded515ab4fa748",
+  "actualAppliedAutotilerSha256": "e99b0f392123553807290d05e550046b8fe1f3ea1759a7ce700714c2c827c598",
+  "actualProductionPartialSha256": "917c056ce50fc40a6d4c9ea76a810b5255f9ae8dc9aef7e4c9b7bf1485836109",
+  "actualProductionMaskRulesSha256": "0c5473089373614a0a92e3bea8f47bb2c6abdbb8cd7556c2c0925dc19039e0fa",
+  "actualAppliedTilesetSha256": "2de21b884d5508fd2c874aee28d62c30264aeef405ed2000fd2007457b7597f0",
+  "pinnedTilesetSha256": "7135c648d9f62fb404cd4a37708f04ee96879828dc5acd29780fb1ad649fec95",
+  "sharedClosureSha256": "03d5be105ed3ca3cb0061ac1abc1054e186b35141032076084c74d7bee949158",
+  "canonicalTerrainPreparationSha256": "b35b6f5c0479b0eccaf5d5a1c6affaca388c6733a585248b910208a354c6af7f",
+  "referenceConstruction": "MECHANICAL_PINNED_METHODS_WITH_CANONICAL_ORIGINALS_AND_ACTUAL_VIRTUAL_MAP",
+  "hostBoundaries": "XML helpers and coordinate textures; AnimatedTiles.Set preserves exact initial-frame RNG consumption"
+}

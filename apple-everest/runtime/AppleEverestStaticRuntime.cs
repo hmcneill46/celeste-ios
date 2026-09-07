@@ -29,6 +29,7 @@ public static class AppleEverestStaticRuntime
     private static readonly HashSet<string> ObservedModInteropRegistrations = new(StringComparer.Ordinal);
     private static readonly HashSet<string> ObservedModInteropExports = new(StringComparer.Ordinal);
     private static readonly Dictionary<string, string> StaticSpriteOwners = new(StringComparer.OrdinalIgnoreCase);
+    private static readonly List<VirtualTexture> MountedStaticTextures = new();
     private static SpriteBank StaticSpriteBank;
     internal static SpriteBank SelectedMapSpriteBank;
     private static bool started;
@@ -107,6 +108,7 @@ public static class AppleEverestStaticRuntime
         if (GeneratedAppleEverestContentManifest.Has("AppleEverest/Canary/precedence.txt")) VerifyContentPrecedence();
         CompleteContentLifecycle();
         Log($"content=PASS mounts={GeneratedAppleEverestContentManifest.Entries.Length}");
+        ObserveTextureUsage("content-ready");
     }
 
     private static void CompleteContentLifecycle()
@@ -164,11 +166,29 @@ public static class AppleEverestStaticRuntime
             // dimensions at startup, but decode the backing image only if
             // gameplay or UI actually uses it.
             VirtualTexture texture = VirtualContent.CreateDeferredTexture(descriptor.LogicalPath);
+            MountedStaticTextures.Add(texture);
             MTexture mounted = new(texture) { AtlasPath = descriptor.Key };
             atlas.Sources.Add(texture);
             atlas[descriptor.Key] = mounted;
         }
         Log($"content-atlas=PASS gameplay={game} gui={gui} journal={journal} checkpoints={checkpoints} precedence=dependency-order");
+    }
+
+    public static void ObserveTextureUsage(string checkpoint, Level level = null)
+    {
+        int decoded = 0;
+        long rgbaBytes = 0;
+        foreach (VirtualTexture texture in MountedStaticTextures)
+        {
+            // Read the existing backing field. MTexture.Texture/Texture_Safe
+            // would force decoding and invalidate this observation.
+            var backing = texture.Texture;
+            if (backing == null || backing.IsDisposed) continue;
+            decoded++;
+            rgbaBytes += (long)texture.Width * texture.Height * 4;
+        }
+        string sid = level == null ? "none" : AppleEverestProgressionRuntime.Sid(level.Session.Area) ?? "vanilla";
+        Log($"texture-usage checkpoint={checkpoint} sid={sid} room={level?.Session.Level ?? "none"} mounted={MountedStaticTextures.Count} decoded={decoded} estimated-rgba-bytes={rgbaBytes} managed-live-bytes={GC.GetTotalMemory(false)}");
     }
 
     private static void MountStaticModContent()

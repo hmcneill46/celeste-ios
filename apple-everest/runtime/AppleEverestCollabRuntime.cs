@@ -88,7 +88,7 @@ internal static class AppleEverestCollabRuntime
 
     internal static void OpenChapterPanel(Player player, string sid, string mode = "SetReturnToHere", bool saving = true)
     {
-        if (player?.Scene is not Level || IsOpen || player.StateMachine.State == 11) return;
+        if (player?.Scene is not Level || IsOpen || player.StateMachine.State == 11 || !DestinationAvailable(sid)) return;
         AreaData area = ResolveArea(sid);
         if (!Dialog.Has(area.Name + "_collabcredits") && area.Mode[0].Checkpoints?.Length > 0) saving = false;
         returnMode = mode;
@@ -228,6 +228,7 @@ internal static class AppleEverestCollabRuntime
         if (overworldWrapper == null || forcedMapSid == null || panel?.Overworld != overworldWrapper.WrappedScene ||
             Engine.Scene is not Level level)
             return false;
+        if (!DestinationAvailable(forcedMapSid)) return true;
         panel.Focused = false;
         panel.EnteringChapter = true;
         Audio.Play("event:/ui/world_map/chapter/checkpoint_start");
@@ -404,13 +405,17 @@ internal static class AppleEverestCollabRuntime
         }
     }
 
-    private static AreaData ResolveArea(string sid) => sid != null && AppleEverestProgressionRuntime.TryDescriptor(sid, out var descriptor)
-        ? AreaData.Get(descriptor.RuntimeAreaId) : AreaData.Get(0);
+    internal static bool DestinationAvailable(string sid) => sid != null &&
+        AppleEverestMapBinding.DestinationAvailability(sid) == "AVAILABLE_SELECTED" &&
+        AppleEverestProgressionRuntime.TryDescriptor(sid, out _);
+
+    private static AreaData ResolveArea(string sid) => DestinationAvailable(sid) && AppleEverestProgressionRuntime.TryDescriptor(sid, out var descriptor)
+        ? AreaData.Get(descriptor.RuntimeAreaId) : throw new InvalidOperationException("Collab destination is unavailable: " + sid);
 
     private static void OpenOverworld(Player player, string areaSid, string journalLevelSet, bool chapter)
     {
         if (player?.Scene is not Level level || overworldWrapper != null || player.StateMachine.State == 11 ||
-            SaveData.Instance == null)
+            SaveData.Instance == null || !DestinationAvailable(areaSid))
             return;
 
         player.Drop();
@@ -684,7 +689,8 @@ internal sealed class AppleEverestChapterPanelTrigger : Trigger
     public override void Update()
     {
         base.Update();
-        talk.Enabled = !AppleEverestCollabRuntime.IsOpen && (string.IsNullOrEmpty(interactFlag) || SceneAs<Level>().Session.GetFlag(interactFlag));
+        talk.Enabled = AppleEverestCollabRuntime.DestinationAvailable(sid) && !AppleEverestCollabRuntime.IsOpen &&
+            (string.IsNullOrEmpty(interactFlag) || SceneAs<Level>().Session.GetFlag(interactFlag));
     }
 }
 

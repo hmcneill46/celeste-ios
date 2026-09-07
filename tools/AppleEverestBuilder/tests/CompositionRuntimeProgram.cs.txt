@@ -1,0 +1,86 @@
+using System.Text.Json;
+using Celeste;
+using Celeste.Mod;
+using Monocle;
+using Microsoft.Xna.Framework;
+
+internal static class Program
+{
+    static int checks;
+    static void Check(bool condition,string name){checks++;if(!condition)throw new Exception(name);}
+    static string Sounds()=>JsonSerializer.Serialize(SurfaceIndex.TileToIndex.OrderBy(p=>p.Key));
+    static void Main(string[] args)
+    {
+        var request=JsonDocument.Parse(File.ReadAllText(args[0])).RootElement;
+        Calc.ContentRoot=request.GetProperty("contentRoot").GetString();
+        foreach(var entry in request.GetProperty("frames").EnumerateObject())GFX.Game.Frames.Add(entry.Name,entry.Value.GetInt32());
+        const string lobby="StrawberryJam2021/0-Lobbies/1-Beginner",bing="StrawberryJam2021/1-Beginner/Bing_Over_Google";
+        var lobbyBinding=AppleEverestMapBinding.Find(lobby);var bingBinding=AppleEverestMapBinding.Find(bing);
+        Check(lobbyBinding!=null&&bingBinding!=null,"exact selected map bindings");
+        Check(AppleEverestMapBinding.HeaderMatches(lobby,"3Plain")&&AppleEverestMapBinding.HeaderMatches(bing,"Bing_Over_Google"),"original source labels paired");
+        Check(!AppleEverestMapBinding.HeaderMatches(lobby,lobby)&&!AppleEverestMapBinding.HeaderMatches(bing,"3Plain"),"wrong source label rejected");
+        Check(AppleEverestMapBinding.HeaderMatches("1-ForsakenCity","1-ForsakenCity")&&!AppleEverestMapBinding.HeaderMatches("unknown","3Plain"),"canonical header behavior and unknown binding");
+        Check(lobbyBinding.TerrainSeed==3349&&bingBinding.TerrainSeed==4143,"pinned original terrain seeds");
+        var availability=request.GetProperty("destinations").EnumerateArray().Select(row=>new {
+            sid=row.GetString(),status=AppleEverestMapBinding.DestinationAvailability(row.GetString())}).ToArray();
+        Check(availability.Length==23&&availability.Count(a=>a.status=="AVAILABLE_SELECTED")==1&&availability.Count(a=>a.status=="UNAVAILABLE_EXCLUDED")==22,"all authored destination states");
+        Check(AppleEverestMapBinding.DestinationAvailability("StrawberryJam2021/unrecognized")=="UNAVAILABLE_UNKNOWN","unknown destination fail closed");
+        foreach(var map in GeneratedAppleEverestMapBindings.Maps.Where(m=>!m.Sid.StartsWith("StrawberryJam2021/")))
+            Check(map.TerrainSeed==-1,"accepted fixture seed retained");
+
+        var fg=GFX.FGAutotiler=new Autotiler(request.GetProperty("vanillaForeground").GetString());
+        var bg=GFX.BGAutotiler=new Autotiler(request.GetProperty("vanillaBackground").GetString());
+        // Accepted Apple baseline initializes this unused ID to zero. The
+        // pinned desktop's G=8 table entry is not a selected gameplay consumer.
+        SurfaceIndex.TileToIndex['G']=0;
+        var animations=GFX.AnimatedTilesBank=new AnimatedTilesBank();
+        foreach(string name in new[]{"grass_top_a","dead_top_a"})animations.Add(name,0.2f,Vector2.Zero,Vector2.Zero,new(){new("original:"+name)});
+        string sounds=Sounds();int cycles=0;
+        for(int repeat=0;repeat<3;repeat++)
+        {
+            AppleEverestSelectedCanaryAssets.PrepareLevel(new Session("AppleEverestStage25KJ/FactoryProfiles/MaxMechanics"));
+            Check(!ReferenceEquals(GFX.FGAutotiler,fg)&&ReferenceEquals(GFX.BGAutotiler,bg),"fixture foreground-only setup");
+            Check(GFX.AnimatedTilesBank.AnimationsByName["grass_top_a"].Frames[0].AtlasPath=="original:grass_top_a","fixture merge retains canonical duplicate");
+            int start=Autotiler.Constructions.Count;
+            AppleEverestSelectedCanaryAssets.PrepareLevel(new Session(lobby));
+            Check(Autotiler.Constructions.Skip(start).SequenceEqual(new[]{lobbyBinding.BackgroundTiles,lobbyBinding.ForegroundTiles}),"original background-before-foreground setup");
+            Check(!ReferenceEquals(GFX.FGAutotiler,fg)&&!ReferenceEquals(GFX.BGAutotiler,bg),"original FG and BG activated");
+            Check(GFX.AnimatedTilesBank.AnimationsByName["grass_top_a"].Frames[0].AtlasPath!="original:grass_top_a","original bank replaces duplicates");
+            Check(GFX.AnimatedTilesBank.Animations.Count==request.GetProperty("originalAnimationCount").GetInt32(),"complete original animation bank");
+            Check(AppleEverestStaticRuntime.SelectedMapSpriteBank.Path==lobbyBinding.Sprites,"map sprite override active");
+            Check(SurfaceIndex.TileToIndex['J']==8&&SurfaceIndex.TileToIndex['G']==0,"selected sound and accepted baseline sentinel");
+            AppleEverestSelectedCanaryAssets.PrepareLevel(new Session(bing));
+            Check(ReferenceEquals(GFX.FGAutotiler,fg)&&ReferenceEquals(GFX.BGAutotiler,bg)&&ReferenceEquals(GFX.AnimatedTilesBank,animations),"Bing restores canonical graphics objects");
+            Check(AppleEverestStaticRuntime.SelectedMapSpriteBank==null&&Sounds()==sounds,"Bing restores sound table and sprite selection");
+            AppleEverestSelectedCanaryAssets.PrepareLevel(new Session(lobby));
+            AppleEverestSelectedCanaryAssets.PrepareLevel(new Session("1-ForsakenCity"));
+            Check(ReferenceEquals(GFX.FGAutotiler,fg)&&ReferenceEquals(GFX.BGAutotiler,bg)&&ReferenceEquals(GFX.AnimatedTilesBank,animations)&&Sounds()==sounds,"vanilla restores graphics and sounds");
+            cycles++;
+        }
+
+        var parallaxReports=new List<object>();var scene=new Level();
+        foreach(var row in request.GetProperty("parallaxes").EnumerateArray())
+        {
+            string key=row.GetProperty("key").GetString();int count=row.GetProperty("frames").GetInt32();float fps=row.GetProperty("fps").GetSingle();
+            var effect=AppleEverestAnimatedParallax.Create(new MTexture(key+"00"));
+            Check(effect is AppleEverestAnimatedParallax&&effect.Texture.AtlasPath==key+":0","animated parallax initial frame");
+            Engine.DeltaTime=1f/fps;effect.Update(scene);Check(effect.Texture.AtlasPath==key+":0","strict timer boundary");
+            Engine.DeltaTime=0.00001f;effect.Update(scene);Check(effect.Texture.AtlasPath==key+":1","next animated frame");
+            effect.Visible=false;Engine.DeltaTime=10;effect.Update(scene);Check(effect.Texture.AtlasPath==key+":1","hidden animation timer paused");
+            effect.Visible=true;effect.Update(scene);Check(effect.Texture.AtlasPath==key+":2","large timestep advances one frame only");
+            Check(effect.BaseUpdates==4,"base parallax update retained while hidden");
+            effect=AppleEverestAnimatedParallax.Create(new MTexture(key+"00"));Engine.DeltaTime=1f/fps;
+            for(int i=0;i<count+1;i++)effect.Update(scene);
+            Check(effect.Texture.AtlasPath==key+":0","animation wraps through exact frame order");
+            parallaxReports.Add(new {key,frames=count,fps});
+        }
+        Check(AppleEverestAnimatedParallax.Create(new MTexture("bgs/ordinary" )).GetType()==typeof(Parallax),"ordinary parallax retained");
+        Check(AppleEverestAnimatedParallax.Create(new MTexture(null)).GetType()==typeof(Parallax),"canonical unpacked Misc texture has no atlas path");
+        bool rejected=false;try{AppleEverestAnimatedParallax.Create(new MTexture("bgs/MaxHelpingHand/animatedParallax/missing00"));}catch(InvalidOperationException){rejected=true;}
+        Check(rejected,"missing animated frames fail closed");
+        File.WriteAllText(args[1],JsonSerializer.Serialize(new {status="PASS",assertions=checks,graphicsCycles=cycles,destinations=availability,
+            parallaxes=parallaxReports,originalSeeds=new{lobby=3349,bing=4143},
+            scope="Actual generated bindings, graphics lifecycle and animated parallax source; graphical resource handles are host adapters. Actual terrain sound/debris semantics verified by independent pinned conformance."},new JsonSerializerOptions{WriteIndented=true})+"\n");
+        Console.WriteLine($"PASS: {checks} actual runtime composition assertions; {cycles} complete graphics restoration cycles");
+    }
+}

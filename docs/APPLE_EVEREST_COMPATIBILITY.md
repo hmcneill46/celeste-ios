@@ -6,6 +6,42 @@ work. It is not
 a promise that similarly named, newer, older, or dependent mods work. The
 normal iOS and tvOS products do not contain these mods.
 
+## Stage 25K-L candidate: unchanged Beginner slice
+
+K-L starts from accepted K-J build 41. Its current status is
+**HOST_PREFLIGHT_PASS_PHYSICAL_PENDING**. It has not established physical
+acceptance of either new Apple product. See the
+[K-L report](history/stages/APPLE_EVEREST_FIRST_SJ_SLICE_OUTCOME_STAGE25KL_REPORT.md)
+and [device checklist](testing/APPLE_EVEREST_STAGE25KL_DEVICE_CHECKLIST.md).
+
+The exact SJ 1.0.12 Beginner lobby and Bing BINs are preserved, including their
+source labels and binary appendices. The selected plan contains 1,398 public
+package files plus one pinned Everest core asset; the union with accepted
+regression content contains 2,942 mounted files. Only two original SJ gameplay
+BINs are selected; the other 126 remain excluded from Apple products.
+
+K-L requires four independent gates: content IDs 920/920/0/0, actual compiled
+registrations 73/73/0, selected semantics 73/73/0/0, and real composition with
+zero blocked or unknown results. The last gate checks terrain, resource and
+atlas paths, graphics lifecycle, source-label/SID bindings, panel destinations,
+progression and audio. All four must emit `READY_FOR_REAL_SJ_PRODUCT_BUILD`
+before AOT. They do not substitute for exact-product physical acceptance.
+
+The bounded autotiler supports square 3×3 and 5×5 definitions. The 26 original
+J cells match a mechanically compiled pinned Everest reference; vanilla and
+accepted 3×3 paths retain their existing implementation. New bounded issues
+are fixed within K-L under `AUTO_FIX_COMPOSITION` or
+`AUTO_IMPLEMENT_BOUNDED_COMPATIBILITY`. Only a proven architectural requirement
+is `STOP_MAJOR_ARCHITECTURE`; encountering another finite asset or parser gap
+does not end the stage.
+
+The real credits NPC keeps its original portrait-free presentation. The ornate
+K-H Madeline diagnostic is a separate regression. The desktop comparison uses
+all 52 pinned original packages and all 128 original SJ maps so excluded-map
+artifacts do not distort the reference. The Apple destination guard permits
+the selected Bing entrance and safely disables the 22 other authored entrances.
+Full Beginner and full Strawberry Jam support remain unproved.
+
 Status vocabulary:
 
 - **SUPPORTED** — content enters the static closure without managed code.

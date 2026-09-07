@@ -87,7 +87,7 @@ internal static class FactoryProfilePreflight
 
     internal static void Write(string manifestPath, IReadOnlyList<string> modPaths, string output,
         string repoRoot, string profilePath, string upstream, string suppliedClosure, string assemblyPath, string authoredProfilesPath,
-        string canonicalManaged, string dotnet)
+        string canonicalManaged, string dotnet, string? contentPlanPath = null)
     {
         SelectedFactoryClosureResult graph = SelectedFactoryTypeClosure.LoadAndValidate(manifestPath);
         using JsonDocument authored = JsonDocument.Parse(File.ReadAllBytes(authoredProfilesPath));
@@ -134,7 +134,7 @@ internal static class FactoryProfilePreflight
             }
             if (!providers.IsSubsetOf(supplied)) throw new InvalidDataException("exact selected providers missing: " + string.Join(",", providers.Except(supplied).Order()));
             string regenerated = Path.Combine(temporary, "regenerated");
-            Program.Build(profilePath, repoRoot, upstream, regenerated, modPaths, factoryClosurePath: null);
+            Program.Build(profilePath, repoRoot, upstream, regenerated, modPaths, factoryClosurePath: null, contentPlanPath);
             using JsonDocument production = JsonDocument.Parse(File.ReadAllBytes(Path.Combine(regenerated, "compatibility-manifest.json")));
             using JsonDocument previous = JsonDocument.Parse(File.ReadAllBytes(Path.Combine(suppliedClosure, "compatibility-manifest.json")));
             foreach (string field in new[] { "sharedClosureSha256", "managedLogicalSha256", "contentLogicalSha256", "registrySha256",

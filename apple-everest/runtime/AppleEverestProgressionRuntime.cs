@@ -266,7 +266,7 @@ internal static class AppleEverestProgressionRuntime
             session = new Session(new AreaKey(descriptor.RuntimeAreaId));
             SaveData.Instance.StartSession(session);
         }
-        Engine.Scene = new LevelLoader(session) { PlayerIntroTypeOverride = Player.IntroTypes.None };
+        Engine.Scene = new LevelLoader(session);
         AppleEverestStaticRuntime.Log($"levelset-map=launch sid={descriptor.Sid} slot={SaveData.Instance.FileSlot} room={session.Level} persistent=true");
     }
 

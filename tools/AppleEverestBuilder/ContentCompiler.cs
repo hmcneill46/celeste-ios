@@ -27,7 +27,7 @@ internal static class ContentCompiler
         using FileStream stream = File.OpenRead(path);
         using BinaryReader reader = new(stream, Encoding.UTF8, leaveOpen: false);
         if (reader.ReadString() != "CELESTE MAP") throw new InvalidDataException("map binary has an invalid Celeste header");
-        _ = reader.ReadString();
+        string sourcePackageLabel = reader.ReadString();
         int count = reader.ReadInt16();
         if (count is < 1 or > 8192) throw new InvalidDataException("map string table is invalid");
         string[] table = new string[count];
@@ -63,7 +63,7 @@ internal static class ContentCompiler
                 .OrderBy(value => value.Order).ThenBy(value => value.Level, StringComparer.Ordinal)
                 .Select(value => value.Level).ToArray(),
             entitySet, triggerSet, ["A"], !mapPath.Contains("/0-Lobbies/", StringComparison.Ordinal),
-            presentation.Build());
+            presentation.Build(), sourcePackageLabel);
     }
 
     internal static IReadOnlyList<(string Kind, string Id)> InspectGameplayIds(string path)
@@ -179,7 +179,7 @@ internal static class ContentCompiler
         return new(stream.Length, rootBytes, appendixBytes, appendixSha256);
     }
 
-    public static string Stage(string source, string relative, string contentOutput)
+    public static string Stage(string source, string relative, string contentOutput, bool preserveOriginalMap = false)
     {
         string logical = relative.StartsWith("Content/", StringComparison.Ordinal)
             ? relative["Content/".Length..]
@@ -201,7 +201,12 @@ internal static class ContentCompiler
         if (logical.StartsWith("Maps/", StringComparison.Ordinal) && logical.EndsWith(".bin", StringComparison.Ordinal))
         {
             string target = Target(contentOutput, logical);
-            NormalizeMapPackage(source, target, logical["Maps/".Length..^4]);
+            if (preserveOriginalMap)
+            {
+                _ = InspectBoundary(source);
+                File.Copy(source, target, overwrite: true);
+            }
+            else NormalizeMapPackage(source, target, logical["Maps/".Length..^4]);
             return logical;
         }
         string destination = Target(contentOutput, logical);
@@ -481,7 +486,12 @@ internal static class ContentCompiler
                 BloomBase = Number(attributes, "BloomBase", value.BloomBase, 0f, 8f),
                 BloomStrength = Number(attributes, "BloomStrength", value.BloomStrength, 0f, 8f),
                 Jumpthru = Text(attributes, "Jumpthru", value.Jumpthru),
-                CoreMode = Choice(attributes, "CoreMode", value.CoreMode, "None", "Hot", "Cold")
+                CoreMode = Choice(attributes, "CoreMode", value.CoreMode, "None", "Hot", "Cold"),
+                ForegroundTiles = Text(attributes, "ForegroundTiles", value.ForegroundTiles),
+                BackgroundTiles = Text(attributes, "BackgroundTiles", value.BackgroundTiles),
+                AnimatedTiles = Text(attributes, "AnimatedTiles", value.AnimatedTiles),
+                Sprites = Text(attributes, "Sprites", value.Sprites),
+                Name = Text(attributes, "Name", value.Name)
             };
         }
 

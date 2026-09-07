@@ -16,7 +16,7 @@ internal static class Program
             switch (args[0])
             {
                 case "acquire": Acquire(One(options, "--profile"), One(options, "--output")); break;
-                case "build": Build(One(options, "--profile"), One(options, "--repo-root"), One(options, "--upstream"), One(options, "--output"), Many(options, "--mod"), Optional(options, "--factory-closure")); break;
+                case "build": Build(One(options, "--profile"), One(options, "--repo-root"), One(options, "--upstream"), One(options, "--output"), Many(options, "--mod"), Optional(options, "--factory-closure"), Optional(options, "--content-plan")); break;
                 case "build-configured-fixture": BuildConfiguredFixture(One(options, "--profile"),
                     One(options, "--repo-root"), One(options, "--upstream"),
                     One(options, "--output"), One(options, "--mod")); break;
@@ -62,7 +62,7 @@ internal static class Program
                     One(options, "--manifest"), Many(options, "--mod"), One(options, "--output"),
                     One(options, "--repo-root"), One(options, "--profile"), One(options, "--upstream"),
                     One(options, "--closure"), One(options, "--assembly"), One(options, "--authored-profiles"),
-                    One(options, "--canonical-managed-root"), One(options, "--dotnet")); break;
+                    One(options, "--canonical-managed-root"), One(options, "--dotnet"), Optional(options, "--content-plan")); break;
                 case "verify-compiled-factory-controls": FactoryPreflightControls.Write(
                     One(options, "--assembly"), One(options, "--manifest"), One(options, "--authored-profiles"), One(options, "--output")); break;
                 case "verify-factory-package-controls": FactoryPackageIdentity.WriteControls(One(options, "--repo-root"),
@@ -276,7 +276,7 @@ internal static class Program
     }
 
     internal static void Build(string profilePath, string repoRoot, string upstream, string output,
-        IReadOnlyList<string> modPaths, string? factoryClosurePath)
+        IReadOnlyList<string> modPaths, string? factoryClosurePath, string? contentPlanPath = null)
     {
         AppleEverestProfile profile = LoadProfile(profilePath);
         VerifyUpstream(profile, upstream);
@@ -298,7 +298,8 @@ internal static class Program
             SelectedFactoryClosureResult closure = SelectedFactoryTypeClosure.LoadAndValidate(factoryClosurePath);
             SelectedFactoryTypeClosure.ValidateAvailableFactories(closure, ordered);
         }
-        ClosureGenerator.Generate(profile, ordered, Path.GetFullPath(repoRoot), output);
+        SelectedContentPlan? contentPlan = contentPlanPath == null ? null : SelectedContentPlan.Load(contentPlanPath, ordered);
+        ClosureGenerator.Generate(profile, ordered, Path.GetFullPath(repoRoot), output, contentPlan);
         Directory.Delete(staging, recursive: true);
     }
 

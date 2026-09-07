@@ -176,7 +176,8 @@ internal sealed record MapProgressionRecord(
     string[] ProgressionTriggers,
     string[] AreaModes,
     bool CompletionAvailable,
-    MapPresentationRecord? Presentation = null);
+    MapPresentationRecord? Presentation = null,
+    string SourcePackageLabel = "");
 internal sealed record MapBinaryBoundaryRecord(
     long FileBytes,
     long ConsumedRootBytes,
@@ -201,7 +202,12 @@ internal sealed record MapPresentationRecord(
     string Ambience,
     string StartLevel,
     bool HeartIsEnd,
-    bool IgnoreLevelAudioLayerData)
+    bool IgnoreLevelAudioLayerData,
+    string ForegroundTiles = "",
+    string BackgroundTiles = "",
+    string AnimatedTiles = "",
+    string Sprites = "",
+    string Name = "")
 {
     internal static readonly MapPresentationRecord EverestDefault = new(
         "areas/null", "6c7c81", "2f344b", "ffffff", "WakeUp", false, "",

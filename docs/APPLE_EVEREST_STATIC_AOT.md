@@ -5,6 +5,52 @@ small, pre-analysed subset of Everest mods into separate iPhone, iPad, and
 Apple TV canary products. It is contributor infrastructure, not general
 Everest compatibility, and it is not part of the recommended vanilla builders.
 
+## Stage 25K-L real-composition boundary
+
+The [K-L candidate report](history/stages/APPLE_EVEREST_FIRST_SJ_SLICE_OUTCOME_STAGE25KL_REPORT.md)
+records host readiness separately from final iPhone/tvOS physical acceptance.
+The target-neutral closure now preserves the two original selected SJ BINs and
+generates immutable source-label/SID, terrain-seed, graphics and destination
+bindings. Unregistered headers keep canonical validation. Excluded destinations
+cannot fall back to vanilla Area 0. Source maps and their appendices are not
+rewritten.
+
+`AppleEverestTileMaskRules` validates the complete selected terrain definitions
+at build time. The only supported scan dimensions are square 3×3 and 5×5, with
+at most 25 mask cells. The unchanged canonical parser/matcher handles 3×3;
+`AppleEverestAutotiler` adds the bounded dimension-aware 5×5 implementation.
+Matching preserves pinned Everest ignore, center, padding, priority and random
+variant behavior, including its level-boundary convention. Unsupported sizes,
+mask lengths, parser modes and mixed-dimension copies fail closed. The runtime
+contains no J, SJ or coordinate-specific matching branch.
+
+The exact original XML contains one unused template whose texture is missing
+from the original package. The constructor uses the pinned core fallback and
+the exact pinned modulo tile indexing. Gate D allows that one hash-bound unused
+reference; any visible use, omitted fallback or different missing sheet rejects
+readiness. Visible copied templates keep their own real textures.
+
+Map graphics banks are restored between loads. Original real-map animation
+banks replace the canonical bank; explicitly owned regression fixtures retain
+their accepted merge policy. Background terrain precedes foreground terrain,
+and generated original terrain seeds preserve desktop variants. Two finite
+animated parallax profiles and selected custom debris consumers are static
+lowerings. Deferred first-use texture decoding and the single FMOD Studio
+system remain in place.
+
+Before AOT, the builder requires four separate checks: content IDs, actual
+compiled registrations, selected semantic closure, and full real composition.
+Only their common closure hash can produce `READY_FOR_REAL_SJ_PRODUCT_BUILD`.
+Actual packaged content and native factory evidence are checked again after
+publishing. Host tests never grant physical PASS.
+
+The outcome-first policy automatically fixes finite composition gaps and
+implements bounded compatibility mechanisms that can be frozen on the host.
+It does not permit runtime assembly loading, general reflection/DynamicData,
+live detours/IL hooks, JIT/interpreters, Lua, arbitrary native plugins, a second
+FMOD system or a new persistence authority. A genuinely unbounded requirement
+must be recorded as `STOP_MAJOR_ARCHITECTURE` with exact content evidence.
+
 ## Why desktop Everest is not run on-device
 
 Desktop Everest and MonoMod normally discover assemblies, generate hooks, and

@@ -18,6 +18,48 @@ internal static class StaticSemanticRuntimePatches
     internal static void Apply(string managedRoot)
     {
         string target = Path.Combine(managedRoot, "Celeste", "Mod", "AppleEverestStatic");
+        if (File.Exists(Path.Combine(target, "AppleEverestAutotiler.cs")))
+        {
+            string autotiler = Path.Combine(managedRoot, "Celeste", "Autotiler.cs");
+            if (!File.ReadAllText(autotiler).Contains("public string Debris;", StringComparison.Ordinal))
+                Change(autotiler, "public Tiles Padded = new Tiles();", "public Tiles Padded = new Tiles();\n\t\tpublic string Debris;");
+            if (!File.ReadAllText(autotiler).Contains("TryGetCustomDebris(out string path", StringComparison.Ordinal))
+                Change(autotiler, "public Generated GenerateMap(VirtualMap<char> mapData, Behaviour behaviour)",
+                    "public bool TryGetCustomDebris(out string path, char tiletype)\n\t{\n" +
+                    "\t\tpath = lookup.TryGetValue(tiletype, out TerrainType terrain) ? terrain.Debris : null;\n" +
+                    "\t\treturn !string.IsNullOrEmpty(path);\n\t}\n\n\tpublic Generated GenerateMap(VirtualMap<char> mapData, Behaviour behaviour)");
+            Change(autotiler, "public class Autotiler", "public partial class Autotiler");
+            Change(autotiler, "private class TerrainType", "private partial class TerrainType");
+            Change(autotiler, "GFX.Game[\"tilesets/\" + item.Attr(\"path\")]",
+                "ResolveTerrainTexture(\"tilesets/\" + item.Attr(\"path\"))");
+            // Exact pinned Everest Tileset indexers. In-range canonical
+            // coordinates are unchanged; oversized constructor rules wrap.
+            string tileset = Path.Combine(managedRoot, "Monocle", "Tileset.cs");
+            Change(tileset, "=> tiles[x, y];", "=> tiles[x % tiles.GetLength(0), y % tiles.GetLength(1)];");
+            Change(tileset, "tiles[index % tiles.GetLength(0), index / tiles.GetLength(0)]",
+                "tiles[index % tiles.GetLength(0), (index / tiles.GetLength(0)) % tiles.GetLength(1)]");
+            Change(autotiler, "public Generated GenerateOverlay(char id, int x, int y, int tilesX, int tilesY, VirtualMap<char> mapData)",
+                "private Generated AppleEverestOriginalGenerateOverlay(char id, int x, int y, int tilesX, int tilesY, VirtualMap<char> mapData)");
+            Change(autotiler, "private void ReadInto(TerrainType data, Tileset tileset, XmlElement xml)",
+                "private void AppleEverestOriginalReadInto(TerrainType data, Tileset tileset, XmlElement xml)");
+            Change(autotiler, "private Tiles TileHandler(VirtualMap<char> mapData, int x, int y, Rectangle forceFill, char forceID, Behaviour behaviour)",
+                "private Tiles AppleEverestOriginalTileHandler(VirtualMap<char> mapData, int x, int y, Rectangle forceFill, char forceID, Behaviour behaviour)");
+            Change(Path.Combine(managedRoot, "Celeste", "Debris.cs"),
+                "\t\timage.FlipY = Calc.Random.Chance(0.5f);\n\t\treturn this;",
+                "\t\timage.FlipY = Calc.Random.Chance(0.5f);\n" +
+                "\t\tif (GFX.FGAutotiler.TryGetCustomDebris(out string customDebris, tileset))\n" +
+                "\t\t\timage.Texture = Calc.Random.Choose(GFX.Game.GetAtlasSubtextures(\"debris/\" + customDebris));\n" +
+                "\t\treturn this;");
+        }
+        Change(Path.Combine(managedRoot, "Celeste", "MapData.cs"),
+            "!element.Package.Equals(ModeData.Path)",
+            "!global::Celeste.Mod.AppleEverestMapBinding.HeaderMatches(ModeData.Path, element.Package)");
+        Change(Path.Combine(managedRoot, "Celeste", "MapData.cs"), "string name = Data.Name;",
+            "int appleTerrainSeed = global::Celeste.Mod.AppleEverestMapBinding.Find(ModeData.Path)?.TerrainSeed ?? -1;\n" +
+            "\t\t\tif (appleTerrainSeed >= 0) return appleTerrainSeed;\n\t\t\tstring name = Data.Name;");
+        if (File.Exists(Path.Combine(target, "AppleEverestAnimatedParallax.cs")))
+            Change(Path.Combine(managedRoot, "Celeste", "MapData.cs"), "new Parallax(mTexture)",
+                "global::Celeste.Mod.AppleEverestAnimatedParallax.Create(mTexture)");
         string level = Path.Combine(managedRoot, "Celeste", "Level.cs");
         Change(level, "\tpublic void LoadLevel(Player.IntroTypes playerIntro, bool isFromLoader = false)\n\t{",
             "\tpublic void LoadLevel(Player.IntroTypes playerIntro, bool isFromLoader = false)\n\t{\n" +
@@ -373,7 +415,7 @@ internal static class StaticSemanticRuntimePatches
         if (File.Exists(Path.Combine(target, "AppleEverestFancySolidTiles.cs")))
         {
             string autotiler = Path.Combine(managedRoot, "Celeste", "Autotiler.cs");
-            Change(autotiler, "\tprivate Tiles TileHandler(", """
+            Change(autotiler, "\tprivate bool IsEmpty(", """
                 // FancyTileEntities' exact selected overlay algorithm, lowered
                 // into its declaring type to remove the reflection dispatch.
                 private VirtualMap<char> appleEverestFancyForceData;
@@ -408,7 +450,7 @@ internal static class StaticSemanticRuntimePatches
                     return new Generated { TileGrid = grid, SpriteOverlay = animated };
                 }
 
-                """ + "\tprivate Tiles TileHandler(");
+                """ + "\tprivate bool IsEmpty(");
             Change(autotiler, "\tprivate bool CheckTile(TerrainType set, VirtualMap<char> mapData, int x, int y, Rectangle forceFill, Behaviour behaviour)\n\t{",
                 "\tprivate bool CheckTile(TerrainType set, VirtualMap<char> mapData, int x, int y, Rectangle forceFill, Behaviour behaviour)\n\t{\n" +
                 "\t\tif (appleEverestFancyForceData != null)\n\t\t{\n" +

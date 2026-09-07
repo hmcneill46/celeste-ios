@@ -149,7 +149,7 @@ internal static class StaticSemanticLowering
                 "Graphics/Atlases/Gameplay/MaxHelpingHand/summitcheckpoints/",
                 "Graphics/Atlases/Gameplay/objects/MaxHelpingHand/flagSwitchGate/",
                 "Graphics/Atlases/Gameplay/objects/MaxHelpingHand/flagTouchSwitch/"
-            ], RuntimeFiles: ["AppleEverestSidewaysJumpThru.cs", "AppleEverestEverestBaseEntitySemantics.cs", "AppleEverestMaxFlagSemantics.cs", "AppleEverestMaxColorSemantics.cs", "AppleEverestCameraOffsetBorder.cs", "AppleEverestStylegroundFadeController.cs", "AppleEverestParallaxFadeOutController.cs", "AppleEverestRainbowSpinnerColorArea.cs", "AppleEverestSelectedProfileGuard.cs"],
+            ], RuntimeFiles: ["AppleEverestAnimatedParallax.cs", "AppleEverestSidewaysJumpThru.cs", "AppleEverestEverestBaseEntitySemantics.cs", "AppleEverestMaxFlagSemantics.cs", "AppleEverestMaxColorSemantics.cs", "AppleEverestCameraOffsetBorder.cs", "AppleEverestStylegroundFadeController.cs", "AppleEverestParallaxFadeOutController.cs", "AppleEverestRainbowSpinnerColorArea.cs", "AppleEverestSelectedProfileGuard.cs"],
             Tracking: [new("Celeste.Mod.AppleEverestSidewaysJumpThru", []), new("Celeste.Mod.AppleEverestColorGradeFadeTrigger", []), new("Celeste.Mod.AppleEverestCameraOffsetBorder", []), new("Celeste.Mod.AppleEverestStylegroundFadeController", []), new("Celeste.Mod.AppleEverestParallaxFadeOutController", []), new("Celeste.Mod.AppleEverestRainbowSpinnerColorArea", []), new("Celeste.Mod.AppleEverestMoreCustomNpc", [])]),
         new("lunatichelper-1.1.1-henny-v1", "LunaticHelper", "1.1.1",
             "e7cef501937fc1bc07d1ff13e753fe920b4ccbbd4e4db4c0b2c4312de89fdd78",
@@ -274,7 +274,7 @@ internal static class StaticSemanticLowering
                 "Graphics/Atlases/Gameplay/animatedTiles/SJ2021/BeginnerLobby/grass/top_a"],
             StrawberryJamModule(),
             ["AppleEverestStrawberryJamState.cs", "AppleEverestStrawberryJamEntities.cs",
-                "AppleEverestStrawberryJamRendering.cs", "AppleEverestRootStateCanary.cs", "AppleEverestSelectedCanaryAssets.cs"])
+                "AppleEverestStrawberryJamRendering.cs", "AppleEverestRootStateCanary.cs", "AppleEverestSelectedCanaryAssets.cs", "AppleEverestAutotiler.cs"])
     ];
 
     private static StaticSemanticModulePlan CollabModule() => new(

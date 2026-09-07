@@ -1,0 +1,352 @@
+{
+  "schemaVersion": 1,
+  "stage": "25K-L",
+  "status": "HOST_VERIFIED_PHYSICAL_PENDING",
+  "stoppingPolicy": "CONTINUE_ALL_BOUNDED_FIXES_UNTIL_PHYSICAL_GREEN_OR_PROVEN_MAJOR_ARCHITECTURE",
+  "issues": [
+    {
+      "id": "KL01",
+      "discoveryPoint": "initial terrain blocker",
+      "selectedContent": "Lobby foreground J at 26 authored cells",
+      "classification": "AUTO_IMPLEMENT_BOUNDED_COMPATIBILITY",
+      "reason": "Only square 3x3 and 5x5 definitions with 0/1/x are present.",
+      "implementation": "Actual canonical parser/matcher retained for 3x3; bounded 5x5 partial.",
+      "plannedTests": "Pinned mechanical host reference, real cells, synthetic ignores/edges/fills, seeded RNG, invalid profiles.",
+      "failClosedRule": "Reject all other sizes, short/long masks, custom modes, mixed-size copies; gate every used terrain ID.",
+      "regressions": "Canonical and canary 3x3 terrain",
+      "closureEffect": "New partial, parser validation and static source transforms.",
+      "status": "HOST_VERIFIED_PHYSICAL_PENDING",
+      "tests": [
+        "AppleEverestBuilder618",
+        "GateA920/920/0/0",
+        "GateB73/73/0",
+        "GateC73/73/0/0",
+        "GateD0/0",
+        "PinnedTerrain89347Assertions",
+        "All26OriginalJCells",
+        "ThreeSeededTerrainRuns",
+        "ThirteenRejectedTerrainProfiles"
+      ]
+    },
+    {
+      "id": "KL02",
+      "discoveryPoint": "archive and complete constructor audit",
+      "selectedContent": "Original FG/BG XML, animated tile banks, custom debris, chapter icons, decals",
+      "classification": "AUTO_FIX_COMPOSITION",
+      "reason": "Finite exact resource references were absent from earlier texture-cache projection.",
+      "implementation": "Regenerate a hash-bound file union from BIN decals, terrain and animation definitions across exact providers.",
+      "plannedTests": "All file/source hashes, contiguous frames, canonical atlas resolution and omission controls.",
+      "failClosedRule": "Missing or ambiguous path/provider, wrong case identity and omitted references block gate D.",
+      "regressions": "Retain accepted provider regression assets and all canaries.",
+      "closureEffect": "Selected content plan and content tree widen; exactly two original SJ maps.",
+      "status": "HOST_VERIFIED_PHYSICAL_PENDING",
+      "tests": [
+        "AppleEverestBuilder618",
+        "GateA920/920/0/0",
+        "GateB73/73/0",
+        "GateC73/73/0/0",
+        "GateD0/0",
+        "FourRejectedCompositionControls",
+        "ExactOriginalResourceHashes"
+      ]
+    },
+    {
+      "id": "KL03",
+      "discoveryPoint": "actual map load audit",
+      "selectedContent": "Original labels 3Plain and Bing_Over_Google",
+      "classification": "AUTO_FIX_COMPOSITION",
+      "reason": "Package labels differ from canonical static SID, and the old stager rewrites them.",
+      "implementation": "Preserve complete BIN bytes and emit explicit immutable source-label/SID bindings available before MapData construction.",
+      "plannedTests": "Whole BIN/root/appendix hashes, incorrect-label and unknown-SID controls.",
+      "failClosedRule": "Header must match the generated paired label; no global bypass.",
+      "regressions": "Previous map compatibility IDs remain source-derived and stable.",
+      "closureEffect": "Generated binding enters managed closure.",
+      "status": "HOST_VERIFIED_PHYSICAL_PENDING",
+      "tests": [
+        "AppleEverestBuilder618",
+        "GateA920/920/0/0",
+        "GateB73/73/0",
+        "GateC73/73/0/0",
+        "GateD0/0",
+        "ActualRuntimeComposition75Assertions",
+        "ThreeGraphicsRestorationCycles"
+      ]
+    },
+    {
+      "id": "KL04",
+      "discoveryPoint": "graphics lifecycle audit",
+      "selectedContent": "Lobby ForegroundTiles/BackgroundTiles/AnimatedTiles/Sprites metadata",
+      "classification": "AUTO_FIX_COMPOSITION",
+      "reason": "Original animation bank repeats vanilla IDs and must replace its bank.",
+      "implementation": "Generated map descriptors; fresh real banks, explicit fixture merge, BG-before-FG sounds and full restoration.",
+      "plannedTests": "Bank content, duplicate-ID controls, cross-map and repeated-load lifecycle.",
+      "failClosedRule": "Missing graphics bindings and duplicate real animation IDs reject.",
+      "regressions": "K-J fixture merging, Bing and vanilla restoration.",
+      "closureEffect": "New map graphics bindings; original source XML remains unchanged.",
+      "status": "HOST_VERIFIED_PHYSICAL_PENDING",
+      "tests": [
+        "AppleEverestBuilder618",
+        "GateA920/920/0/0",
+        "GateB73/73/0",
+        "GateC73/73/0/0",
+        "GateD0/0",
+        "ActualRuntimeComposition75Assertions",
+        "ThreeGraphicsRestorationCycles"
+      ]
+    },
+    {
+      "id": "KL05",
+      "discoveryPoint": "terrain consumer audit",
+      "selectedContent": "Lobby dashBlock id55, tile N; six foreground debris paths",
+      "classification": "AUTO_IMPLEMENT_BOUNDED_COMPATIBILITY",
+      "reason": "Existing bounded custom debris ABI had no consumer.",
+      "implementation": "Use pinned custom atlas subtextures and Calc.Random.Choose in Debris.Init.",
+      "plannedTests": "Source/atlas closure and exact RNG/consumer checks; physical breakable.",
+      "failClosedRule": "Missing referenced frames block composition.",
+      "regressions": "Vanilla fallback path unchanged when no custom debris.",
+      "closureEffect": "One bounded static Debris source substitution.",
+      "status": "HOST_VERIFIED_PHYSICAL_PENDING",
+      "tests": [
+        "AppleEverestBuilder618",
+        "GateA920/920/0/0",
+        "GateB73/73/0",
+        "GateC73/73/0/0",
+        "GateD0/0",
+        "PinnedTerrain89347Assertions",
+        "All26OriginalJCells",
+        "ThreeSeededTerrainRuns",
+        "ThirteenRejectedTerrainProfiles"
+      ]
+    },
+    {
+      "id": "KL06",
+      "discoveryPoint": "destination and progression audit",
+      "selectedContent": "23 lobby entrances and six local bench warps",
+      "classification": "AUTO_FIX_COMPOSITION",
+      "reason": "Only Bing is installed; 22 authored entrances target excluded maps.",
+      "implementation": "Generated available/excluded/unknown status; guard interaction, opening and launch; remove area-zero fallback.",
+      "plannedTests": "1 available +22 excluded, unknown target negative, authored thresholds21 retained.",
+      "failClosedRule": "Excluded/unknown destination cannot open or launch.",
+      "regressions": "Owned interaction fixtures and local warps retain behavior.",
+      "closureEffect": "Generated excluded SID metadata; no new save schema.",
+      "status": "HOST_VERIFIED_PHYSICAL_PENDING",
+      "tests": [
+        "AppleEverestBuilder618",
+        "GateA920/920/0/0",
+        "GateB73/73/0",
+        "GateC73/73/0/0",
+        "GateD0/0",
+        "ActualRuntimeComposition75Assertions",
+        "ThreeGraphicsRestorationCycles"
+      ]
+    },
+    {
+      "id": "KL07",
+      "discoveryPoint": "real vanilla-named backdrop audit",
+      "selectedContent": "Waves four frames at3fps and tower64 at12fps",
+      "classification": "AUTO_IMPLEMENT_BOUNDED_COMPATIBILITY",
+      "reason": "Pinned helper replaces Parallax construction based on texture prefix; custom-ID census cannot capture it.",
+      "implementation": "Bounded static constructor substitution and pinned visible-only, single-step timer update.",
+      "plannedTests": "Exact authored frame closure, visible/hidden and timer boundary tests.",
+      "failClosedRule": "No metadata/HD profiles; finite frame/FPS bounds.",
+      "regressions": "Ordinary Parallax constructor and controller compatibility.",
+      "closureEffect": "One semantic source and constructor substitution.",
+      "status": "HOST_VERIFIED_PHYSICAL_PENDING",
+      "tests": [
+        "AppleEverestBuilder618",
+        "GateA920/920/0/0",
+        "GateB73/73/0",
+        "GateC73/73/0/0",
+        "GateD0/0",
+        "ActualRuntimeComposition75Assertions",
+        "ThreeGraphicsRestorationCycles"
+      ]
+    },
+    {
+      "id": "KL08",
+      "discoveryPoint": "launch lifecycle audit",
+      "selectedContent": "Real lobby authored WakeUp intro",
+      "classification": "AUTO_FIX_COMPOSITION",
+      "reason": "Persistent launch overrides parsed intro with None.",
+      "implementation": "Use canonical fresh/resume intro selection, retain explicit diagnostic teleport overrides.",
+      "plannedTests": "Compiled launch and descriptor check; fresh/resume physical tests.",
+      "failClosedRule": "Only valid installed descriptors may launch.",
+      "regressions": "Diagnostic and resume paths.",
+      "closureEffect": "One launch construction edit; no data/schema change.",
+      "status": "HOST_VERIFIED_PHYSICAL_PENDING",
+      "tests": [
+        "AppleEverestBuilder618",
+        "GateA920/920/0/0",
+        "GateB73/73/0",
+        "GateC73/73/0/0",
+        "GateD0/0"
+      ]
+    },
+    {
+      "id": "KL09",
+      "discoveryPoint": "Independent conformance review",
+      "selectedContent": "Original lobby and Bing seeded terrain variants",
+      "classification": "AUTO_FIX_COMPOSITION",
+      "reason": "Apple display names are normalized to dialog keys; pinned Everest seeds MapData terrain using original Name metadata or raw SID. This changes random variants despite correct masks.",
+      "implementation": "Generate explicit terrain seeds for preserved original maps (lobby3349, Bing4143) and bind MapData.LoadSeed without changing accepted canary/UI naming.",
+      "plannedTests": "Generated/compiled seed lookup, mechanically copied LevelLoader expansion and BG-before-FG RNG parity against pinned reference.",
+      "failClosedRule": "Original maps cannot build with a missing/wrong derived terrain seed.",
+      "regressions": "Owned canary seeds remain unchanged.",
+      "closureEffect": "Map binding gains an immutable derived integer, no persistence schema change.",
+      "status": "HOST_VERIFIED_PHYSICAL_PENDING",
+      "tests": [
+        "AppleEverestBuilder618",
+        "GateA920/920/0/0",
+        "GateB73/73/0",
+        "GateC73/73/0/0",
+        "GateD0/0",
+        "PinnedTerrain89347Assertions",
+        "All26OriginalJCells",
+        "ThreeSeededTerrainRuns",
+        "ThirteenRejectedTerrainProfiles"
+      ]
+    },
+    {
+      "id": "KL10",
+      "discoveryPoint": "first complete constructor/resource gate",
+      "selectedContent": "Unused original y template in both lobby terrain XMLs; copied visible templates retain their own sheets",
+      "classification": "AUTO_IMPLEMENT_BOUNDED_COMPATIBILITY",
+      "reason": "Exact original package lacks tilesets/subfolder/betterTemplate. Pinned Everest constructs it from the core fallback and uses modulo tile indices.",
+      "implementation": "Stage the exact pinned 16x16 Everest fallback PNG as core atlas content; normal-or-fallback Autotiler constructor; exact pinned Tileset indexers. Core mount uses the stager-returned logical path and is excluded from ordinary mod-owned StaticAssets.",
+      "plannedTests": "Actual applied indexers versus pinned source; 2D/linear/negative controls; missing template pixels; copied-sheet preservation; whole source resource audit; omission/visible-use negatives; generated owner/path resolution.",
+      "failClosedRule": "Only the exact original missing y reference in the two hash-locked XMLs is allowed. Any used missing sheet, missing fallback, unreviewed path, invalid core bytes or unresolved content owner blocks Gate D.",
+      "regressions": "All other 161 definitions retain their real sheets; canonical 3x3 coordinates stay in bounds.",
+      "closureEffect": "One pinned core PNG and static terrain/indexer code, no generic atlas fallback/event architecture.",
+      "status": "HOST_VERIFIED_PHYSICAL_PENDING",
+      "tests": [
+        "AppleEverestBuilder618",
+        "GateA920/920/0/0",
+        "GateB73/73/0",
+        "GateC73/73/0/0",
+        "GateD0/0",
+        "PinnedTerrain89347Assertions",
+        "All26OriginalJCells",
+        "ThreeSeededTerrainRuns",
+        "ThirteenRejectedTerrainProfiles",
+        "FourRejectedCompositionControls",
+        "ExactOriginalResourceHashes"
+      ]
+    },
+    {
+      "id": "KL11",
+      "discoveryPoint": "composition gate exercised against the original BIN trees",
+      "selectedContent": "47 Fancy grids and ordinary Misc/Game/Gui parallax atlas selection",
+      "classification": "AUTO_FIX_COMPOSITION",
+      "reason": "The first verifier parsed commas as terrain cells and assumed every parallax came from Gameplay. Actual existing runtime uses trimmed comma/newline rows and canonical atlas selection.",
+      "implementation": "Mirror the actual bounded consumers in Gate D; census every authored tiletype/TileType; validate original sprite frames/start IDs and generated MapData/LevelLoader/Collab consumer wiring.",
+      "plannedTests": "38 comma and nine newline Fancy inputs; all real parallax resources resolved through canonical selection; original itemCrystal animations18/1/1 and pedestal1; owner/consumer/descriptor gates.",
+      "failClosedRule": "Unresolved actual atlas paths, missing entity terrain, unsupported sprite frames or disconnected consumers reject readiness.",
+      "regressions": "No runtime or original map change for these verifier corrections.",
+      "closureEffect": "Stronger four-gate proof only.",
+      "status": "HOST_VERIFIED_PHYSICAL_PENDING",
+      "tests": [
+        "AppleEverestBuilder618",
+        "GateA920/920/0/0",
+        "GateB73/73/0",
+        "GateC73/73/0/0",
+        "GateD0/0",
+        "FourRejectedCompositionControls",
+        "ExactOriginalResourceHashes"
+      ]
+    },
+    {
+      "id": "KL12",
+      "discoveryPoint": "ordinary Misc parallax integration inspection",
+      "selectedContent": "Canonical loose-atlas background textures whose MTexture.AtlasPath is null",
+      "classification": "AUTO_FIX_COMPOSITION",
+      "reason": "New animated-parallax selection dereferenced AtlasPath even for ordinary canonical backgrounds.",
+      "implementation": "Use a null-safe exact prefix test and retain the ordinary Parallax constructor.",
+      "plannedTests": "Actual compiled runtime helper with both ordinary named and null-path textures; selected animation timer/frame tests.",
+      "failClosedRule": "Only selected animated prefix enters bounded animation logic; missing selected frames still reject.",
+      "regressions": "Ordinary background construction remains canonical.",
+      "closureEffect": "One null-safe source expression; no asset or map rewrite.",
+      "status": "HOST_VERIFIED_PHYSICAL_PENDING",
+      "tests": [
+        "AppleEverestBuilder618",
+        "GateA920/920/0/0",
+        "GateB73/73/0",
+        "GateC73/73/0/0",
+        "GateD0/0",
+        "ActualRuntimeComposition75Assertions",
+        "ThreeGraphicsRestorationCycles"
+      ]
+    },
+    {
+      "id": "KL13",
+      "discoveryPoint": "final product wrapper inspection",
+      "selectedContent": "Exactly two original SJ BINs in actual K-L Apple products",
+      "classification": "AUTO_FIX_COMPOSITION",
+      "reason": "The accepted K-J wrapper deliberately rejects every original SJ BIN; retaining that diagnostic-only policy would reject the real product.",
+      "implementation": "With bound real readiness, run the K-L packaged-content verifier; keep the original zero-real-map rule for K-J-only products.",
+      "failClosedRule": "Exactly two unchanged original maps, 126 excluded, every mounted byte exact; nested excluded maps and source package archives reject.",
+      "regressions": "K-J-only product rule remains intact.",
+      "closureEffect": "Product verification only; no runtime/content rewrite.",
+      "tests": [
+        "FourGatesPASS",
+        "HostPackagedContentControls",
+        "ActualSignedNativeProductPending"
+      ],
+      "status": "HOST_VERIFIED_PHYSICAL_PENDING",
+      "plannedTests": "FourGatesPASS; HostPackagedContentControls; ActualSignedNativeProductPending"
+    },
+    {
+      "id": "KL14",
+      "discoveryPoint": "final independent terrain proof audit",
+      "selectedContent": "Unused foreground G sound table and 92 render-only background G cells",
+      "classification": "AUTO_FIX_COMPOSITION",
+      "reason": "Host fixtures injected pinned desktop G=8 although accepted Apple initialization produces G=0. Neither selected map has a foreground/entity/Fancy G sound consumer.",
+      "implementation": "Use the accepted G=0 fixture sentinel and state that sound-registration comparison begins from identical tables. Retain the accepted runtime; explicitly record the unused desktop table difference.",
+      "failClosedRule": "This proof does not establish full unrelated desktop sound-table equivalence.",
+      "regressions": "Canonical accepted sound baseline retained; selected J sound8 and graphics restoration still checked.",
+      "closureEffect": "Host fixture/evidence correction only.",
+      "tests": [
+        "PinnedTerrain89347Assertions",
+        "ActualRuntimeComposition75Assertions",
+        "IndependentOriginalGConsumerCensus"
+      ],
+      "status": "HOST_VERIFIED_PHYSICAL_PENDING",
+      "plannedTests": "PinnedTerrain89347Assertions; ActualRuntimeComposition75Assertions; IndependentOriginalGConsumerCensus"
+    },
+    {
+      "id": "KL15",
+      "discoveryPoint": "final independent acceptance verifier audit",
+      "selectedContent": "Final closure, signed IPA, physical receipt, three generations and clean clone",
+      "classification": "AUTO_FIX_COMPOSITION",
+      "reason": "Scalar PASS reports alone could accept stale products or a changed ignored generated tree.",
+      "implementation": "Bind clean exact HEAD across products, receipts, regressions and reproduction; rehash generated managed/content trees and Collab/progression manifests; compare every IPA member to the inspected signed app; rerun native/content/platform checks; require independent recursive clone/compiler/four-gate/three-run evidence.",
+      "failClosedRule": "Wrong authority, source, platform, version, build, IPA, factory lifecycle count, generated hash, source archive or excluded map rejects acceptance.",
+      "regressions": "Frozen-source/external-acceptance model retained from K-J; host PASS cannot imply physical PASS.",
+      "closureEffect": "Evidence and verifier changes only; final native execution remains pending.",
+      "tests": [
+        "PhysicalIdentityRejectionControls",
+        "HostPackagedContentControls",
+        "ActualSignedNativeProductPending"
+      ],
+      "status": "HOST_VERIFIED_PHYSICAL_PENDING",
+      "plannedTests": "PhysicalIdentityRejectionControls; HostPackagedContentControls; ActualSignedNativeProductPending"
+    },
+    {
+      "id": "KL16",
+      "discoveryPoint": "required deferred-texture physical observation preparation",
+      "selectedContent": "Static atlas mounts at content-ready and ordinary Level.LoadLevel completion",
+      "classification": "AUTO_FIX_COMPOSITION",
+      "reason": "The retained deferred loader did not report mounted versus actually decoded texture counts at real-map loads.",
+      "implementation": "Read existing VirtualTexture backing fields at established content/level lifecycle points; log mounted/decoded counts, estimated RGBA bytes and managed live memory without forcing decode.",
+      "plannedTests": "Fresh complete runtime compilation; source guard against texture getters that force load; actual device logs pending.",
+      "tests": [
+        "FreshSixDllCompilation",
+        "NonDecodingObservationSourceGuard",
+        "ExactDeviceMeasurementsPending"
+      ],
+      "failClosedRule": "Measurements are diagnostic observations, not a substitute for actual GPU memory or physical acceptance.",
+      "regressions": "No new loader, render entity, first-frame timer, quality setting or persistence authority.",
+      "closureEffect": "One runtime observation method and one existing level-load call; shared managed closure changes.",
+      "status": "HOST_VERIFIED_PHYSICAL_PENDING"
+    }
+  ]
+}

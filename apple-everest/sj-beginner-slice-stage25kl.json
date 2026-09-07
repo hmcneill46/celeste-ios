@@ -1,0 +1,93 @@
+{
+  "schemaVersion": 1,
+  "stage": "25K-L",
+  "status": "HOST_PREFLIGHT_PASS_PHYSICAL_PENDING",
+  "startSha": "e69bfd6eeba3d36a5d745c24b3bc0f2f3f4ee92f",
+  "branch": "feature/apple-everest-first-sj-slice-outcome",
+  "sharedClosureSha256": "03d5be105ed3ca3cb0061ac1abc1054e186b35141032076084c74d7bee949158",
+  "sjVersion": "1.0.12",
+  "sjZipSha256": "4e1a2fc12baa3db27da433b93bf26b59f34b3e6b7f760c41d8d127636d020655",
+  "originalMaps": [
+    {
+      "sid": "StrawberryJam2021/0-Lobbies/1-Beginner",
+      "sha256": "a4e3e20a2f0cc878fe43b32fb8025d7650b20cc6265f69e37bf3110a7cdf47c2",
+      "sourcePackageLabel": "3Plain",
+      "rootBytes": 524807,
+      "appendixBytes": 149841,
+      "appendixSha256": "d76dba1bc5834d999f4d622afd008a702ffe6663b17fe7b0be3c5cc69afabe0d",
+      "terrainSeed": 3349
+    },
+    {
+      "sid": "StrawberryJam2021/1-Beginner/Bing_Over_Google",
+      "sha256": "e770a8d193f217d09a6e153fbe272813d26a04d972df947ac812aa5cfe66f347",
+      "sourcePackageLabel": "Bing_Over_Google",
+      "rootBytes": 70024,
+      "appendixBytes": 65339,
+      "appendixSha256": "963d5f086279311c18561df8fb135e445ca1cf0bcc2d3f1ba0d8b21f8376da6d",
+      "terrainSeed": 4143
+    }
+  ],
+  "sourceMapCount": 2,
+  "excludedSjMapCount": 126,
+  "historicalTargetedPlanFiles": 1212,
+  "knownAdditionalRootFiles": 117,
+  "explicitSelectedPackageFiles": 1398,
+  "selectedCoreAssets": 1,
+  "finalMountedFilesIncludingRegressions": 2942,
+  "pngAssetsIncludingRegressions": 2716,
+  "acceptedRegistrySha256": "6e5b89f7d952aa98e72640abce0c75522567fb9d48f8b027e3db54f5cf9da72f",
+  "customAudioOrder": [
+    {
+      "owner": "ChronoHelper",
+      "sourcePath": "Audio/ExpertContestHelper.bank",
+      "loadOrdinal": 8,
+      "sha256": "2607c358e66f4bce4e81fa3748eaffe1205dcfb57010be2e90ce40fabeb8d3ec"
+    },
+    {
+      "owner": "StrawberryJam2021AudioA",
+      "sourcePath": "Audio/sj21_bingovergoogle.bank",
+      "loadOrdinal": 9,
+      "sha256": "772e3d4a41b463edcf529882f6d2f4de12384e891ae62a23220aa1379d89e159"
+    },
+    {
+      "owner": "StrawberryJam2021AudioA",
+      "sourcePath": "Audio/sj21_shared.bank",
+      "loadOrdinal": 10,
+      "sha256": "7620d1de4c32f1564b1206ac252af806b5b33c6a9f2b4624df582ece0d7f62e8"
+    },
+    {
+      "owner": "StrawberryJam2021AudioB",
+      "sourcePath": "Audio/sj21_BegLobby.bank",
+      "loadOrdinal": 11,
+      "sha256": "a5c45fe0ed77d048c4c9520bb2e1e58f9dbfd1d05dc2ccc19d5310fac0ac0ceb"
+    },
+    {
+      "owner": "StrawberryJam2021",
+      "sourcePath": "Audio/sj21_jamjars.bank",
+      "loadOrdinal": 12,
+      "sha256": "9e6bf27fc7f607e2ef5695b6b32ccf34abf1b7380ba13d66f3b49bc5b1613c1b"
+    },
+    {
+      "owner": "CollabUtils2",
+      "sourcePath": "Audio/SC2020_global_collectibles.bank",
+      "loadOrdinal": 13,
+      "sha256": "81c19f256382718b1b8ea7bcab0944b6ed204e1eb7cf048fd699ba4f0d2a5777"
+    },
+    {
+      "owner": "HonlyHelper",
+      "sourcePath": "Audio/HonlyHelper.bank",
+      "loadOrdinal": 14,
+      "sha256": "6164aa671dda3c9bee425545b7d556c74b9a0245e88f8d8c9acd652b90b62172"
+    }
+  ],
+  "singleFmodStudioSystem": true,
+  "saveEnvelope": "AEVPSV1",
+  "iPadPhysicalStatus": "IPADOS_PHYSICAL_DEFERRED_LEGACY_COMPATIBILITY_POLICY",
+  "historicalAllThreeDeviceBaseline": "Stage25K-B build35",
+  "developmentIntegrationReady": false,
+  "allPlatformReleaseReady": false,
+  "boundedFixClassifications": {
+    "AUTO_IMPLEMENT_BOUNDED_COMPATIBILITY": 4,
+    "AUTO_FIX_COMPOSITION": 12
+  }
+}

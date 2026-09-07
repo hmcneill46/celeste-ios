@@ -1,0 +1,87 @@
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.IO;
+using System.Linq;
+using System.Xml;
+
+namespace Microsoft.Xna.Framework
+{
+    public struct Vector2
+    {
+        public float X,Y;
+        public Vector2(float x,float y){X=x;Y=y;}
+        public static Vector2 Zero=>default;
+    }
+}
+namespace Monocle
+{
+    public class Scene { }
+    public static class Engine { public static float DeltaTime; }
+    public sealed class MTexture { public string AtlasPath; public MTexture(string path){AtlasPath=path;} }
+    public sealed class Atlas
+    {
+        public readonly Dictionary<string,int> Frames=new(StringComparer.OrdinalIgnoreCase);
+        public List<MTexture> GetAtlasSubtextures(string key) => Enumerable.Range(0,Frames.GetValueOrDefault(key))
+            .Select(i=>new MTexture(key+":"+i)).ToList();
+    }
+    public sealed class SpriteBank
+    {
+        public readonly string Path;
+        public SpriteBank(Atlas atlas,string path){Path=path;_ = Calc.LoadContentXML(path);}
+    }
+    public static class Calc
+    {
+        public static string ContentRoot;
+        public static XmlDocument LoadContentXML(string file)
+        {
+            var doc=new XmlDocument();doc.Load(System.IO.Path.IsPathRooted(file)?file:System.IO.Path.Combine(ContentRoot,file));return doc;
+        }
+    }
+    public static class XmlRules
+    {
+        public static string Attr(this XmlElement e,string key)=>e.GetAttribute(key);
+        public static float AttrFloat(this XmlElement e,string key,float fallback)=>e.HasAttribute(key)?float.Parse(e.GetAttribute(key),CultureInfo.InvariantCulture):fallback;
+        public static Microsoft.Xna.Framework.Vector2 AttrVector2(this XmlElement e,string x,string y,Microsoft.Xna.Framework.Vector2 fallback)=>
+            new(e.AttrFloat(x,fallback.X),e.AttrFloat(y,fallback.Y));
+    }
+}
+namespace Celeste
+{
+    // The matcher and its sound/debris registration are verified separately
+    // against pinned code. This adapter observes graphics lifecycle ordering.
+    public sealed class Autotiler
+    {
+        public readonly string Path;
+        public static readonly List<string> Constructions=new();
+        public Autotiler(string path)
+        {
+            Path=path;Constructions.Add(path);
+            foreach(XmlElement tile in Monocle.Calc.LoadContentXML(path).GetElementsByTagName("Tileset"))
+                if(tile.HasAttribute("sound"))SurfaceIndex.TileToIndex[tile.GetAttribute("id")[0]]=int.Parse(tile.GetAttribute("sound"));
+        }
+    }
+    public static class GFX
+    {
+        public static Monocle.Atlas Game=new();
+        public static Autotiler FGAutotiler,BGAutotiler;
+        public static AnimatedTilesBank AnimatedTilesBank;
+    }
+    public static class SurfaceIndex {public static Dictionary<char,int> TileToIndex=new();}
+    public sealed class Session {public string Area; public Session(string sid){Area=sid;}}
+    public sealed class Level:Monocle.Scene { }
+    public class Parallax
+    {
+        public Monocle.MTexture Texture;
+        public bool Visible=true;
+        public int BaseUpdates;
+        public Parallax(Monocle.MTexture texture){Texture=texture;}
+        public virtual void Update(Monocle.Scene scene){BaseUpdates++;}
+        public bool IsVisible(Level scene)=>Visible;
+    }
+}
+namespace Celeste.Mod
+{
+    internal static class AppleEverestStaticRuntime {internal static Monocle.SpriteBank SelectedMapSpriteBank;}
+    internal static class AppleEverestProgressionRuntime {internal static string Sid(string area)=>area;}
+}

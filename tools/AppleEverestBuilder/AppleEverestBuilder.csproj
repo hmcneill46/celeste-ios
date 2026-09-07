@@ -17,6 +17,7 @@
     <PackageReference Include="YamlDotNet" Version="16.1.3" />
     <Compile Remove="tests/**/*.cs" />
     <Compile Include="../../apple-everest/runtime/AppleEverestDialogFragmentParser.cs" Link="AppleEverestDialogFragmentParser.cs" />
+    <Compile Include="../../apple-everest/runtime/AppleEverestTileMaskRules.cs" Link="AppleEverestTileMaskRules.cs" />
     <EmbeddedResource Include="../../apple-everest/managed-detour-targets-v2.json"
                       LogicalName="AppleEverest.ManagedDetourTargets.json" />
     <EmbeddedResource Include="../../apple-everest/apple-api-surface-v1.json"

@@ -1,6 +1,12 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+# Keep serial host compilation from retaining build/compiler servers across
+# the repeated fresh preflights on memory-constrained development machines.
+export MSBUILDDISABLENODEREUSE=1
+export DOTNET_CLI_USE_MSBUILD_SERVER=0
+export UseSharedCompilation=false
+
 SCRIPT_DIR="$(CDPATH= cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd -P)"
 REPO_ROOT="$(CDPATH= cd -- "$SCRIPT_DIR/.." && pwd -P)"
 PROFILE="$REPO_ROOT/apple-everest/profiles/stable-1.6458.0.json"
@@ -26,6 +32,7 @@ CONFIGURED_FIXTURE=0
 FACTORY_CLOSURE=""
 FACTORY_PREFLIGHT=""
 AUTHORED_FACTORY_PROFILES=""
+CONTENT_PLAN=""
 MODS=()
 
 usage() {
@@ -51,6 +58,7 @@ Options:
   --factory-closure JSON   validate selected factory closure before generation
   --factory-preflight JSON package-backed selected graph; requires authored profiles
   --authored-factory-profiles JSON exact extracted selected profiles for preflight
+  --content-plan JSON      hash-bound selected original content union
   --work-root DIRECTORY    isolated ignored build root below .build/apple-everest
   --output DIRECTORY       isolated product root below artifacts/apple-everest
   -h, --help               show this help
@@ -74,6 +82,7 @@ while (($#)); do
     --factory-closure) FACTORY_CLOSURE="$2"; shift 2 ;;
     --factory-preflight) FACTORY_PREFLIGHT="$2"; shift 2 ;;
     --authored-factory-profiles) AUTHORED_FACTORY_PROFILES="$2"; shift 2 ;;
+    --content-plan) CONTENT_PLAN="$2"; shift 2 ;;
     --work-root) WORK_ROOT="$2"; shift 2 ;;
     --output) OUTPUT="$2"; shift 2 ;;
     -h|--help) usage; exit 0 ;;
@@ -227,6 +236,9 @@ mod_args=()
 for mod in "${MODS[@]}"; do mod_args+=(--mod "$mod"); done
 build_args=(build --profile "$PROFILE" --repo-root "$REPO_ROOT" --upstream "$UPSTREAM" --output "$CLOSURE")
 [[ -z "$FACTORY_CLOSURE" ]] || build_args+=(--factory-closure "$FACTORY_CLOSURE")
+content_plan_args=()
+[[ -z "$CONTENT_PLAN" ]] || content_plan_args+=(--content-plan "$CONTENT_PLAN")
+build_args+=("${content_plan_args[@]}")
 if ((CONFIGURED_FIXTURE)); then
   ((${#MODS[@]} == 1)) || { echo "error: --configured-fixture requires exactly one --mod" >&2; exit 2; }
   (cd /private/tmp && "$DOTNET8" run --project "$BUILDER_PROJECT" -- build-configured-fixture \
@@ -266,7 +278,7 @@ if [[ -n "$FACTORY_PREFLIGHT" ]]; then
     preflight-factory-closure --manifest "$FACTORY_PREFLIGHT" --authored-profiles "$AUTHORED_FACTORY_PROFILES" \
     --assembly "$preflight_assembly" --closure "$CLOSURE" --repo-root "$REPO_ROOT" \
     --profile "$PROFILE" --upstream "$UPSTREAM" --canonical-managed-root "$REPO_ROOT/.build/celeste-ios/current/managed" \
-    --dotnet "$(command -v dotnet)" --output "$WORK_ROOT/production-preflight.json" "${mod_args[@]}")
+    --dotnet "$(command -v dotnet)" --output "$WORK_ROOT/production-preflight.json" "${mod_args[@]}" "${content_plan_args[@]}")
   if [[ -d "$CLOSURE/content/Content/Maps/AppleEverestStage25KJ/FactoryProfiles" ]]; then
     python3 "$SCRIPT_DIR/inspect-apple-everest-stage25kj-canary-profiles.py" \
       --closure "$CLOSURE" --output "$WORK_ROOT/compiled-canary-profiles.json"
@@ -277,11 +289,26 @@ if [[ -n "$FACTORY_PREFLIGHT" ]]; then
   fi
 fi
 
+if [[ -f "$CLOSURE/content/Content/Maps/StrawberryJam2021/0-Lobbies/1-Beginner.bin" ]]; then
+  [[ -n "$CONTENT_PLAN" && -n "$FACTORY_PREFLIGHT" && -f "$WORK_ROOT/production-preflight.json" ]] || {
+    echo "error: real SJ product requires an original content plan and actual compiled factory preflight" >&2; exit 1; }
+  composition_root="$WORK_ROOT/real-composition"
+  safe_replace "$composition_root" .apple-everest-real-sj-composition
+  mkdir -p "$composition_root"
+  touch "$composition_root/.apple-everest-real-sj-composition"
+  python3 "$SCRIPT_DIR/verify-apple-everest-stage25kl-composition.py" \
+    --closure "$CLOSURE" --runtime "$preflight_runtime" --content-plan "$CONTENT_PLAN" \
+    --production-preflight "$WORK_ROOT/production-preflight.json" --output "$composition_root"
+  [[ -f "$composition_root/READY_FOR_REAL_SJ_PRODUCT_BUILD" ]] || {
+    echo "error: all four real SJ gates must pass before product preparation/AOT" >&2; exit 1; }
+fi
+
 prepare_platform() {
   local platform="$1" base destination
   destination="$WORK_ROOT/$platform-runtime"
   safe_replace "$destination" .apple-everest-derived-runtime
   mkdir -p "$destination"
+  touch "$destination/.apple-everest-derived-runtime"
   if [[ "$platform" == ios ]]; then
     base="$REPO_ROOT/.build/celeste-ios/current"
     [[ -f "$base/managed/Celeste.Modern.csproj" && -d "$base/content/Content" && -d "$base/banks/Content/FMOD" ]] || {
@@ -424,7 +451,12 @@ scan_product_runtime() {
     python3 "$REPO_ROOT/scripts/verify-apple-everest-aot-factory-product.py" \
       --app "$app" --build "$platform_build" --manifest "$FACTORY_PREFLIGHT" \
       --authored-profiles "$AUTHORED_FACTORY_PROFILES" --output "$platform_build/linked-selected-factories.json"
-    python3 - "$app" <<'PY'
+    if [[ -f "$WORK_ROOT/real-composition/READY_FOR_REAL_SJ_PRODUCT_BUILD" ]]; then
+      python3 "$SCRIPT_DIR/verify-apple-everest-stage25kl-product-content.py" \
+        --app "$app" --closure "$CLOSURE" --readiness "$WORK_ROOT/real-composition/readiness.json" \
+        --output "$platform_build/real-sj-product-content.json"
+    else
+      python3 - "$app" <<'PY'
 import pathlib,sys
 root=pathlib.Path(sys.argv[1])
 for path in root.rglob('*'):
@@ -432,6 +464,7 @@ for path in root.rglob('*'):
         raise SystemExit('real Strawberry Jam map content entered a factory-only product')
 print('PASS: actual product has no original Strawberry Jam map content')
 PY
+    fi
   fi
   if [[ -d "$CLOSURE/assemblies" ]]; then
     while IFS= read -r -d '' assembly; do
@@ -464,6 +497,8 @@ record={'phase':sys.argv[2],'utc':datetime.datetime.now(datetime.timezone.utc).i
         'freeGiB':round(shutil.disk_usage(root).free/2**30,3)}
 with (root/'disk-measurements.jsonl').open('a') as stream: stream.write(json.dumps(record,sort_keys=True)+'\n')
 print('disk:',record['phase'],record['freeGiB'],'GiB free')
+if (root/'real-composition/READY_FOR_REAL_SJ_PRODUCT_BUILD').exists() and record['phase']=='before-ios-aot' and record['freeGiB']<25:
+    raise SystemExit('real SJ iOS AOT requires at least 25 GiB free; reclaim only reproducible owned intermediates first')
 PY
 }
 
