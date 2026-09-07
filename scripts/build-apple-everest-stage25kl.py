@@ -3,6 +3,7 @@
 import argparse
 import importlib.util
 import json
+import os
 from pathlib import Path
 import subprocess
 import sys
@@ -24,6 +25,14 @@ def main():
             index+=2
         elif option in flags:index+=1
         else:parser.error("K-L does not permit input/gate overrides or reuse of an unbound AOT product: "+option)
+    env=dict(os.environ,MSBUILDDISABLENODEREUSE="1",DOTNET_CLI_USE_MSBUILD_SERVER="0",UseSharedCompilation="false")
+    # Content selection validates a pinned core asset before the common builder
+    # runs. Acquire that same pinned source first, including on a fresh checkout.
+    subprocess.run([str(ROOT/"scripts/bootstrap-apple-everest-host.sh")],cwd=ROOT,env=env,check=True)
+    subprocess.run([str(ROOT/".build/apple-everest/toolchain/dotnet8/dotnet"),"run","--project",
+        str(ROOT/"tools/AppleEverestBuilder/AppleEverestBuilder.csproj"),"--","acquire","--profile",
+        str(ROOT/"apple-everest/profiles/stable-1.6458.0.json"),"--output",
+        str(ROOT/".build/apple-everest/upstream/Everest")],cwd="/private/tmp",env=env,check=True)
     spec=importlib.util.spec_from_file_location("kl_content",ROOT/"scripts/generate-apple-everest-stage25kl-content.py")
     generator=importlib.util.module_from_spec(spec);sys.modules[spec.name]=generator;spec.loader.exec_module(generator)
     generated,_=generator.generate(args.package_root)
@@ -42,7 +51,7 @@ def main():
              "--authored-factory-profiles",str(profiles),"--content-plan",str(plan)]
     for path in inputs:command += ["--mod",str(path.resolve())]
     # Signing/device identities remain local and are not echoed in exceptions.
-    raise SystemExit(subprocess.run(command+product_args,cwd=ROOT).returncode)
+    raise SystemExit(subprocess.run(command+product_args,cwd=ROOT,env=env).returncode)
 
 
 if __name__=="__main__":main()

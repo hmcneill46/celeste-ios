@@ -126,7 +126,7 @@ HookGen 205 / API 30 / frozen IL 17 (5 DJ + 12 Sideways) remain unchanged.
 Every issue has one classification, reason, implementation, tests, rejection
 rule, regression scope and closure effect in the
 [complete ledger](../../../apple-everest/sj-bounded-fixes-stage25kl.json).
-No STOP_MAJOR_ARCHITECTURE has been found. Seventeen issues: 13 composition fixes
+No STOP_MAJOR_ARCHITECTURE has been found. Eighteen issues: 14 composition fixes
 and 4 bounded mechanisms. Actual signed-product tests remain pending where noted.
 
 | ID | Classification | Resolution |
@@ -148,6 +148,7 @@ and 4 bounded mechanisms. Actual signed-product tests remain pending where noted
 | KL15 | AUTO_FIX_COMPOSITION | Bind clean exact HEAD across products, receipts, regressions and reproduction; rehash generated managed/content trees and Collab/progression manifests; compare every IPA member to the inspected signed app; rerun native/content/platform checks; require independent recursive clone/compiler/four-gate/three-run evidence. |
 | KL16 | AUTO_FIX_COMPOSITION | Observe mounted/decoded textures through backing fields at content-ready and level-loaded without forcing decode; report RGBA estimate and managed live bytes. |
 | KL17 | AUTO_FIX_COMPOSITION | Hash complete relative POSIX paths in canonical string order; fix false fresh-clone content mismatch without changing inputs or expected identities. |
+| KL18 | AUTO_FIX_COMPOSITION | Acquire the exact pinned Everest source before content-plan generation so a fresh checkout can validate the required core fallback asset. |
 
 ## Real flow, audio and persistence
 
@@ -477,9 +478,9 @@ boundary; it cannot silently convert pending checks to PASS.
 
 115. **Must be NO.** Confirmed NO; no quality reduction for deferred legacy iPad.
 
-116. **What bounded issues beyond autotiling were found?** Three additional bounded mechanisms and thirteen composition/evidence fixes; see all 17 ledger entries including autotiling.
+116. **What bounded issues beyond autotiling were found?** Three additional bounded mechanisms and fourteen composition/evidence fixes; see all 18 ledger entries including autotiling.
 
-117. **How many AUTO_FIX_COMPOSITION?** 13.
+117. **How many AUTO_FIX_COMPOSITION?** 14.
 
 118. **How many AUTO_IMPLEMENT_BOUNDED_COMPATIBILITY?** 4, including the initial autotiler mechanism.
 

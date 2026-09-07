@@ -365,6 +365,26 @@
       "regressions": "Canonical inputs and generated product bytes remain unchanged; no hash expectation was weakened.",
       "closureEffect": "Host verification ordering only; shared runtime/content closure unchanged.",
       "status": "HOST_VERIFIED_PHYSICAL_PENDING"
+    },
+    {
+      "id": "KL18",
+      "discoveryPoint": "fresh-clone first four-gate invocation after independent package acquisition",
+      "selectedContent": "Pinned Everest core fallback asset required by the original unused terrain template",
+      "classification": "AUTO_FIX_COMPOSITION",
+      "reason": "The K-L wrapper validated the generated content plan before the common builder acquired pinned Everest source, relying on a pre-existing ignored upstream checkout.",
+      "implementation": "Run the accepted host bootstrap and exact-profile upstream acquisition before content-plan generation; retain all original asset hash and four-gate checks.",
+      "plannedTests": "Fresh clone with independently acquired mod packages and no upstream checkout; exact fallback hash; complete compiler/four-gate checks and final fresh recursive reproduction.",
+      "tests": [
+        "FreshMissingUpstreamAcquisition",
+        "ExactPinnedCoreAssetHash",
+        "IndependentInputsFreshCompilerAndFourGatesPASS",
+        "IndependentInputsCurrentRegressionsPASS",
+        "FreshCloneAndFinalSourceVerificationRequired"
+      ],
+      "failClosedRule": "Upstream identity or fallback bytes differing from the accepted pins still fail before product generation.",
+      "regressions": "Warm checkout uses the same idempotent accepted acquisition; no runtime or third-party byte changes.",
+      "closureEffect": "Build dependency ordering only; shared runtime/content closure unchanged.",
+      "status": "HOST_VERIFIED_FINAL_SOURCE_REPRODUCTION_PENDING"
     }
   ]
 }
