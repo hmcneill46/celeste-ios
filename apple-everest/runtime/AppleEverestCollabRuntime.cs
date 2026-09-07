@@ -148,6 +148,17 @@ internal static class AppleEverestCollabRuntime
     internal static bool ShouldShowChapterDeaths(OuiChapterPanel panel) =>
         IsForcedChapterPanel(panel);
 
+    internal static string ChapterCardTexture(OuiChapterPanel panel, string texture)
+    {
+        if (!IsForcedChapterPanel(panel) ||
+            (texture != "areaselect/cardtop_golden" && texture != "areaselect/card_golden")) return texture;
+        var berries = AreaData.Get(panel.Area).Mode[(int)panel.Area.Mode].MapData.Goldenberries;
+        string kind = berries.Any(berry => berry.Name == "CollabUtils2/RainbowBerry") ? "rainbow" :
+            berries.Any(berry => berry.Name == "CollabUtils2/SilverBerry") ? "silver" : null;
+        return kind == null ? texture : "CollabUtils2/chapterCard/" +
+            (texture == "areaselect/cardtop_golden" ? "cardtop_" : "card_") + kind;
+    }
+
     internal static bool NeedsChapterCheckpointPage(OuiChapterPanel panel) =>
         overworldWrapper != null && forcedMapSid != null && panel?.Overworld == overworldWrapper.WrappedScene &&
         UsesSyntheticBookmarks(forcedMapSid) &&
@@ -807,14 +818,9 @@ internal sealed class AppleEverestCollabJournalProgress : OuiJournalPage
             AreaStats stats = SaveData.Instance.Areas[descriptor.RuntimeAreaId];
             AreaModeStats mode = stats.Modes[0];
             AreaData area = AreaData.Areas[descriptor.RuntimeAreaId];
-            // Everest special berries deliberately participate in persistence
-            // without increasing a map's authored ordinary-strawberry total.
-            // Pinned Celeste increments TotalStrawberries for every Strawberry
-            // subclass, so cap the journal-facing value at the compiler-known
-            // ordinary total while the special EntityIDs remain durable.
-            int ordinaryBerries = Math.Min(stats.TotalStrawberries, area.Mode[0].TotalStrawberries);
-            string berries = area.Mode[0].TotalStrawberries > 0 || ordinaryBerries > 0
-                ? ordinaryBerries + (mode.Completed ? "/" + area.Mode[0].TotalStrawberries : "")
+            int collectedBerries = stats.TotalStrawberries;
+            string berries = area.Mode[0].TotalStrawberries > 0 || collectedBerries > 0
+                ? collectedBerries + (mode.Completed ? "/" + area.Mode[0].TotalStrawberries : "")
                 : "-";
 
             string levelHeartTexture = MTN.Journal.Has("CollabUtils2LevelHearts/" + map.Sid)
@@ -830,7 +836,14 @@ internal sealed class AppleEverestCollabJournalProgress : OuiJournalPage
                     ? new TextCell(Dialog.Deaths(mode.Deaths), TextJustify, 0.5f, TextColor)
                     : new IconCell("dot"));
 
-            if (mode.SingleRunCompleted)
+            EntityData collectedSilver = area.Mode[0].MapData.Goldenberries.FirstOrDefault(berry =>
+                berry.Name == "CollabUtils2/SilverBerry" && mode.Strawberries.Contains(new EntityID(berry.Level.Name, berry.ID)));
+            if (collectedSilver != null)
+                row.Add(new IconCell("CollabUtils2/silver_strawberry"));
+            else if (area.Mode[0].MapData.Goldenberries.Any(berry =>
+                         mode.Strawberries.Contains(new EntityID(berry.Level.Name, berry.ID))))
+                row.Add(new IconCell("CollabUtils2/golden_strawberry"));
+            else if (mode.SingleRunCompleted)
             {
                 row.Add(new TextCell(Dialog.Deaths(mode.BestDeaths), TextJustify, 0.5f, TextColor));
                 totalBestDeaths += mode.BestDeaths;
@@ -855,7 +868,7 @@ internal sealed class AppleEverestCollabJournalProgress : OuiJournalPage
                 allBestTimesPresent = false;
             }
 
-            totalStrawberries += ordinaryBerries;
+            totalStrawberries += collectedBerries;
             totalDeaths += mode.Deaths;
             totalTime += stats.TotalTimePlayed;
         }

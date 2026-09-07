@@ -488,7 +488,7 @@ internal static class CollabStaticTests
              closureGenerator.Contains("SecondRealCollab:source-lowered-heart-door-and-special-berries:v1", StringComparison.Ordinal) &&
              closureGenerator.Contains("ConfigureHeartDoor(this, TopSolid, BotSolid", StringComparison.Ordinal) &&
              closureGenerator.Contains("ConfigureStrawberry(this, sprite, bloom, light)", StringComparison.Ordinal) &&
-             progressionRuntime.Contains("CountsAsOrdinaryStrawberry", StringComparison.Ordinal) &&
+             progressionRuntime.Contains("CountsAsCollectedStrawberry", StringComparison.Ordinal) &&
              progressionRuntime.Contains("CollabUtils2/SilverBerry", StringComparison.Ordinal),
             "vanilla hosts are deterministically source-lowered for heart doors and special-berry progression");
         Pass(!runtime.Contains("Assembly.Load", StringComparison.Ordinal) &&

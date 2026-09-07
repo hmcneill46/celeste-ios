@@ -15,6 +15,19 @@ internal sealed record AppleEverestDialogFragmentEntry(string Raw, string Cleane
 /// </summary>
 internal static class AppleEverestDialogFragmentParser
 {
+    // Everest's DialogKeyify, plus an isolated namespace for the owned K-H
+    // diagnostic. The selected source profiles deliberately share these keys.
+    internal static string KeyForMap(string? sid, string key)
+    {
+        string normalized = key.Replace('/', '_').Replace('-', '_').Replace('+', '_').Replace(' ', '_');
+        if (sid == "AppleEverest/Stage25KH" &&
+            (normalized.Equals("SJ2021_lobby_gym_tutorial_info", StringComparison.OrdinalIgnoreCase) ||
+             normalized.Equals("SJ2021_lobby_gym_tutorial_controls", StringComparison.OrdinalIgnoreCase) ||
+             normalized.Equals("StrawberryJam2021_0_Lobbies_1_Beginner_Credits", StringComparison.OrdinalIgnoreCase)))
+            return "APPLE_EVEREST_STAGE25KH_" + normalized;
+        return normalized;
+    }
+
     private static readonly Regex Command = new("\\{(.*?)\\}", RegexOptions.RightToLeft);
     private static readonly Regex Insert = new("\\{\\+\\s*(.*?)\\}");
     private static readonly Regex Variable = new("^\\w+\\=.*");

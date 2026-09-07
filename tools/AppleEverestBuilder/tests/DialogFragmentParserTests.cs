@@ -33,6 +33,28 @@ internal static class DialogFragmentParserTests
                 new Dictionary<string, string>());
         Pass(inserts["copy"] == new AppleEverestDialogFragmentEntry("HELLO WORLD#1", "HELLO WORLD#1"),
             "mod dialog insert and escaped hash semantics");
+
+        const string credits = "StrawberryJam2021_0_Lobbies_1_Beginner_Credits";
+        const string diagnosticMap = "AppleEverest/Stage25KH";
+        Pass(AppleEverestDialogFragmentParser.KeyForMap(null, "AppleEverestStage25KJ/0-Lobbies/1-Fixture") ==
+            "AppleEverestStage25KJ_0_Lobbies_1_Fixture", "original Everest SID key normalization resolves lobby title");
+        Pass(AppleEverestDialogFragmentParser.KeyForMap(null, "a+b c/d-e") == "a_b_c_d_e",
+            "all four original Everest dialog separators normalize");
+        foreach (bool diagnosticFirst in new[] { true, false })
+        {
+            var dialog = new Dictionary<string, AppleEverestDialogFragmentEntry>(StringComparer.OrdinalIgnoreCase);
+            var original = AppleEverestDialogFragmentParser.Parse(credits + "=Original credits\n", new Dictionary<string, string>());
+            foreach (bool diagnostic in diagnosticFirst ? new[] { true, false } : new[] { false, true })
+                foreach (var entry in diagnostic ? exact : original)
+                    dialog[AppleEverestDialogFragmentParser.KeyForMap(diagnostic ? diagnosticMap : null, entry.Key)] = entry.Value;
+            Pass(dialog[AppleEverestDialogFragmentParser.KeyForMap(diagnosticMap, credits)].Raw == npc.Raw &&
+                 dialog[AppleEverestDialogFragmentParser.KeyForMap("AppleEverestStage25KJ/FactoryProfiles/MaxMechanics", credits)].Raw ==
+                     "Original credits", "K-H portrait and original credits survive either mount order");
+        }
+        string scoped = AppleEverestDialogFragmentParser.KeyForMap(diagnosticMap, credits);
+        Pass(AppleEverestDialogFragmentParser.KeyForMap(diagnosticMap, scoped) == scoped &&
+             AppleEverestDialogFragmentParser.KeyForMap(diagnosticMap, "options_gameplay") == "options_gameplay",
+            "diagnostic alias is idempotent and leaves unrelated UI keys alone");
         return passed;
     }
 }

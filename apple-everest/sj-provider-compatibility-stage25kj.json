@@ -1,5 +1,5 @@
 {
-  "actualProductionPreflightSha256": "0fc02019d6eb434634e8d58831e8e05499447c36fecd967281f8cb8823f3b246",
+  "actualProductionPreflightSha256": "5d2c69ba7331f1ed046fa00f5d86d202aac9057de67788752f30759f9239fb8a",
   "agentPolicy": "FOUR_LIFETIME_READ_ONLY_AUDIT_AGENTS_ROOT_ONLY_WRITER_BUILDER_SIGNER",
   "auditAgents": [
     {
@@ -324,7 +324,7 @@
       "requiresNewRuntimeArchitecture": false,
       "secondaryBlockers": [
         {
-          "detail": "Typed settings/save state and exact static map metadata replace discovery; required in-level map UI retained.",
+          "detail": "Typed settings/save state and exact static map metadata replace discovery; required in-level map UI retained. Everest dialog-key normalization resolves the map SID title; Grab/climb bridges touch panning; explicit nearest/selected-warp index guards and normalization after destination changes address the pinned desktop Update line 337 exception; zoom indices are bounded.",
           "implementationDisposition": "EXPLICIT_TYPED_IMPLEMENTATION_AND_STATIC_FOLDS",
           "kind": "SELECTED_CONSTRUCTOR_LIFECYCLE_MODULE_EFFECTS"
         },
@@ -380,7 +380,7 @@
       "requiresNewRuntimeArchitecture": false,
       "secondaryBlockers": [
         {
-          "detail": "Typed supported wipe replaces reflected construction; cross-SID path outside selected profiles.",
+          "detail": "Typed supported wipe replaces reflected construction; cross-SID path outside selected profiles. Invalid or empty active-destination selections remain safe while panning; the original desktop indexed-access crash is a separate reference defect.",
           "implementationDisposition": "EXPLICIT_TYPED_IMPLEMENTATION_AND_STATIC_FOLDS",
           "kind": "SELECTED_CONSTRUCTOR_LIFECYCLE_MODULE_EFFECTS"
         },

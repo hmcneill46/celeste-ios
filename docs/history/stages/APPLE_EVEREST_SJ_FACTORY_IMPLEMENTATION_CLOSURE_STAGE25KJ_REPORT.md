@@ -26,6 +26,18 @@ The signed tvOS build reached native linking and packaging, then exposed a host 
 
 Both existing native products passed those platform controls diagnostically. The superseded TV product also passed the complete 299-root native proof, and all 12 native corruption controls passed. No runtime implementation changed to resolve this failure. The correction and visible build number 37 create a new source revision; both products, final-revision repetitions, regressions and independent clone must be regenerated for that revision before acceptance. Source equivalence does not transfer physical results.
 
+## Build 39 iPhone findings and build 40 correction
+
+The user reported **73/73 lifecycle PASS on iPhone 12** for build 39, with the other grouped behavior checks matching the reference except the differences below. That is initialization evidence for build 39, not complete semantic acceptance. Apple TV was not tested. Build 39 products and machine receipts are archived; build 40 requires its own exact-product checks.
+
+The shared original dialogue keys collided across the K-H diagnostic and K-J fixtures. The reference let K-H override K-J; the port let the original SJ fragment override K-H. K-H entries now receive a diagnostic namespace selected only for its owned map. The desktop preparation applies the equivalent namespace to that diagnostic map. K-J retains original **Gym / Tech Tutorial** signs and portrait-free credits with the default black/white frame; K-H retains the Madeline portrait, ornate frame and PASS text. The tutorial signs are passive, so there is no tutorial interaction to enter.
+
+The port now applies Everest's original SID-to-dialog normalization, exposes Grab/climb plus movement for touch panning with the matching control prompt, and bounds both nearest-warp and selected-warp accesses, normalizes selection after destination-list changes, and corrects the inclusive zoom bound. The exact distributed PDB binds the supplied desktop crash to Update line 337: activeWarps[selectedWarpIndexes[selectedLobbyIndex]], after an active-count check. The exact preceding UI state was not captured, so an empty list alone is not asserted as the trigger. The original desktop code remains unchanged. Use its original Tab/view-only map for a safe panning comparison, and activate both benches before testing destination selection. The owned three-map fixture explicitly specifies the same house chapter icon on both platforms.
+
+Collab special berries now contribute to collected SaveData totals while remaining excluded from the map's possible ordinary totals. The original golden-berry metadata, silver/rainbow chapter-card routing and silver/golden journal badges are restored. Thus a completed A with silver can display 1/0; B with red and silver can display 2/1. Exact original package hashes remain unchanged, and no original SJ gameplay map is mounted. The root reference shortcut now targets the prepared K-J reference.
+
+The focused host dialogue tests exercise both mount orders and confirm the K-H portrait and original credits remain distinct; all 597 builder tests passed before the final source freeze. Final build 40 signed-product, native-root, reproduction, clone and physical results are recorded separately after they run.
+
 ## Build 38 physical failure and build 39 correction
 
 The connected iPhone's fatal error log identifies a real load failure in `MaxMechanics/factory_04`: `LunaticHelper/StrawberryWithReturn` was rejected before construction. MapData had replaced authored checkpoint/order defaults with assigned tracker coordinates, while the selected profile guard still compared those fields to the raw authored profile. The retained rotating lifecycle log contains 42 distinct passes before the failed load; it does not establish 73/73. Build 38 products and machine receipts are preserved as superseded, with no physical acceptance transferred.
@@ -144,7 +156,7 @@ Three earlier development closures and their independent compiler proofs had ide
 
 | Identity | SHA256 |
 |---|---|
-| Current generated shared closure | `01d433c8d03dd0fc9a88ebed48ee014b5ef448a435b6224968dc1e399d42931e` |
+| Current generated shared closure | `5b3157fd8c83fe350683f293c9f176b1416bef9de771ee1a90d5954547056843` |
 | Complete registry | `6e5b89f7d952aa98e72640abce0c75522567fb9d48f8b027e3db54f5cf9da72f` |
 | Selected gameplay registry | `8ed2794ec88b7ba140ace3763da73eb7eb37023c703a797030ace99e41587a59` |
 | Managed tree | `8482c33d4c42eb869166c7fea8eabfe695276cc9feb46b9a880a2d2da1f189ae` |
@@ -160,17 +172,17 @@ Apple strips executable managed bodies to ret stubs after AOT. The product verif
 
 A development iOS product passed the linked/native/stripping checks and ten initial isolated corruption controls. Additional registration-source and incomplete-receipt controls are implemented; the final fresh dual-platform build and those controls are pending. The signed app verifier checks codesign; isolated negative controls do not pretend to rebuild/sign each corrupt product or establish device semantics.
 
-Current product candidate is 0.1.1 build 39. Builds 36–38 are superseded and have no transferable device acceptance. Final signed iOS/tvOS IPA sizes/hashes and exact source identities will come from their product manifests. iOS must remain arm64, minimum 15 and device families [1,2]; tvOS must retain native TV family [3]. Release/full trim/full AOT, UseInterpreter=false and no JIT are mandatory.
+Current product candidate is 0.1.1 build 40. Builds 36–39 are superseded. Build 39 has an iPhone 12 initialization pass but unresolved semantics; its physical results do not transfer to build 40. Final signed iOS/tvOS IPA sizes/hashes and exact source identities will come from their product manifests. iOS must remain arm64, minimum 15 and device families [1,2]; tvOS must retain native TV family [3]. Release/full trim/full AOT, UseInterpreter=false and no JIT are mandatory.
 
 ## Validation and physical acceptance
 
-Current successful tests: AppleEverestBuilder 592; typed HookGen semantics 50; pinned desktop HookGen and direct-hook order/lifetime; input profiles 56; Save Manager pairing 31, protocol 66, continuity 57; soft reload 21; K-D 46; K-E 62; I-B 75. H-C freshly passes its expected historical YELLOW verifier (120 checks); that is not a K-J readiness result.
+Current successful tests: AppleEverestBuilder 597; typed HookGen semantics 50; pinned desktop HookGen and direct-hook order/lifetime; input profiles 56; Save Manager pairing 31, protocol 66, continuity 57; soft reload 21; K-D 46; K-E 62; I-B 75. H-C freshly passes its expected historical YELLOW verifier (120 checks); that is not a K-J readiness result.
 
 Historical scripts and accepted records remain immutable. Current-checkout K-C stops on its obsolete pre-KH tvos-port SHA; K-F stops on its old hardcoded trigger-ID check. K-J preserves source node-order/nearest selection and validates exactly RumbleTrigger then AppleEverestFlagTrigger, allowing the authored fixture to be relocated. K-F’s later audio/privacy/ref invariants require separate current checks because its historical run stops early.
 
 Other historical verifier attempts are reported by actual exit/status, not presented as fresh passes: K-A expects the older shared build number; K-B expects the older closure; H-D requires its historical ignored direct-composition evidence; H-B/F-B2 expect older catalog breadth; E/D expect older transformer models. Historical accepted counts remain historical evidence (K-B 80, K-A 82, H-D 163, H-C 120, H-B 144, H-A 190, F-B2 94, F-A 143, E 130, D 144).
 
-The permanent K-J verifier passed 573 checks in its pending-acceptance mode. Sideways passed the 17 initial transform records, fresh replay, 12 idempotent selected methods and 11 negative controls. The current builder rerun passed 592 tests after the final host-control additions. Final signed product controls, clean recursive final-SHA clone and final regression receipts remain pending. An ordinary verifier PASS while C is pending does not publish readiness.
+The permanent K-J verifier passed 573 checks in its pending-acceptance mode. Sideways passed the 17 initial transform records, fresh replay, 12 idempotent selected methods and 11 negative controls. The current builder rerun passed 597 tests after the dialogue-scope regressions. Final signed product controls, clean recursive final-SHA clone and final regression receipts remain pending. An ordinary verifier PASS while C is pending does not publish readiness.
 
 iPhone: pending exact K-J product. Apple TV: pending exact K-J product; manual Xcode installation is supported. iPad: IPADOS_PHYSICAL_PENDING_HARDWARE_UNAVAILABLE unless hardware is connected. Earlier user acceptance belongs to K-H and is not reused as K-J evidence. Stage 25K-B build 35 remains the last all-three-device physical GREEN.
 
@@ -252,7 +264,7 @@ No third-party ZIP/DLL, original gameplay BIN, bank, IPA/app, save payload, devi
 64. **Runtime detour?** No RuntimeDetour backend on device.
 65. **Live ILHook?** No.
 66. **Three closures identical?** Three earlier development runs were identical. Exact final frozen-revision repetitions are pending.
-67. **Shared closure SHA?** 01d433c8d03dd0fc9a88ebed48ee014b5ef448a435b6224968dc1e399d42931e.
+67. **Shared closure SHA?** 5b3157fd8c83fe350683f293c9f176b1416bef9de771ee1a90d5954547056843.
 68. **iPhone exact-final physical?** Pending exact final K-J iPhone product.
 69. **iPad?** Physical pending; hardware unavailable. Universal native iPad product requirements retained.
 70. **Apple TV?** Pending exact K-J Apple TV product.
@@ -262,7 +274,7 @@ No third-party ZIP/DLL, original gameplay BIN, bank, IPA/app, save payload, devi
 74. **JIT absent?** Required; full-AOT startup with interpreter disabled.
 75. **Real SJ maps packaged?** No.
 76. **Must be NO.** NO.
-77. **Current builder tests?** 592 passed again after the final host-control additions.
+77. **Current builder tests?** 597 passed after the dialogue-scope regressions.
 78. **HookGen?** Pinned desktop HookGen/direct-hook tests and 50 typed semantic checks passed.
 79. **K-H functional regressions?** Included in current builder/source scope; exact device tutorial/NPC regressions pending.
 80. **K-F/K-E/K-D/K-C?** Current K-D 46 and K-E 62 passed; K-C/K-F historical checks stop at documented obsolete assumptions and are not counted as fresh passes.

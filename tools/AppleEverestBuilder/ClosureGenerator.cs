@@ -1354,7 +1354,7 @@ internal static class ClosureGenerator
             "\tprivate void AppleEverestOriginal_AddDeath(AreaKey area)\n\t{\n\t\tif (global::Celeste.Mod.AppleEverestProgressionRuntime.IsCustom(area))\n\t\t{\n\t\t\tAreas[area.ID].Modes[(int)area.Mode].Deaths++;\n\t\t\treturn;\n\t\t}\n\t\tTotalDeaths++;");
         ReplaceOnce(saveData,
             "\t\tAreaModeStats areaModeStats = Areas[area.ID].Modes[(int)area.Mode];\n\t\tif (!areaModeStats.Strawberries.Contains(strawberry))",
-            "\t\tAreaModeStats areaModeStats = Areas[area.ID].Modes[(int)area.Mode];\n\t\tif (global::Celeste.Mod.AppleEverestProgressionRuntime.IsCustom(area))\n\t\t{\n\t\t\tif (areaModeStats.Strawberries.Add(strawberry) && global::Celeste.Mod.AppleEverestProgressionRuntime.CountsAsOrdinaryStrawberry(area, strawberry)) areaModeStats.TotalStrawberries++;\n\t\t\treturn;\n\t\t}\n\t\tif (!areaModeStats.Strawberries.Contains(strawberry))");
+            "\t\tAreaModeStats areaModeStats = Areas[area.ID].Modes[(int)area.Mode];\n\t\tif (global::Celeste.Mod.AppleEverestProgressionRuntime.IsCustom(area))\n\t\t{\n\t\t\tif (areaModeStats.Strawberries.Add(strawberry) && global::Celeste.Mod.AppleEverestProgressionRuntime.CountsAsCollectedStrawberry(area, strawberry)) areaModeStats.TotalStrawberries++;\n\t\t\treturn;\n\t\t}\n\t\tif (!areaModeStats.Strawberries.Contains(strawberry))");
         ReplaceOnce(saveData,
             "\tpublic void AddTime(AreaKey area, long time)\n\t{\n\t\tTime += time;\n\t\tAreas[area.ID].Modes[(int)area.Mode].TimePlayed += time;\n\t}",
             "\tpublic void AddTime(AreaKey area, long time)\n\t{\n\t\tif (!global::Celeste.Mod.AppleEverestProgressionRuntime.IsCustom(area)) Time += time;\n\t\tAreas[area.ID].Modes[(int)area.Mode].TimePlayed += time;\n\t}");

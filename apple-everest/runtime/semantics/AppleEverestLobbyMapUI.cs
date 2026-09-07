@@ -6,7 +6,6 @@ using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Monocle;
-
 namespace Celeste.Mod;
 
 internal class AppleEverestLobbyMapUI : Entity
@@ -205,10 +204,7 @@ internal class AppleEverestLobbyMapUI : Entity
 		closeButtonRenderInfo = new AppleEverestButtonHelper.ButtonRenderInfo(Dialog.Clean("collabutils2_lobbymap_close"), Input.MenuCancel, null, null, null, closeWiggler);
 		confirmButtonRenderInfo = new AppleEverestButtonHelper.ButtonRenderInfo(Dialog.Clean("collabutils2_lobbymap_confirm"), Input.MenuConfirm, null, null, null, confirmWiggler);
 		zoomButtonRenderInfo = new AppleEverestButtonHelper.ButtonRenderInfo(Dialog.Clean("collabutils2_lobbymap_zoom"), Input.MenuJournal, null, null, null, zoomWiggler);
-		holdToPanButtonRenderInfo = new AppleEverestButtonHelper.ButtonRenderInfo(Dialog.Clean("collabutils2_lobbymap_hold_to_pan"), new VirtualButton
-		{
-			Binding = AppleEverestCollabModule.Instance.Settings.HoldToPan.Binding
-		});
+		holdToPanButtonRenderInfo = new AppleEverestButtonHelper.ButtonRenderInfo(Dialog.Clean("collabutils2_lobbymap_hold_to_pan"), Input.Grab);
 		panButtonRenderInfo = new AppleEverestButtonHelper.ButtonRenderInfo(Dialog.Clean("collabutils2_lobbymap_pan"), lobbyMapUpButton, lobbyMapDownButton, lobbyMapLeftButton, lobbyMapRightButton);
 		aimButtonRenderInfo = new AppleEverestButtonHelper.ButtonRenderInfo(Dialog.Clean("collabutils2_lobbymap_pan"), new VirtualButton
 		{
@@ -274,7 +270,7 @@ internal class AppleEverestLobbyMapUI : Entity
 		}
 		if (focused)
 		{
-			bool check = AppleEverestCollabModule.Instance.Settings.HoldToPan.Check;
+			bool check = (Input.Grab.Check || Input.GrabCheck || AppleEverestCollabModule.Instance.Settings.HoldToPan.Check);
 			Vector2 value = Input.Aim.Value;
 			Vector2 value2 = lobbyMapJoystick.Value;
 			bool flag = value.LengthSquared() > float.Epsilon;
@@ -376,7 +372,7 @@ internal class AppleEverestLobbyMapUI : Entity
 				if (!viewOnly && !shouldCentreOrigin)
 				{
 					int num3 = nearestWarpIndexToActualOrigin();
-					if (num3 != selectedWarpIndexes[selectedLobbyIndex])
+					if (num3 >= 0 && num3 < activeWarps.Count && num3 != selectedWarpIndexes[selectedLobbyIndex])
 					{
 						Audio.Play((num3 < selectedWarpIndexes[selectedLobbyIndex]) ? "event:/ui/main/rollover_up" : "event:/ui/main/rollover_down");
 						selectedWarpIndexes[selectedLobbyIndex] = (lastSelectedWarpIndex = num3);
@@ -421,9 +417,10 @@ internal class AppleEverestLobbyMapUI : Entity
 				return;
 			}
 		}
-		if (!viewOnly && activeWarps.Count > 0 && lastSelectedWarpIndex != selectedWarpIndexes[selectedLobbyIndex])
+		int selectedWarp = selectedWarpIndexes[selectedLobbyIndex];
+		if (!viewOnly && selectedWarp >= 0 && selectedWarp < activeWarps.Count && lastSelectedWarpIndex != selectedWarp)
 		{
-			selectedOrigin = originForPosition(activeWarps[selectedWarpIndexes[selectedLobbyIndex]].Position);
+			selectedOrigin = originForPosition(activeWarps[selectedWarp].Position);
 			if (lastSelectedWarpIndex < 0)
 			{
 				actualOrigin = (shouldCentreOrigin ? new Vector2(0.5f) : selectedOrigin);
@@ -583,6 +580,10 @@ internal class AppleEverestLobbyMapUI : Entity
 				activeWarps.Clear();
 				activeWarps.AddRange(array.Where((AppleEverestLobbyMapController.MarkerInfo f) => f.Type == AppleEverestLobbyMapController.MarkerType.Warp && (!f.WarpRequiresActivation || visitManager.ActivatedWarps.Contains(f.MarkerId))));
 				activeWarps.Sort((AppleEverestLobbyMapController.MarkerInfo lhs, AppleEverestLobbyMapController.MarkerInfo rhs) => (!int.TryParse(lhs.MarkerId.Trim(), out var result) || !int.TryParse(rhs.MarkerId.Trim(), out var result2)) ? string.CompareOrdinal(lhs.MarkerId, rhs.MarkerId) : Math.Sign(result - result2));
+				// The pinned desktop UI can retain an index outside the newly
+				// visible destination list (its Update line 337 then throws).
+				selectedWarpIndexes[selectedLobbyIndex] = activeWarps.Count == 0 ? -1 :
+					Calc.Clamp(selectedWarpIndexes[selectedLobbyIndex], 0, activeWarps.Count - 1);
 				bool rainbowBerryUnlocked = isRainbowBerryUnlocked(lobbyMapInfo.LevelSet);
 				markerComponents.ForEach(delegate(Component c)
 				{
@@ -606,7 +607,7 @@ internal class AppleEverestLobbyMapUI : Entity
 				markerComponents.ForEach(base.Add);
 				if (!viewOnly & first)
 				{
-					selectedWarpIndexes[selectedLobbyIndex] = 0;
+					selectedWarpIndexes[selectedLobbyIndex] = activeWarps.Count == 0 ? -1 : 0;
 					float num = float.MaxValue;
 					for (int num2 = 0; num2 < activeWarps.Count; num2++)
 					{
@@ -632,7 +633,7 @@ internal class AppleEverestLobbyMapUI : Entity
 				{
 					zoomLevel = 1;
 				}
-				zoomLevel = Calc.Clamp(zoomLevel, 0, zoomLevels.Length);
+				zoomLevel = Calc.Clamp(zoomLevel, 0, zoomLevels.Length - 1);
 				actualScale = zoomLevels[zoomLevel];
 				shouldCentreOrigin = zoomLevel == 0;
 				bool flag = lobbySelection.SID == level2.Session.Area.SID && lobbySelection.Room == level2.Session.Level;
@@ -808,7 +809,7 @@ internal class AppleEverestLobbyMapUI : Entity
 			}
 		}
 		Vector2 position2 = new Vector2(windowBounds.Left, (float)windowBounds.Bottom + 45f);
-		bool check = AppleEverestCollabModule.Instance.Settings.HoldToPan.Check;
+		bool check = (Input.Grab.Check || Input.GrabCheck || AppleEverestCollabModule.Instance.Settings.HoldToPan.Check);
 		if (!viewOnly && activeWarps.Count > 1 && !check)
 		{
 			AppleEverestButtonHelper.RenderMultiButton(ref position2, 32f, changeDestinationButtonRenderInfo, 0.5f, 1f, 0f, 0.05f);
@@ -835,7 +836,7 @@ internal class AppleEverestLobbyMapUI : Entity
 		{
 			AppleEverestButtonHelper.RenderMultiButton(ref position2, 32f, panButtonRenderInfo, 0.5f, alpha, 1f, 0.05f);
 		}
-		else if (hasLatestBinding(AppleEverestCollabModule.Instance.Settings.HoldToPan.Binding))
+		else
 		{
 			AppleEverestButtonHelper.RenderMultiButton(ref position2, 32f, holdToPanButtonRenderInfo, 0.5f, alpha, 1f, 0.05f);
 		}

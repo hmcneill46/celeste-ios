@@ -226,6 +226,20 @@ def main():
         path = fixture / 'Maps' / (sid + '.bin')
         path.parent.mkdir(parents=True, exist_ok=True)
         source_xml = MAP_SOURCES[sid]
+        if sid == 'AppleEverest/Stage25KH':
+            # Keep the owned portrait/PASS diagnostic from overriding the
+            # original tutorial and credits used by K-J's exact profiles.
+            tree = ET.parse(source_xml)
+            for entity in tree.findall('./levels/level/entities/appleEverestEntity'):
+                for attribute in ['info', 'dialogId']:
+                    if entity.get(attribute):
+                        entity.set(attribute, 'APPLE_EVEREST_STAGE25KH_' + entity.get(attribute))
+                if entity.get('controls', '').startswith('dialog:'):
+                    entity.set('controls', entity.get('controls').replace('dialog:', 'dialog:APPLE_EVEREST_STAGE25KH_', 1))
+            source_xml = output / 'tmp/Stage25KH-reference.xml'
+            tree.write(source_xml, encoding='unicode')
+            map_differences.append({'sid': sid, 'diagnosticDialogNamespace': 'APPLE_EVEREST_STAGE25KH_',
+                'reason': 'Isolate owned K-H diagnostic text; K-J retains original package dialogue'})
         if sid == 'AppleEverest/Stage25KE':
             # This marker introspects the Apple static-module state, which has
             # no desktop counterpart. Preserve every actual helper entity.
@@ -263,7 +277,8 @@ def main():
     for directory in ['Dialog', 'Graphics']:
         shutil.copytree(source / directory, fixture / directory)
     with (fixture / 'Dialog/English.txt').open('a') as dialog:
-        dialog.write('\n' + (ROOT / 'apple-everest/canaries/stage25kh/Dialog/English.txt').read_text())
+        owned = (ROOT / 'apple-everest/canaries/stage25kh/Dialog/English.txt').read_text()
+        dialog.write('\n' + re.sub(r'^(\w+)=', r'APPLE_EVEREST_STAGE25KH_\1=', owned, flags=re.M))
     shutil.copy2(source / 'CollabUtils2CollabID.txt', fixture / 'CollabUtils2CollabID.txt')
     metadata = Path('Maps') / (PREFIX + '/0-Lobbies/1-Fixture.meta.yaml')
     shutil.copy2(source / metadata, fixture / metadata)

@@ -44,7 +44,7 @@
     <Backgrounds />
     <Foregrounds />
   </Style>
-  <meta IntroType="None" ForegroundTiles="Graphics/SJ2021xmls/BeginnerLobby/ForegroundTiles.xml" AnimatedTiles="Graphics/SJ2021xmls/BeginnerLobby/AnimatedTiles.xml" Sprites="Graphics/SJ2021xmls/BeginnerLobby/Sprites.xml">
+  <meta IntroType="None" Icon="areas/0" ForegroundTiles="Graphics/SJ2021xmls/BeginnerLobby/ForegroundTiles.xml" AnimatedTiles="Graphics/SJ2021xmls/BeginnerLobby/AnimatedTiles.xml" Sprites="Graphics/SJ2021xmls/BeginnerLobby/Sprites.xml">
     <mode StartLevel="canary" Inventory="Default" />
   </meta>
 </Map>

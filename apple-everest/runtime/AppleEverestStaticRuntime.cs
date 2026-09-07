@@ -701,6 +701,14 @@ public static class AppleEverestStaticRuntime
         }
     }
 
+    private static string dialogMapSid;
+
+    internal static void PrepareDialogForMap(Session session) =>
+        dialogMapSid = AppleEverestProgressionRuntime.Sid(session.Area);
+
+    internal static string ResolveDialogKey(string key) =>
+        AppleEverestDialogFragmentParser.KeyForMap(dialogMapSid, key);
+
     private static void LoadStaticDialogFragments()
     {
         foreach (string logical in GeneratedAppleEverestContentManifest.Entries)
@@ -715,8 +723,11 @@ public static class AppleEverestStaticRuntime
                     ReadBundleText(Path.Combine(Engine.ContentDirectory, logical)), language.Dialog);
             foreach ((string key, AppleEverestDialogFragmentEntry entry) in entries)
             {
-                language.Dialog[key] = entry.Raw;
-                language.Cleaned[key] = entry.Cleaned;
+                string mountedKey = AppleEverestDialogFragmentParser.KeyForMap(
+                    logical.StartsWith("AppleEverest/Mods/AppleEverestStage25KHCanary/", StringComparison.Ordinal)
+                        ? "AppleEverest/Stage25KH" : null, key);
+                language.Dialog[mountedKey] = entry.Raw;
+                language.Cleaned[mountedKey] = entry.Cleaned;
             }
             Log($"content-dialog=loaded path={logical}");
         }

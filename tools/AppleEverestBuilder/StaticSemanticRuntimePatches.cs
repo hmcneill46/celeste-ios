@@ -19,6 +19,18 @@ internal static class StaticSemanticRuntimePatches
     {
         string target = Path.Combine(managedRoot, "Celeste", "Mod", "AppleEverestStatic");
         string level = Path.Combine(managedRoot, "Celeste", "Level.cs");
+        Change(level, "\tpublic void LoadLevel(Player.IntroTypes playerIntro, bool isFromLoader = false)\n\t{",
+            "\tpublic void LoadLevel(Player.IntroTypes playerIntro, bool isFromLoader = false)\n\t{\n" +
+            "\t\tglobal::Celeste.Mod.AppleEverestStaticRuntime.PrepareDialogForMap(Session);");
+        string dialog = Path.Combine(managedRoot, "Celeste", "Dialog.cs");
+        foreach (string lookup in new[] { "language.Dialog.ContainsKey(name)", "language.Dialog.TryGetValue(name, out value)",
+                     "language.Cleaned.TryGetValue(name, out value)" })
+            Change(dialog, lookup, lookup.Replace("(name", "(global::Celeste.Mod.AppleEverestStaticRuntime.ResolveDialogKey(name)"));
+        foreach (string part in new[] { "cardtop", "card" })
+            Change(Path.Combine(managedRoot, "Celeste", "OuiChapterPanel.cs"),
+                "GFX.Gui[(!flag) ? \"areaselect/" + part + "\" : \"areaselect/" + part + "_golden\"]",
+                "GFX.Gui[global::Celeste.Mod.AppleEverestCollabRuntime.ChapterCardTexture(this, (!flag) ? \"areaselect/" +
+                part + "\" : \"areaselect/" + part + "_golden\")]");
         if (File.Exists(Path.Combine(target, "AppleEverestCollabState.cs")))
             Change(Path.Combine(target, "AppleEverestCollabRuntime.cs"),
                 "internal static AppleEverestCollabSession Route => null;",

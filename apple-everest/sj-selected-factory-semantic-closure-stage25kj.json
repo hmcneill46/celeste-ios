@@ -1,5 +1,5 @@
 {
-  "auditedSourceNotesSha256": "52bf9745001ebe6753b6d0ae5d6679efa61d5c5da6822dc83b3fbe4dde2f1a26",
+  "auditedSourceNotesSha256": "7a01eb655e101fdc0ad2fcb1a5c5075c2b87ad71932e6378fa4d1747931febd0",
   "authority": "SOURCE_REVIEW_PLUS_ACTUAL_IMPLEMENTATION_PLUS_SEPARATE_PHYSICAL_GATE",
   "census": {
     "blocked": 0,
@@ -91,7 +91,7 @@
           }
         ],
         "entryMethod": "Celeste.Backdrop Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_backdrop_72f7a1f94b4e5de8(Celeste.BinaryPacker/Element)",
-        "fullImplementationByteComparison": "f8c6606236636c1d9a3f34f54c95268687844e44198ae96d64daba33d2747604",
+        "fullImplementationByteComparison": "11bdf75d3e2c07de18b39c7d8dfb39aefe71d39f085d522c5fea3cee81993ad1",
         "guardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
         "productionCallers": [
           "Celeste.Backdrop Celeste.MapData::ParseBackdrop(Celeste.BinaryPacker/Element,Celeste.BinaryPacker/Element)"
@@ -122,7 +122,7 @@
         "authority": "PINNED_DISTRIBUTED_DLL_OR_PINNED_EVEREST_SOURCE",
         "customId": "FemtoHelper/WindPetals",
         "requiredEffectsAndFolds": "Both red falling and blue rising profiles guarded; standard flags and SJ mask integration retained; physical fixture samples red profile.",
-        "reviewLedgerSha256": "52bf9745001ebe6753b6d0ae5d6679efa61d5c5da6822dc83b3fbe4dde2f1a26",
+        "reviewLedgerSha256": "7a01eb655e101fdc0ad2fcb1a5c5075c2b87ad71932e6378fa4d1747931febd0",
         "selectedBehavior": "Randomized particles, wind drift, spin/blur, wrapping/parallax and original visibility fade.",
         "sourceMembers": "WindPetals loader/ctor/Update/Render",
         "status": "ROOT_REVIEWED_SELECTED_SOURCE"
@@ -204,7 +204,7 @@
           }
         ],
         "entryMethod": "Celeste.Backdrop Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_backdrop_f846fbe539453c07(Celeste.BinaryPacker/Element)",
-        "fullImplementationByteComparison": "f8c6606236636c1d9a3f34f54c95268687844e44198ae96d64daba33d2747604",
+        "fullImplementationByteComparison": "11bdf75d3e2c07de18b39c7d8dfb39aefe71d39f085d522c5fea3cee81993ad1",
         "guardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
         "productionCallers": [
           "Celeste.Backdrop Celeste.MapData::ParseBackdrop(Celeste.BinaryPacker/Element,Celeste.BinaryPacker/Element)"
@@ -234,7 +234,7 @@
         "authority": "PINNED_DISTRIBUTED_DLL_OR_PINNED_EVEREST_SOURCE",
         "customId": "FlaglinesAndSuch/customDreamStars",
         "requiredEffectsAndFolds": "Exact primitive backdrop and soap mask integration; preserve its own visibility behavior without invented FadeAlpha multiplier.",
-        "reviewLedgerSha256": "52bf9745001ebe6753b6d0ae5d6679efa61d5c5da6822dc83b3fbe4dde2f1a26",
+        "reviewLedgerSha256": "7a01eb655e101fdc0ad2fcb1a5c5075c2b87ad71932e6378fa4d1747931febd0",
         "selectedBehavior": "50 white circles, normalized direction, random speed/size, camera scroll and wrapping.",
         "sourceMembers": "Class1 loader; customDreamStars",
         "status": "ROOT_REVIEWED_SELECTED_SOURCE"
@@ -322,7 +322,7 @@
           }
         ],
         "entryMethod": "Celeste.Backdrop Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_backdrop_a6d57201da361d8f(Celeste.BinaryPacker/Element)",
-        "fullImplementationByteComparison": "f8c6606236636c1d9a3f34f54c95268687844e44198ae96d64daba33d2747604",
+        "fullImplementationByteComparison": "11bdf75d3e2c07de18b39c7d8dfb39aefe71d39f085d522c5fea3cee81993ad1",
         "guardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
         "productionCallers": [
           "Celeste.Backdrop Celeste.MapData::ParseBackdrop(Celeste.BinaryPacker/Element,Celeste.BinaryPacker/Element)"
@@ -352,7 +352,7 @@
         "authority": "PINNED_DISTRIBUTED_DLL_OR_PINNED_EVEREST_SOURCE",
         "customId": "FlaglinesAndSuch/customGodrays",
         "requiredEffectsAndFolds": "Exact lowercase duration fallback yields4/8; standard forestpathOverlay visibility.",
-        "reviewLedgerSha256": "52bf9745001ebe6753b6d0ae5d6679efa61d5c5da6822dc83b3fbe4dde2f1a26",
+        "reviewLedgerSha256": "7a01eb655e101fdc0ad2fcb1a5c5075c2b87ad71932e6378fa4d1747931febd0",
         "selectedBehavior": "Six randomized rays, dimensions/lifetime, triangles/fade and non-spritebatch rendering.",
         "sourceMembers": "Class1 loader; CustomGodrays; Ray.Reset",
         "status": "ROOT_REVIEWED_SELECTED_SOURCE"
@@ -426,7 +426,7 @@
           }
         ],
         "entryMethod": "Celeste.Backdrop Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_backdrop_6918cd44543f28e0(Celeste.BinaryPacker/Element)",
-        "fullImplementationByteComparison": "f8c6606236636c1d9a3f34f54c95268687844e44198ae96d64daba33d2747604",
+        "fullImplementationByteComparison": "11bdf75d3e2c07de18b39c7d8dfb39aefe71d39f085d522c5fea3cee81993ad1",
         "guardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
         "productionCallers": [
           "Celeste.Backdrop Celeste.MapData::ParseBackdrop(Celeste.BinaryPacker/Element,Celeste.BinaryPacker/Element)"
@@ -458,7 +458,7 @@
         "authority": "PINNED_DISTRIBUTED_DLL_OR_PINNED_EVEREST_SOURCE",
         "customId": "LunaticHelper/CustomDust",
         "requiredEffectsAndFolds": "Explicit Create parser and standard backdrop flags/exclusions; no original module hook remains necessary.",
-        "reviewLedgerSha256": "52bf9745001ebe6753b6d0ae5d6679efa61d5c5da6822dc83b3fbe4dde2f1a26",
+        "reviewLedgerSha256": "7a01eb655e101fdc0ad2fcb1a5c5075c2b87ad71932e6378fa4d1747931febd0",
         "selectedBehavior": "Count/palette/RNG lifecycle, horizontal/vertical wind, wrapping and visibility/fade multipliers.",
         "sourceMembers": "CustomDust.ctor/Reset/Update/Render",
         "status": "ROOT_REVIEWED_SELECTED_SOURCE"
@@ -533,7 +533,7 @@
           }
         ],
         "entryMethod": "Celeste.Backdrop Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_backdrop_5dd0ff4176ce86d8(Celeste.BinaryPacker/Element)",
-        "fullImplementationByteComparison": "f8c6606236636c1d9a3f34f54c95268687844e44198ae96d64daba33d2747604",
+        "fullImplementationByteComparison": "11bdf75d3e2c07de18b39c7d8dfb39aefe71d39f085d522c5fea3cee81993ad1",
         "guardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
         "productionCallers": [
           "Celeste.Backdrop Celeste.MapData::ParseBackdrop(Celeste.BinaryPacker/Element,Celeste.BinaryPacker/Element)"
@@ -563,7 +563,7 @@
         "authority": "PINNED_DISTRIBUTED_DLL_OR_PINNED_EVEREST_SOURCE",
         "customId": "MaxHelpingHand/HeatWaveNoColorGrade",
         "requiredEffectsAndFolds": "Typed private heat/fade and level fields; all selected profiles disable grade control.",
-        "reviewLedgerSha256": "52bf9745001ebe6753b6d0ae5d6679efa61d5c5da6822dc83b3fbe4dde2f1a26",
+        "reviewLedgerSha256": "7a01eb655e101fdc0ad2fcb1a5c5075c2b87ad71932e6378fa4d1747931febd0",
         "selectedBehavior": "Inherited particles/heat lifecycle; restores four color-grade fields around Update and resets distortion at zero heat.",
         "sourceMembers": "HeatWaveNoColorGrade.Update",
         "status": "ROOT_REVIEWED_SELECTED_SOURCE"
@@ -659,7 +659,7 @@
           }
         ],
         "entryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_entity_d3be8f45a3e64ff7(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-        "fullImplementationByteComparison": "f8c6606236636c1d9a3f34f54c95268687844e44198ae96d64daba33d2747604",
+        "fullImplementationByteComparison": "11bdf75d3e2c07de18b39c7d8dfb39aefe71d39f085d522c5fea3cee81993ad1",
         "guardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
         "productionCallers": [
           "System.Boolean Celeste.Level::AppleEverestOriginal_LoadCustomEntity(Celeste.EntityData,Celeste.Level)"
@@ -689,7 +689,7 @@
         "authority": "PINNED_DISTRIBUTED_DLL_OR_PINNED_EVEREST_SOURCE",
         "customId": "BrokemiaHelper/caveWall",
         "requiredEffectsAndFolds": "Typed talk-UI/dead-body hooks; unrelated MoveBlockBarrier reflection remains excluded.",
-        "reviewLedgerSha256": "52bf9745001ebe6753b6d0ae5d6679efa61d5c5da6822dc83b3fbe4dde2f1a26",
+        "reviewLedgerSha256": "7a01eb655e101fdc0ad2fcb1a5c5075c2b87ad71932e6378fa4d1747931febd0",
         "selectedBehavior": "Groups, temporary/restored solid map, overlay generation, player/dead-body fade, transition listener and displacement blocking.",
         "sourceMembers": "CaveWall.Added/Awake/Update; TalkComponentUI",
         "status": "ROOT_REVIEWED_SELECTED_SOURCE"
@@ -784,7 +784,7 @@
           }
         ],
         "entryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_entity_e976946a4aecc993(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-        "fullImplementationByteComparison": "f8c6606236636c1d9a3f34f54c95268687844e44198ae96d64daba33d2747604",
+        "fullImplementationByteComparison": "11bdf75d3e2c07de18b39c7d8dfb39aefe71d39f085d522c5fea3cee81993ad1",
         "guardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
         "productionCallers": [
           "System.Boolean Celeste.Level::AppleEverestOriginal_LoadCustomEntity(Celeste.EntityData,Celeste.Level)"
@@ -827,7 +827,7 @@
         "authority": "PINNED_DISTRIBUTED_DLL_OR_PINNED_EVEREST_SOURCE",
         "customId": "CherryHelper/AssistRect",
         "requiredEffectsAndFolds": "Typed dimensions/color; no selected dynamic lookup.",
-        "reviewLedgerSha256": "52bf9745001ebe6753b6d0ae5d6679efa61d5c5da6822dc83b3fbe4dde2f1a26",
+        "reviewLedgerSha256": "7a01eb655e101fdc0ad2fcb1a5c5075c2b87ad71932e6378fa4d1747931febd0",
         "selectedBehavior": "Noncolliding authored rectangle; translucent inset fill and dashed border.",
         "sourceMembers": "AssistRectangle.ctor/Render",
         "status": "ROOT_REVIEWED_SELECTED_SOURCE"
@@ -918,7 +918,7 @@
           }
         ],
         "entryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_entity_bd853e5ba5d4bc95(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-        "fullImplementationByteComparison": "f8c6606236636c1d9a3f34f54c95268687844e44198ae96d64daba33d2747604",
+        "fullImplementationByteComparison": "11bdf75d3e2c07de18b39c7d8dfb39aefe71d39f085d522c5fea3cee81993ad1",
         "guardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
         "productionCallers": [
           "System.Boolean Celeste.Level::AppleEverestOriginal_LoadCustomEntity(Celeste.EntityData,Celeste.Level)"
@@ -948,7 +948,7 @@
         "authority": "PINNED_DISTRIBUTED_DLL_OR_PINNED_EVEREST_SOURCE",
         "customId": "CherryHelper/ItemCrystal",
         "requiredEffectsAndFolds": "Typed Holdable integration and tracked component; preserve original sprite override and callbacks; map-scoped crab sprites override helper defaults only while the selected map is active.",
-        "reviewLedgerSha256": "52bf9745001ebe6753b6d0ae5d6679efa61d5c5da6822dc83b3fbe4dde2f1a26",
+        "reviewLedgerSha256": "7a01eb655e101fdc0ad2fcb1a5c5075c2b87ad71932e6378fa4d1747931febd0",
         "selectedBehavior": "Crab-reskinned holdable crystal, spring/cassette/player interaction, throw/drop/impact and Summit_Confetti destruction.",
         "sourceMembers": "ItemCrystal; ItemCrystalCollider",
         "status": "ROOT_REVIEWED_SELECTED_SOURCE"
@@ -1036,7 +1036,7 @@
           }
         ],
         "entryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_entity_a965c6b982b72966(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-        "fullImplementationByteComparison": "f8c6606236636c1d9a3f34f54c95268687844e44198ae96d64daba33d2747604",
+        "fullImplementationByteComparison": "11bdf75d3e2c07de18b39c7d8dfb39aefe71d39f085d522c5fea3cee81993ad1",
         "guardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
         "productionCallers": [
           "System.Boolean Celeste.Level::AppleEverestOriginal_LoadCustomEntity(Celeste.EntityData,Celeste.Level)"
@@ -1066,7 +1066,7 @@
         "authority": "PINNED_DISTRIBUTED_DLL_OR_PINNED_EVEREST_SOURCE",
         "customId": "CherryHelper/ItemCrystalPedestal",
         "requiredEffectsAndFolds": "Do not deduplicate source callbacks; tracked custom collider and actual crystal companion.",
-        "reviewLedgerSha256": "52bf9745001ebe6753b6d0ae5d6679efa61d5c5da6822dc83b3fbe4dde2f1a26",
+        "reviewLedgerSha256": "7a01eb655e101fdc0ad2fcb1a5c5075c2b87ad71932e6378fa4d1747931febd0",
         "selectedBehavior": "Forced release, repeated collision callbacks, 0.4-second CubeInOut attraction/fill and crystal destruction.",
         "sourceMembers": "ItemCrystalPedestal.OnCollide/Routine",
         "status": "ROOT_REVIEWED_SELECTED_SOURCE"
@@ -1172,7 +1172,7 @@
           }
         ],
         "entryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_entity_5a362867c3f9914f(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-        "fullImplementationByteComparison": "f8c6606236636c1d9a3f34f54c95268687844e44198ae96d64daba33d2747604",
+        "fullImplementationByteComparison": "11bdf75d3e2c07de18b39c7d8dfb39aefe71d39f085d522c5fea3cee81993ad1",
         "guardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
         "productionCallers": [
           "System.Boolean Celeste.Level::AppleEverestOriginal_LoadCustomEntity(Celeste.EntityData,Celeste.Level)"
@@ -1201,8 +1201,8 @@
         "assets": "Map texture, GUI icons, mountain/player markers and UI audio.",
         "authority": "PINNED_DISTRIBUTED_DLL_OR_PINNED_EVEREST_SOURCE",
         "customId": "CollabUtils2/LobbyMapController",
-        "requiredEffectsAndFolds": "Typed settings/save state and exact static map metadata replace discovery; required in-level map UI retained.",
-        "reviewLedgerSha256": "52bf9745001ebe6753b6d0ae5d6679efa61d5c5da6822dc83b3fbe4dde2f1a26",
+        "requiredEffectsAndFolds": "Typed settings/save state and exact static map metadata replace discovery; required in-level map UI retained. Everest dialog-key normalization resolves the map SID title; Grab/climb bridges touch panning; explicit nearest/selected-warp index guards and normalization after destination changes address the pinned desktop Update line 337 exception; zoom indices are bounded.",
+        "reviewLedgerSha256": "7a01eb655e101fdc0ad2fcb1a5c5075c2b87ad71932e6378fa4d1747931febd0",
         "selectedBehavior": "Controller/marker parsing, registration, visited-point updates, input/HUD and SceneEnd.",
         "sourceMembers": "LobbyMapController; LobbyVisitManager; LobbyMapUI; ByteArray2D; ButtonHelper",
         "status": "ROOT_REVIEWED_SELECTED_SOURCE"
@@ -1291,7 +1291,7 @@
           }
         ],
         "entryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_entity_2a0446d88a3a2da9(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-        "fullImplementationByteComparison": "f8c6606236636c1d9a3f34f54c95268687844e44198ae96d64daba33d2747604",
+        "fullImplementationByteComparison": "11bdf75d3e2c07de18b39c7d8dfb39aefe71d39f085d522c5fea3cee81993ad1",
         "guardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
         "productionCallers": [
           "System.Boolean Celeste.Level::AppleEverestOriginal_LoadCustomEntity(Celeste.EntityData,Celeste.Level)"
@@ -1321,7 +1321,7 @@
         "authority": "PINNED_DISTRIBUTED_DLL_OR_PINNED_EVEREST_SOURCE",
         "customId": "CollabUtils2/LobbyMapMarker",
         "requiredEffectsAndFolds": "No invented direct Update/Render requirement for passive marker.",
-        "reviewLedgerSha256": "52bf9745001ebe6753b6d0ae5d6679efa61d5c5da6822dc83b3fbe4dde2f1a26",
+        "reviewLedgerSha256": "7a01eb655e101fdc0ad2fcb1a5c5075c2b87ad71932e6378fa4d1747931febd0",
         "selectedBehavior": "Stores icon and position; deliberately inactive/invisible and consumed by controller/UI.",
         "sourceMembers": "LobbyMapMarker.ctor",
         "status": "ROOT_REVIEWED_SELECTED_SOURCE"
@@ -1420,7 +1420,7 @@
           }
         ],
         "entryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_entity_303ef0da9ef736e0(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-        "fullImplementationByteComparison": "f8c6606236636c1d9a3f34f54c95268687844e44198ae96d64daba33d2747604",
+        "fullImplementationByteComparison": "11bdf75d3e2c07de18b39c7d8dfb39aefe71d39f085d522c5fea3cee81993ad1",
         "guardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
         "productionCallers": [
           "System.Boolean Celeste.Level::AppleEverestOriginal_LoadCustomEntity(Celeste.EntityData,Celeste.Level)"
@@ -1454,8 +1454,8 @@
         "assets": "Bench/warp presentation and original UI audio.",
         "authority": "PINNED_DISTRIBUTED_DLL_OR_PINNED_EVEREST_SOURCE",
         "customId": "CollabUtils2/LobbyMapWarp",
-        "requiredEffectsAndFolds": "Typed supported wipe replaces reflected construction; cross-SID path outside selected profiles.",
-        "reviewLedgerSha256": "52bf9745001ebe6753b6d0ae5d6679efa61d5c5da6822dc83b3fbe4dde2f1a26",
+        "requiredEffectsAndFolds": "Typed supported wipe replaces reflected construction; cross-SID path outside selected profiles. Invalid or empty active-destination selections remain safe while panning; the original desktop indexed-access crash is a separate reference defect.",
+        "reviewLedgerSha256": "7a01eb655e101fdc0ad2fcb1a5c5075c2b87ad71932e6378fa4d1747931febd0",
         "selectedBehavior": "Bench sprite/talk, activation/sit coroutine, locking/backpack/hair and same-SID reload/follower/spawn behavior.",
         "sourceMembers": "LobbyMapWarp; LobbyMapUI teleport routine",
         "status": "ROOT_REVIEWED_SELECTED_SOURCE"
@@ -1546,7 +1546,7 @@
           }
         ],
         "entryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_entity_a4c69fdeab1b1161(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-        "fullImplementationByteComparison": "f8c6606236636c1d9a3f34f54c95268687844e44198ae96d64daba33d2747604",
+        "fullImplementationByteComparison": "11bdf75d3e2c07de18b39c7d8dfb39aefe71d39f085d522c5fea3cee81993ad1",
         "guardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
         "productionCallers": [
           "System.Boolean Celeste.Level::AppleEverestOriginal_LoadCustomEntity(Celeste.EntityData,Celeste.Level)"
@@ -1576,7 +1576,7 @@
         "authority": "PINNED_DISTRIBUTED_DLL_OR_PINNED_EVEREST_SOURCE",
         "customId": "CollabUtils2/MiniHeart",
         "requiredEffectsAndFolds": "Typed follower predicate and return route; beginner/noGhostSprite profile; snapshot/bus cleanup on interruption.",
-        "reviewLedgerSha256": "52bf9745001ebe6753b6d0ae5d6679efa61d5c5da6822dc83b3fbe4dde2f1a26",
+        "reviewLedgerSha256": "7a01eb655e101fdc0ad2fcb1a5c5075c2b87ad71932e6378fa4d1747931febd0",
         "selectedBehavior": "Collider/holdable, animation/light/bloom, smash/freeze/formation, follower collection/completion, input wait and cleanup.",
         "sourceMembers": "AbstractMiniHeart; MiniHeart; ReturnToLobbyHelper",
         "status": "ROOT_REVIEWED_SELECTED_SOURCE"
@@ -1673,7 +1673,7 @@
           }
         ],
         "entryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_entity_ba6529f52e7e5dc8(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-        "fullImplementationByteComparison": "f8c6606236636c1d9a3f34f54c95268687844e44198ae96d64daba33d2747604",
+        "fullImplementationByteComparison": "11bdf75d3e2c07de18b39c7d8dfb39aefe71d39f085d522c5fea3cee81993ad1",
         "guardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
         "productionCallers": [
           "System.Boolean Celeste.Level::AppleEverestOriginal_LoadCustomEntity(Celeste.EntityData,Celeste.Level)"
@@ -1703,7 +1703,7 @@
         "authority": "PINNED_DISTRIBUTED_DLL_OR_PINNED_EVEREST_SOURCE",
         "customId": "CollabUtils2/MiniHeartDoor",
         "requiredEffectsAndFolds": "Typed open/skip state; beginner, visible and empty doorID.",
-        "reviewLedgerSha256": "52bf9745001ebe6753b6d0ae5d6679efa61d5c5da6822dc83b3fbe4dde2f1a26",
+        "reviewLedgerSha256": "7a01eb655e101fdc0ad2fcb1a5c5075c2b87ad71932e6378fa4d1747931febd0",
         "selectedBehavior": "Exact level-set heart count, split-solid dimensions, approach/open and session/module persistence.",
         "sourceMembers": "MiniHeartDoor; HeartGemDoor hooks",
         "status": "ROOT_REVIEWED_SELECTED_SOURCE"
@@ -1793,7 +1793,7 @@
           }
         ],
         "entryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_entity_ce183ed12139667b(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-        "fullImplementationByteComparison": "f8c6606236636c1d9a3f34f54c95268687844e44198ae96d64daba33d2747604",
+        "fullImplementationByteComparison": "11bdf75d3e2c07de18b39c7d8dfb39aefe71d39f085d522c5fea3cee81993ad1",
         "guardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
         "productionCallers": [
           "System.Boolean Celeste.Level::AppleEverestOriginal_LoadCustomEntity(Celeste.EntityData,Celeste.Level)"
@@ -1823,7 +1823,7 @@
         "authority": "PINNED_DISTRIBUTED_DLL_OR_PINNED_EVEREST_SOURCE",
         "customId": "CollabUtils2/RainbowBerry",
         "requiredEffectsAndFolds": "Static exact silver metadata, tracked successor lifecycle, ghost sprite/light/bloom and perfect effect.",
-        "reviewLedgerSha256": "52bf9745001ebe6753b6d0ae5d6679efa61d5c5da6822dc83b3fbe4dde2f1a26",
+        "reviewLedgerSha256": "7a01eb655e101fdc0ad2fcb1a5c5075c2b87ad71932e6378fa4d1747931febd0",
         "selectedBehavior": "Missing-silver hologram successor, ready hidden cutscene berry and combined collectible states.",
         "sourceMembers": "RainbowBerry; HoloRainbowBerry; RainbowBerryPerfectEffect; StrawberryHooks",
         "status": "ROOT_REVIEWED_SELECTED_SOURCE"
@@ -1912,7 +1912,7 @@
           }
         ],
         "entryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_entity_50ce1aea560f1bd6(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-        "fullImplementationByteComparison": "f8c6606236636c1d9a3f34f54c95268687844e44198ae96d64daba33d2747604",
+        "fullImplementationByteComparison": "11bdf75d3e2c07de18b39c7d8dfb39aefe71d39f085d522c5fea3cee81993ad1",
         "guardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
         "productionCallers": [
           "System.Boolean Celeste.Level::AppleEverestOriginal_LoadCustomEntity(Celeste.EntityData,Celeste.Level)"
@@ -1941,8 +1941,8 @@
         "assets": "Ordinary/ghost silver sprites and SC2020 audio events.",
         "authority": "PINNED_DISTRIBUTED_DLL_OR_PINNED_EVEREST_SOURCE",
         "customId": "CollabUtils2/SilverBerry",
-        "requiredEffectsAndFolds": "Selected alwaysSpawn=false; typed sprite/collection/golden-death hooks.",
-        "reviewLedgerSha256": "52bf9745001ebe6753b6d0ae5d6679efa61d5c5da6822dc83b3fbe4dde2f1a26",
+        "requiredEffectsAndFolds": "Selected alwaysSpawn=false; typed sprite/collection/golden-death hooks. Untracked status excludes the berry from map possible totals, not collected SaveData totals; special IDs also enter MapData.Goldenberries for card and journal presentation.",
+        "reviewLedgerSha256": "7a01eb655e101fdc0ad2fcb1a5c5075c2b87ad71932e6378fa4d1747931febd0",
         "selectedBehavior": "Golden/particle setup, completion/death/furthest-room removal and temporary particle-global restoration.",
         "sourceMembers": "SilverBerry; StrawberryHooks",
         "status": "ROOT_REVIEWED_SELECTED_SOURCE"
@@ -2042,7 +2042,7 @@
           }
         ],
         "entryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_entity_628c6927da0adc78(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-        "fullImplementationByteComparison": "f8c6606236636c1d9a3f34f54c95268687844e44198ae96d64daba33d2747604",
+        "fullImplementationByteComparison": "11bdf75d3e2c07de18b39c7d8dfb39aefe71d39f085d522c5fea3cee81993ad1",
         "guardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
         "productionCallers": [
           "System.Boolean Celeste.Level::AppleEverestOriginal_LoadCustomEntity(Celeste.EntityData,Celeste.Level)"
@@ -2112,7 +2112,7 @@
         "authority": "PINNED_DISTRIBUTED_DLL_OR_PINNED_EVEREST_SOURCE",
         "customId": "FancyTileEntities/FancySolidTiles",
         "requiredEffectsAndFolds": "Typed private Autotiler state and exact tile algorithm; room-origin and adjacent-solid context retained.",
-        "reviewLedgerSha256": "52bf9745001ebe6753b6d0ae5d6679efa61d5c5da6822dc83b3fbe4dde2f1a26",
+        "reviewLedgerSha256": "7a01eb655e101fdc0ad2fcb1a5c5075c2b87ad71932e6378fa4d1747931febd0",
         "selectedBehavior": "Authored tileData including final empty row; seeded blending, collision, light occlusion, interceptor and animated overlays.",
         "sourceMembers": "FancySolidTiles; Autotiler.GenerateOverlay/GenerateTileMap",
         "status": "ROOT_REVIEWED_SELECTED_SOURCE"
@@ -2209,7 +2209,7 @@
           }
         ],
         "entryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_entity_916487af82677601(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-        "fullImplementationByteComparison": "f8c6606236636c1d9a3f34f54c95268687844e44198ae96d64daba33d2747604",
+        "fullImplementationByteComparison": "11bdf75d3e2c07de18b39c7d8dfb39aefe71d39f085d522c5fea3cee81993ad1",
         "guardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
         "productionCallers": [
           "System.Boolean Celeste.Level::AppleEverestOriginal_LoadCustomEntity(Celeste.EntityData,Celeste.Level)"
@@ -2256,7 +2256,7 @@
         "authority": "PINNED_DISTRIBUTED_DLL_OR_PINNED_EVEREST_SOURCE",
         "customId": "FemtoHelper/CustomParallaxBigWaterfall",
         "requiredEffectsAndFolds": "BG silent/no displacement; FG depth -49900, waterfall_big_main and Vanilla displacement; retain straight FG versus wavy BG rendering.",
-        "reviewLedgerSha256": "52bf9745001ebe6753b6d0ae5d6679efa61d5c5da6822dc83b3fbe4dde2f1a26",
+        "reviewLedgerSha256": "7a01eb655e101fdc0ad2fcb1a5c5075c2b87ad71932e6378fa4d1747931febd0",
         "selectedBehavior": "Layer defaults, random lines, transition fade, parallax, clipping and displacement.",
         "sourceMembers": "CustomParallaxBigWaterfall.Added/Update/RenderDisplacement/Render",
         "status": "ROOT_REVIEWED_SELECTED_SOURCE"
@@ -2372,7 +2372,7 @@
           }
         ],
         "entryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_entity_b289acd2506c856f(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-        "fullImplementationByteComparison": "f8c6606236636c1d9a3f34f54c95268687844e44198ae96d64daba33d2747604",
+        "fullImplementationByteComparison": "11bdf75d3e2c07de18b39c7d8dfb39aefe71d39f085d522c5fea3cee81993ad1",
         "guardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
         "productionCallers": [
           "System.Boolean Celeste.Level::AppleEverestOriginal_LoadCustomEntity(Celeste.EntityData,Celeste.Level)"
@@ -2402,7 +2402,7 @@
         "authority": "PINNED_DISTRIBUTED_DLL_OR_PINNED_EVEREST_SOURCE",
         "customId": "FemtoHelper/ParticleEmitter",
         "requiredEffectsAndFolds": "Empty flag/no attachment; source BloomAlpha/BloomRadius casing retains defaults; 10 percent per0.2s remains sparse.",
-        "reviewLedgerSha256": "52bf9745001ebe6753b6d0ae5d6679efa61d5c5da6822dc83b3fbe4dde2f1a26",
+        "reviewLedgerSha256": "7a01eb655e101fdc0ad2fcb1a5c5075c2b87ad71932e6378fa4d1747931febd0",
         "selectedBehavior": "Selected chooser/colors/late fade/lifetime/scale/speed/friction/acceleration/spin and probabilistic ParticlesBG emission.",
         "sourceMembers": "ParticleEmitter.ctor/Update",
         "status": "ROOT_REVIEWED_SELECTED_SOURCE"
@@ -2498,7 +2498,7 @@
           }
         ],
         "entryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_entity_b84eb7a5562c3517(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-        "fullImplementationByteComparison": "f8c6606236636c1d9a3f34f54c95268687844e44198ae96d64daba33d2747604",
+        "fullImplementationByteComparison": "11bdf75d3e2c07de18b39c7d8dfb39aefe71d39f085d522c5fea3cee81993ad1",
         "guardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
         "productionCallers": [
           "System.Boolean Celeste.Level::AppleEverestOriginal_LoadCustomEntity(Celeste.EntityData,Celeste.Level)"
@@ -2528,7 +2528,7 @@
         "authority": "PINNED_DISTRIBUTED_DLL_OR_PINNED_EVEREST_SOURCE",
         "customId": "FrostHelper/CustomFireBarrier",
         "requiredEffectsAndFolds": "isIce=false, ignoreCoreMode=true, silent=true; typed geometry/buffer access and unload cleanup.",
-        "reviewLedgerSha256": "52bf9745001ebe6753b6d0ae5d6679efa61d5c5da6822dc83b3fbe4dde2f1a26",
+        "reviewLedgerSha256": "7a01eb655e101fdc0ad2fcb1a5c5075c2b87ad71932e6378fa4d1747931febd0",
         "selectedBehavior": "Lethal collider/lava component, inset solid, transition update, waves/bubbles/vertices/culling and opaque target rendering.",
         "sourceMembers": "CustomFireBarrier; CustomLavaRect; CameraCullHelper",
         "status": "ROOT_REVIEWED_SELECTED_SOURCE"
@@ -2618,7 +2618,7 @@
           }
         ],
         "entryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_entity_c04ab29f4d2a778a(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-        "fullImplementationByteComparison": "f8c6606236636c1d9a3f34f54c95268687844e44198ae96d64daba33d2747604",
+        "fullImplementationByteComparison": "11bdf75d3e2c07de18b39c7d8dfb39aefe71d39f085d522c5fea3cee81993ad1",
         "guardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
         "productionCallers": [
           "System.Boolean Celeste.Level::AppleEverestOriginal_LoadCustomEntity(Celeste.EntityData,Celeste.Level)"
@@ -2649,7 +2649,7 @@
         "authority": "PINNED_DISTRIBUTED_DLL_OR_PINNED_EVEREST_SOURCE",
         "customId": "FrostHelper/CustomFlutterBird",
         "requiredEffectsAndFolds": "Default directory/audio and dontFlyAway=false; typed Persistent-tag insertion replaces selected hook effect.",
-        "reviewLedgerSha256": "52bf9745001ebe6753b6d0ae5d6679efa61d5c5da6822dc83b3fbe4dde2f1a26",
+        "reviewLedgerSha256": "7a01eb655e101fdc0ad2fcb1a5c5075c2b87ad71932e6378fa4d1747931febd0",
         "selectedBehavior": "Second RNG color choice after vanilla construction, ordinary hop/tweet/flyaway and persistence at flyaway sound evaluation.",
         "sourceMembers": "CustomFlutterBird.CustomCreate/GetFlyAwaySfx; FlutterBird.FlyAway",
         "status": "ROOT_REVIEWED_SELECTED_SOURCE"
@@ -2739,7 +2739,7 @@
           }
         ],
         "entryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_entity_6027fbd5deab70c0(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-        "fullImplementationByteComparison": "f8c6606236636c1d9a3f34f54c95268687844e44198ae96d64daba33d2747604",
+        "fullImplementationByteComparison": "11bdf75d3e2c07de18b39c7d8dfb39aefe71d39f085d522c5fea3cee81993ad1",
         "guardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
         "productionCallers": [
           "System.Boolean Celeste.Level::AppleEverestOriginal_LoadCustomEntity(Celeste.EntityData,Celeste.Level)"
@@ -2769,7 +2769,7 @@
         "authority": "PINNED_DISTRIBUTED_DLL_OR_PINNED_EVEREST_SOURCE",
         "customId": "FrostHelper/DecalContainer",
         "requiredEffectsAndFolds": "Exact generated decal registry, original Decal.Added then typed handlers, tracked successors and pause behavior; no general registry scan.",
-        "reviewLedgerSha256": "52bf9745001ebe6753b6d0ae5d6679efa61d5c5da6822dc83b3fbe4dde2f1a26",
+        "reviewLedgerSha256": "7a01eb655e101fdc0ad2fcb1a5c5075c2b87ad71932e6378fa4d1747931febd0",
         "selectedBehavior": "Source-order transfer into 64-tile chunks per depth, maker removal, successor animation/culling/parallax/lights/static movers.",
         "sourceMembers": "DecalContainerMaker.Awake; DecalContainerRenderer; ParallaxDecalRenderer; DecalInfo",
         "status": "ROOT_REVIEWED_SELECTED_SOURCE"
@@ -2873,7 +2873,7 @@
           }
         ],
         "entryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_entity_ecaa7b1af6199825(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-        "fullImplementationByteComparison": "f8c6606236636c1d9a3f34f54c95268687844e44198ae96d64daba33d2747604",
+        "fullImplementationByteComparison": "11bdf75d3e2c07de18b39c7d8dfb39aefe71d39f085d522c5fea3cee81993ad1",
         "guardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
         "productionCallers": [
           "System.Boolean Celeste.Level::AppleEverestOriginal_LoadCustomEntity(Celeste.EntityData,Celeste.Level)"
@@ -2903,7 +2903,7 @@
         "authority": "PINNED_DISTRIBUTED_DLL_OR_PINNED_EVEREST_SOURCE",
         "customId": "FrostHelper/EntityMover",
         "requiredEffectsAndFolds": "Exact Tutorial target, mustCollide=false, absolute mode, Linear, zero duration and empty end sound; no easing expression engine.",
-        "reviewLedgerSha256": "52bf9745001ebe6753b6d0ae5d6679efa61d5c5da6822dc83b3fbe4dde2f1a26",
+        "reviewLedgerSha256": "7a01eb655e101fdc0ad2fcb1a5c5075c2b87ad71932e6378fa4d1747931febd0",
         "selectedBehavior": "Caches targets in scene order; looping tween moves cached starts to authored node with source pauses and manual tween update.",
         "sourceMembers": "EntityMover.Awake/Update; EntityFilter; EaseHelper; EntityMoveHelper",
         "status": "ROOT_REVIEWED_SELECTED_SOURCE"
@@ -2999,7 +2999,7 @@
           }
         ],
         "entryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_entity_49c17d433ac53d8f(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-        "fullImplementationByteComparison": "f8c6606236636c1d9a3f34f54c95268687844e44198ae96d64daba33d2747604",
+        "fullImplementationByteComparison": "11bdf75d3e2c07de18b39c7d8dfb39aefe71d39f085d522c5fea3cee81993ad1",
         "guardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
         "productionCallers": [
           "System.Boolean Celeste.Level::AppleEverestOriginal_LoadCustomEntity(Celeste.EntityData,Celeste.Level)"
@@ -3030,7 +3030,7 @@
         "authority": "PINNED_DISTRIBUTED_DLL_OR_PINNED_EVEREST_SOURCE",
         "customId": "FrostHelper/IceSpinner",
         "requiredEffectsAndFolds": "Typed shatter hook before original and Summit-return hook at reviewed location; preserve source texture metadata and controller quirks.",
-        "reviewLedgerSha256": "52bf9745001ebe6753b6d0ae5d6679efa61d5c5da6822dc83b3fbe4dde2f1a26",
+        "reviewLedgerSha256": "7a01eb655e101fdc0ad2fcb1a5c5075c2b87ad71932e6378fa4d1747931febd0",
         "selectedBehavior": "Selected stationary orange/green spinner RNG, culling/collision intervals, connectors/outlines, depth and removal.",
         "sourceMembers": "CustomSpinner; spinner controller/border/connector/source/collider/debris helpers",
         "status": "ROOT_REVIEWED_SELECTED_SOURCE"
@@ -3131,7 +3131,7 @@
           }
         ],
         "entryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_entity_355967621d00c100(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-        "fullImplementationByteComparison": "f8c6606236636c1d9a3f34f54c95268687844e44198ae96d64daba33d2747604",
+        "fullImplementationByteComparison": "11bdf75d3e2c07de18b39c7d8dfb39aefe71d39f085d522c5fea3cee81993ad1",
         "guardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
         "productionCallers": [
           "System.Boolean Celeste.Level::AppleEverestOriginal_LoadCustomEntity(Celeste.EntityData,Celeste.Level)"
@@ -3170,7 +3170,7 @@
         "authority": "PINNED_DISTRIBUTED_DLL_OR_PINNED_EVEREST_SOURCE",
         "customId": "FrostHelper/WireLamps",
         "requiredEffectsAndFolds": "attached=false excludes raycast; cull before light updates; exact RGB parsing and scene guards.",
-        "reviewLedgerSha256": "52bf9745001ebe6753b6d0ae5d6679efa61d5c5da6822dc83b3fbe4dde2f1a26",
+        "reviewLedgerSha256": "7a01eb655e101fdc0ad2fcb1a5c5075c2b87ad71932e6378fa4d1747931febd0",
         "selectedBehavior": "Position-seeded RNG, white lights, authored counts, wind-wobbling quadratic cable, 16 segments and component positioning/render.",
         "sourceMembers": "WireLamps.ctor/Render; CameraCullHelper.IsVisible",
         "status": "ROOT_REVIEWED_SELECTED_SOURCE"
@@ -3264,7 +3264,7 @@
           }
         ],
         "entryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_entity_53705f3887d72707(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-        "fullImplementationByteComparison": "f8c6606236636c1d9a3f34f54c95268687844e44198ae96d64daba33d2747604",
+        "fullImplementationByteComparison": "11bdf75d3e2c07de18b39c7d8dfb39aefe71d39f085d522c5fea3cee81993ad1",
         "guardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
         "productionCallers": [
           "System.Boolean Celeste.Level::AppleEverestOriginal_LoadCustomEntity(Celeste.EntityData,Celeste.Level)"
@@ -3294,7 +3294,7 @@
         "authority": "PINNED_DISTRIBUTED_DLL_OR_PINNED_EVEREST_SOURCE",
         "customId": "HonlyHelper/PettableCat",
         "requiredEffectsAndFolds": "Typed player/hair restoration and ordinary coroutine lifecycle.",
-        "reviewLedgerSha256": "52bf9745001ebe6753b6d0ae5d6679efa61d5c5da6822dc83b3fbe4dde2f1a26",
+        "reviewLedgerSha256": "7a01eb655e101fdc0ad2fcb1a5c5075c2b87ad71932e6378fa4d1747931febd0",
         "selectedBehavior": "NPC approach/talk, cat/petter animation, temporary player/hair hiding, sound, cancellation and session flag.",
         "sourceMembers": "PettableCat.ctor/Talk/Routine",
         "status": "ROOT_REVIEWED_SELECTED_SOURCE"
@@ -3389,7 +3389,7 @@
           }
         ],
         "entryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_entity_b53e81d6f01a69c6(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-        "fullImplementationByteComparison": "f8c6606236636c1d9a3f34f54c95268687844e44198ae96d64daba33d2747604",
+        "fullImplementationByteComparison": "11bdf75d3e2c07de18b39c7d8dfb39aefe71d39f085d522c5fea3cee81993ad1",
         "guardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
         "productionCallers": [
           "System.Boolean Celeste.Level::AppleEverestOriginal_LoadCustomEntity(Celeste.EntityData,Celeste.Level)"
@@ -3429,7 +3429,7 @@
         "authority": "PINNED_DISTRIBUTED_DLL_OR_PINNED_EVEREST_SOURCE",
         "customId": "JungleHelper/MossyWall",
         "requiredEffectsAndFolds": "Selected colors/directory; no Jungle lantern/forced lantern skin/cassette producer means final color and climb blocker remain.",
-        "reviewLedgerSha256": "52bf9745001ebe6753b6d0ae5d6679efa61d5c5da6822dc83b3fbe4dde2f1a26",
+        "reviewLedgerSha256": "7a01eb655e101fdc0ad2fcb1a5c5075c2b87ad71932e6378fa4d1747931febd0",
         "selectedBehavior": "Seed-preserving moss images, thin segment colliders, ClimbBlocker, StaticMover/shake and disabled darkening.",
         "sourceMembers": "MossyWall.ctor/Update/Render",
         "status": "ROOT_REVIEWED_SELECTED_SOURCE"
@@ -3522,7 +3522,7 @@
           }
         ],
         "entryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_entity_df4abc3d394a9e91(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-        "fullImplementationByteComparison": "f8c6606236636c1d9a3f34f54c95268687844e44198ae96d64daba33d2747604",
+        "fullImplementationByteComparison": "11bdf75d3e2c07de18b39c7d8dfb39aefe71d39f085d522c5fea3cee81993ad1",
         "guardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
         "productionCallers": [
           "System.Boolean Celeste.Level::AppleEverestOriginal_LoadCustomEntity(Celeste.EntityData,Celeste.Level)"
@@ -3552,7 +3552,7 @@
         "authority": "PINNED_DISTRIBUTED_DLL_OR_PINNED_EVEREST_SOURCE",
         "customId": "LunaticHelper/InvisibleLightSource",
         "requiredEffectsAndFolds": "Exact White folds reflected named-color lookup to typed Color.White.",
-        "reviewLedgerSha256": "52bf9745001ebe6753b6d0ae5d6679efa61d5c5da6822dc83b3fbe4dde2f1a26",
+        "reviewLedgerSha256": "7a01eb655e101fdc0ad2fcb1a5c5075c2b87ad71932e6378fa4d1747931febd0",
         "selectedBehavior": "Actual BloomPoint and VertexLight components with authored alpha/radii/fades.",
         "sourceMembers": "InvisibleLightSource.ctor",
         "status": "ROOT_REVIEWED_SELECTED_SOURCE"
@@ -3644,7 +3644,7 @@
           }
         ],
         "entryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_entity_e32989277aa3f07c(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-        "fullImplementationByteComparison": "f8c6606236636c1d9a3f34f54c95268687844e44198ae96d64daba33d2747604",
+        "fullImplementationByteComparison": "11bdf75d3e2c07de18b39c7d8dfb39aefe71d39f085d522c5fea3cee81993ad1",
         "guardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
         "productionCallers": [
           "System.Boolean Celeste.Level::AppleEverestOriginal_LoadCustomEntity(Celeste.EntityData,Celeste.Level)"
@@ -3674,7 +3674,7 @@
         "authority": "PINNED_DISTRIBUTED_DLL_OR_PINNED_EVEREST_SOURCE",
         "customId": "LunaticHelper/StrawberryWithReturn",
         "requiredEffectsAndFolds": "Selected unwinged/no-node profile; preserve original Strawberry callback and ordinary module-independent behavior.",
-        "reviewLedgerSha256": "52bf9745001ebe6753b6d0ae5d6679efa61d5c5da6822dc83b3fbe4dde2f1a26",
+        "reviewLedgerSha256": "7a01eb655e101fdc0ad2fcb1a5c5075c2b87ad71932e6378fa4d1747931febd0",
         "selectedBehavior": "Second PlayerCollider, ordinary collection, seed gate,0.3s coroutine, dead-player check and cassette flight to respawn.",
         "sourceMembers": "StrawberryWithReturn; Strawberry.OnPlayer",
         "status": "ROOT_REVIEWED_SELECTED_SOURCE"
@@ -3768,7 +3768,7 @@
           }
         ],
         "entryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_entity_984a9e718e563b59(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-        "fullImplementationByteComparison": "f8c6606236636c1d9a3f34f54c95268687844e44198ae96d64daba33d2747604",
+        "fullImplementationByteComparison": "11bdf75d3e2c07de18b39c7d8dfb39aefe71d39f085d522c5fea3cee81993ad1",
         "guardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
         "productionCallers": [
           "System.Boolean Celeste.Level::AppleEverestOriginal_LoadCustomEntity(Celeste.EntityData,Celeste.Level)"
@@ -3797,8 +3797,8 @@
         "assets": "Original SJ tutorial dialog and accepted GUI/button glyphs.",
         "authority": "PINNED_DISTRIBUTED_DLL_OR_PINNED_EVEREST_SOURCE",
         "customId": "MaxHelpingHand/CustomTutorialWithNoBird",
-        "requiredEffectsAndFolds": "Typed directional GUI/private fields; no-bird/default-font/Right/repeatable profiles, with real Actor riding lifecycle.",
-        "reviewLedgerSha256": "52bf9745001ebe6753b6d0ae5d6679efa61d5c5da6822dc83b3fbe4dde2f1a26",
+        "requiredEffectsAndFolds": "Typed directional GUI/private fields; no-bird/default-font/Right/repeatable profiles, with real Actor riding lifecycle. Passive Gym/Tech Tutorial sign in K-J; owned K-H diagnostic keys have a map-scoped namespace.",
+        "reviewLedgerSha256": "7a01eb655e101fdc0ad2fcb1a5c5075c2b87ad71932e6378fa4d1747931febd0",
         "selectedBehavior": "Actor ancestry/tracking/update, light/GUI, exact8x2 IsRiding, show/hide coroutine and SceneEnd time reset.",
         "sourceMembers": "CustomTutorialWithNoBird; CustomBirdTutorial; BirdTutorialGui",
         "status": "ROOT_REVIEWED_SELECTED_SOURCE"
@@ -3896,7 +3896,7 @@
           }
         ],
         "entryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_entity_38c792650603a6a8(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-        "fullImplementationByteComparison": "f8c6606236636c1d9a3f34f54c95268687844e44198ae96d64daba33d2747604",
+        "fullImplementationByteComparison": "11bdf75d3e2c07de18b39c7d8dfb39aefe71d39f085d522c5fea3cee81993ad1",
         "guardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
         "productionCallers": [
           "System.Boolean Celeste.Level::AppleEverestOriginal_LoadCustomEntity(Celeste.EntityData,Celeste.Level)"
@@ -3932,7 +3932,7 @@
         "authority": "PINNED_DISTRIBUTED_DLL_OR_PINNED_EVEREST_SOURCE",
         "customId": "MaxHelpingHand/FlagExitBlock",
         "requiredEffectsAndFolds": "Typed ExitBlock fields; tile7, gradual transition and no close sound.",
-        "reviewLedgerSha256": "52bf9745001ebe6753b6d0ae5d6679efa61d5c5da6822dc83b3fbe4dde2f1a26",
+        "reviewLedgerSha256": "7a01eb655e101fdc0ad2fcb1a5c5075c2b87ad71932e6378fa4d1747931febd0",
         "selectedBehavior": "Removes inherited transition listener; intentional Solid.Update, flag inversion, overlap protection and alpha/cutout sync.",
         "sourceMembers": "FlagExitBlock.ctor/Awake/Update; MonoModLinkTo",
         "status": "ROOT_REVIEWED_SELECTED_SOURCE"
@@ -4024,7 +4024,7 @@
           }
         ],
         "entryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_entity_8d531fa5f291d5d7(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-        "fullImplementationByteComparison": "f8c6606236636c1d9a3f34f54c95268687844e44198ae96d64daba33d2747604",
+        "fullImplementationByteComparison": "11bdf75d3e2c07de18b39c7d8dfb39aefe71d39f085d522c5fea3cee81993ad1",
         "guardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
         "productionCallers": [
           "System.Boolean Celeste.Level::AppleEverestOriginal_LoadCustomEntity(Celeste.EntityData,Celeste.Level)"
@@ -4054,7 +4054,7 @@
         "authority": "PINNED_DISTRIBUTED_DLL_OR_PINNED_EVEREST_SOURCE",
         "customId": "MaxHelpingHand/GroupedTriggerSpikesUp",
         "requiredEffectsAndFolds": "Reviewed prior-30 repair; exact Up/outline profiles exclude other orientations and tentacles.",
-        "reviewLedgerSha256": "52bf9745001ebe6753b6d0ae5d6679efa61d5c5da6822dc83b3fbe4dde2f1a26",
+        "reviewLedgerSha256": "7a01eb655e101fdc0ad2fcb1a5c5075c2b87ad71932e6378fa4d1747931febd0",
         "selectedBehavior": "SafeGroundBlocker, LedgeBlocker, player/static-mover callbacks, texture resolution, group delay/extension/collision/render.",
         "sourceMembers": "GroupedTriggerSpikes Up branch",
         "status": "ROOT_REVIEWED_SELECTED_SOURCE"
@@ -4166,7 +4166,7 @@
           }
         ],
         "entryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_entity_29e88bcf09cded3b(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-        "fullImplementationByteComparison": "f8c6606236636c1d9a3f34f54c95268687844e44198ae96d64daba33d2747604",
+        "fullImplementationByteComparison": "11bdf75d3e2c07de18b39c7d8dfb39aefe71d39f085d522c5fea3cee81993ad1",
         "guardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
         "productionCallers": [
           "System.Boolean Celeste.Level::AppleEverestOriginal_LoadCustomEntity(Celeste.EntityData,Celeste.Level)"
@@ -4195,8 +4195,8 @@
         "assets": "Original SJ credits dialog; accepted animated portrait and ornate textbox.",
         "authority": "PINNED_DISTRIBUTED_DLL_OR_PINNED_EVEREST_SOURCE",
         "customId": "MaxHelpingHand/MoreCustomNPC",
-        "requiredEffectsAndFolds": "Empty sprite, no approach/autoskip, default font and no completion/flag writes; typed dialogue pipeline.",
-        "reviewLedgerSha256": "52bf9745001ebe6753b6d0ae5d6679efa61d5c5da6822dc83b3fbe4dde2f1a26",
+        "requiredEffectsAndFolds": "Empty sprite, no approach/autoskip, default font and no completion/flag writes; typed dialogue pipeline. K-J retains the original portrait-free credits and default black/white frame; only the owned K-H map resolves the diagnostic Madeline portrait and PASS text.",
+        "reviewLedgerSha256": "7a01eb655e101fdc0ad2fcb1a5c5075c2b87ad71932e6378fa4d1747931febd0",
         "selectedBehavior": "Node-derived TalkComponent range, DoNotTalk, coroutine, normal/skip cleanup and repeatable counter reset.",
         "sourceMembers": "MoreCustomNPC; CustomNPC",
         "status": "ROOT_REVIEWED_SELECTED_SOURCE"
@@ -4284,7 +4284,7 @@
           }
         ],
         "entryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_entity_57642f2ce7054edc(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-        "fullImplementationByteComparison": "f8c6606236636c1d9a3f34f54c95268687844e44198ae96d64daba33d2747604",
+        "fullImplementationByteComparison": "11bdf75d3e2c07de18b39c7d8dfb39aefe71d39f085d522c5fea3cee81993ad1",
         "guardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
         "productionCallers": [
           "System.Boolean Celeste.Level::AppleEverestOriginal_LoadCustomEntity(Celeste.EntityData,Celeste.Level)"
@@ -4314,7 +4314,7 @@
         "authority": "PINNED_DISTRIBUTED_DLL_OR_PINNED_EVEREST_SOURCE",
         "customId": "MaxHelpingHand/ParallaxFadeOutController",
         "requiredEffectsAndFolds": "Typed Parallax fade state replaces private access.",
-        "reviewLedgerSha256": "52bf9745001ebe6753b6d0ae5d6679efa61d5c5da6822dc83b3fbe4dde2f1a26",
+        "reviewLedgerSha256": "7a01eb655e101fdc0ad2fcb1a5c5075c2b87ad71932e6378fa4d1747931febd0",
         "selectedBehavior": "Registration cleanup and continued visibility of DoFadeIn parallax while fading after scene age1s.",
         "sourceMembers": "ParallaxFadeOutController.Awake/Removed/SceneEnd; backdrop renderer",
         "status": "ROOT_REVIEWED_SELECTED_SOURCE"
@@ -4410,7 +4410,7 @@
           }
         ],
         "entryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_entity_2374782bc644bca1(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-        "fullImplementationByteComparison": "f8c6606236636c1d9a3f34f54c95268687844e44198ae96d64daba33d2747604",
+        "fullImplementationByteComparison": "11bdf75d3e2c07de18b39c7d8dfb39aefe71d39f085d522c5fea3cee81993ad1",
         "guardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
         "productionCallers": [
           "System.Boolean Celeste.Level::AppleEverestOriginal_LoadCustomEntity(Celeste.EntityData,Celeste.Level)"
@@ -4440,7 +4440,7 @@
         "authority": "PINNED_DISTRIBUTED_DLL_OR_PINNED_EVEREST_SOURCE",
         "customId": "MaxHelpingHand/RainbowSpinnerColorAreaController",
         "requiredEffectsAndFolds": "Typed TryHue is outermost before original hue computation; selected unflagged palette.",
-        "reviewLedgerSha256": "52bf9745001ebe6753b6d0ae5d6679efa61d5c5da6822dc83b3fbe4dde2f1a26",
+        "reviewLedgerSha256": "7a01eb655e101fdc0ad2fcb1a5c5075c2b87ad71932e6378fa4d1747931febd0",
         "selectedBehavior": "Palette/geometry parsing, registration cleanup, area collision and timed position gradient.",
         "sourceMembers": "RainbowSpinnerColorAreaController; CrystalStaticSpinner.GetHue",
         "status": "ROOT_REVIEWED_SELECTED_SOURCE"
@@ -4531,7 +4531,7 @@
           }
         ],
         "entryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_entity_e0131e8940c2d761(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-        "fullImplementationByteComparison": "f8c6606236636c1d9a3f34f54c95268687844e44198ae96d64daba33d2747604",
+        "fullImplementationByteComparison": "11bdf75d3e2c07de18b39c7d8dfb39aefe71d39f085d522c5fea3cee81993ad1",
         "guardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
         "productionCallers": [
           "System.Boolean Celeste.Level::AppleEverestOriginal_LoadCustomEntity(Celeste.EntityData,Celeste.Level)"
@@ -4562,7 +4562,7 @@
         "authority": "PINNED_DISTRIBUTED_DLL_OR_PINNED_EVEREST_SOURCE",
         "customId": "MaxHelpingHand/SetFlagOnSpawnController",
         "requiredEffectsAndFolds": "onlyOnRespawn=false and absent conditional flag exclude original respawn-hook state.",
-        "reviewLedgerSha256": "52bf9745001ebe6753b6d0ae5d6679efa61d5c5da6822dc83b3fbe4dde2f1a26",
+        "reviewLedgerSha256": "7a01eb655e101fdc0ad2fcb1a5c5075c2b87ad71932e6378fa4d1747931febd0",
         "selectedBehavior": "Constructor sets flags through Level or LevelLoader.Level; Added removes controller.",
         "sourceMembers": "SetFlagOnSpawnController.ctor/Added",
         "status": "ROOT_REVIEWED_SELECTED_SOURCE"
@@ -4657,7 +4657,7 @@
           }
         ],
         "entryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_entity_f362206ab31ec9a1(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-        "fullImplementationByteComparison": "f8c6606236636c1d9a3f34f54c95268687844e44198ae96d64daba33d2747604",
+        "fullImplementationByteComparison": "11bdf75d3e2c07de18b39c7d8dfb39aefe71d39f085d522c5fea3cee81993ad1",
         "guardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
         "productionCallers": [
           "System.Boolean Celeste.Level::AppleEverestOriginal_LoadCustomEntity(Celeste.EntityData,Celeste.Level)"
@@ -4693,7 +4693,7 @@
         "authority": "PINNED_DISTRIBUTED_DLL_OR_PINNED_EVEREST_SOURCE",
         "customId": "MaxHelpingHand/SidewaysJumpThru",
         "requiredEffectsAndFolds": "Twelve target methods and25 exact sites frozen through accepted IL worker after existing pinned transforms; wood, both directions, no push, seekers blocked.",
-        "reviewLedgerSha256": "52bf9745001ebe6753b6d0ae5d6679efa61d5c5da6822dc83b3fbe4dde2f1a26",
+        "reviewLedgerSha256": "7a01eb655e101fdc0ad2fcb1a5c5075c2b87ad71932e6378fa4d1747931febd0",
         "selectedBehavior": "StaticMover/rendering and actor/player wall/climb/feather collision behavior.",
         "sourceMembers": "SidewaysJumpThru; selected actor/player/scene IL sites",
         "status": "ROOT_REVIEWED_SELECTED_SOURCE"
@@ -4788,7 +4788,7 @@
           }
         ],
         "entryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_entity_46bc3b0f61721f13(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-        "fullImplementationByteComparison": "f8c6606236636c1d9a3f34f54c95268687844e44198ae96d64daba33d2747604",
+        "fullImplementationByteComparison": "11bdf75d3e2c07de18b39c7d8dfb39aefe71d39f085d522c5fea3cee81993ad1",
         "guardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
         "productionCallers": [
           "System.Boolean Celeste.Level::AppleEverestOriginal_LoadCustomEntity(Celeste.EntityData,Celeste.Level)"
@@ -4818,7 +4818,7 @@
         "authority": "PINNED_DISTRIBUTED_DLL_OR_PINNED_EVEREST_SOURCE",
         "customId": "MaxHelpingHand/StylegroundFadeController",
         "requiredEffectsAndFolds": "Typed renderer/Parallax access; exact flag lists and1s fade intervals.",
-        "reviewLedgerSha256": "52bf9745001ebe6753b6d0ae5d6679efa61d5c5da6822dc83b3fbe4dde2f1a26",
+        "reviewLedgerSha256": "7a01eb655e101fdc0ad2fcb1a5c5075c2b87ad71932e6378fa4d1747931febd0",
         "selectedBehavior": "Flag dictionaries, cleanup, forced visibility, fade calculation, intermediate target and spritebatch restoration.",
         "sourceMembers": "StylegroundFadeController; backdrop update/render hooks",
         "status": "ROOT_REVIEWED_SELECTED_SOURCE"
@@ -4930,7 +4930,7 @@
           }
         ],
         "entryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_entity_0ea249055b58e496(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-        "fullImplementationByteComparison": "f8c6606236636c1d9a3f34f54c95268687844e44198ae96d64daba33d2747604",
+        "fullImplementationByteComparison": "11bdf75d3e2c07de18b39c7d8dfb39aefe71d39f085d522c5fea3cee81993ad1",
         "guardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
         "productionCallers": [
           "System.Boolean Celeste.Level::AppleEverestOriginal_LoadCustomEntity(Celeste.EntityData,Celeste.Level)"
@@ -4967,7 +4967,7 @@
         "authority": "PINNED_DISTRIBUTED_DLL_OR_PINNED_EVEREST_SOURCE",
         "customId": "SJ2021/AllInOneMask",
         "requiredEffectsAndFolds": "Typed render hooks/targets; current-to-current grade and disabled lighting folds those derived masks; exact flags/scroll/renderer guard.",
-        "reviewLedgerSha256": "52bf9745001ebe6753b6d0ae5d6679efa61d5c5da6822dc83b3fbe4dde2f1a26",
+        "reviewLedgerSha256": "7a01eb655e101fdc0ad2fcb1a5c5075c2b87ad71932e6378fa4d1747931febd0",
         "selectedBehavior": "Selected style/bloom composition, ordered slices, clipping and behind-foreground render order.",
         "sourceMembers": "AllInOneMask; Mask; MaskHooks; StylegroundMaskRenderer",
         "status": "ROOT_REVIEWED_SELECTED_SOURCE"
@@ -5067,7 +5067,7 @@
           }
         ],
         "entryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_entity_bb9d452f95470d13(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-        "fullImplementationByteComparison": "f8c6606236636c1d9a3f34f54c95268687844e44198ae96d64daba33d2747604",
+        "fullImplementationByteComparison": "11bdf75d3e2c07de18b39c7d8dfb39aefe71d39f085d522c5fea3cee81993ad1",
         "guardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
         "productionCallers": [
           "System.Boolean Celeste.Level::AppleEverestOriginal_LoadCustomEntity(Celeste.EntityData,Celeste.Level)"
@@ -5098,7 +5098,7 @@
         "authority": "PINNED_DISTRIBUTED_DLL_OR_PINNED_EVEREST_SOURCE",
         "customId": "SJ2021/BloomMask",
         "requiredEffectsAndFolds": "Typed bloom render stage and original standalone-before-derived ordering; no scrolling or entity renderer.",
-        "reviewLedgerSha256": "52bf9745001ebe6753b6d0ae5d6679efa61d5c5da6822dc83b3fbe4dde2f1a26",
+        "reviewLedgerSha256": "7a01eb655e101fdc0ad2fcb1a5c5075c2b87ad71932e6378fa4d1747931febd0",
         "selectedBehavior": "Authored bloom base/strength interpolation over visible directional slices.",
         "sourceMembers": "BloomMask; Mask; MaskHooks",
         "status": "ROOT_REVIEWED_SELECTED_SOURCE"
@@ -5200,7 +5200,7 @@
           }
         ],
         "entryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_entity_a9bcc5b459704410(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-        "fullImplementationByteComparison": "f8c6606236636c1d9a3f34f54c95268687844e44198ae96d64daba33d2747604",
+        "fullImplementationByteComparison": "11bdf75d3e2c07de18b39c7d8dfb39aefe71d39f085d522c5fea3cee81993ad1",
         "guardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
         "productionCallers": [
           "System.Boolean Celeste.Level::AppleEverestOriginal_LoadCustomEntity(Celeste.EntityData,Celeste.Level)"
@@ -5230,7 +5230,7 @@
         "authority": "PINNED_DISTRIBUTED_DLL_OR_PINNED_EVEREST_SOURCE",
         "customId": "SJ2021/GlowController",
         "requiredEffectsAndFolds": "Typed orphan-light repair is retained separately; no reflection scan and no nonempty-list acceptance.",
-        "reviewLedgerSha256": "52bf9745001ebe6753b6d0ae5d6679efa61d5c5da6822dc83b3fbe4dde2f1a26",
+        "reviewLedgerSha256": "7a01eb655e101fdc0ad2fcb1a5c5075c2b87ad71932e6378fa4d1747931febd0",
         "selectedBehavior": "Four empty name lists cannot match entities; selected controller remains passive.",
         "sourceMembers": "GlowController; LightingRenderer.BeforeRender",
         "status": "ROOT_REVIEWED_SELECTED_SOURCE"
@@ -5322,7 +5322,7 @@
           }
         ],
         "entryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_entity_42aa2cea811a4344(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-        "fullImplementationByteComparison": "f8c6606236636c1d9a3f34f54c95268687844e44198ae96d64daba33d2747604",
+        "fullImplementationByteComparison": "11bdf75d3e2c07de18b39c7d8dfb39aefe71d39f085d522c5fea3cee81993ad1",
         "guardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
         "productionCallers": [
           "System.Boolean Celeste.Level::AppleEverestOriginal_LoadCustomEntity(Celeste.EntityData,Celeste.Level)"
@@ -5372,7 +5372,7 @@
         "authority": "PINNED_DISTRIBUTED_DLL_OR_PINNED_EVEREST_SOURCE",
         "customId": "SJ2021/StrawberryJamJar",
         "requiredEffectsAndFolds": "Typed module FilledJamJarSIDs and progression lookup; beginner/SetReturnToHere/allowSaving guarded; original target maps stay unmounted in K-J.",
-        "reviewLedgerSha256": "52bf9745001ebe6753b6d0ae5d6679efa61d5c5da6822dc83b3fbe4dde2f1a26",
+        "reviewLedgerSha256": "7a01eb655e101fdc0ad2fcb1a5c5075c2b87ad71932e6378fa4d1747931febd0",
         "selectedBehavior": "Completion-dependent empty/fill/full sprite state, fill sound and generated chapter-panel companion.",
         "sourceMembers": "StrawberryJamJar.ctor/Added; ChapterPanelTrigger",
         "status": "ROOT_REVIEWED_SELECTED_SOURCE"
@@ -5473,7 +5473,7 @@
           }
         ],
         "entryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_entity_ff30f71473c6809f(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-        "fullImplementationByteComparison": "f8c6606236636c1d9a3f34f54c95268687844e44198ae96d64daba33d2747604",
+        "fullImplementationByteComparison": "11bdf75d3e2c07de18b39c7d8dfb39aefe71d39f085d522c5fea3cee81993ad1",
         "guardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
         "productionCallers": [
           "System.Boolean Celeste.Level::AppleEverestOriginal_LoadCustomEntity(Celeste.EntityData,Celeste.Level)"
@@ -5541,7 +5541,7 @@
         "authority": "PINNED_DISTRIBUTED_DLL_OR_PINNED_EVEREST_SOURCE",
         "customId": "SJ2021/StylegroundMask",
         "requiredEffectsAndFolds": "Typed renderer hooks; exact fade directions, zero scroll and empty flag guard.",
-        "reviewLedgerSha256": "52bf9745001ebe6753b6d0ae5d6679efa61d5c5da6822dc83b3fbe4dde2f1a26",
+        "reviewLedgerSha256": "7a01eb655e101fdc0ad2fcb1a5c5075c2b87ad71932e6378fa4d1747931febd0",
         "selectedBehavior": "Tag selection, alpha interpolation, clipping and selected behind-foreground compositing.",
         "sourceMembers": "StylegroundMask; StylegroundMaskRenderer",
         "status": "ROOT_REVIEWED_SELECTED_SOURCE"
@@ -5641,7 +5641,7 @@
           }
         ],
         "entryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_entity_de24ab73150828de(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-        "fullImplementationByteComparison": "f8c6606236636c1d9a3f34f54c95268687844e44198ae96d64daba33d2747604",
+        "fullImplementationByteComparison": "11bdf75d3e2c07de18b39c7d8dfb39aefe71d39f085d522c5fea3cee81993ad1",
         "guardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
         "productionCallers": [
           "System.Boolean Celeste.Level::AppleEverestOriginal_LoadCustomEntity(Celeste.EntityData,Celeste.Level)"
@@ -5675,7 +5675,7 @@
         "authority": "PINNED_DISTRIBUTED_DLL_OR_PINNED_EVEREST_SOURCE",
         "customId": "VivHelper/CustomHangingLamp",
         "requiredEffectsAndFolds": "Selected absent suffix and white color fold broader Viv utilities.",
-        "reviewLedgerSha256": "52bf9745001ebe6753b6d0ae5d6679efa61d5c5da6822dc83b3fbe4dde2f1a26",
+        "reviewLedgerSha256": "7a01eb655e101fdc0ad2fcb1a5c5075c2b87ad71932e6378fa4d1747931febd0",
         "selectedBehavior": "Base/chain/lamp images, collider, bloom/light, player-velocity interaction, damped rotation and sound.",
         "sourceMembers": "CustomHangingLamp.ctor/Update/Render",
         "status": "ROOT_REVIEWED_SELECTED_SOURCE"
@@ -5778,7 +5778,7 @@
           }
         ],
         "entryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_entity_5f1e3ee79912f5bc(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-        "fullImplementationByteComparison": "f8c6606236636c1d9a3f34f54c95268687844e44198ae96d64daba33d2747604",
+        "fullImplementationByteComparison": "11bdf75d3e2c07de18b39c7d8dfb39aefe71d39f085d522c5fea3cee81993ad1",
         "guardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
         "productionCallers": [
           "System.Boolean Celeste.Level::AppleEverestOriginal_LoadCustomEntity(Celeste.EntityData,Celeste.Level)"
@@ -5810,7 +5810,7 @@
         "authority": "PINNED_DISTRIBUTED_DLL_OR_PINNED_EVEREST_SOURCE",
         "customId": "VivHelper/CustomSpinner",
         "requiredEffectsAndFolds": "White type, unit scales, no attachment/dash-shatter/custom debris; preserve texture and connector ID order.",
-        "reviewLedgerSha256": "52bf9745001ebe6753b6d0ae5d6679efa61d5c5da6822dc83b3fbe4dde2f1a26",
+        "reviewLedgerSha256": "7a01eb655e101fdc0ad2fcb1a5c5075c2b87ad71932e6378fa4d1747931febd0",
         "selectedBehavior": "Compound collider, culling, proximity collision, image variants, connectors/fillers/borders and player/holdable collision.",
         "sourceMembers": "VivCustomSpinner; VivCustomCrystalDebris",
         "status": "ROOT_REVIEWED_SELECTED_SOURCE"
@@ -5903,7 +5903,7 @@
           }
         ],
         "entryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_entity_89e210dbae7b98a5(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-        "fullImplementationByteComparison": "f8c6606236636c1d9a3f34f54c95268687844e44198ae96d64daba33d2747604",
+        "fullImplementationByteComparison": "11bdf75d3e2c07de18b39c7d8dfb39aefe71d39f085d522c5fea3cee81993ad1",
         "guardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
         "productionCallers": [
           "System.Boolean Celeste.Level::AppleEverestOriginal_LoadCustomEntity(Celeste.EntityData,Celeste.Level)"
@@ -5933,7 +5933,7 @@
         "authority": "PINNED_DISTRIBUTED_DLL_OR_PINNED_EVEREST_SOURCE",
         "customId": "VortexHelper/AttachedJumpThru",
         "requiredEffectsAndFolds": "Typed attached-platform access and actual JumpThru override; selected Xaphan solid attachment excludes MoveBlock dynamic-speed exception.",
-        "reviewLedgerSha256": "52bf9745001ebe6753b6d0ae5d6679efa61d5c5da6822dc83b3fbe4dde2f1a26",
+        "reviewLedgerSha256": "7a01eb655e101fdc0ad2fcb1a5c5075c2b87ad71932e6378fa4d1747931febd0",
         "selectedBehavior": "Initial depth-60, selected wood texture, repeated static-mover attachment, movement/lift/shake/enable/disable propagation.",
         "sourceMembers": "AttachedJumpThru.ctor/Awake/OnShake; JumpThru",
         "status": "ROOT_REVIEWED_SELECTED_SOURCE"
@@ -6041,7 +6041,7 @@
           }
         ],
         "entryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_entity_a9f11de7515c9963(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-        "fullImplementationByteComparison": "f8c6606236636c1d9a3f34f54c95268687844e44198ae96d64daba33d2747604",
+        "fullImplementationByteComparison": "11bdf75d3e2c07de18b39c7d8dfb39aefe71d39f085d522c5fea3cee81993ad1",
         "guardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
         "productionCallers": [
           "System.Boolean Celeste.Level::AppleEverestOriginal_LoadCustomEntity(Celeste.EntityData,Celeste.Level)"
@@ -6080,7 +6080,7 @@
         "authority": "PINNED_DISTRIBUTED_DLL_OR_PINNED_EVEREST_SOURCE",
         "customId": "XaphanHelper/Slope",
         "requiredEffectsAndFolds": "Typed Player/Actor/Solid hooks and exact actor types; remote-drone/Metroid/speed branches excluded by reviewed producer/flag/profile absence.",
-        "reviewLedgerSha256": "52bf9745001ebe6753b6d0ae5d6679efa61d5c5da6822dc83b3fbe4dde2f1a26",
+        "reviewLedgerSha256": "7a01eb655e101fdc0ad2fcb1a5c5075c2b87ad71932e6378fa4d1747931febd0",
         "selectedBehavior": "Stepped collision, child platforms/occluders, vertical movement and selected sliding pose.",
         "sourceMembers": "Slope; PlayerPlatform; FakePlayerPlatform; XaphanModule",
         "status": "ROOT_REVIEWED_SELECTED_SOURCE"
@@ -6175,7 +6175,7 @@
           }
         ],
         "entryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_entity_ac601ae872ff72d9(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-        "fullImplementationByteComparison": "f8c6606236636c1d9a3f34f54c95268687844e44198ae96d64daba33d2747604",
+        "fullImplementationByteComparison": "11bdf75d3e2c07de18b39c7d8dfb39aefe71d39f085d522c5fea3cee81993ad1",
         "guardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
         "productionCallers": [
           "System.Boolean Celeste.Level::AppleEverestOriginal_LoadCustomEntity(Celeste.EntityData,Celeste.Level)"
@@ -6208,7 +6208,7 @@
         "authority": "PINNED_DISTRIBUTED_DLL_OR_PINNED_EVEREST_SOURCE",
         "customId": "YetAnotherHelper/BubbleField",
         "requiredEffectsAndFolds": "Left/Right, strength1.5, Always, liftOffOfGround and makeWind; typed Player fields replace dynamic access.",
-        "reviewLedgerSha256": "52bf9745001ebe6753b6d0ae5d6679efa61d5c5da6822dc83b3fbe4dde2f1a26",
+        "reviewLedgerSha256": "7a01eb655e101fdc0ad2fcb1a5c5075c2b87ad71932e6378fa4d1747931febd0",
         "selectedBehavior": "Horizontal wind-mover ramps, player bounds/state handling and stochastic moving bubble components.",
         "sourceMembers": "BubblePushField; bubble particle component",
         "status": "ROOT_REVIEWED_SELECTED_SOURCE"
@@ -6301,7 +6301,7 @@
           }
         ],
         "entryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_entity_f31538d24c54e3f5(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-        "fullImplementationByteComparison": "f8c6606236636c1d9a3f34f54c95268687844e44198ae96d64daba33d2747604",
+        "fullImplementationByteComparison": "11bdf75d3e2c07de18b39c7d8dfb39aefe71d39f085d522c5fea3cee81993ad1",
         "guardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
         "productionCallers": [
           "System.Boolean Celeste.Level::AppleEverestOriginal_LoadCustomEntity(Celeste.EntityData,Celeste.Level)"
@@ -6332,7 +6332,7 @@
         "authority": "PINNED_DISTRIBUTED_DLL_OR_PINNED_EVEREST_SOURCE",
         "customId": "pandorasBox/coloredBigWaterfall",
         "requiredEffectsAndFolds": "Typed color replacement; preserve original omission of base Awake.",
-        "reviewLedgerSha256": "52bf9745001ebe6753b6d0ae5d6679efa61d5c5da6822dc83b3fbe4dde2f1a26",
+        "reviewLedgerSha256": "7a01eb655e101fdc0ad2fcb1a5c5075c2b87ad71932e6378fa4d1747931febd0",
         "selectedBehavior": "Inherited waterfall construction/rendering with authored BG, size and color.",
         "sourceMembers": "ColoredBigWaterfall.ctor/Awake; BigWaterfall",
         "status": "ROOT_REVIEWED_SELECTED_SOURCE"
@@ -6429,7 +6429,7 @@
           }
         ],
         "entryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_entity_a02fca3a7f9d32f2(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-        "fullImplementationByteComparison": "f8c6606236636c1d9a3f34f54c95268687844e44198ae96d64daba33d2747604",
+        "fullImplementationByteComparison": "11bdf75d3e2c07de18b39c7d8dfb39aefe71d39f085d522c5fea3cee81993ad1",
         "guardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
         "productionCallers": [
           "System.Boolean Celeste.Level::AppleEverestOriginal_LoadCustomEntity(Celeste.EntityData,Celeste.Level)"
@@ -6508,7 +6508,7 @@
         "authority": "PINNED_DISTRIBUTED_DLL_OR_PINNED_EVEREST_SOURCE",
         "customId": "pandorasBox/coloredWater",
         "requiredEffectsAndFolds": "Typed private/base Water state; ordinary WaterInteraction and tracker alias retained.",
-        "reviewLedgerSha256": "52bf9745001ebe6753b6d0ae5d6679efa61d5c5da6822dc83b3fbe4dde2f1a26",
+        "reviewLedgerSha256": "7a01eb655e101fdc0ad2fcb1a5c5075c2b87ad71932e6378fa4d1747931febd0",
         "selectedBehavior": "Swimming, surfaces, colored rendering/particles and source visibility.",
         "sourceMembers": "ColoredWater; Water; WaterInteraction",
         "status": "ROOT_REVIEWED_SELECTED_SOURCE"
@@ -6602,7 +6602,7 @@
           }
         ],
         "entryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_entity_de6479082d46f302(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-        "fullImplementationByteComparison": "f8c6606236636c1d9a3f34f54c95268687844e44198ae96d64daba33d2747604",
+        "fullImplementationByteComparison": "11bdf75d3e2c07de18b39c7d8dfb39aefe71d39f085d522c5fea3cee81993ad1",
         "guardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
         "productionCallers": [
           "System.Boolean Celeste.Level::AppleEverestOriginal_LoadCustomEntity(Celeste.EntityData,Celeste.Level)"
@@ -6634,7 +6634,7 @@
         "authority": "PINNED_DISTRIBUTED_DLL_OR_PINNED_EVEREST_SOURCE",
         "customId": "pandorasBox/coloredWaterfall",
         "requiredEffectsAndFolds": "Preserve source scan and audio-selection order; actual blocking-solid predicate.",
-        "reviewLedgerSha256": "52bf9745001ebe6753b6d0ae5d6679efa61d5c5da6822dc83b3fbe4dde2f1a26",
+        "reviewLedgerSha256": "7a01eb655e101fdc0ad2fcb1a5c5075c2b87ad71932e6378fa4d1747931febd0",
         "selectedBehavior": "Downward Water/solid scan, shallow/deep sound selection, splash/ripples and water surface rendering.",
         "sourceMembers": "ColoredWaterfall.Awake/Update/Render",
         "status": "ROOT_REVIEWED_SELECTED_SOURCE"
@@ -6734,7 +6734,7 @@
           }
         ],
         "entryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_entity_1af271094557f224(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-        "fullImplementationByteComparison": "f8c6606236636c1d9a3f34f54c95268687844e44198ae96d64daba33d2747604",
+        "fullImplementationByteComparison": "11bdf75d3e2c07de18b39c7d8dfb39aefe71d39f085d522c5fea3cee81993ad1",
         "guardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
         "productionCallers": [
           "System.Boolean Celeste.Level::AppleEverestOriginal_LoadCustomEntity(Celeste.EntityData,Celeste.Level)"
@@ -6766,7 +6766,7 @@
         "authority": "PINNED_DISTRIBUTED_DLL_OR_PINNED_EVEREST_SOURCE",
         "customId": "pandorasBox/entityActivator",
         "requiredEffectsAndFolds": "Typed exact-type target list including nested vanilla and Xaphan child platforms; no subclass assignability substitution.",
-        "reviewLedgerSha256": "52bf9745001ebe6753b6d0ae5d6679efa61d5c5da6822dc83b3fbe4dde2f1a26",
+        "reviewLedgerSha256": "7a01eb655e101fdc0ad2fcb1a5c5075c2b87ad71932e6378fa4d1747931febd0",
         "selectedBehavior": "Camera-threshold changes, end-of-frame activation, three-viewport region and entity/component state toggles.",
         "sourceMembers": "EntityActivator.Update/SetActive",
         "status": "ROOT_REVIEWED_SELECTED_SOURCE"
@@ -6860,7 +6860,7 @@
           }
         ],
         "entryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_trigger_8990317cc403bd7e(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-        "fullImplementationByteComparison": "f8c6606236636c1d9a3f34f54c95268687844e44198ae96d64daba33d2747604",
+        "fullImplementationByteComparison": "11bdf75d3e2c07de18b39c7d8dfb39aefe71d39f085d522c5fea3cee81993ad1",
         "guardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
         "productionCallers": [
           "System.Void Celeste.Level::AppleEverestOriginal_LoadLevel(Celeste.Player/IntroTypes,System.Boolean)"
@@ -6872,7 +6872,7 @@
             "sourceFiles": [
               {
                 "path": "apple-everest/runtime/AppleEverestCollabRuntime.cs",
-                "sha256": "856be89b0ad083eccc289a14ffec7922913619141778a1ca972384fb12bec0db"
+                "sha256": "b48450b3412c491ac747f0693f22f53ba06977c8479d4d6bd36229a546a69c64"
               }
             ],
             "type": "Celeste.Mod.AppleEverestChapterPanelTrigger"
@@ -6890,8 +6890,8 @@
         "assets": "Original chapter UI/dialog.",
         "authority": "PINNED_DISTRIBUTED_DLL_OR_PINNED_EVEREST_SOURCE",
         "customId": "CollabUtils2/ChapterPanelTrigger",
-        "requiredEffectsAndFolds": "Typed private-state adapters; separate normal durable state and ephemeral debug continuation; guarded saving/return modes.",
-        "reviewLedgerSha256": "52bf9745001ebe6753b6d0ae5d6679efa61d5c5da6822dc83b3fbe4dde2f1a26",
+        "requiredEffectsAndFolds": "Typed private-state adapters; separate normal durable state and ephemeral debug continuation; guarded saving/return modes. Exact original golden-card skin routing selects the silver/rainbow textures; collected silver contributes to the displayed count while possible ordinary total stays unchanged.",
+        "reviewLedgerSha256": "7a01eb655e101fdc0ad2fcb1a5c5075c2b87ad71932e6378fa4d1747931febd0",
         "selectedBehavior": "Talk/enabling, in-level overworld, launch/continue, pause return, seven route fields and return timing.",
         "sourceMembers": "ChapterPanelTrigger; InGameOverworldHelper; ReturnToLobbyHelper; Session",
         "status": "ROOT_REVIEWED_SELECTED_SOURCE"
@@ -6985,7 +6985,7 @@
           }
         ],
         "entryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_trigger_fb7a7a2c02b41d67(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-        "fullImplementationByteComparison": "f8c6606236636c1d9a3f34f54c95268687844e44198ae96d64daba33d2747604",
+        "fullImplementationByteComparison": "11bdf75d3e2c07de18b39c7d8dfb39aefe71d39f085d522c5fea3cee81993ad1",
         "guardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
         "productionCallers": [
           "System.Void Celeste.Level::AppleEverestOriginal_LoadLevel(Celeste.Player/IntroTypes,System.Boolean)"
@@ -6997,7 +6997,7 @@
             "sourceFiles": [
               {
                 "path": "apple-everest/runtime/AppleEverestCollabRuntime.cs",
-                "sha256": "856be89b0ad083eccc289a14ffec7922913619141778a1ca972384fb12bec0db"
+                "sha256": "b48450b3412c491ac747f0693f22f53ba06977c8479d4d6bd36229a546a69c64"
               }
             ],
             "type": "Celeste.Mod.AppleEverestJournalTrigger"
@@ -7014,8 +7014,8 @@
         "assets": "Journal/cover and selected sticker resources.",
         "authority": "PINNED_DISTRIBUTED_DLL_OR_PINNED_EVEREST_SOURCE",
         "customId": "CollabUtils2/JournalTrigger",
-        "requiredEffectsAndFolds": "Static exact map/sticker metadata replaces discovery; top-level Stickers YAML matches desktop schema.",
-        "reviewLedgerSha256": "52bf9745001ebe6753b6d0ae5d6679efa61d5c5da6822dc83b3fbe4dde2f1a26",
+        "requiredEffectsAndFolds": "Static exact map/sticker metadata replaces discovery; top-level Stickers YAML matches desktop schema. Original collected totals remain uncapped; silver/golden completion badges occupy the original best-deaths column.",
+        "reviewLedgerSha256": "7a01eb655e101fdc0ad2fcb1a5c5075c2b87ad71932e6378fa4d1747931febd0",
         "selectedBehavior": "Talk, journal pages/progress, player/scene restoration and conditional stickers.",
         "sourceMembers": "JournalTrigger; InGameOverworldHelper; OuiJournalCoverWithStickers",
         "status": "ROOT_REVIEWED_SELECTED_SOURCE"
@@ -7107,7 +7107,7 @@
           }
         ],
         "entryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_trigger_95ab032485d2aa3a(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-        "fullImplementationByteComparison": "f8c6606236636c1d9a3f34f54c95268687844e44198ae96d64daba33d2747604",
+        "fullImplementationByteComparison": "11bdf75d3e2c07de18b39c7d8dfb39aefe71d39f085d522c5fea3cee81993ad1",
         "guardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
         "productionCallers": [
           "System.Void Celeste.Level::AppleEverestOriginal_LoadLevel(Celeste.Player/IntroTypes,System.Boolean)"
@@ -7137,7 +7137,7 @@
         "authority": "PINNED_DISTRIBUTED_DLL_OR_PINNED_EVEREST_SOURCE",
         "customId": "CollabUtils2/MiniHeartDoorUnlockCutsceneTrigger",
         "requiredEffectsAndFolds": "Typed Assist/Variant confirmation and cancellation hooks.",
-        "reviewLedgerSha256": "52bf9745001ebe6753b6d0ae5d6679efa61d5c5da6822dc83b3fbe4dde2f1a26",
+        "reviewLedgerSha256": "7a01eb655e101fdc0ad2fcb1a5c5075c2b87ad71932e6378fa4d1747931febd0",
         "selectedBehavior": "Awake door binding, heart check, persistent open ID, normal/skip camera/player/open cleanup.",
         "sourceMembers": "MiniHeartDoorUnlockCutsceneTrigger; cutscene; AssistSkipConfirmUI",
         "status": "ROOT_REVIEWED_SELECTED_SOURCE"
@@ -7228,7 +7228,7 @@
           }
         ],
         "entryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_trigger_e71114611a979a62(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-        "fullImplementationByteComparison": "f8c6606236636c1d9a3f34f54c95268687844e44198ae96d64daba33d2747604",
+        "fullImplementationByteComparison": "11bdf75d3e2c07de18b39c7d8dfb39aefe71d39f085d522c5fea3cee81993ad1",
         "guardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
         "productionCallers": [
           "System.Void Celeste.Level::AppleEverestOriginal_LoadLevel(Celeste.Player/IntroTypes,System.Boolean)"
@@ -7258,7 +7258,7 @@
         "authority": "PINNED_DISTRIBUTED_DLL_OR_PINNED_EVEREST_SOURCE",
         "customId": "CollabUtils2/RainbowBerryUnlockCutsceneTrigger",
         "requiredEffectsAndFolds": "Typed deferred cleanup including audio snapshot/bus; selected empty filter defaults.",
-        "reviewLedgerSha256": "52bf9745001ebe6753b6d0ae5d6679efa61d5c5da6822dc83b3fbe4dde2f1a26",
+        "reviewLedgerSha256": "7a01eb655e101fdc0ad2fcb1a5c5075c2b87ad71932e6378fa4d1747931febd0",
         "selectedBehavior": "Awake berry match, hologram transfer, combined ID, spin/combine/particles/camera/freeze and normal/skip restoration.",
         "sourceMembers": "RainbowBerryUnlockCutsceneTrigger; RainbowBerryUnlockCutscene",
         "status": "ROOT_REVIEWED_SELECTED_SOURCE"
@@ -7361,7 +7361,7 @@
           }
         ],
         "entryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_trigger_2f846cf738017762(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-        "fullImplementationByteComparison": "f8c6606236636c1d9a3f34f54c95268687844e44198ae96d64daba33d2747604",
+        "fullImplementationByteComparison": "11bdf75d3e2c07de18b39c7d8dfb39aefe71d39f085d522c5fea3cee81993ad1",
         "guardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
         "productionCallers": [
           "System.Void Celeste.Level::AppleEverestOriginal_LoadLevel(Celeste.Player/IntroTypes,System.Boolean)"
@@ -7393,7 +7393,7 @@
         "authority": "PINNED_DISTRIBUTED_DLL_OR_PINNED_EVEREST_SOURCE",
         "customId": "ContortHelper/MadelineSpotlightModifierTrigger",
         "requiredEffectsAndFolds": "White, empty flags, zero delay, repeatable/nonpersistent enter profile; typed VertexLight access and dead-player checks.",
-        "reviewLedgerSha256": "52bf9745001ebe6753b6d0ae5d6679efa61d5c5da6822dc83b3fbe4dde2f1a26",
+        "reviewLedgerSha256": "7a01eb655e101fdc0ad2fcb1a5c5075c2b87ad71932e6378fa4d1747931febd0",
         "selectedBehavior": "OnEnter retains initial zero-yield, reacquires live player and attaches CubeInOut tween with iterative light interpolation.",
         "sourceMembers": "MadelineSpotlightModifierTrigger; AbstractTrigger",
         "status": "ROOT_REVIEWED_SELECTED_SOURCE"
@@ -7485,7 +7485,7 @@
           }
         ],
         "entryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_trigger_03026125973981db(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-        "fullImplementationByteComparison": "f8c6606236636c1d9a3f34f54c95268687844e44198ae96d64daba33d2747604",
+        "fullImplementationByteComparison": "11bdf75d3e2c07de18b39c7d8dfb39aefe71d39f085d522c5fea3cee81993ad1",
         "guardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
         "productionCallers": [
           "System.Void Celeste.Level::AppleEverestOriginal_LoadLevel(Celeste.Player/IntroTypes,System.Boolean)"
@@ -7515,7 +7515,7 @@
         "authority": "PINNED_DISTRIBUTED_DLL_OR_PINNED_EVEREST_SOURCE",
         "customId": "DJMapHelper/colorGradeTrigger",
         "requiredEffectsAndFolds": "Exact DLL transformation/AOT identity; selected assembly global hooks stay in existing static HookGen/IL framework with configured order.",
-        "reviewLedgerSha256": "52bf9745001ebe6753b6d0ae5d6679efa61d5c5da6822dc83b3fbe4dde2f1a26",
+        "reviewLedgerSha256": "7a01eb655e101fdc0ad2fcb1a5c5075c2b87ad71932e6378fa4d1747931febd0",
         "selectedBehavior": "Original distributed static trigger sets selected level color grade through preserved reviewed API.",
         "sourceMembers": "ColorGradeTrigger.ctor/OnEnter; exact frozen DJMapHelper assembly",
         "status": "ROOT_REVIEWED_SELECTED_SOURCE"
@@ -7611,7 +7611,7 @@
           }
         ],
         "entryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_trigger_5c492fc646697c25(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-        "fullImplementationByteComparison": "f8c6606236636c1d9a3f34f54c95268687844e44198ae96d64daba33d2747604",
+        "fullImplementationByteComparison": "11bdf75d3e2c07de18b39c7d8dfb39aefe71d39f085d522c5fea3cee81993ad1",
         "guardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
         "productionCallers": [
           "System.Void Celeste.Level::AppleEverestOriginal_LoadLevel(Celeste.Player/IntroTypes,System.Boolean)"
@@ -7643,7 +7643,7 @@
         "authority": "PINNED_DISTRIBUTED_DLL_OR_PINNED_EVEREST_SOURCE",
         "customId": "ExtendedVariantMode/FloatExtendedVariantFadeTrigger",
         "requiredEffectsAndFolds": "Exact BackgroundBrightness, revertOnDeath=false and three selected position modes; bounded render target and unload cleanup replace arbitrary variant registry.",
-        "reviewLedgerSha256": "52bf9745001ebe6753b6d0ae5d6679efa61d5c5da6822dc83b3fbe4dde2f1a26",
+        "reviewLedgerSha256": "7a01eb655e101fdc0ad2fcb1a5c5075c2b87ad71932e6378fa4d1747931febd0",
         "selectedBehavior": "Position interpolation changes the typed BackgroundBrightness session field and background render opacity.",
         "sourceMembers": "FloatExtendedVariantFadeTrigger; BackgroundBrightness",
         "status": "ROOT_REVIEWED_SELECTED_SOURCE"
@@ -7736,7 +7736,7 @@
           }
         ],
         "entryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_trigger_85f8cc9f7f188660(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-        "fullImplementationByteComparison": "f8c6606236636c1d9a3f34f54c95268687844e44198ae96d64daba33d2747604",
+        "fullImplementationByteComparison": "11bdf75d3e2c07de18b39c7d8dfb39aefe71d39f085d522c5fea3cee81993ad1",
         "guardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
         "productionCallers": [
           "System.Void Celeste.Level::AppleEverestOriginal_LoadLevel(Celeste.Player/IntroTypes,System.Boolean)"
@@ -7766,7 +7766,7 @@
         "authority": "PINNED_DISTRIBUTED_DLL_OR_PINNED_EVEREST_SOURCE",
         "customId": "ExtendedVariantMode/ResetVariantsTrigger",
         "requiredEffectsAndFolds": "Explicit callback integration for Frost OnSpawnActivator; no whole ExtendedVariantMode module compatibility claim.",
-        "reviewLedgerSha256": "52bf9745001ebe6753b6d0ae5d6679efa61d5c5da6822dc83b3fbe4dde2f1a26",
+        "reviewLedgerSha256": "7a01eb655e101fdc0ad2fcb1a5c5075c2b87ad71932e6378fa4d1747931febd0",
         "selectedBehavior": "OnEnter with extended=true restores BackgroundBrightness to1; selected empty map-override lists leave saved Assist Mode settings untouched.",
         "sourceMembers": "ResetVariantsTrigger; BackgroundBrightness",
         "status": "ROOT_REVIEWED_SELECTED_SOURCE"
@@ -7865,7 +7865,7 @@
           }
         ],
         "entryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_trigger_4d9990e2e797a1bb(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-        "fullImplementationByteComparison": "f8c6606236636c1d9a3f34f54c95268687844e44198ae96d64daba33d2747604",
+        "fullImplementationByteComparison": "11bdf75d3e2c07de18b39c7d8dfb39aefe71d39f085d522c5fea3cee81993ad1",
         "guardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
         "productionCallers": [
           "System.Void Celeste.Level::AppleEverestOriginal_LoadLevel(Celeste.Player/IntroTypes,System.Boolean)"
@@ -7895,7 +7895,7 @@
         "authority": "PINNED_DISTRIBUTED_DLL_OR_PINNED_EVEREST_SOURCE",
         "customId": "FrostHelper/OnSpawnActivator",
         "requiredEffectsAndFolds": "All/zero-delay/once ResetVariants targets; whole EntityList.UpdateLists wrapper including early return supplies post-Awake dispatch.",
-        "reviewLedgerSha256": "52bf9745001ebe6753b6d0ae5d6679efa61d5c5da6822dc83b3fbe4dde2f1a26",
+        "reviewLedgerSha256": "7a01eb655e101fdc0ad2fcb1a5c5075c2b87ad71932e6378fa4d1747931febd0",
         "selectedBehavior": "Caches node-overlapping triggers in tracked order; conditional leave then enter/stay and one-time removal.",
         "sourceMembers": "OnSpawnActivator; BaseActivator; PostAwakeHook",
         "status": "ROOT_REVIEWED_SELECTED_SOURCE"
@@ -8001,7 +8001,7 @@
           }
         ],
         "entryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_trigger_3615799e7fae7921(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-        "fullImplementationByteComparison": "f8c6606236636c1d9a3f34f54c95268687844e44198ae96d64daba33d2747604",
+        "fullImplementationByteComparison": "11bdf75d3e2c07de18b39c7d8dfb39aefe71d39f085d522c5fea3cee81993ad1",
         "guardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
         "productionCallers": [
           "System.Void Celeste.Level::AppleEverestOriginal_LoadLevel(Celeste.Player/IntroTypes,System.Boolean)"
@@ -8033,7 +8033,7 @@
         "authority": "PINNED_DISTRIBUTED_DLL_OR_PINNED_EVEREST_SOURCE",
         "customId": "HonlyHelper/CameraTargetCrossfadeTrigger",
         "requiredEffectsAndFolds": "Typed player trigger-list access replaces private lookup.",
-        "reviewLedgerSha256": "52bf9745001ebe6753b6d0ae5d6679efa61d5c5da6822dc83b3fbe4dde2f1a26",
+        "reviewLedgerSha256": "7a01eb655e101fdc0ad2fcb1a5c5075c2b87ad71932e6378fa4d1747931febd0",
         "selectedBehavior": "Two anchors relative to half viewport, position/strength interpolation, axis flags and conditional leave reset.",
         "sourceMembers": "CameraTargetCrossfadeTrigger.OnStay/OnLeave",
         "status": "ROOT_REVIEWED_SELECTED_SOURCE"
@@ -8126,7 +8126,7 @@
           }
         ],
         "entryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_trigger_4d1b8b57fe863f94(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-        "fullImplementationByteComparison": "f8c6606236636c1d9a3f34f54c95268687844e44198ae96d64daba33d2747604",
+        "fullImplementationByteComparison": "11bdf75d3e2c07de18b39c7d8dfb39aefe71d39f085d522c5fea3cee81993ad1",
         "guardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
         "productionCallers": [
           "System.Void Celeste.Level::AppleEverestOriginal_LoadLevel(Celeste.Player/IntroTypes,System.Boolean)"
@@ -8157,7 +8157,7 @@
         "authority": "PINNED_DISTRIBUTED_DLL_OR_PINNED_EVEREST_SOURCE",
         "customId": "MaxHelpingHand/CameraCatchupSpeedTrigger",
         "requiredEffectsAndFolds": "Typed build-time call replaces selected reflection/ILHook; revertOnLeave=true avoids persistent-session write branch.",
-        "reviewLedgerSha256": "52bf9745001ebe6753b6d0ae5d6679efa61d5c5da6822dc83b3fbe4dde2f1a26",
+        "reviewLedgerSha256": "7a01eb655e101fdc0ad2fcb1a5c5075c2b87ad71932e6378fa4d1747931febd0",
         "selectedBehavior": "Camera interpolation divisor is replaced at the original Player.Update site.",
         "sourceMembers": "Load/modPlayerOrigUpdate/replaceCatchupSpeed/OnEnter",
         "status": "ROOT_REVIEWED_SELECTED_SOURCE"
@@ -8259,7 +8259,7 @@
           }
         ],
         "entryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_trigger_06466e2eb27981e2(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-        "fullImplementationByteComparison": "f8c6606236636c1d9a3f34f54c95268687844e44198ae96d64daba33d2747604",
+        "fullImplementationByteComparison": "11bdf75d3e2c07de18b39c7d8dfb39aefe71d39f085d522c5fea3cee81993ad1",
         "guardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
         "productionCallers": [
           "System.Void Celeste.Level::AppleEverestOriginal_LoadLevel(Celeste.Player/IntroTypes,System.Boolean)"
@@ -8330,7 +8330,7 @@
         "authority": "PINNED_DISTRIBUTED_DLL_OR_PINNED_EVEREST_SOURCE",
         "customId": "MaxHelpingHand/CameraOffsetBorder",
         "requiredEffectsAndFolds": "Typed host hooks; empty flag folds optional gating.",
-        "reviewLedgerSha256": "52bf9745001ebe6753b6d0ae5d6679efa61d5c5da6822dc83b3fbe4dde2f1a26",
+        "reviewLedgerSha256": "7a01eb655e101fdc0ad2fcb1a5c5075c2b87ad71932e6378fa4d1747931febd0",
         "selectedBehavior": "Nine spatial predicates, initial update, transition disabling and target rectangle exclusion.",
         "sourceMembers": "CameraOffsetBorder.Awake/Update; camera-target/transition hooks",
         "status": "ROOT_REVIEWED_SELECTED_SOURCE"
@@ -8425,7 +8425,7 @@
           }
         ],
         "entryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_trigger_b967d1965331ca15(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-        "fullImplementationByteComparison": "f8c6606236636c1d9a3f34f54c95268687844e44198ae96d64daba33d2747604",
+        "fullImplementationByteComparison": "11bdf75d3e2c07de18b39c7d8dfb39aefe71d39f085d522c5fea3cee81993ad1",
         "guardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
         "productionCallers": [
           "System.Void Celeste.Level::AppleEverestOriginal_LoadLevel(Celeste.Player/IntroTypes,System.Boolean)"
@@ -8472,7 +8472,7 @@
         "authority": "PINNED_DISTRIBUTED_DLL_OR_PINNED_EVEREST_SOURCE",
         "customId": "MaxHelpingHand/ColorGradeFadeTrigger",
         "requiredEffectsAndFolds": "Typed color-grade state and exact trigger-presence patch; reflection-fall alternative excluded.",
-        "reviewLedgerSha256": "52bf9745001ebe6753b6d0ae5d6679efa61d5c5da6822dc83b3fbe4dde2f1a26",
+        "reviewLedgerSha256": "7a01eb655e101fdc0ad2fcb1a5c5075c2b87ad71932e6378fa4d1747931febd0",
         "selectedBehavior": "Positional grade interpolation remains active without being overwritten by Level update.",
         "sourceMembers": "ColorGradeFadeTrigger.OnStay; Level.Update hook",
         "status": "ROOT_REVIEWED_SELECTED_SOURCE"
@@ -8567,7 +8567,7 @@
           }
         ],
         "entryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_trigger_654ff1d7396f4468(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-        "fullImplementationByteComparison": "f8c6606236636c1d9a3f34f54c95268687844e44198ae96d64daba33d2747604",
+        "fullImplementationByteComparison": "11bdf75d3e2c07de18b39c7d8dfb39aefe71d39f085d522c5fea3cee81993ad1",
         "guardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
         "productionCallers": [
           "System.Void Celeste.Level::AppleEverestOriginal_LoadLevel(Celeste.Player/IntroTypes,System.Boolean)"
@@ -8601,7 +8601,7 @@
         "authority": "PINNED_DISTRIBUTED_DLL_OR_PINNED_EVEREST_SOURCE",
         "customId": "MaxHelpingHand/FlagToggleCameraOffsetTrigger",
         "requiredEffectsAndFolds": "Typed creator/Attach; Visible and Collidable toggle while Active remains enabled.",
-        "reviewLedgerSha256": "52bf9745001ebe6753b6d0ae5d6679efa61d5c5da6822dc83b3fbe4dde2f1a26",
+        "reviewLedgerSha256": "7a01eb655e101fdc0ad2fcb1a5c5075c2b87ad71932e6378fa4d1747931febd0",
         "selectedBehavior": "Actual CameraOffsetTrigger and scaled offsets; component observes flag during EntityAdded and Update.",
         "sourceMembers": "FlagToggleCameraOffsetTrigger.Load; FlagToggleComponent",
         "status": "ROOT_REVIEWED_SELECTED_SOURCE"
@@ -8704,7 +8704,7 @@
           }
         ],
         "entryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_trigger_cef21a429380b7a3(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-        "fullImplementationByteComparison": "f8c6606236636c1d9a3f34f54c95268687844e44198ae96d64daba33d2747604",
+        "fullImplementationByteComparison": "11bdf75d3e2c07de18b39c7d8dfb39aefe71d39f085d522c5fea3cee81993ad1",
         "guardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
         "productionCallers": [
           "System.Void Celeste.Level::AppleEverestOriginal_LoadLevel(Celeste.Player/IntroTypes,System.Boolean)"
@@ -8730,7 +8730,7 @@
         "authority": "PINNED_DISTRIBUTED_DLL_OR_PINNED_EVEREST_SOURCE",
         "customId": "MaxHelpingHand/FlagToggleCameraTargetTrigger",
         "requiredEffectsAndFolds": "Typed creator/Attach; y-only, NoEffect, empty deletion flag; component updates while disabled.",
-        "reviewLedgerSha256": "52bf9745001ebe6753b6d0ae5d6679efa61d5c5da6822dc83b3fbe4dde2f1a26",
+        "reviewLedgerSha256": "7a01eb655e101fdc0ad2fcb1a5c5075c2b87ad71932e6378fa4d1747931febd0",
         "selectedBehavior": "Actual relative-node target trigger, anchor interpolation and OnStay/OnLeave behavior.",
         "sourceMembers": "FlagToggleCameraTargetTrigger.Load; FlagToggleComponent",
         "status": "ROOT_REVIEWED_SELECTED_SOURCE"
@@ -8829,7 +8829,7 @@
           }
         ],
         "entryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_trigger_457555b7d7500357(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-        "fullImplementationByteComparison": "f8c6606236636c1d9a3f34f54c95268687844e44198ae96d64daba33d2747604",
+        "fullImplementationByteComparison": "11bdf75d3e2c07de18b39c7d8dfb39aefe71d39f085d522c5fea3cee81993ad1",
         "guardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
         "productionCallers": [
           "System.Void Celeste.Level::AppleEverestOriginal_LoadLevel(Celeste.Player/IntroTypes,System.Boolean)"
@@ -8864,7 +8864,7 @@
         "authority": "PINNED_DISTRIBUTED_DLL_OR_PINNED_EVEREST_SOURCE",
         "customId": "MaxHelpingHand/FlagToggleSmoothCameraOffsetTrigger",
         "requiredEffectsAndFolds": "Typed creator/component plus Everest smooth trigger; selected LeftToRight.",
-        "reviewLedgerSha256": "52bf9745001ebe6753b6d0ae5d6679efa61d5c5da6822dc83b3fbe4dde2f1a26",
+        "reviewLedgerSha256": "7a01eb655e101fdc0ad2fcb1a5c5075c2b87ad71932e6378fa4d1747931febd0",
         "selectedBehavior": "Scaled offsets, positional OnStay interpolation and repeatable OnLeave behavior.",
         "sourceMembers": "FlagToggleSmoothCameraOffsetTrigger.Load; SmoothCameraOffsetTrigger",
         "status": "ROOT_REVIEWED_SELECTED_SOURCE"
@@ -8960,7 +8960,7 @@
           }
         ],
         "entryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_trigger_66e0af1936d3ca6f(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-        "fullImplementationByteComparison": "f8c6606236636c1d9a3f34f54c95268687844e44198ae96d64daba33d2747604",
+        "fullImplementationByteComparison": "11bdf75d3e2c07de18b39c7d8dfb39aefe71d39f085d522c5fea3cee81993ad1",
         "guardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
         "productionCallers": [
           "System.Void Celeste.Level::AppleEverestOriginal_LoadLevel(Celeste.Player/IntroTypes,System.Boolean)"
@@ -9088,7 +9088,7 @@
         "authority": "PINNED_DISTRIBUTED_DLL_OR_PINNED_EVEREST_SOURCE",
         "customId": "everest/flagTrigger",
         "requiredEffectsAndFolds": "Pinned Everest source lowered through typed Session.SetFlag; all original attribute profiles checked.",
-        "reviewLedgerSha256": "52bf9745001ebe6753b6d0ae5d6679efa61d5c5da6822dc83b3fbe4dde2f1a26",
+        "reviewLedgerSha256": "7a01eb655e101fdc0ad2fcb1a5c5075c2b87ad71932e6378fa4d1747931febd0",
         "selectedBehavior": "Default-false state, enter/leave/level-start mode, death-count predicate and only-once behavior; source callbacks do not change PlayerIsInside.",
         "sourceMembers": "Everest FlagTrigger.ctor/Awake/OnEnter/OnLeave",
         "status": "ROOT_REVIEWED_SELECTED_SOURCE"
@@ -9187,7 +9187,7 @@
           }
         ],
         "entryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_trigger_7a5988650f6cccc2(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-        "fullImplementationByteComparison": "f8c6606236636c1d9a3f34f54c95268687844e44198ae96d64daba33d2747604",
+        "fullImplementationByteComparison": "11bdf75d3e2c07de18b39c7d8dfb39aefe71d39f085d522c5fea3cee81993ad1",
         "guardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
         "productionCallers": [
           "System.Void Celeste.Level::AppleEverestOriginal_LoadLevel(Celeste.Player/IntroTypes,System.Boolean)"
@@ -9238,7 +9238,7 @@
         "authority": "PINNED_DISTRIBUTED_DLL_OR_PINNED_EVEREST_SOURCE",
         "customId": "everest/smoothCameraOffsetTrigger",
         "requiredEffectsAndFolds": "Pinned Everest typed entity; shared Max flag component composes through actual creator.",
-        "reviewLedgerSha256": "52bf9745001ebe6753b6d0ae5d6679efa61d5c5da6822dc83b3fbe4dde2f1a26",
+        "reviewLedgerSha256": "7a01eb655e101fdc0ad2fcb1a5c5075c2b87ad71932e6378fa4d1747931febd0",
         "selectedBehavior": "Scaled camera offsets, positional interpolation and selected leave/only-once behavior.",
         "sourceMembers": "Everest SmoothCameraOffsetTrigger.ctor/OnStay/OnLeave",
         "status": "ROOT_REVIEWED_SELECTED_SOURCE"
@@ -9332,7 +9332,7 @@
           }
         ],
         "entryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_trigger_5110c8e9eeed1821(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-        "fullImplementationByteComparison": "f8c6606236636c1d9a3f34f54c95268687844e44198ae96d64daba33d2747604",
+        "fullImplementationByteComparison": "11bdf75d3e2c07de18b39c7d8dfb39aefe71d39f085d522c5fea3cee81993ad1",
         "guardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
         "productionCallers": [
           "System.Void Celeste.Level::AppleEverestOriginal_LoadLevel(Celeste.Player/IntroTypes,System.Boolean)"
@@ -9370,7 +9370,7 @@
         "authority": "PINNED_DISTRIBUTED_DLL_OR_PINNED_EVEREST_SOURCE",
         "customId": "vitellary/bloomstrengthtrigger",
         "requiredEffectsAndFolds": "Exact from/to values and three selected position modes; direct typed bloom access.",
-        "reviewLedgerSha256": "52bf9745001ebe6753b6d0ae5d6679efa61d5c5da6822dc83b3fbe4dde2f1a26",
+        "reviewLedgerSha256": "7a01eb655e101fdc0ad2fcb1a5c5075c2b87ad71932e6378fa4d1747931febd0",
         "selectedBehavior": "Clamped position interpolation changes actual Level.Bloom.Strength.",
         "sourceMembers": "BloomStrengthTrigger.ctor/OnStay",
         "status": "ROOT_REVIEWED_SELECTED_SOURCE"
@@ -9465,7 +9465,7 @@
           }
         ],
         "entryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_trigger_d13ce7e5bbdaa203(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-        "fullImplementationByteComparison": "f8c6606236636c1d9a3f34f54c95268687844e44198ae96d64daba33d2747604",
+        "fullImplementationByteComparison": "11bdf75d3e2c07de18b39c7d8dfb39aefe71d39f085d522c5fea3cee81993ad1",
         "guardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
         "productionCallers": [
           "System.Void Celeste.Level::AppleEverestOriginal_LoadLevel(Celeste.Player/IntroTypes,System.Boolean)"
@@ -9501,7 +9501,7 @@
         "authority": "PINNED_DISTRIBUTED_DLL_OR_PINNED_EVEREST_SOURCE",
         "customId": "vitellary/editdepthtrigger",
         "requiredEffectsAndFolds": "Typed identities for FancySolidTiles/FlagExitBlock replace name discovery; debug=false and updateOnEntry=false; exact negative/positive depths.",
-        "reviewLedgerSha256": "52bf9745001ebe6753b6d0ae5d6679efa61d5c5da6822dc83b3fbe4dde2f1a26",
+        "reviewLedgerSha256": "7a01eb655e101fdc0ad2fcb1a5c5075c2b87ad71932e6378fa4d1747931febd0",
         "selectedBehavior": "Source selected initial overlap scan changes target entity depth.",
         "sourceMembers": "EditDepthTrigger.ctor/Added",
         "status": "ROOT_REVIEWED_SELECTED_SOURCE"
@@ -9623,7 +9623,7 @@
           }
         ],
         "entryMethod": "Monocle.Entity Celeste.Mod.GeneratedAppleEverestGameplayRegistry::Create_trigger_9d4ddb540f21a426(Celeste.EntityData,Microsoft.Xna.Framework.Vector2,Celeste.EntityID)",
-        "fullImplementationByteComparison": "f8c6606236636c1d9a3f34f54c95268687844e44198ae96d64daba33d2747604",
+        "fullImplementationByteComparison": "11bdf75d3e2c07de18b39c7d8dfb39aefe71d39f085d522c5fea3cee81993ad1",
         "guardSha256": "d3ed738fd8b78d7687f93abd25937998a9209270e89e21dce737420d1673c3be",
         "productionCallers": [
           "System.Void Celeste.Level::AppleEverestOriginal_LoadLevel(Celeste.Player/IntroTypes,System.Boolean)"
@@ -9653,7 +9653,7 @@
         "authority": "PINNED_DISTRIBUTED_DLL_OR_PINNED_EVEREST_SOURCE",
         "customId": "vitellary/triggertrigger",
         "requiredEffectsAndFolds": "Select unfiltered targets first then require actual RumbleTrigger and Everest FlagTrigger; typed holdable tracking and transition cleanup.",
-        "reviewLedgerSha256": "52bf9745001ebe6753b6d0ae5d6679efa61d5c5da6822dc83b3fbe4dde2f1a26",
+        "reviewLedgerSha256": "7a01eb655e101fdc0ad2fcb1a5c5075c2b87ad71932e6378fa4d1747931febd0",
         "selectedBehavior": "Holdable entry, original node scan/fallback including duplicate targets, target suppression,0.4s uncanceled alarms and one-use behavior.",
         "sourceMembers": "TriggerTrigger.ctor/Awake/Update/ActivateTriggers",
         "status": "ROOT_REVIEWED_SELECTED_SOURCE"
@@ -9662,25 +9662,25 @@
   ],
   "fullProductionCompilation": {
     "AllImplementationBytesCompared": true,
-    "AppliedManagedLogicalSha256": "48b690f84e0104f691c92decfdd34836455ab1d4a7b61f9bfd82ab544606c0ce",
-    "AppliedManagedSourceLogicalSha256": "55fb953156f5b136872432104fbe4bb5d65ff0cab8bdcaee7f07cb6eafae0523",
+    "AppliedManagedLogicalSha256": "683c2ffdf96182bbfacd71019e52715cc2fbc726fccf1af34431024dfa167b84",
+    "AppliedManagedSourceLogicalSha256": "e363fd94e0110159e3ec595e109c8545ce4acc1ddcfc5cc9b33dab844d522156",
     "CanonicalManagedLogicalSha256": "ab386f605572569cbcda81e408b22531f5af42e06b305ee07a701e39486a55bb",
-    "CompiledDllLogicalSha256": "f8c6606236636c1d9a3f34f54c95268687844e44198ae96d64daba33d2747604",
+    "CompiledDllLogicalSha256": "11bdf75d3e2c07de18b39c7d8dfb39aefe71d39f085d522c5fea3cee81993ad1",
     "CompiledDlls": [
       {
-        "Bytes": 4920832,
+        "Bytes": 4923392,
         "Path": "Celeste.dll",
-        "Sha256": "c3b25f207062d4987bb4157faa06bea77770789b5f543f8f70164dc243590965"
+        "Sha256": "d9ef35f485c5ad729c2817f7efa10c92abc7144c09a77e1ca508b8ddf49e5384"
       },
       {
         "Bytes": 8704,
         "Path": "CelesteAppleInput.dll",
-        "Sha256": "f224fef8c00e856d145b0df9aa363eee97a033477fa730ae3ddbee69b294c01c"
+        "Sha256": "512a6a899b146722412acaf46de5b509c2b9e8f763b49019e4684a34038c6c84"
       },
       {
         "Bytes": 107520,
         "Path": "CelesteIOSFoundation.dll",
-        "Sha256": "21d57327c6a8b47da898f520112ad6e78c582cf29967895ffe8eb0f5fbc97cce"
+        "Sha256": "c647206c1e7c861974252c84478f1bf655db034542cb0dc71fa9b179eef099dc"
       },
       {
         "Bytes": 194048,
@@ -9695,25 +9695,25 @@
       {
         "Bytes": 781312,
         "Path": "FNA.dll",
-        "Sha256": "0f6c003931468c5911e62054dc287cb7c8a34e4cee85cb5df5ce1005e13a8cc7"
+        "Sha256": "9b9da968324ab4017379d070f6c441fee3de1908befffc96d2414d086b31e309"
       }
     ],
     "FreshProductionCompilation": true,
     "FreshRawDlls": [
       {
-        "Bytes": 4920832,
+        "Bytes": 4923392,
         "Path": "Celeste.dll",
-        "Sha256": "f8f51f3eb36bac2d0345daafd62e636ec706c405ad6358027c24829870f3854f"
+        "Sha256": "5e28c9773d36879b42438a91077c6e5a8d5c9d3047c4a40179e8a2cb393f6fd5"
       },
       {
         "Bytes": 8704,
         "Path": "CelesteAppleInput.dll",
-        "Sha256": "d315ef79a6347fd935806e3a4761789536c991e739b8c6dc3b13129cd6612453"
+        "Sha256": "fd8f1c807500c833c28e468f9ff0068ff354ff00a523f6049cdb182501a4fa54"
       },
       {
         "Bytes": 107520,
         "Path": "CelesteIOSFoundation.dll",
-        "Sha256": "0c5c5897fee39b1f75e07cff2ebf06d5141d4e87fb8b08c4428180d6909808f4"
+        "Sha256": "b16b80bff6c6006e8b1e27c929606d87b9ea9b4edaa68fc0a6a5bd108425a278"
       },
       {
         "Bytes": 194048,
@@ -9728,7 +9728,7 @@
       {
         "Bytes": 781312,
         "Path": "FNA.dll",
-        "Sha256": "a56b46d4c24f7f075af5797f4094e096554cc6711a8755a2157a761e7356c6bc"
+        "Sha256": "569cdcbb9fd887af52e65949eaaf673c169426ee2aefc3bb676613b27c7e94f0"
       }
     ],
     "IgnoredBuildFields": [
@@ -9737,19 +9737,19 @@
     ],
     "InspectedRawDlls": [
       {
-        "Bytes": 4920832,
+        "Bytes": 4923392,
         "Path": "Celeste.dll",
-        "Sha256": "3311f800d64dbd45a2ad28707a1ccf74aa1581bbd600c3b2c6750a3cd98f3121"
+        "Sha256": "e0398c6deb4af4946790830c1c49504492b8bbe0ee5551e287a59c19ccc05568"
       },
       {
         "Bytes": 8704,
         "Path": "CelesteAppleInput.dll",
-        "Sha256": "d315ef79a6347fd935806e3a4761789536c991e739b8c6dc3b13129cd6612453"
+        "Sha256": "fd8f1c807500c833c28e468f9ff0068ff354ff00a523f6049cdb182501a4fa54"
       },
       {
         "Bytes": 107520,
         "Path": "CelesteIOSFoundation.dll",
-        "Sha256": "0c5c5897fee39b1f75e07cff2ebf06d5141d4e87fb8b08c4428180d6909808f4"
+        "Sha256": "b16b80bff6c6006e8b1e27c929606d87b9ea9b4edaa68fc0a6a5bd108425a278"
       },
       {
         "Bytes": 194048,
@@ -9764,7 +9764,7 @@
       {
         "Bytes": 781312,
         "Path": "FNA.dll",
-        "Sha256": "a56b46d4c24f7f075af5797f4094e096554cc6711a8755a2157a761e7356c6bc"
+        "Sha256": "569cdcbb9fd887af52e65949eaaf673c169426ee2aefc3bb676613b27c7e94f0"
       }
     ],
     "Scope": "UNTRIMMED_PRODUCTION_MANAGED_CLOSURE_FINAL_PLATFORM_TRIM_AND_NATIVE_AOT_ARE_SEPARATE_GATES"
@@ -23693,15 +23693,15 @@
     }
   },
   "schemaVersion": 1,
-  "sharedClosureSha256": "01d433c8d03dd0fc9a88ebed48ee014b5ef448a435b6224968dc1e399d42931e",
+  "sharedClosureSha256": "5b3157fd8c83fe350683f293c9f176b1416bef9de771ee1a90d5954547056843",
   "sharedSourceEffects": [
     {
       "path": "tools/AppleEverestBuilder/ClosureGenerator.cs",
-      "sha256": "bb1c64066fbfe0b2ba7c5d062b30edf73f4fe1770a677230bbbe26232b95be1d"
+      "sha256": "98e285ae93cfef30e927ab1612d1e4453af15ad7642b1d7d1484dd155f851dfd"
     },
     {
       "path": "tools/AppleEverestBuilder/StaticSemanticRuntimePatches.cs",
-      "sha256": "2d59fc742781c06673d067441a04c0e2ffad46808e11ae67265230518a9defd4"
+      "sha256": "ebb8f626ee8cc817590da39b4b2bd6eaeb4dde4692a15b05ccb00faacd21a358"
     },
     {
       "path": "tools/AppleEverestBuilder/StaticSemanticLowering.cs",
@@ -23717,7 +23717,7 @@
     },
     {
       "path": "apple-everest/runtime/AppleEverestCollabRuntime.cs",
-      "sha256": "856be89b0ad083eccc289a14ffec7922913619141778a1ca972384fb12bec0db"
+      "sha256": "b48450b3412c491ac747f0693f22f53ba06977c8479d4d6bd36229a546a69c64"
     },
     {
       "path": "apple-everest/runtime/AppleEverestCollabSession.cs",

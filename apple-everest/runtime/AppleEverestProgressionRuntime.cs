@@ -74,6 +74,11 @@ internal static class AppleEverestProgressionRuntime
             };
             AreaData.Areas.Add(area);
             mode.MapData = new MapData(new AreaKey(id));
+            // CollabUtils2's MapData.Load hook adds its golden subclasses to
+            // this list for the chapter card and journal's collected badges.
+            foreach (EntityData berry in mode.MapData.Levels.SelectMany(room => room.Entities)
+                         .Where(entity => entity.Name is "CollabUtils2/SilverBerry" or "CollabUtils2/RainbowBerry"))
+                if (!mode.MapData.Goldenberries.Contains(berry)) mode.MapData.Goldenberries.Add(berry);
             // Pinned Celeste's MapData loader only classifies vanilla-named
             // strawberries. Static helper berries are lowered to the same
             // runtime collectible but retain their authored map entity name,
@@ -289,17 +294,17 @@ internal static class AppleEverestProgressionRuntime
 
     internal static int TotalStrawberries(string levelSet, SaveData save) => Areas(levelSet, save).Sum(value => value.TotalStrawberries);
 
-    // Everest special berries retain normal durable EntityIDs but are
-    // registered as untracked collectibles and therefore do not increase the
-    // authored ordinary-berry count. Resolve the distinction from the closed
-    // MapData graph; no runtime helper metadata or dynamic discovery is involved.
-    internal static bool CountsAsOrdinaryStrawberry(AreaKey area, EntityID id)
+    // Untracked special berries do not increase the map's possible ordinary
+    // total, but collection still increases SaveData's collected total. This
+    // is why the source can display 1/0 or 2/1 after a silver completion.
+    internal static bool CountsAsCollectedStrawberry(AreaKey area, EntityID id)
     {
         if (!IsCustom(area)) return true;
         MapData map = AreaData.Get(area)?.Mode[(int)area.Mode]?.MapData;
         LevelData room = map?.Levels?.FirstOrDefault(value => value.Name == id.Level);
         EntityData entity = room?.Entities?.FirstOrDefault(value => value.ID == id.ID);
-        return entity?.Name is "strawberry" or "LunaticHelper/StrawberryWithReturn";
+        return entity?.Name is "strawberry" or "LunaticHelper/StrawberryWithReturn" or
+            "CollabUtils2/SilverBerry" or "CollabUtils2/RainbowBerry" or "CollabUtils2/SpeedBerry";
     }
     internal static int TotalHearts(string levelSet, SaveData save) => Areas(levelSet, save).Sum(value => value.Modes.Count(mode => mode?.HeartGem == true));
     internal static bool Completed(AreaKey area, SaveData save)

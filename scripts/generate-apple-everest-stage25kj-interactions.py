@@ -48,7 +48,7 @@ def main():
   tree=ET.Element('Map');levels=ET.SubElement(tree,'levels');ET.SubElement(tree,'Filler')
   style=ET.SubElement(tree,'Style',{'color':'172532'});ET.SubElement(style,'Backgrounds');ET.SubElement(style,'Foregrounds')
   level,entities,triggers=c.room(levels,'canary',width,height)
-  ET.SubElement(ET.SubElement(tree,'meta',{'IntroType':'None',
+  ET.SubElement(ET.SubElement(tree,'meta',{'IntroType':'None','Icon':'areas/0',
    'ForegroundTiles':'Graphics/SJ2021xmls/BeginnerLobby/ForegroundTiles.xml',
    'AnimatedTiles':'Graphics/SJ2021xmls/BeginnerLobby/AnimatedTiles.xml',
    'Sprites':'Graphics/SJ2021xmls/BeginnerLobby/Sprites.xml'}),'mode',{'StartLevel':'canary','Inventory':'Default'})
