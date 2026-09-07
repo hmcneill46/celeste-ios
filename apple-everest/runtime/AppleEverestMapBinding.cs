@@ -20,6 +20,11 @@ internal sealed class AppleEverestMapBinding
         foreach (var map in GeneratedAppleEverestMapBindings.Maps) if (map.Sid == sid) return map;
         return null;
     }
+    // The isolated debug route temporarily mounts a selected map in Area 0.
+    // Its active ModeData.Path still identifies the actual content. Never use
+    // that temporary area number as the identity of graphics or module rules.
+    internal static AppleEverestMapBinding ForSession(Session session) =>
+        Find(session?.MapData?.ModeData?.Path);
     // Pure generated lookup is available before AreaData constructs MapData.
     internal static bool HeaderMatches(string sid, string label)
     {

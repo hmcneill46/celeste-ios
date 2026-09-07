@@ -4,7 +4,7 @@
   "status": "HOST_PREFLIGHT_PASS_PHYSICAL_PENDING",
   "startSha": "e69bfd6eeba3d36a5d745c24b3bc0f2f3f4ee92f",
   "branch": "feature/apple-everest-first-sj-slice-outcome",
-  "sharedClosureSha256": "03d5be105ed3ca3cb0061ac1abc1054e186b35141032076084c74d7bee949158",
+  "sharedClosureSha256": "8de807cf9a805b769b3cc947251fd6ca264ccf40d8c0a2a59f21e51109223a5b",
   "sjVersion": "1.0.12",
   "sjZipSha256": "4e1a2fc12baa3db27da433b93bf26b59f34b3e6b7f760c41d8d127636d020655",
   "originalMaps": [
@@ -87,7 +87,7 @@
   "developmentIntegrationReady": false,
   "allPlatformReleaseReady": false,
   "boundedFixClassifications": {
-    "AUTO_IMPLEMENT_BOUNDED_COMPATIBILITY": 4,
-    "AUTO_FIX_COMPOSITION": 14
+    "AUTO_IMPLEMENT_BOUNDED_COMPATIBILITY": 5,
+    "AUTO_FIX_COMPOSITION": 15
   }
 }

@@ -6,6 +6,7 @@ from collections import Counter
 import hashlib
 import importlib.util
 import json
+import os
 from pathlib import Path
 import re
 import shutil
@@ -13,6 +14,7 @@ import struct
 import subprocess
 import sys
 import xml.etree.ElementTree as ET
+import zipfile
 
 ROOT=Path(__file__).resolve().parents[1]
 MAPS={
@@ -35,10 +37,47 @@ def check(condition,message):
     if not condition:raise ValueError(message)
 
 
+def prepare_credits_reference(package, probe, markers):
+    # Host-only extraction from the exact original DLL. The compiled reference
+    # keeps the original callback's branches; adapters trap credits/TAS access.
+    check(sha(package)=="4e1a2fc12baa3db27da433b93bf26b59f34b3e6b7f760c41d8d127636d020655","credits reference package differs")
+    with zipfile.ZipFile(package) as archive:
+        dll=archive.read("Code/StrawberryJam2021.dll")
+        dll_hash=hashlib.sha256(dll).hexdigest()
+        check(dll_hash=="8d5b9184204e7e7728965bcf95af5f150f6220dafbfe52fdd6c23e50d47e5258","credits reference DLL differs")
+        resources=[]
+        for row in markers:
+            path="Tutorials/"+row["tutorial"]+".tas"
+            check(path in archive.namelist() and path[:-4]+".bin" not in archive.namelist(),"original credits marker is not a TAS-only record")
+            resources.append({"path":path,"sha256":hashlib.sha256(archive.read(path)).hexdigest()})
+    (probe/"PinnedRoot.dll").write_bytes(dll)
+    result=subprocess.run(["dotnet","tool","run","ilspycmd","--","-t","Celeste.Mod.StrawberryJam2021.Cutscenes.CS_Credits",str(probe/"PinnedRoot.dll")],cwd=ROOT,capture_output=True,text=True)
+    check(result.returncode==0,"pinned credits reference decompilation failed: "+result.stderr[-1000:])
+    source=result.stdout
+    table=source.split("public static readonly Dictionary<string, string> HeartsidesToLobbies",1)[1].split("\n\tprivate static ILHook",1)[0]
+    table="public static readonly Dictionary<string, string> HeartsidesToLobbies"+table
+    callback="private static bool Level_OnLoadEntity"+source.split("private static bool Level_OnLoadEntity",1)[1].split("\n\tprivate static void AreaCompleteUpdateHook",1)[0]
+    original_hash=hashlib.sha256(callback.encode()).hexdigest()
+    # ILSpy 8 emits address casts for the desktop value-type ABI. Normalize
+    # only those casts for the host adapters; do not rewrite control flow.
+    replacements={"private static bool Level_OnLoadEntity":"internal static bool Level_OnLoadEntity",
+                  "((AreaKey)(ref level.Session.Area)).SID":"level.Session.Area.SID",
+                  "((object)(EntityID)(ref val))":"((object)val)"}
+    for before,after in replacements.items():
+        check(callback.count(before)==1,"pinned callback ABI changed: "+before)
+        callback=callback.replace(before,after)
+    (probe/"PinnedCreditsReference.cs").write_text("using System; using System.Collections.Generic; using System.Linq; using Celeste; using Monocle; using Microsoft.Xna.Framework;\nnamespace PinnedReference;\ninternal class CS_Credits {\n"+table+
+        "private readonly SortedDictionary<string, Vector2> playbacks = new(StringComparer.OrdinalIgnoreCase);\n"+callback+"}\n")
+    return {"authority":"EXACT_PINNED_ROOT_CALLBACK_NORMAL_PLAY_BRANCH","sourceDllSha256":dll_hash,
+            "originalDecompiledCallbackSha256":original_hash,"hostCallbackSha256":sha(probe/"PinnedCreditsReference.cs"),
+            "normalizations":replacements,"authoredTasOnlyResources":resources,"creditsExecutionIncluded":False}
+
+
 def main():
     parser=argparse.ArgumentParser(description=__doc__)
     for name in ["closure","runtime","production-preflight","content-plan","output"]:
         parser.add_argument("--"+name,required=True,type=Path)
+    parser.add_argument("--sj-package",type=Path,default=Path(os.environ.get("APPLE_EVEREST_SJ_SOURCE_PACKAGE",ROOT/".build/apple-everest/stage25kl/packages/StrawberryJam2021.zip")))
     args=parser.parse_args()
     closure=args.closure.resolve();runtime=args.runtime.resolve();output=args.output.resolve()
     output.mkdir(parents=True,exist_ok=True)
@@ -84,6 +123,14 @@ def main():
         map_reports.append({"sid":sid,"sha256":digest,"sourcePackageLabel":label,"rootBytes":root_bytes,
                             "appendixBytes":file.stat().st_size-root_bytes,"appendixSha256":appendix,"terrainSeed":bindings[sid]["TerrainSeed"]})
     map_evidence=output/"original-map-trees.json";map_evidence.write_text(json.dumps(trees,ensure_ascii=False)+"\n")
+    credit_markers=[]
+    for path,tree in trees.items():
+        for parent,node in compiler.walk(tree["tree"]):
+            check(node["name"] not in ("SJ2021/CreditsTalker","SJ2021/Credits"),"credits cutscene entered selected normal-play scope")
+            if node["name"]=="playbackTutorial":
+                check(path==next(iter(MAPS)),"ordinary mod playback requires separate recording closure")
+                credit_markers.append({"id":node["attributes"]["id"],"tutorial":node["attributes"]["tutorial"]})
+    check(len(credit_markers)==10,"original credits marker census differs")
 
     atlas_keys={};atlas_metadata={}
     for name in ["Gameplay","Gui","Misc","ColorGrades"]:
@@ -302,6 +349,7 @@ def main():
     for filename,repo_path in {
         "AppleEverestMapBinding.cs":"apple-everest/runtime/AppleEverestMapBinding.cs",
         "AppleEverestSelectedCanaryAssets.cs":"apple-everest/runtime/semantics/AppleEverestSelectedCanaryAssets.cs",
+        "AppleEverestStrawberryJamLobbyLoading.cs":"apple-everest/runtime/semantics/AppleEverestStrawberryJamLobbyLoading.cs",
         "AppleEverestAnimatedParallax.cs":"apple-everest/runtime/semantics/AppleEverestAnimatedParallax.cs"}.items():
         check(sha(runtime_static/filename)==sha(ROOT/repo_path),"actual runtime source differs: "+filename)
         shutil.copyfile(runtime_static/filename,probe/filename);source_hashes[repo_path]=sha(ROOT/repo_path)
@@ -312,6 +360,16 @@ def main():
     check(applied_static.count(accepted_sprite_hook)==1 and applied_static.replace(accepted_sprite_hook,"")==static_source.read_text(),
           "actual texture observation source differs beyond accepted Xaphan transform")
     source_hashes[static_source.relative_to(ROOT).as_posix()]=sha(static_source)
+    root_source=ROOT/"apple-everest/runtime/semantics/AppleEverestStrawberryJamState.cs"
+    check(sha(root_source)==sha(runtime_static/root_source.name),"actual root lifecycle source differs")
+    root_text=root_source.read_text()
+    check("AppleEverestStrawberryJamLobbyLoading.Load();" in root_text and "AppleEverestStrawberryJamLobbyLoading.Unload();" in root_text,
+          "root credits marker callback is not installed and removed by the actual module")
+    source_hashes[root_source.relative_to(ROOT).as_posix()]=sha(root_source)
+    check("Everest.Events.Level.LoadEntity(level, levelData, offset, entityData)" in (runtime/"Celeste/Level.cs").read_text(),"actual entity interception consumer missing")
+    check("dialogMapSid = AppleEverestMapBinding.ForSession(session)?.Sid" in applied_static,
+          "debug route loses selected-map dialog scope")
+    credits_reference=prepare_credits_reference(args.sj_package.resolve(),probe,credit_markers)
     observer=static_source.read_text().split("public static void ObserveTextureUsage(",1)[1].split("private static void MountStaticModContent",1)[0]
     observer=re.sub(r"//[^\n]*","",observer)
     check("var backing = texture.Texture" in observer and "backing == null" in observer and ".Texture_Safe" not in observer and "EnsureLoaded(" not in observer and
@@ -323,7 +381,7 @@ def main():
     shutil.copyfile(ROOT/".build/celeste-ios/current/managed/Celeste/AnimatedTilesBank.cs",probe/"AnimatedTilesBank.cs")
     for filename in ["Stubs","Program"]:shutil.copyfile(ROOT/("tools/AppleEverestBuilder/tests/CompositionRuntime"+filename+".cs.txt"),probe/(filename+".cs"))
     (probe/"Probe.csproj").write_text('<Project Sdk="Microsoft.NET.Sdk"><PropertyGroup><OutputType>Exe</OutputType><TargetFramework>net10.0</TargetFramework><ImplicitUsings>enable</ImplicitUsings><Nullable>disable</Nullable></PropertyGroup></Project>\n')
-    (probe/"request.json").write_text(json.dumps({"contentRoot":str(content),"frames":frame_counts,"destinations":[d["sid"] for d in destinations],"parallaxes":parallaxes,
+    (probe/"request.json").write_text(json.dumps({"contentRoot":str(content),"frames":frame_counts,"destinations":[d["sid"] for d in destinations],"parallaxes":parallaxes,"creditMarkers":credit_markers,
         "originalAnimationCount":len(animations[graphics+"AnimatedTiles.xml"]),"vanillaForeground":str(canonical/"Graphics/ForegroundTiles.xml"),"vanillaBackground":str(canonical/"Graphics/BackgroundTiles.xml")}))
     with (probe/"run.log").open("w") as log:
         run=subprocess.run(["dotnet","run","--project",str(probe/"Probe.csproj"),"-c","Release","--",str(probe/"request.json"),str(output/"runtime-composition.json")],cwd=ROOT,stdout=log,stderr=subprocess.STDOUT)
@@ -354,6 +412,7 @@ def main():
                      "terrain":terrain_reports,"usedTerrain":used_terrain,"decalOccurrences":decal_occurrences,"parallaxes":parallaxes,"destinations":destinations,
                      "mapSprites":sprite_reports,"collabManifestSha256":sha(closure/"collab-manifest.txt"),"progressionManifestSha256":sha(closure/"levelset-progression-manifest.txt"),
                      "rejectedCompositionControls":negative_controls,
+                     "lobbyCreditMarkers":credit_markers,"creditsReference":credits_reference,
                      "textureObservation":{"checkpoints":["content-ready","level-loaded"],"scope":"static atlas mounts",
                                            "readsBackingFieldsWithoutDecode":True,"rgbaBytesAreEstimate":True,"managedLiveBytesAreNotProcessResidentBytes":True},
                      "requiredCustomAudio":sorted(custom_required),"atlasMetadataSha256":atlas_metadata,"runtimeSourceSha256":source_hashes,

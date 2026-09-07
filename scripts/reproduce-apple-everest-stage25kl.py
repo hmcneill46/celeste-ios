@@ -52,6 +52,7 @@ def main():
             run(runner+['inspect-compiled-factories','--assembly',assemblies[0],'--manifest',AE/'selected-factory-type-closure-stage25kh.json',
                 '--authored-profiles',current/'compiled-canary-profiles.json','--output',current/'compiled-canary-guards.json'])
             run(['python3',ROOT/'scripts/verify-apple-everest-stage25kl-composition.py','--closure',closure,'--runtime',product/'preflight-runtime',
+                '--sj-package',args.package_root.resolve()/'StrawberryJam2021.zip',
                 '--production-preflight',current/'production-preflight.json','--content-plan',plan,'--output',current/'real-composition'])
         manifest=read(closure/'compatibility-manifest.json');production=read(current/'production-preflight.json');ready=read(current/'real-composition/readiness.json')
         if manifest['sharedClosureSha256']!=read(product/'shared-closure/compatibility-manifest.json')['sharedClosureSha256']:

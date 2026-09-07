@@ -172,7 +172,11 @@ def main():
     cells={(row['x'],row['y']):row for row in terrain['realCells']}
     check(cells[(446,263)]['apple']['Textures']==['tilesets/SJ2021/mosscairn/grayExtended#5,14'] and
           cells[(448,263)]['apple']['Textures']==['tilesets/SJ2021/mosscairn/grayExtended#10,3'],'counterexample was lost')
-    check(runtime['status']=='PASS' and runtime['assertions']>=75 and runtime['graphicsCycles']==3,'actual graphics/animation lifecycle proof incomplete')
+    check(runtime['status']=='PASS' and runtime['assertions']>=131 and runtime['graphicsCycles']==3,'actual graphics/animation/debug lifecycle proof incomplete')
+    check(len(runtime.get('creditMarkers',[]))==10 and all(row['normal']==row['debug']=='CONSUMED_MATCHES_PINNED_ROOT'
+          for row in runtime['creditMarkers']),'actual lobby marker interception proof incomplete')
+    check(ready['gateD'].get('creditsReference',{}).get('sourceDllSha256')=='8d5b9184204e7e7728965bcf95af5f150f6220dafbfe52fdd6c23e50d47e5258',
+          'lobby loading proof lacks exact original root reference')
     check(sha(composition/'autotiler-conformance.json')==ready['gateD']['autotilerConformanceSha256'] and
           sha(composition/'runtime-composition.json')==ready['gateD']['runtimeProbeSha256'],'composition evidence changed')
     ledger=read(AE/'sj-bounded-fixes-stage25kl.json')
@@ -195,7 +199,9 @@ def main():
             'developmentIntegrationReady':False,'allPlatformReleaseReady':False,'boundedFixClassifications':dict(classes)})
         physical=AE/'sj-beginner-physical-stage25kl.json'
         if not physical.exists():write(physical,{'schemaVersion':1,'stage':'25K-L','status':'PENDING_EXACT_FINAL_PRODUCTS','sharedClosureSha256':digest,
-            'intendedVersion':'0.1.1','intendedBuild':'42',**{platform:{'status':'PENDING','ipaSha256':None,'checks':{name:'PENDING' for name in names}} for platform,names in PHYSICAL.items()},
+            'intendedVersion':ET.parse(ROOT/'modern-ios/IOSPortVersion.props').findtext('.//IOSPortSemanticVersion'),
+            'intendedBuild':ET.parse(ROOT/'modern-ios/IOSPortVersion.props').findtext('.//IOSPortBuildNumber'),
+            **{platform:{'status':'PENDING','ipaSha256':None,'checks':{name:'PENDING' for name in names}} for platform,names in PHYSICAL.items()},
             'ipad':{'status':DEFERRED},'historicalAllThreeDeviceBaseline':'Stage25K-B build35','developmentIntegrationReady':False,'allPlatformReleaseReady':False})
     if args.reproduction_root:
         reproduction=read(args.reproduction_root/'reproduction.json')

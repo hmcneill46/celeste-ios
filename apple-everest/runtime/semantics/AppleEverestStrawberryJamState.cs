@@ -62,10 +62,14 @@ internal sealed class AppleEverestStrawberryJamModule : EverestModule
     public AppleEverestStrawberryJamModule() => Instance = this;
     internal static bool IsSliceMap(Level level)
     {
-        string sid = level == null ? null : AppleEverestProgressionRuntime.Sid(level.Session.Area);
+        string sid = AppleEverestMapBinding.ForSession(level?.Session)?.Sid;
         return sid is "StrawberryJam2021/0-Lobbies/1-Beginner" or "StrawberryJam2021/1-Beginner/Bing_Over_Google";
     }
-    public override void Load() => LifecycleState = Math.Max(LifecycleState, 1);
+    public override void Load()
+    {
+        AppleEverestStrawberryJamLobbyLoading.Load();
+        LifecycleState = Math.Max(LifecycleState, 1);
+    }
     public override void Initialize() => LifecycleState = Math.Max(LifecycleState, 2);
     public override void LoadContent(bool firstLoad)
     {
@@ -73,7 +77,11 @@ internal sealed class AppleEverestStrawberryJamModule : EverestModule
             "AppleEverest/Mods/StrawberryJam2021/Graphics/StrawberryJam2021/CustomEntitySprites.xml");
         LifecycleState = Math.Max(LifecycleState, 3);
     }
-    public override void Unload() => LifecycleState = 0;
+    public override void Unload()
+    {
+        AppleEverestStrawberryJamLobbyLoading.Unload();
+        LifecycleState = 0;
+    }
 }
 
 internal static class AppleEverestStrawberryJamModuleDurability

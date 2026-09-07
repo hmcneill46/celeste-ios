@@ -45,4 +45,16 @@ namespace Celeste.Mod
         Func<EverestModuleSession, byte[]>? SerializeSession,
         Func<byte[], int, EverestModuleSession>? DeserializeSession);
     internal static class AppleEverestProgressionRuntime { internal static string Sid(object area) => (string)area; }
+    // Graphics identity and entity events are executed by CompositionRuntime;
+    // the codec fixture only supplies the state module's referenced ABI.
+    internal sealed record AppleEverestMapBinding(string Sid)
+    {
+        internal static AppleEverestMapBinding? ForSession(Celeste.Session? session) =>
+            session == null ? null : new((string)session.Area);
+    }
+    internal static class AppleEverestStrawberryJamLobbyLoading
+    {
+        internal static void Load() { }
+        internal static void Unload() { }
+    }
 }

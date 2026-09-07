@@ -1,10 +1,17 @@
 # Stage 25K-L device checks
 
 Status: host gates pass; the new device products and physical checks are pending.
-The intended next version is **0.1.1 (42)**. Confirm the version and the supplied
+The intended next version is **0.1.1 (43)**. Confirm the version and the supplied
 product identity before testing. Build 41 passes belong to K-J and do not carry
 over. Run this checklist separately on iPhone and Apple TV; iPad is deliberately
 `IPADOS_PHYSICAL_DEFERRED_LEGACY_COMPATIBILITY_POLICY`.
+
+Build 42 failed at lobby loading on iPhone. First confirm build 43 reaches the
+menu and opens the normal lobby route below. Also retry **Play Static Mod Map
+(Debug): 1-Beginner**: it should load with the same custom terrain and sprites.
+Exit debug mode before running the persistent progression checklist. The ten
+credits playback markers do not appear as tutorial ghosts during normal lobby
+play, matching the original desktop behavior.
 
 ## Reference and expected differences
 

@@ -1,9 +1,15 @@
 # Stage 25K-L — first unchanged SJ slice outcome
 
-**HOST_PREFLIGHT_PASS_PHYSICAL_PENDING.** The four host gates pass. No K-L
-signed product, physical iPhone/tvOS PASS, integration recommendation or final
-GREEN is claimed by this tracked source report. No major architecture stop has
+**HOST_PREFLIGHT_PASS_PHYSICAL_PENDING.** The four host gates pass. No accepted K-L
+physical iPhone/tvOS PASS, integration recommendation or final GREEN is claimed
+by this tracked source report. No major architecture stop has
 been found; the outcome-first work continues through bounded issues.
+
+Build 42 was signed and installed on iPhone, but normal and debug lobby entry
+failed. The replacement build 43 carries the two fixes below; prior physical
+results do not transfer. The first crash originated in missing root entity
+interception, with a secondary Metal assertion during teardown. The debug
+freeze originated in a missing background tileset binding.
 
 ## Frozen source and acceptance model
 
@@ -69,7 +75,7 @@ reject final product acceptance.
 
 `READY_FOR_REAL_SJ_PRODUCT_BUILD` is closure-hash bound and precedes AOT. Fresh
 production preflight compiles six DLLs and compares all implementation bytes
-(except compiler timestamp/MVID). The latest runtime compile has 348 warnings,
+(except compiler timestamp/MVID). The latest runtime compile has 318 warnings,
 zero errors. All 73 actual canary selectors/guards accept 312 owned occurrences
 and reject unsupported profiles.
 
@@ -106,15 +112,18 @@ entity-tile or Fancy G sound consumer. Lobby's92 background G cells only render.
 The fixture now uses G=0 and does not claim unrelated global sound-table parity.
 Exact GPU visual parity still needs the physical reference comparison.
 
-Actual runtime composition checks 75 assertions and three graphics restoration
-cycles. Four resource omissions/unsupported references reject. The report
-rehashes the 154-file generated managed tree and full content tree, along with
+Actual runtime composition checks 131 assertions and three graphics restoration
+cycles, including the debug route. All ten original credit markers match the
+original root DLL callback on normal and debug launches. Load/reload/unload,
+missing callback and unsupported credits context checks are included. Four
+resource omissions/unsupported references reject. The report
+rehashes the 155-file generated managed tree and full content tree, along with
 Collab/progression manifests, before accepting retained proof.
 
 Current shared closure:
-`03d5be105ed3ca3cb0061ac1abc1054e186b35141032076084c74d7bee949158`.
+`8de807cf9a805b769b3cc947251fd6ca264ccf40d8c0a2a59f21e51109223a5b`.
 Managed logical SHA256:
-`f5cf30e9830ede429eac2011e73e0157f357b674d49d1f7b2a1a54a6896dc92e`.
+`630ca979b1a53d71f9157e863bec530ff0459a66a95a2cd6791d79dd4b08fb0f`.
 Content logical SHA256:
 `e249f99a303c3579bf2fc9a86143c7ea59d88a3270aa038d1099426d8b9ca8a9`.
 Accepted registry remains
@@ -126,8 +135,8 @@ HookGen 205 / API 30 / frozen IL 17 (5 DJ + 12 Sideways) remain unchanged.
 Every issue has one classification, reason, implementation, tests, rejection
 rule, regression scope and closure effect in the
 [complete ledger](../../../apple-everest/sj-bounded-fixes-stage25kl.json).
-No STOP_MAJOR_ARCHITECTURE has been found. Eighteen issues: 14 composition fixes
-and 4 bounded mechanisms. Actual signed-product tests remain pending where noted.
+No STOP_MAJOR_ARCHITECTURE has been found. Twenty issues: 15 composition fixes
+and 5 bounded mechanisms. Actual signed-product tests remain pending where noted.
 
 | ID | Classification | Resolution |
 | --- | --- | --- |
@@ -149,6 +158,8 @@ and 4 bounded mechanisms. Actual signed-product tests remain pending where noted
 | KL16 | AUTO_FIX_COMPOSITION | Observe mounted/decoded textures through backing fields at content-ready and level-loaded without forcing decode; report RGBA estimate and managed live bytes. |
 | KL17 | AUTO_FIX_COMPOSITION | Hash complete relative POSIX paths in canonical string order; fix false fresh-clone content mismatch without changing inputs or expected identities. |
 | KL18 | AUTO_FIX_COMPOSITION | Acquire the exact pinned Everest source before content-plan generation so a fresh checkout can validate the required core fallback asset. |
+| KL19 | AUTO_IMPLEMENT_BOUNDED_COMPATIBILITY | Restore the original root callback's normal-play handling of all ten TAS-only credits markers, with pinned callback comparison and lifecycle/omission controls. |
+| KL20 | AUTO_FIX_COMPOSITION | Resolve mounted map identity for debug graphics, sprites, dialog and root rules; exercise custom +/J definitions and restoration. |
 
 ## Real flow, audio and persistence
 
@@ -180,7 +191,7 @@ are pending exact device products.
 
 ## Products, regression and reproduction boundary
 
-Canonical next version: 0.1.1 build 42. iOS must be arm64, [1,2], iOS 15, native iPad
+Canonical next version: 0.1.1 build 43. iOS must be arm64, [1,2], iOS 15, native iPad
 presentation metadata;tvOS must be arm64, [3], tvOS 16. Both require Release,
 full trim/full AOT, UseInterpreter=false, no JIT, signed native provenance and no
 forbidden device surfaces. No K-L IPA size/hash or physical PASS is invented.
@@ -478,11 +489,11 @@ boundary; it cannot silently convert pending checks to PASS.
 
 115. **Must be NO.** Confirmed NO; no quality reduction for deferred legacy iPad.
 
-116. **What bounded issues beyond autotiling were found?** Three additional bounded mechanisms and fourteen composition/evidence fixes; see all 18 ledger entries including autotiling.
+116. **What bounded issues beyond autotiling were found?** Four additional bounded mechanisms and fifteen composition/evidence fixes; see all 20 ledger entries including autotiling.
 
-117. **How many AUTO_FIX_COMPOSITION?** 14.
+117. **How many AUTO_FIX_COMPOSITION?** 15.
 
-118. **How many AUTO_IMPLEMENT_BOUNDED_COMPATIBILITY?** 4, including the initial autotiler mechanism.
+118. **How many AUTO_IMPLEMENT_BOUNDED_COMPATIBILITY?** 5, including the initial autotiler mechanism.
 
 119. **Any STOP_MAJOR_ARCHITECTURE?** No.
 
@@ -492,7 +503,7 @@ boundary; it cannot silently convert pending checks to PASS.
 
 122. **Three closures identical?** Pending three fresh final-F closures and compiler/gate runs.
 
-123. **Shared closure SHA?** Current shared closure: 03d5be105ed3ca3cb0061ac1abc1054e186b35141032076084c74d7bee949158; final-F reproduction must match.
+123. **Shared closure SHA?** Current shared closure: 8de807cf9a805b769b3cc947251fd6ca264ccf40d8c0a2a59f21e51109223a5b; final-F reproduction must match.
 
 124. **iPhone exact-final physical PASS?** Pending; no earlier iPhone pass transferred.
 

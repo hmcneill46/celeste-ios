@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "stage": "25K-L",
-  "sharedClosureSha256": "03d5be105ed3ca3cb0061ac1abc1054e186b35141032076084c74d7bee949158",
+  "sharedClosureSha256": "8de807cf9a805b769b3cc947251fd6ca264ccf40d8c0a2a59f21e51109223a5b",
   "status": "HOST_PASS",
   "composition": {
     "blocked": 0,
@@ -402,6 +402,102 @@
       "MISSING_TEMPLATE_BECOMES_VISIBLE",
       "UNREVIEWED_MISSING_TEMPLATE"
     ],
+    "lobbyCreditMarkers": [
+      {
+        "id": 644,
+        "tutorial": "SJ2021/Credits/1-Beginner/4-WaterTunnel"
+      },
+      {
+        "id": 691,
+        "tutorial": "SJ2021/Credits/1-Beginner/8-LeftSand"
+      },
+      {
+        "id": 912,
+        "tutorial": "SJ2021/Credits/1-Beginner/2-Bamboo"
+      },
+      {
+        "id": 952,
+        "tutorial": "SJ2021/Credits/1-Beginner/6-Bubbles"
+      },
+      {
+        "id": 1232,
+        "tutorial": "SJ2021/Credits/1-Beginner/3-Springs"
+      },
+      {
+        "id": 1242,
+        "tutorial": "SJ2021/Credits/1-Beginner/5-Crab"
+      },
+      {
+        "id": 1377,
+        "tutorial": "SJ2021/Credits/1-Beginner/1-Heartgate"
+      },
+      {
+        "id": 443,
+        "tutorial": "SJ2021/Credits/1-Beginner/7-Falls"
+      },
+      {
+        "id": 1128,
+        "tutorial": "SJ2021/Credits/1-Beginner/3-Docks"
+      },
+      {
+        "id": 1379,
+        "tutorial": "SJ2021/Credits/1-Beginner/9-Windmills"
+      }
+    ],
+    "creditsReference": {
+      "authority": "EXACT_PINNED_ROOT_CALLBACK_NORMAL_PLAY_BRANCH",
+      "sourceDllSha256": "8d5b9184204e7e7728965bcf95af5f150f6220dafbfe52fdd6c23e50d47e5258",
+      "originalDecompiledCallbackSha256": "d6278059d57fc960791f57b7dc6a5194132317598b306445c2e3b738fe288d93",
+      "hostCallbackSha256": "f790600ccec687994452a504befe10f940336d7242308835f5eb92377a74ad8b",
+      "normalizations": {
+        "private static bool Level_OnLoadEntity": "internal static bool Level_OnLoadEntity",
+        "((AreaKey)(ref level.Session.Area)).SID": "level.Session.Area.SID",
+        "((object)(EntityID)(ref val))": "((object)val)"
+      },
+      "authoredTasOnlyResources": [
+        {
+          "path": "Tutorials/SJ2021/Credits/1-Beginner/4-WaterTunnel.tas",
+          "sha256": "1b3fee51fd8a9f957f59ee15b9f95ce1b43c8a3ec2c2896d2ed8a97e63887d84"
+        },
+        {
+          "path": "Tutorials/SJ2021/Credits/1-Beginner/8-LeftSand.tas",
+          "sha256": "df5c572808559ee855e07c770ea7773a82f2813f2e5fed5c1d7a405d892a3ac4"
+        },
+        {
+          "path": "Tutorials/SJ2021/Credits/1-Beginner/2-Bamboo.tas",
+          "sha256": "f3d6e59413637233c028a9f8d56f9e16e34025c3d72542df482936a1145d99f9"
+        },
+        {
+          "path": "Tutorials/SJ2021/Credits/1-Beginner/6-Bubbles.tas",
+          "sha256": "f7b5a236587d252a8356df5b86d3002b74dceeb3e374994725ca2e1c4f51e20d"
+        },
+        {
+          "path": "Tutorials/SJ2021/Credits/1-Beginner/3-Springs.tas",
+          "sha256": "fc6ec3eb5f5075b6ee07c4e76cd3270af2e4c6b79a3f9b16c47c2cc734f9f275"
+        },
+        {
+          "path": "Tutorials/SJ2021/Credits/1-Beginner/5-Crab.tas",
+          "sha256": "c26b189e8e91d31712961fce534c8482853766d188059e5a9e179b509bf8ae15"
+        },
+        {
+          "path": "Tutorials/SJ2021/Credits/1-Beginner/1-Heartgate.tas",
+          "sha256": "217c6c95dd565b63ec7b324948ec59b46293f4e43086401c95750b8398a21647"
+        },
+        {
+          "path": "Tutorials/SJ2021/Credits/1-Beginner/7-Falls.tas",
+          "sha256": "2abdaa5467a5e7d2898c921067998e394aa17bf04a456d5434e3ba3c172d3d0b"
+        },
+        {
+          "path": "Tutorials/SJ2021/Credits/1-Beginner/3-Docks.tas",
+          "sha256": "a09ead14afcf3447b852a128205487700b7136178abcc581040d2f9c63ae4fc5"
+        },
+        {
+          "path": "Tutorials/SJ2021/Credits/1-Beginner/9-Windmills.tas",
+          "sha256": "612816f2fcee9b3b51e4fbeb965c3bbff0b70b2113229788d6d5c1588dfc16d9"
+        }
+      ],
+      "creditsExecutionIncluded": false
+    },
     "textureObservation": {
       "checkpoints": [
         "content-ready",
@@ -436,17 +532,19 @@
       "ColorGrades/credits": "a73d18c5bfb685551ff94ab5c535c695672d3ad968bc3e9f3aa2302e0e557b43"
     },
     "runtimeSourceSha256": {
-      "apple-everest/runtime/AppleEverestMapBinding.cs": "1d12d7ce3d5b04a28e45aa6db2d3a96c51668646b835fa4c538a9cb882698a91",
-      "apple-everest/runtime/semantics/AppleEverestSelectedCanaryAssets.cs": "10dbc92660d050ec66b51177f6379607fd3e85caddca73a3efd74c5bcc4904db",
+      "apple-everest/runtime/AppleEverestMapBinding.cs": "dcd5e53bd04f9dbf7bdfecc1634fbb9fd7cace042c31141d083f7ead109a746b",
+      "apple-everest/runtime/semantics/AppleEverestSelectedCanaryAssets.cs": "6d19113dde234c5ee2d7b26a5d540d51bd7a1de61a51ac6d9817cab4ab0f5cb2",
+      "apple-everest/runtime/semantics/AppleEverestStrawberryJamLobbyLoading.cs": "82d0027a59e0347ddd1fcfe0ed693c875e55ac1110281a6ac510d9b79a24f04a",
       "apple-everest/runtime/semantics/AppleEverestAnimatedParallax.cs": "f7ff4d3e5ff82127f1800c23984fc173f2a51bc7d7a79fe2a438bb9a13090be8",
-      "apple-everest/runtime/AppleEverestStaticRuntime.cs": "2868f42fa50b4a5ee311b54f4b2ffbc12c08255b4c929056ac6260311cae0744"
+      "apple-everest/runtime/AppleEverestStaticRuntime.cs": "248b9f792317b1828712acb4d2aa48460daada2066d0d529da33e9a8eaf6dbf8",
+      "apple-everest/runtime/semantics/AppleEverestStrawberryJamState.cs": "8cc7f5892ae32f1fa1a2edd61e92bda4387c72102af6a66442a4b50df076eaa8"
     },
-    "runtimeProbeSha256": "b3239f31ce03969418ea8a62ee4ed18414a0bf509fbed783ecb7e3490ae6b92d",
-    "autotilerConformanceSha256": "9a70a9c1a0ef8f78b5857620173c3c521ee1d03e9062879ae3890247d47799e5"
+    "runtimeProbeSha256": "d427351f4945c334c888497f94d6d325d7eb7b30f7981d10f635bcd9cf5b2b5c",
+    "autotilerConformanceSha256": "77dcef1dd84beaf8090a3ca1010ec9644f6e920c277c1309c967cdb8e1fcc089"
   },
   "runtime": {
     "status": "PASS",
-    "assertions": 75,
+    "assertions": 131,
     "graphicsCycles": 3,
     "destinations": [
       {
@@ -552,6 +650,68 @@
         "key": "bgs/MaxHelpingHand/animatedParallax/SJ2021/HankyMueller/tower",
         "frames": 64,
         "fps": 12
+      }
+    ],
+    "creditMarkers": [
+      {
+        "id": 644,
+        "tutorial": "SJ2021/Credits/1-Beginner/4-WaterTunnel",
+        "normal": "CONSUMED_MATCHES_PINNED_ROOT",
+        "debug": "CONSUMED_MATCHES_PINNED_ROOT"
+      },
+      {
+        "id": 691,
+        "tutorial": "SJ2021/Credits/1-Beginner/8-LeftSand",
+        "normal": "CONSUMED_MATCHES_PINNED_ROOT",
+        "debug": "CONSUMED_MATCHES_PINNED_ROOT"
+      },
+      {
+        "id": 912,
+        "tutorial": "SJ2021/Credits/1-Beginner/2-Bamboo",
+        "normal": "CONSUMED_MATCHES_PINNED_ROOT",
+        "debug": "CONSUMED_MATCHES_PINNED_ROOT"
+      },
+      {
+        "id": 952,
+        "tutorial": "SJ2021/Credits/1-Beginner/6-Bubbles",
+        "normal": "CONSUMED_MATCHES_PINNED_ROOT",
+        "debug": "CONSUMED_MATCHES_PINNED_ROOT"
+      },
+      {
+        "id": 1232,
+        "tutorial": "SJ2021/Credits/1-Beginner/3-Springs",
+        "normal": "CONSUMED_MATCHES_PINNED_ROOT",
+        "debug": "CONSUMED_MATCHES_PINNED_ROOT"
+      },
+      {
+        "id": 1242,
+        "tutorial": "SJ2021/Credits/1-Beginner/5-Crab",
+        "normal": "CONSUMED_MATCHES_PINNED_ROOT",
+        "debug": "CONSUMED_MATCHES_PINNED_ROOT"
+      },
+      {
+        "id": 1377,
+        "tutorial": "SJ2021/Credits/1-Beginner/1-Heartgate",
+        "normal": "CONSUMED_MATCHES_PINNED_ROOT",
+        "debug": "CONSUMED_MATCHES_PINNED_ROOT"
+      },
+      {
+        "id": 443,
+        "tutorial": "SJ2021/Credits/1-Beginner/7-Falls",
+        "normal": "CONSUMED_MATCHES_PINNED_ROOT",
+        "debug": "CONSUMED_MATCHES_PINNED_ROOT"
+      },
+      {
+        "id": 1128,
+        "tutorial": "SJ2021/Credits/1-Beginner/3-Docks",
+        "normal": "CONSUMED_MATCHES_PINNED_ROOT",
+        "debug": "CONSUMED_MATCHES_PINNED_ROOT"
+      },
+      {
+        "id": 1379,
+        "tutorial": "SJ2021/Credits/1-Beginner/9-Windmills",
+        "normal": "CONSUMED_MATCHES_PINNED_ROOT",
+        "debug": "CONSUMED_MATCHES_PINNED_ROOT"
       }
     ],
     "originalSeeds": {

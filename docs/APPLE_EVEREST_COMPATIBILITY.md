@@ -27,6 +27,12 @@ atlas paths, graphics lifecycle, source-label/SID bindings, panel destinations,
 progression and audio. All four must emit `READY_FOR_REAL_SJ_PRODUCT_BUILD`
 before AOT. They do not substitute for exact-product physical acceptance.
 
+Build 42 failed on the iPhone when entering this lobby. Build 43 adds the
+original root's normal-play handling of ten credits markers and corrects
+selected graphics/dialog identity in the isolated debug route. The markers
+remain in the unchanged map; they do not create tutorial ghosts during ordinary
+play on the desktop reference. Exact replacement-product testing remains required.
+
 The bounded autotiler supports square 3×3 and 5×5 definitions. The 26 original
 J cells match a mechanically compiled pinned Everest reference; vanilla and
 accepted 3×3 paths retain their existing implementation. New bounded issues

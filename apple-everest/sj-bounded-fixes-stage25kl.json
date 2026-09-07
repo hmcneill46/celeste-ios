@@ -385,6 +385,48 @@
       "regressions": "Warm checkout uses the same idempotent accepted acquisition; no runtime or third-party byte changes.",
       "closureEffect": "Build dependency ordering only; shared runtime/content closure unchanged.",
       "status": "HOST_VERIFIED_FINAL_SOURCE_REPRODUCTION_PENDING"
+    },
+    {
+      "id": "KL19",
+      "discoveryPoint": "iPhone build 42 normal real-lobby launch",
+      "selectedContent": "Ten playbackTutorial markers in the unchanged Beginner lobby; first failure entity 644, SJ2021/Credits/1-Beginner/4-WaterTunnel",
+      "classification": "AUTO_IMPLEMENT_BOUNDED_COMPATIBILITY",
+      "reason": "Vanilla construction tried to read a nonexistent PlaybackData .bin recording. The exact SJ 1.0.12 CS_Credits.Level_OnLoadEntity callback consumes these TAS-only credits markers even when no credits cutscene is pending.",
+      "implementation": "Install the selected normal-lobby branch through the existing typed entity event in the root module Load/Unload lifecycle. Retain all original map bytes. Do not create playback ghosts or execute TAS during ordinary lobby play.",
+      "tests": [
+        "AllTenOriginalMarkersBothLaunchRoutes",
+        "ExactPinnedRootCallbackHostComparison",
+        "OrdinaryTutorialAndNonPlaybackEntityControls",
+        "IdempotentModuleReloadAndUnloadOmissionControl",
+        "UnsupportedCreditsContextRejection",
+        "FreshCompleteProductionCompilerAndFourGates"
+      ],
+      "failClosedRule": "Only the selected Beginner lobby normal-play branch is implemented. Credits entities and new ordinary mod playback consumers reject Gate D; active credits reject at runtime. The heartside remains excluded.",
+      "regressions": "Other entities, vanilla/tutorial canaries, typed event ordering, module state codecs, source map bytes and content plan remain unchanged.",
+      "closureEffect": "One bounded root semantic source, module lifecycle installation and Gate D reference evidence; no new factory, catalog, audio, persistence or runtime discovery surface.",
+      "status": "HOST_VERIFIED_PHYSICAL_PENDING",
+      "plannedTests": "AllTenOriginalMarkersBothLaunchRoutes; ExactPinnedRootCallbackHostComparison; OrdinaryTutorialAndNonPlaybackEntityControls; IdempotentModuleReloadAndUnloadOmissionControl; UnsupportedCreditsContextRejection; FreshCompleteProductionCompilerAndFourGates"
+    },
+    {
+      "id": "KL20",
+      "discoveryPoint": "iPhone build 42 Play Static Mod Map (Debug): 1-Beginner",
+      "selectedContent": "The same lobby mounted temporarily in Area 0; background tile + and foreground J, map sprites and scoped dialog",
+      "classification": "AUTO_FIX_COMPOSITION",
+      "reason": "The isolated debug session used a nonregistered temporary area number to resolve selected graphics, so vanilla background autotiling threw KeyNotFoundException for + on the loading thread.",
+      "implementation": "Resolve generated map bindings from the active Session.MapData.ModeData.Path for graphics, dialog and selected root rules. Keep persistent progression registration and nonpersistent debug save isolation intact.",
+      "tests": [
+        "DebugAreaHasNoProgressionRegistration",
+        "DebugModeResolvesExactLobbyBinding",
+        "CustomBackgroundPlusAndForegroundJDefinitionsBeforeGeneration",
+        "DebugMapSpritesAndDialogSourceConsumer",
+        "ThreeFullGraphicsRestoreCycles",
+        "FreshCompleteProductionCompilerAndFourGates"
+      ],
+      "failClosedRule": "Unknown mounted map paths do not acquire an unrelated selected binding. Excluded destinations still cannot fall back to Area 0. Exact original terrain conformance remains required.",
+      "regressions": "Normal registered launch, canonical/Bing graphics restoration, K-J fixture bank merge, K-H scoped dialog and nonpersistent save isolation.",
+      "closureEffect": "Common map-binding identity helper and existing consumer wiring; no content or canonical terrain matcher changes.",
+      "status": "HOST_VERIFIED_PHYSICAL_PENDING",
+      "plannedTests": "DebugAreaHasNoProgressionRegistration; DebugModeResolvesExactLobbyBinding; CustomBackgroundPlusAndForegroundJDefinitionsBeforeGeneration; DebugMapSpritesAndDialogSourceConsumer; ThreeFullGraphicsRestoreCycles; FreshCompleteProductionCompilerAndFourGates"
     }
   ]
 }

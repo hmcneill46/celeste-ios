@@ -49,6 +49,13 @@ internal static class Program
             Check(GFX.AnimatedTilesBank.Animations.Count==request.GetProperty("originalAnimationCount").GetInt32(),"complete original animation bank");
             Check(AppleEverestStaticRuntime.SelectedMapSpriteBank.Path==lobbyBinding.Sprites,"map sprite override active");
             Check(SurfaceIndex.TileToIndex['J']==8&&SurfaceIndex.TileToIndex['G']==0,"selected sound and accepted baseline sentinel");
+            var debug=new Session(lobby,debug:true);
+            Check(AppleEverestProgressionRuntime.Sid(debug.Area)==null,"debug area is deliberately not a progression registration");
+            Check(ReferenceEquals(AppleEverestMapBinding.ForSession(debug),lobbyBinding),"debug content identity comes from the mounted mode");
+            AppleEverestSelectedCanaryAssets.PrepareLevel(debug);
+            Check(GFX.BGAutotiler.Path==lobbyBinding.BackgroundTiles&&GFX.BGAutotiler.TileIds.Contains('+'),"debug lobby applies the background plus definition before terrain generation");
+            Check(GFX.FGAutotiler.Path==lobbyBinding.ForegroundTiles&&GFX.FGAutotiler.TileIds.Contains('J'),"debug lobby applies the original foreground");
+            Check(AppleEverestStaticRuntime.SelectedMapSpriteBank.Path==lobbyBinding.Sprites,"debug lobby applies map sprites");
             AppleEverestSelectedCanaryAssets.PrepareLevel(new Session(bing));
             Check(ReferenceEquals(GFX.FGAutotiler,fg)&&ReferenceEquals(GFX.BGAutotiler,bg)&&ReferenceEquals(GFX.AnimatedTilesBank,animations),"Bing restores canonical graphics objects");
             Check(AppleEverestStaticRuntime.SelectedMapSpriteBank==null&&Sounds()==sounds,"Bing restores sound table and sprite selection");
@@ -57,6 +64,41 @@ internal static class Program
             Check(ReferenceEquals(GFX.FGAutotiler,fg)&&ReferenceEquals(GFX.BGAutotiler,bg)&&ReferenceEquals(GFX.AnimatedTilesBank,animations)&&Sounds()==sounds,"vanilla restores graphics and sounds");
             cycles++;
         }
+
+        var creditsReports=new List<object>();
+        AppleEverestStrawberryJamLobbyLoading.Load();
+        AppleEverestStrawberryJamLobbyLoading.Load();
+        Check(Everest.Events.Level.HandlerCount==1,"root load/reload installs exactly one credits marker callback");
+        foreach(var row in request.GetProperty("creditMarkers").EnumerateArray())
+        {
+            var data=new EntityData{Name="playbackTutorial",ID=row.GetProperty("id").GetInt32()};
+            data.Values["tutorial"]=row.GetProperty("tutorial").GetString();
+            foreach(bool debug in new[]{false,true})
+            {
+                var actual=new Level{Session=new Session(lobby,debug)};
+                var reference=new Level{Session=new Session(lobby)};
+                bool expected=PinnedReference.CS_Credits.Level_OnLoadEntity(reference,new LevelData(),Vector2.Zero,data);
+                Check(expected&&Everest.Events.Level.LoadEntity(actual,new LevelData(),Vector2.Zero,data)==expected,"exact authored credit marker consumed before PlayerPlayback constructor on both routes");
+            }
+            creditsReports.Add(new {id=data.ID,tutorial=data.Attr("tutorial"),normal="CONSUMED_MATCHES_PINNED_ROOT",debug="CONSUMED_MATCHES_PINNED_ROOT"});
+        }
+        Check(creditsReports.Count==10,"all original Beginner credits markers covered");
+        foreach(string sid in new[]{lobby,bing,"1-ForsakenCity","AppleEverest/Stage25KH"})
+        foreach(string name in new[]{"playbackTutorial","CollabUtils2/MiniHeartDoor","CollabUtils2/RainbowBerry","player"})
+        {
+            var level=new Level{Session=new Session(sid)};var data=new EntityData{Name=name};
+            Check(Everest.Events.Level.LoadEntity(level,new LevelData(),Vector2.Zero,data)==
+                PinnedReference.CS_Credits.Level_OnLoadEntity(level,new LevelData(),Vector2.Zero,data),"non-credits entities and ordinary tutorials retain pinned behavior");
+        }
+        bool creditsRejected=false;
+        try{Everest.Events.Level.LoadEntity(new Level{Session=new Session(lobby),InCredits=true},new LevelData(),Vector2.Zero,new EntityData{Name="playbackTutorial"});}
+        catch(InvalidOperationException){creditsRejected=true;}
+        Check(creditsRejected,"unsupported heartside credits context fails closed");
+        AppleEverestStrawberryJamLobbyLoading.Unload();
+        Check(Everest.Events.Level.HandlerCount==0&&!Everest.Events.Level.LoadEntity(new Level{Session=new Session(lobby)},new LevelData(),Vector2.Zero,new EntityData{Name="playbackTutorial"}),"omitted/unloaded root callback reproduces the unsafe vanilla constructor route");
+        AppleEverestStrawberryJamLobbyLoading.Load();
+        Check(Everest.Events.Level.HandlerCount==1,"callback restores after soft reload");
+        AppleEverestStrawberryJamLobbyLoading.Unload();
 
         var parallaxReports=new List<object>();var scene=new Level();
         foreach(var row in request.GetProperty("parallaxes").EnumerateArray())
@@ -79,7 +121,7 @@ internal static class Program
         bool rejected=false;try{AppleEverestAnimatedParallax.Create(new MTexture("bgs/MaxHelpingHand/animatedParallax/missing00"));}catch(InvalidOperationException){rejected=true;}
         Check(rejected,"missing animated frames fail closed");
         File.WriteAllText(args[1],JsonSerializer.Serialize(new {status="PASS",assertions=checks,graphicsCycles=cycles,destinations=availability,
-            parallaxes=parallaxReports,originalSeeds=new{lobby=3349,bing=4143},
+            parallaxes=parallaxReports,creditMarkers=creditsReports,originalSeeds=new{lobby=3349,bing=4143},
             scope="Actual generated bindings, graphics lifecycle and animated parallax source; graphical resource handles are host adapters. Actual terrain sound/debris semantics verified by independent pinned conformance."},new JsonSerializerOptions{WriteIndented=true})+"\n");
         Console.WriteLine($"PASS: {checks} actual runtime composition assertions; {cycles} complete graphics restoration cycles");
     }

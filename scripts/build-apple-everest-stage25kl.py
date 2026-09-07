@@ -26,6 +26,7 @@ def main():
         elif option in flags:index+=1
         else:parser.error("K-L does not permit input/gate overrides or reuse of an unbound AOT product: "+option)
     env=dict(os.environ,MSBUILDDISABLENODEREUSE="1",DOTNET_CLI_USE_MSBUILD_SERVER="0",UseSharedCompilation="false")
+    env["APPLE_EVEREST_SJ_SOURCE_PACKAGE"]=str((args.package_root/"StrawberryJam2021.zip").resolve())
     # Content selection validates a pinned core asset before the common builder
     # runs. Acquire that same pinned source first, including on a fresh checkout.
     subprocess.run([str(ROOT/"scripts/bootstrap-apple-everest-host.sh")],cwd=ROOT,env=env,check=True)

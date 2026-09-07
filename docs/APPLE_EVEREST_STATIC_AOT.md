@@ -15,6 +15,15 @@ bindings. Unregistered headers keep canonical validation. Excluded destinations
 cannot fall back to vanilla Area 0. Source maps and their appendices are not
 rewritten.
 
+The isolated debug route resolves these bindings from the mounted mode's map
+path, so its temporary area number cannot select vanilla graphics or lose the
+map's dialog scope. SJ's selected normal-lobby entity callback consumes the ten
+authored credits playback markers before vanilla construction, matching the
+exact 1.0.12 root DLL. These are TAS-only credits markers; normal lobby play
+does not import or execute them. The excluded heartside credits are outside
+this bounded profile. Gate D compiles the original callback as a host reference
+and exercises normal/debug interception plus load/unload and omission controls.
+
 `AppleEverestTileMaskRules` validates the complete selected terrain definitions
 at build time. The only supported scan dimensions are square 3×3 and 5×5, with
 at most 25 mask cells. The unchanged canonical parser/matcher handles 3×3;

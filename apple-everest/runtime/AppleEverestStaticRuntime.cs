@@ -724,7 +724,7 @@ public static class AppleEverestStaticRuntime
     private static string dialogMapSid;
 
     internal static void PrepareDialogForMap(Session session) =>
-        dialogMapSid = AppleEverestProgressionRuntime.Sid(session.Area);
+        dialogMapSid = AppleEverestMapBinding.ForSession(session)?.Sid;
 
     internal static string ResolveDialogKey(string key) =>
         AppleEverestDialogFragmentParser.KeyForMap(dialogMapSid, key);

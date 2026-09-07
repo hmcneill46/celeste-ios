@@ -2,9 +2,9 @@
   "schemaVersion": 1,
   "stage": "25K-L",
   "status": "PENDING_EXACT_FINAL_PRODUCTS",
-  "sharedClosureSha256": "03d5be105ed3ca3cb0061ac1abc1054e186b35141032076084c74d7bee949158",
+  "sharedClosureSha256": "8de807cf9a805b769b3cc947251fd6ca264ccf40d8c0a2a59f21e51109223a5b",
   "intendedVersion": "0.1.1",
-  "intendedBuild": "42",
+  "intendedBuild": "43",
   "iphone": {
     "status": "PENDING",
     "ipaSha256": null,
@@ -130,5 +130,6 @@
   "historicalAllThreeDeviceBaseline": "Stage25K-B build35",
   "developmentIntegrationReady": false,
   "allPlatformReleaseReady": false,
-  "acceptancePolicy": "Freeze source F before products; store explicit final exact-F receipt outside tracked source and pass --physical-evidence. Host/source report never grants device PASS."
+  "acceptancePolicy": "Freeze source F before products; store explicit final exact-F receipt outside tracked source and pass --physical-evidence. Host/source report never grants device PASS.",
+  "supersededBuild42": "FAILED_IPHONE_NORMAL_AND_DEBUG_LOBBY_ENTRY"
 }

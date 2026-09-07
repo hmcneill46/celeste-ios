@@ -273,7 +273,7 @@ internal static class StaticSemanticLowering
                 "Graphics/Atlases/Gameplay/tilesets/SJ2021/snas/girdernosnow.png",
                 "Graphics/Atlases/Gameplay/animatedTiles/SJ2021/BeginnerLobby/grass/top_a"],
             StrawberryJamModule(),
-            ["AppleEverestStrawberryJamState.cs", "AppleEverestStrawberryJamEntities.cs",
+            ["AppleEverestStrawberryJamState.cs", "AppleEverestStrawberryJamEntities.cs", "AppleEverestStrawberryJamLobbyLoading.cs",
                 "AppleEverestStrawberryJamRendering.cs", "AppleEverestRootStateCanary.cs", "AppleEverestSelectedCanaryAssets.cs", "AppleEverestAutotiler.cs"])
     ];
 

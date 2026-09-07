@@ -12,11 +12,13 @@ namespace Microsoft.Xna.Framework
         public float X,Y;
         public Vector2(float x,float y){X=x;Y=y;}
         public static Vector2 Zero=>default;
+        public static Vector2 operator +(Vector2 a,Vector2 b)=>new(a.X+b.X,a.Y+b.Y);
     }
 }
 namespace Monocle
 {
-    public class Scene { }
+    public class Scene { public EntityList Entities=new(); }
+    public class EntityList { public List<object> ToAdd=new(); }
     public static class Engine { public static float DeltaTime; }
     public sealed class MTexture { public string AtlasPath; public MTexture(string path){AtlasPath=path;} }
     public sealed class Atlas
@@ -53,12 +55,16 @@ namespace Celeste
     public sealed class Autotiler
     {
         public readonly string Path;
+        public readonly HashSet<char> TileIds=new();
         public static readonly List<string> Constructions=new();
         public Autotiler(string path)
         {
             Path=path;Constructions.Add(path);
             foreach(XmlElement tile in Monocle.Calc.LoadContentXML(path).GetElementsByTagName("Tileset"))
+            {
+                TileIds.Add(tile.GetAttribute("id")[0]);
                 if(tile.HasAttribute("sound"))SurfaceIndex.TileToIndex[tile.GetAttribute("id")[0]]=int.Parse(tile.GetAttribute("sound"));
+            }
         }
     }
     public static class GFX
@@ -68,8 +74,25 @@ namespace Celeste
         public static AnimatedTilesBank AnimatedTilesBank;
     }
     public static class SurfaceIndex {public static Dictionary<char,int> TileToIndex=new();}
-    public sealed class Session {public string Area; public Session(string sid){Area=sid;}}
-    public sealed class Level:Monocle.Scene { }
+    public struct AreaKey {public string SID;public AreaKey(string sid){SID=sid;}}
+    public sealed class ModeProperties {public string Path;}
+    public sealed class MapData {public ModeProperties ModeData;}
+    public sealed class Session
+    {
+        public AreaKey Area;public MapData MapData;public string Level="room";
+        public Session(string sid,bool debug=false){Area=new(debug?"0-Intro":sid);MapData=new(){ModeData=new(){Path=sid}};}
+        public void SetFlag(string name,bool value) { throw new Exception("credits-only reference branch reached"); }
+    }
+    public sealed class Level:Monocle.Scene {public Session Session;public bool InCredits;}
+    public sealed class LevelData { }
+    public sealed class EntityData
+    {
+        public string Name;public int ID;public Microsoft.Xna.Framework.Vector2 Position;
+        public Dictionary<string,string> Values=new();
+        public string Attr(string name,string fallback="")=>Values.GetValueOrDefault(name,fallback);
+    }
+    public struct EntityID {public EntityID(string room,int id) { }}
+    public static class LevelEnter {public static string ErrorMessage;}
     public class Parallax
     {
         public Monocle.MTexture Texture;
@@ -83,5 +106,30 @@ namespace Celeste
 namespace Celeste.Mod
 {
     internal static class AppleEverestStaticRuntime {internal static Monocle.SpriteBank SelectedMapSpriteBank;}
-    internal static class AppleEverestProgressionRuntime {internal static string Sid(string area)=>area;}
+    internal static class AppleEverestProgressionRuntime {internal static string Sid(Celeste.AreaKey area)=>area.SID=="0-Intro"?null:area.SID;}
+    internal static class Everest
+    {
+        internal static class Events
+        {
+            internal static class Level
+            {
+                internal delegate bool LoadEntityHandler(Celeste.Level level,Celeste.LevelData room,Microsoft.Xna.Framework.Vector2 offset,Celeste.EntityData data);
+                internal static event LoadEntityHandler OnLoadEntity;
+                internal static int HandlerCount=>OnLoadEntity?.GetInvocationList().Length??0;
+                internal static bool LoadEntity(Celeste.Level level,Celeste.LevelData room,Microsoft.Xna.Framework.Vector2 offset,Celeste.EntityData data)
+                {
+                    if(OnLoadEntity==null)return false;
+                    foreach(LoadEntityHandler handler in OnLoadEntity.GetInvocationList())if(handler(level,room,offset,data))return true;
+                    return false;
+                }
+            }
+        }
+    }
+}
+
+namespace PinnedReference
+{
+    internal sealed class ModAsset { }
+    internal static class Content {internal static bool TryGet(string path,ref ModAsset asset,bool ignored)=>throw new Exception("TAS must not load during normal lobby play");}
+    internal static class TasHelper {internal static bool Preload(string path)=>throw new Exception("TAS must not run during normal lobby play");}
 }

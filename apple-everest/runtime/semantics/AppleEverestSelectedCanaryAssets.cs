@@ -26,7 +26,7 @@ internal static class AppleEverestSelectedCanaryAssets
             foreach (var entry in originalSounds) SurfaceIndex.TileToIndex.Add(entry.Key, entry.Value);
             active = false;
         }
-        var map = AppleEverestMapBinding.Find(AppleEverestProgressionRuntime.Sid(session.Area));
+        var map = AppleEverestMapBinding.ForSession(session);
         if (map == null || map.ForegroundTiles.Length + map.BackgroundTiles.Length + map.AnimatedTiles.Length + map.Sprites.Length == 0)
             return;
         originalForeground = GFX.FGAutotiler;
