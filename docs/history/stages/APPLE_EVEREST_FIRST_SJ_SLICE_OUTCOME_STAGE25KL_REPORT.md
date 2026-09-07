@@ -566,4 +566,3 @@ boundary; it cannot silently convert pending checks to PASS.
 159. **Is whole Beginner lobby support rational yet?** Not established; audit remaining destinations and mechanics first.
 
 160. **Is full 128-map Strawberry Jam rational yet?** No; no evidence supports expanding to all 128 now.
-
