@@ -1,10 +1,10 @@
 {
   "schemaVersion": 1,
   "stage": "25K-L",
-  "status": "PENDING_EXACT_FINAL_PRODUCTS",
-  "sharedClosureSha256": "ffca0aea178ee8ff2f7ef885e459d9a3b895a63434cb676dfc9edbfb4b201992",
+  "status": "PENDING_EXACT_BUILD45_PRODUCTS",
+  "sharedClosureSha256": "fd9be7456e038f29f8daa05ca56d0e4223326238807d1b7ab06496e2aea9a621",
   "intendedVersion": "0.1.1",
-  "intendedBuild": "44",
+  "intendedBuild": "45",
   "iphone": {
     "status": "PENDING",
     "ipaSha256": null,
@@ -136,5 +136,10 @@
     "iphone": "User confirmed lobby entry/reference-like behavior and Bing entry/gameplay; long title bookmark differed.",
     "fullPhysicalMatrix": "NOT_CLAIMED",
     "replacement44": "Exact replacement-product tests required; no automatic PASS transfer."
+  },
+  "priorBuild44": {
+    "iphone": "User confirmed left title alignment but reported missing right-edge blue coverage.",
+    "fullPhysicalMatrix": "NOT_CLAIMED",
+    "replacement45": "Exact pinned wider core graphic required; no prior PASS transfers."
   }
 }

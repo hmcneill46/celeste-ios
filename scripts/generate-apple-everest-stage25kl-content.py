@@ -18,6 +18,8 @@ MAPS = ("Maps/StrawberryJam2021/0-Lobbies/1-Beginner.bin",
 GRAPH = ROOT / "apple-everest/strawberry-jam-dependency-graph-stage25kc.json"
 FALLBACK_PATH = "Graphics/Atlases/Gameplay/__fallback.png"
 FALLBACK_SHA = "f28617c37d0760b999caed3cde18935841017c29d7dab622fb668c224fca2ca8"
+TITLE_PATH = "Graphics/Atlases/Gui/areaselect/title.png"
+TITLE_SHA = "0839135f2baafbf652d652177e69456c07bc85343a6c93491e4e2a906034518d"
 
 
 def sha(data):
@@ -209,8 +211,11 @@ def generate(package_root):
     excluded = sorted(p for p in inventories[root] if p.startswith("Maps/") and p.endswith(".bin") and p not in MAPS)
     if len(excluded) != 126 or sorted(p for p in chosen[root] if p.endswith(".bin")) != sorted(MAPS):
         raise ValueError("selected map closure widened")
-    fallback = ROOT / ".build/apple-everest/upstream/Everest/Celeste.Mod.mm/Content" / FALLBACK_PATH
+    core = ROOT / ".build/apple-everest/upstream/Everest/Celeste.Mod.mm/Content"
+    fallback = core / FALLBACK_PATH
     if file_sha(fallback) != FALLBACK_SHA: raise ValueError("pinned Everest fallback asset mismatch")
+    title = core / TITLE_PATH
+    if file_sha(title) != TITLE_SHA: raise ValueError("pinned Everest chapter title asset mismatch")
     # The original XML contains one unused template path that is absent from
     # every pinned provider. Everest constructs it with its own missing-image
     # sheet. Keep that behavior and the source bytes, not a renamed mod sheet.
@@ -218,7 +223,7 @@ def generate(package_root):
     if original_missing not in canonical: raise ValueError("original missing template profile changed")
     canonical.remove(original_missing)
     result = {"schemaVersion": 1, "id": "stage25kl-sj-beginner-slice-v1", "selectionMode": "UNION_WITH_ACCEPTED_PROVIDER_REGRESSION_CONTENT", "packages": records,
-              "everestContent": [{"path": FALLBACK_PATH, "sha256": FALLBACK_SHA}],
+              "everestContent": [{"path": FALLBACK_PATH, "sha256": FALLBACK_SHA}, {"path": TITLE_PATH, "sha256": TITLE_SHA}],
               "originalMissingTerrainTextures": [{"key": original_missing, "tileId": "y", "sources": [definitions + f for f in ("ForegroundTiles.xml", "BackgroundTiles.xml")],
                                                   "resolution": "PINNED_EVEREST_ATLAS_FALLBACK_AND_TILESET_MODULO", "usedCellCount": 0}],
               "excludedMapCount": len(excluded), "excludedMaps": excluded, "canonicalTextureReferences": sorted(canonical),

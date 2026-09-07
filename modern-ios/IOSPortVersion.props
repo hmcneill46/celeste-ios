@@ -9,6 +9,6 @@
   -->
   <PropertyGroup>
     <IOSPortSemanticVersion>0.1.1</IOSPortSemanticVersion>
-    <IOSPortBuildNumber>44</IOSPortBuildNumber>
+    <IOSPortBuildNumber>45</IOSPortBuildNumber>
   </PropertyGroup>
 </Project>

@@ -16,8 +16,8 @@ and [device checklist](testing/APPLE_EVEREST_STAGE25KL_DEVICE_CHECKLIST.md).
 
 The exact SJ 1.0.12 Beginner lobby and Bing BINs are preserved, including their
 source labels and binary appendices. The selected plan contains 1,398 public
-package files plus one pinned Everest core asset; the union with accepted
-regression content contains 2,942 mounted files. Only two original SJ gameplay
+package files plus two pinned Everest core assets; the union with accepted
+regression content contains 2,943 mounted files. Only two original SJ gameplay
 BINs are selected; the other 126 remain excluded from Apple products.
 
 K-L requires four independent gates: content IDs 920/920/0/0, actual compiled
@@ -32,10 +32,12 @@ original root's normal-play handling of ten credits markers and corrects
 selected graphics/dialog identity in the isolated debug route. The markers
 remain in the unchanged map; they do not create tutorial ghosts during ordinary
 play on the desktop reference. The user confirmed build 43 iPhone lobby entry,
-reference-like lobby behavior and Bing launch/gameplay. Build 44 also restores
-the pinned chapter-title bookmark sizing: both layers follow the measured title
-width, and short titles keep the vanilla offset. Exact replacement-product
-testing remains required.
+reference-like lobby behavior and Bing launch/gameplay. Build 44 restored the
+measured title offset but retained the shorter canonical graphic. Build 45 also
+mounts Everest's exact 1400x173 title PNG. Gate D checks the original Bing title
+from its correct left edge through the right screen edge, and reproduces the
+279-unit gap if the core graphic is omitted. Short titles retain their position.
+Exact replacement-product testing remains required.
 
 The bounded autotiler supports square 3×3 and 5×5 definitions. The 26 original
 J cells match a mechanically compiled pinned Everest reference; vanilla and

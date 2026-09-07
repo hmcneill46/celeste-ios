@@ -97,6 +97,44 @@ def prepare_title_reference(canonical, probe, title):
                   "scope":"Exact original title with canonical English advance/kerning metrics plus controlled width boundaries. Physical rendering remains separate."}
 
 
+def title_artwork(canonical, runtime, closure, content, mounts, atlas_keys, atlas, compiler):
+    # _FixTitleLength and the core texture override are one visible behavior.
+    # Merely resolving the vanilla atlas key was insufficient in build 44.
+    mount=mounts.get(("Everest",compiler.TITLE_PATH))
+    check(mount is not None and mount["sha256"]==compiler.TITLE_SHA,"pinned wider title mount omitted or substituted")
+    resolved=atlas_keys["Gui"].get("areaselect/title")
+    check(resolved==content/mount["logicalPath"] and sha(resolved)==compiler.TITLE_SHA,
+          "chapter title resolves to the short canonical graphic or another override")
+    data=resolved.read_bytes()
+    check(data[:8]==b"\x89PNG\r\n\x1a\n" and struct.unpack(">II",data[16:24])==(1400,173),"pinned chapter title dimensions differ")
+    metadata=canonical/"Graphics/Atlases/Gui.meta"
+    check(sha(metadata)=="884ea39e604e34e3a45b005d164a5249de9a985e58fde7ef730193c47363525b","canonical GUI geometry source differs")
+    reader=atlas.Reader(metadata.read_bytes());reader.int32();reader.string();reader.int32();frames={}
+    for _ in range(reader.int16()):
+        reader.string()
+        for _ in range(reader.int16()):
+            key=reader.string().replace("\\","/");frame=[reader.int16() for _ in range(8)]
+            if key in ["areaselect/title","areaselect/accent"]:frames[key]=frame
+    check(frames["areaselect/title"][2:]==[916,173,0,0,916,173] and
+          frames["areaselect/accent"][2:]==[54,119,-26,-27,916,173],"canonical title/accent frame geometry differs")
+    chapter=(runtime/"Celeste/OuiChapterPanel.cs").read_text()
+    check("OpenPosition => new Vector2(1070f, 100f)" in chapter and "IconOffset => new Vector2(690f, 86f)" in chapter,
+          "chapter panel geometry changed; re-audit both title edges")
+    check('ActiveFont.Draw(text, Position + IconOffset + new Vector2(-100f, global::Celeste.Mod.AppleEverestCollabRuntime.ChapterTitleOffset(this, -18f)), new Vector2(1f, 0f), Vector2.One * 1f' in chapter,
+          "chapter title anchor or font scale changed; re-audit left coverage")
+    generated=(closure/"managed/GeneratedAppleEverestContentManifest.cs").read_text()
+    descriptor='new AppleEverestAtlasMountDescriptor("Everest", "Gui", "areaselect/title", "'+mount["logicalPath"]+'")'
+    check(generated.count(descriptor)==1,"actual generated GUI title mount missing or duplicated")
+    static=(runtime/"Celeste/Mod/AppleEverestStatic/AppleEverestStaticRuntime.cs").read_text()
+    check('atlas = GFX.Gui;' in static and 'MTexture mounted = new(texture)' in static and
+          'atlas[descriptor.Key] = mounted;' in static,"actual atlas mounting no longer replaces the canonical title")
+    return {"sourcePath":compiler.TITLE_PATH,"logicalPath":mount["logicalPath"],"sha256":compiler.TITLE_SHA,
+            "width":1400,"height":173,"canonicalWidth":916,"canonicalGuiMetadataSha256":sha(metadata),
+            "openPositionX":1070,"titleAnchorX":1660,"viewportWidth":1920,"atlasKey":"areaselect/title",
+            "generatedDescriptorVerified":True,"canonicalOverrideVerified":True,
+            "scope":"Pinned core PNG and actual atlas descriptor; original Bing and short-title screen coverage. Accent retains the original left-detail clip."}
+
+
 def main():
     parser=argparse.ArgumentParser(description=__doc__)
     for name in ["closure","runtime","production-preflight","content-plan","output"]:
@@ -122,7 +160,8 @@ def main():
     for row in m["contentMounts"]:
         check(sha(content/row["logicalPath"])==row["sha256"],"staged content hash mismatch: "+row["sourcePath"])
     checked_files=0
-    check(plan.get("everestContent")==[{"path":compiler.FALLBACK_PATH,"sha256":compiler.FALLBACK_SHA}],"pinned core fallback selection differs")
+    check(plan.get("everestContent")==[{"path":compiler.FALLBACK_PATH,"sha256":compiler.FALLBACK_SHA},
+                                      {"path":compiler.TITLE_PATH,"sha256":compiler.TITLE_SHA}],"pinned core fallback/title selection differs")
     for entry in plan["everestContent"]:
         mount=mounts[("Everest",entry["path"])]
         check(mount["sha256"]==entry["sha256"],"selected Everest core file differs")
@@ -396,6 +435,7 @@ def main():
           "debug route loses selected-map dialog scope")
     credits_reference=prepare_credits_reference(args.sj_package.resolve(),probe,credit_markers)
     title_cases,title_reference=prepare_title_reference(canonical,probe,bing[4])
+    title_reference["artwork"]=title_artwork(canonical,runtime,closure,content,mounts,atlas_keys,atlas,compiler)
     chapter_source=(runtime/"Celeste/OuiChapterPanel.cs").read_text()
     for layer in ["title","accent"]:
         consumer='GFX.Gui["areaselect/'+layer+'"].Draw(Position + new Vector2(global::Celeste.Mod.AppleEverestChapterTitleLayout.BannerOffset(Area, -60f), 0f)'
@@ -411,7 +451,7 @@ def main():
     shutil.copyfile(ROOT/".build/celeste-ios/current/managed/Celeste/AnimatedTilesBank.cs",probe/"AnimatedTilesBank.cs")
     for filename in ["Stubs","Program"]:shutil.copyfile(ROOT/("tools/AppleEverestBuilder/tests/CompositionRuntime"+filename+".cs.txt"),probe/(filename+".cs"))
     (probe/"Probe.csproj").write_text('<Project Sdk="Microsoft.NET.Sdk"><PropertyGroup><OutputType>Exe</OutputType><TargetFramework>net10.0</TargetFramework><ImplicitUsings>enable</ImplicitUsings><Nullable>disable</Nullable></PropertyGroup></Project>\n')
-    (probe/"request.json").write_text(json.dumps({"contentRoot":str(content),"frames":frame_counts,"destinations":[d["sid"] for d in destinations],"parallaxes":parallaxes,"creditMarkers":credit_markers,"chapterTitles":title_cases,
+    (probe/"request.json").write_text(json.dumps({"contentRoot":str(content),"frames":frame_counts,"destinations":[d["sid"] for d in destinations],"parallaxes":parallaxes,"creditMarkers":credit_markers,"chapterTitles":title_cases,"chapterBookmark":title_reference["artwork"],
         "originalAnimationCount":len(animations[graphics+"AnimatedTiles.xml"]),"vanillaForeground":str(canonical/"Graphics/ForegroundTiles.xml"),"vanillaBackground":str(canonical/"Graphics/BackgroundTiles.xml")}))
     with (probe/"run.log").open("w") as log:
         run=subprocess.run(["dotnet","run","--project",str(probe/"Probe.csproj"),"-c","Release","--",str(probe/"request.json"),str(output/"runtime-composition.json")],cwd=ROOT,stdout=log,stderr=subprocess.STDOUT)

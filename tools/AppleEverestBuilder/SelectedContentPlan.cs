@@ -12,6 +12,8 @@ internal sealed class SelectedContentPlan
     public Entry[] EverestContent { get; set; } = [];
     internal const string TerrainFallbackPath = "Graphics/Atlases/Gameplay/__fallback.png";
     internal const string TerrainFallbackSha256 = "f28617c37d0760b999caed3cde18935841017c29d7dab622fb668c224fca2ca8";
+    internal const string ChapterTitlePath = "Graphics/Atlases/Gui/areaselect/title.png";
+    internal const string ChapterTitleSha256 = "0839135f2baafbf652d652177e69456c07bc85343a6c93491e4e2a906034518d";
     internal sealed class Package
     {
         public string Name { get; set; } = "";
@@ -58,10 +60,13 @@ internal sealed class SelectedContentPlan
                     throw new InvalidDataException("invalid original-byte content selection: " + entry.Path);
             }
         }
-        // The only selected core asset is the exact stable-1.6458.0 atlas
-        // fallback. This is not an arbitrary engine-content input surface.
-        if (plan.EverestContent.Length > 1 || plan.EverestContent.Any(entry =>
-            entry.Path != TerrainFallbackPath || entry.Sha256 != TerrainFallbackSha256 || entry.PreserveSourceBytes))
+        // Only these two exact stable-1.6458.0 core assets are admitted.
+        // The wider title graphic is the companion to _FixTitleLength.
+        if (plan.EverestContent.Length > 2 ||
+            plan.EverestContent.Select(entry => entry.Path).Distinct(StringComparer.OrdinalIgnoreCase).Count() != plan.EverestContent.Length ||
+            plan.EverestContent.Any(entry => entry.PreserveSourceBytes || !((
+                entry.Path == TerrainFallbackPath && entry.Sha256 == TerrainFallbackSha256) || (
+                entry.Path == ChapterTitlePath && entry.Sha256 == ChapterTitleSha256))))
             throw new InvalidDataException("unsupported selected Everest core content");
         return plan;
     }

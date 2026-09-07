@@ -117,9 +117,23 @@ internal static class Program
         }
         var bingTitle=request.GetProperty("chapterTitles").EnumerateArray().Single(row=>row.GetProperty("sid").GetString()==bing);
         Check(bingTitle.GetProperty("width").GetSingle()==835f&&AppleEverestChapterTitleLayout.BannerOffset(new AreaKey(bing),-60f)==-345f,
-            "original Bing title uses exact English font metrics and extends bookmark by 285 pixels");
+            "original Bing title uses exact English font metrics and moves both layers left by 285 pixels");
         Check(new PinnedReference.ChapterTitleReference{Area=new AreaKey(bing)}.FixTitleLength(-60f)!=-60f,
             "omitting bookmark adjustment reproduces the original long-title defect");
+        var artwork=request.GetProperty("chapterBookmark");
+        float panelX=artwork.GetProperty("openPositionX").GetSingle(),screenWidth=artwork.GetProperty("viewportWidth").GetSingle();
+        float bitmapWidth=artwork.GetProperty("width").GetSingle(),canonicalWidth=artwork.GetProperty("canonicalWidth").GetSingle();
+        float leftEdge=panelX+AppleEverestChapterTitleLayout.BannerOffset(new AreaKey(bing),-60f);
+        float textLeft=artwork.GetProperty("titleAnchorX").GetSingle()-bingTitle.GetProperty("width").GetSingle();
+        float rightEdge=leftEdge+bitmapWidth,omittedCoreRightEdge=leftEdge+canonicalWidth;
+        Check(leftEdge==725f&&textLeft==825f&&leftEdge<textLeft&&rightEdge==2125f&&rightEdge>=screenWidth,
+            "actual pinned title artwork covers the original Bing title at the left and the full viewport at the right");
+        Check(omittedCoreRightEdge==1641f&&screenWidth-omittedCoreRightEdge==279f,
+            "omitting the core graphic reproduces the exact build 44 right-edge gap despite correct title positioning");
+        float shortLeft=panelX+AppleEverestChapterTitleLayout.BannerOffset(new AreaKey("host-title-120"),-60f);
+        Check(shortLeft==1010f&&shortLeft+canonicalWidth>=screenWidth&&shortLeft+bitmapWidth>=screenWidth,
+            "short titles retain their left edge and full viewport coverage with the reference graphic");
+        var chapterBookmark=new {leftEdge,textLeft,rightEdge,viewportWidth=screenWidth,bitmapWidth,omittedCoreRightEdge,shortLeft};
 
         var parallaxReports=new List<object>();var scene=new Level();
         foreach(var row in request.GetProperty("parallaxes").EnumerateArray())
@@ -142,7 +156,7 @@ internal static class Program
         bool rejected=false;try{AppleEverestAnimatedParallax.Create(new MTexture("bgs/MaxHelpingHand/animatedParallax/missing00"));}catch(InvalidOperationException){rejected=true;}
         Check(rejected,"missing animated frames fail closed");
         File.WriteAllText(args[1],JsonSerializer.Serialize(new {status="PASS",assertions=checks,graphicsCycles=cycles,destinations=availability,
-            parallaxes=parallaxReports,creditMarkers=creditsReports,chapterTitles=titleReports,originalSeeds=new{lobby=3349,bing=4143},
+            parallaxes=parallaxReports,creditMarkers=creditsReports,chapterTitles=titleReports,chapterBookmark,originalSeeds=new{lobby=3349,bing=4143},
             scope="Actual generated bindings, graphics lifecycle and animated parallax source; graphical resource handles are host adapters. Actual terrain sound/debris semantics verified by independent pinned conformance."},new JsonSerializerOptions{WriteIndented=true})+"\n");
         Console.WriteLine($"PASS: {checks} actual runtime composition assertions; {cycles} complete graphics restoration cycles");
     }

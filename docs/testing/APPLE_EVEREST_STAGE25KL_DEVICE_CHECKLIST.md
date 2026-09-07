@@ -1,14 +1,15 @@
 # Stage 25K-L device checks
 
 Status: host gates pass; the new device products and physical checks are pending.
-The intended next version is **0.1.1 (44)**. Confirm the version and the supplied
+The intended next version is **0.1.1 (45)**. Confirm the version and the supplied
 product identity before testing. Build 41 passes belong to K-J and do not carry
 over. Run this checklist separately on iPhone and Apple TV; iPad is deliberately
 `IPADOS_PHYSICAL_DEFERRED_LEGACY_COMPATIBILITY_POLICY`.
 
 Build 43 passed iPhone lobby loading and Bing entry/gameplay in the user's
-retest. Build 44 additionally applies the reference's long-title bookmark
-layout. Confirm it reaches the menu and opens the normal lobby route below.
+retest. Build 44 corrected the long title's left alignment but omitted the wider
+reference graphic, leaving the right edge short. Build 45 includes that exact
+graphic. Check both edges, then the menu and normal lobby route below.
 Also retry **Play Static Mod Map
 (Debug): 1-Beginner**: it should load with the same custom terrain and sprites.
 Exit debug mode before running the persistent progression checklist. The ten
@@ -77,7 +78,9 @@ host count alone.
    title is **If my 'driveway' almost did you in...**, author **by Bing_Over_Google**,
    with its original medium-difficulty icon and **3 ordinary strawberries**.
    The blue title bookmark and its accent must extend to contain the full long
-   title, matching the reference. A short chapter title keeps its normal size.
+   title and continue all the way to the right screen edge, matching the reference.
+   Check both landscape orientations on iPhone. A short chapter title keeps its
+   normal visible left position and full right-edge coverage.
    Check Start/Continue and existing collection/completion presentation.
 2. Start through that panel. The original first room is **00- intro**, marker
    local `(264,152)`, world `(-56,152)`. Compare its music, scenery and initial

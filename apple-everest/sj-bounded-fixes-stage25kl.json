@@ -450,6 +450,31 @@
       "failClosedRule": "Both exact source draw sites are required by single-match build patches; missing consumer or different pinned source/font fails host acceptance. The renderer uses the active font for the actual cleaned title.",
       "regressions": "Short names retain vanilla offset; existing title-author vertical ordering, card textures, chapter launch/progression and ordinary UI behavior remain.",
       "closureEffect": "One static runtime source and two generated call sites; no new factory, catalog, original content, persistence or runtime discovery surface.",
+      "status": "HOST_VERIFIED_PHYSICAL_PENDING",
+      "priorProductObservation": "Build 44 iPhone user confirmed corrected left alignment but reported the blue title ending before the right screen edge. KL22 closes the missing companion core graphic; no full build44 physical PASS."
+    },
+    {
+      "id": "KL22",
+      "discoveryPoint": "iPhone build44 authored Bing title right-edge retest",
+      "selectedContent": "Pinned Everest core Graphics/Atlases/Gui/areaselect/title.png, 1400x173, SHA256 0839135f2baafbf652d652177e69456c07bc85343a6c93491e4e2a906034518d",
+      "classification": "AUTO_FIX_COMPOSITION",
+      "reason": "The measured-title offset was correct but the 916x173 canonical title remained mounted. Its right edge moved to 1641 in the 1920-wide UI. Pinned Everest supplies a 1400x173 replacement that reaches 2125 at the same offset.",
+      "implementation": "Admit and mount the exact pinned core title PNG alongside the existing exact terrain fallback. Keep the existing title/accent offset rule, original accent clip, font, map bytes and atlas replacement lifecycle.",
+      "tests": [
+        "ExactPinnedCoreTitleIdentityAndAllowlist",
+        "DuplicateAndSubstitutedCoreAssetRejection",
+        "ActualGeneratedGuiOverrideDescriptor",
+        "CanonicalTitleAndAccentGeometry",
+        "OriginalBingBothEdgeCoverage725To2125",
+        "OmittedCoreGraphicReproduces279PixelGap",
+        "ShortTitlePositionAndViewportCoverage",
+        "ActualSignedProductIncludesExactCoreTitle",
+        "FreshSixDllCompilerFourGatesAndReproduction"
+      ],
+      "plannedTests": "Verify source bytes, generated/runtime atlas precedence, the complete visible Bing rectangle and omission control, then both replacement products and exact-device retest.",
+      "failClosedRule": "Only the two pinned core paths/hashes are admitted; duplicate, substituted and unsupported core records reject. Gate D requires the wider final GUI mount even though a same-named canonical texture exists.",
+      "regressions": "Short titles retain left position and full viewport coverage; original accent, chapter launch, progression, map content, helper mechanisms and audio are unchanged.",
+      "closureEffect": "One exact core PNG plus its generated content and atlas mount; no new runtime mechanism, factory, catalog, persistence or discovery surface.",
       "status": "HOST_VERIFIED_PHYSICAL_PENDING"
     }
   ]

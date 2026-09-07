@@ -4,7 +4,7 @@
   "status": "HOST_PREFLIGHT_PASS_PHYSICAL_PENDING",
   "startSha": "e69bfd6eeba3d36a5d745c24b3bc0f2f3f4ee92f",
   "branch": "feature/apple-everest-first-sj-slice-outcome",
-  "sharedClosureSha256": "ffca0aea178ee8ff2f7ef885e459d9a3b895a63434cb676dfc9edbfb4b201992",
+  "sharedClosureSha256": "fd9be7456e038f29f8daa05ca56d0e4223326238807d1b7ab06496e2aea9a621",
   "sjVersion": "1.0.12",
   "sjZipSha256": "4e1a2fc12baa3db27da433b93bf26b59f34b3e6b7f760c41d8d127636d020655",
   "originalMaps": [
@@ -32,9 +32,9 @@
   "historicalTargetedPlanFiles": 1212,
   "knownAdditionalRootFiles": 117,
   "explicitSelectedPackageFiles": 1398,
-  "selectedCoreAssets": 1,
-  "finalMountedFilesIncludingRegressions": 2942,
-  "pngAssetsIncludingRegressions": 2716,
+  "selectedCoreAssets": 2,
+  "finalMountedFilesIncludingRegressions": 2943,
+  "pngAssetsIncludingRegressions": 2717,
   "acceptedRegistrySha256": "6e5b89f7d952aa98e72640abce0c75522567fb9d48f8b027e3db54f5cf9da72f",
   "customAudioOrder": [
     {
@@ -88,6 +88,6 @@
   "allPlatformReleaseReady": false,
   "boundedFixClassifications": {
     "AUTO_IMPLEMENT_BOUNDED_COMPATIBILITY": 6,
-    "AUTO_FIX_COMPOSITION": 15
+    "AUTO_FIX_COMPOSITION": 16
   }
 }

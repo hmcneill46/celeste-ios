@@ -29,7 +29,12 @@ through an ordinary static call. The measured cleaned map name controls both
 layers; short names retain the vanilla offset. Gate D compares eight width
 profiles against the original pinned method, including Bing's 835-unit English
 title, verifies both applied render consumers and rejects the old fixed-offset
-result. No runtime patching or original texture/font modification is involved.
+result. The paired core `Gui/areaselect/title.png` override is also required:
+its original 1400x173 bytes replace the shorter canonical graphic through the
+existing static atlas mount. The original Bing rectangle spans UI x=725..2125;
+using the canonical 916-pixel width instead ends at x=1641, 279 short of the
+right edge. Gate D binds the actual mount, dimensions and both-edge coverage,
+including that omission control. No image resampling or runtime patching is used.
 
 `AppleEverestTileMaskRules` validates the complete selected terrain definitions
 at build time. The only supported scan dimensions are square 3×3 and 5×5, with

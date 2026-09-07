@@ -5646,6 +5646,10 @@
     {
       "path": "Graphics/Atlases/Gameplay/__fallback.png",
       "sha256": "f28617c37d0760b999caed3cde18935841017c29d7dab622fb668c224fca2ca8"
+    },
+    {
+      "path": "Graphics/Atlases/Gui/areaselect/title.png",
+      "sha256": "0839135f2baafbf652d652177e69456c07bc85343a6c93491e4e2a906034518d"
     }
   ],
   "originalMissingTerrainTextures": [

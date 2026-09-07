@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "status": "PASS",
   "marker": "READY_FOR_REAL_SJ_PRODUCT_BUILD",
-  "sharedClosureSha256": "ffca0aea178ee8ff2f7ef885e459d9a3b895a63434cb676dfc9edbfb4b201992",
+  "sharedClosureSha256": "fd9be7456e038f29f8daa05ca56d0e4223326238807d1b7ab06496e2aea9a621",
   "gateA": {
     "selectedOccurrences": 920,
     "acceptedOrVanilla": 920,
@@ -63,8 +63,8 @@
         "terrainSeed": 4143
       }
     ],
-    "selectedPlanFileCount": 1399,
-    "totalMountedFilesIncludingRegressions": 2942,
+    "selectedPlanFileCount": 1400,
+    "totalMountedFilesIncludingRegressions": 2943,
     "terrain": [
       {
         "source": "Graphics/SJ2021xmls/BeginnerLobby/ForegroundTiles.xml",
@@ -548,7 +548,23 @@
         "areaselect/accent"
       ],
       "caseCount": 8,
-      "scope": "Exact original title with canonical English advance/kerning metrics plus controlled width boundaries. Physical rendering remains separate."
+      "scope": "Exact original title with canonical English advance/kerning metrics plus controlled width boundaries. Physical rendering remains separate.",
+      "artwork": {
+        "sourcePath": "Graphics/Atlases/Gui/areaselect/title.png",
+        "logicalPath": "AppleEverest/Mods/Everest/Graphics/Atlases/Gui/areaselect/title.png",
+        "sha256": "0839135f2baafbf652d652177e69456c07bc85343a6c93491e4e2a906034518d",
+        "width": 1400,
+        "height": 173,
+        "canonicalWidth": 916,
+        "canonicalGuiMetadataSha256": "884ea39e604e34e3a45b005d164a5249de9a985e58fde7ef730193c47363525b",
+        "openPositionX": 1070,
+        "titleAnchorX": 1660,
+        "viewportWidth": 1920,
+        "atlasKey": "areaselect/title",
+        "generatedDescriptorVerified": true,
+        "canonicalOverrideVerified": true,
+        "scope": "Pinned core PNG and actual atlas descriptor; original Bing and short-title screen coverage. Accent retains the original left-detail clip."
+      }
     },
     "textureObservation": {
       "checkpoints": [
@@ -585,16 +601,16 @@
     },
     "runtimeSourceSha256": {
       "apple-everest/runtime/AppleEverestMapBinding.cs": "dcd5e53bd04f9dbf7bdfecc1634fbb9fd7cace042c31141d083f7ead109a746b",
-      "apple-everest/runtime/AppleEverestChapterTitleLayout.cs": "fea8afb3898514dae0b4813112ee31826f0fd91fad95f252b05dc7c0e75b4d34",
+      "apple-everest/runtime/AppleEverestChapterTitleLayout.cs": "8a83b811d5386f8dacdad1ddc4c98a40a1b1d34386778fc77401b96102a5177d",
       "apple-everest/runtime/semantics/AppleEverestSelectedCanaryAssets.cs": "6d19113dde234c5ee2d7b26a5d540d51bd7a1de61a51ac6d9817cab4ab0f5cb2",
       "apple-everest/runtime/semantics/AppleEverestStrawberryJamLobbyLoading.cs": "82d0027a59e0347ddd1fcfe0ed693c875e55ac1110281a6ac510d9b79a24f04a",
       "apple-everest/runtime/semantics/AppleEverestAnimatedParallax.cs": "f7ff4d3e5ff82127f1800c23984fc173f2a51bc7d7a79fe2a438bb9a13090be8",
       "apple-everest/runtime/AppleEverestStaticRuntime.cs": "248b9f792317b1828712acb4d2aa48460daada2066d0d529da33e9a8eaf6dbf8",
       "apple-everest/runtime/semantics/AppleEverestStrawberryJamState.cs": "8cc7f5892ae32f1fa1a2edd61e92bda4387c72102af6a66442a4b50df076eaa8"
     },
-    "runtimeProbeSha256": "d14f4af3aa8ec0ea90fce66cf0868f70a7cbc2750f83101d12aa5f8e28d2ff53",
-    "autotilerConformanceSha256": "21cc18c28a5f47ddca2930cd5246378f1875b9de0da6f9e1096c1faf1987bdad"
+    "runtimeProbeSha256": "1055264ecc89b584cbd80cfaf51e83bad0314a060a21d79afa8e9e6d0dc32f29",
+    "autotilerConformanceSha256": "e218bcfe4d7ccf2095694cb825ff317b919b72d8af26248772fd336f6f76b920"
   },
-  "compiledPreflightSha256": "97b6533315935b79b4675200c283de0e85f3881fa4f140b40be6cd84fb6be83a",
-  "contentPlanSha256": "955071e5184a5f76d750b036de787b377f44b8bd37cc12129e314cd7f16933ac"
+  "compiledPreflightSha256": "5702308bae787f2e69fa98c4605061339cafaa0296c5af2af8ed1b90b5b51d9c",
+  "contentPlanSha256": "3b520b9426c239f089d608f044c6d7c5d490570464986a7c04531b2a1954ba59"
 }

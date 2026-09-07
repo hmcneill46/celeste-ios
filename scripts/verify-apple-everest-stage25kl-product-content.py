@@ -42,9 +42,13 @@ def main():
     for mount in manifest['contentMounts']:
         path=mount['logicalPath']
         if path not in files or sha(files[path])!=mount['sha256']:raise ValueError('packaged selected content differs: '+path)
+    artwork=ready['gateD']['chapterTitleLayout']['artwork']
+    if artwork['sha256']!='0839135f2baafbf652d652177e69456c07bc85343a6c93491e4e2a906034518d' or sha(files[artwork['logicalPath']])!=artwork['sha256']:
+        raise ValueError('actual package omitted or substituted the wider Everest title graphic')
     report={'schemaVersion':1,'status':'PASS','sharedClosureSha256':manifest['sharedClosureSha256'],'originalMaps':actual,
             'originalMapCount':2,'excludedSjGameplayMaps':126,'verifiedMountedFiles':len(manifest['contentMounts']),
-            'caseExact':True,'allMountedContentBytesMatch':True,'sourceOriginalMapBytesPreserved':True}
+            'caseExact':True,'allMountedContentBytesMatch':True,'sourceOriginalMapBytesPreserved':True,
+            'chapterTitleArtwork':artwork}
     args.output.parent.mkdir(parents=True,exist_ok=True);args.output.write_text(json.dumps(report,indent=2)+'\n')
     print('PASS: actual app contains exactly two original SJ BINs and every hash-bound selected asset;126 excluded')
 

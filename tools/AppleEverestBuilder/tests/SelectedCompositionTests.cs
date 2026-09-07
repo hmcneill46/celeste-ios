@@ -53,6 +53,15 @@ internal static class SelectedCompositionTests
         Write();var loaded=SelectedContentPlan.Load(planFile,[mod]);Check(loaded.Files(mod).Count()==2,"enumerated content plan accepted");
         plan.EverestContent=[new(){Path=SelectedContentPlan.TerrainFallbackPath,Sha256=SelectedContentPlan.TerrainFallbackSha256}];
         Write();Check(SelectedContentPlan.Load(planFile,[mod]).EverestContent.Length==1,"exact pinned core fallback is allowed");
+        var titleAsset=new SelectedContentPlan.Entry {Path=SelectedContentPlan.ChapterTitlePath,Sha256=SelectedContentPlan.ChapterTitleSha256};
+        plan.EverestContent=[plan.EverestContent[0],titleAsset];Write();
+        Check(SelectedContentPlan.Load(planFile,[mod]).EverestContent.Length==2,"exact pinned wider chapter title and fallback are allowed");
+        plan.EverestContent=[titleAsset,titleAsset];Write();Reject(()=>SelectedContentPlan.Load(planFile,[mod]),"duplicate core title mount");
+        plan.EverestContent=[new(){Path=SelectedContentPlan.ChapterTitlePath,Sha256=new string('0',64)}];
+        Write();Reject(()=>SelectedContentPlan.Load(planFile,[mod]),"core title source substitution");
+        plan.EverestContent=[new(){Path=SelectedContentPlan.ChapterTitlePath,Sha256=SelectedContentPlan.ChapterTitleSha256,PreserveSourceBytes=true}];
+        Write();Reject(()=>SelectedContentPlan.Load(planFile,[mod]),"unsupported core title processing flag");
+        plan.EverestContent=[new(){Path=SelectedContentPlan.TerrainFallbackPath,Sha256=SelectedContentPlan.TerrainFallbackSha256}];
         plan.EverestContent[0].Path="Graphics/unreviewed.png";Write();Reject(()=>SelectedContentPlan.Load(planFile,[mod]),"unreviewed core asset");
         plan.EverestContent[0].Path=SelectedContentPlan.TerrainFallbackPath;plan.EverestContent[0].Sha256=new string('0',64);
         Write();Reject(()=>SelectedContentPlan.Load(planFile,[mod]),"core fallback source substitution");plan.EverestContent=[];
