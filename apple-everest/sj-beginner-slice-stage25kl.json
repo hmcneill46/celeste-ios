@@ -88,6 +88,6 @@
   "allPlatformReleaseReady": false,
   "boundedFixClassifications": {
     "AUTO_IMPLEMENT_BOUNDED_COMPATIBILITY": 4,
-    "AUTO_FIX_COMPOSITION": 12
+    "AUTO_FIX_COMPOSITION": 13
   }
 }

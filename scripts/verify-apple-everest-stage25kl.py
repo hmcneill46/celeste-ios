@@ -155,7 +155,8 @@ def main():
     check(manifest['registrySha256']=='6e5b89f7d952aa98e72640abce0c75522567fb9d48f8b027e3db54f5cf9da72f','accepted registry changed')
     check([manifest[key] for key in ['managedDetourTargetCount','appleApiSurfaceMemberCount','frozenIlTransformCount','customAudioBankCount']]==[205,30,17,7],'accepted catalog scope differs')
     for tree,prefix in [('managed','managed'),('content/Content','content')]:
-        files=sorted(p for p in (closure/tree).rglob('*') if p.is_file())
+        files=sorted((p for p in (closure/tree).rglob('*') if p.is_file()),
+                     key=lambda p:p.relative_to(closure/tree).as_posix())
         logical=''.join(p.relative_to(closure/tree).as_posix()+'\0'+str(p.stat().st_size)+'\0'+sha(p)+'\n' for p in files)
         check(len(files)==manifest[prefix+'FileCount'] and hashlib.sha256(logical.encode()).hexdigest()==manifest[prefix+'LogicalSha256'],
               'actual generated '+tree+' tree differs from closure authority')

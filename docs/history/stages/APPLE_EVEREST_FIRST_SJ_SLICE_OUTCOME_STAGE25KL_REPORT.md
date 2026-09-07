@@ -69,7 +69,7 @@ reject final product acceptance.
 
 `READY_FOR_REAL_SJ_PRODUCT_BUILD` is closure-hash bound and precedes AOT. Fresh
 production preflight compiles six DLLs and compares all implementation bytes
-(except compiler timestamp/MVID). The current runtime compile has 318 warnings,
+(except compiler timestamp/MVID). The latest runtime compile has 348 warnings,
 zero errors. All 73 actual canary selectors/guards accept 312 owned occurrences
 and reject unsupported profiles.
 
@@ -126,7 +126,7 @@ HookGen 205 / API 30 / frozen IL 17 (5 DJ + 12 Sideways) remain unchanged.
 Every issue has one classification, reason, implementation, tests, rejection
 rule, regression scope and closure effect in the
 [complete ledger](../../../apple-everest/sj-bounded-fixes-stage25kl.json).
-No STOP_MAJOR_ARCHITECTURE has been found. Sixteen issues: 12 composition fixes
+No STOP_MAJOR_ARCHITECTURE has been found. Seventeen issues: 13 composition fixes
 and 4 bounded mechanisms. Actual signed-product tests remain pending where noted.
 
 | ID | Classification | Resolution |
@@ -146,8 +146,8 @@ and 4 bounded mechanisms. Actual signed-product tests remain pending where noted
 | KL13 | AUTO_FIX_COMPOSITION | With bound real readiness, run the K-L packaged-content verifier; keep the original zero-real-map rule for K-J-only products. |
 | KL14 | AUTO_FIX_COMPOSITION | Use the accepted G=0 fixture sentinel and state that sound-registration comparison begins from identical tables. Retain the accepted runtime; explicitly record the unused desktop table difference. |
 | KL15 | AUTO_FIX_COMPOSITION | Bind clean exact HEAD across products, receipts, regressions and reproduction; rehash generated managed/content trees and Collab/progression manifests; compare every IPA member to the inspected signed app; rerun native/content/platform checks; require independent recursive clone/compiler/four-gate/three-run evidence. |
-
 | KL16 | AUTO_FIX_COMPOSITION | Observe mounted/decoded textures through backing fields at content-ready and level-loaded without forcing decode; report RGBA estimate and managed live bytes. |
+| KL17 | AUTO_FIX_COMPOSITION | Hash complete relative POSIX paths in canonical string order; fix false fresh-clone content mismatch without changing inputs or expected identities. |
 
 ## Real flow, audio and persistence
 
@@ -477,9 +477,9 @@ boundary; it cannot silently convert pending checks to PASS.
 
 115. **Must be NO.** Confirmed NO; no quality reduction for deferred legacy iPad.
 
-116. **What bounded issues beyond autotiling were found?** Four bounded mechanisms and twelve composition/evidence fixes; see all 16 ledger entries.
+116. **What bounded issues beyond autotiling were found?** Three additional bounded mechanisms and thirteen composition/evidence fixes; see all 17 ledger entries including autotiling.
 
-117. **How many AUTO_FIX_COMPOSITION?** 12.
+117. **How many AUTO_FIX_COMPOSITION?** 13.
 
 118. **How many AUTO_IMPLEMENT_BOUNDED_COMPATIBILITY?** 4, including the initial autotiler mechanism.
 

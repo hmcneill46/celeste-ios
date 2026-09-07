@@ -95,7 +95,8 @@ def main():
     if finder.is_file():
         h = hashlib.sha256()
         count = size = 0
-        for path in sorted(p for p in (original / 'Content').rglob('*') if p.is_file() and p != finder):
+        for path in sorted((p for p in (original / 'Content').rglob('*') if p.is_file() and p != finder),
+                           key=lambda p: p.relative_to(original / 'Content').as_posix()):
             relative = path.relative_to(original / 'Content').as_posix()
             length = path.stat().st_size
             h.update((relative + '\0' + str(length) + '\0' + sha(path) + '\n').encode())

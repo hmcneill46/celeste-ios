@@ -347,6 +347,24 @@
       "regressions": "No new loader, render entity, first-frame timer, quality setting or persistence authority.",
       "closureEffect": "One runtime observation method and one existing level-load call; shared managed closure changes.",
       "status": "HOST_VERIFIED_PHYSICAL_PENDING"
+    },
+    {
+      "id": "KL17",
+      "discoveryPoint": "first exact-source fresh recursive clone",
+      "selectedContent": "Canonical original Content inventory and generated managed/content inventory hashes",
+      "classification": "AUTO_FIX_COMPOSITION",
+      "reason": "Path-component sorting places CelestialResort/00.data before CelestialResort.meta, unlike the canonical relative-path string order, causing a false input hash mismatch.",
+      "implementation": "Sort logical hash inputs by their complete relative POSIX path, matching the accepted canonical generator and builder Hashing.LogicalHash.",
+      "plannedTests": "Exact original 1216-file, 1158665183-byte content hash; fresh recursive clone and complete final-source host verification.",
+      "tests": [
+        "CanonicalContentRelativePathOrdering",
+        "ExactOriginal1216FileContentIdentity",
+        "FreshCloneAndFinalSourceVerificationRequired"
+      ],
+      "failClosedRule": "All file names, sizes and SHA256 values still enter the hash; no content exclusion beyond the already observed disposable Finder metadata.",
+      "regressions": "Canonical inputs and generated product bytes remain unchanged; no hash expectation was weakened.",
+      "closureEffect": "Host verification ordering only; shared runtime/content closure unchanged.",
+      "status": "HOST_VERIFIED_PHYSICAL_PENDING"
     }
   ]
 }
