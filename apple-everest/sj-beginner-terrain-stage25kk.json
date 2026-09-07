@@ -1,0 +1,239 @@
+{
+  "acceptedMaskCapacity": 9,
+  "bingUsedJTiles": 0,
+  "cannotProjectToAccepted3x3": true,
+  "classification": "NEW_EVEREST_VARIABLE_SCAN_AUTOTILER",
+  "counterexample": [
+    {
+      "canonicalCrossDistance2": "1111",
+      "canonicalNeighborhood3x3": "111111111",
+      "everestMatchedRule": "center",
+      "everestNeighborhood5x5": "1111111111111111111111111",
+      "everestTextureCoordinates": "5,14",
+      "tileX": 446,
+      "tileY": 263
+    },
+    {
+      "canonicalCrossDistance2": "1111",
+      "canonicalNeighborhood3x3": "111111111",
+      "everestMatchedRule": "xx10x-x1111-11111-x111x-xx1xx",
+      "everestNeighborhood5x5": "1110011111111111111111111",
+      "everestTextureCoordinates": "10,3",
+      "tileX": 448,
+      "tileY": 263
+    }
+  ],
+  "failureAuthority": "EXACT_AUTHORED_CONTENT_PLUS_ACCEPTED_COMPILED_CONTRACT_AND_SOURCE_ANALYSIS",
+  "firstAuthoredMask": "xxxxx-xx0xx-x111x-xx1xx-xx1xx",
+  "firstOutOfBoundsWriteIndex": 9,
+  "maskCells": 25,
+  "maskCount": 62,
+  "neededBehavior": [
+    "variable-size mask parsing",
+    "variable-size neighborhood matching",
+    "matching fill/padding semantics",
+    "exact custom tile metadata loading"
+  ],
+  "physicalCrashClaimed": false,
+  "sourceXml": "Graphics/SJ2021xmls/BeginnerLobby/ForegroundTiles.xml",
+  "sourceXmlBytes": 53620,
+  "sourceXmlSha256": "4d13bd8fc7164ddd7b20015e17dde1b7aaa035d292ac59b058e40d22c6876f8f",
+  "stopRequiredByBrief": [
+    "46",
+    "53"
+  ],
+  "tileset": {
+    "debris": "SJ2021/mosscairn/gray",
+    "id": "J",
+    "ignores": "7",
+    "path": "SJ2021/mosscairn/grayExtended",
+    "scanHeight": "5",
+    "scanWidth": "5",
+    "sound": "8"
+  },
+  "usedTileCount": 26,
+  "usedTiles": [
+    {
+      "room": "sj2021beginnerlobby",
+      "tileX": 446,
+      "tileY": 263,
+      "worldX": 3144,
+      "worldY": 1464
+    },
+    {
+      "room": "sj2021beginnerlobby",
+      "tileX": 447,
+      "tileY": 263,
+      "worldX": 3152,
+      "worldY": 1464
+    },
+    {
+      "room": "sj2021beginnerlobby",
+      "tileX": 448,
+      "tileY": 263,
+      "worldX": 3160,
+      "worldY": 1464
+    },
+    {
+      "room": "sj2021beginnerlobby",
+      "tileX": 453,
+      "tileY": 263,
+      "worldX": 3200,
+      "worldY": 1464
+    },
+    {
+      "room": "sj2021beginnerlobby",
+      "tileX": 454,
+      "tileY": 263,
+      "worldX": 3208,
+      "worldY": 1464
+    },
+    {
+      "room": "sj2021beginnerlobby",
+      "tileX": 455,
+      "tileY": 263,
+      "worldX": 3216,
+      "worldY": 1464
+    },
+    {
+      "room": "sj2021beginnerlobby",
+      "tileX": 456,
+      "tileY": 263,
+      "worldX": 3224,
+      "worldY": 1464
+    },
+    {
+      "room": "sj2021beginnerlobby",
+      "tileX": 457,
+      "tileY": 263,
+      "worldX": 3232,
+      "worldY": 1464
+    },
+    {
+      "room": "sj2021beginnerlobby",
+      "tileX": 458,
+      "tileY": 263,
+      "worldX": 3240,
+      "worldY": 1464
+    },
+    {
+      "room": "sj2021beginnerlobby",
+      "tileX": 459,
+      "tileY": 263,
+      "worldX": 3248,
+      "worldY": 1464
+    },
+    {
+      "room": "sj2021beginnerlobby",
+      "tileX": 460,
+      "tileY": 263,
+      "worldX": 3256,
+      "worldY": 1464
+    },
+    {
+      "room": "sj2021beginnerlobby",
+      "tileX": 461,
+      "tileY": 263,
+      "worldX": 3264,
+      "worldY": 1464
+    },
+    {
+      "room": "sj2021beginnerlobby",
+      "tileX": 465,
+      "tileY": 263,
+      "worldX": 3296,
+      "worldY": 1464
+    },
+    {
+      "room": "sj2021beginnerlobby",
+      "tileX": 466,
+      "tileY": 263,
+      "worldX": 3304,
+      "worldY": 1464
+    },
+    {
+      "room": "sj2021beginnerlobby",
+      "tileX": 467,
+      "tileY": 263,
+      "worldX": 3312,
+      "worldY": 1464
+    },
+    {
+      "room": "sj2021beginnerlobby",
+      "tileX": 448,
+      "tileY": 264,
+      "worldX": 3160,
+      "worldY": 1472
+    },
+    {
+      "room": "sj2021beginnerlobby",
+      "tileX": 454,
+      "tileY": 264,
+      "worldX": 3208,
+      "worldY": 1472
+    },
+    {
+      "room": "sj2021beginnerlobby",
+      "tileX": 455,
+      "tileY": 264,
+      "worldX": 3216,
+      "worldY": 1472
+    },
+    {
+      "room": "sj2021beginnerlobby",
+      "tileX": 456,
+      "tileY": 264,
+      "worldX": 3224,
+      "worldY": 1472
+    },
+    {
+      "room": "sj2021beginnerlobby",
+      "tileX": 457,
+      "tileY": 264,
+      "worldX": 3232,
+      "worldY": 1472
+    },
+    {
+      "room": "sj2021beginnerlobby",
+      "tileX": 458,
+      "tileY": 264,
+      "worldX": 3240,
+      "worldY": 1472
+    },
+    {
+      "room": "sj2021beginnerlobby",
+      "tileX": 459,
+      "tileY": 264,
+      "worldX": 3248,
+      "worldY": 1472
+    },
+    {
+      "room": "sj2021beginnerlobby",
+      "tileX": 460,
+      "tileY": 264,
+      "worldX": 3256,
+      "worldY": 1472
+    },
+    {
+      "room": "sj2021beginnerlobby",
+      "tileX": 461,
+      "tileY": 264,
+      "worldX": 3264,
+      "worldY": 1472
+    },
+    {
+      "room": "sj2021beginnerlobby",
+      "tileX": 466,
+      "tileY": 264,
+      "worldX": 3304,
+      "worldY": 1472
+    },
+    {
+      "room": "sj2021beginnerlobby",
+      "tileX": 467,
+      "tileY": 264,
+      "worldX": 3312,
+      "worldY": 1472
+    }
+  ]
+}

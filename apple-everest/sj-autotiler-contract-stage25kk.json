@@ -1,0 +1,37 @@
+{
+  "acceptedAutotilerSourceSha256": "c0a174b10272fb67226a71833b357ee443d4e007ef3e1814b6cbccde8a790168",
+  "acceptedCompleteRegistrySha256": "6e5b89f7d952aa98e72640abce0c75522567fb9d48f8b027e3db54f5cf9da72f",
+  "acceptedMatching": {
+    "adjacentArrayLength": 9,
+    "maskMatchCellCount": 9,
+    "maskSortCellCount": 9,
+    "scanHeight": 3,
+    "scanWidth": 3
+  },
+  "acceptedSemanticLedgerSha256": "0097f41ed546502765849d86f951925596b8ba0d61671a98ddd446cbe0f6f652",
+  "acceptedSharedClosureSha256": "21c6480c3a852322b7a4efc54e58c447561f455abb54f2e67c1f8d885869247f",
+  "acceptedSourceCommit": "e69bfd6eeba3d36a5d745c24b3bc0f2f3f4ee92f",
+  "authority": "ACCEPTED_KJ_SOURCE_AND_ACTUAL_COMPILED_IL_INSPECTION",
+  "canonicalAutotilerSourceSha256": "b0db319cab002cecbd8155c19b4462af0f1c6a75df38e6348a25a09e8d450a0b",
+  "compiledAssemblySha256": "92d8b4fc49a25f624a751480b5d3701870233c527eee7fb94a3275c60f1d90c2",
+  "compiledMaskConstructor": {
+    "arrayLength": 9,
+    "elementType": "System.Byte",
+    "ilInspectionSha256": "8dd34b04d1c3065d8f0959782acda2345340e512eb74e31c4aa990281753c42b",
+    "method": "System.Void Celeste.Autotiler/Masked::.ctor()"
+  },
+  "reviewedScope": "Existing K-J compiled profile only. No new K-K product or gameplay evidence.",
+  "runtimeSourceFiles": {
+    "apple-everest/runtime/semantics/AppleEverestSelectedCanaryAssets.cs": "228073142d1ed32a86adf18dd0617df760d8e82fa3b29309c1c45ec166468b79",
+    "tools/AppleEverestBuilder/ClosureGenerator.cs": "98e285ae93cfef30e927ab1612d1e4453af15ad7642b1d7d1484dd155f851dfd",
+    "tools/AppleEverestBuilder/StaticAotCompatibility.cs": "3c0a77b48d01c1119bab8e8806b0465f8c94a430847dbad635a340f975c68d3f",
+    "tools/AppleEverestBuilder/StaticSemanticLowering.cs": "50d0bdd9f97b0fa44078fe0c232a5c9225972bd804be6a8f11a8f891940b7a73",
+    "tools/AppleEverestBuilder/StaticSemanticRuntimePatches.cs": "ebb8f626ee8cc817590da39b4b2bd6eaeb4dde4692a15b05ccb00faacd21a358"
+  },
+  "schemaVersion": 1,
+  "stage": "25K-K",
+  "upstream": {
+    "sourcePath": "Celeste.Mod.mm/Patches/Autotiler.cs",
+    "sourceSha256": "cb331f7b766976c306675d8928e46632d1b6a6b17df5d0ab8eded515ab4fa748"
+  }
+}

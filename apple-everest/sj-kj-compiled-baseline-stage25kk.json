@@ -1,0 +1,31 @@
+{
+  "actualFactoryRegistrySha256": "8ed2794ec88b7ba140ace3763da73eb7eb37023c703a797030ace99e41587a59",
+  "actualProductionRegenerated": true,
+  "allImplementationBytesCompared": true,
+  "compiledAssemblySha256": "92d8b4fc49a25f624a751480b5d3701870233c527eee7fb94a3275c60f1d90c2",
+  "compiledDllCount": 6,
+  "compiledMaskCapacity": 9,
+  "contentIdCensus": {
+    "acceptedOrVanilla": 920,
+    "blocked": 0,
+    "selectedOccurrences": 920,
+    "unclassified": 0
+  },
+  "exactPackageIdentityVerified": true,
+  "freshProductionCompilation": true,
+  "fullObservedPreflightSha256": "dbe7bcb7577f537ce32c953b534e54ffd4bd9353f3fe3cb7046c8d3b88589452",
+  "maskIlInspectionSha256": "8dd34b04d1c3065d8f0959782acda2345340e512eb74e31c4aa990281753c42b",
+  "publicPackageSet": "24 exact K-K acquisition ZIPs plus separately hash-verified accepted Chrono regression ZIP",
+  "realKkProductGenerated": false,
+  "registrationCensus": {
+    "available": 73,
+    "providerRejected": 0,
+    "selected": 73,
+    "unavailable": 0
+  },
+  "schemaVersion": 1,
+  "scope": "FRESH_REPRODUCTION_OF_ACCEPTED_KJ_CANARY_PROFILE_NOT_KK_REAL_CONTENT_PRODUCT",
+  "sharedClosureSha256": "21c6480c3a852322b7a4efc54e58c447561f455abb54f2e67c1f8d885869247f",
+  "sourceCommitAtRun": "e69bfd6eeba3d36a5d745c24b3bc0f2f3f4ee92f",
+  "stage": "25K-K"
+}

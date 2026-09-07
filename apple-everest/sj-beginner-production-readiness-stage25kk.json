@@ -1,0 +1,35 @@
+{
+  "acceptedKjReadinessMarker": "READY_FOR_K_K_REAL_SJ_INTEGRATION_RETRY",
+  "acceptedKjThreeGatesRetained": true,
+  "allPlatformReleaseReady": false,
+  "aotAllowed": false,
+  "contentIdCensus": {
+    "acceptedOrVanilla": 920,
+    "blocked": 0,
+    "selectedOccurrences": 920,
+    "unclassified": 0
+  },
+  "developmentIntegrationReady": false,
+  "fullBeginnerSupported": false,
+  "fullStrawberryJamSupported": false,
+  "productionRegistrationCensus": {
+    "available": 73,
+    "selected": 73,
+    "unavailable": 0
+  },
+  "readinessMarker": null,
+  "realContentComposition": "BLOCKED_NEW_VARIABLE_SCAN_AUTOTILER",
+  "schemaVersion": 1,
+  "selectedFactorySemanticCensus": {
+    "blocked": 0,
+    "fullyClosed": 73,
+    "selected": 73,
+    "unknown": 0
+  },
+  "stage": "25K-K",
+  "status": "YELLOW_NEW_AUTOTILER_COMPATIBILITY_MECHANISM",
+  "stopRequiredByBrief": [
+    "46",
+    "53"
+  ]
+}

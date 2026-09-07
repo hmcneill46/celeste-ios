@@ -1,0 +1,23 @@
+{
+  "appleTv": "NOT_RUN_NO_KK_PRODUCT",
+  "bing": "NOT_RUN",
+  "coldResume": "NOT_RUN",
+  "completion": "NOT_RUN",
+  "deviceDataTouched": false,
+  "iosIpaSha256": null,
+  "ipad": "IPADOS_PHYSICAL_DEFERRED_LEGACY_COMPATIBILITY_POLICY",
+  "iphone": "NOT_RUN_NO_KK_PRODUCT",
+  "journal": "NOT_RUN",
+  "lastAcceptedPrimaryProducts": "Stage 25K-J build 41",
+  "lastAllThreePhysicalGreen": "Stage 25K-B build 35",
+  "lobby": "NOT_RUN",
+  "physicalRoomsTraversed": [],
+  "reentry": "NOT_RUN",
+  "returnToLobby": "NOT_RUN",
+  "saveQuit": "NOT_RUN",
+  "schemaVersion": 1,
+  "stage": "25K-K",
+  "status": "NOT_RUN_PREFLIGHT_STOP",
+  "strawberryWithReturn": "NOT_RUN",
+  "tvosIpaSha256": null
+}

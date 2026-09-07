@@ -1,0 +1,818 @@
+{
+  "acceptedKjCompleteRegistrySha256": "6e5b89f7d952aa98e72640abce0c75522567fb9d48f8b027e3db54f5cf9da72f",
+  "acceptedKjGameplayRegistrySourceSha256": "8ed2794ec88b7ba140ace3763da73eb7eb37023c703a797030ace99e41587a59",
+  "acceptedKjLedgerSha256": "0097f41ed546502765849d86f951925596b8ba0d61671a98ddd446cbe0f6f652",
+  "authoredProfilesRegeneratedFromExactMaps": true,
+  "authoredProfilesSha256": "152725e134092b8b84990d6dc93ae0ba7aaf1bf4488eacc6c9a807125028561f",
+  "contentIdCensus": {
+    "acceptedOrVanilla": 920,
+    "blocked": 0,
+    "selectedOccurrences": 920,
+    "unclassified": 0
+  },
+  "kkProductionRegistryGenerated": false,
+  "productionRegistrationCensus": {
+    "available": 73,
+    "selected": 73,
+    "unavailable": 0
+  },
+  "providersReverifiedFromPublicZips": [
+    {
+      "distributedDlls": [
+        {
+          "path": "bin/BrokemiaHelper.dll",
+          "sha256": "89408eb1fb4ab1f11312f5dcbb579d3747b7b5bf38f7bf2c62359ffe2c1df841"
+        }
+      ],
+      "name": "BrokemiaHelper",
+      "version": "1.8.5",
+      "wholePackageCompatible": false,
+      "zipSha256": "c80d7d71cdccef7c9b418e05d53debd197b59717d3cdeade72910ace33d4fbeb"
+    },
+    {
+      "distributedDlls": [
+        {
+          "path": "Code/bin/CherryHelper.dll",
+          "sha256": "dd0951122a93ffce9cfd74e36415dff34473061eacb792cf758168080828a2fa"
+        }
+      ],
+      "name": "CherryHelper",
+      "version": "1.8.2",
+      "wholePackageCompatible": false,
+      "zipSha256": "8ca640f9e14f844507e0bbedc2afcb99ef61bec6957a7558cee90e9fabd2fba7"
+    },
+    {
+      "distributedDlls": [
+        {
+          "path": "bin/CollabUtils2.dll",
+          "sha256": "ce7d646252a2fc51f1f513071d97eaa1acedf7ddb0871276c688914e37319f60"
+        }
+      ],
+      "name": "CollabUtils2",
+      "version": "1.13.4",
+      "wholePackageCompatible": false,
+      "zipSha256": "4bcea8a9011edb8b7d27b433c47f1f4a871b8f7a4dd7f2bffac67bb99c7f6ad5"
+    },
+    {
+      "distributedDlls": [
+        {
+          "path": "ContortHelper.dll",
+          "sha256": "c3983e67e1b535fbb1e0f0a541e8c78ad8f4cd150f66636c783a83dc5ffb4488"
+        }
+      ],
+      "name": "ContortHelper",
+      "version": "1.5.5",
+      "wholePackageCompatible": false,
+      "zipSha256": "d8b42128a808e68d30329baa9299fdb41bf7d24743635dec3137c36bcc87956a"
+    },
+    {
+      "distributedDlls": [
+        {
+          "path": "Code/bin/vitmod.dll",
+          "sha256": "456410258fbce4594c3e987d025bf651e1bd3f49d2d676a921d8ea9f27ba052a"
+        }
+      ],
+      "name": "CrystallineHelper",
+      "version": "1.17.2",
+      "wholePackageCompatible": false,
+      "zipSha256": "4573f5e45dce0905142cd2b119f4a9a744bdce8ef3199319d1e46b6d1d342747"
+    },
+    {
+      "distributedDlls": [
+        {
+          "path": "DJMapHelper.dll",
+          "sha256": "0d73202b5e16f26a4c8a286dd6ad600c1601d1904d8f72d909f8acb8469ee446"
+        }
+      ],
+      "name": "DJMapHelper",
+      "version": "1.13.4",
+      "wholePackageCompatible": false,
+      "zipSha256": "95ab02d657213031b70c3079738b21be399e567ca8a32b1fe8e8effc0778eedb"
+    },
+    {
+      "distributedDlls": [
+        {
+          "path": "bin/ExtendedVariantMode.dll",
+          "sha256": "cb28846f7f7348ddb996f63498c97694616436e97ef34f67880b697ba024fe81"
+        }
+      ],
+      "name": "ExtendedVariantMode",
+      "version": "0.50.5",
+      "wholePackageCompatible": false,
+      "zipSha256": "4019b362d9ad1b2d3a6a670f833ef6324d735d5791a0bf21b62cf5cfbc0d639d"
+    },
+    {
+      "distributedDlls": [
+        {
+          "path": "FancyTileEntities/bin/Debug/net452/FancyTileEntities.dll",
+          "sha256": "48c4ba952c602c8f40325392edf9975c86ea7a90cd25a3954b0efe7086b6f0a1"
+        }
+      ],
+      "name": "FancyTileEntities",
+      "version": "1.6.2",
+      "wholePackageCompatible": false,
+      "zipSha256": "c37806dc7e7db4a392c8ab79030701f4cf2046109cc19435b607fca7fe41c8d8"
+    },
+    {
+      "distributedDlls": [
+        {
+          "path": "bin/FemtoHelper.dll",
+          "sha256": "f99b8ec46987b8dd5b0ce018f854d55f07519651d720d63ed7343eaf82963280"
+        }
+      ],
+      "name": "FemtoHelper",
+      "version": "1.15.22",
+      "wholePackageCompatible": false,
+      "zipSha256": "5a845805bae30490ed7c9da84410fbe672628b8fe927a830f5f2eb148eb88419"
+    },
+    {
+      "distributedDlls": [
+        {
+          "path": "bin/FlaglinesAndSuch.dll",
+          "sha256": "42801778b18505cd4455e59e5c3865f3f0268580d73e256e886b531cd8025ede"
+        }
+      ],
+      "name": "FlaglinesAndSuch",
+      "version": "1.6.80",
+      "wholePackageCompatible": false,
+      "zipSha256": "fb0fd300f95d77539eb9079aed445c81f263557c1a1715187bd509d39c1eb794"
+    },
+    {
+      "distributedDlls": [
+        {
+          "path": "Code/FrostHelper/bin/FrostTempleHelper.dll",
+          "sha256": "723e204638703111c12746badd31b8d37cd41d4978d1a2d98315647406d880af"
+        }
+      ],
+      "name": "FrostHelper",
+      "version": "1.80.1",
+      "wholePackageCompatible": false,
+      "zipSha256": "ba6aee8f596eff0f595fd90cb7f136ea13b1e9c2d664fc38f389608b0f9e2c81"
+    },
+    {
+      "distributedDlls": [
+        {
+          "path": "Code/bin/HonlyHelper.dll",
+          "sha256": "110a7d00881f4ad38b587ca51afdb0f03c4d3d0ac20cc46da3e665615932c367"
+        }
+      ],
+      "name": "HonlyHelper",
+      "version": "1.7.5",
+      "wholePackageCompatible": false,
+      "zipSha256": "6a2d0f04a5be3a9c9c3bf66ec7e93701398a64d5a0e72add5df682e860e7d08d"
+    },
+    {
+      "distributedDlls": [
+        {
+          "path": "Code/bin/JungleHelper.dll",
+          "sha256": "fed840ade7250f05e38b70a81bcfe751ca87ff63274f4b568172868cacf56f8a"
+        }
+      ],
+      "name": "JungleHelper",
+      "version": "1.4.10",
+      "wholePackageCompatible": false,
+      "zipSha256": "a140e21cbb5fd2dcaac70d4d5e36d49476e414861455ae25dedc0678164406cc"
+    },
+    {
+      "distributedDlls": [
+        {
+          "path": "LunaticHelper.dll",
+          "sha256": "fc08f00296551a6025c5e31422c6edd5e8136e6861459f44ffea909129c6a925"
+        }
+      ],
+      "name": "LunaticHelper",
+      "version": "1.1.1",
+      "wholePackageCompatible": false,
+      "zipSha256": "b10e044b1dfa412605bee3ba6bfdd4263591099d331d6c1aab1e9ba65bf6a3e5"
+    },
+    {
+      "distributedDlls": [
+        {
+          "path": "bin/MaxHelpingHand.dll",
+          "sha256": "6f463f2c014eb60c4abb61e395eb5065455d4bf469f4c83fce9814fb7bfcdfa6"
+        }
+      ],
+      "name": "MaxHelpingHand",
+      "version": "1.40.9",
+      "wholePackageCompatible": false,
+      "zipSha256": "abfc5d167936410e9b6665018335ee654455e30710caffe01540b232da468fee"
+    },
+    {
+      "distributedDlls": [
+        {
+          "path": "PandorasBox.dll",
+          "sha256": "d48168822a646892dc9850ebfcb75376cb80663cef7c2fceb9c36fe3d3af02e7"
+        }
+      ],
+      "name": "PandorasBox",
+      "version": "1.0.49",
+      "wholePackageCompatible": false,
+      "zipSha256": "25f9c7d6792983ac697e3780667fb0963233c0c08f6e528f5c6d9fe732cded05"
+    },
+    {
+      "distributedDlls": [
+        {
+          "path": "Code/StrawberryJam2021.dll",
+          "sha256": "8d5b9184204e7e7728965bcf95af5f150f6220dafbfe52fdd6c23e50d47e5258"
+        }
+      ],
+      "name": "StrawberryJam2021",
+      "version": "1.0.12",
+      "wholePackageCompatible": false,
+      "zipSha256": "4e1a2fc12baa3db27da433b93bf26b59f34b3e6b7f760c41d8d127636d020655"
+    },
+    {
+      "distributedDlls": [],
+      "name": "StrawberryJam2021Assets",
+      "version": "1.0.1",
+      "wholePackageCompatible": false,
+      "zipSha256": "26fab85f20fff89d1adcba2ef926c3447d9996057c7dfc78e5d97f9d96ed7e45"
+    },
+    {
+      "distributedDlls": [],
+      "name": "StrawberryJam2021AudioA",
+      "version": "1.0.4",
+      "wholePackageCompatible": false,
+      "zipSha256": "81e9cbc39b3a5525c93dfc5b24b675a833a8fb616e8a01cfc0838296f5e37e1d"
+    },
+    {
+      "distributedDlls": [],
+      "name": "StrawberryJam2021AudioB",
+      "version": "1.0.0",
+      "wholePackageCompatible": false,
+      "zipSha256": "70b90f45709956a4d18bfbb5941836c534344a1cf0ab859a50430daa3b76ef42"
+    },
+    {
+      "distributedDlls": [
+        {
+          "path": "dll/VivHelper.dll",
+          "sha256": "d843355cbce2be03611d46a200cc4b341888ec53deb29e940b18442bbdc4f55f"
+        }
+      ],
+      "name": "VivHelper",
+      "version": "1.14.10",
+      "wholePackageCompatible": false,
+      "zipSha256": "9a95f51659ccfcb78404f9610307918d6114fc824298fbb8493651ec7c80215a"
+    },
+    {
+      "distributedDlls": [
+        {
+          "path": "Code/bin/VortexHelper.dll",
+          "sha256": "f5a32f02c2699dcdf41bb1af808ead631491571c3d259429761953693bd37f73"
+        }
+      ],
+      "name": "VortexHelper",
+      "version": "1.2.19",
+      "wholePackageCompatible": false,
+      "zipSha256": "b6280fe2e3c05d355c32a51049854137c41be72d24ec4aec9d997cc7c4394db2"
+    },
+    {
+      "distributedDlls": [
+        {
+          "path": "Code/bin/XaphanHelper.dll",
+          "sha256": "e408dc081cb79d89b3436724b74413a603189cb53e84af5844918df08717273c"
+        }
+      ],
+      "name": "XaphanHelper",
+      "version": "1.0.79",
+      "wholePackageCompatible": false,
+      "zipSha256": "ca868d06eb05f0c5de55126090e5019210e9d83c3dae9394cbcd155acf8eb16f"
+    },
+    {
+      "distributedDlls": [
+        {
+          "path": "YetAnotherHelper/bin/Debug/net452/YetAnotherHelper.dll",
+          "sha256": "f48e16a568edf43913beac0684bd26b7dc12d45be4011a8b214e05db86b78aea"
+        }
+      ],
+      "name": "YetAnotherHelper",
+      "version": "1.2.5",
+      "wholePackageCompatible": false,
+      "zipSha256": "73d64e1b3457e2461d3368a01de9f5f31a58bf24e130f3e35ec7280b24814c2d"
+    }
+  ],
+  "realSliceSemanticClosureEstablished": false,
+  "registryAuthority": "ACCEPTED_KJ_ACTUAL_COMPILED_PROFILE; NO_KK_REAL_SLICE_PRODUCT",
+  "schemaVersion": 1,
+  "selectedFactories": [
+    {
+      "customId": "FemtoHelper/WindPetals",
+      "distinctProfiles": 2,
+      "kind": "backdrop",
+      "occurrences": 2,
+      "provider": "FemtoHelper"
+    },
+    {
+      "customId": "FlaglinesAndSuch/customDreamStars",
+      "distinctProfiles": 1,
+      "kind": "backdrop",
+      "occurrences": 1,
+      "provider": "FlaglinesAndSuch"
+    },
+    {
+      "customId": "FlaglinesAndSuch/customGodrays",
+      "distinctProfiles": 1,
+      "kind": "backdrop",
+      "occurrences": 1,
+      "provider": "FlaglinesAndSuch"
+    },
+    {
+      "customId": "LunaticHelper/CustomDust",
+      "distinctProfiles": 3,
+      "kind": "backdrop",
+      "occurrences": 3,
+      "provider": "LunaticHelper"
+    },
+    {
+      "customId": "MaxHelpingHand/HeatWaveNoColorGrade",
+      "distinctProfiles": 1,
+      "kind": "backdrop",
+      "occurrences": 1,
+      "provider": "MaxHelpingHand"
+    },
+    {
+      "customId": "BrokemiaHelper/caveWall",
+      "distinctProfiles": 1,
+      "kind": "entity",
+      "occurrences": 1,
+      "provider": "BrokemiaHelper"
+    },
+    {
+      "customId": "CherryHelper/AssistRect",
+      "distinctProfiles": 14,
+      "kind": "entity",
+      "occurrences": 47,
+      "provider": "CherryHelper"
+    },
+    {
+      "customId": "CherryHelper/ItemCrystal",
+      "distinctProfiles": 1,
+      "kind": "entity",
+      "occurrences": 1,
+      "provider": "CherryHelper"
+    },
+    {
+      "customId": "CherryHelper/ItemCrystalPedestal",
+      "distinctProfiles": 1,
+      "kind": "entity",
+      "occurrences": 1,
+      "provider": "CherryHelper"
+    },
+    {
+      "customId": "CollabUtils2/LobbyMapController",
+      "distinctProfiles": 1,
+      "kind": "entity",
+      "occurrences": 1,
+      "provider": "CollabUtils2"
+    },
+    {
+      "customId": "CollabUtils2/LobbyMapMarker",
+      "distinctProfiles": 1,
+      "kind": "entity",
+      "occurrences": 1,
+      "provider": "CollabUtils2"
+    },
+    {
+      "customId": "CollabUtils2/LobbyMapWarp",
+      "distinctProfiles": 6,
+      "kind": "entity",
+      "occurrences": 6,
+      "provider": "CollabUtils2"
+    },
+    {
+      "customId": "CollabUtils2/MiniHeart",
+      "distinctProfiles": 1,
+      "kind": "entity",
+      "occurrences": 1,
+      "provider": "CollabUtils2"
+    },
+    {
+      "customId": "CollabUtils2/MiniHeartDoor",
+      "distinctProfiles": 1,
+      "kind": "entity",
+      "occurrences": 1,
+      "provider": "CollabUtils2"
+    },
+    {
+      "customId": "CollabUtils2/RainbowBerry",
+      "distinctProfiles": 1,
+      "kind": "entity",
+      "occurrences": 1,
+      "provider": "CollabUtils2"
+    },
+    {
+      "customId": "CollabUtils2/SilverBerry",
+      "distinctProfiles": 1,
+      "kind": "entity",
+      "occurrences": 1,
+      "provider": "CollabUtils2"
+    },
+    {
+      "customId": "FancyTileEntities/FancySolidTiles",
+      "distinctProfiles": 41,
+      "kind": "entity",
+      "occurrences": 47,
+      "provider": "FancyTileEntities"
+    },
+    {
+      "customId": "FemtoHelper/CustomParallaxBigWaterfall",
+      "distinctProfiles": 18,
+      "kind": "entity",
+      "occurrences": 24,
+      "provider": "FemtoHelper"
+    },
+    {
+      "customId": "FemtoHelper/ParticleEmitter",
+      "distinctProfiles": 1,
+      "kind": "entity",
+      "occurrences": 6,
+      "provider": "FemtoHelper"
+    },
+    {
+      "customId": "FrostHelper/CustomFireBarrier",
+      "distinctProfiles": 1,
+      "kind": "entity",
+      "occurrences": 1,
+      "provider": "FrostHelper"
+    },
+    {
+      "customId": "FrostHelper/CustomFlutterBird",
+      "distinctProfiles": 2,
+      "kind": "entity",
+      "occurrences": 2,
+      "provider": "FrostHelper"
+    },
+    {
+      "customId": "FrostHelper/DecalContainer",
+      "distinctProfiles": 1,
+      "kind": "entity",
+      "occurrences": 1,
+      "provider": "FrostHelper"
+    },
+    {
+      "customId": "FrostHelper/EntityMover",
+      "distinctProfiles": 1,
+      "kind": "entity",
+      "occurrences": 1,
+      "provider": "FrostHelper"
+    },
+    {
+      "customId": "FrostHelper/IceSpinner",
+      "distinctProfiles": 2,
+      "kind": "entity",
+      "occurrences": 20,
+      "provider": "FrostHelper"
+    },
+    {
+      "customId": "FrostHelper/WireLamps",
+      "distinctProfiles": 10,
+      "kind": "entity",
+      "occurrences": 10,
+      "provider": "FrostHelper"
+    },
+    {
+      "customId": "HonlyHelper/PettableCat",
+      "distinctProfiles": 1,
+      "kind": "entity",
+      "occurrences": 3,
+      "provider": "HonlyHelper"
+    },
+    {
+      "customId": "JungleHelper/MossyWall",
+      "distinctProfiles": 11,
+      "kind": "entity",
+      "occurrences": 209,
+      "provider": "JungleHelper"
+    },
+    {
+      "customId": "LunaticHelper/InvisibleLightSource",
+      "distinctProfiles": 1,
+      "kind": "entity",
+      "occurrences": 2,
+      "provider": "LunaticHelper"
+    },
+    {
+      "customId": "LunaticHelper/StrawberryWithReturn",
+      "distinctProfiles": 1,
+      "kind": "entity",
+      "occurrences": 1,
+      "provider": "LunaticHelper"
+    },
+    {
+      "customId": "MaxHelpingHand/CustomTutorialWithNoBird",
+      "distinctProfiles": 1,
+      "kind": "entity",
+      "occurrences": 1,
+      "provider": "MaxHelpingHand"
+    },
+    {
+      "customId": "MaxHelpingHand/FlagExitBlock",
+      "distinctProfiles": 7,
+      "kind": "entity",
+      "occurrences": 7,
+      "provider": "MaxHelpingHand"
+    },
+    {
+      "customId": "MaxHelpingHand/GroupedTriggerSpikesUp",
+      "distinctProfiles": 1,
+      "kind": "entity",
+      "occurrences": 1,
+      "provider": "MaxHelpingHand"
+    },
+    {
+      "customId": "MaxHelpingHand/MoreCustomNPC",
+      "distinctProfiles": 1,
+      "kind": "entity",
+      "occurrences": 1,
+      "provider": "MaxHelpingHand"
+    },
+    {
+      "customId": "MaxHelpingHand/ParallaxFadeOutController",
+      "distinctProfiles": 1,
+      "kind": "entity",
+      "occurrences": 1,
+      "provider": "MaxHelpingHand"
+    },
+    {
+      "customId": "MaxHelpingHand/RainbowSpinnerColorAreaController",
+      "distinctProfiles": 1,
+      "kind": "entity",
+      "occurrences": 1,
+      "provider": "MaxHelpingHand"
+    },
+    {
+      "customId": "MaxHelpingHand/SetFlagOnSpawnController",
+      "distinctProfiles": 2,
+      "kind": "entity",
+      "occurrences": 2,
+      "provider": "MaxHelpingHand"
+    },
+    {
+      "customId": "MaxHelpingHand/SidewaysJumpThru",
+      "distinctProfiles": 7,
+      "kind": "entity",
+      "occurrences": 8,
+      "provider": "MaxHelpingHand"
+    },
+    {
+      "customId": "MaxHelpingHand/StylegroundFadeController",
+      "distinctProfiles": 1,
+      "kind": "entity",
+      "occurrences": 1,
+      "provider": "MaxHelpingHand"
+    },
+    {
+      "customId": "SJ2021/AllInOneMask",
+      "distinctProfiles": 8,
+      "kind": "entity",
+      "occurrences": 8,
+      "provider": "StrawberryJam2021"
+    },
+    {
+      "customId": "SJ2021/BloomMask",
+      "distinctProfiles": 2,
+      "kind": "entity",
+      "occurrences": 3,
+      "provider": "StrawberryJam2021"
+    },
+    {
+      "customId": "SJ2021/GlowController",
+      "distinctProfiles": 1,
+      "kind": "entity",
+      "occurrences": 1,
+      "provider": "StrawberryJam2021"
+    },
+    {
+      "customId": "SJ2021/StrawberryJamJar",
+      "distinctProfiles": 21,
+      "kind": "entity",
+      "occurrences": 21,
+      "provider": "StrawberryJam2021"
+    },
+    {
+      "customId": "SJ2021/StylegroundMask",
+      "distinctProfiles": 39,
+      "kind": "entity",
+      "occurrences": 39,
+      "provider": "StrawberryJam2021"
+    },
+    {
+      "customId": "VivHelper/CustomHangingLamp",
+      "distinctProfiles": 5,
+      "kind": "entity",
+      "occurrences": 7,
+      "provider": "VivHelper"
+    },
+    {
+      "customId": "VivHelper/CustomSpinner",
+      "distinctProfiles": 3,
+      "kind": "entity",
+      "occurrences": 14,
+      "provider": "VivHelper"
+    },
+    {
+      "customId": "VortexHelper/AttachedJumpThru",
+      "distinctProfiles": 1,
+      "kind": "entity",
+      "occurrences": 2,
+      "provider": "VortexHelper"
+    },
+    {
+      "customId": "XaphanHelper/Slope",
+      "distinctProfiles": 10,
+      "kind": "entity",
+      "occurrences": 14,
+      "provider": "XaphanHelper"
+    },
+    {
+      "customId": "YetAnotherHelper/BubbleField",
+      "distinctProfiles": 4,
+      "kind": "entity",
+      "occurrences": 4,
+      "provider": "YetAnotherHelper"
+    },
+    {
+      "customId": "pandorasBox/coloredBigWaterfall",
+      "distinctProfiles": 2,
+      "kind": "entity",
+      "occurrences": 2,
+      "provider": "PandorasBox"
+    },
+    {
+      "customId": "pandorasBox/coloredWater",
+      "distinctProfiles": 50,
+      "kind": "entity",
+      "occurrences": 54,
+      "provider": "PandorasBox"
+    },
+    {
+      "customId": "pandorasBox/coloredWaterfall",
+      "distinctProfiles": 3,
+      "kind": "entity",
+      "occurrences": 30,
+      "provider": "PandorasBox"
+    },
+    {
+      "customId": "pandorasBox/entityActivator",
+      "distinctProfiles": 3,
+      "kind": "entity",
+      "occurrences": 3,
+      "provider": "PandorasBox"
+    },
+    {
+      "customId": "CollabUtils2/ChapterPanelTrigger",
+      "distinctProfiles": 2,
+      "kind": "trigger",
+      "occurrences": 2,
+      "provider": "CollabUtils2"
+    },
+    {
+      "customId": "CollabUtils2/JournalTrigger",
+      "distinctProfiles": 1,
+      "kind": "trigger",
+      "occurrences": 9,
+      "provider": "CollabUtils2"
+    },
+    {
+      "customId": "CollabUtils2/MiniHeartDoorUnlockCutsceneTrigger",
+      "distinctProfiles": 1,
+      "kind": "trigger",
+      "occurrences": 1,
+      "provider": "CollabUtils2"
+    },
+    {
+      "customId": "CollabUtils2/RainbowBerryUnlockCutsceneTrigger",
+      "distinctProfiles": 1,
+      "kind": "trigger",
+      "occurrences": 1,
+      "provider": "CollabUtils2"
+    },
+    {
+      "customId": "ContortHelper/MadelineSpotlightModifierTrigger",
+      "distinctProfiles": 3,
+      "kind": "trigger",
+      "occurrences": 3,
+      "provider": "ContortHelper"
+    },
+    {
+      "customId": "DJMapHelper/colorGradeTrigger",
+      "distinctProfiles": 6,
+      "kind": "trigger",
+      "occurrences": 7,
+      "provider": "DJMapHelper"
+    },
+    {
+      "customId": "ExtendedVariantMode/FloatExtendedVariantFadeTrigger",
+      "distinctProfiles": 3,
+      "kind": "trigger",
+      "occurrences": 3,
+      "provider": "ExtendedVariantMode"
+    },
+    {
+      "customId": "ExtendedVariantMode/ResetVariantsTrigger",
+      "distinctProfiles": 1,
+      "kind": "trigger",
+      "occurrences": 1,
+      "provider": "ExtendedVariantMode"
+    },
+    {
+      "customId": "FrostHelper/OnSpawnActivator",
+      "distinctProfiles": 1,
+      "kind": "trigger",
+      "occurrences": 1,
+      "provider": "FrostHelper"
+    },
+    {
+      "customId": "HonlyHelper/CameraTargetCrossfadeTrigger",
+      "distinctProfiles": 3,
+      "kind": "trigger",
+      "occurrences": 3,
+      "provider": "HonlyHelper"
+    },
+    {
+      "customId": "MaxHelpingHand/CameraCatchupSpeedTrigger",
+      "distinctProfiles": 2,
+      "kind": "trigger",
+      "occurrences": 2,
+      "provider": "MaxHelpingHand"
+    },
+    {
+      "customId": "MaxHelpingHand/CameraOffsetBorder",
+      "distinctProfiles": 42,
+      "kind": "trigger",
+      "occurrences": 42,
+      "provider": "MaxHelpingHand"
+    },
+    {
+      "customId": "MaxHelpingHand/ColorGradeFadeTrigger",
+      "distinctProfiles": 18,
+      "kind": "trigger",
+      "occurrences": 18,
+      "provider": "MaxHelpingHand"
+    },
+    {
+      "customId": "MaxHelpingHand/FlagToggleCameraOffsetTrigger",
+      "distinctProfiles": 10,
+      "kind": "trigger",
+      "occurrences": 10,
+      "provider": "MaxHelpingHand"
+    },
+    {
+      "customId": "MaxHelpingHand/FlagToggleCameraTargetTrigger",
+      "distinctProfiles": 2,
+      "kind": "trigger",
+      "occurrences": 2,
+      "provider": "MaxHelpingHand"
+    },
+    {
+      "customId": "MaxHelpingHand/FlagToggleSmoothCameraOffsetTrigger",
+      "distinctProfiles": 6,
+      "kind": "trigger",
+      "occurrences": 6,
+      "provider": "MaxHelpingHand"
+    },
+    {
+      "customId": "everest/flagTrigger",
+      "distinctProfiles": 99,
+      "kind": "trigger",
+      "occurrences": 111,
+      "provider": "EverestCore"
+    },
+    {
+      "customId": "everest/smoothCameraOffsetTrigger",
+      "distinctProfiles": 22,
+      "kind": "trigger",
+      "occurrences": 23,
+      "provider": "EverestCore"
+    },
+    {
+      "customId": "vitellary/bloomstrengthtrigger",
+      "distinctProfiles": 9,
+      "kind": "trigger",
+      "occurrences": 9,
+      "provider": "CrystallineHelper"
+    },
+    {
+      "customId": "vitellary/editdepthtrigger",
+      "distinctProfiles": 7,
+      "kind": "trigger",
+      "occurrences": 43,
+      "provider": "CrystallineHelper"
+    },
+    {
+      "customId": "vitellary/triggertrigger",
+      "distinctProfiles": 1,
+      "kind": "trigger",
+      "occurrences": 1,
+      "provider": "CrystallineHelper"
+    }
+  ],
+  "selectedFactorySemanticCensus": {
+    "blocked": 0,
+    "fullyClosed": 73,
+    "selected": 73,
+    "unknown": 0
+  },
+  "stage": "25K-K",
+  "status": "ACCEPTED_KJ_SELECTED_FACTORY_SCOPE_UNCHANGED"
+}

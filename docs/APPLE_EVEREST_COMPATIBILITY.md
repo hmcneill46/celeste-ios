@@ -1,8 +1,8 @@
 # Apple Everest real-mod compatibility
 
 This is a technical test matrix for the experimental shared Apple static-AOT
-builder. It lists exact public inputs and the separate Stage 25K-J implementation
-work. It is not
+builder. It lists exact public inputs, Stage 25K-J implementation acceptance,
+and the Stage 25K-K real-content integration stop. It is not
 a promise that similarly named, newer, older, or dependent mods work. The
 normal iOS and tvOS products do not contain these mods.
 
@@ -49,8 +49,11 @@ Future integration requires all three gates:
 | B: production registration | Exact supplied ZIP/DLL/version, regenerated production registry, independently compiled implementation and actual profile guards | 73 available, zero missing |
 | C: selected semantics | Source review, required constructor/lifecycle/hook/content closure, actual canary dispatch and representative physical acceptance | 73 closed, zero blocked or unknown |
 
-The K-J production check currently establishes A and B. C remains pending
-the exact K-J device canaries; earlier K-H physical passes do not establish it.
+Accepted K-J build 41 establishes A, B and C for the selected canary profiles,
+with user-reported acceptance on iPhone 12 and Apple TV. The exact final
+[accepted semantic ledger](../apple-everest/sj-kj-accepted-semantic-stage25kk.json)
+is preserved with its accepted SHA256; it supersedes the pending observation
+in the earlier frozen K-J implementation report.
 The 43 starting failures comprise 19 accepted-package missing registrations,
 seven FrostHelper identity mismatches and 17 provider-analysis rejections.
 Selected bounded implementations do not establish whole-helper compatibility.
@@ -69,7 +72,28 @@ reference. Only a completed three-gate K-J acceptance may emit
 `READY_FOR_K_K_REAL_SJ_INTEGRATION_RETRY`; K-K then owns the unchanged lobby/Bing
 retry. The historical K-I readiness marker is insufficient. Full Beginner and
 full Strawberry Jam support remain unproved. Stage 25K-B build 35 remains the
-last all-three-device physical GREEN while an iPad is unavailable.
+last all-three-device physical GREEN. K-K explicitly defers iPad mini 4 under
+`IPADOS_PHYSICAL_DEFERRED_LEGACY_COMPATIBILITY_POLICY`; it is not a K-K physical
+development gate.
+
+K-K stopped **YELLOW_NEW_AUTOTILER_COMPATIBILITY_MECHANISM** before Apple
+product generation. Fresh exact-package regeneration and six-DLL compilation
+retain K-J's selected 920/920 content, 73/73 registration and 73/73 accepted
+semantic gates. The unchanged lobby nevertheless uses 26 tiles from an Everest
+5×5 custom tile definition. The accepted compiled Autotiler allocates nine-cell
+masks and matches fixed 3×3 neighborhoods. Two authored cells with identical
+3×3 surroundings require different 5×5 results, so a smaller template projection
+cannot preserve the original rendering. This is a new mechanism under the
+stage's stop policy. No original map was changed, no K-K product was built or
+installed, and no real-slice physical acceptance is claimed. The accepted K-J
+build 41 products remain the latest primary-device acceptance.
+
+The [K-K report](history/stages/APPLE_EVEREST_FIRST_SJ_SLICE_STAGE25KK_REPORT.md),
+[terrain evidence](../apple-everest/sj-beginner-terrain-stage25kk.json) and
+[production readiness](../apple-everest/sj-beginner-production-readiness-stage25kk.json)
+record the reproducible stop. Close and accept the bounded custom-autotiler
+mechanism before retrying the unchanged lobby/Bing slice. A Beginner expansion
+audit remains premature.
 
 ## Bounded build-time frozen IL
 

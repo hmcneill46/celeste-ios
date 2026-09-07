@@ -1,0 +1,1193 @@
+{
+  "aevpsv1SchemaVersion": 1,
+  "allPlatformReleaseReady": false,
+  "branch": "feature/apple-everest-first-sj-slice-retry2",
+  "buildNumberChanged": false,
+  "contentPlan": {
+    "additionalRootFilesRequiredBeforeFutureProduct": [
+      {
+        "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/cave/coral/coral_00.png",
+        "reason": "Animation frame already required by accepted K-J decal definitions",
+        "sha256": "aecace2bbc17c3994934a8b31c935359c36dd5b09a465ea9e76ea6243e8bd68c"
+      },
+      {
+        "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/cave/coral/coral_01.png",
+        "reason": "Animation frame already required by accepted K-J decal definitions",
+        "sha256": "a3f0aed969d69cb44450d48a0a892e8623610a00ae2e32448794de23c7c5d090"
+      },
+      {
+        "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/cave/coral/coral_08.png",
+        "reason": "Animation frame already required by accepted K-J decal definitions",
+        "sha256": "e025ace30229ab9694f37c8a9aa9aeca315f1b383283159dec09ed0e1275cb32"
+      },
+      {
+        "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/cave/coral/coral_09.png",
+        "reason": "Animation frame already required by accepted K-J decal definitions",
+        "sha256": "71b852fa6ac07b264fc035c46f66b219a26b4c3e8a921219ec231b36466f7c48"
+      },
+      {
+        "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/cave/coral/coral_10.png",
+        "reason": "Animation frame already required by accepted K-J decal definitions",
+        "sha256": "e6882a68d0049272a0da77a043cbcbd44d74d28bc650136ef466e0923049259a"
+      },
+      {
+        "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/cave/coral/coral_11.png",
+        "reason": "Animation frame already required by accepted K-J decal definitions",
+        "sha256": "3e0fcbe50b05b3936c3cbe6750bea6dfe68e32f87a7e318e81ef1a78b65e1f90"
+      },
+      {
+        "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/cave/coral/coral_12.png",
+        "reason": "Animation frame already required by accepted K-J decal definitions",
+        "sha256": "e9c6d91e66d21bfd5cb03afda181fb0ce69fbfdaf17a9587099860f3af761f9f"
+      },
+      {
+        "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/cave/coral/coral_b00.png",
+        "reason": "Animation frame already required by accepted K-J decal definitions",
+        "sha256": "aecace2bbc17c3994934a8b31c935359c36dd5b09a465ea9e76ea6243e8bd68c"
+      },
+      {
+        "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/cave/coral/coral_b01.png",
+        "reason": "Animation frame already required by accepted K-J decal definitions",
+        "sha256": "a3f0aed969d69cb44450d48a0a892e8623610a00ae2e32448794de23c7c5d090"
+      },
+      {
+        "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/cave/coral/coral_b08.png",
+        "reason": "Animation frame already required by accepted K-J decal definitions",
+        "sha256": "e025ace30229ab9694f37c8a9aa9aeca315f1b383283159dec09ed0e1275cb32"
+      },
+      {
+        "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/cave/coral/coral_b09.png",
+        "reason": "Animation frame already required by accepted K-J decal definitions",
+        "sha256": "71b852fa6ac07b264fc035c46f66b219a26b4c3e8a921219ec231b36466f7c48"
+      },
+      {
+        "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/cave/coral/coral_b10.png",
+        "reason": "Animation frame already required by accepted K-J decal definitions",
+        "sha256": "e6882a68d0049272a0da77a043cbcbd44d74d28bc650136ef466e0923049259a"
+      },
+      {
+        "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/cave/coral/coral_b11.png",
+        "reason": "Animation frame already required by accepted K-J decal definitions",
+        "sha256": "3e0fcbe50b05b3936c3cbe6750bea6dfe68e32f87a7e318e81ef1a78b65e1f90"
+      },
+      {
+        "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/cave/coral/coral_b12.png",
+        "reason": "Animation frame already required by accepted K-J decal definitions",
+        "sha256": "e9c6d91e66d21bfd5cb03afda181fb0ce69fbfdaf17a9587099860f3af761f9f"
+      },
+      {
+        "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/cave/coral/coral_c00.png",
+        "reason": "Animation frame already required by accepted K-J decal definitions",
+        "sha256": "742e8c4ed2b2c08e60473f32d22b212eea607f66505ccb15dc85a718498c6e54"
+      },
+      {
+        "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/cave/coral/coral_c01.png",
+        "reason": "Animation frame already required by accepted K-J decal definitions",
+        "sha256": "687d78aaa1900682986f2e8d1cf235d1ece2eb6483dd5c6053410a13afc181a6"
+      },
+      {
+        "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/cave/coral/coral_c08.png",
+        "reason": "Animation frame already required by accepted K-J decal definitions",
+        "sha256": "9037f7d0ab8360a5c43f631d35d9fda8d4886662c6ed2e545dfdc308a396dd9a"
+      },
+      {
+        "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/cave/coral/coral_c09.png",
+        "reason": "Animation frame already required by accepted K-J decal definitions",
+        "sha256": "f3cbefe94030695e3c16cc1536417c9e352432debcc4180520ba600f3b537b67"
+      },
+      {
+        "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/cave/coral/coral_c10.png",
+        "reason": "Animation frame already required by accepted K-J decal definitions",
+        "sha256": "965b7bda03dd51b48c18f3cb545083f46de38b3d989eabb8392f9932577b3d8c"
+      },
+      {
+        "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/cave/coral/coral_c11.png",
+        "reason": "Animation frame already required by accepted K-J decal definitions",
+        "sha256": "0c154305cb74ff92bfd8c0c1e8c347b40960f8da4448f0e0cc4aed2e3a4b80d9"
+      },
+      {
+        "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/cave/coral/coral_c12.png",
+        "reason": "Animation frame already required by accepted K-J decal definitions",
+        "sha256": "77ae8bc3c4d72519f20b190d32f0d258b8fe9208a935bd029390c2c90f136fcf"
+      },
+      {
+        "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/cave/coral/coral_d00.png",
+        "reason": "Animation frame already required by accepted K-J decal definitions",
+        "sha256": "8300e14b0b8697663ea1111ef0a7e1ac5689176654078ad464d4815bf12baf89"
+      },
+      {
+        "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/cave/coral/coral_d01.png",
+        "reason": "Animation frame already required by accepted K-J decal definitions",
+        "sha256": "ebbe57253eedf681644fff0f9824becc5d6800da2e62cc49d185f11d1b0d3730"
+      },
+      {
+        "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/cave/coral/coral_d08.png",
+        "reason": "Animation frame already required by accepted K-J decal definitions",
+        "sha256": "c7428610d83341a46128adb45a741f32a19f890bb7c90822d80016a39610f77f"
+      },
+      {
+        "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/cave/coral/coral_d09.png",
+        "reason": "Animation frame already required by accepted K-J decal definitions",
+        "sha256": "02d766aa58962a720c9eaa8873acc88a0837f3ae05b06a3fb73696612df9058a"
+      },
+      {
+        "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/cave/coral/coral_d10.png",
+        "reason": "Animation frame already required by accepted K-J decal definitions",
+        "sha256": "d90ad3ea0da02e9290c1b930d074f447082167017c4bdf7c4007cc83c0051d99"
+      },
+      {
+        "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/cave/coral/coral_d11.png",
+        "reason": "Animation frame already required by accepted K-J decal definitions",
+        "sha256": "7f98d229ad6ceea76b85a40e8bdf526bd1da9c7a13fe5e577044b51f5bf4d702"
+      },
+      {
+        "path": "Graphics/Atlases/Gameplay/decals/SJ2021/BeginnerLobby/cave/coral/coral_d12.png",
+        "reason": "Animation frame already required by accepted K-J decal definitions",
+        "sha256": "6c7326f18f094827637f4c7d3072d7040bb4b4800f9da2dd86bd5524e21b61a0"
+      },
+      {
+        "path": "Graphics/Atlases/Gameplay/decals/SJ2021/snolls/animals/misc/spider/b/hanging_spider_a00.png",
+        "reason": "Animation frame already required by accepted K-J decal definitions",
+        "sha256": "df33943446a4d8aeb163438a7236785022b00a7cfa5bc5d804732ea536c5d5ab"
+      },
+      {
+        "path": "Graphics/Atlases/Gameplay/decals/SJ2021/snolls/animals/misc/spider/b/hanging_spider_a01.png",
+        "reason": "Animation frame already required by accepted K-J decal definitions",
+        "sha256": "562d660b66fc69943b87330fb0d807bb5adb5221e17341004402043aa9380750"
+      },
+      {
+        "path": "Graphics/Atlases/Gameplay/decals/SJ2021/snolls/animals/misc/spider/b/hanging_spider_a02.png",
+        "reason": "Animation frame already required by accepted K-J decal definitions",
+        "sha256": "52a0c8b7811b9e09288a0df3fc23475528bba0086e70d8847be941c71daf8983"
+      },
+      {
+        "path": "Graphics/Atlases/Gameplay/decals/SJ2021/snolls/animals/misc/spider/b/hanging_spider_a03.png",
+        "reason": "Animation frame already required by accepted K-J decal definitions",
+        "sha256": "be9b57aceebcfcec383dc998e0c89d2efe907c440010a5f458ed9af27acc9c90"
+      },
+      {
+        "path": "Graphics/Atlases/Gameplay/decals/SJ2021/snolls/animals/misc/spider/b/hanging_spider_a04.png",
+        "reason": "Animation frame already required by accepted K-J decal definitions",
+        "sha256": "1bbf1d248ccc6cb60663a0b4723e7c1db34d3bee65728574275b9f9704aace29"
+      },
+      {
+        "path": "Graphics/Atlases/Gameplay/decals/SJ2021/snolls/animals/misc/spider/b/hanging_spider_a05.png",
+        "reason": "Animation frame already required by accepted K-J decal definitions",
+        "sha256": "7dff52a2c0a1b5b7767da29218ff0cf9939a03a377d53d20080bf1ae67d706b6"
+      },
+      {
+        "path": "Graphics/Atlases/Gameplay/decals/SJ2021/snolls/animals/misc/spider/b/hanging_spider_a06.png",
+        "reason": "Animation frame already required by accepted K-J decal definitions",
+        "sha256": "938147852e6c7a69170ca284f07f6cb5ffab4880c7d0f940566899fc1b54a948"
+      },
+      {
+        "path": "Graphics/Atlases/Gameplay/decals/SJ2021/snolls/animals/misc/spider/b/hanging_spider_a07.png",
+        "reason": "Animation frame already required by accepted K-J decal definitions",
+        "sha256": "2823201cccb50652143fd272f04a80c4a7021127d8727367e2e3fdc265784b39"
+      },
+      {
+        "path": "Graphics/Atlases/Gameplay/decals/SJ2021/snolls/animals/misc/spider/b/hanging_spider_a08.png",
+        "reason": "Animation frame already required by accepted K-J decal definitions",
+        "sha256": "dd583ab0a99ecea375a59686a0638b567beae138721655b10c306faee5bfa15d"
+      },
+      {
+        "path": "Graphics/Atlases/Gameplay/decals/SJ2021/snolls/animals/misc/spider/b/hanging_spider_a09.png",
+        "reason": "Animation frame already required by accepted K-J decal definitions",
+        "sha256": "38bf49a6217884b63aa191e7f0bfb2318df470dada8693d81ae3214c3073fac8"
+      },
+      {
+        "path": "Graphics/Atlases/Gameplay/decals/SJ2021/snolls/animals/misc/spider/b/hanging_spider_a10.png",
+        "reason": "Animation frame already required by accepted K-J decal definitions",
+        "sha256": "3e33eac6e48054b9653ef9bdebab95c1f433ded84b419518f6242633cf9afd7a"
+      },
+      {
+        "path": "Graphics/Atlases/Gameplay/decals/SJ2021/snolls/animals/misc/spider/b/hanging_spider_a11.png",
+        "reason": "Animation frame already required by accepted K-J decal definitions",
+        "sha256": "116847b149886a156c010af4cd14bacbc938cbb91f98fbcd60913df2f7b61b0e"
+      },
+      {
+        "path": "Graphics/Atlases/Gameplay/decals/SJ2021/snolls/animals/misc/spider/b/hanging_spider_a12.png",
+        "reason": "Animation frame already required by accepted K-J decal definitions",
+        "sha256": "4f24c4f4dc88492c580609e326d0c55377529a6ad4dfce8c9d0a261623335126"
+      },
+      {
+        "path": "Graphics/Atlases/Gameplay/decals/SJ2021/snolls/animals/misc/spider/b/hanging_spider_a13.png",
+        "reason": "Animation frame already required by accepted K-J decal definitions",
+        "sha256": "b945d4364e776bcf6b571e8ed8ab52c5ce0af9a358114dac62b77da38f9f63cf"
+      },
+      {
+        "path": "Graphics/Atlases/Gameplay/decals/SJ2021/snolls/animals/misc/spider/b/hanging_spider_a14.png",
+        "reason": "Animation frame already required by accepted K-J decal definitions",
+        "sha256": "453d85e6750ee46b439755f95ccf59513dd3e840f3633bbf80459e747ecbfaa1"
+      },
+      {
+        "path": "Graphics/Atlases/Gameplay/decals/SJ2021/snolls/animals/misc/spider/b/hanging_spider_a15.png",
+        "reason": "Animation frame already required by accepted K-J decal definitions",
+        "sha256": "d1c7165d61602ab7126336390b1abfcf53b2f44efc97a56063a93f2561a86755"
+      },
+      {
+        "path": "Graphics/Atlases/Gameplay/decals/SJ2021/snolls/animals/misc/spider/b/hanging_spider_a16.png",
+        "reason": "Animation frame already required by accepted K-J decal definitions",
+        "sha256": "fce035442c51664b884eff80d94608668614bb455693517d4b75a4deda9aa3b9"
+      },
+      {
+        "path": "Graphics/Atlases/Gameplay/decals/SJ2021/snolls/animals/misc/spider/b/hanging_spider_a17.png",
+        "reason": "Animation frame already required by accepted K-J decal definitions",
+        "sha256": "fbbaa66ca582c24f3f42e26c85d50dcc91f51a2fa57f680900ec395243228b57"
+      },
+      {
+        "path": "Graphics/Atlases/Gameplay/decals/SJ2021/snolls/animals/misc/spider/b/hanging_spider_a18.png",
+        "reason": "Animation frame already required by accepted K-J decal definitions",
+        "sha256": "18b4d776244e655fb5b58f4b21ed83a588ec28b9de9368a1c65966351004c622"
+      },
+      {
+        "path": "Graphics/Atlases/Gameplay/decals/SJ2021/snolls/animals/misc/spider/b/hanging_spider_a19.png",
+        "reason": "Animation frame already required by accepted K-J decal definitions",
+        "sha256": "f6c1a1809a56836b37976e3bd00c25a195c252675fd5244807ebf9840b55c5dd"
+      },
+      {
+        "path": "Graphics/Atlases/Gameplay/decals/SJ2021/snolls/animals/misc/spider/b/hanging_spider_a21.png",
+        "reason": "Animation frame already required by accepted K-J decal definitions",
+        "sha256": "0b42ab15c786da7b25defa3eb898ecaa24757e5d9636ac3b0a667ca81e774658"
+      },
+      {
+        "path": "Graphics/Atlases/Gameplay/decals/SJ2021/snolls/animals/misc/spider/b/hanging_spider_a22.png",
+        "reason": "Animation frame already required by accepted K-J decal definitions",
+        "sha256": "1bab16f862ff415f7d80e70ca926990b066949dad64b7be87dc2a767e540e656"
+      },
+      {
+        "path": "Graphics/Atlases/Gameplay/decals/SJ2021/snolls/animals/misc/spider/b/hanging_spider_a23.png",
+        "reason": "Animation frame already required by accepted K-J decal definitions",
+        "sha256": "c6ff03884f7681f34325d2a74cee6e202a494fc078e93792c10f7993d580dc34"
+      },
+      {
+        "path": "Graphics/Atlases/Gameplay/decals/SJ2021/snolls/animals/misc/spider/b/hanging_spider_a24.png",
+        "reason": "Animation frame already required by accepted K-J decal definitions",
+        "sha256": "6fb88b0fa4aa6899a2c5a6965310199131362f232f734e149cd13e1377cbf1e5"
+      },
+      {
+        "path": "Graphics/Atlases/Gameplay/decals/SJ2021/snolls/animals/misc/spider/b/hanging_spider_a25.png",
+        "reason": "Animation frame already required by accepted K-J decal definitions",
+        "sha256": "fa3ef7dd89df620d6b7a3d20e7ae511f39c469937ee8868a8845e68783821400"
+      },
+      {
+        "path": "Graphics/Atlases/Gameplay/decals/SJ2021/snolls/animals/misc/spider/b/hanging_spider_a26.png",
+        "reason": "Animation frame already required by accepted K-J decal definitions",
+        "sha256": "0995109fd4d09822b7c527cdadeeebeb52a9230b394b0bf03a162d8da2dd660b"
+      },
+      {
+        "path": "Graphics/Atlases/Gameplay/decals/SJ2021/snolls/animals/misc/spider/b/hanging_spider_a27.png",
+        "reason": "Animation frame already required by accepted K-J decal definitions",
+        "sha256": "08cf90cd7ac35ded47abc708dfcdd043e50278fd7d357323a77bc238f41ff504"
+      },
+      {
+        "path": "Graphics/Atlases/Gameplay/decals/SJ2021/snolls/animals/misc/spider/b/hanging_spider_a28.png",
+        "reason": "Animation frame already required by accepted K-J decal definitions",
+        "sha256": "5ed21f83867f0e938730c8d0886857a841d600da42c7d2df2343440c70cb89e8"
+      },
+      {
+        "path": "Graphics/Atlases/Gameplay/decals/SJ2021/snolls/animals/misc/spider/b/hanging_spider_a29.png",
+        "reason": "Animation frame already required by accepted K-J decal definitions",
+        "sha256": "61eedc6f183ddad750bdd3b4cffc5c8047036567555f2b99593a7bf5920969da"
+      },
+      {
+        "path": "Graphics/Atlases/Gameplay/decals/SJ2021/snolls/animals/misc/spider/b/hanging_spider_a30.png",
+        "reason": "Animation frame already required by accepted K-J decal definitions",
+        "sha256": "41da53e5cdfe3f0ed7dd84da1d5f307838d66bbc259bee9392012b6875374800"
+      },
+      {
+        "path": "Graphics/Atlases/Gameplay/decals/SJ2021/snolls/animals/misc/spider/b/hanging_spider_a31.png",
+        "reason": "Animation frame already required by accepted K-J decal definitions",
+        "sha256": "6475a5427a34185abcb40a5d6646db72eb45a9182c28bc3d7d03d35fe75d755b"
+      },
+      {
+        "path": "Graphics/Atlases/Gameplay/decals/SJ2021/snolls/animals/misc/spider/b/hanging_spider_a32.png",
+        "reason": "Animation frame already required by accepted K-J decal definitions",
+        "sha256": "e80a001056d081caa038ebdc75555ff934588eaab67c8f063e2d17b536429022"
+      },
+      {
+        "path": "Graphics/Atlases/Gameplay/decals/SJ2021/snolls/animals/misc/spider/b/hanging_spider_a33.png",
+        "reason": "Animation frame already required by accepted K-J decal definitions",
+        "sha256": "e2582f87c389fefac69e1fbf94177b204f4981ad7a7d6c3a240d8cba74c53892"
+      },
+      {
+        "path": "Graphics/Atlases/Gameplay/decals/SJ2021/snolls/animals/misc/spider/b/hanging_spider_a34.png",
+        "reason": "Animation frame already required by accepted K-J decal definitions",
+        "sha256": "63a174f332f0ea49d70b8690dd56e1e69cd54e547f64021d1519e72b0d9c4345"
+      },
+      {
+        "path": "Graphics/Atlases/Gameplay/decals/SJ2021/snolls/animals/misc/spider/b/hanging_spider_a35.png",
+        "reason": "Animation frame already required by accepted K-J decal definitions",
+        "sha256": "30ef51a6416bae37575e8d750d4e3fa46c97cb033d61b74e9c0af901dde3a15d"
+      },
+      {
+        "path": "Graphics/Atlases/Gameplay/decals/SJ2021/snolls/animals/misc/spider/b/hanging_spider_a36.png",
+        "reason": "Animation frame already required by accepted K-J decal definitions",
+        "sha256": "1d4683f92c63174f329d19d6b7cabe178e5c1f4eb4e10d5485df0e9946fb87cf"
+      },
+      {
+        "path": "Graphics/Atlases/Gameplay/decals/SJ2021/snolls/animals/misc/spider/b/hanging_spider_a37.png",
+        "reason": "Animation frame already required by accepted K-J decal definitions",
+        "sha256": "ba8d62bcee87733f598d1e53117c72871ea4561f266a48d73cfe2821257c69cc"
+      },
+      {
+        "path": "Graphics/Atlases/Gameplay/decals/SJ2021/snolls/animals/misc/spider/b/hanging_spider_a38.png",
+        "reason": "Animation frame already required by accepted K-J decal definitions",
+        "sha256": "e2b9a9055d8cf7cd58427afd6a6982cc869118aaa2a7b5d2f3082cbe4a3b18c2"
+      },
+      {
+        "path": "Graphics/Atlases/Gameplay/decals/SJ2021/snolls/animals/misc/spider/b/hanging_spider_a39.png",
+        "reason": "Animation frame already required by accepted K-J decal definitions",
+        "sha256": "a2a809998bf39ad2fb4ccc8329934ebf9003b1f86109a9c19cbd61f2c18893eb"
+      },
+      {
+        "path": "Graphics/Atlases/Gameplay/decals/SJ2021/snolls/animals/misc/spider/b/hanging_spider_a40.png",
+        "reason": "Animation frame already required by accepted K-J decal definitions",
+        "sha256": "1a9ba25592d29beaf51969ddd74de4a48bc341dd314b850fde94fc41c3d1ed96"
+      },
+      {
+        "path": "Graphics/Atlases/Gameplay/decals/SJ2021/snolls/animals/misc/spider/b/hanging_spider_a41.png",
+        "reason": "Animation frame already required by accepted K-J decal definitions",
+        "sha256": "0169312fbe029795b83b757468c9160c0c71f24a647b630d90d634688fdfab36"
+      },
+      {
+        "path": "Graphics/Atlases/Gameplay/decals/SJ2021/snolls/animals/misc/spider/b/hanging_spider_a42.png",
+        "reason": "Animation frame already required by accepted K-J decal definitions",
+        "sha256": "91d3b2752ee3dbeaed0644c89b8cb1f6479bfd57e82fed8621532b535d8c4a8d"
+      },
+      {
+        "path": "Graphics/Atlases/Gameplay/decals/SJ2021/snolls/animals/misc/spider/b/hanging_spider_a43.png",
+        "reason": "Animation frame already required by accepted K-J decal definitions",
+        "sha256": "c3c66a94837ca5675b31d936ea756e33e3b7d886328324702da611172c24b9f0"
+      },
+      {
+        "path": "Graphics/Atlases/Gameplay/decals/SJ2021/snolls/animals/misc/spider/b/hanging_spider_a44.png",
+        "reason": "Animation frame already required by accepted K-J decal definitions",
+        "sha256": "b4eea28f25b562a88eafeb84a363a600467a08c79397fee71a2afe007161379c"
+      },
+      {
+        "path": "Graphics/Atlases/Gameplay/decals/SJ2021/snolls/animals/misc/spider/b/hanging_spider_a45.png",
+        "reason": "Animation frame already required by accepted K-J decal definitions",
+        "sha256": "42f9f5d06041def60497a3dd51490ce71e92741e817deb49b9a49a59eb403a1c"
+      },
+      {
+        "path": "Graphics/Atlases/Gameplay/decals/SJ2021/snolls/animals/misc/spider/b/hanging_spider_a46.png",
+        "reason": "Animation frame already required by accepted K-J decal definitions",
+        "sha256": "717beb178c052ea78eb95184de6272f7ede9fa3669d42d6b8fcb3eb48fe181e9"
+      },
+      {
+        "path": "Graphics/Atlases/Gameplay/decals/SJ2021/snolls/animals/misc/spider/b/hanging_spider_a47.png",
+        "reason": "Animation frame already required by accepted K-J decal definitions",
+        "sha256": "587c7c73209f7c5b96ff22bd26d1c6e12adafc5db69d05c5a76491c1b7d5d2c0"
+      },
+      {
+        "path": "Graphics/Atlases/Gameplay/decals/SJ2021/snolls/animals/misc/spider/b/hanging_spider_a48.png",
+        "reason": "Animation frame already required by accepted K-J decal definitions",
+        "sha256": "46ed128b3f050f8459c5080bd4d5420bf2840a3b45a396c388bed9db839e4af0"
+      },
+      {
+        "path": "Graphics/Atlases/Gameplay/decals/SJ2021/snolls/animals/misc/spider/b/hanging_spider_a49.png",
+        "reason": "Animation frame already required by accepted K-J decal definitions",
+        "sha256": "b49f876debaa3cb6b35fe501db0edd23f93185ac8abcd0b080eca1be7ed5ff4d"
+      },
+      {
+        "path": "Graphics/Atlases/Gameplay/decals/SJ2021/snolls/animals/misc/spider/b/hanging_spider_a50.png",
+        "reason": "Animation frame already required by accepted K-J decal definitions",
+        "sha256": "d67e85889f26c36dde6f68d5af5792d08fb1b770199f4dad9d3ee21267800140"
+      },
+      {
+        "path": "Graphics/Atlases/Gameplay/decals/SJ2021/snolls/animals/misc/spider/b/hanging_spider_a51.png",
+        "reason": "Animation frame already required by accepted K-J decal definitions",
+        "sha256": "61d2db9630359e54dfb1377da5461f838f3a49abb6c82181c28d2f07d0249ace"
+      },
+      {
+        "path": "Graphics/Atlases/Gameplay/decals/SJ2021/snolls/animals/misc/spider/b/hanging_spider_a52.png",
+        "reason": "Animation frame already required by accepted K-J decal definitions",
+        "sha256": "68114bf5fc2038c0bcc79ae897ee6544455d3a12267af8dd1667df5e776c8116"
+      },
+      {
+        "path": "Graphics/Atlases/Gameplay/decals/SJ2021/snolls/animals/misc/spider/b/hanging_spider_a53.png",
+        "reason": "Animation frame already required by accepted K-J decal definitions",
+        "sha256": "068bf0f147904f132ff7f8a3f5e088197231fdfe1f97b589e64caa8840d38ef9"
+      },
+      {
+        "path": "Graphics/Atlases/Gameplay/decals/SJ2021/snolls/animals/misc/spider/b/hanging_spider_a54.png",
+        "reason": "Animation frame already required by accepted K-J decal definitions",
+        "sha256": "23ac1980f1be9ce09f452be7359d73275ecb98661c2f20e089ac9204fb9cb9ac"
+      },
+      {
+        "path": "Graphics/Atlases/Gameplay/decals/SJ2021/snolls/animals/misc/spider/b/hanging_spider_a55.png",
+        "reason": "Animation frame already required by accepted K-J decal definitions",
+        "sha256": "db9cb2ce5f25a619bfb1b9def8cffc4057b3be3e21339f766c9fce818a6b6221"
+      },
+      {
+        "path": "Graphics/Atlases/Gameplay/decals/SJ2021/snolls/animals/misc/spider/b/hanging_spider_a56.png",
+        "reason": "Animation frame already required by accepted K-J decal definitions",
+        "sha256": "83f86318d6805a71af6f33227cfdc40ac449dad5c541cd391b41c9483b56da63"
+      },
+      {
+        "path": "Graphics/Atlases/Gameplay/decals/SJ2021/snolls/animals/misc/spider/b/hanging_spider_a57.png",
+        "reason": "Animation frame already required by accepted K-J decal definitions",
+        "sha256": "7fcc2986861e1fb3493583fc890ac2560714cd6164076afecec010db495f9471"
+      },
+      {
+        "path": "Graphics/Atlases/Gameplay/decals/SJ2021/snolls/animals/runaway/rabbit01.png",
+        "reason": "Animation frame already required by accepted K-J decal definitions",
+        "sha256": "f77c50b34066de9176232ba366cb05da26161f4160a4c4424ec6c9446baea94e"
+      },
+      {
+        "path": "Graphics/Atlases/Gameplay/decals/SJ2021/snolls/animals/runaway/rabbit02.png",
+        "reason": "Animation frame already required by accepted K-J decal definitions",
+        "sha256": "ef9efb9ba73d96c81b21615581415d66b25b623e524ee4c3e4ff324a8b4b1026"
+      },
+      {
+        "path": "Graphics/Atlases/Gameplay/decals/SJ2021/snolls/animals/runaway/rabbit03.png",
+        "reason": "Animation frame already required by accepted K-J decal definitions",
+        "sha256": "b25fc0f897c2e77d07b347f7bb573dd966c815e5abcef31e80460b03a45443d7"
+      },
+      {
+        "path": "Graphics/Atlases/Gameplay/decals/SJ2021/snolls/animals/runaway/rabbit04.png",
+        "reason": "Animation frame already required by accepted K-J decal definitions",
+        "sha256": "abc1ff64e4bae17bbc85acd9bfa4f6fe752108ac5ed7db3e1513d2f23d613b68"
+      },
+      {
+        "path": "Graphics/Atlases/Gameplay/decals/SJ2021/snolls/animals/runaway/rabbit05.png",
+        "reason": "Animation frame already required by accepted K-J decal definitions",
+        "sha256": "bffd09ab3b656e909f15e6f1a714180bb1a3ae82c646119d5dbb6c85563a0ecc"
+      },
+      {
+        "path": "Graphics/Atlases/Gameplay/decals/SJ2021/snolls/animals/runaway/rabbit11.png",
+        "reason": "Animation frame already required by accepted K-J decal definitions",
+        "sha256": "19e6bdcd6a9bb26ecd7b32477fe3d7bd40efa317513de7087f57fe48e3af4c86"
+      },
+      {
+        "path": "Graphics/Atlases/Gameplay/decals/SJ2021/snolls/animals/runaway/rabbit12.png",
+        "reason": "Animation frame already required by accepted K-J decal definitions",
+        "sha256": "dfe29843b3a12a4aaca7be889d8765aab9b3097275a25e64dac4caa3436851b7"
+      },
+      {
+        "path": "Graphics/Atlases/Gameplay/decals/SJ2021/snolls/animals/runaway/rabbit13.png",
+        "reason": "Animation frame already required by accepted K-J decal definitions",
+        "sha256": "e05cb9a14b98ef20a7961ec541be4a0e5bd5d8c23deee74fda6c8dc8cbea11c1"
+      },
+      {
+        "path": "Graphics/Atlases/Gameplay/decals/SJ2021/snolls/animals/runaway/rabbit14.png",
+        "reason": "Animation frame already required by accepted K-J decal definitions",
+        "sha256": "a5d4f2e61e9256f467272bd6badc1166f4ccc1c23029f00ec6c90b3b7cd4c441"
+      },
+      {
+        "path": "Graphics/Atlases/Gameplay/decals/SJ2021/snolls/animals/runaway/rabbit15.png",
+        "reason": "Animation frame already required by accepted K-J decal definitions",
+        "sha256": "25be5b16ceb5343bcc418808c3e156fd201f24f4c16ab4a02956dc3b45c312d1"
+      },
+      {
+        "path": "Graphics/Atlases/Gameplay/decals/SJ2021/snolls/animals/runaway/rabbit16.png",
+        "reason": "Animation frame already required by accepted K-J decal definitions",
+        "sha256": "f2db6d8827061e8b21652e67aafe2f054c7862b4f5a5cdf351d29457c778615c"
+      },
+      {
+        "path": "Graphics/Atlases/Gameplay/decals/SJ2021/snolls/animals/runaway/rabbit17.png",
+        "reason": "Animation frame already required by accepted K-J decal definitions",
+        "sha256": "ecb52afd3437703d887fca1ad7e584fcb3aaef56e3f35fd72e2837b185136ede"
+      },
+      {
+        "path": "Graphics/Atlases/Gameplay/decals/SJ2021/snolls/animals/runaway/rabbit18.png",
+        "reason": "Animation frame already required by accepted K-J decal definitions",
+        "sha256": "1b21c11b544cd815329bce70bc70a71a9bcd10714a6a1a9e035348b6c4ddffef"
+      },
+      {
+        "path": "Graphics/Atlases/Gameplay/decals/SJ2021/snolls/animals/runaway/rabbit19.png",
+        "reason": "Animation frame already required by accepted K-J decal definitions",
+        "sha256": "952e648239f818dda3f29d326c13b75669da4d3c8949be93d8898f8167f8227d"
+      },
+      {
+        "path": "Graphics/Atlases/Gameplay/decals/SJ2021/snolls/animals/runaway/rabbit20.png",
+        "reason": "Animation frame already required by accepted K-J decal definitions",
+        "sha256": "8a61752f372ed62f42a44e42d8dd63687af74e863bbdc853f49dfd074bf00cf0"
+      },
+      {
+        "path": "Graphics/Atlases/Gameplay/decals/SJ2021/snolls/animals/runaway/rabbit21.png",
+        "reason": "Animation frame already required by accepted K-J decal definitions",
+        "sha256": "1ed961fdd93d70895b1a15a19a43f6f6e1d88e1e261d76644812d7192bd0c4a6"
+      },
+      {
+        "path": "Graphics/Atlases/Gameplay/tilesets/SJ2021/BeginnerLobby/dreamSand.png",
+        "reason": "Referenced by complete ForegroundTiles constructor",
+        "sha256": "5c5db989ad7dd7d72468639fc8fd39dfc0756ba7ed13de23cfca2b5034155db5"
+      },
+      {
+        "path": "Graphics/Atlases/Gameplay/tilesets/SJ2021/CoupCritik/scraperIn.png",
+        "reason": "Referenced by complete ForegroundTiles constructor",
+        "sha256": "0b2fd4d7a4885a9d6616bf937a243694918006fa896667e5562655e7f927a7ac"
+      },
+      {
+        "path": "Graphics/Atlases/Gameplay/tilesets/SJ2021/CoupCritik/scraperOut.png",
+        "reason": "Referenced by complete ForegroundTiles constructor",
+        "sha256": "6b4888241f802125a64f68ac42320891a0502008cd7db7b476d109c53f8e7f1b"
+      },
+      {
+        "path": "Graphics/Atlases/Gameplay/tilesets/SJ2021/Hyperlife/bgGirder.png",
+        "reason": "Referenced by complete BackgroundTiles constructor",
+        "sha256": "b32934c798dc145f69aa960df6f852669418691c99cc509c8b39c7efdcfd28bf"
+      },
+      {
+        "path": "Graphics/Atlases/Gameplay/tilesets/SJ2021/NotYourBadeline/bruh.png",
+        "reason": "Referenced by complete ForegroundTiles constructor",
+        "sha256": "b15d1952f23808cd834ed547cf603bc1938ab00a73fd504dcd50d5104bd0dca8"
+      },
+      {
+        "path": "Graphics/Atlases/Gameplay/tilesets/SJ2021/NotYourBadeline/pipe_outer_2.png",
+        "reason": "Referenced by complete ForegroundTiles constructor",
+        "sha256": "b3dfbbcd66e6f386469070dce53a9a7f05c9a6e91a56512c343014a8a86a6d53"
+      },
+      {
+        "path": "Graphics/Atlases/Gameplay/tilesets/SJ2021/Skeleton/curioxidyHoneycomb.png",
+        "reason": "Referenced by complete ForegroundTiles constructor",
+        "sha256": "405fc18ea403334be79a70347b9973f3b3bf986430987b64af4bc05b3b7bdec2"
+      },
+      {
+        "path": "Graphics/Atlases/Gameplay/tilesets/SJ2021/frozenflygone/Lab.png",
+        "reason": "Referenced by complete ForegroundTiles constructor",
+        "sha256": "10b940e4aa60ac71b945bb644040f8b1820839f8d105f545dbb277726e17f5cf"
+      },
+      {
+        "path": "Graphics/Atlases/Gameplay/tilesets/SJ2021/mosscairn/bgOrange.png",
+        "reason": "Referenced by complete BackgroundTiles constructor",
+        "sha256": "97338af8401baf17ec9f8b3ce50d277528962cb53eeb3196bb6c1abaa2bfa08c"
+      },
+      {
+        "path": "Graphics/Atlases/Gameplay/tilesets/SJ2021/mosscairn/bgYellow.png",
+        "reason": "Referenced by complete BackgroundTiles constructor",
+        "sha256": "c4e5050776feed5fd83903867ef5dc38124697861ccdaab25fcb1a1e4c28f55a"
+      },
+      {
+        "path": "Graphics/Atlases/Gameplay/tilesets/SJ2021/mosscairn/blockH.png",
+        "reason": "Referenced by complete ForegroundTiles constructor",
+        "sha256": "4470053651686b7c72d2229829620926e655ecce4960e80538762a2888c1b2ca"
+      },
+      {
+        "path": "Graphics/Atlases/Gameplay/tilesets/SJ2021/mosscairn/blockY.png",
+        "reason": "Referenced by complete ForegroundTiles constructor",
+        "sha256": "fcf2a1f21c99df83f675180614d536e8a782409bb95ac48ec9fb62f4a8ec71d2"
+      },
+      {
+        "path": "Graphics/Atlases/Gameplay/tilesets/SJ2021/mosscairn/blockYf.png",
+        "reason": "Referenced by complete ForegroundTiles constructor",
+        "sha256": "8cd8c42883cc761aaee101f3c4d3f1953b7c5a390ce04ee2832d46c9a64e810a"
+      },
+      {
+        "path": "Graphics/Atlases/Gameplay/tilesets/SJ2021/mosscairn/yellow.png",
+        "reason": "Referenced by complete ForegroundTiles constructor",
+        "sha256": "441aa2980e5eb18d33b9bbd292279cb05870a9c619e893947f6d258e14f4e43b"
+      },
+      {
+        "path": "Graphics/Atlases/Gui/areas/SJ2021/meters/2-med.png",
+        "reason": "Authored map presentation metadata",
+        "sha256": "20490711a3fb92a88604e2322b45e035f4e15285b4f99f26052d8e4de970b7e7"
+      },
+      {
+        "path": "Graphics/ColorGrading/SJ2021/Hanky/ForestNight.png",
+        "reason": "Authored map presentation metadata",
+        "sha256": "8fc1c87a11def048c23566d44c9b787cc9fa98b07730fac6f6588f962ecfee59"
+      }
+    ],
+    "classification": "HISTORICAL_SELECTION_REPRODUCED_NOT_PRODUCT_READY",
+    "excludedSjMapBins": 126,
+    "files": 1212,
+    "helperAssets": 7,
+    "packagedSjMapBins": 0,
+    "packages": 14,
+    "selectedSjAudioBanks": 4,
+    "selectedSjMapBins": 2,
+    "sjAssetsFiles": 24,
+    "sjRootFiles": 1178
+  },
+  "developmentIntegrationReady": false,
+  "firstPhysicallyRunningUnchangedSjSlice": false,
+  "fullBeginnerSupported": false,
+  "fullStrawberryJamSupported": false,
+  "kgMerged": false,
+  "kiMerged": false,
+  "maps": {
+    "bing": {
+      "appendixBytes": 65339,
+      "appendixSha256": "963d5f086279311c18561df8fb135e445ca1cf0bcc2d3f1ba0d8b21f8376da6d",
+      "authoredPlayerSpawns": [
+        {
+          "localX": 264,
+          "localY": 152,
+          "room": "00- intro",
+          "worldX": -56,
+          "worldY": 152
+        },
+        {
+          "localX": 464,
+          "localY": 152,
+          "room": "01- Crusher",
+          "worldX": -360,
+          "worldY": 152
+        },
+        {
+          "localX": 32,
+          "localY": 136,
+          "room": "01- Crusher",
+          "worldX": -792,
+          "worldY": 136
+        },
+        {
+          "localX": 424,
+          "localY": 136,
+          "room": "02- Bait N' Switch",
+          "worldX": -872,
+          "worldY": 136
+        },
+        {
+          "localX": 32,
+          "localY": 144,
+          "room": "02- Bait N' Switch",
+          "worldX": -1264,
+          "worldY": 144
+        },
+        {
+          "localX": 336,
+          "localY": 144,
+          "room": "02B- a stwawbewwy??",
+          "worldX": -1104,
+          "worldY": -40
+        },
+        {
+          "localX": 464,
+          "localY": 104,
+          "room": "03- Uberjump",
+          "worldX": -1352,
+          "worldY": 104
+        },
+        {
+          "localX": 40,
+          "localY": 128,
+          "room": "03- Uberjump",
+          "worldX": -1776,
+          "worldY": 128
+        },
+        {
+          "localX": 656,
+          "localY": 104,
+          "room": "04- Head Trauma",
+          "worldX": -1864,
+          "worldY": 104
+        },
+        {
+          "localX": 16,
+          "localY": 120,
+          "room": "04- Head Trauma",
+          "worldX": -2504,
+          "worldY": 120
+        },
+        {
+          "localX": 464,
+          "localY": 144,
+          "room": "05- Boing",
+          "worldX": -2576,
+          "worldY": 144
+        },
+        {
+          "localX": 24,
+          "localY": 144,
+          "room": "05- Boing",
+          "worldX": -3016,
+          "worldY": 144
+        },
+        {
+          "localX": 736,
+          "localY": 120,
+          "room": "06- Bubbles",
+          "worldX": -3104,
+          "worldY": 120
+        },
+        {
+          "localX": 48,
+          "localY": 112,
+          "room": "06- Bubbles",
+          "worldX": -3792,
+          "worldY": 112
+        },
+        {
+          "localX": 752,
+          "localY": 120,
+          "room": "07- Falling Cannon",
+          "worldX": -3888,
+          "worldY": 120
+        },
+        {
+          "localX": 48,
+          "localY": 136,
+          "room": "07- Falling Cannon",
+          "worldX": -4592,
+          "worldY": 136
+        },
+        {
+          "localX": 312,
+          "localY": 336,
+          "room": "07B- OwO whats this??",
+          "worldX": -4496,
+          "worldY": -32
+        },
+        {
+          "localX": 592,
+          "localY": 24,
+          "room": "08- U Turn",
+          "worldX": -5184,
+          "worldY": 24
+        },
+        {
+          "localX": 1080,
+          "localY": 120,
+          "room": "08- U Turn",
+          "worldX": -4696,
+          "worldY": 120
+        },
+        {
+          "localX": 440,
+          "localY": 152,
+          "room": "09- Fin",
+          "worldX": -5168,
+          "worldY": -32
+        }
+      ],
+      "bytes": 135363,
+      "compatibilityIdRegisteredInKkProduct": false,
+      "hostAnalysisOnly": true,
+      "member": "Maps/StrawberryJam2021/1-Beginner/Bing_Over_Google.bin",
+      "originalBytesModified": false,
+      "packagedInKkProduct": false,
+      "physicalRoom": null,
+      "physicalSpawn": null,
+      "rooms": [
+        "00- intro",
+        "01- Crusher",
+        "02- Bait N' Switch",
+        "02B- a stwawbewwy??",
+        "03- Uberjump",
+        "04- Head Trauma",
+        "05- Boing",
+        "06- Bubbles",
+        "07- Falling Cannon",
+        "07B- OwO whats this??",
+        "08- U Turn",
+        "09- Fin",
+        "filler"
+      ],
+      "rootBytes": 70024,
+      "sha256": "e770a8d193f217d09a6e153fbe272813d26a04d972df947ac812aa5cfe66f347",
+      "sid": "StrawberryJam2021/1-Beginner/Bing_Over_Google",
+      "sourceDerivedCompatibilityId": "4024d36a33c33e411381e26ca2482ba09f828bc1c7f86306a98a915e904e39e1",
+      "sourcePackageLabel": "Bing_Over_Google"
+    },
+    "lobby": {
+      "appendixBytes": 149841,
+      "appendixSha256": "d76dba1bc5834d999f4d622afd008a702ffe6663b17fe7b0be3c5cc69afabe0d",
+      "authoredPlayerSpawns": [
+        {
+          "localX": 1012,
+          "localY": 680,
+          "room": "sj2021beginnerlobby",
+          "worldX": 588,
+          "worldY": 40
+        },
+        {
+          "localX": 3808,
+          "localY": 1168,
+          "room": "sj2021beginnerlobby",
+          "worldX": 3384,
+          "worldY": 528
+        },
+        {
+          "localX": 2312,
+          "localY": 880,
+          "room": "sj2021beginnerlobby",
+          "worldX": 1888,
+          "worldY": 240
+        },
+        {
+          "localX": 1632,
+          "localY": 392,
+          "room": "sj2021beginnerlobby",
+          "worldX": 1208,
+          "worldY": -248
+        },
+        {
+          "localX": 2712,
+          "localY": 1248,
+          "room": "sj2021beginnerlobby",
+          "worldX": 2288,
+          "worldY": 608
+        },
+        {
+          "localX": 2592,
+          "localY": 1840,
+          "room": "sj2021beginnerlobby",
+          "worldX": 2168,
+          "worldY": 1200
+        },
+        {
+          "localX": 2464,
+          "localY": 1928,
+          "room": "sj2021beginnerlobby",
+          "worldX": 2040,
+          "worldY": 1288
+        },
+        {
+          "localX": 2356,
+          "localY": 2208,
+          "room": "sj2021beginnerlobby",
+          "worldX": 1932,
+          "worldY": 1568
+        },
+        {
+          "localX": 4144,
+          "localY": 2032,
+          "room": "sj2021beginnerlobby",
+          "worldX": 3720,
+          "worldY": 1392
+        },
+        {
+          "localX": 1448,
+          "localY": 2096,
+          "room": "sj2021beginnerlobby",
+          "worldX": 1024,
+          "worldY": 1456
+        },
+        {
+          "localX": 2268,
+          "localY": 2352,
+          "room": "sj2021beginnerlobby",
+          "worldX": 1844,
+          "worldY": 1712
+        },
+        {
+          "localX": 2240,
+          "localY": 2096,
+          "room": "sj2021beginnerlobby",
+          "worldX": 1816,
+          "worldY": 1456
+        },
+        {
+          "localX": 2536,
+          "localY": 888,
+          "room": "sj2021beginnerlobby",
+          "worldX": 2112,
+          "worldY": 248
+        },
+        {
+          "localX": 1336,
+          "localY": 1304,
+          "room": "sj2021beginnerlobby",
+          "worldX": 912,
+          "worldY": 664
+        },
+        {
+          "localX": 1936,
+          "localY": 2040,
+          "room": "sj2021beginnerlobby",
+          "worldX": 1512,
+          "worldY": 1400
+        },
+        {
+          "localX": 1944,
+          "localY": 1192,
+          "room": "sj2021beginnerlobby",
+          "worldX": 1520,
+          "worldY": 552
+        },
+        {
+          "localX": 1096,
+          "localY": 1008,
+          "room": "sj2021beginnerlobby",
+          "worldX": 672,
+          "worldY": 368
+        },
+        {
+          "localX": 2360,
+          "localY": 624,
+          "room": "sj2021beginnerlobby",
+          "worldX": 1936,
+          "worldY": -16
+        },
+        {
+          "localX": 1592,
+          "localY": 1464,
+          "room": "sj2021beginnerlobby",
+          "worldX": 1168,
+          "worldY": 824
+        },
+        {
+          "localX": 1704,
+          "localY": 1456,
+          "room": "sj2021beginnerlobby",
+          "worldX": 1280,
+          "worldY": 816
+        },
+        {
+          "localX": 3320,
+          "localY": 1904,
+          "room": "sj2021beginnerlobby",
+          "worldX": 2896,
+          "worldY": 1264
+        },
+        {
+          "localX": 800,
+          "localY": 2160,
+          "room": "sj2021beginnerlobby",
+          "worldX": 376,
+          "worldY": 1520
+        },
+        {
+          "localX": 2672,
+          "localY": 672,
+          "room": "sj2021beginnerlobby",
+          "worldX": 2248,
+          "worldY": 32
+        },
+        {
+          "localX": 760,
+          "localY": 672,
+          "room": "sj2021beginnerlobby",
+          "worldX": 336,
+          "worldY": 32
+        },
+        {
+          "localX": 3736,
+          "localY": 656,
+          "room": "sj2021beginnerlobby",
+          "worldX": 3312,
+          "worldY": 16
+        },
+        {
+          "localX": 3816,
+          "localY": 512,
+          "room": "sj2021beginnerlobby",
+          "worldX": 3392,
+          "worldY": -128
+        },
+        {
+          "localX": 1112,
+          "localY": 2080,
+          "room": "sj2021beginnerlobby",
+          "worldX": 688,
+          "worldY": 1440
+        },
+        {
+          "localX": 3200,
+          "localY": 752,
+          "room": "sj2021beginnerlobby",
+          "worldX": 2776,
+          "worldY": 112
+        },
+        {
+          "localX": 2280,
+          "localY": 1640,
+          "room": "sj2021beginnerlobby",
+          "worldX": 1856,
+          "worldY": 1000
+        },
+        {
+          "localX": 3156,
+          "localY": 2080,
+          "room": "sj2021beginnerlobby",
+          "worldX": 2732,
+          "worldY": 1440
+        },
+        {
+          "localX": 3168,
+          "localY": 1048,
+          "room": "sj2021beginnerlobby",
+          "worldX": 2744,
+          "worldY": 408
+        },
+        {
+          "localX": 2248,
+          "localY": 1376,
+          "room": "sj2021beginnerlobby",
+          "worldX": 1824,
+          "worldY": 736
+        },
+        {
+          "localX": 320,
+          "localY": 664,
+          "room": "sj2021beginnerlobby",
+          "worldX": -104,
+          "worldY": 24
+        },
+        {
+          "localX": 3704,
+          "localY": 2096,
+          "room": "sj2021beginnerlobby",
+          "worldX": 3280,
+          "worldY": 1456
+        },
+        {
+          "localX": 3280,
+          "localY": 1592,
+          "room": "sj2021beginnerlobby",
+          "worldX": 2856,
+          "worldY": 952
+        },
+        {
+          "localX": 2536,
+          "localY": 2176,
+          "room": "sj2021beginnerlobby",
+          "worldX": 2112,
+          "worldY": 1536
+        },
+        {
+          "localX": 1880,
+          "localY": 1832,
+          "room": "sj2021beginnerlobby",
+          "worldX": 1456,
+          "worldY": 1192
+        },
+        {
+          "localX": 1296,
+          "localY": 1880,
+          "room": "sj2021beginnerlobby",
+          "worldX": 872,
+          "worldY": 1240
+        },
+        {
+          "localX": 1504,
+          "localY": 1896,
+          "room": "sj2021beginnerlobby",
+          "worldX": 1080,
+          "worldY": 1256
+        },
+        {
+          "localX": 1232,
+          "localY": 744,
+          "room": "sj2021beginnerlobby",
+          "worldX": 808,
+          "worldY": 104
+        },
+        {
+          "localX": 3240,
+          "localY": 1296,
+          "room": "sj2021beginnerlobby",
+          "worldX": 2816,
+          "worldY": 656
+        },
+        {
+          "localX": 2888,
+          "localY": 1904,
+          "room": "sj2021beginnerlobby",
+          "worldX": 2464,
+          "worldY": 1264
+        },
+        {
+          "localX": 3528,
+          "localY": 1936,
+          "room": "sj2021beginnerlobby",
+          "worldX": 3104,
+          "worldY": 1296
+        },
+        {
+          "localX": 628,
+          "localY": 638,
+          "room": "sj2021beginnerlobby",
+          "worldX": 204,
+          "worldY": -2
+        },
+        {
+          "localX": 2082,
+          "localY": 680,
+          "room": "sj2021beginnerlobby",
+          "worldX": 1658,
+          "worldY": 40
+        },
+        {
+          "localX": 1612,
+          "localY": 2160,
+          "room": "sj2021beginnerlobby",
+          "worldX": 1188,
+          "worldY": 1520
+        },
+        {
+          "localX": 3836,
+          "localY": 640,
+          "room": "sj2021beginnerlobby",
+          "worldX": 3412,
+          "worldY": 0
+        },
+        {
+          "localX": 1156,
+          "localY": 1552,
+          "room": "sj2021beginnerlobby",
+          "worldX": 732,
+          "worldY": 912
+        },
+        {
+          "localX": 1941,
+          "localY": 1368,
+          "room": "sj2021beginnerlobby",
+          "worldX": 1517,
+          "worldY": 728
+        },
+        {
+          "localX": 1516,
+          "localY": 190,
+          "room": "sj2021beginnerlobby",
+          "worldX": 1092,
+          "worldY": -450
+        },
+        {
+          "localX": 1144,
+          "localY": 1552,
+          "room": "sj2021beginnerlobby",
+          "worldX": 720,
+          "worldY": 912
+        },
+        {
+          "localX": 960,
+          "localY": 1888,
+          "room": "sj2021beginnerlobby",
+          "worldX": 536,
+          "worldY": 1248
+        }
+      ],
+      "bytes": 674648,
+      "compatibilityIdRegisteredInKkProduct": false,
+      "hostAnalysisOnly": true,
+      "member": "Maps/StrawberryJam2021/0-Lobbies/1-Beginner.bin",
+      "originalBytesModified": false,
+      "packagedInKkProduct": false,
+      "physicalRoom": null,
+      "physicalSpawn": null,
+      "rooms": [
+        "sj2021beginnerlobby"
+      ],
+      "rootBytes": 524807,
+      "sha256": "a4e3e20a2f0cc878fe43b32fb8025d7650b20cc6265f69e37bf3110a7cdf47c2",
+      "sid": "StrawberryJam2021/0-Lobbies/1-Beginner",
+      "sourceDerivedCompatibilityId": "e9e4d8c99bdecded8a85516e723096abfa51340c7a1d00524c27686de3c9c9e6",
+      "sourcePackageLabel": "3Plain"
+    }
+  },
+  "nextWork": "Close and accept the bounded Everest custom-autotiler mechanism before retrying unchanged lobby/Bing integration; defer expansion audit.",
+  "product": {
+    "completeClosureThreeRun": "NOT_RUN_PREFLIGHT_STOP",
+    "installation": "NOT_RUN",
+    "ios": "NOT_BUILT_PREFLIGHT_STOP",
+    "sharedClosureSha256": null,
+    "signing": "NOT_RUN",
+    "tvos": "NOT_BUILT_PREFLIGHT_STOP"
+  },
+  "recommendedFastForwardSha": null,
+  "runtimeSourceChanged": false,
+  "schemaVersion": 1,
+  "stage": "25K-K",
+  "startSha": "e69bfd6eeba3d36a5d745c24b3bc0f2f3f4ee92f",
+  "status": "YELLOW_NEW_AUTOTILER_COMPATIBILITY_MECHANISM",
+  "strawberryJam": {
+    "dllSha256": "8d5b9184204e7e7728965bcf95af5f150f6220dafbfe52fdd6c23e50d47e5258",
+    "version": "1.0.12",
+    "zipSha256": "4e1a2fc12baa3db27da433b93bf26b59f34b3e6b7f760c41d8d127636d020655"
+  }
+}
