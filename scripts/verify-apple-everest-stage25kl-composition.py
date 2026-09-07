@@ -73,6 +73,30 @@ def prepare_credits_reference(package, probe, markers):
             "normalizations":replacements,"authoredTasOnlyResources":resources,"creditsExecutionIncluded":False}
 
 
+def prepare_title_reference(canonical, probe, title):
+    source=ROOT/".build/apple-everest/upstream/Everest/Celeste.Mod.mm/Patches/OuiChapterPanel.cs"
+    check(sha(source)=="d7c4941d15f70ccf05c0f99d24549cb05a57f87ee77ab645057c541123318f6d","pinned chapter title reference differs")
+    method=re.search(r"        private float _FixTitleLength\(float vanillaValue\) \{.*?\n        \}",source.read_text(),re.S).group()
+    original_hash=hashlib.sha256(method.encode()).hexdigest()
+    method=method.replace("private float _FixTitleLength","internal float FixTitleLength")
+    (probe/"PinnedChapterTitleReference.cs").write_text("using System; using Celeste;\nnamespace PinnedReference;\ninternal class ChapterTitleReference { internal AreaKey Area;\n"+method+"\n}\n")
+    font=canonical/"Dialog/Fonts/renogare64.fnt"
+    check(sha(font)=="6f266bb81c9bcf827b922f94c6879622836441d9293dafbe50fa22267a915260","canonical English title font differs")
+    xml=ET.parse(font).getroot()
+    advances={int(c.attrib["id"]):int(c.attrib["xadvance"]) for c in xml.find("chars")}
+    kern={(int(k.attrib["first"]),int(k.attrib["second"])):int(k.attrib["amount"]) for k in xml.find("kernings")}
+    check(all(ord(c) in advances for c in title),"original title has an unresolved English glyph")
+    width=sum(advances[ord(c)]+(kern.get((ord(c),ord(title[i+1])),0) if i+1<len(title) else 0) for i,c in enumerate(title))
+    check(width==835,"original Bing English title measurement differs")
+    cases=[{"sid":"host-title-"+str(w),"title":"localized display "+str(w),"width":w} for w in [0,120,549,550,551,1400,3000]]
+    cases.append({"sid":"StrawberryJam2021/1-Beginner/Bing_Over_Google","title":title,"width":width})
+    return cases,{"authority":"PINNED_EVEREST_CHAPTER_TITLE_LENGTH","sourceSha256":sha(source),
+                  "originalMethodSha256":original_hash,"hostReferenceSha256":sha(probe/"PinnedChapterTitleReference.cs"),
+                  "fontSha256":sha(font),"originalEnglishTitleWidth":width,"originalEnglishBookmarkOffset":-345,
+                  "renderConsumers":["areaselect/title","areaselect/accent"],"caseCount":len(cases),
+                  "scope":"Exact original title with canonical English advance/kerning metrics plus controlled width boundaries. Physical rendering remains separate."}
+
+
 def main():
     parser=argparse.ArgumentParser(description=__doc__)
     for name in ["closure","runtime","production-preflight","content-plan","output"]:
@@ -348,6 +372,7 @@ def main():
     source_hashes={}
     for filename,repo_path in {
         "AppleEverestMapBinding.cs":"apple-everest/runtime/AppleEverestMapBinding.cs",
+        "AppleEverestChapterTitleLayout.cs":"apple-everest/runtime/AppleEverestChapterTitleLayout.cs",
         "AppleEverestSelectedCanaryAssets.cs":"apple-everest/runtime/semantics/AppleEverestSelectedCanaryAssets.cs",
         "AppleEverestStrawberryJamLobbyLoading.cs":"apple-everest/runtime/semantics/AppleEverestStrawberryJamLobbyLoading.cs",
         "AppleEverestAnimatedParallax.cs":"apple-everest/runtime/semantics/AppleEverestAnimatedParallax.cs"}.items():
@@ -370,6 +395,11 @@ def main():
     check("dialogMapSid = AppleEverestMapBinding.ForSession(session)?.Sid" in applied_static,
           "debug route loses selected-map dialog scope")
     credits_reference=prepare_credits_reference(args.sj_package.resolve(),probe,credit_markers)
+    title_cases,title_reference=prepare_title_reference(canonical,probe,bing[4])
+    chapter_source=(runtime/"Celeste/OuiChapterPanel.cs").read_text()
+    for layer in ["title","accent"]:
+        consumer='GFX.Gui["areaselect/'+layer+'"].Draw(Position + new Vector2(global::Celeste.Mod.AppleEverestChapterTitleLayout.BannerOffset(Area, -60f), 0f)'
+        check(chapter_source.count(consumer)==1,"actual chapter bookmark layer omits pinned title adjustment: "+layer)
     observer=static_source.read_text().split("public static void ObserveTextureUsage(",1)[1].split("private static void MountStaticModContent",1)[0]
     observer=re.sub(r"//[^\n]*","",observer)
     check("var backing = texture.Texture" in observer and "backing == null" in observer and ".Texture_Safe" not in observer and "EnsureLoaded(" not in observer and
@@ -381,7 +411,7 @@ def main():
     shutil.copyfile(ROOT/".build/celeste-ios/current/managed/Celeste/AnimatedTilesBank.cs",probe/"AnimatedTilesBank.cs")
     for filename in ["Stubs","Program"]:shutil.copyfile(ROOT/("tools/AppleEverestBuilder/tests/CompositionRuntime"+filename+".cs.txt"),probe/(filename+".cs"))
     (probe/"Probe.csproj").write_text('<Project Sdk="Microsoft.NET.Sdk"><PropertyGroup><OutputType>Exe</OutputType><TargetFramework>net10.0</TargetFramework><ImplicitUsings>enable</ImplicitUsings><Nullable>disable</Nullable></PropertyGroup></Project>\n')
-    (probe/"request.json").write_text(json.dumps({"contentRoot":str(content),"frames":frame_counts,"destinations":[d["sid"] for d in destinations],"parallaxes":parallaxes,"creditMarkers":credit_markers,
+    (probe/"request.json").write_text(json.dumps({"contentRoot":str(content),"frames":frame_counts,"destinations":[d["sid"] for d in destinations],"parallaxes":parallaxes,"creditMarkers":credit_markers,"chapterTitles":title_cases,
         "originalAnimationCount":len(animations[graphics+"AnimatedTiles.xml"]),"vanillaForeground":str(canonical/"Graphics/ForegroundTiles.xml"),"vanillaBackground":str(canonical/"Graphics/BackgroundTiles.xml")}))
     with (probe/"run.log").open("w") as log:
         run=subprocess.run(["dotnet","run","--project",str(probe/"Probe.csproj"),"-c","Release","--",str(probe/"request.json"),str(output/"runtime-composition.json")],cwd=ROOT,stdout=log,stderr=subprocess.STDOUT)
@@ -412,7 +442,7 @@ def main():
                      "terrain":terrain_reports,"usedTerrain":used_terrain,"decalOccurrences":decal_occurrences,"parallaxes":parallaxes,"destinations":destinations,
                      "mapSprites":sprite_reports,"collabManifestSha256":sha(closure/"collab-manifest.txt"),"progressionManifestSha256":sha(closure/"levelset-progression-manifest.txt"),
                      "rejectedCompositionControls":negative_controls,
-                     "lobbyCreditMarkers":credit_markers,"creditsReference":credits_reference,
+                     "lobbyCreditMarkers":credit_markers,"creditsReference":credits_reference,"chapterTitleLayout":title_reference,
                      "textureObservation":{"checkpoints":["content-ready","level-loaded"],"scope":"static atlas mounts",
                                            "readsBackingFieldsWithoutDecode":True,"rgbaBytesAreEstimate":True,"managedLiveBytesAreNotProcessResidentBytes":True},
                      "requiredCustomAudio":sorted(custom_required),"atlasMetadataSha256":atlas_metadata,"runtimeSourceSha256":source_hashes,

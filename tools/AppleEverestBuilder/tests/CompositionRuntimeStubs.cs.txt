@@ -75,6 +75,26 @@ namespace Celeste
     }
     public static class SurfaceIndex {public static Dictionary<char,int> TileToIndex=new();}
     public struct AreaKey {public string SID;public AreaKey(string sid){SID=sid;}}
+    public sealed class AreaData
+    {
+        public string Name;
+        public static readonly Dictionary<string,AreaData> Areas=new();
+        public static AreaData Get(AreaKey area)=>Areas[area.SID];
+    }
+    public static class Dialog
+    {
+        public static readonly Dictionary<string,string> Values=new();
+        public static string Clean(string key)=>Values[key];
+    }
+    public static class ActiveFont
+    {
+        public static readonly Dictionary<string,float> Widths=new();
+        public static string LastMeasured;
+        public static Microsoft.Xna.Framework.Vector2 Measure(string text)
+        {
+            LastMeasured=text;return new(Widths[text],0);
+        }
+    }
     public sealed class ModeProperties {public string Path;}
     public sealed class MapData {public ModeProperties ModeData;}
     public sealed class Session

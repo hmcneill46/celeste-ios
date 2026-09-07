@@ -2,9 +2,9 @@
   "schemaVersion": 1,
   "stage": "25K-L",
   "status": "PENDING_EXACT_FINAL_PRODUCTS",
-  "sharedClosureSha256": "8de807cf9a805b769b3cc947251fd6ca264ccf40d8c0a2a59f21e51109223a5b",
+  "sharedClosureSha256": "ffca0aea178ee8ff2f7ef885e459d9a3b895a63434cb676dfc9edbfb4b201992",
   "intendedVersion": "0.1.1",
-  "intendedBuild": "43",
+  "intendedBuild": "44",
   "iphone": {
     "status": "PENDING",
     "ipaSha256": null,
@@ -131,5 +131,10 @@
   "developmentIntegrationReady": false,
   "allPlatformReleaseReady": false,
   "acceptancePolicy": "Freeze source F before products; store explicit final exact-F receipt outside tracked source and pass --physical-evidence. Host/source report never grants device PASS.",
-  "supersededBuild42": "FAILED_IPHONE_NORMAL_AND_DEBUG_LOBBY_ENTRY"
+  "supersededBuild42": "FAILED_IPHONE_NORMAL_AND_DEBUG_LOBBY_ENTRY",
+  "priorBuild43": {
+    "iphone": "User confirmed lobby entry/reference-like behavior and Bing entry/gameplay; long title bookmark differed.",
+    "fullPhysicalMatrix": "NOT_CLAIMED",
+    "replacement44": "Exact replacement-product tests required; no automatic PASS transfer."
+  }
 }

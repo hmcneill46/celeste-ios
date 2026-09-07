@@ -24,6 +24,13 @@ does not import or execute them. The excluded heartside credits are outside
 this bounded profile. Gate D compiles the original callback as a host reference
 and exercises normal/debug interception plus load/unload and omission controls.
 
+Chapter-panel title and accent drawing use the pinned Everest title-width rule
+through an ordinary static call. The measured cleaned map name controls both
+layers; short names retain the vanilla offset. Gate D compares eight width
+profiles against the original pinned method, including Bing's 835-unit English
+title, verifies both applied render consumers and rejects the old fixed-offset
+result. No runtime patching or original texture/font modification is involved.
+
 `AppleEverestTileMaskRules` validates the complete selected terrain definitions
 at build time. The only supported scan dimensions are square 3×3 and 5×5, with
 at most 25 mask cells. The unchanged canonical parser/matcher handles 3×3;

@@ -31,7 +31,11 @@ Build 42 failed on the iPhone when entering this lobby. Build 43 adds the
 original root's normal-play handling of ten credits markers and corrects
 selected graphics/dialog identity in the isolated debug route. The markers
 remain in the unchanged map; they do not create tutorial ghosts during ordinary
-play on the desktop reference. Exact replacement-product testing remains required.
+play on the desktop reference. The user confirmed build 43 iPhone lobby entry,
+reference-like lobby behavior and Bing launch/gameplay. Build 44 also restores
+the pinned chapter-title bookmark sizing: both layers follow the measured title
+width, and short titles keep the vanilla offset. Exact replacement-product
+testing remains required.
 
 The bounded autotiler supports square 3×3 and 5×5 definitions. The 26 original
 J cells match a mechanically compiled pinned Everest reference; vanilla and

@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "status": "PASS",
   "marker": "READY_FOR_REAL_SJ_PRODUCT_BUILD",
-  "sharedClosureSha256": "8de807cf9a805b769b3cc947251fd6ca264ccf40d8c0a2a59f21e51109223a5b",
+  "sharedClosureSha256": "ffca0aea178ee8ff2f7ef885e459d9a3b895a63434cb676dfc9edbfb4b201992",
   "gateA": {
     "selectedOccurrences": 920,
     "acceptedOrVanilla": 920,
@@ -535,6 +535,21 @@
       ],
       "creditsExecutionIncluded": false
     },
+    "chapterTitleLayout": {
+      "authority": "PINNED_EVEREST_CHAPTER_TITLE_LENGTH",
+      "sourceSha256": "d7c4941d15f70ccf05c0f99d24549cb05a57f87ee77ab645057c541123318f6d",
+      "originalMethodSha256": "50e52a3ea91ba4819b8320a4bf48bc3ca53653ef692807a3f6240a71a840df55",
+      "hostReferenceSha256": "94c0e7b3a8f6bbed07b9293356026b987a592cb784a66303b0b18b53d575306e",
+      "fontSha256": "6f266bb81c9bcf827b922f94c6879622836441d9293dafbe50fa22267a915260",
+      "originalEnglishTitleWidth": 835,
+      "originalEnglishBookmarkOffset": -345,
+      "renderConsumers": [
+        "areaselect/title",
+        "areaselect/accent"
+      ],
+      "caseCount": 8,
+      "scope": "Exact original title with canonical English advance/kerning metrics plus controlled width boundaries. Physical rendering remains separate."
+    },
     "textureObservation": {
       "checkpoints": [
         "content-ready",
@@ -570,15 +585,16 @@
     },
     "runtimeSourceSha256": {
       "apple-everest/runtime/AppleEverestMapBinding.cs": "dcd5e53bd04f9dbf7bdfecc1634fbb9fd7cace042c31141d083f7ead109a746b",
+      "apple-everest/runtime/AppleEverestChapterTitleLayout.cs": "fea8afb3898514dae0b4813112ee31826f0fd91fad95f252b05dc7c0e75b4d34",
       "apple-everest/runtime/semantics/AppleEverestSelectedCanaryAssets.cs": "6d19113dde234c5ee2d7b26a5d540d51bd7a1de61a51ac6d9817cab4ab0f5cb2",
       "apple-everest/runtime/semantics/AppleEverestStrawberryJamLobbyLoading.cs": "82d0027a59e0347ddd1fcfe0ed693c875e55ac1110281a6ac510d9b79a24f04a",
       "apple-everest/runtime/semantics/AppleEverestAnimatedParallax.cs": "f7ff4d3e5ff82127f1800c23984fc173f2a51bc7d7a79fe2a438bb9a13090be8",
       "apple-everest/runtime/AppleEverestStaticRuntime.cs": "248b9f792317b1828712acb4d2aa48460daada2066d0d529da33e9a8eaf6dbf8",
       "apple-everest/runtime/semantics/AppleEverestStrawberryJamState.cs": "8cc7f5892ae32f1fa1a2edd61e92bda4387c72102af6a66442a4b50df076eaa8"
     },
-    "runtimeProbeSha256": "d427351f4945c334c888497f94d6d325d7eb7b30f7981d10f635bcd9cf5b2b5c",
-    "autotilerConformanceSha256": "77dcef1dd84beaf8090a3ca1010ec9644f6e920c277c1309c967cdb8e1fcc089"
+    "runtimeProbeSha256": "d14f4af3aa8ec0ea90fce66cf0868f70a7cbc2750f83101d12aa5f8e28d2ff53",
+    "autotilerConformanceSha256": "21cc18c28a5f47ddca2930cd5246378f1875b9de0da6f9e1096c1faf1987bdad"
   },
-  "compiledPreflightSha256": "ede79a6a7484951ba9fc4d2c82e10a73fc0e66e653482127a61091c35efaaae2",
+  "compiledPreflightSha256": "97b6533315935b79b4675200c283de0e85f3881fa4f140b40be6cd84fb6be83a",
   "contentPlanSha256": "955071e5184a5f76d750b036de787b377f44b8bd37cc12129e314cd7f16933ac"
 }

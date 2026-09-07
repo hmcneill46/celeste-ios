@@ -172,7 +172,14 @@ def main():
     cells={(row['x'],row['y']):row for row in terrain['realCells']}
     check(cells[(446,263)]['apple']['Textures']==['tilesets/SJ2021/mosscairn/grayExtended#5,14'] and
           cells[(448,263)]['apple']['Textures']==['tilesets/SJ2021/mosscairn/grayExtended#10,3'],'counterexample was lost')
-    check(runtime['status']=='PASS' and runtime['assertions']>=131 and runtime['graphicsCycles']==3,'actual graphics/animation/debug lifecycle proof incomplete')
+    check(runtime['status']=='PASS' and runtime['assertions']>=157 and runtime['graphicsCycles']==3,'actual graphics/animation/debug/title lifecycle proof incomplete')
+    title=ready['gateD']['chapterTitleLayout']
+    check(title['authority']=='PINNED_EVEREST_CHAPTER_TITLE_LENGTH' and title['sourceSha256']=='d7c4941d15f70ccf05c0f99d24549cb05a57f87ee77ab645057c541123318f6d' and
+          title['renderConsumers']==['areaselect/title','areaselect/accent'] and title['caseCount']==8,'pinned bookmark title rendering proof missing')
+    titles=runtime['chapterTitles']
+    check(len(titles)==8 and all(t['bookmarkOffset']==t['referenceOffset'] for t in titles) and
+          any(t['sid']=='StrawberryJam2021/1-Beginner/Bing_Over_Google' and t['measuredWidth']==835 and t['bookmarkOffset']==-345 for t in titles),
+          'original long title bookmark does not match pinned Everest')
     check(len(runtime.get('creditMarkers',[]))==10 and all(row['normal']==row['debug']=='CONSUMED_MATCHES_PINNED_ROOT'
           for row in runtime['creditMarkers']),'actual lobby marker interception proof incomplete')
     check(ready['gateD'].get('creditsReference',{}).get('sourceDllSha256')=='8d5b9184204e7e7728965bcf95af5f150f6220dafbfe52fdd6c23e50d47e5258',

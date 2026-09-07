@@ -1504,7 +1504,7 @@
   "actualProductionMaskRulesSha256": "0c5473089373614a0a92e3bea8f47bb2c6abdbb8cd7556c2c0925dc19039e0fa",
   "actualAppliedTilesetSha256": "2de21b884d5508fd2c874aee28d62c30264aeef405ed2000fd2007457b7597f0",
   "pinnedTilesetSha256": "7135c648d9f62fb404cd4a37708f04ee96879828dc5acd29780fb1ad649fec95",
-  "sharedClosureSha256": "8de807cf9a805b769b3cc947251fd6ca264ccf40d8c0a2a59f21e51109223a5b",
+  "sharedClosureSha256": "ffca0aea178ee8ff2f7ef885e459d9a3b895a63434cb676dfc9edbfb4b201992",
   "canonicalTerrainPreparationSha256": "b35b6f5c0479b0eccaf5d5a1c6affaca388c6733a585248b910208a354c6af7f",
   "referenceConstruction": "MECHANICAL_PINNED_METHODS_WITH_CANONICAL_ORIGINALS_AND_ACTUAL_VIRTUAL_MAP",
   "hostBoundaries": "XML helpers and coordinate textures; AnimatedTiles.Set preserves exact initial-frame RNG consumption"

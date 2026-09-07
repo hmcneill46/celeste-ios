@@ -1113,6 +1113,10 @@ internal static class ClosureGenerator
         ReplaceOnce(chapterPanelPath,
             "Position + IconOffset + new Vector2(-100f, -18f)",
             "Position + IconOffset + new Vector2(-100f, global::Celeste.Mod.AppleEverestCollabRuntime.ChapterTitleOffset(this, -18f))");
+        foreach (string layer in new[] { "title", "accent" })
+            ReplaceOnce(chapterPanelPath,
+                "GFX.Gui[\"areaselect/" + layer + "\"].Draw(Position + new Vector2(-60f, 0f)",
+                "GFX.Gui[\"areaselect/" + layer + "\"].Draw(Position + new Vector2(global::Celeste.Mod.AppleEverestChapterTitleLayout.BannerOffset(Area, -60f), 0f)");
         ReplaceOnce(chapterSelectPath,
             "\tpublic void AdvanceToNext()",
             "\tinternal OuiChapterSelectIcon AppleEverestIcon(int area) => area >= 0 && area < icons.Count ? icons[area] : null;\n\n" +

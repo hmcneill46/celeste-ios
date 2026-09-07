@@ -100,6 +100,27 @@ internal static class Program
         Check(Everest.Events.Level.HandlerCount==1,"callback restores after soft reload");
         AppleEverestStrawberryJamLobbyLoading.Unload();
 
+        var titleReports=new List<object>();
+        foreach(var row in request.GetProperty("chapterTitles").EnumerateArray())
+        {
+            string sid=row.GetProperty("sid").GetString(),name=row.GetProperty("title").GetString();
+            float width=row.GetProperty("width").GetSingle();
+            string key="dialog-key:"+sid;
+            AreaData.Areas[sid]=new(){Name=key};Dialog.Values[key]=name;ActiveFont.Widths[name]=width;
+            var area=new AreaKey(sid);
+            float expected=new PinnedReference.ChapterTitleReference{Area=area}.FixTitleLength(-60f);
+            float actual=AppleEverestChapterTitleLayout.BannerOffset(area,-60f);
+            Check(actual==expected,"chapter bookmark matches pinned Everest for measured title width");
+            Check(ActiveFont.LastMeasured==name,"chapter bookmark measures cleaned display title, not SID or dialog key");
+            Check(width<=550f?actual==-60f:actual+width==490f,"short titles retain offset; long titles preserve pinned margin");
+            titleReports.Add(new{sid,title=name,measuredWidth=width,bookmarkOffset=actual,referenceOffset=expected});
+        }
+        var bingTitle=request.GetProperty("chapterTitles").EnumerateArray().Single(row=>row.GetProperty("sid").GetString()==bing);
+        Check(bingTitle.GetProperty("width").GetSingle()==835f&&AppleEverestChapterTitleLayout.BannerOffset(new AreaKey(bing),-60f)==-345f,
+            "original Bing title uses exact English font metrics and extends bookmark by 285 pixels");
+        Check(new PinnedReference.ChapterTitleReference{Area=new AreaKey(bing)}.FixTitleLength(-60f)!=-60f,
+            "omitting bookmark adjustment reproduces the original long-title defect");
+
         var parallaxReports=new List<object>();var scene=new Level();
         foreach(var row in request.GetProperty("parallaxes").EnumerateArray())
         {
@@ -121,7 +142,7 @@ internal static class Program
         bool rejected=false;try{AppleEverestAnimatedParallax.Create(new MTexture("bgs/MaxHelpingHand/animatedParallax/missing00"));}catch(InvalidOperationException){rejected=true;}
         Check(rejected,"missing animated frames fail closed");
         File.WriteAllText(args[1],JsonSerializer.Serialize(new {status="PASS",assertions=checks,graphicsCycles=cycles,destinations=availability,
-            parallaxes=parallaxReports,creditMarkers=creditsReports,originalSeeds=new{lobby=3349,bing=4143},
+            parallaxes=parallaxReports,creditMarkers=creditsReports,chapterTitles=titleReports,originalSeeds=new{lobby=3349,bing=4143},
             scope="Actual generated bindings, graphics lifecycle and animated parallax source; graphical resource handles are host adapters. Actual terrain sound/debris semantics verified by independent pinned conformance."},new JsonSerializerOptions{WriteIndented=true})+"\n");
         Console.WriteLine($"PASS: {checks} actual runtime composition assertions; {cycles} complete graphics restoration cycles");
     }
