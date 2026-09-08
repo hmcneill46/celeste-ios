@@ -5,14 +5,13 @@ physical iPhone/tvOS PASS, integration recommendation or final GREEN is claimed
 by this tracked source report. No major architecture stop has
 been found; the outcome-first work continues through bounded issues.
 
-Build 42 was signed and installed on iPhone, but normal and debug lobby entry
-failed. Build 43 fixed both entry routes; the user confirmed lobby appearance,
-behavior and Bing entry/gameplay on iPhone. Build 44 corrected the long title
-left edge, but the user found missing right-edge coverage. Build 45 adds the
-exact wider core graphic paired with the pinned offset rule. Scoped prior
-observations remain historical; the complete build 45 physical matrix is pending. The first crash originated in missing root entity
-interception, with a secondary Metal assertion during teardown. The debug
-freeze originated in a missing background tileset binding.
+Build 45 was tested on both iPhone and Apple TV. The user reported both
+checklists passed except missing Bing panel credits and a lower fresh lobby
+spawn. The wider bookmark now matches the reference on both devices. Build 46
+restores the pinned credits page and authored default-spawn rule. Those scoped
+build45 observations are retained as historical evidence; exact build46 physical
+acceptance remains pending. Earlier builds42–44 exposed and closed the normal
+lobby credits-marker load, debug graphics identity and both title-edge gaps.
 
 ## Frozen source and acceptance model
 
@@ -115,7 +114,7 @@ entity-tile or Fancy G sound consumer. Lobby's92 background G cells only render.
 The fixture now uses G=0 and does not claim unrelated global sound-table parity.
 Exact GPU visual parity still needs the physical reference comparison.
 
-Actual runtime composition checks 160 assertions and three graphics restoration
+Actual runtime composition checks 290 assertions and three graphics restoration
 cycles, including the debug route. All ten original credit markers match the
 original root DLL callback on normal and debug launches. Eight title-width cases
 match the pinned chapter-panel method: Bing's English title measures 835 units,
@@ -127,26 +126,44 @@ gap. The generated GUI mount, existing atlas replacement and exact original
 PNG bytes are required. Short titles and the 550-unit threshold retain their position. Load/reload/unload,
 missing callback and unsupported credits context checks are included. Four
 resource omissions/unsupported references reject. The report
-rehashes the 156-file generated managed tree and full content tree, along with
+rehashes the 158-file generated managed tree and full content tree, along with
 Collab/progression manifests, before accepting retained proof.
 
 Current shared closure:
-`fd9be7456e038f29f8daa05ca56d0e4223326238807d1b7ab06496e2aea9a621`.
+`11e5006c72dde385ca3b41773e3d924c29e7b19979aef96e11a5ad44f211d6b9`.
 Managed logical SHA256:
-`7dcb0ae23cd297a654b22e9197485b45e649a922ae89124e8d720486d470853c`.
+`906787e52b5d8bc84ab68195532678019beb77947cb7713486af7e1388cffb1f`.
 Content logical SHA256:
-`e249f99a303c3579bf2fc9a86143c7ea59d88a3270aa038d1099426d8b9ca8a9`.
+`3ee3129bf48f841786482f9bc88311bb58b3c8cbef3f4550d7a8fe2f1064b8ca`.
 Accepted registry remains
 `6e5b89f7d952aa98e72640abce0c75522567fb9d48f8b027e3db54f5cf9da72f`.
 HookGen 205 / API 30 / frozen IL 17 (5 DJ + 12 Sideways) remain unchanged.
+
+The build46 chapter credits use the original packaged Bing text: Music:
+Hyperlife; Sticker: phant; Playtesting: Nano; Captain: Bissy. The complete pinned
+CollabUtils2 draw method is compiled as a host reference. Forty comparisons cover
+sizing, fade and both bookmark indices, including its reserved 52-pixel empty tag
+row (center offset14, maximum text height358, width800). Actual production panel
+methods verify fresh Start, saved Start Over/Continue, fixed text across options,
+ordinary-panel isolation, and clearing on wrapper open/close. FancyText's parser
+and glyph renderer remain canonical. Unsupported selected credit tags reject.
+Host rendering adapters observe draw calls; actual pixels still need the user.
+
+Default-spawn conformance uses the exact pinned Everest getter and marker parser
+against every original lobby/Bing room. The lobby's52 markers have no marked
+default: Everest picks world(588,40); omitting the fix reproduces the lower vanilla
+selection(376,1520). First-true authored defaults, invariant conversion, empty
+lists, normal/debug routes and vanilla fallback are checked. The actual LoadLevel
+branch preserving saved respawns and explicit start positions remains unchanged.
+No source map bytes, progression descriptors or save envelopes change.
 
 ## Bounded discovery ledger
 
 Every issue has one classification, reason, implementation, tests, rejection
 rule, regression scope and closure effect in the
 [complete ledger](../../../apple-everest/sj-bounded-fixes-stage25kl.json).
-No STOP_MAJOR_ARCHITECTURE has been found. Twenty-two issues: 16 composition fixes
-and 6 bounded mechanisms. Actual signed-product tests remain pending where noted.
+No STOP_MAJOR_ARCHITECTURE has been found. Twenty-four issues: 16 composition fixes
+and 8 bounded mechanisms. Actual signed-product tests remain pending where noted.
 
 | ID | Classification | Resolution |
 | --- | --- | --- |
@@ -172,6 +189,8 @@ and 6 bounded mechanisms. Actual signed-product tests remain pending where noted
 | KL20 | AUTO_FIX_COMPOSITION | Resolve mounted map identity for debug graphics, sprites, dialog and root rules; exercise custom +/J definitions and restoration. |
 | KL21 | AUTO_IMPLEMENT_BOUNDED_COMPATIBILITY | Apply pinned Everest measured-title bookmark positioning to both render layers; eight reference width cases include the exact original 835-unit Bing title and fixed-offset omission control. |
 | KL22 | AUTO_FIX_COMPOSITION | Mount the exact 1400x173 core title graphic required by that offset rule; bind actual GUI precedence and test both edges plus the 279-pixel gap with the omitted asset. |
+| KL23 | AUTO_IMPLEMENT_BOUNDED_COMPATIBILITY | Original styled credits and exact pinned chapter page, fitting, bookmark and wrapper lifecycle. |
+| KL24 | AUTO_IMPLEMENT_BOUNDED_COMPATIBILITY | Pinned first-authored/default spawn for selected mounted maps; saved and vanilla respawn behavior preserved. |
 
 ## Real flow, audio and persistence
 
@@ -200,19 +219,19 @@ Deferred dimensions/first-use texture decoding remain; there is no modern-device
 quality reduction for the deferred iPad. Texture counts are now logged at content-ready and level-loaded through backing fields, without forcing decode. RGBA and managed-live bytes are estimates rather than total GPU/process memory. Build 43 retained checkpoints show 7 then 503/756 decoded mod textures in the
 lobby and 759 after Bing, out of 2,687 mounts; the last RGBA estimate was
 26,146,768 bytes. These are partial checkpoints, not a cold-start baseline or
-total GPU/process memory. The user reported good gameplay. Build 45 load and
+total GPU/process memory. The user reported good gameplay. Build 46 load and
 performance observations remain pending.
 
 ## Products, regression and reproduction boundary
 
-Canonical next version: 0.1.1 build 45. iOS must be arm64, [1,2], iOS 15, native iPad
+Canonical next version: 0.1.1 build 46. iOS must be arm64, [1,2], iOS 15, native iPad
 presentation metadata;tvOS must be arm64, [3], tvOS 16. Both require Release,
 full trim/full AOT, UseInterpreter=false, no JIT, signed native provenance and no
 forbidden device surfaces. No K-L IPA size/hash or physical PASS is invented.
 Accepted historical K-J 41 archives remain SHA-verified and retained. Superseded
 unpacked apps were removed only after every file matched its retained IPA.
 
-Builder development tests: 622 PASS, including four new exact core-asset controls. Final-F scripts run current typed HookGen,
+Builder development tests: 622 PASS, including the retained exact core-asset controls and updated panel consumers. Final-F scripts run current typed HookGen,
 pinned desktop HookGen, Save Manager pairing/protocol/continuity/soft reload,
 input profiles,current K-D/K-E/I-B, current builder mechanism coverage, canonical
 and native locks, privacy, docs/links and recursive submodules. Immutable older
@@ -238,7 +257,7 @@ physical receipt is mandatory for GREEN.
 Disk at stage start: 12.772 GiB. The user-authorized external-cache cleanup
 recovered 55.344 GiB, leaving 88.310 GiB. Build 43 measured 75.436 GiB before
 iOS AOT, 70.372 GiB before tvOS AOT, 67.187 GiB after products and 65.474 GiB
-after clean-clone removal. Build 45 must record fresh checkpoints and retain
+after clean-clone removal. Build 46 must record fresh checkpoints and retain
 at least 25 GiB before AOT. Authoritative inputs, signing setup, accepted
 archives and earlier diagnostic/product evidence remain preserved.
 
@@ -350,9 +369,9 @@ boundary; it cannot silently convert pending checks to PASS.
 
 39. **Foreground/background textures complete?** All required visible sheets resolve; the original unused y template uses the exact pinned fallback, with visible-use rejection.
 
-40. **Any further bounded content gaps discovered?** Yes: further animation/helper assets, core fallback ownership/path, graphics/label/seed bindings and bounded parallax/debris behavior.
+40. **Any further bounded content gaps discovered?** Yes. Build45 passed both user checklists except chapter credits and initial spawn. Both bounded compatibility rules are implemented for build46; original bytes remain unchanged.
 
-41. **How were they fixed?** See the complete classified ledger below; all finite fixes were implemented within this stage.
+41. **How were they fixed?** Retain prior loading/title fixes; restore pinned CollabUtils2 text credits and Everest default-spawn selection, then repeat final product and source verification.
 
 42. **Original lobby BIN unchanged?** Yes: a4e3e20a2f0cc878fe43b32fb8025d7650b20cc6265f69e37bf3110a7cdf47c2, including appendix.
 
@@ -372,19 +391,19 @@ boundary; it cannot silently convert pending checks to PASS.
 
 50. **No Area-0 fallback?** Removed from selected Collab resolution; unavailable/unknown targets reject.
 
-51. **Real Beginner lobby launched?** Yes on build 43 iPhone: user confirmed both entry routes and reference-like lobby behavior. Exact build 45 retest pending.
+51. **Real Beginner lobby launched?** Build45 user confirmed the lobby on both devices, with the initial spawn exception. Exact build46 retest pending.
 
-52. **Actual lobby room?** Build 43 device log confirms sj2021beginnerlobby. Build 45 observation pending.
+52. **Actual lobby room?** Build 43 device log confirms sj2021beginnerlobby. Build 46 observation pending.
 
-53. **Actual spawn?** Authored first marker local (1012,680), world (588,40); WakeUp intro retained. Physical observation pending.
+53. **Actual spawn?** Pinned default is the first authored marker, local(1012,680), world(588,40). Build45 used lower world(376,1520); build46 corrects the fallback while preserving saved/return positions.
 
 54. **Real J terrain rendered?** Host generation PASS; physical rendering pending.
 
-55. **Visually compared to desktop?** The user reported the build 43 lobby looks and acts like the reference. Build 44 fixed left alignment but missed the wider core title texture; build 45 adds the exact reference graphic and requires a both-edge visual retest.
+55. **Visually compared to desktop?** The user confirmed build45 visual parity and both title edges on both devices, apart from missing panel credits and fresh spawn. Build46 addresses those exceptions.
 
 56. **Real BegLobby audio?** Selected event/bank resolves; physical BegLobby playback pending.
 
-57. **Any missing asset?** Host gate has zero unresolved required visible assets. The build 44 user report exposed the omitted wider core title graphic. Build 45 includes it; exact replacement physical checks remain pending.
+57. **Any missing asset?** No unresolved required visible assets. Build45 wider title passed both devices. The credits were already mounted but their panel renderer was absent; build46 restores it.
 
 58. **Any unknown factory?** Zero unknown selected factories in host gate. Actual device observation pending.
 
@@ -424,15 +443,15 @@ boundary; it cannot silently convert pending checks to PASS.
 
 76. **Start/Continue?** Real saving/Start/Continue descriptors retained; physical interaction pending.
 
-77. **Panel launched Bing?** Yes on build 43 iPhone, confirmed by the user and subsequent original Bing room-load observations. Build 45 retest pending.
+77. **Panel launched Bing?** Yes on build 43 iPhone, confirmed by the user and subsequent original Bing room-load observations. Build 46 retest pending.
 
-78. **Actual Bing room?** Build 43 device log confirms 00- intro and later original Bing rooms. Build 45 observation pending.
+78. **Actual Bing room?** Build 43 device log confirms 00- intro and later original Bing rooms. Build 46 observation pending.
 
 79. **Actual Bing spawn?** Authored marker local (264,152), world (-56,152); physical observation pending.
 
 80. **Bing audio?** event:/sj21_bingovergoogle resolves; physical playback pending.
 
-81. **Rooms traversed?** Build 43 log: 00- intro; 01- Crusher; 02- Bait N' Switch; 02B- a stwawbewwy??; 03- Uberjump. Build 45 retest pending.
+81. **Rooms traversed?** Build 43 log: 00- intro; 01- Crusher; 02- Bait N' Switch; 02B- a stwawbewwy??; 03- Uberjump. Build 46 retest pending.
 
 82. **Death/respawn?** Pending physical death/respawn.
 
@@ -496,27 +515,27 @@ boundary; it cannot silently convert pending checks to PASS.
 
 112. **Deferred textures retained?** Yes. Build 43 retained log checkpoints show 7 then 503/756 decoded mod textures in the lobby and 759 after Bing out of 2687 mounts. These are partial retained checkpoints, not a complete cold-start baseline.
 
-113. **Any modern-device performance/memory issue?** The user reported good build 43 lobby and Bing behavior. Last retained RGBA estimate was 26146768 bytes for 759 decoded mod textures; this is not total GPU/process memory. Build 45 observations remain pending.
+113. **Any modern-device performance/memory issue?** The user reported good build 43 lobby and Bing behavior. Last retained RGBA estimate was 26146768 bytes for 759 decoded mod textures; this is not total GPU/process memory. Build 46 observations remain pending.
 
 114. **Any modern quality degraded for iPad?** No.
 
 115. **Must be NO.** Confirmed NO; no quality reduction for deferred legacy iPad.
 
-116. **What bounded issues beyond autotiling were found?** Five additional bounded mechanisms beyond autotiling and sixteen composition/evidence fixes: 22 source ledger entries, including the title bookmark rule.
+116. **What bounded issues beyond autotiling were found?** 24 source-ledger issues: 16 composition fixes and 8 bounded mechanisms, including KL23 chapter credits and KL24 default-spawn selection.
 
 117. **How many AUTO_FIX_COMPOSITION?** 16.
 
-118. **How many AUTO_IMPLEMENT_BOUNDED_COMPATIBILITY?** 6, including the initial autotiler mechanism and pinned chapter-title bookmark layout.
+118. **How many AUTO_IMPLEMENT_BOUNDED_COMPATIBILITY?** 8 bounded mechanisms, including the new finite text-credits profile and core default-spawn semantics.
 
 119. **Any STOP_MAJOR_ARCHITECTURE?** No.
 
 120. **If yes, exact reason?** Not applicable; no proven major architectural blocker.
 
-121. **Did Codex continue automatically after bounded fixes?** Yes; continued through the two lobby-entry failures and the user-observed long-title bookmark difference, using exact original behavior and renewed verification.
+121. **Did Codex continue automatically after bounded fixes?** Yes. Continued through both build45 exceptions with exact pinned references and bounded static-AOT changes; final build46 verification and physical retest remain required.
 
 122. **Three closures identical?** Pending three fresh final-F closures and compiler/gate runs.
 
-123. **Shared closure SHA?** Current shared closure: fd9be7456e038f29f8daa05ca56d0e4223326238807d1b7ab06496e2aea9a621; final-F reproduction must match.
+123. **Shared closure SHA?** Current shared closure: 11e5006c72dde385ca3b41773e3d924c29e7b19979aef96e11a5ad44f211d6b9; final-F reproduction must match.
 
 124. **iPhone exact-final physical PASS?** Pending; no earlier iPhone pass transferred.
 
@@ -534,7 +553,7 @@ boundary; it cannot silently convert pending checks to PASS.
 
 131. **Forbidden surfaces absent?** No new forbidden runtime mechanism; fresh final linked/native scans remain required.
 
-132. **Builder tests?** Current build 45 development run: 622 PASS, including four core-asset controls. Final-F rerun remains required.
+132. **Builder tests?** Current build 46 development run: 622 PASS, with retained core-asset controls and updated panel consumers. Final-F rerun remains required.
 
 133. **HookGen tests?** Final-F typed and pinned desktop HookGen reruns pending.
 

@@ -21,6 +21,7 @@ internal static class AppleEverestCollabRuntime
     private static string forcedJournalLevelSet;
     private static string returnMode;
     private static bool allowSaving;
+    private static readonly AppleEverestCollabChapterCredits chapterCredits = new();
     internal static AppleEverestCollabSession Route => null;
     internal static bool IsOpen => overworldWrapper != null;
     private static AppleEverestCollabSession restartRoute;
@@ -143,7 +144,9 @@ internal static class AppleEverestCollabRuntime
         IsForcedChapterPanel(panel) ? -49f : fallback;
 
     internal static int ChapterSwapHeight(OuiChapterPanel panel, int fallback) =>
-        IsForcedChapterPanel(panel) && panel.selectingMode && UsesSyntheticBookmarks(forcedMapSid) ? 300 : fallback;
+        IsForcedChapterPanel(panel) && panel.selectingMode
+            ? AppleEverestCollabChapterCredits.HasCredits(panel.Area) ? 730 : UsesSyntheticBookmarks(forcedMapSid) ? 300 : fallback
+            : fallback;
 
     internal static bool ShouldShowChapterDeaths(OuiChapterPanel panel) =>
         IsForcedChapterPanel(panel);
@@ -160,9 +163,8 @@ internal static class AppleEverestCollabRuntime
     }
 
     internal static bool NeedsChapterCheckpointPage(OuiChapterPanel panel) =>
-        overworldWrapper != null && forcedMapSid != null && panel?.Overworld == overworldWrapper.WrappedScene &&
-        UsesSyntheticBookmarks(forcedMapSid) &&
-        AppleEverestProgressionPersistence.HasSuspendedSession(forcedMapSid);
+        IsForcedChapterPanel(panel) && (AppleEverestCollabChapterCredits.HasCredits(panel.Area) ||
+            UsesSyntheticBookmarks(forcedMapSid) && AppleEverestProgressionPersistence.HasSuspendedSession(forcedMapSid));
 
     private static bool UsesSyntheticBookmarks(string sid) =>
         sid != null && (sid == forcedMapSid ? allowSaving : Maps.TryGetValue(sid, out AppleEverestCollabMapDescriptor map) && map.AllowSaving) &&
@@ -171,24 +173,24 @@ internal static class AppleEverestCollabRuntime
 
     internal static void ConfigureChapterCheckpoints(OuiChapterPanel panel)
     {
-        if (overworldWrapper == null || forcedMapSid == null || panel?.Overworld != overworldWrapper.WrappedScene ||
-            !UsesSyntheticBookmarks(forcedMapSid) ||
-            !AppleEverestProgressionPersistence.HasSuspendedSession(forcedMapSid)) return;
+        if (!NeedsChapterCheckpointPage(panel)) return;
+        chapterCredits.Prepare(panel.Area);
+        bool hasSaved = AppleEverestProgressionPersistence.HasSuspendedSession(forcedMapSid);
         Color startColor = panel.checkpoints.FirstOrDefault()?.BgColor ?? Calc.HexToColor("eabe26");
         Color continueColor = panel.checkpoints.Skip(1).FirstOrDefault()?.BgColor ?? Calc.HexToColor("3c6180");
         panel.checkpoints.Clear();
         panel.checkpoints.Add(new OuiChapterPanel.Option
         {
-            Label = Dialog.Clean("collabutils2_chapterpanel_start"),
+            Label = Dialog.Clean(hasSaved ? "collabutils2_chapterpanel_start" : "overworld_start"),
             BgColor = startColor,
             Bg = GFX.Gui["areaselect/tab"],
             Icon = GFX.Gui["areaselect/startpoint"],
             CheckpointRotation = Calc.Random.Choose(-1, 1) * Calc.Random.Range(0.05f, 0.2f),
             CheckpointOffset = new Vector2(Calc.Random.Range(-16, 16), Calc.Random.Range(-16, 16)),
             Large = false,
-            Siblings = 2
+            Siblings = hasSaved ? 2 : 1
         });
-        panel.checkpoints.Add(new OuiChapterPanel.Option
+        if (hasSaved) panel.checkpoints.Add(new OuiChapterPanel.Option
         {
             Label = Dialog.Clean("collabutils2_chapterpanel_continue"),
             BgColor = continueColor,
@@ -200,14 +202,17 @@ internal static class AppleEverestCollabRuntime
             Siblings = 2,
             CheckpointLevelName = ContinueCheckpoint
         });
-        panel.option = 1;
-        AppleEverestStaticRuntime.Log($"collab-chapter-bookmarks=ready sid={forcedMapSid} choices=start-over,continue selected=continue");
+        panel.option = hasSaved ? 1 : 0;
+        AppleEverestStaticRuntime.Log($"collab-chapter-bookmarks=ready sid={forcedMapSid} choices={(hasSaved ? "start-over,continue" : "start")} selected={(hasSaved ? "continue" : "start")} credits={AppleEverestCollabChapterCredits.HasCredits(panel.Area)}");
     }
 
     internal static bool ShouldDrawVanillaCheckpoint(OuiChapterPanel panel) =>
-        overworldWrapper == null || forcedMapSid == null || panel?.Overworld != overworldWrapper.WrappedScene ||
-        !UsesSyntheticBookmarks(forcedMapSid) ||
-        !AppleEverestProgressionPersistence.HasSuspendedSession(forcedMapSid);
+        !NeedsChapterCheckpointPage(panel);
+
+    internal static void DrawChapterCredits(OuiChapterPanel panel, Vector2 center, int checkpointIndex, float height)
+    {
+        if (IsForcedChapterPanel(panel)) chapterCredits.Draw(center, checkpointIndex, height);
+    }
 
     internal static string CheckpointPreviewName(AreaKey area, string level)
     {
@@ -425,6 +430,7 @@ internal static class AppleEverestCollabRuntime
         SaveData.Instance.LastArea = new AreaKey(ResolveArea(areaSid).ID);
         SaveData.Instance.LastArea_Safe = SaveData.Instance.LastArea;
         forcedMapSid = chapter ? areaSid : null;
+        chapterCredits.Clear();
         forcedJournalLevelSet = journalLevelSet;
 
         if (chapter) AppleEverestOuiEnterChapterPanel.Start = true;
@@ -586,6 +592,7 @@ internal static class AppleEverestCollabRuntime
         }
         hasPreviousArea = false;
         forcedMapSid = null;
+        chapterCredits.Clear();
         forcedJournalLevelSet = null;
         level.Session.Audio.Apply();
         if (resetPlayer)

@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "stage": "25K-L",
-  "sharedClosureSha256": "fd9be7456e038f29f8daa05ca56d0e4223326238807d1b7ab06496e2aea9a621",
+  "sharedClosureSha256": "11e5006c72dde385ca3b41773e3d924c29e7b19979aef96e11a5ad44f211d6b9",
   "status": "HOST_PASS",
   "composition": {
     "blocked": 0,
@@ -529,6 +529,28 @@
         "scope": "Pinned core PNG and actual atlas descriptor; original Bing and short-title screen coverage. Accent retains the original left-detail clip."
       }
     },
+    "panelAndSpawnReference": {
+      "authority": "PINNED_EVEREST_SPAWN_AND_COLLABUTILS2_TEXT_CREDITS",
+      "spawnSourceSha256": {
+        "Level.cs": "f6416408cf8c05c2d17758eb3a0287b3f72eb30186589aa5407d432cdfe3fc5d",
+        "LevelData.cs": "b927d3619603107a21365b8efeaa803c1b895ed44faab257cca0b7d06e934ead"
+      },
+      "collabDllSha256": "ce7d646252a2fc51f1f513071d97eaa1acedf7ddb0871276c688914e37319f60",
+      "originalCreditsDrawSha256": "69c8a4ecb3e46aafa6f76e2dd6a6e9139b8e8373cb698a1dfea5e67e81ea2bec",
+      "hostSpawnSourceSha256": "60bdff438d778de0cec70f2f4a7de00db76fa98580ec50a4de38c7a19eef70f8",
+      "hostCreditsSourceSha256": "8aedccfeb027c2734bc98acec20e559459dbb58877301cd92eaa233cf6f738c0",
+      "actualPanelMethodsSha256": "85de217436ed6fddce7e86a3ecedd0721306e0d91a3a63e7e0f840e6b6dafd25",
+      "acceptedCollabSourceTransforms": {
+        "Route => AppleEverestCollabModule.Instance?.Session;": "Route => null;",
+        "new AppleEverestCollabJournalCover(journal)": "new OuiJournalCover(journal)"
+      },
+      "originalRoomCount": 14,
+      "selectedCreditsCount": 1,
+      "selectedCreditTags": 0,
+      "unsupportedTagGateControlRejected": true,
+      "savedRespawnBranchUnchanged": true,
+      "scope": "Complete pinned credits draw method with empty tag list; host rendering handles observe calls. Actual FancyText parser and glyph drawing remain canonical."
+    },
     "textureObservation": {
       "checkpoints": [
         "content-ready",
@@ -565,18 +587,21 @@
     "runtimeSourceSha256": {
       "apple-everest/runtime/AppleEverestMapBinding.cs": "dcd5e53bd04f9dbf7bdfecc1634fbb9fd7cace042c31141d083f7ead109a746b",
       "apple-everest/runtime/AppleEverestChapterTitleLayout.cs": "8a83b811d5386f8dacdad1ddc4c98a40a1b1d34386778fc77401b96102a5177d",
+      "apple-everest/runtime/AppleEverestDefaultSpawn.cs": "ced45218d3746309a2bf1f2939ba94369df1f079fa19c2336df81d4175326544",
+      "apple-everest/runtime/AppleEverestCollabChapterCredits.cs": "77aa828123b89a0fcdea5473a2064ae332b20857e2521fa5437b1c777948c4a3",
       "apple-everest/runtime/semantics/AppleEverestSelectedCanaryAssets.cs": "6d19113dde234c5ee2d7b26a5d540d51bd7a1de61a51ac6d9817cab4ab0f5cb2",
       "apple-everest/runtime/semantics/AppleEverestStrawberryJamLobbyLoading.cs": "82d0027a59e0347ddd1fcfe0ed693c875e55ac1110281a6ac510d9b79a24f04a",
       "apple-everest/runtime/semantics/AppleEverestAnimatedParallax.cs": "f7ff4d3e5ff82127f1800c23984fc173f2a51bc7d7a79fe2a438bb9a13090be8",
       "apple-everest/runtime/AppleEverestStaticRuntime.cs": "248b9f792317b1828712acb4d2aa48460daada2066d0d529da33e9a8eaf6dbf8",
-      "apple-everest/runtime/semantics/AppleEverestStrawberryJamState.cs": "8cc7f5892ae32f1fa1a2edd61e92bda4387c72102af6a66442a4b50df076eaa8"
+      "apple-everest/runtime/semantics/AppleEverestStrawberryJamState.cs": "8cc7f5892ae32f1fa1a2edd61e92bda4387c72102af6a66442a4b50df076eaa8",
+      "apple-everest/runtime/AppleEverestCollabRuntime.cs": "d1b440b2d05ece6515e081e223358f73acf63e7268201aca20001382f4ffe0ba"
     },
-    "runtimeProbeSha256": "1055264ecc89b584cbd80cfaf51e83bad0314a060a21d79afa8e9e6d0dc32f29",
-    "autotilerConformanceSha256": "e218bcfe4d7ccf2095694cb825ff317b919b72d8af26248772fd336f6f76b920"
+    "runtimeProbeSha256": "dffc8aefdbadd6961126e3a48778adabe8ba92c329b8d4774d1614570fd168dc",
+    "autotilerConformanceSha256": "97872f62d887eaaaf356eef96e0f88bd855453b047ab8ba48d71410b7114677e"
   },
   "runtime": {
     "status": "PASS",
-    "assertions": 160,
+    "assertions": 290,
     "graphicsCycles": 3,
     "destinations": [
       {
@@ -812,6 +837,135 @@
       "bitmapWidth": 1400,
       "omittedCoreRightEdge": 1641,
       "shortLeft": 1010
+    },
+    "spawnReports": [
+      {
+        "sid": "StrawberryJam2021/0-Lobbies/1-Beginner",
+        "room": "sj2021beginnerlobby",
+        "spawnCount": 52,
+        "x": 588,
+        "y": 40,
+        "omittedX": 376,
+        "omittedY": 1520
+      },
+      {
+        "sid": "StrawberryJam2021/1-Beginner/Bing_Over_Google",
+        "room": "00- intro",
+        "spawnCount": 1,
+        "x": -56,
+        "y": 152,
+        "omittedX": -56,
+        "omittedY": 152
+      },
+      {
+        "sid": "StrawberryJam2021/1-Beginner/Bing_Over_Google",
+        "room": "01- Crusher",
+        "spawnCount": 2,
+        "x": -360,
+        "y": 152,
+        "omittedX": -792,
+        "omittedY": 136
+      },
+      {
+        "sid": "StrawberryJam2021/1-Beginner/Bing_Over_Google",
+        "room": "02- Bait N' Switch",
+        "spawnCount": 2,
+        "x": -872,
+        "y": 136,
+        "omittedX": -1264,
+        "omittedY": 144
+      },
+      {
+        "sid": "StrawberryJam2021/1-Beginner/Bing_Over_Google",
+        "room": "02B- a stwawbewwy??",
+        "spawnCount": 1,
+        "x": -1104,
+        "y": -40,
+        "omittedX": -1104,
+        "omittedY": -40
+      },
+      {
+        "sid": "StrawberryJam2021/1-Beginner/Bing_Over_Google",
+        "room": "03- Uberjump",
+        "spawnCount": 2,
+        "x": -1352,
+        "y": 104,
+        "omittedX": -1776,
+        "omittedY": 128
+      },
+      {
+        "sid": "StrawberryJam2021/1-Beginner/Bing_Over_Google",
+        "room": "04- Head Trauma",
+        "spawnCount": 2,
+        "x": -1864,
+        "y": 104,
+        "omittedX": -2504,
+        "omittedY": 120
+      },
+      {
+        "sid": "StrawberryJam2021/1-Beginner/Bing_Over_Google",
+        "room": "05- Boing",
+        "spawnCount": 2,
+        "x": -2576,
+        "y": 144,
+        "omittedX": -3016,
+        "omittedY": 144
+      },
+      {
+        "sid": "StrawberryJam2021/1-Beginner/Bing_Over_Google",
+        "room": "06- Bubbles",
+        "spawnCount": 2,
+        "x": -3104,
+        "y": 120,
+        "omittedX": -3792,
+        "omittedY": 112
+      },
+      {
+        "sid": "StrawberryJam2021/1-Beginner/Bing_Over_Google",
+        "room": "07- Falling Cannon",
+        "spawnCount": 2,
+        "x": -3888,
+        "y": 120,
+        "omittedX": -4592,
+        "omittedY": 136
+      },
+      {
+        "sid": "StrawberryJam2021/1-Beginner/Bing_Over_Google",
+        "room": "07B- OwO whats this??",
+        "spawnCount": 1,
+        "x": -4496,
+        "y": -32,
+        "omittedX": -4496,
+        "omittedY": -32
+      },
+      {
+        "sid": "StrawberryJam2021/1-Beginner/Bing_Over_Google",
+        "room": "08- U Turn",
+        "spawnCount": 2,
+        "x": -5184,
+        "y": 24,
+        "omittedX": -5184,
+        "omittedY": 24
+      },
+      {
+        "sid": "StrawberryJam2021/1-Beginner/Bing_Over_Google",
+        "room": "09- Fin",
+        "spawnCount": 1,
+        "x": -5168,
+        "y": -32,
+        "omittedX": -5168,
+        "omittedY": -32
+      }
+    ],
+    "panelCredits": {
+      "originalText": "\n  Music:{# 2a2a2a} Hyperlife{#}\n  Sticker:{# 2a2a2a} phant{#}\n  Playtesting:{# 2a2a2a} Nano{#}\n  Captain:{# 2a2a2a} Bissy{#}\n  \n",
+      "referenceDrawComparisons": 40,
+      "reservedEmptyTagRow": 52,
+      "creditsCenterOffset": 14,
+      "pageHeight": 730,
+      "unchangedAcrossBookmarks": true,
+      "lifecycleClear": true,
+      "unsupportedTagsRejected": true
     },
     "originalSeeds": {
       "lobby": 3349,

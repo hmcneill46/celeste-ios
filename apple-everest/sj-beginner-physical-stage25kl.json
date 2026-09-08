@@ -1,10 +1,10 @@
 {
   "schemaVersion": 1,
   "stage": "25K-L",
-  "status": "PENDING_EXACT_BUILD45_PRODUCTS",
-  "sharedClosureSha256": "fd9be7456e038f29f8daa05ca56d0e4223326238807d1b7ab06496e2aea9a621",
+  "status": "PENDING_EXACT_BUILD46_PRODUCTS",
+  "sharedClosureSha256": "11e5006c72dde385ca3b41773e3d924c29e7b19979aef96e11a5ad44f211d6b9",
   "intendedVersion": "0.1.1",
-  "intendedBuild": "45",
+  "intendedBuild": "46",
   "iphone": {
     "status": "PENDING",
     "ipaSha256": null,
@@ -141,5 +141,6 @@
     "iphone": "User confirmed left title alignment but reported missing right-edge blue coverage.",
     "fullPhysicalMatrix": "NOT_CLAIMED",
     "replacement45": "Exact pinned wider core graphic required; no prior PASS transfers."
-  }
+  },
+  "priorBuild45UserReport": "Both device checklists pass except missing chapter-panel credits and lower fresh lobby spawn. Wider title matches on both. Build46 acceptance is separate."
 }

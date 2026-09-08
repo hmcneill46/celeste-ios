@@ -37,7 +37,12 @@ measured title offset but retained the shorter canonical graphic. Build 45 also
 mounts Everest's exact 1400x173 title PNG. Gate D checks the original Bing title
 from its correct left edge through the right screen edge, and reproduces the
 279-unit gap if the core graphic is omitted. Short titles retain their position.
-Exact replacement-product testing remains required.
+The user confirmed build45's wider title and remaining checklist behavior on both
+iPhone and Apple TV, with two exceptions. Build46 restores the original chapter
+credits (including fixed Start Over/Continue presentation) and Everest's first
+marked/authored default-spawn rule. Fresh lobby spawn is world(588,40), while
+saved and return positions retain precedence. Exact replacement-product testing
+remains required.
 
 The bounded autotiler supports square 3×3 and 5×5 definitions. The 26 original
 J cells match a mechanically compiled pinned Everest reference; vanilla and

@@ -252,7 +252,7 @@ internal static class CollabStaticTests
              runtime.Contains("collabutils2_chapterpanel_start", StringComparison.Ordinal) &&
              runtime.Contains("collabutils2_chapterpanel_continue", StringComparison.Ordinal) &&
              runtime.Contains("CheckpointLevelName = ContinueCheckpoint", StringComparison.Ordinal) &&
-             runtime.Contains("panel.option = 1", StringComparison.Ordinal) &&
+             runtime.Contains("panel.option = hasSaved ? 1 : 0", StringComparison.Ordinal) &&
              runtime.Contains("ShouldDrawVanillaCheckpoint", StringComparison.Ordinal),
             "save-and-return exposes authentic Start Over and Continue bookmarks without routing synthetic options through vanilla checkpoint indexing");
         Pass(runtime.Contains("UsesSyntheticBookmarks", StringComparison.Ordinal) &&
@@ -425,7 +425,7 @@ internal static class CollabStaticTests
              closureGenerator.Contains("ChapterTitleOffset(this, -18f)", StringComparison.Ordinal) &&
              closureGenerator.Contains("AppleEverestIcon(int area)", StringComparison.Ordinal) &&
              runtime.Contains("icon.Position = panel.Position + panel.IconOffset", StringComparison.Ordinal) &&
-             runtime.Contains("panel.selectingMode && UsesSyntheticBookmarks(forcedMapSid) ? 300 : fallback",
+             runtime.Contains("AppleEverestCollabChapterCredits.HasCredits(panel.Area) ? 730 : UsesSyntheticBookmarks(forcedMapSid) ? 300 : fallback",
                  StringComparison.Ordinal),
             "forced collab chapter panels preserve the selected map icon, title-author order, authored height or compact synthetic-bookmark height, and normal-mode death count");
         Pass(closureGenerator.Contains("Graphics/Atlases/Checkpoints/", StringComparison.Ordinal) &&

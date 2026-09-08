@@ -412,6 +412,8 @@ def main():
     for filename,repo_path in {
         "AppleEverestMapBinding.cs":"apple-everest/runtime/AppleEverestMapBinding.cs",
         "AppleEverestChapterTitleLayout.cs":"apple-everest/runtime/AppleEverestChapterTitleLayout.cs",
+        "AppleEverestDefaultSpawn.cs":"apple-everest/runtime/AppleEverestDefaultSpawn.cs",
+        "AppleEverestCollabChapterCredits.cs":"apple-everest/runtime/AppleEverestCollabChapterCredits.cs",
         "AppleEverestSelectedCanaryAssets.cs":"apple-everest/runtime/semantics/AppleEverestSelectedCanaryAssets.cs",
         "AppleEverestStrawberryJamLobbyLoading.cs":"apple-everest/runtime/semantics/AppleEverestStrawberryJamLobbyLoading.cs",
         "AppleEverestAnimatedParallax.cs":"apple-everest/runtime/semantics/AppleEverestAnimatedParallax.cs"}.items():
@@ -435,6 +437,9 @@ def main():
           "debug route loses selected-map dialog scope")
     credits_reference=prepare_credits_reference(args.sj_package.resolve(),probe,credit_markers)
     title_cases,title_reference=prepare_title_reference(canonical,probe,bing[4])
+    panel_spawn=module("kl_panel_spawn",ROOT/"scripts/stage25kl-panel-spawn-reference.py")
+    panel_spawn_cases,panel_spawn_reference=panel_spawn.prepare(args.sj_package.resolve().parent,probe,runtime,content,mounts,trees,bindings)
+    source_hashes["apple-everest/runtime/AppleEverestCollabRuntime.cs"]=sha(ROOT/"apple-everest/runtime/AppleEverestCollabRuntime.cs")
     title_reference["artwork"]=title_artwork(canonical,runtime,closure,content,mounts,atlas_keys,atlas,compiler)
     chapter_source=(runtime/"Celeste/OuiChapterPanel.cs").read_text()
     for layer in ["title","accent"]:
@@ -451,7 +456,7 @@ def main():
     shutil.copyfile(ROOT/".build/celeste-ios/current/managed/Celeste/AnimatedTilesBank.cs",probe/"AnimatedTilesBank.cs")
     for filename in ["Stubs","Program"]:shutil.copyfile(ROOT/("tools/AppleEverestBuilder/tests/CompositionRuntime"+filename+".cs.txt"),probe/(filename+".cs"))
     (probe/"Probe.csproj").write_text('<Project Sdk="Microsoft.NET.Sdk"><PropertyGroup><OutputType>Exe</OutputType><TargetFramework>net10.0</TargetFramework><ImplicitUsings>enable</ImplicitUsings><Nullable>disable</Nullable></PropertyGroup></Project>\n')
-    (probe/"request.json").write_text(json.dumps({"contentRoot":str(content),"frames":frame_counts,"destinations":[d["sid"] for d in destinations],"parallaxes":parallaxes,"creditMarkers":credit_markers,"chapterTitles":title_cases,"chapterBookmark":title_reference["artwork"],
+    (probe/"request.json").write_text(json.dumps({**panel_spawn_cases,"contentRoot":str(content),"frames":frame_counts,"destinations":[d["sid"] for d in destinations],"parallaxes":parallaxes,"creditMarkers":credit_markers,"chapterTitles":title_cases,"chapterBookmark":title_reference["artwork"],
         "originalAnimationCount":len(animations[graphics+"AnimatedTiles.xml"]),"vanillaForeground":str(canonical/"Graphics/ForegroundTiles.xml"),"vanillaBackground":str(canonical/"Graphics/BackgroundTiles.xml")}))
     with (probe/"run.log").open("w") as log:
         run=subprocess.run(["dotnet","run","--project",str(probe/"Probe.csproj"),"-c","Release","--",str(probe/"request.json"),str(output/"runtime-composition.json")],cwd=ROOT,stdout=log,stderr=subprocess.STDOUT)
@@ -470,7 +475,7 @@ def main():
                 if current!=source["sha256"]:
                     check(source["path"]=="apple-everest/runtime/AppleEverestCollabRuntime.cs" and factory["customId"] in ("CollabUtils2/ChapterPanelTrigger","CollabUtils2/JournalTrigger"),"unreviewed semantic source delta: "+source["path"])
                     deltas.append({"factory":factory["customId"],"source":source["path"],"acceptedSha256":source["sha256"],"currentSha256":current,
-                                   "review":"KL06 fail-closed destination checks and removal of area-zero fallback; available-destination behavior retained"})
+                                   "review":"KL06 fail-closed destinations; KL23 pinned text-only credits page, bookmark options and wrapper lifecycle; existing progression preserved"})
     check(len(deltas)==2,"expected reviewed semantic delta census changed")
     collab=(ROOT/"apple-everest/runtime/AppleEverestCollabRuntime.cs").read_text()
     check("AreaData.Get(0)" not in collab and "talk.Enabled = AppleEverestCollabRuntime.DestinationAvailable(sid)" in collab and
@@ -482,7 +487,7 @@ def main():
                      "terrain":terrain_reports,"usedTerrain":used_terrain,"decalOccurrences":decal_occurrences,"parallaxes":parallaxes,"destinations":destinations,
                      "mapSprites":sprite_reports,"collabManifestSha256":sha(closure/"collab-manifest.txt"),"progressionManifestSha256":sha(closure/"levelset-progression-manifest.txt"),
                      "rejectedCompositionControls":negative_controls,
-                     "lobbyCreditMarkers":credit_markers,"creditsReference":credits_reference,"chapterTitleLayout":title_reference,
+                     "lobbyCreditMarkers":credit_markers,"creditsReference":credits_reference,"chapterTitleLayout":title_reference,"panelAndSpawnReference":panel_spawn_reference,
                      "textureObservation":{"checkpoints":["content-ready","level-loaded"],"scope":"static atlas mounts",
                                            "readsBackingFieldsWithoutDecode":True,"rgbaBytesAreEstimate":True,"managedLiveBytesAreNotProcessResidentBytes":True},
                      "requiredCustomAudio":sorted(custom_required),"atlasMetadataSha256":atlas_metadata,"runtimeSourceSha256":source_hashes,

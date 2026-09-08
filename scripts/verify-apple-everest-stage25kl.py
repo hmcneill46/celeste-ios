@@ -172,7 +172,7 @@ def main():
     cells={(row['x'],row['y']):row for row in terrain['realCells']}
     check(cells[(446,263)]['apple']['Textures']==['tilesets/SJ2021/mosscairn/grayExtended#5,14'] and
           cells[(448,263)]['apple']['Textures']==['tilesets/SJ2021/mosscairn/grayExtended#10,3'],'counterexample was lost')
-    check(runtime['status']=='PASS' and runtime['assertions']>=160 and runtime['graphicsCycles']==3,'actual graphics/animation/debug/title lifecycle proof incomplete')
+    check(runtime['status']=='PASS' and runtime['assertions']>=290 and runtime['graphicsCycles']==3,'actual graphics/animation/debug/title/credits/spawn lifecycle proof incomplete')
     title=ready['gateD']['chapterTitleLayout']
     check(title['authority']=='PINNED_EVEREST_CHAPTER_TITLE_LENGTH' and title['sourceSha256']=='d7c4941d15f70ccf05c0f99d24549cb05a57f87ee77ab645057c541123318f6d' and
           title['renderConsumers']==['areaselect/title','areaselect/accent'] and title['caseCount']==8,'pinned bookmark title rendering proof missing')
@@ -191,6 +191,20 @@ def main():
           for row in runtime['creditMarkers']),'actual lobby marker interception proof incomplete')
     check(ready['gateD'].get('creditsReference',{}).get('sourceDllSha256')=='8d5b9184204e7e7728965bcf95af5f150f6220dafbfe52fdd6c23e50d47e5258',
           'lobby loading proof lacks exact original root reference')
+    panel_spawn=ready['gateD']['panelAndSpawnReference']
+    check(panel_spawn['authority']=='PINNED_EVEREST_SPAWN_AND_COLLABUTILS2_TEXT_CREDITS' and
+          panel_spawn['collabDllSha256']=='ce7d646252a2fc51f1f513071d97eaa1acedf7ddb0871276c688914e37319f60' and
+          panel_spawn['selectedCreditTags']==0 and panel_spawn['unsupportedTagGateControlRejected'] and panel_spawn['savedRespawnBranchUnchanged'],
+          'chapter credits/default spawn proof lacks exact pinned authority or saved-respawn preservation')
+    lobby_spawns=[row for row in runtime['spawnReports'] if row['sid']=='StrawberryJam2021/0-Lobbies/1-Beginner']
+    check(len(lobby_spawns)==1 and all(lobby_spawns[0][key]==value for key,value in
+          {'spawnCount':52,'x':588,'y':40,'omittedX':376,'omittedY':1520}.items()),'original lobby spawn/omission conformance incomplete')
+    credits=runtime['panelCredits']
+    check(credits['referenceDrawComparisons']==40 and credits['reservedEmptyTagRow']==52 and
+          credits['creditsCenterOffset']==14 and credits['pageHeight']==730 and credits['unchangedAcrossBookmarks'] and
+          credits['lifecycleClear'] and credits['unsupportedTagsRejected'] and
+          all(name in credits['originalText'] for name in ['Hyperlife','phant','Nano','Bissy']),
+          'actual chapter credits layout/options/lifecycle conformance incomplete')
     check(sha(composition/'autotiler-conformance.json')==ready['gateD']['autotilerConformanceSha256'] and
           sha(composition/'runtime-composition.json')==ready['gateD']['runtimeProbeSha256'],'composition evidence changed')
     ledger=read(AE/'sj-bounded-fixes-stage25kl.json')

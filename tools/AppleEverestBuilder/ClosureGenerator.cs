@@ -596,6 +596,7 @@ internal static class ClosureGenerator
             Path.Combine(managedRoot, "Celeste", "CrystalStaticSpinner.cs"));
         MapDataCompatibilityPatch.Apply(Path.Combine(managedRoot, "Celeste", "MapData.cs"));
         PatchMetadataStartLevel(Path.Combine(managedRoot, "Celeste", "MapData.cs"));
+        PatchDefaultSpawn(managedRoot);
         PatchBackdropLoading(Path.Combine(managedRoot, "Celeste", "MapData.cs"));
         PatchStartup(Path.Combine(managedRoot, "Celeste", "Celeste.cs"));
         PatchContentReady(Path.Combine(managedRoot, "Celeste", "GameLoader.cs"));
@@ -898,6 +899,18 @@ internal static class ClosureGenerator
             "\t\t}");
     }
 
+    private static void PatchDefaultSpawn(string managedRoot)
+    {
+        string data = Path.Combine(managedRoot, "Celeste", "LevelData.cs");
+        ReplaceOnce(data, "\tpublic List<Vector2> Spawns;",
+            "\tpublic List<Vector2> Spawns;\n\n\tpublic Vector2? DefaultSpawn;");
+        const string add = "\t\t\t\t\t\tSpawns.Add(new Vector2((float)Bounds.X + Convert.ToSingle(child2.Attributes[\"x\"], CultureInfo.InvariantCulture), (float)Bounds.Y + Convert.ToSingle(child2.Attributes[\"y\"], CultureInfo.InvariantCulture)));";
+        ReplaceOnce(data, add, add + "\n\t\t\t\t\t\tglobal::Celeste.Mod.AppleEverestDefaultSpawn.Record(this, child2.Attributes, Spawns[Spawns.Count - 1]);");
+        ReplaceOnce(Path.Combine(managedRoot, "Celeste", "Level.cs"),
+            "\tpublic Vector2 DefaultSpawnPoint => GetSpawnPoint(new Vector2(Bounds.Left, Bounds.Bottom));",
+            "\tpublic Vector2 DefaultSpawnPoint => global::Celeste.Mod.AppleEverestDefaultSpawn.Get(this);");
+    }
+
     private static void PatchMetadataStartLevel(string path) => ReplaceOnce(path,
         "\tpublic LevelData StartLevel()\n\t{\n\t\treturn GetAt(Vector2.Zero);\n\t}",
         "\tpublic LevelData StartLevel()\n\t{\n" +
@@ -1142,7 +1155,8 @@ internal static class ClosureGenerator
             "\t\t\t\tif (global::Celeste.Mod.AppleEverestCollabRuntime.ShouldDrawVanillaCheckpoint(this))\n" +
             "\t\t\t\t{\n" +
             "\t\t\t\t\tDrawCheckpoint(center, options[num], num);\n" +
-            "\t\t\t\t}");
+            "\t\t\t\t}\n" +
+            "\t\t\t\telse global::Celeste.Mod.AppleEverestCollabRuntime.DrawChapterCredits(this, center, num, height);");
         ReplaceOnce(journalPath,
             "\t\tint num = 0;\n\t\tforeach (OuiJournalPage page in Pages)",
             "\t\tglobal::Celeste.Mod.AppleEverestCollabRuntime.ConfigureJournalPages(this);\n" +

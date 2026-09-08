@@ -135,6 +135,107 @@ internal static class Program
             "short titles retain their left edge and full viewport coverage with the reference graphic");
         var chapterBookmark=new {leftEdge,textLeft,rightEdge,viewportWidth=screenWidth,bitmapWidth,omittedCoreRightEdge,shortLeft};
 
+        var spawnReports=new List<object>();
+        foreach(var row in request.GetProperty("spawnCases").EnumerateArray())
+        {
+            string sid=row.GetProperty("sid").GetString(),room=row.GetProperty("room").GetString();
+            var bounds=row.GetProperty("bounds").EnumerateArray().Select(v=>v.GetInt32()).ToArray();
+            var data=new LevelData{Bounds=new(bounds[0],bounds[1],bounds[2],bounds[3])};
+            var referenceData=new LevelData{Bounds=data.Bounds};
+            foreach(var marker in row.GetProperty("players").EnumerateArray())
+            {
+                var point=new Vector2(marker.GetProperty("x").GetSingle(),marker.GetProperty("y").GetSingle());
+                var attributes=new Dictionary<string,object>{{"isDefaultSpawn",marker.GetProperty("isDefaultSpawn").GetBoolean()}};
+                data.Spawns.Add(point);referenceData.Spawns.Add(point);
+                AppleEverestDefaultSpawn.Record(data,attributes,point);PinnedReference.SpawnReference.Record(referenceData,attributes,point);
+            }
+            Check(Nullable.Equals(data.DefaultSpawn,referenceData.DefaultSpawn),"original default marker parsing matches pinned Everest");
+            var referenceLevel=new Level{Session=new Session(sid){LevelData=referenceData}};
+            if(data.Spawns.Count==0)
+            {
+                bool actualRejected=false,referenceRejected=false;
+                try{AppleEverestDefaultSpawn.Get(new Level{Session=new Session(sid){LevelData=data}});}catch(ArgumentOutOfRangeException){actualRejected=true;}
+                try{PinnedReference.SpawnReference.Get(referenceLevel);}catch(ArgumentOutOfRangeException){referenceRejected=true;}
+                Check(actualRejected&&referenceRejected,"empty spawn lists retain pinned failure instead of invented coordinates");
+                continue;
+            }
+            var expected=PinnedReference.SpawnReference.Get(referenceLevel);
+            foreach(bool debug in new[]{false,true})
+                Check(AppleEverestDefaultSpawn.Get(new Level{Session=new Session(sid,debug){LevelData=data}}).Equals(expected),"every original room spawn matches reference on normal and debug routes");
+            var omitted=referenceLevel.GetSpawnPoint(new Vector2(data.Bounds.Left,data.Bounds.Bottom));
+            if(sid==lobby)Check(expected.Equals(new Vector2(588,40))&&omitted.Equals(new Vector2(376,1520))&&data.Spawns.Count==52,"omitted fallback fix reproduces exact lower lobby spawn");
+            spawnReports.Add(new{sid,room,spawnCount=data.Spawns.Count,x=expected.X,y=expected.Y,omittedX=omitted.X,omittedY=omitted.Y});
+        }
+        foreach(object flag in new object[]{true,"true",1})
+        {
+            var data=new LevelData{Spawns=new(){new(1,1),new(9,9)},Bounds=new(0,0,100,100)};
+            var reference=new LevelData{Spawns=data.Spawns,Bounds=data.Bounds};
+            foreach(var marker in new[]{(new Dictionary<string,object>(),new Vector2(1,1)),(new Dictionary<string,object>{{"isDefaultSpawn",false}},new Vector2(2,2)),(new Dictionary<string,object>{{"isDefaultSpawn",flag}},new Vector2(9,9)),(new Dictionary<string,object>{{"isDefaultSpawn",true}},new Vector2(10,10))})
+            {
+                AppleEverestDefaultSpawn.Record(data,marker.Item1,marker.Item2);PinnedReference.SpawnReference.Record(reference,marker.Item1,marker.Item2);
+                Check(Nullable.Equals(data.DefaultSpawn,reference.DefaultSpawn),"first true default marker wins with invariant conversion");
+            }
+            Check(AppleEverestDefaultSpawn.Get(new Level{Session=new Session(bing){LevelData=data}}).Equals(new Vector2(9,9)),"explicit authored default overrides first spawn");
+            var vanilla=new Level{Session=new Session("1-ForsakenCity"){LevelData=data}};
+            Check(AppleEverestDefaultSpawn.Get(vanilla).Equals(PinnedReference.SpawnReference.Get(vanilla)),"vanilla nearest-bottom-left rule remains unchanged despite default marker");
+        }
+
+        var originalCredits=request.GetProperty("panelCredits").EnumerateArray().Single();
+        string creditsName=originalCredits.GetProperty("name").GetString(),creditsRaw=originalCredits.GetProperty("raw").GetString();
+        var creditsArea=new AreaKey(bing);AreaData.Areas[bing].Name=creditsName;Dialog.Values[creditsName+"_collabcredits"]=creditsRaw;
+        Dialog.Values["overworld_start"]="Start";Dialog.Values["collabutils2_chapterpanel_start"]="Start Over";Dialog.Values["collabutils2_chapterpanel_continue"]="Continue";
+        var creditRenderer=new AppleEverestCollabChapterCredits();int creditDrawComparisons=0;
+        foreach(var profile in new[]{(500f,3),(1600f,3),(500f,20),(0f,0)})
+        {
+            var text=FancyText.Next=new FancyText.Text{Width=profile.Item1,Nodes=Enumerable.Range(0,profile.Item2).Select(_=>(object)new FancyText.NewLine()).ToList()};
+            creditRenderer.Prepare(creditsArea);
+            Check(FancyText.LastInput==creditsRaw.Replace("{break}","{n}")&&FancyText.LastWidth==int.MaxValue&&FancyText.LastLines==int.MaxValue&&FancyText.LastScale==1,"original styled credits reach unchanged canonical FancyText parser");
+            foreach(float height in new[]{300f,600f,665f,730f,800f})
+            foreach(int index in new[]{0,1})
+            {
+                text.Calls.Clear();creditRenderer.Draw(new Vector2(100,200),index,height);var actual=text.Calls.ToArray();
+                text.Calls.Clear();PinnedReference.PanelCreditsReference.Render(text,creditsArea,new Vector2(100,200),index,height);
+                Check(actual.SequenceEqual(text.Calls),"complete pinned credits draw agrees for size, fade and both bookmark indices");
+                if(index==0&&height==730f)Check(actual.Single().StartsWith("100|214|"),"empty pinned tag list reserves one row; exact credits center retained");
+                creditDrawComparisons++;
+            }
+            creditRenderer.Clear();text.Calls.Clear();creditRenderer.Draw(Vector2.Zero,0,730);Check(text.Calls.Count==0,"closing or reloading clears prior credits");
+        }
+        Dialog.Values[creditsName+"_collabcredits"]="A{break}B{# 2a2a2a}C{#}";
+        creditRenderer.Prepare(creditsArea);Check(FancyText.LastInput=="A{n}B{# 2a2a2a}C{#}","page breaks normalize but inline colors remain authored");
+        Dialog.Values[creditsName+"_collabcredits"]=creditsRaw;
+        foreach(bool saved in new[]{false,true})
+        {
+            AppleEverestProgressionPersistence.Saved=saved;var panel=new OuiChapterPanel{Area=creditsArea};
+            AppleEverestCollabRuntime.Setup(panel,bing,true);
+            Check(AppleEverestCollabRuntime.NeedsChapterCheckpointPage(panel)&&AppleEverestCollabRuntime.ChapterSwapHeight(panel,999)==730,"fresh and saved credits force the reference-height chapter page");
+            FancyText.Next=new FancyText.Text();AppleEverestCollabRuntime.ConfigureChapterCheckpoints(panel);
+            Check(panel.checkpoints.Select(o=>o.Label).SequenceEqual(saved?new[]{"Start Over","Continue"}:new[]{"Start"})&&panel.option==(saved?1:0),"actual production bookmarks and selected option match saved-session state");
+            Check(panel.checkpoints.All(o=>o.Siblings==(saved?2:1))&&!AppleEverestCollabRuntime.ShouldDrawVanillaCheckpoint(panel),"credits replace vanilla checkpoint preview for every bookmark");
+            var draws=new List<string>();
+            for(int choice=0;choice<panel.checkpoints.Count;choice++)
+            {
+                panel.option=choice;FancyText.Next.Calls.Clear();
+                for(int index=0;index<panel.checkpoints.Count;index++)AppleEverestCollabRuntime.DrawChapterCredits(panel,Vector2.Zero,index,730);
+                Check(FancyText.Next.Calls.Count==1,"one credits block is drawn for each selected option");draws.Add(FancyText.Next.Calls.Single());
+            }
+            Check(draws.Distinct().Count()==1,"Start Over and Continue leave credits fixed");
+            AppleEverestCollabRuntime.Setup(panel,bing,false);
+            Check(!AppleEverestCollabRuntime.NeedsChapterCheckpointPage(panel)&&AppleEverestCollabRuntime.ShouldDrawVanillaCheckpoint(panel)&&AppleEverestCollabRuntime.ChapterSwapHeight(panel,999)==999,"ordinary overworld panel stays unchanged");
+        }
+        Dialog.Values[creditsName+"_collabcreditstags"]="unsupported";bool tagsRejected=false;
+        try{creditRenderer.Prepare(creditsArea);}catch(InvalidOperationException){tagsRejected=true;}
+        Check(tagsRejected,"unclosed credit-tag profile fails closed");Dialog.Values.Remove(creditsName+"_collabcreditstags");
+        Dialog.Values.Remove(creditsName+"_collabcredits");
+        creditRenderer.Prepare(creditsArea);FancyText.Next.Calls.Clear();creditRenderer.Draw(Vector2.Zero,0,730);
+        Check(FancyText.Next.Calls.Count==0,"opening panel without credits cannot leak previous text");
+        foreach(bool saved in new[]{false,true})
+        {
+            AppleEverestProgressionPersistence.Saved=saved;var panel=new OuiChapterPanel{Area=creditsArea};AppleEverestCollabRuntime.Setup(panel,bing,true);
+            Check(AppleEverestCollabRuntime.NeedsChapterCheckpointPage(panel)==saved&&AppleEverestCollabRuntime.ChapterSwapHeight(panel,999)==300,"accepted no-credits saved bookmarks and fresh direct-start behavior remain");
+        }
+        var panelCredits=new{originalText=creditsRaw,referenceDrawComparisons=creditDrawComparisons,reservedEmptyTagRow=52,creditsCenterOffset=14,pageHeight=730,unchangedAcrossBookmarks=true,lifecycleClear=true,unsupportedTagsRejected=tagsRejected};
+
         var parallaxReports=new List<object>();var scene=new Level();
         foreach(var row in request.GetProperty("parallaxes").EnumerateArray())
         {
@@ -156,7 +257,7 @@ internal static class Program
         bool rejected=false;try{AppleEverestAnimatedParallax.Create(new MTexture("bgs/MaxHelpingHand/animatedParallax/missing00"));}catch(InvalidOperationException){rejected=true;}
         Check(rejected,"missing animated frames fail closed");
         File.WriteAllText(args[1],JsonSerializer.Serialize(new {status="PASS",assertions=checks,graphicsCycles=cycles,destinations=availability,
-            parallaxes=parallaxReports,creditMarkers=creditsReports,chapterTitles=titleReports,chapterBookmark,originalSeeds=new{lobby=3349,bing=4143},
+            parallaxes=parallaxReports,creditMarkers=creditsReports,chapterTitles=titleReports,chapterBookmark,spawnReports,panelCredits,originalSeeds=new{lobby=3349,bing=4143},
             scope="Actual generated bindings, graphics lifecycle and animated parallax source; graphical resource handles are host adapters. Actual terrain sound/debris semantics verified by independent pinned conformance."},new JsonSerializerOptions{WriteIndented=true})+"\n");
         Console.WriteLine($"PASS: {checks} actual runtime composition assertions; {cycles} complete graphics restoration cycles");
     }

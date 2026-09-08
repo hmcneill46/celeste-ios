@@ -476,6 +476,51 @@
       "regressions": "Short titles retain left position and full viewport coverage; original accent, chapter launch, progression, map content, helper mechanisms and audio are unchanged.",
       "closureEffect": "One exact core PNG plus its generated content and atlas mount; no new runtime mechanism, factory, catalog, persistence or discovery surface.",
       "status": "HOST_VERIFIED_PHYSICAL_PENDING"
+    },
+    {
+      "id": "KL23",
+      "discoveryPoint": "Build45 user comparison on both devices",
+      "selectedContent": "Original Bing chapter-panel _collabcredits dialog; fresh Start and saved Start Over/Continue",
+      "classification": "AUTO_IMPLEMENT_BOUNDED_COMPATIBILITY",
+      "reason": "The selected dialog was mounted but the port omitted CollabUtils2's text credits page and renderer.",
+      "implementation": "Use canonical FancyText with original color markup, normalize page breaks, retain the exact 730-high page, 800-wide fitting, 52-pixel empty tag row and pinned fade/per-line centering. Render once independently of the selected bookmark; clear on open/close.",
+      "tests": [
+        "ExactPinnedCollabUtils2CompleteDrawMethod",
+        "FortyDimensionFadeBookmarkComparisons",
+        "OriginalBingCreditsAndParseArguments",
+        "ActualFreshSavedOrdinaryPanelMethods",
+        "WrapperLifecycleAndNoCreditsOmission",
+        "UnsupportedTagsRejection",
+        "FreshSixDllCompilerAndFourGates"
+      ],
+      "plannedTests": "Exact source comparisons, generated consumers and both replacement native products; manual reference comparison on both devices.",
+      "failClosedRule": "Selected credit tags reject before product generation and at runtime; no new tag profile or renderer is claimed.",
+      "regressions": "No-credit synthetic Continue, ordinary checkpoint panels, authored color markup, save envelopes and original content bytes remain unchanged.",
+      "closureEffect": "One static text credits renderer and existing panel consumer wiring; no new factory, persistence authority, assets or runtime discovery.",
+      "status": "HOST_VERIFIED_PHYSICAL_PENDING",
+      "priorProductObservation": "User reported both build45 checklists pass except credits and fresh lobby spawn; wider title passed on both. This is not build46 acceptance."
+    },
+    {
+      "id": "KL24",
+      "discoveryPoint": "Build45 fresh lobby spawn lower than exact macOS reference",
+      "selectedContent": "All original lobby/Bing player markers and selected static map default-spawn semantics",
+      "classification": "AUTO_IMPLEMENT_BOUNDED_COMPATIBILITY",
+      "reason": "Canonical nearest-bottom-left fallback selected world376,1520; pinned Everest selects the first authored marker world588,40 when no isDefaultSpawn marker exists.",
+      "implementation": "Preserve first-true default-marker parsing and use the marked default or first authored spawn for generated mounted maps, including the debug route. Preserve vanilla nearest-bottom-left behavior and explicit saved/return/start-position precedence.",
+      "tests": [
+        "ExactPinnedEverestGetterAndMarkerParsing",
+        "EveryOriginalRoomBothRoutes",
+        "Original52MarkerLobbyOmissionCounterexample",
+        "ExplicitFirstTrueDefaultAndInvariantConversion",
+        "EmptySpawnFailureAndVanillaControl",
+        "UnchangedActualSavedRespawnBranch",
+        "FreshSixDllCompilerAndFourGates"
+      ],
+      "plannedTests": "Compare all original room marker lists and negative controls to pinned source; fresh launch and existing-save resume on both replacement products.",
+      "failClosedRule": "Unknown mounted paths retain canonical behavior; an empty selected spawn list retains pinned failure. No invented coordinates or source-map rewrites.",
+      "regressions": "Bing's original start, saved respawns, chapter return coordinates, vanilla spawn choice, debug isolation and original BIN bytes.",
+      "closureEffect": "One core static helper, nullable LevelData field and two exact source consumers; no new factory or persistence authority.",
+      "status": "HOST_VERIFIED_PHYSICAL_PENDING"
     }
   ]
 }

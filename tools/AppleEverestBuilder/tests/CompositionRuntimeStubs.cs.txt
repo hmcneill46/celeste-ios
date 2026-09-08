@@ -12,18 +12,27 @@ namespace Microsoft.Xna.Framework
         public float X,Y;
         public Vector2(float x,float y){X=x;Y=y;}
         public static Vector2 Zero=>default;
+        public static Vector2 One=>new(1,1);
         public static Vector2 operator +(Vector2 a,Vector2 b)=>new(a.X+b.X,a.Y+b.Y);
+        public static Vector2 operator *(Vector2 a,float b)=>new(a.X*b,a.Y*b);
     }
+    public struct Rectangle {public int X,Y,Width,Height;public int Left=>X;public int Bottom=>Y+Height;public Rectangle(int x,int y,int w,int h){X=x;Y=y;Width=w;Height=h;}}
+    public struct Color {public static Color Black=>default;public static Color White=>default;public static Color operator *(Color a,float b)=>a;}
 }
 namespace Monocle
 {
     public class Scene { public EntityList Entities=new(); }
     public class EntityList { public List<object> ToAdd=new(); }
     public static class Engine { public static float DeltaTime; }
-    public sealed class MTexture { public string AtlasPath; public MTexture(string path){AtlasPath=path;} }
+    public sealed class MTexture
+    {
+        public string AtlasPath; public int Width; public MTexture(string path){AtlasPath=path;}
+        public void Draw(Microsoft.Xna.Framework.Vector2 p,Microsoft.Xna.Framework.Vector2 o,Microsoft.Xna.Framework.Color c,Microsoft.Xna.Framework.Vector2 s,float r,Microsoft.Xna.Framework.Rectangle clip)=>throw new Exception("tags outside selected profile");
+    }
     public sealed class Atlas
     {
         public readonly Dictionary<string,int> Frames=new(StringComparer.OrdinalIgnoreCase);
+        public MTexture this[string key]=>new(key);
         public List<MTexture> GetAtlasSubtextures(string key) => Enumerable.Range(0,Frames.GetValueOrDefault(key))
             .Select(i=>new MTexture(key+":"+i)).ToList();
     }
@@ -35,11 +44,21 @@ namespace Monocle
     public static class Calc
     {
         public static string ContentRoot;
+        public static Random Random=new(0);
+        public static Microsoft.Xna.Framework.Color HexToColor(string value)=>default;
+        public static float ClampedMap(float v,float a,float b,float min,float max)=>min+Math.Clamp((v-a)/(b-a),0,1)*(max-min);
         public static XmlDocument LoadContentXML(string file)
         {
             var doc=new XmlDocument();doc.Load(System.IO.Path.IsPathRooted(file)?file:System.IO.Path.Combine(ContentRoot,file));return doc;
         }
     }
+    public static class RandomRules
+    {
+        public static int Choose(this Random random,int a,int b)=>a;
+        public static int Range(this Random random,int a,int b)=>a;
+        public static float Range(this Random random,float a,float b)=>a;
+    }
+    public static class Draw {public static void Rect(float x,float y,float w,float h,Microsoft.Xna.Framework.Color c)=>throw new Exception("tags outside selected profile");}
     public static class XmlRules
     {
         public static string Attr(this XmlElement e,string key)=>e.GetAttribute(key);
@@ -70,6 +89,7 @@ namespace Celeste
     public static class GFX
     {
         public static Monocle.Atlas Game=new();
+        public static Monocle.Atlas Gui=new();
         public static Autotiler FGAutotiler,BGAutotiler;
         public static AnimatedTilesBank AnimatedTilesBank;
     }
@@ -78,6 +98,7 @@ namespace Celeste
     public sealed class AreaData
     {
         public string Name;
+        public Microsoft.Xna.Framework.Color TitleBaseColor,TitleTextColor;
         public static readonly Dictionary<string,AreaData> Areas=new();
         public static AreaData Get(AreaKey area)=>Areas[area.SID];
     }
@@ -85,6 +106,8 @@ namespace Celeste
     {
         public static readonly Dictionary<string,string> Values=new();
         public static string Clean(string key)=>Values[key];
+        public static bool Has(string key,object language=null)=>Values.ContainsKey(key);
+        public static string Get(string key)=>Values[key];
     }
     public static class ActiveFont
     {
@@ -94,17 +117,47 @@ namespace Celeste
         {
             LastMeasured=text;return new(Widths[text],0);
         }
+        public static void Draw(string text,Microsoft.Xna.Framework.Vector2 p,Microsoft.Xna.Framework.Vector2 o,Microsoft.Xna.Framework.Vector2 s,Microsoft.Xna.Framework.Color c)=>throw new Exception("tags outside selected profile");
     }
     public sealed class ModeProperties {public string Path;}
     public sealed class MapData {public ModeProperties ModeData;}
     public sealed class Session
     {
         public AreaKey Area;public MapData MapData;public string Level="room";
+        public LevelData LevelData;
         public Session(string sid,bool debug=false){Area=new(debug?"0-Intro":sid);MapData=new(){ModeData=new(){Path=sid}};}
         public void SetFlag(string name,bool value) { throw new Exception("credits-only reference branch reached"); }
     }
-    public sealed class Level:Monocle.Scene {public Session Session;public bool InCredits;}
-    public sealed class LevelData { }
+    public sealed class Level:Monocle.Scene
+    {
+        public Session Session;public bool InCredits;public Microsoft.Xna.Framework.Rectangle Bounds=>Session.LevelData.Bounds;
+        public Microsoft.Xna.Framework.Vector2 GetSpawnPoint(Microsoft.Xna.Framework.Vector2 from)=>Session.LevelData.Spawns.OrderBy(p=>(p.X-from.X)*(p.X-from.X)+(p.Y-from.Y)*(p.Y-from.Y)).First();
+    }
+    public sealed class LevelData {public List<Microsoft.Xna.Framework.Vector2> Spawns=new();public Microsoft.Xna.Framework.Vector2? DefaultSpawn;public Microsoft.Xna.Framework.Rectangle Bounds;}
+    public static class AreaRules {public static string GetLevelSet(this AreaKey area)=>Celeste.Mod.AppleEverestMapBinding.Find(area.SID)==null?"Celeste":"Custom";}
+    public sealed class OuiChapterPanel
+    {
+        public object Overworld=new();public AreaKey Area;public float height;public bool selectingMode=true;public int option;public AreaData Data=new();
+        public List<Option> checkpoints=new();
+        public sealed class Option {public string Label,CheckpointLevelName;public Microsoft.Xna.Framework.Color BgColor;public Monocle.MTexture Bg,Icon;public float CheckpointRotation;public Microsoft.Xna.Framework.Vector2 CheckpointOffset;public bool Large;public int Siblings;}
+    }
+    // FancyText is the unchanged canonical parser/renderer in production. This
+    // adapter records calls and supplies controlled font measurements; it does
+    // not claim host pixel or glyph conformance.
+    public static class FancyText
+    {
+        public sealed class NewLine { }
+        public static string LastInput;public static int LastWidth,LastLines;public static float LastScale;
+        public static Text Next=new();
+        public static Text Parse(string input,int width,int lines,float scale,Microsoft.Xna.Framework.Color color){LastInput=input;LastWidth=width;LastLines=lines;LastScale=scale;return Next;}
+        public sealed class FontAdapter {public float LineHeight=64;public FontAdapter Get(float size)=>this;}
+        public sealed class Text
+        {
+            public float Width=500,BaseSize=1;public FontAdapter Font=new();public List<object> Nodes=new();public List<string> Calls=new();
+            public float WidestLine()=>Width;
+            public void DrawJustifyPerLine(Microsoft.Xna.Framework.Vector2 p,Microsoft.Xna.Framework.Vector2 j,Microsoft.Xna.Framework.Vector2 s,float alpha,int start,int end)=>Calls.Add(string.Join("|",p.X,p.Y,j.X,j.Y,s.X,s.Y,alpha,start,end));
+        }
+    }
     public sealed class EntityData
     {
         public string Name;public int ID;public Microsoft.Xna.Framework.Vector2 Position;
@@ -125,8 +178,16 @@ namespace Celeste
 }
 namespace Celeste.Mod
 {
-    internal static class AppleEverestStaticRuntime {internal static Monocle.SpriteBank SelectedMapSpriteBank;}
-    internal static class AppleEverestProgressionRuntime {internal static string Sid(Celeste.AreaKey area)=>area.SID=="0-Intro"?null:area.SID;}
+    internal static class AppleEverestStaticRuntime {internal static Monocle.SpriteBank SelectedMapSpriteBank;internal static void Log(string message){}}
+    internal static class AppleEverestProgressionRuntime
+    {
+        internal static string Sid(Celeste.AreaKey area)=>area.SID=="0-Intro"?null:area.SID;
+        internal static bool TryDescriptor(string sid,out AppleEverestMapProgressionDescriptor descriptor){descriptor=new();return AppleEverestMapBinding.Find(sid)!=null;}
+    }
+    internal sealed class AppleEverestMapProgressionDescriptor {internal string[] Checkpoints=Array.Empty<string>();}
+    internal sealed class AppleEverestCollabMapDescriptor {internal bool AllowSaving=true;}
+    internal static class AppleEverestProgressionPersistence {internal static bool Saved;internal static bool HasSuspendedSession(string sid)=>Saved;}
+    internal sealed class Wrapper {internal object WrappedScene;}
     internal static class Everest
     {
         internal static class Events
@@ -149,6 +210,10 @@ namespace Celeste.Mod
 
 namespace PinnedReference
 {
+    internal sealed class CreditsTag
+    {
+        public string Text;public Monocle.MTexture BorderTexture,FillTexture;public Microsoft.Xna.Framework.Color? BorderColor,FillColor,TextColor;
+    }
     internal sealed class ModAsset { }
     internal static class Content {internal static bool TryGet(string path,ref ModAsset asset,bool ignored)=>throw new Exception("TAS must not load during normal lobby play");}
     internal static class TasHelper {internal static bool Preload(string path)=>throw new Exception("TAS must not run during normal lobby play");}

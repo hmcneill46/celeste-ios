@@ -1,15 +1,14 @@
 # Stage 25K-L device checks
 
 Status: host gates pass; the new device products and physical checks are pending.
-The intended next version is **0.1.1 (45)**. Confirm the version and the supplied
+The intended next version is **0.1.1 (46)**. Confirm the version and the supplied
 product identity before testing. Build 41 passes belong to K-J and do not carry
 over. Run this checklist separately on iPhone and Apple TV; iPad is deliberately
 `IPADOS_PHYSICAL_DEFERRED_LEGACY_COMPATIBILITY_POLICY`.
 
-Build 43 passed iPhone lobby loading and Bing entry/gameplay in the user's
-retest. Build 44 corrected the long title's left alignment but omitted the wider
-reference graphic, leaving the right edge short. Build 45 includes that exact
-graphic. Check both edges, then the menu and normal lobby route below.
+Build45 passed the user's checklists on both devices except the credits page and
+fresh lobby spawn. The wide bookmark passed on both. Build46 restores those two
+pinned behaviors; repeat the affected checks and the progression checks below.
 Also retry **Play Static Mod Map
 (Debug): 1-Beginner**: it should load with the same custom terrain and sprites.
 Exit debug mode before running the persistent progression checklist. The ten
@@ -42,6 +41,8 @@ and the retained K-J/E/F/H diagnostic rooms.
 2. Compare the fresh intro, geometry, collision, foreground/background,
    animated scenery and audio with the reference. The source room is
    `sj2021beginnerlobby`; its first marker is local `(1012,680)`, world `(588,40)`.
+   A fresh menu launch must start here, high in the lobby, matching the reference.
+   A saved session or return from Bing must keep its existing saved/return position.
    Record any missing sprite, seams, crash, profile error or fallback graphic.
 3. Walk through the lobby and sample its moving platforms, grass, water,
    lamps, particles, trigger effects, masks, crystal/pedestal, cave and other
@@ -81,7 +82,11 @@ host count alone.
    title and continue all the way to the right screen edge, matching the reference.
    Check both landscape orientations on iPhone. A short chapter title keeps its
    normal visible left position and full right-edge coverage.
-   Check Start/Continue and existing collection/completion presentation.
+   Enter the Start page. The panel must show **Music: Hyperlife**, **Sticker: phant**,
+   **Playtesting: Nano**, **Captain: Bissy**, with reference colors and spacing.
+   With a saved session, switching **Start Over / Continue** keeps the same credits
+   fixed in place. Close and reopen; text must not duplicate or leak to other panels.
+   Check existing collection/completion presentation.
 2. Start through that panel. The original first room is **00- intro**, marker
    local `(264,152)`, world `(-56,152)`. Compare its music, scenery and initial
    player state with the reference.
