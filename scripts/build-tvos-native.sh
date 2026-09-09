@@ -271,7 +271,16 @@ build_xcode_archive() {
   set +x
   [[ -f "$products/$product" ]] || { echo "error: expected product missing: $products/$product" >&2; exit 1; }
   mkdir -p -- "$STAGE_DIR/$component/$variant"
-  cp -p -- "$products/$product" "$STAGE_DIR/$component/$variant/lib$component.a"
+  finalize_archive "$products/$product" "$STAGE_DIR/$component/$variant/lib$component.a" "$component-$variant-upstream"
+}
+
+# This is the final archive-construction step, before staging/packaging.
+# The finalizer validates the index against every object and preserves payloads.
+finalize_archive() {
+  local source="$1" destination="$2" label="$3"
+  python3 "$SCRIPT_DIR/finalize-apple-archive.py" --build-root "$BUILD_DIR" \
+    --input "$source" --output "$destination" \
+    --report "$LOG_DIR/${label}-archive-construction.json"
 }
 
 build_pair() {
@@ -309,7 +318,7 @@ append_metal_hud_bootstrap() {
 
   xcrun libtool -static -o "$objects/device-combined.a" \
     "$STAGE_DIR/tvStubs/device/libtvStubs.a" "$objects/device-arm64.o"
-  mv -- "$objects/device-combined.a" "$STAGE_DIR/tvStubs/device/libtvStubs.a"
+  finalize_archive "$objects/device-combined.a" "$STAGE_DIR/tvStubs/device/libtvStubs.a" "tvStubs-device-combined"
 
   xcrun lipo "$STAGE_DIR/tvStubs/simulator/libtvStubs.a" -thin arm64 \
     -output "$objects/simulator-upstream-arm64.a"
@@ -321,7 +330,8 @@ append_metal_hud_bootstrap() {
     "$objects/simulator-upstream-x86_64.a" "$objects/simulator-x86_64.o"
   xcrun lipo -create \
     "$objects/simulator-combined-arm64.a" "$objects/simulator-combined-x86_64.a" \
-    -output "$STAGE_DIR/tvStubs/simulator/libtvStubs.a"
+    -output "$objects/simulator-combined.a"
+  finalize_archive "$objects/simulator-combined.a" "$STAGE_DIR/tvStubs/simulator/libtvStubs.a" "tvStubs-simulator-combined"
 }
 
 append_metal_hud_bootstrap
@@ -355,7 +365,7 @@ find_molten_archive() {
 for variant in device simulator; do
   molten_archive="$(find_molten_archive "$variant")"
   mkdir -p -- "$STAGE_DIR/MoltenVK/$variant"
-  cp -p -- "$molten_archive" "$STAGE_DIR/MoltenVK/$variant/libMoltenVK.a"
+  finalize_archive "$molten_archive" "$STAGE_DIR/MoltenVK/$variant/libMoltenVK.a" "MoltenVK-$variant"
 done
 
 copy_headers() {

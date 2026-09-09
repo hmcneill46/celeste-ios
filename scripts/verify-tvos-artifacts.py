@@ -55,10 +55,42 @@ def canonical_sha(value: object) -> str:
     return hashlib.sha256(data).hexdigest()
 
 
-def exported_symbols(archive: pathlib.Path) -> list[str]:
-    text = run(["xcrun", "nm", "-gjU", str(archive)])
+def exported_symbols(archive: pathlib.Path, architecture: str = "arm64") -> list[str]:
+    # Keep nm diagnostics out of the symbol stream; inherit stderr for logging.
+    text = subprocess.check_output(["xcrun", "nm", "-arch", architecture, "-gjU", str(archive)], text=True)
     # nm prints archive/member headings as well as Mach-O symbols.
     return sorted({line[1:] for line in text.splitlines() if line.startswith("_")})
+
+
+def collect_exports(archive: pathlib.Path, architectures: list[str]) -> dict[str, set[str]]:
+    if "arm64" not in architectures or len(set(architectures)) != len(architectures):
+        raise SystemExit("required arm64 slice missing or duplicate architecture")
+    return {arch: set(exported_symbols(archive, arch)) for arch in architectures}
+
+
+def validate_required_symbols(variant: str, exports: dict, expectations: dict) -> dict:
+    """Check each real slice independently; only same-architecture SDL stubs apply."""
+    for component in COMPONENTS:
+        expected_archs = {"arm64", "x86_64"} if variant == "simulator" else {"arm64"}
+        if component == "MoltenVK" and variant == "device":
+            expected_archs.add("arm64e")
+        if set(exports[component]) != expected_archs:
+            raise SystemExit(f"{component}/{variant}: unexpected architecture set")
+        for arch, symbols in exports[component].items():
+            expected = set(expectations["components"][component]["symbols"])
+            available = symbols
+            if component == "SDL2":
+                available = available | exports["tvStubs"][arch]
+            missing = sorted(expected - available)
+            if missing:
+                raise SystemExit(f"missing {component}/{variant}/{arch} expected symbols: {missing[:20]}")
+    duplicates = {}
+    for arch, stubs in exports["tvStubs"].items():
+        real = set().union(*(exports[c].get(arch, set()) for c in COMPONENTS if c != "tvStubs"))
+        duplicates[arch] = sorted(real & stubs)
+        if duplicates[arch]:
+            raise SystemExit(f"tvStubs shadows real {variant}/{arch} symbols: {duplicates[arch]}")
+    return duplicates
 
 
 def validate_inspection(path: pathlib.Path, expected_platform: str, deployment: str) -> dict:
@@ -126,7 +158,7 @@ def main() -> int:
     state_revisions = {d["name"]: d["revision"] for d in source_state["dependencies"]}
 
     artifacts: dict[str, dict] = {}
-    exports: dict[str, dict[str, set[str]]] = {"device": {}, "simulator": {}}
+    exports: dict[str, dict[str, dict[str, set[str]]]] = {"device": {}, "simulator": {}}
     probe_archives: dict[str, dict[str, pathlib.Path]] = {"device": {}, "simulator": {}}
 
     for component in COMPONENTS:
@@ -170,16 +202,24 @@ def main() -> int:
             )
             expected_platform = "TVOSSIMULATOR" if variant == "simulator" else "TVOS"
             inspection = validate_inspection(inspection_path, expected_platform, args.deployment_target)
-            if variant == "device" and any(a not in ("arm64", "arm64e") for a in inspection["architectures"]):
-                raise SystemExit(f"unexpected device architecture in {component}: {inspection['architectures']}")
-            if variant == "simulator" and any(a not in ("arm64", "x86_64") for a in inspection["architectures"]):
-                raise SystemExit(f"unexpected simulator architecture in {component}: {inspection['architectures']}")
-
-            symbols = exported_symbols(archive)
+            expected_archs = ["arm64", "x86_64"] if variant == "simulator" else ["arm64"]
+            if component == "MoltenVK" and variant == "device":
+                expected_archs.append("arm64e")
+            if sorted(inspection["architectures"]) != sorted(expected_archs):
+                raise SystemExit(f"{component}/{variant}: packaged architecture set differs from recipe")
+            if sorted(library["SupportedArchitectures"]) != sorted(inspection["architectures"]):
+                raise SystemExit(f"{component}/{variant}: XCFramework architecture metadata differs")
+            by_arch = collect_exports(archive, inspection["architectures"])
+            # The accepted logical fingerprint is arm64 on every build host.
+            # Additional per-slice evidence stays outside the normalized format.
+            symbols = sorted(by_arch["arm64"])
             (reports / f"{component}-{variant}-exports.txt").write_text(
                 "\n".join(symbols) + "\n", encoding="utf-8"
             )
-            exports[variant][component] = set(symbols)
+            (reports / f"{component}-{variant}-exports-by-architecture.json").write_text(
+                json.dumps({a: sorted(v) for a, v in by_arch.items()}, indent=2, sort_keys=True) + "\n"
+            )
+            exports[variant][component] = by_arch
             probe_archives[variant][component] = archive
 
             member_fingerprint = []
@@ -275,25 +315,11 @@ def main() -> int:
             "logicalSha256": canonical_sha(logical),
         }
 
-    # Pinned managed imports must resolve in both variants. SDL's intentionally
-    # non-tvOS declarations are satisfied only by tvStubs.
     for variant in ("device", "simulator"):
-        for component in COMPONENTS:
-            expected = set(locked_expectations["components"][component]["symbols"])
-            available = exports[variant][component]
-            if component == "SDL2":
-                available = available | exports[variant]["tvStubs"]
-            missing = sorted(expected - available)
-            if missing:
-                raise SystemExit(f"missing {component}/{variant} expected symbols: {missing[:20]}")
-
-        real_symbols = set().union(*(exports[variant][c] for c in COMPONENTS if c != "tvStubs"))
-        duplicates = sorted(real_symbols & exports[variant]["tvStubs"])
+        duplicates = validate_required_symbols(variant, exports[variant], locked_expectations)
         (reports / f"tvStubs-{variant}-duplicates.json").write_text(
-            json.dumps(duplicates, indent=2) + "\n", encoding="utf-8"
+            json.dumps(duplicates, indent=2, sort_keys=True) + "\n", encoding="utf-8"
         )
-        if duplicates:
-            raise SystemExit(f"tvStubs shadows real {variant} symbols: {duplicates}")
 
     # Force-load all six archives so link probes detect their complete undefined
     # and duplicate symbol sets instead of only the functions called by main.c.

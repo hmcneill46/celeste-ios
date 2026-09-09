@@ -125,7 +125,16 @@ build_xcode() {
     OTHER_CFLAGS="$source_map" >"$log" 2>&1
   [[ -f "$products/$product" ]] || { echo "error: missing $component product" >&2; exit 1; }
   mkdir -p "$STAGE_DIR/$component/$variant"
-  cp -p "$products/$product" "$STAGE_DIR/$component/$variant/lib$component.a"
+  finalize_archive "$products/$product" "$STAGE_DIR/$component/$variant/lib$component.a" "$component-$variant"
+}
+
+# This is the final archive-construction step, before staging/packaging.
+# The finalizer validates the index against every object and preserves payloads.
+finalize_archive() {
+  local source="$1" destination="$2" label="$3"
+  python3 "$SCRIPT_DIR/finalize-apple-archive.py" --build-root "$BUILD_DIR" \
+    --input "$source" --output "$destination" \
+    --report "$LOG_DIR/${label}-archive-construction.json"
 }
 
 build_pair() {
@@ -147,9 +156,12 @@ for variant in device simulator; do
   xcrun --sdk "$sdk" clang -target "$target" -isysroot "$sdk_path" -Os -fno-ident \
     -fvisibility=hidden -c "$REPO_ROOT/native/apple-platform-stubs/ApplePlatformStubs.c" \
     -o "$STAGE_DIR/ApplePlatformStubs/$variant/ApplePlatformStubs.o"
+  mkdir -p "$WORK_DIR/ApplePlatformStubs/$variant"
   ZERO_AR_DATE=1 xcrun --sdk "$sdk" ar rcs \
-    "$STAGE_DIR/ApplePlatformStubs/$variant/libApplePlatformStubs.a" \
+    "$WORK_DIR/ApplePlatformStubs/$variant/libApplePlatformStubs.a" \
     "$STAGE_DIR/ApplePlatformStubs/$variant/ApplePlatformStubs.o"
+  finalize_archive "$WORK_DIR/ApplePlatformStubs/$variant/libApplePlatformStubs.a" \
+    "$STAGE_DIR/ApplePlatformStubs/$variant/libApplePlatformStubs.a" "ApplePlatformStubs-$variant"
 done
 
 copy_headers() {

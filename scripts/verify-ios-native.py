@@ -50,12 +50,46 @@ def canonical_sha(value: object) -> str:
     return hashlib.sha256(encoded).hexdigest()
 
 
-def exports(archive: pathlib.Path) -> set[str]:
+def exports(archive: pathlib.Path, architecture: str = "arm64") -> set[str]:
     result = set()
-    for line in run(["xcrun", "nm", "-gjU", str(archive)]).splitlines():
+    # Keep nm diagnostics out of the symbol stream; inherit stderr for logging.
+    output = subprocess.check_output(["xcrun", "nm", "-arch", architecture, "-gjU", str(archive)], text=True)
+    for line in output.splitlines():
         if line.startswith("_"):
             result.add(line[1:])
     return result
+
+
+def collect_exports(archive: pathlib.Path, architectures: list[str]) -> dict[str, set[str]]:
+    if architectures != ["arm64"]:
+        raise SystemExit("iOS native archives must contain exactly arm64")
+    return {arch: exports(archive, arch) for arch in architectures}
+
+
+def validate_component_symbols(component: str, by_arch: dict, mach_names: list[str]) -> None:
+    if set(by_arch) != {"arm64"}:
+        raise SystemExit("iOS native archives must contain exactly arm64")
+    for symbol_set in by_arch.values():
+        if component == "SDL2":
+            if "SDL_UIKitRunApp" not in symbol_set or "main" in symbol_set:
+                raise SystemExit("SDL must retain SDL_UIKitRunApp and omit standalone main")
+            if any("SDL_uikit_main" in name for name in mach_names):
+                raise SystemExit("SDL standalone UIKit main object is present")
+        elif component == "FNA3D":
+            if not any("FNA3D_Driver_Metal" in name for name in mach_names):
+                raise SystemExit("FNA3D direct Metal driver is absent")
+            if any("Vulkan" in name for name in mach_names):
+                raise SystemExit("FNA3D iOS foundation unexpectedly contains Vulkan")
+        elif component == "ApplePlatformStubs" and symbol_set != STUB_SYMBOLS:
+            raise SystemExit("ApplePlatformStubs export inventory is not exactly 25 reviewed symbols")
+
+
+def validate_stub_overlap(exports_by_component: dict) -> None:
+    stubs = exports_by_component["ApplePlatformStubs"]
+    for arch, symbols in stubs.items():
+        real = set().union(*(exports_by_component[c][arch] for c in COMPONENTS if c != "ApplePlatformStubs"))
+        if real & symbols:
+            raise SystemExit(f"ApplePlatformStubs shadows real {arch} symbols: {sorted(real & symbols)}")
 
 
 def main() -> int:
@@ -80,6 +114,7 @@ def main() -> int:
     dependency_revisions = {d.get("component"): d["revision"] for d in lock["dependencies"]
                             if d.get("component") in COMPONENTS}
     artifacts: dict[str, object] = {}
+    exports_by_variant = {x: {} for x in PLATFORMS}
     archives: dict[str, dict[str, pathlib.Path]] = {x: {} for x in PLATFORMS}
 
     for component in COMPONENTS:
@@ -94,6 +129,8 @@ def main() -> int:
             if library.get("SupportedPlatform") != "ios":
                 raise SystemExit(f"{component}: non-iOS slice")
             variant = "simulator" if library.get("SupportedPlatformVariant") == "simulator" else "device"
+            if variant in variants:
+                raise SystemExit(f"{component}: duplicate platform variant")
             if library.get("SupportedArchitectures") != ["arm64"]:
                 raise SystemExit(f"{component}/{variant}: must be arm64 only")
             identifier = library["LibraryIdentifier"]
@@ -123,21 +160,14 @@ def main() -> int:
                         mach_names.append(member["name"])
                     name = re.sub(r"-[0-9a-f]{32}(?=\.o$)", "-<PATH_HASH>", member["name"])
                     members.append([name, member["type"], member["sha256"]])
-            symbol_set = exports(archive)
+            by_arch = collect_exports(archive, inspection["architectures"])
+            symbol_set = by_arch["arm64"]
+            validate_component_symbols(component, by_arch, mach_names)
+            exports_by_variant[variant][component] = by_arch
             (reports / f"{component}-{variant}-exports.txt").write_text(
                 "\n".join(sorted(symbol_set)) + "\n")
-            if component == "SDL2":
-                if "SDL_UIKitRunApp" not in symbol_set or "main" in symbol_set:
-                    raise SystemExit("SDL must retain SDL_UIKitRunApp and omit standalone main")
-                if any("SDL_uikit_main" in name for name in mach_names):
-                    raise SystemExit("SDL standalone UIKit main object is present")
-            elif component == "FNA3D":
-                if not any("FNA3D_Driver_Metal" in name for name in mach_names):
-                    raise SystemExit("FNA3D direct Metal driver is absent")
-                if any("Vulkan" in name for name in mach_names):
-                    raise SystemExit("FNA3D iOS foundation unexpectedly contains Vulkan")
-            elif component == "ApplePlatformStubs" and symbol_set != STUB_SYMBOLS:
-                raise SystemExit("ApplePlatformStubs export inventory is not exactly 25 reviewed symbols")
+            (reports / f"{component}-{variant}-exports-by-architecture.json").write_text(
+                json.dumps({a: sorted(v) for a, v in by_arch.items()}, indent=2, sort_keys=True) + "\n")
             archives[variant][component] = archive
             variants[variant] = {
                 "architecture": "arm64",
@@ -155,6 +185,9 @@ def main() -> int:
             "logicalSha256": canonical_sha({"component": component, "variants": variants}),
         }
 
+    for by_component in exports_by_variant.values():
+        validate_stub_overlap(by_component)
+
     # A real static link catches missing Apple frameworks and cross-component closure.
     probe_source = reports / "link-probe.c"
     probe_source.write_text("int main(void) { return 0; }\n")
@@ -166,8 +199,20 @@ def main() -> int:
             command.extend(["-Wl,-force_load," + str(archive)])
         for framework in FRAMEWORKS:
             command.extend(["-framework", framework])
-        command.extend(["-lc++", "-lz", "-o", str(reports / f"link-probe-{variant}")])
-        subprocess.check_call(command, stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT)
+        executable = reports / f"link-probe-{variant}"
+        command.extend(["-lc++", "-lz", "-Wl,-no_adhoc_codesign", "-o", str(executable)])
+        subprocess.check_call(command, stdout=subprocess.DEVNULL)
+        vtool = run(["xcrun", "vtool", "-show-build", str(executable)])
+        if not re.search(rf"^\s*platform\s+{PLATFORMS[variant]}$", vtool, re.MULTILINE):
+            raise SystemExit(f"wrong platform in {variant} link probe")
+        if not re.search(rf"^\s*minos\s+{re.escape(args.deployment_target)}$", vtool, re.MULTILINE):
+            raise SystemExit(f"wrong minimum OS in {variant} link probe")
+        if run(["xcrun", "lipo", "-archs", str(executable)]) != "arm64":
+            raise SystemExit(f"wrong architecture in {variant} link probe")
+        signature = subprocess.run(["codesign", "--display", str(executable)],
+                                   stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        if signature.returncode == 0:
+            raise SystemExit(f"{variant} link probe was unexpectedly signed")
 
     tracked_inputs = {
         str(path.relative_to(repo)): sha256(path)
