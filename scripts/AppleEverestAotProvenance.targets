@@ -6,7 +6,7 @@
     <MakeDir Directories="$(AppleEverestAotProofRoot)" />
     <WriteItemsToFile Items="@(_AssembliesToAOT)" ItemName="_AssembliesToAOT"
                       File="$(AppleEverestAotProofRoot)/compiler-items.xml" IncludeMetadata="true" Overwrite="true" />
-    <Exec Command="python3 &quot;$(MSBuildThisFileDirectory)record-apple-everest-aot-provenance.py&quot; before --root &quot;$(AppleEverestAotProofRoot)&quot; --compiler &quot;$(_XamarinAOTCompiler)&quot; --native-main &quot;@(_MainFile)&quot;" />
+    <Exec Command="python3 &quot;$(MSBuildThisFileDirectory)record-apple-everest-aot-provenance.py&quot; before --root &quot;$(AppleEverestAotProofRoot)&quot; --compiler &quot;$(_XamarinAOTCompiler)&quot; --platform &quot;$(TargetPlatformIdentifier)&quot; --native-main &quot;@(_MainFile)&quot;" />
   </Target>
   <Target Name="AppleEverestAfterAot" AfterTargets="_AOTCompile"
           Condition="'$(AppleEverestAotProofRoot)' != '' and '$(_RunAotCompiler)' == 'true'">

@@ -450,7 +450,7 @@ scan_product_runtime() {
   if [[ -n "$FACTORY_PREFLIGHT" ]]; then
     python3 "$REPO_ROOT/scripts/verify-apple-everest-aot-factory-product.py" \
       --app "$app" --build "$platform_build" --manifest "$FACTORY_PREFLIGHT" \
-      --authored-profiles "$AUTHORED_FACTORY_PROFILES" --output "$platform_build/linked-selected-factories.json"
+      --authored-profiles "$AUTHORED_FACTORY_PROFILES" --signing "$SIGNING" --output "$platform_build/linked-selected-factories.json"
     if [[ -f "$WORK_ROOT/real-composition/READY_FOR_REAL_SJ_PRODUCT_BUILD" ]]; then
       python3 "$SCRIPT_DIR/verify-apple-everest-stage25kl-product-content.py" \
         --app "$app" --closure "$CLOSURE" --readiness "$WORK_ROOT/real-composition/readiness.json" \

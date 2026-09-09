@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Verify the actual linked/AOT/native/signed selected-factory app product."""
+"""Verify the actual linked/AOT/native selected-factory app and explicit signing mode."""
 import argparse
 import copy
 import json
@@ -8,6 +8,7 @@ import plistlib
 import shlex
 import struct
 import subprocess
+import sys
 from importlib.util import spec_from_file_location, module_from_spec
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -65,14 +66,53 @@ def verify_platform(info, fields, captured, data):
     triples = [value for value in arguments if value.startswith('--aot=mtriple=')]
     if fields['Abi'] != 'ARM64+LLVM' or fields['Arch'] != 'arm64' or triples != ['--aot=mtriple=arm64-ios']:
         raise ValueError('AOT compiler arguments differ from the reviewed ARM64 Apple ABI')
-    compiler = Path(captured['compiler']).resolve()
-    pack = 'Microsoft.NETCore.App.Runtime.AOT.osx-arm64.Cross.' + platform + '-arm64'
-    if compiler.parts[-4:] != (pack, '10.0.10', 'tools', 'mono-aot-cross'):
-        raise ValueError('AOT compiler pack does not match the actual native platform')
-    llvm = [value.split('=', 1)[1] for value in arguments if value.startswith('llvm-path=')]
-    if len(llvm) != 1 or Path(llvm[0]).resolve() != compiler.parent:
-        raise ValueError('LLVM tools do not belong to the captured platform compiler pack')
+    provenance.verify_compiler(captured, fields, platform)
     return platform
+
+
+def verify_signing(app, mode):
+    if mode == 'development':
+        subprocess.run(['codesign', '--verify', '--strict', str(app)], check=True)
+        return 'SIGNED_STRICT_VERIFIED'
+    if mode != 'unsigned':
+        raise ValueError('unknown signing verification mode')
+    for path in app.rglob('*'):
+        if (path.name in ('_CodeSignature', 'CodeResources', 'embedded.mobileprovision')
+                or path.suffix.lower() in ('.mobileprovision', '.provisionprofile', '.xcent', '.entitlements')):
+            raise ValueError('signing/provisioning material found in unsigned app')
+        if not path.is_file():
+            continue
+        with path.open('rb') as stream:
+            magic = stream.read(4)
+        if magic == b'\xcf\xfa\xed\xfe':
+            data = path.read_bytes()
+            if len(data) < 32:
+                raise ValueError('truncated Mach-O in unsigned app')
+            count, size = struct.unpack_from('<2I', data, 16)
+            offset = 32
+            if size > len(data) - offset:
+                raise ValueError('invalid Mach-O command table in unsigned app')
+            for _ in range(count):
+                if offset + 8 > 32 + size:
+                    raise ValueError('truncated Mach-O command in unsigned app')
+                command, length = struct.unpack_from('<2I', data, offset)
+                if length < 8 or length % 8 or offset + length > 32 + size:
+                    raise ValueError('invalid Mach-O command in unsigned app')
+                if command == 0x1d:  # LC_CODE_SIGNATURE, including ad-hoc signatures.
+                    raise ValueError('signed Mach-O found in unsigned app')
+                offset += length
+            if offset != 32 + size:
+                raise ValueError('incomplete Mach-O command table in unsigned app')
+        elif magic in (b'\xfe\xed\xfa\xcf', b'\xce\xfa\xed\xfe', b'\xfe\xed\xfa\xce',
+                       b'\xca\xfe\xba\xbe', b'\xbe\xba\xfe\xca', b'\xca\xfe\xba\xbf', b'\xbf\xba\xfe\xca'):
+            raise ValueError('unsupported Mach-O format in unsigned device app')
+    result = subprocess.run(['codesign', '-d', '--verbose=2', str(app)], text=True, capture_output=True)
+    if result.stderr:
+        print(result.stderr, file=sys.stderr, end='')
+    if (result.returncode != 1 or result.stdout
+            or result.stderr.strip() != str(app) + ': code object is not signed at all'):
+        raise ValueError('codesign did not positively establish unsigned app status')
+    return 'UNSIGNED_ABSENCE_VERIFIED'
 
 
 def platform_controls(info, fields, captured, data):
@@ -126,6 +166,7 @@ def main():
     parser.add_argument('--authored-profiles', type=Path, required=True)
     parser.add_argument('--output', type=Path, required=True)
     parser.add_argument('--platform-controls-output', type=Path)
+    parser.add_argument('--signing', choices=['development', 'unsigned'], default='development')
     args = parser.parse_args()
     build, app = args.build.resolve(), args.app.resolve()
     items = list(build.glob('obj/*/release_*-arm64/linker-items/_AssembliesToAOT.items'))
@@ -159,7 +200,7 @@ def main():
             raise ValueError('actual product evidence missing: ' + Path(path).name)
     request_path = build / 'selected-factory-product-request.json'
     request_path.write_text(json.dumps(request, indent=2, sort_keys=True) + '\n')
-    subprocess.run(['codesign', '--verify', '--strict', str(app)], check=True)
+    signing_status = verify_signing(app, args.signing)
     subprocess.run(['dotnet', 'exec', '--fx-version', '10.0.10',
                     str(ROOT / 'tools/AppleEverestBuilder/bin/Debug/net8.0/AppleEverestBuilder.dll'),
                     'verify-aot-factory-product', '--request', str(request_path),
@@ -168,7 +209,7 @@ def main():
     if args.platform_controls_output:
         result = platform_controls(info, fields, captured, native.read_bytes())
         args.platform_controls_output.write_text(json.dumps(result, indent=2, sort_keys=True) + '\n')
-    print('PASS: signed ' + platform + ' selected-factory AOT product')
+    print('PASS: ' + platform + ' selected-factory AOT product; ' + signing_status)
 
 
 if __name__ == '__main__':
