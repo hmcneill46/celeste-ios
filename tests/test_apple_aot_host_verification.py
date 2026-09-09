@@ -279,5 +279,13 @@ class SigningVerification(unittest.TestCase):
             (self.app / 'nested').write_bytes(data)
             with self.subTest(data=data[:4]), self.assertRaises(ValueError): product.verify_signing(self.app, 'unsigned')
 
+    def test_empty_archived_entitlements_still_fail_unsigned(self):
+        # The SDK can emit this empty file from a declared Entitlements.plist
+        # even with EnableCodeSigning=false. Fix the unsigned caller, not the gate.
+        (self.app / 'archived-expanded-entitlements.xcent').write_bytes(plistlib.dumps({}))
+        with patch.object(product.subprocess, 'run') as run, self.assertRaises(ValueError):
+            product.verify_signing(self.app, 'unsigned')
+        run.assert_not_called()
+
 
 if __name__ == '__main__': unittest.main()

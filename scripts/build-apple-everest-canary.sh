@@ -363,7 +363,9 @@ for product_platform in ios tvos; do
   fi
 done
 
-signing_args=(-p:EnableCodeSigning=false)
+# The SDK compiles and bundles declared entitlements even with signing disabled.
+# Keep the explicit unsigned lane free of signing inputs at construction time.
+signing_args=(-p:EnableCodeSigning=false -p:CodesignEntitlements= -p:EnableDefaultCodesignEntitlements=false)
 if [[ "$SIGNING" == development ]]; then
   if [[ "$PLATFORM" != tvos && -n "$IOS_DEVICE_ID" ]]; then
     "$SCRIPT_DIR/configure-ios-personal-team.sh" --team-id "$TEAM_ID" --bundle-id "$IOS_BUNDLE_ID" \

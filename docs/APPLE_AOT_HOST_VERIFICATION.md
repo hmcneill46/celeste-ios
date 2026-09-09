@@ -46,6 +46,14 @@ without this evidence are not silently promoted to the new verification lane.
 strict default, including for existing signed callers. It requires successful
 `codesign --verify --strict`. A failure never retries in another mode.
 The canary builder explicitly propagates its selected `--signing` value.
+For unsigned construction it also clears `CodesignEntitlements` and disables
+default entitlement discovery. The pinned SDK otherwise compiles a project's
+declared entitlement file even with `EnableCodeSigning=false`, placing an
+`archived-expanded-entitlements.xcent` file in the app. This applies to the
+existing empty tvOS entitlement declaration. See the pinned
+[entitlement producer](https://github.com/dotnet/macios/blob/dotnet-10.0.1xx-xcode26.6-10301/msbuild/Xamarin.MacDev.Tasks/Tasks/CompileEntitlements.cs)
+and its `_CompileEntitlements` target. Signed callers retain their entitlement
+input. No packaged file is deleted to pass verification.
 
 The explicit `unsigned` mode rejects bundle signature resources, provisioning
 profiles, entitlement files and any Mach-O LC_CODE_SIGNATURE, including ad-hoc
