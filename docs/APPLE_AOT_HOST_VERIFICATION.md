@@ -26,6 +26,8 @@ again after AOT, after native linking and during product verification.
 
 The target platform is captured from the SDK's `TargetPlatformIdentifier` and
 checked against the final Info.plist and actual native LC_BUILD_VERSION.
+The SDK's `iOS`/`tvOS` spelling is converted to the canonical lowercase names;
+the accepted device-platform choices remain exactly `ios` and `tvos`.
 Both device OSes retain the reviewed `arm64-ios` Mono ABI triple. The target
 family/minimum/SDK checks remain iOS [1,2]/15/26.5 and tvOS [3]/16/26.5.
 The SDK supplies the actual item metadata and compiler path directly to its

@@ -139,7 +139,7 @@ def main():
     parser.add_argument('phase', choices=['before', 'after', 'native'])
     parser.add_argument('--root', type=Path, required=True)
     parser.add_argument('--compiler', type=Path)
-    parser.add_argument('--platform', choices=['ios', 'tvos'])
+    parser.add_argument('--platform', type=str.lower, choices=['ios', 'tvos'])
     parser.add_argument('--native', type=Path)
     parser.add_argument('--native-main', type=Path)
     args = parser.parse_args()

@@ -86,10 +86,11 @@ class HostVerification(unittest.TestCase):
             return 'Mono JIT compiler version 10.0.10.0 (fixture)\n Architecture: arm64\n'
         raise AssertionError(command)
 
-    def boundary(self, phase):
+    def boundary(self, phase, sdk_case=True):
         args = ['receipt', phase, '--root', str(self.proof)]
         if phase == 'before':
-            args += ['--compiler', str(self.compiler), '--platform', self.target, '--native-main', str(self.main_file)]
+            target = {'ios': 'iOS', 'tvos': 'tvOS'}[self.target] if sdk_case else self.target
+            args += ['--compiler', str(self.compiler), '--platform', target, '--native-main', str(self.main_file)]
         if phase == 'native': args += ['--native', str(self.app / 'Fixture')]
         with patch.object(p, 'observe_toolchain', return_value=self.observed), patch.object(p, 'source_identity', return_value=self.source), patch.object(p.subprocess, 'check_output', side_effect=self.tool), patch('sys.argv', args):
             p.main()
@@ -162,6 +163,10 @@ class HostVerification(unittest.TestCase):
         self.fixture(); self.boundary('before')
         with self.assertRaises(ValueError): self.boundary('before')
         with self.assertRaises(FileNotFoundError): self.boundary('after')
+
+    def test_lowercase_cli_target_is_retained(self):
+        self.fixture()
+        self.assertEqual(self.boundary('before', sdk_case=False)['targetPlatform'], 'ios')
 
     def test_actual_compiler_version_architecture_and_probe_failures(self):
         self.fixture(); record = self.completed()
