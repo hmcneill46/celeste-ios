@@ -1,0 +1,331 @@
+{
+  "candidateOrder": [
+    "StrawberryJam2021/1-Beginner/snas",
+    "StrawberryJam2021/1-Beginner/cellularAutomaton",
+    "StrawberryJam2021/1-Beginner/voliver9",
+    "StrawberryJam2021/1-Beginner/coffe",
+    "StrawberryJam2021/1-Beginner/joltik",
+    "StrawberryJam2021/1-Beginner/NotYourBadeline",
+    "StrawberryJam2021/1-Beginner/hyperlife",
+    "StrawberryJam2021/1-Beginner/asteriskblue",
+    "StrawberryJam2021/1-Beginner/CoupCritik",
+    "StrawberryJam2021/1-Beginner/Ceph",
+    "StrawberryJam2021/1-Beginner/Circumplex",
+    "StrawberryJam2021/1-Beginner/Quinnigan",
+    "StrawberryJam2021/1-Beginner/Flagpole1up",
+    "StrawberryJam2021/1-Beginner/Jadeturtle",
+    "StrawberryJam2021/1-Beginner/skeleton",
+    "StrawberryJam2021/1-Beginner/HankyMueller",
+    "StrawberryJam2021/1-Beginner/Owen-Shirrell",
+    "StrawberryJam2021/1-Beginner/Eclipse",
+    "StrawberryJam2021/1-Beginner/frozenflygone",
+    "StrawberryJam2021/0-Gyms/1-Beginner",
+    "StrawberryJam2021/1-Beginner/ZZ-HeartSide",
+    "StrawberryJam2021/1-Beginner/mosscairn"
+  ],
+  "maps": {
+    "StrawberryJam2021/0-Gyms/1-Beginner": {
+      "classification": "UNKNOWN",
+      "evidence": "Auxiliary gym, not an ordinary chapter: teaching UI, Theo/dream barriers, teleports/global flags, custom wipe, Interlude=true unsupported by current static area construction; prologue destination remains excluded.",
+      "rankingConfidence": "SCREENING_ORDER_WITH_EXPLICIT_UNRESOLVED_CLOSURES"
+    },
+    "StrawberryJam2021/1-Beginner/Ceph": {
+      "classification": "UNKNOWN",
+      "evidence": "Cassette zip movers, tempo/variant/music state; CassetteModifier BeatsMax576, custom cassette song and custom wipe.",
+      "rankingConfidence": "SCREENING_ORDER_WITH_EXPLICIT_UNRESOLVED_CLOSURES"
+    },
+    "StrawberryJam2021/1-Beginner/Circumplex": {
+      "classification": "UNKNOWN",
+      "evidence": "Blue booster, flag gates, no-refill springs, upside-down platforms, fake-wall state and large new profile set.",
+      "rankingConfidence": "SCREENING_ORDER_WITH_EXPLICIT_UNRESOLVED_CLOSURES"
+    },
+    "StrawberryJam2021/1-Beginner/CoupCritik": {
+      "classification": "UNKNOWN",
+      "evidence": "Extra jumps, flag gates, inventory changes, conditional blocks/dialog; background G is not foreground sound-table proof.",
+      "rankingConfidence": "SCREENING_ORDER_WITH_EXPLICIT_UNRESOLVED_CLOSURES"
+    },
+    "StrawberryJam2021/1-Beginner/Eclipse": {
+      "classification": "UNKNOWN",
+      "evidence": "Connected dream blocks, time modulation, safe-respawn crumble, spinner/barrier controllers and star-climb presentation; unaccepted providers.",
+      "rankingConfidence": "SCREENING_ORDER_WITH_EXPLICIT_UNRESOLVED_CLOSURES"
+    },
+    "StrawberryJam2021/1-Beginner/Flagpole1up": {
+      "classification": "UNKNOWN",
+      "evidence": "Color switches/blocks, clear pipes, door fields and custom bird tutorials; interacting movement/transport composition.",
+      "rankingConfidence": "SCREENING_ORDER_WITH_EXPLICIT_UNRESOLVED_CLOSURES"
+    },
+    "StrawberryJam2021/1-Beginner/HankyMueller": {
+      "classification": "UNKNOWN",
+      "evidence": "Time crystals/freeze, refill/hint mechanics, connected blocks/containers, lighting and book/dialog UI; many unproved provider closures.",
+      "rankingConfidence": "SCREENING_ORDER_WITH_EXPLICIT_UNRESOLVED_CLOSURES"
+    },
+    "StrawberryJam2021/1-Beginner/Jadeturtle": {
+      "classification": "UNKNOWN",
+      "evidence": "Disposable/respawning Theo, killboxes/barriers, clear pipes, entity muting and flag gates; lifecycle interactions.",
+      "rankingConfidence": "SCREENING_ORDER_WITH_EXPLICIT_UNRESOLVED_CLOSURES"
+    },
+    "StrawberryJam2021/1-Beginner/NotYourBadeline": {
+      "classification": "UNKNOWN",
+      "evidence": "Blackout/wall/controller, lamp flags and82 conditional textboxes; portraits metadata, dialog and upside-down platforms. Same-ID reuse is insufficient.",
+      "rankingConfidence": "SCREENING_ORDER_WITH_EXPLICIT_UNRESOLVED_CLOSURES"
+    },
+    "StrawberryJam2021/1-Beginner/Owen-Shirrell": {
+      "classification": "UNKNOWN",
+      "evidence": "Dash/variant/hint systems, bubble, flag gates, Kevin barrier/UI and custom wipe. One unprefixed ForceVariantTrigger has no proven provider; kept unknown.",
+      "rankingConfidence": "SCREENING_ORDER_WITH_EXPLICIT_UNRESOLVED_CLOSURES"
+    },
+    "StrawberryJam2021/1-Beginner/Quinnigan": {
+      "classification": "UNKNOWN",
+      "evidence": "Triple-boost flower, custom springs, holdable barriers, entity muting and flag gates; large exact-profile delta.",
+      "rankingConfidence": "SCREENING_ORDER_WITH_EXPLICIT_UNRESOLVED_CLOSURES"
+    },
+    "StrawberryJam2021/1-Beginner/ZZ-HeartSide": {
+      "classification": "UNKNOWN",
+      "evidence": "Special heartside is a broad Beginner union plus gravity/teleport/cassette/checkpoint progression, layered complete screen and postcard audio. Two unprefixed ForceVariantTrigger occurrences remain unknown.",
+      "rankingConfidence": "SCREENING_ORDER_WITH_EXPLICIT_UNRESOLVED_CLOSURES"
+    },
+    "StrawberryJam2021/1-Beginner/asteriskblue": {
+      "classification": "UNKNOWN",
+      "evidence": "DreamRefill is DreamTunnelRefill: new player dash state, base-field access, particles and Communal custom audio; 1155 attached spinners. Not an ordinary refill substitution.",
+      "rankingConfidence": "SCREENING_ORDER_WITH_EXPLICIT_UNRESOLVED_CLOSURES"
+    },
+    "StrawberryJam2021/1-Beginner/cellularAutomaton": {
+      "classification": "AUTO_IMPLEMENT_BOUNDED_COMPATIBILITY",
+      "evidence": "Two absent factories: DashZipMover and drowning controller. Frozen DJ killBox exists but needs selected proof. Attached Frost spinners; Player.Render drowning hook; unresolved authored music/custom mover SFX; 443 currently accepted occurrences do not remove these blockers.",
+      "rankingConfidence": "SCREENING_ORDER_WITH_EXPLICIT_UNRESOLVED_CLOSURES"
+    },
+    "StrawberryJam2021/1-Beginner/coffe": {
+      "classification": "UNKNOWN",
+      "evidence": "74 LoopBlocks plus golden-berry respawn, flag killbox, custom moon creatures; custom spiral wipe, stale start a-01 vs c-01, sprite/core-mode lifecycle.",
+      "rankingConfidence": "SCREENING_ORDER_WITH_EXPLICIT_UNRESOLVED_CLOSURES"
+    },
+    "StrawberryJam2021/1-Beginner/frozenflygone": {
+      "classification": "UNKNOWN",
+      "evidence": "Gravity/spawn inversion, upside-down watchtower, room wrapping/teleport, variants and custom Spirialis wipe. Selected static hook closure unproved; gravity is not declared impossible.",
+      "rankingConfidence": "SCREENING_ORDER_WITH_EXPLICIT_UNRESOLVED_CLOSURES"
+    },
+    "StrawberryJam2021/1-Beginner/hyperlife": {
+      "classification": "UNKNOWN",
+      "evidence": "Intro-crusher families, multiroom berry/seed lifecycle, NPC/dialog, CustomNote, spinner controller, unsupported Rocks wipe and unresolved authored music.",
+      "rankingConfidence": "SCREENING_ORDER_WITH_EXPLICIT_UNRESOLVED_CLOSURES"
+    },
+    "StrawberryJam2021/1-Beginner/joltik": {
+      "classification": "UNKNOWN",
+      "evidence": "200 FloatyBgTiles, multicolor spinner controller, northern lights, upside-down platform and golden respawn; tile motion/graphics and exact profiles remain unproved.",
+      "rankingConfidence": "SCREENING_ORDER_WITH_EXPLICIT_UNRESOLVED_CLOSURES"
+    },
+    "StrawberryJam2021/1-Beginner/mosscairn": {
+      "classification": "STOP_MAJOR_ARCHITECTURE",
+      "evidence": "Eight Lua-trigger occurrences/seven script paths require forbidden generic Lua/import behavior or a separately proved static per-script lowering. Six scripts found; baddyfollow unresolved. Gravity, paint/cassette and inventory/skip cleanup compound the work.",
+      "rankingConfidence": "SCREENING_ORDER_WITH_EXPLICIT_UNRESOLVED_CLOSURES"
+    },
+    "StrawberryJam2021/1-Beginner/skeleton": {
+      "classification": "UNKNOWN",
+      "evidence": "Linked zip movers, connected/custom dream blocks, dream-dash controller, swap-block toggles and return berries.",
+      "rankingConfidence": "SCREENING_ORDER_WITH_EXPLICIT_UNRESOLVED_CLOSURES"
+    },
+    "StrawberryJam2021/1-Beginner/snas": {
+      "classification": "AUTO_IMPLEMENT_BOUNDED_COMPATIBILITY",
+      "evidence": "Finite bubble return and random-sound trigger; genuine flag-switch/gate semantics and static SID/mode metadata; exact camera/platform/MiniHeart profiles; resolved AudioB events. Recommended one-map scope.",
+      "rankingConfidence": "HIGH_FOR_NEXT_DECISION"
+    },
+    "StrawberryJam2021/1-Beginner/voliver9": {
+      "classification": "UNKNOWN",
+      "evidence": "Few occurrences conceal Eevee FlagGateContainer container lifecycle, upside-down platforms, CustomNote UI and flag persistence; source-reviewed dependencies exceed snas. Core mode and triggertrigger profiles need proof.",
+      "rankingConfidence": "SCREENING_ORDER_WITH_EXPLICIT_UNRESOLVED_CLOSURES"
+    }
+  },
+  "recommendation": {
+    "audioAddition": {
+      "archiveBankOrdinal": 63,
+      "bytes": 3320960,
+      "events": [
+        "event:/sj21_snas",
+        "event:/sj21_snas_flourish",
+        "event:/sj21_snas_special"
+      ],
+      "expectedCustomLoadOrder": [
+        "8 Chrono",
+        "9 Bing",
+        "10 shared",
+        "11 snas",
+        "12 Beginner lobby",
+        "13 jamjars",
+        "14 Collab collectibles",
+        "15 Honly"
+      ],
+      "guidBytes": 82696,
+      "guidPath": "Audio/sj21_snas.guids.txt",
+      "guidSha256": "4b8dfb05ba4d790b6acf0a86904cd0e28b7fefd3e9cdcd8a53050ac29cd74039",
+      "orderEvidence": "CustomAudioManifest.Order: Chrono,AudioA,AudioB,root,others; original AudioB snas ordinal63 precedes lobby77. Existing bank relative order preserved; future actual registry/payload must prove this.",
+      "path": "Audio/sj21_snas.bank",
+      "provider": "StrawberryJam2021AudioB",
+      "scope": "Exact bank/companion GUID records; future packaged playback/payload proof required",
+      "sha256": "08c980621201485026849c90e41b275c442448527d3c98096adeb73d562a289a",
+      "version": "1.0.0"
+    },
+    "combinedRequirements": [
+      "Original lobby+Bing+snas BINs and all18 accepted regression maps; unchanged appendices/source labels and map hashes",
+      "Finite snas RandomSound/bubble implementations; real flag switch/gate behavior and generated SID/mode/group metadata; exact rejected profile closures",
+      "Close lifecycle and type/reflection branches against all selected/regression entity types; preserve ordinal grouping and saved session flags",
+      "Add original snas FG graphics binding; prove existing cached textures, implicit assets, decals, core terrain and restoration; no cache-list-as-closure shortcut",
+      "Add one AudioB snas bank and exact GUID authority through existing single-system pipeline; preserve existing bank relative order and deterministic fresh GUID/event duplicate checks",
+      "Publish exactly snas availability; preserve original21-heart threshold; all other currently excluded ordinary/special/auxiliary destinations remain excluded (counts computed from actual census).",
+      "Observe panel, fresh start, resume, Return to Lobby, completion/journal/sticker/silver state across selected maps and separate saves",
+      "Pinned processor defaults legacy=true/group persistent=true; switch422 persistent=true, gate423 false; main session flag restores gate after reload. No moving/dream switch or seeker/puffer authored in21-map union; future closed-creation guards required.",
+      "Contort exact list parser:12 oneUse and11 repeat sounds, empty flags, persistent=false; preserve Next(1), zero-delay yield and removal/re-entry timing."
+    ],
+    "decisionEvidenceLimits": "Implementation and real composition remain blocked. Lower-ranked candidates are screening order, not exhaustive cost estimates. Source-reviewed finite lowering is not runtime or physical acceptance.",
+    "nextAction": "Review this K-M audit feature, then authorize a separate implementation stage for the unchanged snas-only union and its finite compatibility/composition requirements. Do not integrate or implement automatically.",
+    "rationale": "One additional map is justified. Snas has8rooms,53 custom occurrences, two finite new factory classes and shared flag-switch/gate work; exact AudioB events and no custom wipe/new player state/attached-spinner family. Current guard coverage is low but incremental behavior is better bounded than closer-looking alternatives. Do not force3\u20135 maps.",
+    "requiredPhysicalMatrix": [
+      "iPhone and Apple TV: lobby jar interaction, original title/credits, correct first spawn, complete unchanged snas route and ordinary/silver berries",
+      "Repeat death/retry, one-way platform collision, two-node bubble flight, oneUse/repeat audio triggers and exact random scheduling",
+      "Flag switch/gate activate, leave/reenter, die/retry, suspend/resume, save/relaunch; confirm persistent switch and restored nonpersistent gate behavior",
+      "Lobby\u2192snas\u2192lobby\u2192Bing\u2192regression traversal: graphics/audio/controller/session restoration and no cross-map flag contamination",
+      "Return to captured jar route; chapter completion, MiniHeart/journal/sticker updates; two numbered saves, A/B fallback and absent-map quarantine",
+      "All unselected jars/gym/heartside stay excluded; original21-heart threshold unchanged; no old PASS transferred",
+      "iPad physical remains deferred under IPADOS_PHYSICAL_DEFERRED_LEGACY_COMPATIBILITY_POLICY; modern device quality retained"
+    ],
+    "sharedPayoff": "FlagTouchSwitch/FlagSwitchGate semantics are required by8 candidates; this enables shared work, not8 complete maps.",
+    "title": "The Squeeze",
+    "wholeBeginnerNext": false
+  },
+  "requirements": {
+    "entity:CollabUtils2/MiniHeart": {
+      "classification": "AUTO_IMPLEMENT_BOUNDED_COMPATIBILITY",
+      "evidence": "Existing accepted typed implementation; snas authored profile rejected. Require exact authored parameter/node coverage and runtime tests, plus completion/session or one-way collision semantics. Not a content-only change."
+    },
+    "entity:CommunalHelper/DreamRefill": {
+      "classification": "UNKNOWN",
+      "evidence": "Exact Communal1.25.5 CustomEntity alias maps to DreamTunnelRefill/DashStateRefill and activates DreamTunnelDash/DoubleDash, custom SFX/particles/baseData. New player-state/static closure is not established."
+    },
+    "entity:CommunalHelper/PlayerBubbleRegion": {
+      "classification": "AUTO_IMPLEMENT_BOUNDED_COMPATIBILITY",
+      "evidence": "Exact audit-only Communal1.25.5 DLL: PlayerBubbleRegion constructor(two nodes, Hitbox, PlayerCollider); OnPlayer uses Dead/state21 and canonical StartCassetteFly. Finite selected lowering, no new player state in this class. Future authored/lifecycle proof required."
+    },
+    "entity:FrostHelper/IceSpinner": {
+      "classification": "AUTO_IMPLEMENT_BOUNDED_COMPATIBILITY",
+      "evidence": "Current AppleEverestFrostSpinner ignores attachToSolid; true occurs1155 times in asteriskblue and28 in cellularAutomaton. Requires bounded StaticMover/solid lifecycle source proof; other new spinner profiles remain unproved."
+    },
+    "entity:MaxHelpingHand/FlagSwitchGate": {
+      "classification": "AUTO_IMPLEMENT_BOUNDED_COMPATIBILITY",
+      "evidence": "Exact Max1.40.9 DLL FlagSwitchGate and MaxHelpingHandMapDataProcessor; current compiled fallback is canonical TouchSwitch/SwitchGate and does not prove flags. Need finite SID/mode/room/id group data, legacy/persistence aggregation, colors/audio/movement, session restoration. Close moving-switch/DreamSwitchGate/reflection/hook branches against combined union; no dynamic scan/detour allowed."
+    },
+    "entity:MaxHelpingHand/FlagTouchSwitch": {
+      "classification": "AUTO_IMPLEMENT_BOUNDED_COMPATIBILITY",
+      "evidence": "Exact Max1.40.9 DLL FlagTouchSwitch and MaxHelpingHandMapDataProcessor; current compiled fallback is canonical TouchSwitch/SwitchGate and does not prove flags. Need finite SID/mode/room/id group data, legacy/persistence aggregation, colors/audio/movement, session restoration. Close moving-switch/DreamSwitchGate/reflection/hook branches against combined union; no dynamic scan/detour allowed."
+    },
+    "entity:MaxHelpingHand/SetFlagOnSpawnController": {
+      "classification": "AUTO_IMPLEMENT_BOUNDED_COMPATIBILITY",
+      "evidence": "Existing accepted typed implementation; snas authored profile rejected. Require exact authored parameter/node coverage and runtime tests, plus completion/session or one-way collision semantics. Not a content-only change."
+    },
+    "entity:MaxHelpingHand/SidewaysJumpThru": {
+      "classification": "AUTO_IMPLEMENT_BOUNDED_COMPATIBILITY",
+      "evidence": "Existing accepted typed implementation; snas authored profile rejected. Require exact authored parameter/node coverage and runtime tests, plus completion/session or one-way collision semantics. Not a content-only change."
+    },
+    "entity:SJ2021/DashZipMover": {
+      "classification": "AUTO_IMPLEMENT_BOUNDED_COMPATIBILITY",
+      "evidence": "Exact root1.0.12 DLL: Solid, OnDashed, Added/Removed path renderer, coroutine Sequence, custom textures/SFX. Bounded candidate mechanism; authored audio and movement/lifecycle proof unresolved."
+    },
+    "entity:pandorasBox/waterDrowningController": {
+      "classification": "AUTO_IMPLEMENT_BOUNDED_COMPATIBILITY",
+      "evidence": "Exact Pandora1.0.49 DLL: selected Update/death path and Player.Render hook. Must preserve render/stamina save/restore; do not drop hook because maxDuration is zero. PlayerHelper selected mode still needs closure."
+    },
+    "trigger:ContortHelper/RandomSoundTrigger": {
+      "classification": "AUTO_IMPLEMENT_BOUNDED_COMPATIBILITY",
+      "evidence": "Exact Contort1.5.5 DLL: RandomSoundTrigger, AbstractTrigger, EntityDatas. Preserve empty comma-list parsing, Next(1) RNG consumption, zero-delay coroutine yield, oneUse removal, authored persistent=false. Future scheduling/exit/death proof required."
+    },
+    "trigger:DJMapHelper/killBoxTrigger": {
+      "classification": "EXISTING_CAPABILITY",
+      "evidence": "Frozen DJ1.13.4 actual registry direct ctor; pinned class uses canonical Trigger and OnEnter Assist.Invincible/state21 guards/Player.Die. Candidate shape/lifecycle/forbidden-surface proof remains required; outside accepted73, not ready by declaration."
+    },
+    "trigger:MaxHelpingHand/CameraOffsetBorder": {
+      "classification": "AUTO_IMPLEMENT_BOUNDED_COMPATIBILITY",
+      "evidence": "Existing accepted typed implementation; snas exact authored profiles rejected. Review full values/nodes/guards and interactions before adding finite profiles; no default profile broadening. Other maps remain independently unproved."
+    },
+    "trigger:MaxHelpingHand/FlagToggleSmoothCameraOffsetTrigger": {
+      "classification": "AUTO_IMPLEMENT_BOUNDED_COMPATIBILITY",
+      "evidence": "Existing accepted typed implementation; snas exact authored profiles rejected. Review full values/nodes/guards and interactions before adding finite profiles; no default profile broadening. Other maps remain independently unproved."
+    },
+    "trigger:everest/flagTrigger": {
+      "classification": "AUTO_IMPLEMENT_BOUNDED_COMPATIBILITY",
+      "evidence": "Existing accepted typed implementation; snas exact authored profiles rejected. Review full values/nodes/guards and interactions before adding finite profiles; no default profile broadening. Other maps remain independently unproved."
+    },
+    "trigger:everest/musicLayerTrigger": {
+      "classification": "AUTO_IMPLEMENT_BOUNDED_COMPATIBILITY",
+      "evidence": "Pinned Everest MusicLayerTrigger constructor parses finite integer layers; OnEnter mutates Session.Audio layers and Apply. No hooks/reflection/module state in inspected class; new selected registration/tests needed."
+    },
+    "trigger:everest/smoothCameraOffsetTrigger": {
+      "classification": "AUTO_IMPLEMENT_BOUNDED_COMPATIBILITY",
+      "evidence": "Existing accepted typed implementation; snas exact authored profiles rejected. Review full values/nodes/guards and interactions before adding finite profiles; no default profile broadening. Other maps remain independently unproved."
+    },
+    "trigger:luaCutscenes/luaCutsceneTrigger": {
+      "classification": "STOP_MAJOR_ARCHITECTURE",
+      "evidence": "Actual mosscairn scripts use Lua/luanet imports, GravityHelper extension, inventory/flags/music/skip cleanup. Generic interpreter/import path forbidden; finite per-script lowering remains unproved, not shown impossible."
+    }
+  },
+  "schemaVersion": 1,
+  "sourceReview": [
+    {
+      "decompiledTextSha256": "eb45ae84fc5efb34312d19d3eafa93c1de9e7ad774c5b93589e2f44336f60d9a",
+      "scope": "PRIVATE_PINNED_ILSPY_RECONSTRUCTION_FOR_SOURCE_REVIEW_NOT_SEMANTIC_EXECUTION",
+      "typeEvidenceFile": "AbstractTrigger.cs"
+    },
+    {
+      "decompiledTextSha256": "ca721bfd23d3c8c767872d7dadd059d42fb470f9c3db94e55cce1dee0aed49bb",
+      "scope": "PRIVATE_PINNED_ILSPY_RECONSTRUCTION_FOR_SOURCE_REVIEW_NOT_SEMANTIC_EXECUTION",
+      "typeEvidenceFile": "DashZipMover.cs"
+    },
+    {
+      "decompiledTextSha256": "15e6791d252890529eb91ea332be3e340791541c6dea521687cf965498524cdb",
+      "scope": "PRIVATE_PINNED_ILSPY_RECONSTRUCTION_FOR_SOURCE_REVIEW_NOT_SEMANTIC_EXECUTION",
+      "typeEvidenceFile": "DreamTunnelRefill.cs"
+    },
+    {
+      "decompiledTextSha256": "5f3f0872ab5440ab95439745703891ff66f3a77ff431a86144482fa73df176b1",
+      "scope": "PRIVATE_PINNED_ILSPY_RECONSTRUCTION_FOR_SOURCE_REVIEW_NOT_SEMANTIC_EXECUTION",
+      "typeEvidenceFile": "EntityDatas.cs"
+    },
+    {
+      "decompiledTextSha256": "82d826907fc21d419a52e408663625caf207a9a0debb3f9208c107b01709c86d",
+      "scope": "PRIVATE_PINNED_ILSPY_RECONSTRUCTION_FOR_SOURCE_REVIEW_NOT_SEMANTIC_EXECUTION",
+      "typeEvidenceFile": "FlagGateContainer.cs"
+    },
+    {
+      "decompiledTextSha256": "c7ab870c8fa16ab93acf68cc42e65ca5164c27538abec39cb2d24befdaa0cdf2",
+      "scope": "PRIVATE_PINNED_ILSPY_RECONSTRUCTION_FOR_SOURCE_REVIEW_NOT_SEMANTIC_EXECUTION",
+      "typeEvidenceFile": "FlagSwitchGate.cs"
+    },
+    {
+      "decompiledTextSha256": "91602ca853757b825ce8d0216ed8f5dfe01a48b4719d6e9d832b2c41a86c5dcb",
+      "scope": "PRIVATE_PINNED_ILSPY_RECONSTRUCTION_FOR_SOURCE_REVIEW_NOT_SEMANTIC_EXECUTION",
+      "typeEvidenceFile": "FlagTouchSwitch.cs"
+    },
+    {
+      "decompiledTextSha256": "1081b850e2e08939a71cef9dd8917fde570df486c29f9b361953d9cca5072532",
+      "scope": "PRIVATE_PINNED_ILSPY_RECONSTRUCTION_FOR_SOURCE_REVIEW_NOT_SEMANTIC_EXECUTION",
+      "typeEvidenceFile": "KillBoxTrigger.cs"
+    },
+    {
+      "decompiledTextSha256": "ecd436b27a02a39f2cd4936fff7fc3aa3d8d5cdd60c01a070d458c94845e7953",
+      "scope": "PRIVATE_PINNED_ILSPY_RECONSTRUCTION_FOR_SOURCE_REVIEW_NOT_SEMANTIC_EXECUTION",
+      "typeEvidenceFile": "MaxHelpingHandMapDataProcessor.cs"
+    },
+    {
+      "decompiledTextSha256": "cdfdbfb79daa7715487b0218e42952e6130340069a58fc1eeeb4ff92bd6c121d",
+      "scope": "PRIVATE_PINNED_ILSPY_RECONSTRUCTION_FOR_SOURCE_REVIEW_NOT_SEMANTIC_EXECUTION",
+      "typeEvidenceFile": "PlayerBubbleRegion.cs"
+    },
+    {
+      "decompiledTextSha256": "267cfe03185864335641de3a2c9ff39ee0f059fa8eb37fe63537e7fc0b15da81",
+      "scope": "PRIVATE_PINNED_ILSPY_RECONSTRUCTION_FOR_SOURCE_REVIEW_NOT_SEMANTIC_EXECUTION",
+      "typeEvidenceFile": "RandomSoundTrigger.cs"
+    },
+    {
+      "decompiledTextSha256": "eddca481ace646193970f9bf71cd896ec013fafa4395de2469b38703aa6aaeb7",
+      "scope": "PRIVATE_PINNED_ILSPY_RECONSTRUCTION_FOR_SOURCE_REVIEW_NOT_SEMANTIC_EXECUTION",
+      "typeEvidenceFile": "WaterDrowningController.cs"
+    }
+  ]
+}

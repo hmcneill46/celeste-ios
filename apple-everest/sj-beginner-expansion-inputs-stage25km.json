@@ -1,0 +1,1022 @@
+{
+  "acceptedGameSha": "be8546d4ae411cb491a0c3bbc4e5343ebf9c9651",
+  "acceptedPackages": [
+    {
+      "distributedDlls": [
+        {
+          "archivePath": "bin/BrokemiaHelper.dll",
+          "bytes": 159744,
+          "path": "BrokemiaHelper.dll",
+          "sha256": "89408eb1fb4ab1f11312f5dcbb579d3747b7b5bf38f7bf2c62359ffe2c1df841"
+        }
+      ],
+      "name": "BrokemiaHelper",
+      "version": "1.8.5",
+      "zipBytes": 386366,
+      "zipSha256": "c80d7d71cdccef7c9b418e05d53debd197b59717d3cdeade72910ace33d4fbeb"
+    },
+    {
+      "distributedDlls": [
+        {
+          "archivePath": "Code/bin/CherryHelper.dll",
+          "bytes": 134656,
+          "path": "CherryHelper.dll",
+          "sha256": "dd0951122a93ffce9cfd74e36415dff34473061eacb792cf758168080828a2fa"
+        }
+      ],
+      "name": "CherryHelper",
+      "version": "1.8.2",
+      "zipBytes": 1344762,
+      "zipSha256": "8ca640f9e14f844507e0bbedc2afcb99ef61bec6957a7558cee90e9fabd2fba7"
+    },
+    {
+      "distributedDlls": [
+        {
+          "archivePath": "bin/CollabUtils2.dll",
+          "bytes": 250368,
+          "path": "CollabUtils2.dll",
+          "sha256": "ce7d646252a2fc51f1f513071d97eaa1acedf7ddb0871276c688914e37319f60"
+        }
+      ],
+      "name": "CollabUtils2",
+      "version": "1.13.4",
+      "zipBytes": 5406848,
+      "zipSha256": "4bcea8a9011edb8b7d27b433c47f1f4a871b8f7a4dd7f2bffac67bb99c7f6ad5"
+    },
+    {
+      "distributedDlls": [
+        {
+          "archivePath": "ContortHelper.dll",
+          "bytes": 151040,
+          "path": "ContortHelper.dll",
+          "sha256": "c3983e67e1b535fbb1e0f0a541e8c78ad8f4cd150f66636c783a83dc5ffb4488"
+        }
+      ],
+      "name": "ContortHelper",
+      "version": "1.5.5",
+      "zipBytes": 140727,
+      "zipSha256": "d8b42128a808e68d30329baa9299fdb41bf7d24743635dec3137c36bcc87956a"
+    },
+    {
+      "distributedDlls": [
+        {
+          "archivePath": "Code/bin/vitmod.dll",
+          "bytes": 301056,
+          "path": "vitmod.dll",
+          "sha256": "456410258fbce4594c3e987d025bf651e1bd3f49d2d676a921d8ea9f27ba052a"
+        }
+      ],
+      "name": "CrystallineHelper",
+      "version": "1.17.2",
+      "zipBytes": 659877,
+      "zipSha256": "4573f5e45dce0905142cd2b119f4a9a744bdce8ef3199319d1e46b6d1d342747"
+    },
+    {
+      "distributedDlls": [
+        {
+          "archivePath": "DJMapHelper.dll",
+          "bytes": 143872,
+          "path": "DJMapHelper.dll",
+          "sha256": "0d73202b5e16f26a4c8a286dd6ad600c1601d1904d8f72d909f8acb8469ee446"
+        }
+      ],
+      "name": "DJMapHelper",
+      "version": "1.13.4",
+      "zipBytes": 433079,
+      "zipSha256": "95ab02d657213031b70c3079738b21be399e567ca8a32b1fe8e8effc0778eedb"
+    },
+    {
+      "distributedDlls": [
+        {
+          "archivePath": "bin/ExtendedVariantMode.dll",
+          "bytes": 402944,
+          "path": "ExtendedVariantMode.dll",
+          "sha256": "cb28846f7f7348ddb996f63498c97694616436e97ef34f67880b697ba024fe81"
+        }
+      ],
+      "name": "ExtendedVariantMode",
+      "version": "0.50.5",
+      "zipBytes": 498461,
+      "zipSha256": "4019b362d9ad1b2d3a6a670f833ef6324d735d5791a0bf21b62cf5cfbc0d639d"
+    },
+    {
+      "distributedDlls": [
+        {
+          "archivePath": "FancyTileEntities/bin/Debug/net452/FancyTileEntities.dll",
+          "bytes": 54784,
+          "path": "FancyTileEntities.dll",
+          "sha256": "48c4ba952c602c8f40325392edf9975c86ea7a90cd25a3954b0efe7086b6f0a1"
+        }
+      ],
+      "name": "FancyTileEntities",
+      "version": "1.6.2",
+      "zipBytes": 64653,
+      "zipSha256": "c37806dc7e7db4a392c8ab79030701f4cf2046109cc19435b607fca7fe41c8d8"
+    },
+    {
+      "distributedDlls": [
+        {
+          "archivePath": "bin/FemtoHelper.dll",
+          "bytes": 632832,
+          "path": "FemtoHelper.dll",
+          "sha256": "f99b8ec46987b8dd5b0ce018f854d55f07519651d720d63ed7343eaf82963280"
+        }
+      ],
+      "name": "FemtoHelper",
+      "version": "1.15.22",
+      "zipBytes": 11103153,
+      "zipSha256": "5a845805bae30490ed7c9da84410fbe672628b8fe927a830f5f2eb148eb88419"
+    },
+    {
+      "distributedDlls": [
+        {
+          "archivePath": "bin/FlaglinesAndSuch.dll",
+          "bytes": 215040,
+          "path": "FlaglinesAndSuch.dll",
+          "sha256": "42801778b18505cd4455e59e5c3865f3f0268580d73e256e886b531cd8025ede"
+        }
+      ],
+      "name": "FlaglinesAndSuch",
+      "version": "1.6.80",
+      "zipBytes": 700428,
+      "zipSha256": "fb0fd300f95d77539eb9079aed445c81f263557c1a1715187bd509d39c1eb794"
+    },
+    {
+      "distributedDlls": [
+        {
+          "archivePath": "Code/FrostHelper/bin/FrostTempleHelper.dll",
+          "bytes": 1104896,
+          "path": "FrostTempleHelper.dll",
+          "sha256": "723e204638703111c12746badd31b8d37cd41d4978d1a2d98315647406d880af"
+        }
+      ],
+      "name": "FrostHelper",
+      "version": "1.80.1",
+      "zipBytes": 1204743,
+      "zipSha256": "ba6aee8f596eff0f595fd90cb7f136ea13b1e9c2d664fc38f389608b0f9e2c81"
+    },
+    {
+      "distributedDlls": [
+        {
+          "archivePath": "Code/bin/HonlyHelper.dll",
+          "bytes": 58880,
+          "path": "HonlyHelper.dll",
+          "sha256": "110a7d00881f4ad38b587ca51afdb0f03c4d3d0ac20cc46da3e665615932c367"
+        }
+      ],
+      "name": "HonlyHelper",
+      "version": "1.7.5",
+      "zipBytes": 1042358,
+      "zipSha256": "6a2d0f04a5be3a9c9c3bf66ec7e93701398a64d5a0e72add5df682e860e7d08d"
+    },
+    {
+      "distributedDlls": [
+        {
+          "archivePath": "Code/bin/JungleHelper.dll",
+          "bytes": 188416,
+          "path": "JungleHelper.dll",
+          "sha256": "fed840ade7250f05e38b70a81bcfe751ca87ff63274f4b568172868cacf56f8a"
+        }
+      ],
+      "name": "JungleHelper",
+      "version": "1.4.10",
+      "zipBytes": 7584200,
+      "zipSha256": "a140e21cbb5fd2dcaac70d4d5e36d49476e414861455ae25dedc0678164406cc"
+    },
+    {
+      "distributedDlls": [
+        {
+          "archivePath": "LunaticHelper.dll",
+          "bytes": 43008,
+          "path": "LunaticHelper.dll",
+          "sha256": "fc08f00296551a6025c5e31422c6edd5e8136e6861459f44ffea909129c6a925"
+        }
+      ],
+      "name": "LunaticHelper",
+      "version": "1.1.1",
+      "zipBytes": 931124,
+      "zipSha256": "b10e044b1dfa412605bee3ba6bfdd4263591099d331d6c1aab1e9ba65bf6a3e5"
+    },
+    {
+      "distributedDlls": [
+        {
+          "archivePath": "bin/MaxHelpingHand.dll",
+          "bytes": 470528,
+          "path": "MaxHelpingHand.dll",
+          "sha256": "6f463f2c014eb60c4abb61e395eb5065455d4bf469f4c83fce9814fb7bfcdfa6"
+        }
+      ],
+      "name": "MaxHelpingHand",
+      "version": "1.40.9",
+      "zipBytes": 963880,
+      "zipSha256": "abfc5d167936410e9b6665018335ee654455e30710caffe01540b232da468fee"
+    },
+    {
+      "distributedDlls": [
+        {
+          "archivePath": "PandorasBox.dll",
+          "bytes": 157184,
+          "path": "PandorasBox.dll",
+          "sha256": "d48168822a646892dc9850ebfcb75376cb80663cef7c2fceb9c36fe3d3af02e7"
+        }
+      ],
+      "name": "PandorasBox",
+      "version": "1.0.49",
+      "zipBytes": 245309,
+      "zipSha256": "25f9c7d6792983ac697e3780667fb0963233c0c08f6e528f5c6d9fe732cded05"
+    },
+    {
+      "distributedDlls": [
+        {
+          "archivePath": "Code/StrawberryJam2021.dll",
+          "bytes": 458752,
+          "path": "StrawberryJam2021.dll",
+          "sha256": "8d5b9184204e7e7728965bcf95af5f150f6220dafbfe52fdd6c23e50d47e5258"
+        }
+      ],
+      "name": "StrawberryJam2021",
+      "version": "1.0.12",
+      "zipBytes": 95650820,
+      "zipSha256": "4e1a2fc12baa3db27da433b93bf26b59f34b3e6b7f760c41d8d127636d020655"
+    },
+    {
+      "distributedDlls": [],
+      "name": "StrawberryJam2021Assets",
+      "version": "1.0.1",
+      "zipBytes": 91062907,
+      "zipSha256": "26fab85f20fff89d1adcba2ef926c3447d9996057c7dfc78e5d97f9d96ed7e45"
+    },
+    {
+      "distributedDlls": [],
+      "name": "StrawberryJam2021AudioA",
+      "version": "1.0.4",
+      "zipBytes": 318011755,
+      "zipSha256": "81e9cbc39b3a5525c93dfc5b24b675a833a8fb616e8a01cfc0838296f5e37e1d"
+    },
+    {
+      "distributedDlls": [],
+      "name": "StrawberryJam2021AudioB",
+      "version": "1.0.0",
+      "zipBytes": 318382262,
+      "zipSha256": "70b90f45709956a4d18bfbb5941836c534344a1cf0ab859a50430daa3b76ef42"
+    },
+    {
+      "distributedDlls": [
+        {
+          "archivePath": "dll/VivHelper.dll",
+          "bytes": 914944,
+          "path": "VivHelper.dll",
+          "sha256": "d843355cbce2be03611d46a200cc4b341888ec53deb29e940b18442bbdc4f55f"
+        }
+      ],
+      "name": "VivHelper",
+      "version": "1.14.10",
+      "zipBytes": 6543567,
+      "zipSha256": "9a95f51659ccfcb78404f9610307918d6114fc824298fbb8493651ec7c80215a"
+    },
+    {
+      "distributedDlls": [
+        {
+          "archivePath": "Code/bin/VortexHelper.dll",
+          "bytes": 114688,
+          "path": "VortexHelper.dll",
+          "sha256": "f5a32f02c2699dcdf41bb1af808ead631491571c3d259429761953693bd37f73"
+        }
+      ],
+      "name": "VortexHelper",
+      "version": "1.2.19",
+      "zipBytes": 2195976,
+      "zipSha256": "b6280fe2e3c05d355c32a51049854137c41be72d24ec4aec9d997cc7c4394db2"
+    },
+    {
+      "distributedDlls": [
+        {
+          "archivePath": "Code/bin/XaphanHelper.dll",
+          "bytes": 2129408,
+          "path": "XaphanHelper.dll",
+          "sha256": "e408dc081cb79d89b3436724b74413a603189cb53e84af5844918df08717273c"
+        }
+      ],
+      "name": "XaphanHelper",
+      "version": "1.0.79",
+      "zipBytes": 6957784,
+      "zipSha256": "ca868d06eb05f0c5de55126090e5019210e9d83c3dae9394cbcd155acf8eb16f"
+    },
+    {
+      "distributedDlls": [
+        {
+          "archivePath": "YetAnotherHelper/bin/Debug/net452/YetAnotherHelper.dll",
+          "bytes": 32256,
+          "path": "YetAnotherHelper.dll",
+          "sha256": "f48e16a568edf43913beac0684bd26b7dc12d45be4011a8b214e05db86b78aea"
+        }
+      ],
+      "name": "YetAnotherHelper",
+      "version": "1.2.5",
+      "zipBytes": 53525,
+      "zipSha256": "73d64e1b3457e2461d3368a01de9f5f31a58bf24e130f3e35ec7280b24814c2d"
+    }
+  ],
+  "authorityFiles": {
+    "apple-everest/runtime/AppleEverestBoundedYaml.cs": "227ea97576038cbf7628756da63cd3352d0353fd80aa2d9eb016b8e2d6fba281",
+    "apple-everest/runtime/AppleEverestChapterTitleLayout.cs": "8a83b811d5386f8dacdad1ddc4c98a40a1b1d34386778fc77401b96102a5177d",
+    "apple-everest/runtime/AppleEverestCollabChapterCredits.cs": "77aa828123b89a0fcdea5473a2064ae332b20857e2521fa5437b1c777948c4a3",
+    "apple-everest/runtime/AppleEverestCollabRuntime.cs": "d1b440b2d05ece6515e081e223358f73acf63e7268201aca20001382f4ffe0ba",
+    "apple-everest/runtime/AppleEverestCollabSession.cs": "b50c3b021ac4ea26a8bbd3c8c64b5180590f37f82054acffb836dc5fe69c62b2",
+    "apple-everest/runtime/AppleEverestCustomAudioLifecycle.cs": "443df290724cbba61081937e0dc53ca693c9df35ec556c6d4f475d9c7b2a6edf",
+    "apple-everest/runtime/AppleEverestCustomAudioRuntime.cs": "15a28f30ccf8624b30f83037e42e7b20ea20c33928a38a9000feb17a318534a9",
+    "apple-everest/runtime/AppleEverestDefaultSpawn.cs": "ced45218d3746309a2bf1f2939ba94369df1f079fa19c2336df81d4175326544",
+    "apple-everest/runtime/AppleEverestDialogFragmentParser.cs": "557403c31079aa0b625d0440c20cb6cc43c8b967938d336e05e1e0259ae4b73c",
+    "apple-everest/runtime/AppleEverestFactoryCanary.cs": "e63207a65cbf4e94fd40bfbd79defb7dc279e4518c642e01b297c93612a7c6d4",
+    "apple-everest/runtime/AppleEverestFactoryCanaryPlan.cs": "9b6f859990c724c476e5c4a0d31ee1ca90a4a401226bbceb23f1ab4d7587d49a",
+    "apple-everest/runtime/AppleEverestHookList.cs": "17fbc3267139c21a6a48275700c4b599fbecd51c0fc03849dd619344083e896a",
+    "apple-everest/runtime/AppleEverestLogPolicy.cs": "f25f775bf83461533a23af2bf2e91ba888555ae58077daaefe523dbecbfda820",
+    "apple-everest/runtime/AppleEverestMapBinding.cs": "dcd5e53bd04f9dbf7bdfecc1634fbb9fd7cace042c31141d083f7ead109a746b",
+    "apple-everest/runtime/AppleEverestModuleCompression.cs": "aa3da8428d3129de9b04ac50a5600ebd0a7fb5b08f7f4ce28e441a48d06265f5",
+    "apple-everest/runtime/AppleEverestModulePersistence.cs": "f9dd68514c14096f003f26931eca83e9e21e0e9aa03f86721cfe4e1c1062b214",
+    "apple-everest/runtime/AppleEverestModuleReplicaAuthority.cs": "19c1897254183f81ca33929005548c7f3a218beda19cc10d881aa640ea9d02ae",
+    "apple-everest/runtime/AppleEverestModuleSnapshotCodec.cs": "54d89945d07f4cb34b56da53e5e80e7e6682286e62865203217fb5d7e7f1eea4",
+    "apple-everest/runtime/AppleEverestModuleYaml.cs": "c0aa618feccaf3eea51f3acbc69d0cfab7e529334364b41145022c640286d6f5",
+    "apple-everest/runtime/AppleEverestProgressionCompression.cs": "cbac70bc635fadcacafb8a886349fdc63db5a3d68eed2b41502a293a229a956c",
+    "apple-everest/runtime/AppleEverestProgressionPersistence.cs": "90e4f52b6fca42a382d42ae5d3740fa01cb499db4db7266c6b03fd49cbfaa681",
+    "apple-everest/runtime/AppleEverestProgressionReplicaAuthority.cs": "95dc1ccdbf5303ffc195d85f71179da9817eb4e04f119828ea24927b746cf062",
+    "apple-everest/runtime/AppleEverestProgressionRuntime.cs": "a53d5952c8b821b19e9f8411b3831be73b1764c8e236afb6921612825a786963",
+    "apple-everest/runtime/AppleEverestProgressionSnapshotCodec.cs": "4d34c448ea425f2de76892f4127ab73bd9c4530451abcb875cb47f6bfb6cb6f1",
+    "apple-everest/runtime/AppleEverestSceneWrappingEntity.cs": "8be526286973f2e5df7776e986cac10616f68898abbf69fbf4833c1446a28638",
+    "apple-everest/runtime/AppleEverestSecondCollabRuntime.cs": "68bd0d6e0cc3bb81f5c0f635af29e0abb86e9dfdd97eb8bf33352d081a5e8392",
+    "apple-everest/runtime/AppleEverestSemanticFactories.cs": "6ac6545bd10e9851bdbfc8de34598fe55097f1d7acc4eed47d2190b6a2ccac05",
+    "apple-everest/runtime/AppleEverestSettingsCodec.cs": "223b046ac173ad8d07ab0ef60cd606d3b631e9528057cd74be1ca72025ef23ad",
+    "apple-everest/runtime/AppleEverestSettingsPersistence.cs": "3511ceab4a2fd0eae2cbdd7004faa383878441fd1195c1af5b6289116376a4c8",
+    "apple-everest/runtime/AppleEverestStage25KFAudioCanary.cs": "eeef426b005daefff7b1f234159ce7be6b6f82e79dd3a0ab5decd58d85e734da",
+    "apple-everest/runtime/AppleEverestStaticIdentity.cs": "9af34e9489591a568eb5644c772c9ecd7db94b78df8792eed8b0750e7a28fb04",
+    "apple-everest/runtime/AppleEverestStaticRuntime.cs": "248b9f792317b1828712acb4d2aa48460daada2066d0d529da33e9a8eaf6dbf8",
+    "apple-everest/runtime/AppleEverestTileMaskRules.cs": "0c5473089373614a0a92e3bea8f47bb2c6abdbb8cd7556c2c0925dc19039e0fa",
+    "apple-everest/runtime/EverestAreaKeyStaticApi.cs": "7933af4699961dc9835225b72f4e6c0a8d1e733ab0dfe768f75e2685f6f88118",
+    "apple-everest/runtime/EverestBackdropsStaticApi.cs": "008d61ea864b9fec4b8fe1af3ba90a3796a412a313d1a20a9a2755dd01df6176",
+    "apple-everest/runtime/EverestBeginnerBreadthStaticApi.cs": "7154d4c00f7f3478162087a57c157c38d87751a547ee8daa713de9872bbd2b64",
+    "apple-everest/runtime/EverestCoreEntitiesStaticApi.cs": "f36b2b1eeab68243be2831e582a7fa2cf58c1e2ff1958ee4196cbd8f491d3a44",
+    "apple-everest/runtime/EverestDialogCutsceneStaticApi.cs": "88894df8a0ca97a7837eb263c0e5cb83b113b0c99dd63aa7d1a64b0ac825624f",
+    "apple-everest/runtime/EverestEntitiesStaticApi.cs": "ed0c9af027d709428f5077610eace1dfc71da4ac18139443703f6898c7232b91",
+    "apple-everest/runtime/EverestLoggerStaticApi.cs": "a4fa5b2e24a8e010b0a5122000b19e8d59f80df4d8c3c7d4cdb9892a9367e84c",
+    "apple-everest/runtime/EverestMapMetaStaticApi.cs": "633cd052dc177d9010892a9139c9aa0b93e6bcc7a9d08b0adfeabec10dae2e4d",
+    "apple-everest/runtime/EverestStaticApi.cs": "7fff98ecf969022ea32778f18d2a472691083e8480cc75c067804f30de9afb22",
+    "apple-everest/runtime/EverestTagsStaticApi.cs": "72aeecfc39f409e42057323ab6b5ac89aeac59f85f96244c1593345ecde050cb",
+    "apple-everest/runtime/LegacyMonoModConfiguredStaticFacade.cs": "f77d0198eae9285208be1bb543418e72d2b8366dfbc678e9c505100a1f047b7a",
+    "apple-everest/runtime/MonoModModInteropStaticFacade.cs": "38509d299aacd98649d8f75199c8f5ede20d00adb02f18c5c95100b7c50c5910",
+    "apple-everest/runtime/MonoModRuntimeDetourStaticFacade.cs": "2352513d3d190ee393aa0839d198527d68a92e5b99d848fc01a9f0284df461d6",
+    "apple-everest/runtime/YamlDotNetStaticApi.cs": "b2116cd898740fec8a2b96ececbcbe43ab1397adf5f952957e0b91aaff316a99",
+    "apple-everest/runtime/semantics/AppleEverestAnimatedParallax.cs": "f7ff4d3e5ff82127f1800c23984fc173f2a51bc7d7a79fe2a438bb9a13090be8",
+    "apple-everest/runtime/semantics/AppleEverestAssistRectangle.cs": "e2ebab3cf1960c4dc1b31c48192767e9d7aef2728a41fa664cb3890c2ada78d9",
+    "apple-everest/runtime/semantics/AppleEverestAutotiler.cs": "917c056ce50fc40a6d4c9ea76a810b5255f9ae8dc9aef7e4c9b7bf1485836109",
+    "apple-everest/runtime/semantics/AppleEverestBubbleReturnBerry.cs": "2c0f38df3e74be5b1c66f00526215a9c9002dc8a9ca6ccd88fce4f8bb60c66f1",
+    "apple-everest/runtime/semantics/AppleEverestBubbleSemantics.cs": "4fa6f7e429b8a708710f66455266d7eb2fe2a087500fd94c60b20bbbab153c61",
+    "apple-everest/runtime/semantics/AppleEverestButtonHelper.cs": "1b8c1f7fafd76db204d2afa2021947d3f06916e2e1f3559634a5679237b76af4",
+    "apple-everest/runtime/semantics/AppleEverestByteArray2D.cs": "08b408567250e151057a6ad58f9b03373809ae4c4b85d1d06080fbc442aefaa6",
+    "apple-everest/runtime/semantics/AppleEverestCameraOffsetBorder.cs": "d5941e50ca23b4edf9ce8ec7a6509adc31f20c6d6ee0a54f386bbaa30382300b",
+    "apple-everest/runtime/semantics/AppleEverestCameraTargetCrossfadeTrigger.cs": "c9dbdb5ca0cb1b16d70f4429662b78bae53509deec04a885f0f5ab8630422362",
+    "apple-everest/runtime/semantics/AppleEverestCaveWall.cs": "e8f7cfdfc5618134a6b75e74bd596c3c2dd16990962faad31bc70eb57aadb36d",
+    "apple-everest/runtime/semantics/AppleEverestCollabAbstractMiniHeart.cs": "dfbc5c2930b25f8248214fed2b0bb98c8e96eec8ae325b00b61b50eabec4a073",
+    "apple-everest/runtime/semantics/AppleEverestCollabAssistSkipConfirmUI.cs": "5eac4ad09e8a3c4db12d833403f6c8def54ef29712daf917b1f6066ef41cbe28",
+    "apple-everest/runtime/semantics/AppleEverestCollabEngineAccess.cs": "e05cf30e4e622772a7367863b3bc73109e5e8148bf30f7f814b386d7890e269e",
+    "apple-everest/runtime/semantics/AppleEverestCollabHeartDoor.cs": "28db26ba2391448048374c0c5bff047b28c6d16096acb7da008ec982ed47590d",
+    "apple-everest/runtime/semantics/AppleEverestCollabHoloRainbowBerry.cs": "0024629f7a34c9032d2ca781ebc42c95da93cccb8f08cd97ff23c5c6900b3084",
+    "apple-everest/runtime/semantics/AppleEverestCollabJournalStickers.cs": "b51b89ca52c86de1d7b12bf459decdc5977d02ee2d92dc1c99eabd271bbd0f6b",
+    "apple-everest/runtime/semantics/AppleEverestCollabMapMetadata.cs": "56d13d158ce5265731d8de746ae0fc7ed69659c755300b46a8834813f0dce66c",
+    "apple-everest/runtime/semantics/AppleEverestCollabMemorialText.cs": "a53b465c990066d49c2175092bdaca95f7a5f4b630e7ede97cb295806341be58",
+    "apple-everest/runtime/semantics/AppleEverestCollabMiniHeart.cs": "5f51f6bc4d9e2a8955e304346c9674f551fe243d4407fdfc7aad2485a5e6c3de",
+    "apple-everest/runtime/semantics/AppleEverestCollabPresentation.cs": "3c7c6d7bfac98fbd3e1bed0c9d636d3c8a8bc21fdfbf9c252bc1045c65d1e815",
+    "apple-everest/runtime/semantics/AppleEverestCollabRainbowBerry.cs": "6b62838cc178746a3cab1ea8af8ba036d7ba5e8599b2c1e36ad1677e7c62c059",
+    "apple-everest/runtime/semantics/AppleEverestCollabRainbowBerryPerfectEffect.cs": "3af40a4343e1931eee3487c292e71d4137dac89ebbb166aef48259b5071debd8",
+    "apple-everest/runtime/semantics/AppleEverestCollabRainbowBerryUnlockCutscene.cs": "03a81ac8f04699c3fb61f39cc9576ea6f22ebf52252ffc3134efc6642e73bdf4",
+    "apple-everest/runtime/semantics/AppleEverestCollabRainbowBerryUnlockTrigger.cs": "26128f1688387348e74ad95260af858d487ea7dac5f1a3241b00744ac925a122",
+    "apple-everest/runtime/semantics/AppleEverestCollabState.cs": "861596459216a3e5449a2d8c1c22cddbd3091c2b6415ce6fcb4b252ff1979373",
+    "apple-everest/runtime/semantics/AppleEverestCollabStrawberryHooks.cs": "5e6f2e7df12d8b4336c0a15d8f261c3582cc378fa5ac2970d428a2ae232a8163",
+    "apple-everest/runtime/semantics/AppleEverestColoredBigWaterfall.cs": "b5352cc344462c25bf7c243f18a858951874cbabec6f7ba9ad2fb5a0d17d0141",
+    "apple-everest/runtime/semantics/AppleEverestColoredWater.cs": "a3277d6cd214d122e51c263b525538326537d2b85dc57601ae64f0159b9594f1",
+    "apple-everest/runtime/semantics/AppleEverestColoredWaterfall.cs": "296bf83485b8e08b57f8a6c140bd75f83ab20174402b875ccb2da17ec2904719",
+    "apple-everest/runtime/semantics/AppleEverestContortSemantics.cs": "c9b118ef46c4dd2931159009f3dece68c7b9a569705d0c9bd59d4bee591a2b47",
+    "apple-everest/runtime/semantics/AppleEverestCoreState.cs": "4e2a50389a9818565f0f1e262155bc1a0337252fd7bd9b29aef0ce418426d7bc",
+    "apple-everest/runtime/semantics/AppleEverestCrystallineSemantics.cs": "5289cdf375b3780452139ffc57deade70c14f367c69bfb599e89decab3ffd4ec",
+    "apple-everest/runtime/semantics/AppleEverestCustomDust.cs": "4e6da3199d1229d37fb9387200e627fc53ed3ea10261fd201444a0814c4dee45",
+    "apple-everest/runtime/semantics/AppleEverestCustomHangingLamp.cs": "3076881910b8b49af6118f325c40daab632b8901659a5ef4a9d0d619eef7f256",
+    "apple-everest/runtime/semantics/AppleEverestDecalSemantics.cs": "c7b900e511266b0492e24685e9d969d0fc3253445ba368a21f2b006bef0ca962",
+    "apple-everest/runtime/semantics/AppleEverestDreamStars.cs": "c8072ac3010baf41f1fb2dd1a6b9e37bc72fa3231f3f3c0c6e5f34dc7d187be4",
+    "apple-everest/runtime/semantics/AppleEverestEntityActivator.cs": "b193a79bbb1f18b506cf361535906813b008c263c6ac8d9f6a5188776ec7f720",
+    "apple-everest/runtime/semantics/AppleEverestEverestBaseEntitySemantics.cs": "ee9ece52eaafdfb306d1ad2bffaffb8907ee7f9ee17b95461b18ab9f6ee8dcdf",
+    "apple-everest/runtime/semantics/AppleEverestFactoryCanaryStickers.cs": "bcc4d003d1c19f014e9044ffad378a1363a12573eaec5dd60634867d39d6846f",
+    "apple-everest/runtime/semantics/AppleEverestFancySolidTiles.cs": "e2944afca9f4cfca69d03f1a9c11dfcb67387ff69b22126cce0fbac00348ac4a",
+    "apple-everest/runtime/semantics/AppleEverestFemtoWaterfall.cs": "2b0bd0e4600961df47ca45c9538ac1bcdf778ba185852cea28d5c94d9e30b322",
+    "apple-everest/runtime/semantics/AppleEverestFrostCrystalDebris.cs": "b308b70a2a7f6b63a215656765bb9e70c35e549f7921d9c282302191c2201e28",
+    "apple-everest/runtime/semantics/AppleEverestFrostDebrisMotion.cs": "89cdf3117b3d589eaff8717a3cfeb98b9354fe0d4b76cb379585b46e4a8c7b2d",
+    "apple-everest/runtime/semantics/AppleEverestFrostDecalContainer.cs": "adf2ce3650a4462bce747715716a18b9fcb5d3529bbe2529dcc95c2504f90c06",
+    "apple-everest/runtime/semantics/AppleEverestFrostDecalContainerHelpers.cs": "0b0df3de32aecae1a73eed19b865ac81f2459ae00616e8a605bd714cdf87b9aa",
+    "apple-everest/runtime/semantics/AppleEverestFrostDecalContainerMaker.cs": "70bb9876eff1fe6d943c4bbb51b9f3990d3c28ecea1a6e0e45cb6b915f78057c",
+    "apple-everest/runtime/semantics/AppleEverestFrostDecalContainerRenderer.cs": "2f05ee0f7ca9596d4c5f9f257c64c711481308219c7e5d911452f7025fde2f14",
+    "apple-everest/runtime/semantics/AppleEverestFrostDecalInfo.cs": "43b9b069c13d2b55e992c2a1041ec06ebfccdc36db246ac3e8b29dd977f0455d",
+    "apple-everest/runtime/semantics/AppleEverestFrostFireBarrier.cs": "e5ca591c5b9aed03f08345095517fef87814c24694e9af976771a8168e5152c7",
+    "apple-everest/runtime/semantics/AppleEverestFrostLavaRect.cs": "09dfb2321ecf14c75c73f4745a5bd2b237a4996d508560835c0bd7654dd05f33",
+    "apple-everest/runtime/semantics/AppleEverestFrostMoverSemantics.cs": "8d83ca2f5663e955917fd2fc56771b9a502c769f8943568cb6efbca7bba75b92",
+    "apple-everest/runtime/semantics/AppleEverestFrostOutlineImage.cs": "6a2898b43608743b1f1e54b0597551c08889fa0afab782c0c0d0b0f22dadbb7c",
+    "apple-everest/runtime/semantics/AppleEverestFrostParallaxDecalRenderer.cs": "ce96bb172d38d040eb73da2738dd509fc2f40bd1bb98fe8831d78330b2cdf91d",
+    "apple-everest/runtime/semantics/AppleEverestFrostSpinner.cs": "675b41f66f5ea77bd045ccf063f44e211b497524e9c930b5cef1db5edf1ab3b4",
+    "apple-everest/runtime/semantics/AppleEverestFrostSpinnerCollider.cs": "d85dbb8f4d1599ef800f3f29690f1f9b4c95145186aae57f274ce8214eb3048c",
+    "apple-everest/runtime/semantics/AppleEverestFrostSpinnerTextures.cs": "62d73cd21c310ad1e757b336f3e91fa2fffb6175ca062bbf40d142a30d2d7460",
+    "apple-everest/runtime/semantics/AppleEverestFrostWireLamps.cs": "00bf63e0016553d773a3227784c45e78d2b9e27e490ad43632b8eb23961bc92c",
+    "apple-everest/runtime/semantics/AppleEverestGodrays.cs": "0425ef294ee3a45aa2cd5ca3f4c1f582c25bb666bd3b67afb0bade4b6e261a24",
+    "apple-everest/runtime/semantics/AppleEverestInvisibleLightSource.cs": "174c6adf91007b3a51228b3bd4ed629c3bb6052024467a4509ac9ccb38b1bcc4",
+    "apple-everest/runtime/semantics/AppleEverestItemCrystal.cs": "ab5a918fecbd00a678e66293d9ebe863b0db4b21c5fb52208b79a9d3e7b0d9cc",
+    "apple-everest/runtime/semantics/AppleEverestItemCrystalCollider.cs": "c9c84fb269dabb38033cea994c2e4c60f35f4d75aecc8e6b346c97a1ce6090c1",
+    "apple-everest/runtime/semantics/AppleEverestItemCrystalPedestal.cs": "15f08c065203406b6e965c4e0e80e08925a7c61209d2eaf61d283b178ffa7c34",
+    "apple-everest/runtime/semantics/AppleEverestJungleSemantics.cs": "6f64fe90f080ccf96656b0bd78e7ed5e364ce5aad6a36e3d8a9d2f746154b790",
+    "apple-everest/runtime/semantics/AppleEverestLobbyMapController.cs": "2eb6cefb9474e827a634da1b9806b5eba9037c5c3f55b1bac6adf45f3723d6f4",
+    "apple-everest/runtime/semantics/AppleEverestLobbyMapMarker.cs": "1095629820cd072f788f430f84ea44578447352a79b99438ab1f4a7745475dec",
+    "apple-everest/runtime/semantics/AppleEverestLobbyMapUI.cs": "e235187cb95af1368e8c618c6693eb83ef1735e377c54d41e3f97e2e3cad01bb",
+    "apple-everest/runtime/semantics/AppleEverestLobbyMapWarp.cs": "4c686dcddf74291ae64311fd3ed00064206ad0205f6c90d8cad0cecd9e737463",
+    "apple-everest/runtime/semantics/AppleEverestLobbyVisitManager.cs": "4ef47f9b24fa1ab3e6729d732f73c16058a0b2d5de6e1a6c8718a6b5b555b134",
+    "apple-everest/runtime/semantics/AppleEverestMaxColorSemantics.cs": "94f65ea315e6469c6c99e78d780d8968cdf5c13d3b46116d3a9a22e208603ab0",
+    "apple-everest/runtime/semantics/AppleEverestMaxFlagSemantics.cs": "6eded9ae72aac7917dd272eafa04e6ac98a74a884f1939464d89229a388e5def",
+    "apple-everest/runtime/semantics/AppleEverestParallaxFadeOutController.cs": "72828f7f5e1a517a82dca657adc168d24c5aa9c64c7b5fece8200cfa2317ac17",
+    "apple-everest/runtime/semantics/AppleEverestParticleEmitter.cs": "98c75c8a582b616a9878a5cd94c577ce424e9e3c5caa6aad53559dc088c79363",
+    "apple-everest/runtime/semantics/AppleEverestPettableCat.cs": "bca439059a03a19b80bb9905b1e8872cf0c837427e18d8b7e07710c41eea41a1",
+    "apple-everest/runtime/semantics/AppleEverestRainbowSpinnerColorArea.cs": "c9d6de58568804d14075149bc6502ad0b7a7ff600c53076e90ed08b188d8044a",
+    "apple-everest/runtime/semantics/AppleEverestRootStateCanary.cs": "c9a2e20af0d12e4c672c4493bc2388c64f8e4d4f25261ab5c82df85831a8d16a",
+    "apple-everest/runtime/semantics/AppleEverestSelectedCanaryAssets.cs": "6d19113dde234c5ee2d7b26a5d540d51bd7a1de61a51ac6d9817cab4ab0f5cb2",
+    "apple-everest/runtime/semantics/AppleEverestSelectedDecalRegistry.cs": "a3f8128375f331c8c21a13f021f53218d4b42490d9ea9ce570e8349d3f29c50a",
+    "apple-everest/runtime/semantics/AppleEverestSelectedProfileGuard.cs": "902bf886a1a83e19da319f18f149700ef085a01ca9ca74bd249f5e1c08cf2693",
+    "apple-everest/runtime/semantics/AppleEverestSelectedVisualHelpers.cs": "c4d14ad5028fe5f44ebad4a4e9e3b393514492b1f488ad208175d73dcad9e8fc",
+    "apple-everest/runtime/semantics/AppleEverestSidewaysJumpThru.cs": "6a84a479c6fc6b650b135200ad54c09a095cd4c403428a4e2ff230d808591564",
+    "apple-everest/runtime/semantics/AppleEverestStrawberryJamEntities.cs": "3cb69db7a22eb960f740474902b63ef1d9592512619b2f2a565f5adb6a10fef0",
+    "apple-everest/runtime/semantics/AppleEverestStrawberryJamLobbyLoading.cs": "82d0027a59e0347ddd1fcfe0ed693c875e55ac1110281a6ac510d9b79a24f04a",
+    "apple-everest/runtime/semantics/AppleEverestStrawberryJamRendering.cs": "c22c4835a07df2aae5a68dde1eb82515832f85fd72b876b4763e0bd946057728",
+    "apple-everest/runtime/semantics/AppleEverestStrawberryJamState.cs": "8cc7f5892ae32f1fa1a2edd61e92bda4387c72102af6a66442a4b50df076eaa8",
+    "apple-everest/runtime/semantics/AppleEverestStylegroundFadeController.cs": "592e0695ddb9eb7b5f738ab60286eb385acc45f657b0a4b042e5b6ec029b77dc",
+    "apple-everest/runtime/semantics/AppleEverestVariantSemantics.cs": "5356c1fa0a79d0b66fc87bfb66893d02c92683bfa2432a4e654bfdf46d70e33b",
+    "apple-everest/runtime/semantics/AppleEverestVivCrystalDebris.cs": "936f068117e689afd48f145a467808cc443c1bbc83caf0c41da9b286b82cebac",
+    "apple-everest/runtime/semantics/AppleEverestVivSpinner.cs": "153105ed1cb131b2f1c15085026af3fee7c82be8c1f096177ffbe6cf25131fda",
+    "apple-everest/runtime/semantics/AppleEverestVortexSemantics.cs": "9fba6dbcae4ce79bb4e8a58ad3338801ad53cdb9db818e5c202b21e21f34fb0f",
+    "apple-everest/runtime/semantics/AppleEverestWindPetals.cs": "81594cc7f98a065eb744a16b5b7aa68448ad9d268f3d5d969424b1771837755d",
+    "apple-everest/runtime/semantics/AppleEverestXaphanFakePlayerPlatform.cs": "83d3d7ef1ee93c76d73e5a5f82dea08c09f665099e221f82b97eb908377a487c",
+    "apple-everest/runtime/semantics/AppleEverestXaphanPlayerPlatform.cs": "48667c8c1e20a077b7cae8be5481d4d8b06f41db6b87517a14155b1ab66d904c",
+    "apple-everest/runtime/semantics/AppleEverestXaphanSlope.cs": "f7d5366e06e682158f77bd0943d81af5d364c89980779f6f56f9faecb39a7039",
+    "apple-everest/runtime/semantics/AppleEverestXaphanSlopeHooks.cs": "5e1912c57ebf85886f666b6a4105f44260a31ded7febdc9f43bae94370890c76",
+    "apple-everest/selected-factory-type-closure-stage25kh.json": "bfeb335ab3f767d955f50e9ed983d083df6d3641d092fd09f6c3c6516e6ec38a",
+    "apple-everest/sj-authored-interaction-profiles-stage25kj.json": "e19eefb599696a35ed0ad7e00317e2ba6cf9987eed48011fb8f37a7b016df05a",
+    "apple-everest/sj-beginner-composition-stage25kl.json": "97fbc0094a8c9b981e98ad3f7b9f8daea119852741c371034382924611e60797",
+    "apple-everest/sj-beginner-content-stage25kl.json": "3b520b9426c239f089d608f044c6d7c5d490570464986a7c04531b2a1954ba59",
+    "apple-everest/sj-beginner-slice-stage25kl.json": "08ac086728ad3019c06b8967eab20bc8bc8f08e59323cb45e1b8cf9b0ddd249e",
+    "apple-everest/sj-bounded-fixes-stage25kl.json": "b4a7becaa9aed61d33982f5c5a81f68f419162fc15e95e462f588d8381b45e90",
+    "apple-everest/sj-collab-presentation-metadata-stage25kj.json": "638183aff5fd52950a5f90b4997376c66777652a5619acd782e8c8f9d3e30887",
+    "apple-everest/sj-factory-authored-profiles-stage25kj.json": "152725e134092b8b84990d6dc93ae0ba7aaf1bf4488eacc6c9a807125028561f",
+    "apple-everest/sj-factory-canary-plan-stage25kj.json": "b567cb485a85711f7f7e43d85e30b4f78e1aef333c0ccc4992f4ccf612e2ab2d",
+    "apple-everest/sj-kj-accepted-semantic-stage25kl.json": "0097f41ed546502765849d86f951925596b8ba0d61671a98ddd446cbe0f6f652",
+    "apple-everest/sj-legacy-factory-profiles-stage25kj.json": "23635bf79fbe2a164f890bbc16b210565283bbdb2c1d75e3253306efffb1d6dc",
+    "apple-everest/strawberry-jam-content-usage-stage25kc.json": "d8ea2b99b737a8e4fc869d1bc429b2b27ac60a4118d10e12b6977404937f150a",
+    "apple-everest/strawberry-jam-dependency-graph-stage25kc.json": "e5607fd369b61b45845587cfcdf4207be01c891bca54bcd54f73bc7b2a02fe75",
+    "scripts/generate-apple-everest-stage25kc.py": "74fe2b0e195fc0f0701f9a2b8875804a7014e614fda389e37a6cf77a9f3fa564",
+    "scripts/generate-apple-everest-stage25kj-profiles.py": "dbf2cfbe173347f1d2f014101c5929c3339f23d1bf1441f2dc3d7fd72ce1348e",
+    "scripts/generate-apple-everest-stage25kl-content.py": "702ae4294850b3e2145d9529deeee5e9d32958275e8d895177a02b6ad1d09563",
+    "scripts/inspect-apple-everest-stage25kj-canary-profiles.py": "e0b60436a49d732f8854511efc3cd227ca8ec66373bd80e4f7161fa2c77848c1",
+    "tools/AppleEverestBuilder/CompiledFactoryInspection.cs": "65de34f2f52ae73da01d7bf788336c1b4de4fe2ed9fafd270966b15b660dac73",
+    "tools/AppleEverestBuilder/ContentCompiler.cs": "1b390a0d56681fffbe3412945eaf52fafd4aab794831f19ad89c8f684f4bd018",
+    "tools/AppleEverestBuilder/CustomAudioManifest.cs": "b0c77880b18074ae32faf190ab9a598070b0481f3be250fa2b41c90b540c717c",
+    "tools/AppleEverestBuilder/StaticSemanticLowering.cs": "265b80ffac3f5232150ddf840b3271cdd3a2da31d78cead710790daeb5492642"
+  },
+  "baselineIdentities": {
+    "content": "3ee3129bf48f841786482f9bc88311bb58b3c8cbef3f4550d7a8fe2f1064b8ca",
+    "managed": "906787e52b5d8bc84ab68195532678019beb77947cb7713486af7e1388cffb1f",
+    "registry": "6e5b89f7d952aa98e72640abce0c75522567fb9d48f8b027e3db54f5cf9da72f",
+    "shared": "11e5006c72dde385ca3b41773e3d924c29e7b19979aef96e11a5ad44f211d6b9"
+  },
+  "candidateOnlyPackages": [
+    {
+      "distributedDlls": [
+        {
+          "bytes": 1029632,
+          "path": "CommunalHelper.dll",
+          "sha256": "4011b959ed4e9cc4cb98bf43f6884ae81361fecc994787640553205029c94a8a"
+        }
+      ],
+      "name": "CommunalHelper",
+      "version": "1.25.5",
+      "zipBytes": 20214604,
+      "zipSha256": "44f4fb0b277a4900fd2a555e1a73e661140aa7b2455d3c7776cf420193349e3c"
+    },
+    {
+      "distributedDlls": [
+        {
+          "bytes": 183296,
+          "path": "EeveeHelper.dll",
+          "sha256": "1613b4f89a8dd119537052e6c85031e543ec65179e5c7ac7a431b283be9e8ad8"
+        }
+      ],
+      "name": "EeveeHelper",
+      "version": "1.12.5",
+      "zipBytes": 218619,
+      "zipSha256": "de8eb463083e7298827d6c1ba4f5a4b69cc6cdd9b4be31fec78e272fce3a3839"
+    }
+  ],
+  "canonicalIdEvidence": "Exact retained production Level/LevelData/MapData dispatch; snowBg/snowFg case-insensitive backdrop paths. Presence proves canonical dispatch, not authored behavior or composition.",
+  "canonicalIds": [
+    {
+      "id": "godrays",
+      "kind": "backdrop"
+    },
+    {
+      "id": "heatwave",
+      "kind": "backdrop"
+    },
+    {
+      "id": "parallax",
+      "kind": "backdrop"
+    },
+    {
+      "id": "planets",
+      "kind": "backdrop"
+    },
+    {
+      "id": "rain",
+      "kind": "backdrop"
+    },
+    {
+      "id": "snowBg",
+      "kind": "backdrop"
+    },
+    {
+      "id": "snowFg",
+      "kind": "backdrop"
+    },
+    {
+      "id": "stardust",
+      "kind": "backdrop"
+    },
+    {
+      "id": "starfield",
+      "kind": "backdrop"
+    },
+    {
+      "id": "badelineBoost",
+      "kind": "entity"
+    },
+    {
+      "id": "bigWaterfall",
+      "kind": "entity"
+    },
+    {
+      "id": "bird",
+      "kind": "entity"
+    },
+    {
+      "id": "blockField",
+      "kind": "entity"
+    },
+    {
+      "id": "bonfire",
+      "kind": "entity"
+    },
+    {
+      "id": "booster",
+      "kind": "entity"
+    },
+    {
+      "id": "bounceBlock",
+      "kind": "entity"
+    },
+    {
+      "id": "cassetteBlock",
+      "kind": "entity"
+    },
+    {
+      "id": "checkpoint",
+      "kind": "entity"
+    },
+    {
+      "id": "clothesline",
+      "kind": "entity"
+    },
+    {
+      "id": "cloud",
+      "kind": "entity"
+    },
+    {
+      "id": "cobweb",
+      "kind": "entity"
+    },
+    {
+      "id": "coreModeToggle",
+      "kind": "entity"
+    },
+    {
+      "id": "coverupWall",
+      "kind": "entity"
+    },
+    {
+      "id": "crumbleBlock",
+      "kind": "entity"
+    },
+    {
+      "id": "crumbleWallOnRumble",
+      "kind": "entity"
+    },
+    {
+      "id": "dashBlock",
+      "kind": "entity"
+    },
+    {
+      "id": "dashSwitchH",
+      "kind": "entity"
+    },
+    {
+      "id": "door",
+      "kind": "entity"
+    },
+    {
+      "id": "dreamBlock",
+      "kind": "entity"
+    },
+    {
+      "id": "exitBlock",
+      "kind": "entity"
+    },
+    {
+      "id": "fakeWall",
+      "kind": "entity"
+    },
+    {
+      "id": "fallingBlock",
+      "kind": "entity"
+    },
+    {
+      "id": "finalBoss",
+      "kind": "entity"
+    },
+    {
+      "id": "fireBall",
+      "kind": "entity"
+    },
+    {
+      "id": "fireBarrier",
+      "kind": "entity"
+    },
+    {
+      "id": "floatingDebris",
+      "kind": "entity"
+    },
+    {
+      "id": "floatySpaceBlock",
+      "kind": "entity"
+    },
+    {
+      "id": "flutterbird",
+      "kind": "entity"
+    },
+    {
+      "id": "foregroundDebris",
+      "kind": "entity"
+    },
+    {
+      "id": "glassBlock",
+      "kind": "entity"
+    },
+    {
+      "id": "goldenBerry",
+      "kind": "entity"
+    },
+    {
+      "id": "hanginglamp",
+      "kind": "entity"
+    },
+    {
+      "id": "iceBlock",
+      "kind": "entity"
+    },
+    {
+      "id": "infiniteStar",
+      "kind": "entity"
+    },
+    {
+      "id": "introCar",
+      "kind": "entity"
+    },
+    {
+      "id": "introCrusher",
+      "kind": "entity"
+    },
+    {
+      "id": "invisibleBarrier",
+      "kind": "entity"
+    },
+    {
+      "id": "jumpThru",
+      "kind": "entity"
+    },
+    {
+      "id": "key",
+      "kind": "entity"
+    },
+    {
+      "id": "killbox",
+      "kind": "entity"
+    },
+    {
+      "id": "lamp",
+      "kind": "entity"
+    },
+    {
+      "id": "lightbeam",
+      "kind": "entity"
+    },
+    {
+      "id": "lightning",
+      "kind": "entity"
+    },
+    {
+      "id": "lockBlock",
+      "kind": "entity"
+    },
+    {
+      "id": "moonCreature",
+      "kind": "entity"
+    },
+    {
+      "id": "moveBlock",
+      "kind": "entity"
+    },
+    {
+      "id": "movingPlatform",
+      "kind": "entity"
+    },
+    {
+      "id": "playbackTutorial",
+      "kind": "entity"
+    },
+    {
+      "id": "player",
+      "kind": "entity"
+    },
+    {
+      "id": "refill",
+      "kind": "entity"
+    },
+    {
+      "id": "resortLantern",
+      "kind": "entity"
+    },
+    {
+      "id": "seekerBarrier",
+      "kind": "entity"
+    },
+    {
+      "id": "soundSource",
+      "kind": "entity"
+    },
+    {
+      "id": "spikesDown",
+      "kind": "entity"
+    },
+    {
+      "id": "spikesLeft",
+      "kind": "entity"
+    },
+    {
+      "id": "spikesRight",
+      "kind": "entity"
+    },
+    {
+      "id": "spikesUp",
+      "kind": "entity"
+    },
+    {
+      "id": "spinner",
+      "kind": "entity"
+    },
+    {
+      "id": "spring",
+      "kind": "entity"
+    },
+    {
+      "id": "starJumpBlock",
+      "kind": "entity"
+    },
+    {
+      "id": "strawberry",
+      "kind": "entity"
+    },
+    {
+      "id": "summitcloud",
+      "kind": "entity"
+    },
+    {
+      "id": "swapBlock",
+      "kind": "entity"
+    },
+    {
+      "id": "switchGate",
+      "kind": "entity"
+    },
+    {
+      "id": "templeGate",
+      "kind": "entity"
+    },
+    {
+      "id": "theoCrystal",
+      "kind": "entity"
+    },
+    {
+      "id": "torch",
+      "kind": "entity"
+    },
+    {
+      "id": "touchSwitch",
+      "kind": "entity"
+    },
+    {
+      "id": "towerviewer",
+      "kind": "entity"
+    },
+    {
+      "id": "trackSpinner",
+      "kind": "entity"
+    },
+    {
+      "id": "trapdoor",
+      "kind": "entity"
+    },
+    {
+      "id": "wallBooster",
+      "kind": "entity"
+    },
+    {
+      "id": "wallSpringLeft",
+      "kind": "entity"
+    },
+    {
+      "id": "wallSpringRight",
+      "kind": "entity"
+    },
+    {
+      "id": "wire",
+      "kind": "entity"
+    },
+    {
+      "id": "zipMover",
+      "kind": "entity"
+    },
+    {
+      "id": "bloomFadeTrigger",
+      "kind": "trigger"
+    },
+    {
+      "id": "cameraAdvanceTargetTrigger",
+      "kind": "trigger"
+    },
+    {
+      "id": "cameraOffsetTrigger",
+      "kind": "trigger"
+    },
+    {
+      "id": "cameraTargetTrigger",
+      "kind": "trigger"
+    },
+    {
+      "id": "changeRespawnTrigger",
+      "kind": "trigger"
+    },
+    {
+      "id": "goldenBerryCollectTrigger",
+      "kind": "trigger"
+    },
+    {
+      "id": "lightFadeTrigger",
+      "kind": "trigger"
+    },
+    {
+      "id": "lookoutBlocker",
+      "kind": "trigger"
+    },
+    {
+      "id": "minitextboxTrigger",
+      "kind": "trigger"
+    },
+    {
+      "id": "moonGlitchBackgroundTrigger",
+      "kind": "trigger"
+    },
+    {
+      "id": "musicFadeTrigger",
+      "kind": "trigger"
+    },
+    {
+      "id": "musicTrigger",
+      "kind": "trigger"
+    },
+    {
+      "id": "oshiroTrigger",
+      "kind": "trigger"
+    },
+    {
+      "id": "respawnTargetTrigger",
+      "kind": "trigger"
+    },
+    {
+      "id": "rumbleTrigger",
+      "kind": "trigger"
+    },
+    {
+      "id": "spawnFacingTrigger",
+      "kind": "trigger"
+    },
+    {
+      "id": "windTrigger",
+      "kind": "trigger"
+    }
+  ],
+  "chrono": {
+    "distributedDlls": [
+      {
+        "archivePath": "bin/ChronoHelper.dll",
+        "bytes": 195072,
+        "path": "ChronoHelper.dll",
+        "sha256": "214b26a5d7e3f17e93d3c388a3a6066dd137f9ce09b6203a4e1a482ba342a2dc"
+      },
+      {
+        "archivePath": "bin/Debug/net452/ChronoHelper.dll",
+        "bytes": 195072,
+        "path": "ChronoHelper.dll",
+        "sha256": "214b26a5d7e3f17e93d3c388a3a6066dd137f9ce09b6203a4e1a482ba342a2dc"
+      },
+      {
+        "archivePath": "bin/Release/net452/ChronoHelper.dll",
+        "bytes": 203776,
+        "path": "ChronoHelper.dll",
+        "sha256": "ea44af0e3b5a701264bac7b3c95241d82531786ae750d76d40b20c586073db29"
+      }
+    ],
+    "name": "ChronoHelper",
+    "version": "1.3.3",
+    "zipSha256": "af46039437fbed52e72941d07e0d9ce6657dacc838516459f7e9e995fea07a18"
+  },
+  "ownedRegressionProviders": {
+    "appleEverest/stage25keRootState": "StrawberryJam2021",
+    "appleEverest/stage25kfAudio": "StrawberryJam2021",
+    "appleEverest/stage25kfDepthTarget": "CrystallineHelper"
+  },
+  "productionEvidence": {
+    "dlls": [
+      {
+        "Bytes": 5466624,
+        "Path": "Celeste.dll",
+        "Sha256": "fa5b6ea15919145384c482c980389dcf42446326fdc311a83f5b7c8546d07553"
+      },
+      {
+        "Bytes": 8704,
+        "Path": "CelesteAppleInput.dll",
+        "Sha256": "ba013bd7b1e767c1a71cc4052242bb28f89c865c37b49c71eafe437726308e53"
+      },
+      {
+        "Bytes": 107520,
+        "Path": "CelesteIOSFoundation.dll",
+        "Sha256": "cddac3547bd905d766186d87131e1aca98f20469f020e89a7ae16f8e49973547"
+      },
+      {
+        "Bytes": 194048,
+        "Path": "ChronoHelper.dll",
+        "Sha256": "1d50ec31b62c4278da9f182340769b7caf598cf159fa8744b52679e79a8cc786"
+      },
+      {
+        "Bytes": 137216,
+        "Path": "DJMapHelper.dll",
+        "Sha256": "46c31e398ae30b0dcc018c0ca4939d26ca2a8a852a6c7641485a1e2f55e67c95"
+      },
+      {
+        "Bytes": 781312,
+        "Path": "FNA.dll",
+        "Sha256": "7e5873ca6de3371873c23823bf9ead9b0c35ed73218c8a2bcb98341b9a535ab0"
+      }
+    ],
+    "receiptSha256": "6aa247908f54cc3ac4d344f7adee4330940024580be5aa9589df2e7b6491481d",
+    "scope": "REHASHED_RETAINED_HOST_C_UNTRIMMED_PRODUCTION_FOR_HOST_PROFILE_INSPECTION_NOT_FRESH_APP_PROOF",
+    "sourceSha": "b4997fa49f4f8b82f6f2984fe9047396e401ea48"
+  },
+  "regressionMaps": {
+    "content/Content/Maps/AppleEverest/CustomAudio.bin": "ea9077ea2796f0f62c4a4be4388b995d2da5616769d416a920a56893eb0b270a",
+    "content/Content/Maps/AppleEverest/DJFrozenIl.bin": "d5604b22f6f7a6efb7babe4e16ca7881ab474e7a3fb3ab0c810f5d0433ef5a5c",
+    "content/Content/Maps/AppleEverest/Stage25KE.bin": "8a6a129185a05d0a754af7f8ee64f0470e335ceee97e4ca60f7e3046ca627463",
+    "content/Content/Maps/AppleEverest/Stage25KF.bin": "a9bb2b1f3ad3e09979282c30d79c23ab2a6f23c4ce17cd2da5b8894030a74f1a",
+    "content/Content/Maps/AppleEverest/Stage25KH.bin": "f79e3c165b4202974cc28eaecee2a75efda85c5c0a7284b5d3f5cf5945cf0ea9",
+    "content/Content/Maps/AppleEverest/Stage25KJMax.bin": "55f5a37dc8163af0388186824441d9087ca42af2a82383d9b4d90930794936d4",
+    "content/Content/Maps/AppleEverestStage25KJ/0-Lobbies/1-Fixture.bin": "599babaee8971540b12a74b32bd4ec846a4ce9d3ca3e822c61624a0461f21998",
+    "content/Content/Maps/AppleEverestStage25KJ/1-Fixture/1-FinishA.bin": "696ef09574bf1634f420b04032c7ae5ca39c170b9a028c80bb372f04ce381a46",
+    "content/Content/Maps/AppleEverestStage25KJ/1-Fixture/2-FinishB.bin": "6347ac2855925b0e8f0d0e2b04d1cac6b4726419d5bff6747b687a5ddada1ddf",
+    "content/Content/Maps/AppleEverestStage25KJ/FactoryProfiles/Atmosphere.bin": "5d28e1735bcca24f9d3e3c32e7755fab5423022078b683c17d17226a5e9995a9",
+    "content/Content/Maps/AppleEverestStage25KJ/FactoryProfiles/BaseHelpers.bin": "8a742ab4479893dcad389517d39836fed04aabe365a122b0da74b7e85b9e6162",
+    "content/Content/Maps/AppleEverestStage25KJ/FactoryProfiles/CameraCorridor.bin": "b5b346471f2e495e3f011d7608309185ce49dd7bfd86ffc30b795df56a691f32",
+    "content/Content/Maps/AppleEverestStage25KJ/FactoryProfiles/Collab.bin": "7ca2e60eaa56a28fb3e3db2381ee4e35900dfb7d1c7d2e60d658c6ea8f6cfbf3",
+    "content/Content/Maps/AppleEverestStage25KJ/FactoryProfiles/CrystalCave.bin": "70cf70785f6f751646141f7de7b18bb93b64f83bfa449b16155fdce6b1fdfa3b",
+    "content/Content/Maps/AppleEverestStage25KJ/FactoryProfiles/Frost.bin": "fe536d3f1b344952e44c766e681873d1e7327dfd609eff61d87e6f9f6d75d025",
+    "content/Content/Maps/AppleEverestStage25KJ/FactoryProfiles/Masks.bin": "b145d1ab6e3f28c72a6a983e0cd117dbf2309636d1b084cbc1d6507789c283e1",
+    "content/Content/Maps/AppleEverestStage25KJ/FactoryProfiles/MaxMechanics.bin": "3aef8b4dcf8c46cc9457bdfef37a98cd73529b2aca11843261ef40bfc49055e6",
+    "content/Content/Maps/AppleEverestStage25KJ/FactoryProfiles/WaterGarden.bin": "0e85e351f53acf27909b860d0bad7a83c3af8946961edbd7bb59191edbfb4bee"
+  },
+  "schemaVersion": 1,
+  "startSha": "b4997fa49f4f8b82f6f2984fe9047396e401ea48"
+}
