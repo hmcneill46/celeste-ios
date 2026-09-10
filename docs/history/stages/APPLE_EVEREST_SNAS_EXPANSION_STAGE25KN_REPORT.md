@@ -3,7 +3,7 @@
 This candidate adds only `StrawberryJam2021/1-Beginner/snas` to the accepted
 Beginner lobby and Bing selection. It starts at K-M revision
 `b65bedd20016dc3482d7702d7f0a9707bc2b1479`, retains HOST-B/HOST-C tooling, and
-advances the canonical Apple product identity to 0.1.1 (47). The accepted
+advances the canonical Apple product identity to 0.1.1 (48). The accepted
 build-46 game baseline remains `be8546d4ae411cb491a0c3bbc4e5343ebf9c9651`.
 This is a new implementation/tooling revision, not an unchanged build-46 app.
 
@@ -87,6 +87,52 @@ The [progression reference](../../../apple-everest/sj-snas-progression-reference
 and [legacy reference](../../../apple-everest/sj-snas-legacy-reference-stage25kn.json)
 identify exactly what is preserved, without transferring physical observations.
 
+## Build 48 audio correction
+
+Build 47 at `06c6fe0a5578888cf332cd5ed323aeb1065f1b34` passed its signed
+product checks but failed physical death/reload on iPhone. The user reported
+correct initial title, credits, icon, spawn and play, then a black screen with
+unresponsive touch controls after a death. The app error log recorded a
+`NullReferenceException` in `Audio.SetMusic` through `AudioState.Apply` and
+`Level.Reload`. Apple TV build 47 installed and launched, but its gameplay was
+not accepted. Those products and observations remain separate historical
+evidence and are not transferred to build 48.
+
+The preserved build-47 generated methods reproduce the same exception on the
+second `AudioState.Apply` when FMOD returns a null path for a stringless event.
+The earlier host audio fixtures returned null event descriptions and missed
+this successful-instance/reverse-name/reload path. Build 47 did not capture
+the exact native `getPath` result; the new production diagnostic records it.
+
+The correction adds a reverse GUID/name table to the existing validated
+custom-bank registry. It follows the GUID-cache behavior in pinned Everest
+revision `4bbde91b8dbaaddef2ceec75ca0cd6d59b3b8d00`,
+`Celeste.Mod.mm/Patches/Audio.cs` (SHA-256
+`fa45530db9c208d0f0a417bc202fd41fb70ed968ff4c7476b359e39cffdc54cf`).
+Only `ERR_EVENT_NOTFOUND` for a known event in the current loaded Studio
+system uses that exact registered path. Unknown GUIDs, conflicting names,
+wrong systems, invalid handles and other FMOD failures are rejected. Failed
+loads and teardown clear the reverse registry. There is no runtime ingestion,
+extra FMOD system, bank edit, event scheduling change or native dependency
+change. The canonical music/ambience and AudioState methods remain unchanged
+apart from routing event-name resolution to the typed registry.
+
+Mandatory preparation now executes generated Audio/AudioState methods and the
+production registry with explicit owned FMOD response fixtures: 152 checks,
+50 reloads and five lobby/snas/Bing transitions. Tests cover instance reuse,
+parameters, stop/fade behavior, ambience, null events, named events, conflicting
+GUID/path bindings, invalid handles, wrong/unloaded systems and failed-load
+cleanup. These are source-bound behavior tests, not native playback. Final
+product checks additionally require the actual resolver, music/ambience and
+AudioState AOT code, including a disposable missing-resolver-code control.
+
+All 2,946 closure content files remain byte-identical to build 47. Content,
+factory, progression, collab, audio-manifest, bank-set and native identities
+remain unchanged; managed/shared and semantic/composition proof identities
+advance for the reviewed correction. The original build-46/K-L and K-M
+authorities are unchanged. Build 48 requires its own clean source revision,
+fresh serial signed products and complete renewed physical acceptance.
+
 ## Mandatory pre-AOT path
 
 Use process-local `DEVELOPER_DIR=/Applications/Xcode-26.6.app/Contents/Developer`
@@ -121,12 +167,12 @@ freezes these results and is required by preparation and final product checks:
 
 | Identity | SHA-256 |
 | --- | --- |
-| Shared closure | `b6cd47670050c6d7be5bcab40c6a052d3113faa5c10e386d1693f5966753caad` |
-| Managed logical | `e0dcff40a9b44b58a554cb061b0298cc00b76b73f6eaaf11383002318a6b0566` |
+| Shared closure | `c236e3e77e6626e1600ce361c3214c62473cf79a279e17a9784f00269ff9bf7d` |
+| Managed logical | `fedad431cde0516dd2ead5848f6327448e9630dbc5e10a02804643404fd1be62` |
 | Content logical | `92e9ce053b4957230e760933336f2de8910f2762c834aca6a95c35aa95418e80` |
 | Gameplay factory registry | `9d7fa8c198cea379e9e330b81741c02b2e747e97050ab2ec078c5432ca13ff04` |
-| Semantic logical | `3befc207260380688b6e8973c6545e5df1062ce08d50cb2fdd9284310d415efc` |
-| Composition logical | `fda85caac4fe645cafdf850836e6432e0c55aa3dca848994dfa88485c4142cad` |
+| Semantic logical | `f45f91061d08bb26c52354870f6c663523c666dcba995dfa3778fc3c6fae3245` |
+| Composition logical | `15244ab33e8ac980b526a42752740c6b4ff7298b843c975906f4060043f1a76a` |
 
 The authority also binds the progression, collab, audio-manifest and bank-set
 identities. The gameplay registry above is distinct from the generic registry
@@ -185,10 +231,10 @@ Retain builder, frozen-IL/hook, SaveManager pairing/protocol/continuity, soft
 reload and input-profile regressions. Historical literal-count verifiers keep
 their original scopes and authorities; they are not rewritten to describe K-N.
 The precommit run passed all current suites, including 706 builder checks,
-50 typed-hook checks, 83 K-N contract controls, 29 portable native-tooling tests
+50 typed-hook checks, 103 K-N contract controls, 29 portable native-tooling tests
 and 21 historical K-M audit tests. Each complete expanded preparation also ran
 3,842 actual compiled runtime checks, 4,793 random/bubble differential assertions,
-221,309 terrain checks, provider omissions and changed-implementation controls.
+221,309 terrain checks, 152 audio name/reload checks, provider omissions and changed-implementation controls.
 Counts describe their named host proof scopes, not physical gameplay coverage.
 
 After review/commit and clean-checkout reproduction, build iOS then tvOS in new

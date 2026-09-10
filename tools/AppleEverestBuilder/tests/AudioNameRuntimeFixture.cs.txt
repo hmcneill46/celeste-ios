@@ -1,0 +1,117 @@
+// Project-owned FMOD boundary fixture. No native library, bank or game source.
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using FMOD;
+using FMOD.Studio;
+
+namespace FMOD
+{
+    public enum RESULT { OK, ERR_EVENT_NOTFOUND, ERR_INVALID_HANDLE, ERR_INTERNAL }
+}
+namespace FMOD.Studio
+{
+    public enum LOAD_BANK_FLAGS { NORMAL }
+    public enum STOP_MODE { IMMEDIATE, ALLOWFADEOUT }
+    public class EventDescription
+    {
+        public Guid Id;
+        public string NativePath;
+        public RESULT PathResult = RESULT.ERR_EVENT_NOTFOUND, IdResult = RESULT.OK;
+        public readonly List<EventInstance> Instances = new();
+        public RESULT getID(out Guid id) { id = Id; return IdResult; }
+        public RESULT getPath(out string path) { path = PathResult == RESULT.OK ? NativePath : null; return PathResult; }
+        public RESULT createInstance(out EventInstance instance) { instance = new() { Description = this }; Instances.Add(instance); return RESULT.OK; }
+        public RESULT is3D(out bool value) { value = false; return RESULT.OK; }
+        public RESULT isSnapshot(out bool value) { value = false; return RESULT.OK; }
+        public RESULT loadSampleData() => RESULT.OK;
+    }
+    public class EventInstance
+    {
+        public EventDescription Description;
+        public RESULT DescriptionResult = RESULT.OK;
+        public int Starts, Stops, Releases, ParameterWrites;
+        public STOP_MODE LastStop;
+        public RESULT getDescription(out EventDescription value) { value = Description; return DescriptionResult; }
+        public RESULT start() { Starts++; return RESULT.OK; }
+        public RESULT stop(STOP_MODE mode) { Stops++; LastStop = mode; return RESULT.OK; }
+        public RESULT release() { Releases++; return RESULT.OK; }
+        public RESULT setParameterValue(string name, float value) { ParameterWrites++; return RESULT.OK; }
+    }
+    public class Bank
+    {
+        public Guid Id;
+        public EventDescription[] Events;
+        public int Unloads;
+        public RESULT getID(out Guid value) { value = Id; return RESULT.OK; }
+        public RESULT getEventList(out EventDescription[] value) { value = Events; return RESULT.OK; }
+        public RESULT getBusCount(out int value) { value = 0; return RESULT.OK; }
+        public RESULT getVCACount(out int value) { value = 0; return RESULT.OK; }
+        public RESULT unload() { Unloads++; return RESULT.OK; }
+    }
+    public class System
+    {
+        public readonly Dictionary<Guid, EventDescription> Events = new();
+        public readonly Dictionary<string, Bank> Banks = new(StringComparer.Ordinal);
+        public int Loads;
+        public RESULT LookupResult = RESULT.OK;
+        public RESULT loadBankFile(string path, LOAD_BANK_FLAGS flags, out Bank bank)
+        { Loads++; return Banks.TryGetValue(path, out bank) ? RESULT.OK : RESULT.ERR_EVENT_NOTFOUND; }
+        public RESULT getEventByID(Guid id, out EventDescription description)
+        { Events.TryGetValue(id, out description); return LookupResult != RESULT.OK ? LookupResult : description == null ? RESULT.ERR_EVENT_NOTFOUND : RESULT.OK; }
+        public RESULT getEvent(string path, out EventDescription description)
+        { description = Events.Values.FirstOrDefault(e => e.PathResult == RESULT.OK && e.NativePath == path); return description == null ? RESULT.ERR_EVENT_NOTFOUND : RESULT.OK; }
+    }
+}
+namespace Microsoft.Xna.Framework { public struct Vector2 { } }
+namespace Monocle { public static class Engine { public static string ContentDirectory = "fixture-content"; } }
+namespace Celeste.Mod
+{
+    internal static class GeneratedAppleEverestCustomAudioManifest
+    {
+        internal const string Schema = "owned-synthetic-fixture";
+        internal static AppleEverestCustomBankDescriptor[] Banks = Array.Empty<AppleEverestCustomBankDescriptor>();
+    }
+    internal static class AppleEverestStaticRuntime
+    {
+        internal static readonly List<string> Messages = new();
+        internal static void Log(string message) => Messages.Add(message);
+    }
+}
+namespace On.Celeste
+{
+    public static class Audio
+    {
+        public static EventInstance Invoke_CreateInstance(string path, Microsoft.Xna.Framework.Vector2? position,
+            Func<string, Microsoft.Xna.Framework.Vector2?, EventInstance> original) => original(path, position);
+    }
+}
+namespace Celeste
+{
+    public static class AppleAudioDiagnostics
+    {
+        public static void RegisterEvent(EventInstance instance, string path, string kind) { }
+    }
+    public static class TvOSStage5BAudioBridge
+    {
+        public static void RegisterEvent(EventInstance instance, string path, string kind) { }
+    }
+    // Only fields, diagnostic and unused 3-D boundaries are supplied here.
+    // Audio methods and AudioState/TrackState/MEP are extracted unmodified from
+    // the actual generated source in the owned ignored probe directory.
+    public static partial class Audio
+    {
+        internal static FMOD.Studio.System system;
+        private static EventInstance currentMusicEvent, currentAmbientEvent;
+        public static string CurrentMusic = "";
+        public static EventInstance CurrentMusicEventInstance => currentMusicEvent;
+        public static EventInstance CurrentAmbienceEventInstance => currentAmbientEvent;
+        public static Dictionary<string, EventDescription> cachedEventDescriptions = new(StringComparer.Ordinal);
+        private static void CheckFmod(RESULT result, string operation)
+        { if (result != RESULT.OK) throw new InvalidOperationException(operation + ":" + result); }
+        public static void Position(EventInstance instance, Microsoft.Xna.Framework.Vector2 position)
+        { throw new InvalidOperationException("3-D positioning is outside this event-name fixture"); }
+        internal static void ResetFixture()
+        { currentMusicEvent = currentAmbientEvent = null; CurrentMusic = ""; cachedEventDescriptions.Clear(); }
+    }
+}

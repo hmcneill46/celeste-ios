@@ -154,6 +154,21 @@ internal static partial class AotFactoryProductInspection
                 });
                 Reject("MISSING_SEPARATE_LEGACY_CONSTRUCTOR_CODE", "no exact code definition",
                     () => RequireNativeDefinitions(missingLegacy, legacyNative, [legacyRoot]));
+                var audioName = linked.MainModule.GetType("Celeste.Mod.AppleEverestCustomAudioRuntime")
+                    .Methods.Single(method => method.Name == "GetEventName");
+                string audioRoot = Symbol(audioName);
+                if (!positive.RootElement.GetProperty("exactNativeRoots").EnumerateArray().Any(value => value.GetString() == audioRoot))
+                    throw new InvalidDataException("audio name resolver omitted from required native roots");
+                var audioNative = Symbols(request.NativeImage, [audioRoot]);
+                RequireNativeDefinitions(request.LlvmObject, audioNative, [audioRoot]);
+                string missingAudio = Changed(request.LlvmObject, bytes =>
+                {
+                    int at = bytes.AsSpan().IndexOf(Encoding.ASCII.GetBytes(audioRoot + "\0"));
+                    if (at < 0) throw new InvalidDataException("audio name control symbol absent");
+                    bytes[at + 1] = (byte)'X';
+                });
+                Reject("MISSING_AUDIO_NAME_RESOLVER_CODE", "no exact code definition",
+                    () => RequireNativeDefinitions(missingAudio, audioNative, [audioRoot]));
                 string legacyMethod = Changed(request.LinkedAssembly, bytes =>
                 {
                     var updateLegacy = linked.MainModule.GetType("Celeste.Mod.AppleEverestStage25KERootCanary")

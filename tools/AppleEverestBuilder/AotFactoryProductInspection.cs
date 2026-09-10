@@ -87,12 +87,16 @@ internal static partial class AotFactoryProductInspection
         {
             foreach (string name in new[] { "AppleEverestSnasProfileGuard", "AppleEverestPlayerBubbleRegion",
                 "AppleEverestRandomSoundTrigger", "AppleEverestFlagGroup", "AppleEverestFlagMember",
-                "AppleEverestFlagTouchSwitch", "AppleEverestFlagSwitchGate", "GeneratedAppleEverestFlagGroups" })
+                "AppleEverestFlagTouchSwitch", "AppleEverestFlagSwitchGate", "GeneratedAppleEverestFlagGroups",
+                "AppleEverestCustomAudioRuntime", "AppleEverestCustomAudioLifecycle" })
             {
                 TypeDefinition type = linked.MainModule.GetType("Celeste.Mod." + name)
                     ?? throw new InvalidDataException("linked K-N semantic/native type missing: " + name);
                 foreach (MethodDefinition method in Types(type).SelectMany(value => value.Methods).Where(method => method.HasBody)) Add(method);
             }
+            foreach (string name in new[] { "GetEventName", "SetMusic", "SetAmbience" })
+                Add(linked.MainModule.GetType("Celeste.Audio").Methods.Single(method => method.Name == name));
+            Add(linked.MainModule.GetType("Celeste.AudioState").Methods.Single(method => method.Name == "Apply"));
             foreach (JsonElement row in JsonSerializer.SerializeToElement(legacy).EnumerateArray())
                 Creator(registry.Methods.Single(method => method.Name == SelectedFactoryProfiles.EntryMethod("entity", row.GetProperty("customId").GetString()!)));
         }

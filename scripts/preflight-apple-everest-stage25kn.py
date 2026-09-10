@@ -38,7 +38,9 @@ GENERATION_SOURCES = {
         "SelectedFactoryProfiles.cs", "SnasFlagGroups.cs", "CollabManifestGenerator.cs", "CustomAudioManifest.cs")
 } | {"tools/AppleEverestIlWorker/SelectedSidewaysIlLowering.cs",
      "apple-everest/runtime/semantics/AppleEverestSelectedProfileGuard.cs",
-     "apple-everest/runtime/semantics/AppleEverestSnasProfileGuard.cs"}
+     "apple-everest/runtime/semantics/AppleEverestSnasProfileGuard.cs",
+     "apple-everest/runtime/AppleEverestCustomAudioRuntime.cs",
+     "apple-everest/runtime/AppleEverestCustomAudioLifecycle.cs"}
 
 
 def check(value, reason):
@@ -92,10 +94,10 @@ def verify_obligations(document, occurrences, root=ROOT):
     check(document["openRequirements"] == [], "unresolved semantic or composition requirement")
     check(document["issueLedger"] == "apple-everest/sj-snas-issues-stage25kn.json", "missing implementation issue ledger")
     issue_path = root / document["issueLedger"]
-    check(sha(issue_path) == "fb3582731ef0c778018dde91d3fe860842fb058d452f358e926c3380fcf75381", "unreviewed implementation issue ledger")
+    check(sha(issue_path) == "e952fec264697982e33e4302484f0335e76c1e321fccdcdb873ba938d92887a6", "unreviewed implementation issue ledger")
     issue_ledger = read(issue_path)
     check(issue_ledger["openRequirements"] == [] and {row["id"] for row in issue_ledger["issues"]} ==
-          {"KN" + str(i).zfill(2) for i in range(1, 9)} and all(row["resolution"] == "IMPLEMENTED_SOURCE_REVIEWED"
+          {"KN" + str(i).zfill(2) for i in range(1, 10)} and all(row["resolution"] == "IMPLEMENTED_SOURCE_REVIEWED"
           for row in issue_ledger["issues"]), "unresolved implementation issue")
     check(document["census"] == {"customOccurrences": 1309, "factories": 83, "rawAuthoredProfiles": 604,
           "selectedFactories": 77, "separateLegacyFactories": 6, "regressionOccurrences": 336}, "wrong semantic census")
@@ -244,6 +246,8 @@ def main():
         "--canonical", canonical / "managed", "--references", canonical / "shared-stage3c/stage3b/stage3a-build/input", "--work-root", out / "random-bubble"])
     run("compiled-runtime", [sys.executable, ROOT / "scripts/verify-apple-everest-snas-compiled-runtime.py",
         "--assembly", assembly, "--closure", closure, "--canonical-content", canonical / "content/Content", "--work-root", out / "compiled-runtime"])
+    run("audio-names", [sys.executable, ROOT / "scripts/verify-apple-everest-audio-names.py",
+        "--runtime", args.runtime, "--work-root", out / "audio-names"])
     run("regressions", [sys.executable, ROOT / "scripts/verify-apple-everest-snas-regressions.py",
         "--assembly", assembly, "--closure", closure, "--production-preflight", args.production_preflight, "--work-root", out / "regressions"])
     run("composition", [sys.executable, ROOT / "scripts/verify-apple-everest-snas-composition.py",
@@ -257,6 +261,7 @@ def main():
         "source-bindings": "source-bindings/source-bound-result.json", "random-bubble": "random-bubble/source-bound-result.json",
         "compiled-runtime": "compiled-runtime/source-bound-result.json", "regressions": "regressions/source-bound-result.json",
         "composition": "composition/source-composition.json", "terrain": "composition/terrain-host/source-bound-result.json",
+        "audio-names": "audio-names/source-bound-result.json",
         "compiled-negative-controls": "compiled-negative-controls.json"}.items()}
     runtime = records["compiled-runtime"];regression = records["regressions"];composition = records["composition"]
     check(runtime["originalAssemblyBytesUnchanged"] and runtime["result"]["status"] == "PASS" and runtime["result"]["checks"] >= 3842,
@@ -298,6 +303,8 @@ def main():
     product = module("kn_product_contract", "verify-apple-everest-stage25kn-product-content.py")
     composition_logical["canonicalAssets"] = product.canonical_assets(canonical / "content/Content")
     composition_logical["canonicalAssetAuthoritySha256"] = product.CANONICAL_ASSET_AUTHORITY
+    product.verify_audio_names(records["audio-names"])
+    composition_logical["audioEventNameExecution"] = records["audio-names"]
     identities = {k: manifest[k] for k in ("sharedClosureSha256", "managedLogicalSha256", "contentLogicalSha256",
         "registrySha256", "customAudioManifestSha256", "customBankLogicalSetSha256", "levelSetProgressionManifestSha256", "collabManifestSha256")}
     identities.update({"factoryRegistrySha256": compiled["actualFactoryRegistrySha256"],
@@ -319,6 +326,12 @@ def main():
         "limitations": runtime["result"]["fixtureBoundaries"] + ["Native audio playback, rendering, route completion and device save/relaunch require the exact signed products."]}
     # Assert the very same complete gate contract consumed by final products.
     product.verify_readiness(report, manifest)
+    # A changed implementation needs review and a new immutable authority.
+    # Retain its computed identities on mismatch, without a readiness receipt
+    # or product marker; the frozen comparison below remains mandatory.
+    (out / "candidate-identities.json").write_text(json.dumps({
+        "status": "UNACCEPTED_UNTIL_FROZEN_IDENTITY_MATCH", "identities": identities,
+        "census": census, "contentPlanSha256": sha(args.content_plan)}, indent=2, sort_keys=True) + "\n")
     product.verify_frozen_readiness(report, manifest)
     check(sha(assembly) == compiled["compiledAssemblySha256"], "assembly changed during expanded proof")
     verify_compilation_source_binding(compiled)

@@ -1,0 +1,139 @@
+// Exercises real generated Audio methods and the production custom registry.
+// FMOD calls use explicit project-owned responses; this is not playback proof.
+using System;
+using System.IO;
+using System.Linq;
+using System.Text.Json;
+using Celeste;
+using Celeste.Mod;
+using FMOD;
+using FMOD.Studio;
+using Audio = Celeste.Audio;
+
+internal static class Program
+{
+    private static int checks;
+    private static void Check(bool condition, string message)
+    { checks++; if (!condition) throw new Exception(message); }
+    private static void Reject(Action action, string message)
+    {
+        try { action(); } catch (InvalidOperationException) { checks++; return; }
+        throw new Exception("negative control accepted: " + message);
+    }
+    private static (FMOD.Studio.System System, EventDescription[] Events) Fixture()
+    {
+        Audio.ResetFixture();
+        var system = new FMOD.Studio.System();
+        string[] names = { "lobby", "snas", "bing" };
+        var banks = names.Select((name, i) => new AppleEverestCustomBankDescriptor(
+            "Fixture" + i, "1.0.0", 8 + i, "fixture/" + name + ".bank", new string('0', 64),
+            new Guid(i + 100, 0, 0, new byte[8]), "bank:/fixture/" + name,
+            new[] { new AppleEverestCustomAudioGuidDescriptor(new Guid(i + 1, 0, 0, new byte[8]), "event:/fixture/" + name, "event") })).ToArray();
+        GeneratedAppleEverestCustomAudioManifest.Banks = banks;
+        foreach (var bank in banks)
+        {
+            var description = new EventDescription { Id = bank.Guids[0].Id };
+            system.Events.Add(description.Id, description);
+            system.Banks.Add(Path.Combine(Monocle.Engine.ContentDirectory, bank.ResourcePath),
+                new Bank { Id = bank.BankId, Events = new[] { description } });
+        }
+        Audio.system = system;
+        return (system, system.Events.Values.ToArray());
+    }
+    public static int Main(string[] args)
+    {
+        var (system, events) = Fixture();
+        AppleEverestCustomAudioRuntime.Load(system);
+        Check(system.Loads == 3, "one load per bank in existing system");
+        AppleEverestCustomAudioRuntime.Load(system);
+        Check(system.Loads == 3, "duplicate load performs no additional bank load");
+        // This exact two-Apply sequence throws in the preserved build-47
+        // Audio.SetMusic when getPath returns ERR_EVENT_NOTFOUND/null.
+        var firstDeath = new AudioState("event:/fixture/snas", null);
+        firstDeath.Apply();
+        firstDeath.Apply();
+        Check(Audio.CurrentMusic == firstDeath.Music.Event, "first death/reload retains the music name");
+        Audio.SetMusic(null);
+        string[] route = { "lobby", "snas", "lobby", "bing", "snas" };
+        EventInstance previous = null;
+        foreach (string room in route)
+        {
+            var state = new AudioState("event:/fixture/" + room, null);
+            state.Music.Param("progress", 0.5f);
+            state.Apply();
+            var current = Audio.CurrentMusicEventInstance;
+            Check(current != null && current.Starts == 1, "initial apply starts exact music once");
+            Check(Audio.CurrentMusic == state.Music.Event, "music has exact non-null registered name");
+            if (previous != null) Check(previous.Stops == 1 && previous.Releases == 1, "transition stops/releases prior music exactly once");
+            for (int reload = 0; reload < 10; reload++)
+            {
+                state.Apply();
+                Check(ReferenceEquals(current, Audio.CurrentMusicEventInstance), "death/reload retains current music instance");
+                Check(current.Starts == 1 && current.Stops == 0 && current.Releases == 0, "reload does not restart/release music");
+            }
+            Check(current.ParameterWrites == 11, "parameters reapply on every reload");
+            Check(!Audio.SetMusic(state.Music.Event.ToUpperInvariant()), "canonical case-insensitive same-music comparison remains unchanged");
+            previous = current;
+        }
+        Audio.SetMusic(null, allowFadeOut: false);
+        Check(Audio.CurrentMusic == "" && Audio.CurrentMusicEventInstance == null, "explicit stop clears current music");
+        Check(previous.LastStop == STOP_MODE.IMMEDIATE, "stop preserves requested fade policy");
+        Check(Audio.GetEventName(null) == "", "null event retains canonical empty name");
+        foreach (string path in new[] { null, "", "null" }) Check(!Audio.SetMusic(path), "empty/sentinel stop remains safe");
+
+        var ambience = new AudioState(null, "event:/fixture/lobby");
+        ambience.Apply(); var ambient = Audio.CurrentAmbienceEventInstance;
+        ambience.Apply(); Check(ReferenceEquals(ambient, Audio.CurrentAmbienceEventInstance) && ambient.Starts == 1,
+            "stringless ambience reapplication does not restart");
+        var vanilla = new EventDescription { Id = new Guid(1000, 0, 0, new byte[8]), PathResult = RESULT.OK, NativePath = "event:/fixture/vanilla" };
+        Check(Audio.GetEventName(new EventInstance { Description = vanilla }) == vanilla.NativePath, "named canonical event path unchanged");
+        var selected = new EventInstance { Description = events[1] };
+        events[1].PathResult = RESULT.OK; events[1].NativePath = "event:/fixture/snas";
+        Check(Audio.GetEventName(selected) == events[1].NativePath, "matching native and registered names accepted");
+        events[1].NativePath = "event:/fixture/wrong";
+        Reject(() => Audio.GetEventName(selected), "conflicting native name");
+        events[1].NativePath = null;
+        Reject(() => Audio.GetEventName(selected), "successful native result with absent name");
+        events[1].PathResult = RESULT.ERR_INTERNAL;
+        Reject(() => Audio.GetEventName(selected), "non-notfound native error must propagate");
+        events[1].PathResult = RESULT.ERR_EVENT_NOTFOUND;
+        events[1].IdResult = RESULT.ERR_INVALID_HANDLE;
+        Reject(() => Audio.GetEventName(selected), "invalid description ID");
+        events[1].IdResult = RESULT.OK;
+        selected.DescriptionResult = RESULT.ERR_INVALID_HANDLE;
+        Reject(() => Audio.GetEventName(selected), "invalid event handle");
+        selected.DescriptionResult = RESULT.OK;
+        Reject(() => Audio.GetEventName(new EventInstance()), "absent event description");
+        Reject(() => Audio.GetEventName(new EventInstance { Description = new EventDescription { Id = Guid.Empty } }), "unregistered stringless event");
+        Reject(() => AppleEverestCustomAudioRuntime.GetEventName(new FMOD.Studio.System(), selected), "wrong system cannot borrow registered name");
+        AppleEverestCustomAudioRuntime.BeforeSystemUnload(system);
+        Reject(() => Audio.GetEventName(selected), "unloaded registry cannot resolve stale event");
+        Check(system.Banks.Values.All(b => b.Unloads == 0), "system teardown does not double-unload banks");
+        AppleEverestCustomAudioRuntime.Load(system);
+        Check(Audio.GetEventName(selected) == "event:/fixture/snas", "reload reconstructs exact name registry");
+        AppleEverestCustomAudioRuntime.BeforeSystemUnload(system);
+
+        (system, events) = Fixture();
+        var original = GeneratedAppleEverestCustomAudioManifest.Banks;
+        var bad = original[1];
+        GeneratedAppleEverestCustomAudioManifest.Banks[1] = new AppleEverestCustomBankDescriptor(
+            bad.Owner, bad.Version, bad.LoadOrdinal, bad.ResourcePath, bad.BankSha256, bad.BankId, bad.BankPath,
+            new[] { new AppleEverestCustomAudioGuidDescriptor(original[0].Guids[0].Id, "event:/fixture/alias", "event") });
+        Reject(() => AppleEverestCustomAudioRuntime.Load(system), "same GUID with different path");
+        Check(system.Banks.Values.Sum(b => b.Unloads) == 2, "failed load unwinds exactly the loaded banks");
+        Reject(() => AppleEverestCustomAudioRuntime.GetEventName(system, new EventInstance { Description = events[0] }), "failed load leaves no reverse name");
+        (system, events) = Fixture();
+        system.LookupResult = RESULT.ERR_INTERNAL;
+        Reject(() => AppleEverestCustomAudioRuntime.Load(system), "load-time event lookup failure");
+        system.LookupResult = RESULT.OK;
+        AppleEverestCustomAudioRuntime.Load(system);
+        Check(Audio.GetEventName(new EventInstance { Description = events[0] }) == "event:/fixture/lobby", "clean retry after failed load");
+        AppleEverestCustomAudioRuntime.BeforeSystemUnload(system);
+        File.WriteAllText(args[0], JsonSerializer.Serialize(new { status = "PASS", checks,
+            reloads = 50, routeTransitions = route.Length, realGeneratedAudioMethods = true,
+            actualAudioStateApply = true, productionRegistryAndLifecycle = true,
+            boundary = "PROJECT_OWNED_FMOD_RETURN_FIXTURES; NO_NATIVE_BANK_OR_AUDIBLE_PLAYBACK_PROOF" }));
+        Console.WriteLine("PASS: " + checks + " audio identity/lifecycle/canonical reload checks");
+        return 0;
+    }
+}

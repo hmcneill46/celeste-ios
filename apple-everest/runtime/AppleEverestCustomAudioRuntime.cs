@@ -64,7 +64,9 @@ internal static class AppleEverestCustomAudioRuntime
 
     private static readonly List<LoadedBank> Banks = new();
     private static readonly Dictionary<string, Guid> Events = new(StringComparer.Ordinal);
+    private static readonly Dictionary<Guid, string> EventNames = new();
     private static readonly HashSet<string> ObservedEvents = new(StringComparer.Ordinal);
+    private static readonly HashSet<Guid> ObservedNames = new();
     private static readonly AppleEverestCustomAudioLifecycle Lifecycle = new();
 
     internal static void Load(FMOD.Studio.System system)
@@ -77,7 +79,7 @@ internal static class AppleEverestCustomAudioRuntime
             AppleEverestStaticRuntime.Log($"custom-audio=already-loaded banks={Banks.Count} duplicate-load=false");
             return;
         }
-        if (Banks.Count != 0 || Events.Count != 0)
+        if (Banks.Count != 0 || Events.Count != 0 || EventNames.Count != 0)
             throw new InvalidOperationException("custom FMOD registry belongs to another live Studio System");
         try
         {
@@ -139,7 +141,10 @@ internal static class AppleEverestCustomAudioRuntime
                         throw new InvalidOperationException($"custom FMOD event GUID mismatch: path={entry.Path}");
                     if (Events.TryGetValue(entry.Path, out Guid existing) && existing != entry.Id)
                         throw new InvalidOperationException($"custom FMOD event path collision: path={entry.Path}");
+                    if (EventNames.TryGetValue(entry.Id, out string existingName) && existingName != entry.Path)
+                        throw new InvalidOperationException("custom FMOD event GUID has conflicting paths");
                     Events[entry.Path] = entry.Id;
+                    EventNames[entry.Id] = entry.Path;
                 }
                 int events = descriptor.Guids.Count(entry => entry.Kind == "event");
                 int buses = descriptor.Guids.Count(entry => entry.Kind == "bus");
@@ -160,6 +165,8 @@ internal static class AppleEverestCustomAudioRuntime
             }
             Banks.Clear();
             Events.Clear();
+            EventNames.Clear();
+            ObservedNames.Clear();
             Lifecycle.FailLoad(system);
             throw;
         }
@@ -184,6 +191,34 @@ internal static class AppleEverestCustomAudioRuntime
             AppleEverestStaticRuntime.Log($"custom-event=PASS path={path} instance-created=true ordinary-audio-path=true");
     }
 
+    internal static string GetEventName(FMOD.Studio.System system, EventInstance instance)
+    {
+        if (instance == null) return "";
+        Require(instance.getDescription(out EventDescription description), "event-name", "getDescription");
+        if (description == null) throw new InvalidOperationException("FMOD event has no description");
+        Require(description.getID(out Guid id), "event-name", "getID");
+        string registered = null;
+        bool known = Lifecycle.Owns(system) && EventNames.TryGetValue(id, out registered);
+        RESULT result = description.getPath(out string path);
+        if (result == RESULT.OK)
+        {
+            if (string.IsNullOrEmpty(path) || (known && path != registered))
+                throw new InvalidOperationException("FMOD event name differs from its validated identity");
+            return path;
+        }
+        // Pinned stringless banks provide an event GUID but no native reverse
+        // path. Use only the exact path validated while loading those banks
+        // into this Studio System, as the pinned Everest GUID cache does.
+        if (result == RESULT.ERR_EVENT_NOTFOUND && known)
+        {
+            if (ObservedNames.Add(id))
+                AppleEverestStaticRuntime.Log($"custom-event-name=PASS path={registered} identity=guid-manifest native-result={result}");
+            return registered;
+        }
+        Require(result, "event-name", "getPath");
+        throw new InvalidOperationException("FMOD event name could not be resolved");
+    }
+
     internal static void BeforeSystemUnload(FMOD.Studio.System system)
     {
         if (!Lifecycle.Owns(system) && Banks.Count == 0) return;
@@ -193,7 +228,9 @@ internal static class AppleEverestCustomAudioRuntime
         int count = Lifecycle.BeforeSystemUnload(system);
         Banks.Clear();
         Events.Clear();
+        EventNames.Clear();
         ObservedEvents.Clear();
+        ObservedNames.Clear();
         AppleEverestStaticRuntime.Log($"custom-audio=teardown banks={count} policy=system-unloadAll");
     }
 

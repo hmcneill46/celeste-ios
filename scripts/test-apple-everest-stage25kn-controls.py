@@ -70,11 +70,22 @@ def main():
     negative("unsupported source profile", lambda: gate.verify_obligations(ledger, bad))
     bad = copy.deepcopy(occurrences);bad[0]["provider"] = "WrongPackage"
     negative("wrong source provider", lambda: gate.verify_obligations(ledger, bad))
+    audio = {"status": "PASS_SOURCE_BOUND_AUDIO_NAMES", "originalSourcesUnchanged": True,
+        "result": {"status": "PASS", "checks": 152, "reloads": 50, "routeTransitions": 5,
+            "realGeneratedAudioMethods": True, "actualAudioStateApply": True, "productionRegistryAndLifecycle": True,
+            "boundary": "PROJECT_OWNED_FMOD_RETURN_FIXTURES; NO_NATIVE_BANK_OR_AUDIBLE_PLAYBACK_PROOF"},
+        "methodSha256": {key: "a" * 64 for key in ("GetEventName", "SetMusic", "SetAmbience", "Stop", "SetParameter",
+            "CreateInstance", "AppleEverestOriginal_CreateInstance", "GetEventDescription")},
+        "sourceSha256": {key: "b" * 64 for key in ("Audio.cs", "AudioState.cs", "AudioTrackState.cs", "MEP.cs",
+            "AppleEverestCustomAudioRuntime.cs", "AppleEverestCustomAudioLifecycle.cs")},
+        "probeSourceSha256": {key: "c" * 64 for key in ("AudioNameRuntimeFixture", "AudioNameRuntimeProgram")},
+        "scriptSha256": "d" * 64}
     ready = {"stage": "25K-N", "status": "PASS", "marker": product.MARKER, "sharedClosureSha256": "a" * 64,
         "gateA": {"occurrences": 1309, "accepted": 1309, "blocked": 0, "unclassified": 0},
         "gateB": {"factories": 83, "available": 83, "missing": 0, "selectedProfileFactories": 77, "separateLegacyFactories": 6},
         "gateC": {"factories": 83, "closed": 83, "blocked": 0, "unknown": 0},
         "gateD": {"status": "PASS_PRE_AOT_COMPOSITION", "blocked": 0, "unknown": 0,
+                  "audioEventNameExecution": audio,
                   "maps": [{"sid": sid, "sha256": digest} for sid, digest in product.MAPS.items()]},
         "census": {"maps": 21, "customOccurrences": 1309, "distinctCustomIds": 83, "rawAuthoredProfiles": 604, "regressionOccurrences": 336},
         "physicalAcceptance": "PENDING_EXACT_PRODUCT_OBSERVATIONS"}
@@ -98,7 +109,18 @@ def main():
     mutate_ready("duplicate source map", lambda d: d["gateD"]["maps"].__setitem__(1, copy.deepcopy(d["gateD"]["maps"][0])))
     mutate_ready("wrong source map hash", lambda d: d["gateD"]["maps"][0].__setitem__("sha256", "0" * 64))
     mutate_ready("host claims physical PASS", lambda d: d.__setitem__("physicalAcceptance", "PASS"))
+    mutate_ready("missing audio execution", lambda d: d["gateD"].pop("audioEventNameExecution"))
+    for key in ("status", "originalSourcesUnchanged", "result", "methodSha256", "sourceSha256", "probeSourceSha256", "scriptSha256"):
+        mutate_ready("missing audio " + key, lambda d, key=key: d["gateD"]["audioEventNameExecution"].pop(key))
+    for key, value in (("checks", 0), ("reloads", 0), ("routeTransitions", 0), ("actualAudioStateApply", False),
+                       ("realGeneratedAudioMethods", False), ("productionRegistryAndLifecycle", False), ("boundary", "PHYSICAL_PASS")):
+        mutate_ready("incomplete audio " + key, lambda d, key=key, value=value: d["gateD"]["audioEventNameExecution"]["result"].__setitem__(key, value))
+    mutate_ready("omitted music execution", lambda d: d["gateD"]["audioEventNameExecution"]["methodSha256"].pop("SetMusic"))
+    mutate_ready("invalid audio source hash", lambda d: d["gateD"]["audioEventNameExecution"].__setitem__("scriptSha256", ""))
     positive(product.frozen_authority)
+    positive(lambda: product.verify_authority_version({"appVersion": "0.1.1", "appBuild": "48"}, "0.1.1", "48"))
+    negative("stale product build authority", lambda: product.verify_authority_version({"appVersion": "0.1.1", "appBuild": "47"}, "0.1.1", "48"))
+    negative("wrong product version authority", lambda: product.verify_authority_version({"appVersion": "0.2.0", "appBuild": "48"}, "0.1.1", "48"))
     # Owned synthetic proof bodies exercise the actual frozen-proof consumer;
     # their hashes are computed locally, without third-party proof fixtures.
     semantic = {"ownedSemanticTrace": ["construct", "added", "removed"]}

@@ -5,6 +5,7 @@ import argparse
 import hashlib
 import json
 from pathlib import Path
+import xml.etree.ElementTree as ET
 
 ROOT = Path(__file__).resolve().parents[1]
 MARKER = "READY_FOR_STAGE25KN_SNAS_PRODUCT_BUILD"
@@ -14,7 +15,7 @@ MAPS = {
     "StrawberryJam2021/1-Beginner/snas": "6ad3172d496e8b5b4ce71f1128fe231b162d534419dc823d2af2cea27fc241d9",
 }
 CANONICAL_ASSET_AUTHORITY = "afc1bc9fe0086d802a657b956cc412f6fe2d799e09ac07aab58d4059affcfcb3"
-FROZEN_IDENTITY_AUTHORITY = "56527ecf21239f1a47b3b15bfb80a1afff13e629a5212a010233785e3b2dbd86"
+FROZEN_IDENTITY_AUTHORITY = "a0d0fb358f1277805ae01cb28ec9f215977bf9b35a66273a53ac884964004b50"
 MANIFEST_IDENTITIES = ("sharedClosureSha256", "managedLogicalSha256", "contentLogicalSha256",
     "registrySha256", "customAudioManifestSha256", "customBankLogicalSetSha256",
     "levelSetProgressionManifestSha256", "collabManifestSha256")
@@ -37,7 +38,16 @@ def logical(value):
 def frozen_authority():
     path = ROOT / "apple-everest/sj-snas-identities-stage25kn.json"
     require(sha(path) == FROZEN_IDENTITY_AUTHORITY, "frozen K-N identity authority differs")
-    return json.loads(path.read_text())
+    document = json.loads(path.read_text())
+    version = ET.parse(ROOT / "modern-ios/IOSPortVersion.props")
+    verify_authority_version(document, version.findtext(".//IOSPortSemanticVersion"),
+                             version.findtext(".//IOSPortBuildNumber"))
+    return document
+
+
+def verify_authority_version(document, version, build):
+    require(document["appVersion"] == version and document["appBuild"] == build,
+            "frozen K-N authority does not identify the canonical product version/build")
 
 
 def verify_frozen_readiness(ready, manifest):
@@ -66,11 +76,32 @@ def verify_readiness(ready, manifest):
             ready["gateC"]["blocked"] == 0 and ready["gateC"]["unknown"] == 0, "incomplete K-N semantic gate")
     require(ready["gateD"]["blocked"] == 0 and ready["gateD"]["unknown"] == 0 and
             ready["gateD"]["status"] == "PASS_PRE_AOT_COMPOSITION", "incomplete K-N real composition gate")
+    verify_audio_names(ready["gateD"]["audioEventNameExecution"])
     rows = ready["gateD"]["maps"]
     require(len(rows) == 3 and {row["sid"]: row["sha256"] for row in rows} == MAPS, "wrong K-N source map union")
     require(ready["census"] == {"maps": 21, "customOccurrences": 1309, "distinctCustomIds": 83,
                                "rawAuthoredProfiles": 604, "regressionOccurrences": 336}, "incomplete actual K-N census")
     require(ready["physicalAcceptance"] == "PENDING_EXACT_PRODUCT_OBSERVATIONS", "preflight cannot claim physical acceptance")
+
+
+def verify_audio_names(proof):
+    require(proof["status"] == "PASS_SOURCE_BOUND_AUDIO_NAMES" and proof["originalSourcesUnchanged"] is True,
+            "missing fresh source-bound audio name proof")
+    result = proof["result"]
+    require(result["status"] == "PASS" and result["checks"] >= 152 and result["reloads"] == 50 and
+            result["routeTransitions"] == 5 and result["realGeneratedAudioMethods"] is True and
+            result["actualAudioStateApply"] is True and result["productionRegistryAndLifecycle"] is True,
+            "audio name/reload execution is incomplete")
+    require(result["boundary"] == "PROJECT_OWNED_FMOD_RETURN_FIXTURES; NO_NATIVE_BANK_OR_AUDIBLE_PLAYBACK_PROOF",
+            "host audio proof must preserve its native/physical evidence boundary")
+    require(set(proof["methodSha256"]) == {"GetEventName", "SetMusic", "SetAmbience", "Stop", "SetParameter",
+            "CreateInstance", "AppleEverestOriginal_CreateInstance", "GetEventDescription"}, "audio method binding omitted")
+    require(set(proof["sourceSha256"]) == {"Audio.cs", "AudioState.cs", "AudioTrackState.cs", "MEP.cs",
+            "AppleEverestCustomAudioRuntime.cs", "AppleEverestCustomAudioLifecycle.cs"}, "audio source binding omitted")
+    require(set(proof["probeSourceSha256"]) == {"AudioNameRuntimeFixture", "AudioNameRuntimeProgram"}, "audio probe source omitted")
+    hashes = [proof["scriptSha256"], *proof["methodSha256"].values(), *proof["sourceSha256"].values(), *proof["probeSourceSha256"].values()]
+    require(all(isinstance(value, str) and len(value) == 64 and all(c in "0123456789abcdef" for c in value) for value in hashes),
+            "invalid audio proof source hash")
 
 
 def expected_custom_maps():

@@ -653,7 +653,7 @@ internal static class ClosureGenerator
         "Player.Update:max-helping-hand-camera-catchup-divisor:v1",
         "Celeste.Run:static-registry-startup:v1",
         "GameLoader:content-ready:v1",
-        "GameLoader+Audio:static-custom-fmod-existing-system:v1",
+        "GameLoader+Audio:static-custom-fmod-existing-system:v2-guid-event-names",
         "MenuOptions:diagnostic-submenu:v2",
         "FactoryCanaries:registered-isolated-rooms-and-actual-lifecycle-dispatch:v1",
         "Tracker.Initialize:typed-gameplay-registry:v3",
@@ -1080,6 +1080,13 @@ internal static class ClosureGenerator
             ["\t\t\tAppleAudioDiagnostics.RegisterEvent(instance, path, \"event\");",
              "\t\t\tTvOSStage5BAudioBridge.RegisterEvent(instance, path, \"event\");"],
             needle => needle + "\n\t\t\tglobal::Celeste.Mod.AppleEverestCustomAudioRuntime.RecordEventRequest(path, instance);");
+        ReplaceOnce(audio,
+            "\tpublic static string GetEventName(EventInstance instance)\n\t{\n" +
+            "\t\tif (instance != null)\n\t\t{\n\t\t\tinstance.getDescription(out var description);\n" +
+            "\t\t\tif (description != null)\n\t\t\t{\n\t\t\t\tstring path = \"\";\n" +
+            "\t\t\t\tdescription.getPath(out path);\n\t\t\t\treturn path;\n\t\t\t}\n\t\t}\n\t\treturn \"\";\n\t}",
+            "\tpublic static string GetEventName(EventInstance instance)\n\t{\n" +
+            "\t\treturn global::Celeste.Mod.AppleEverestCustomAudioRuntime.GetEventName(system, instance);\n\t}");
     }
 
     private static void PatchMenu(string path) => ReplaceOnce(path,

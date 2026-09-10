@@ -2535,7 +2535,7 @@
   "generationSourceBindings": [
     {
       "path": "tools/AppleEverestBuilder/ClosureGenerator.cs",
-      "sha256": "6320a02c2e6c4b1758c8bb6f3e8e9f26f718dd32ca7856a4b8de6238c46cfa69"
+      "sha256": "f905679f7a4c1b21c082f48c02a73d84dd6c3e61ee8a49dc5fd4a9ae15165ff3"
     },
     {
       "path": "tools/AppleEverestBuilder/StaticSemanticLowering.cs",
@@ -2576,6 +2576,14 @@
     {
       "path": "apple-everest/runtime/semantics/AppleEverestSnasProfileGuard.cs",
       "sha256": "16c97dc649d59cb4e07fcc4bec2134e164cbdb8feaa4434a9e78bfea73c568df"
+    },
+    {
+      "path": "apple-everest/runtime/AppleEverestCustomAudioRuntime.cs",
+      "sha256": "1233872afb82f6125f8e8b5846772b7911e1f836c162ef054468c2a8f29e90b7"
+    },
+    {
+      "path": "apple-everest/runtime/AppleEverestCustomAudioLifecycle.cs",
+      "sha256": "443df290724cbba61081937e0dc53ca693c9df35ec556c6d4f475d9c7b2a6edf"
     }
   ],
   "historicalPhysicalResultsTransferred": false,

@@ -1,6 +1,6 @@
 {
   "acceptanceBoundary": "FROZEN_PRE_AOT_LOGICAL_AUTHORITIES; FINAL_PRODUCTS_AND_PHYSICAL_MATRIX_REQUIRED",
-  "appBuild": "47",
+  "appBuild": "48",
   "appVersion": "0.1.1",
   "authoredProfilesSha256": "1906bcec05cfb5ae5c16c471368716dd275aaf747f6b8e24eca8abd4741c6bfd",
   "census": {
@@ -13,16 +13,16 @@
   "contentPlanSha256": "425c7b87f5b2676800bc50c40d4db2067a4dc76f78be3a90d2465a258d1bd2b1",
   "identities": {
     "collabManifestSha256": "111f7cc7cda8f754b30f10097d9964a686a4b83e1d200d0fe57692eee09c1b5f",
-    "compositionLogicalSha256": "fda85caac4fe645cafdf850836e6432e0c55aa3dca848994dfa88485c4142cad",
+    "compositionLogicalSha256": "15244ab33e8ac980b526a42752740c6b4ff7298b843c975906f4060043f1a76a",
     "contentLogicalSha256": "92e9ce053b4957230e760933336f2de8910f2762c834aca6a95c35aa95418e80",
     "customAudioManifestSha256": "31788184560d70e5de36827c7d345fe778178a09026f59d54405b52adb82c11e",
     "customBankLogicalSetSha256": "b363c32eb1f985c35ced264649656f0266c0c9be79468bfe6d31cc69626db63b",
     "factoryRegistrySha256": "9d7fa8c198cea379e9e330b81741c02b2e747e97050ab2ec078c5432ca13ff04",
     "levelSetProgressionManifestSha256": "81e3725848e8cabaa019bb2fcf9b010a5772442beb2de4470a3785b8d7b6fbbc",
-    "managedLogicalSha256": "e0dcff40a9b44b58a554cb061b0298cc00b76b73f6eaaf11383002318a6b0566",
+    "managedLogicalSha256": "fedad431cde0516dd2ead5848f6327448e9630dbc5e10a02804643404fd1be62",
     "registrySha256": "6e5b89f7d952aa98e72640abce0c75522567fb9d48f8b027e3db54f5cf9da72f",
-    "semanticLogicalSha256": "3befc207260380688b6e8973c6545e5df1062ce08d50cb2fdd9284310d415efc",
-    "sharedClosureSha256": "b6cd47670050c6d7be5bcab40c6a052d3113faa5c10e386d1693f5966753caad"
+    "semanticLogicalSha256": "f45f91061d08bb26c52354870f6c663523c666dcba995dfa3778fc3c6fae3245",
+    "sharedClosureSha256": "c236e3e77e6626e1600ce361c3214c62473cf79a279e17a9784f00269ff9bf7d"
   },
   "nativeIdentities": {
     "ios": "9fb302d221180e39f270ea5ebf48e18433b67bd0a40943c042a227fe0f8ad6a2",
