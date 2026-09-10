@@ -1,6 +1,6 @@
 {
   "acceptanceBoundary": "FROZEN_PRE_AOT_LOGICAL_AUTHORITIES; FINAL_PRODUCTS_AND_PHYSICAL_MATRIX_REQUIRED",
-  "appBuild": "48",
+  "appBuild": "49",
   "appVersion": "0.1.1",
   "authoredProfilesSha256": "1906bcec05cfb5ae5c16c471368716dd275aaf747f6b8e24eca8abd4741c6bfd",
   "census": {

@@ -106,6 +106,7 @@ try
     passed += SelectedFactoryTypeClosureTests.Run();
     passed += SnasFlagGroupsTests.Run();
     passed += SnasVerificationControlsTests.Run(temporary, repository);
+    passed += AotNativeRootSignatureTests.Run();
     passed += DialogFragmentParserTests.Run();
 
     EverestVersion required = EverestVersion.Parse("1.2.3.4");

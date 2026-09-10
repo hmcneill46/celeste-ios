@@ -3,7 +3,7 @@
 This candidate adds only `StrawberryJam2021/1-Beginner/snas` to the accepted
 Beginner lobby and Bing selection. It starts at K-M revision
 `b65bedd20016dc3482d7702d7f0a9707bc2b1479`, retains HOST-B/HOST-C tooling, and
-advances the canonical Apple product identity to 0.1.1 (48). The accepted
+advances the canonical Apple product identity to 0.1.1 (49). The accepted
 build-46 game baseline remains `be8546d4ae411cb491a0c3bbc4e5343ebf9c9651`.
 This is a new implementation/tooling revision, not an unchanged build-46 app.
 
@@ -132,6 +132,31 @@ remain unchanged; managed/shared and semantic/composition proof identities
 advance for the reviewed correction. The original build-46/K-L and K-M
 authorities are unchanged. Build 48 requires its own clean source revision,
 fresh serial signed products and complete renewed physical acceptance.
+
+## Build 49 verifier correction
+
+Build 48 completed iOS full AOT and native linking but its wrapper failed at
+`unreviewed native root signature shape: FMOD.Studio.EventDescription&`.
+The actual LLVM object contains the existing TryGetEventDescription helper
+with Mono's trailing-underscore by-reference spelling. The strengthened audio
+root inventory exposed the verifier's unsupported parameter shape; no missing
+runtime code or gameplay failure is inferred from that verifier error.
+
+The bounded host-only correction derives that exact spelling for concrete
+ordinary by-reference types. Pointers, nested type specifications and open
+generics still fail closed. Every required root still needs an exact T/t code
+definition in both the LLVM object and linked image. Eighteen owned synthetic
+signature checks cover distinct by-value/by-reference names and unsupported
+shapes; actual-product controls reject missing audio out-parameter code and
+incorrect by-value substitution. No native byte normalization, hash exclusion,
+root omission or runtime implementation changes are introduced.
+
+The build-48 attempt and source revision remain preserved. Canonical build 49
+gets a new frozen source revision and fresh final products on both platforms.
+Managed/content/registry/semantic/composition/audio/progression logical
+identities remain unchanged from the audio-corrected build-48 closure and must
+be regenerated at the final revision. A corrected diagnostic verification of
+retained build-48 artifacts is not a final product PASS or physical acceptance.
 
 ## Mandatory pre-AOT path
 

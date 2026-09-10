@@ -15,7 +15,7 @@ MAPS = {
     "StrawberryJam2021/1-Beginner/snas": "6ad3172d496e8b5b4ce71f1128fe231b162d534419dc823d2af2cea27fc241d9",
 }
 CANONICAL_ASSET_AUTHORITY = "afc1bc9fe0086d802a657b956cc412f6fe2d799e09ac07aab58d4059affcfcb3"
-FROZEN_IDENTITY_AUTHORITY = "a0d0fb358f1277805ae01cb28ec9f215977bf9b35a66273a53ac884964004b50"
+FROZEN_IDENTITY_AUTHORITY = "bf8921c5b322fd07263982e02beef0275ae18e0fa72cdd07c2ab640bd181df10"
 MANIFEST_IDENTITIES = ("sharedClosureSha256", "managedLogicalSha256", "contentLogicalSha256",
     "registrySha256", "customAudioManifestSha256", "customBankLogicalSetSha256",
     "levelSetProgressionManifestSha256", "collabManifestSha256")

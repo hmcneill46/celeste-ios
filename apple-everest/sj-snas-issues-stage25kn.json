@@ -134,6 +134,20 @@
         "negative omission of actual resolver AOT code"
       ],
       "physical": "New build required on both devices; repeat first-room death, full route, audio restoration and complete original acceptance matrix."
+    },
+    {
+      "id": "KN10",
+      "classification": "AUTO_FIX_COMPOSITION",
+      "resolution": "IMPLEMENTED_SOURCE_REVIEWED",
+      "subject": "Exact native symbols for concrete by-reference parameters",
+      "behavior": "Derive the pinned Mono AOT trailing-underscore spelling for a concrete ordinary by-reference parameter, including the existing audio out EventDescription helper. Preserve exact code-definition requirements in both the actual LLVM object and linked image. Unsupported pointers, nested specifications and open generics remain rejected. No runtime, content, native foundation or acceptance normalization change.",
+      "proofs": [
+        "retained build-48 verifier failure and actual compiled audio out-parameter symbol",
+        "18 project-owned portable signature controls",
+        "actual-product missing out-parameter code negative",
+        "by-value symbol cannot satisfy the actual by-reference code gate"
+      ],
+      "physical": "Build 48 remains a failed product attempt; build 49 requires fresh common-source products and the complete unchanged physical matrix."
     }
   ]
 }

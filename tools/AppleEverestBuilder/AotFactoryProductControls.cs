@@ -169,6 +169,28 @@ internal static partial class AotFactoryProductInspection
                 });
                 Reject("MISSING_AUDIO_NAME_RESOLVER_CODE", "no exact code definition",
                     () => RequireNativeDefinitions(missingAudio, audioNative, [audioRoot]));
+                var audioOut = linked.MainModule.GetType("Celeste.Mod.AppleEverestCustomAudioRuntime")
+                    .Methods.Single(method => method.Name == "TryGetEventDescription");
+                string audioOutRoot = Symbol(audioOut);
+                if (!positive.RootElement.GetProperty("exactNativeRoots").EnumerateArray().Any(value => value.GetString() == audioOutRoot)
+                    || audioOut.Parameters[^1].ParameterType is not ByReferenceType || !audioOutRoot.EndsWith('_'))
+                    throw new InvalidDataException("audio out-parameter method omitted from actual native roots");
+                var audioOutNative = Symbols(request.NativeImage, [audioOutRoot]);
+                RequireNativeDefinitions(request.LlvmObject, audioOutNative, [audioOutRoot]);
+                string missingOut = Changed(request.LlvmObject, bytes =>
+                {
+                    int at = bytes.AsSpan().IndexOf(Encoding.ASCII.GetBytes(audioOutRoot + "\0"));
+                    if (at < 0) throw new InvalidDataException("audio out-parameter control symbol absent");
+                    bytes[at + 1] = (byte)'X';
+                });
+                Reject("MISSING_AUDIO_OUT_PARAMETER_CODE", "no exact code definition",
+                    () => RequireNativeDefinitions(missingOut, audioOutNative, [audioOutRoot]));
+                // A by-value spelling cannot stand in for the compiled byref
+                // method. Invoke the real object/native code-definition gate.
+                string byValueRoot = audioOutRoot[..^1];
+                Reject("VALUE_PARAMETER_CANNOT_SATISFY_BYREF_ROOT", "no exact code definition",
+                    () => RequireNativeDefinitions(request.LlvmObject,
+                        Symbols(request.NativeImage, [byValueRoot]), [byValueRoot]));
                 string legacyMethod = Changed(request.LinkedAssembly, bytes =>
                 {
                     var updateLegacy = linked.MainModule.GetType("Celeste.Mod.AppleEverestStage25KERootCanary")

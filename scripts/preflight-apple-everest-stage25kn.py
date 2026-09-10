@@ -94,10 +94,10 @@ def verify_obligations(document, occurrences, root=ROOT):
     check(document["openRequirements"] == [], "unresolved semantic or composition requirement")
     check(document["issueLedger"] == "apple-everest/sj-snas-issues-stage25kn.json", "missing implementation issue ledger")
     issue_path = root / document["issueLedger"]
-    check(sha(issue_path) == "e952fec264697982e33e4302484f0335e76c1e321fccdcdb873ba938d92887a6", "unreviewed implementation issue ledger")
+    check(sha(issue_path) == "5486102cfa5860bbefdefb94d8d46b662f16b478187b110216b86bec306274c4", "unreviewed implementation issue ledger")
     issue_ledger = read(issue_path)
     check(issue_ledger["openRequirements"] == [] and {row["id"] for row in issue_ledger["issues"]} ==
-          {"KN" + str(i).zfill(2) for i in range(1, 10)} and all(row["resolution"] == "IMPLEMENTED_SOURCE_REVIEWED"
+          {"KN" + str(i).zfill(2) for i in range(1, 11)} and all(row["resolution"] == "IMPLEMENTED_SOURCE_REVIEWED"
           for row in issue_ledger["issues"]), "unresolved implementation issue")
     check(document["census"] == {"customOccurrences": 1309, "factories": 83, "rawAuthoredProfiles": 604,
           "selectedFactories": 77, "separateLegacyFactories": 6, "regressionOccurrences": 336}, "wrong semantic census")

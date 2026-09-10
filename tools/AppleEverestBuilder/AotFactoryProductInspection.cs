@@ -365,11 +365,17 @@ internal static partial class AotFactoryProductInspection
     }
 
     private static string Name(string value) => new(value.Where(c => c != '>').Select(c => char.IsLetterOrDigit(c) ? c : '_').ToArray());
-    private static string Symbol(MethodDefinition method) => "_" + Name(method.Module.Assembly.Name.Name) + "_" +
+    internal static string Symbol(MethodDefinition method) => "_" + Name(method.Module.Assembly.Name.Name) + "_" +
         Name(method.DeclaringType.FullName) + "_" + Name(method.Name) +
         (method.Parameters.Count == 0 ? "" : "_" + string.Join("_", method.Parameters.Select(parameter => Parameter(parameter.ParameterType))));
     private static string Parameter(TypeReference type) => type switch
     {
+        // The pinned Mono AOT compiler appends '_' for a managed by-reference
+        // parameter. Keep the supported addition bounded to concrete ordinary
+        // types; pointers, nested specifications and open generics fail closed.
+        // The resulting exact symbol still needs code in both LLVM and the app.
+        ByReferenceType reference when reference.ElementType is not (Mono.Cecil.TypeSpecification or Mono.Cecil.GenericParameter)
+            && !reference.ElementType.HasGenericParameters => Parameter(reference.ElementType) + "_",
         ArrayType array when array.Rank == 1 => Parameter(array.ElementType) + "__",
         GenericInstanceType generic => Name(generic.ElementType.FullName) + "_" + string.Join("_", generic.GenericArguments.Select(Parameter)),
         Mono.Cecil.TypeSpecification => throw new InvalidDataException("unreviewed native root signature shape: " + type.FullName),
