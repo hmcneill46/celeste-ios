@@ -1,0 +1,159 @@
+// Host-only recording boundaries. Coroutine, Component, ComponentList,
+// EntityList, EntityData, EntityID, Trigger and PlayerCollider are compiled
+// separately from the hash-bound canonical source, without edits.
+using System.Globalization;
+using Microsoft.Xna.Framework;
+using Monocle;
+
+namespace Conformance
+{
+    internal static class Trace
+    {
+        internal static readonly List<string> Events = new();
+        internal static void Add(string value) => Events.Add(value);
+    }
+    internal sealed class RecordedRandom(int seed) : Random(seed)
+    {
+        public override int Next(int maxValue)
+        {
+            int value = base.Next(maxValue);
+            Trace.Add("rng:" + maxValue + ":" + value);
+            return value;
+        }
+    }
+}
+namespace Microsoft.Xna.Framework
+{
+    public struct Vector2(float x, float y)
+    {
+        public float X = x, Y = y;
+        public static Vector2 Zero => new(0,0);
+        public static Vector2 One => new(1,1);
+        public static Vector2 operator +(Vector2 a, Vector2 b) => new(a.X+b.X,a.Y+b.Y);
+        public static Vector2 operator -(Vector2 a, Vector2 b) => new(a.X-b.X,a.Y-b.Y);
+        public static Vector2 operator *(Vector2 a, float b) => new(a.X*b,a.Y*b);
+        public override string ToString() => X.ToString(CultureInfo.InvariantCulture)+","+Y.ToString(CultureInfo.InvariantCulture);
+    }
+    public struct Color { public static Color HotPink => new(); }
+}
+namespace Monocle
+{
+    public sealed class TrackedAttribute(bool inherited) : Attribute { }
+    public static class Engine
+    {
+        public static float DeltaTime=1f/60f, RawDeltaTime=1f/60f;
+        public static readonly Pooler Pooler=new();
+    }
+    public sealed class Pooler { public void EntityRemoved(Entity entity) { } }
+    public sealed class Tracker
+    {
+        public void EntityAdded(Entity entity) { }
+        public void EntityRemoved(Entity entity) { }
+        public void ComponentAdded(Component component) { }
+        public void ComponentRemoved(Component component) { }
+    }
+    public sealed class TagLists
+    {
+        public void EntityAdded(Entity entity) { }
+        public void EntityRemoved(Entity entity) { }
+    }
+    public sealed class Camera { public Vector2 Position; }
+    public class Collider
+    {
+        public float Width,Height,Left,Top;
+        public void Render(Camera camera,Color color) { }
+    }
+    public sealed class Hitbox : Collider
+    {
+        public Hitbox(float width,float height,float x=0,float y=0)
+        { Width=width;Height=height;Left=x;Top=y; }
+    }
+    public class Scene
+    {
+        public readonly EntityList Entities;
+        public readonly Tracker Tracker=new();
+        public readonly TagLists TagLists=new();
+        public Scene() { Entities=new EntityList(this); }
+        public void Tick() { Entities.Update();Entities.UpdateLists(); }
+    }
+    public class Entity
+    {
+        public Vector2 Position;
+        public float actualDepth;
+        public int Depth { get => (int)actualDepth; set => actualDepth=value; }
+        public bool Active=true,Visible=true,Collidable=true;
+        public Scene Scene;
+        public Collider Collider;
+        public readonly ComponentList Components;
+        public float Left=>Position.X+(Collider?.Left??0);
+        public float Top=>Position.Y+(Collider?.Top??0);
+        public float Right=>Left+(Collider?.Width??0);
+        public float Bottom=>Top+(Collider?.Height??0);
+        public float CenterX=>(Left+Right)/2;
+        public float CenterY=>(Top+Bottom)/2;
+        public Entity(Vector2 position=default) { Position=position;Components=new ComponentList(this); }
+        public void Add(Component component) => Components.Add(component);
+        public void Remove(Component component) => Components.Remove(component);
+        public void RemoveSelf() { Conformance.Trace.Add("remove-request");Scene?.Entities.Remove(this); }
+        public virtual void Added(Scene scene)
+        { Scene=scene;foreach(Component c in Components)c.EntityAdded(scene); }
+        public virtual void Awake(Scene scene) { foreach(Component c in Components)c.EntityAwake(); }
+        public virtual void Removed(Scene scene)
+        { foreach(Component c in Components)c.EntityRemoved(scene);Scene=null;Conformance.Trace.Add("removed"); }
+        public virtual void Update() => Components.Update();
+        public virtual void Render() { }
+        public virtual void DebugRender(Camera camera) { }
+        public virtual void HandleGraphicsReset() { }
+        public virtual void HandleGraphicsCreate() { }
+        public bool TagCheck(int tags)=>false;
+        public bool TagFullCheck(int tags)=>false;
+        public T SceneAs<T>() where T:Scene => Scene as T;
+        public bool CollideCheck(Entity other)=>true;
+    }
+    public static class Calc
+    {
+        public static Random Random=new Conformance.RecordedRandom(2526);
+        public static Color HexToColor(string text)=>new();
+        public static float ClampedMap(float value,float from,float to) => Math.Clamp((value-from)/(to-from),0,1);
+    }
+}
+namespace Celeste
+{
+    public sealed class LevelData { public string Name; }
+    public sealed class StateMachine { public int State; }
+    public sealed class Player : Entity
+    {
+        public bool Dead;
+        public readonly StateMachine StateMachine=new();
+        public void StartCassetteFly(Vector2 end,Vector2 control)
+        {
+            Conformance.Trace.Add("cassette:"+end+":"+control);
+            StateMachine.State=21;
+        }
+    }
+    public sealed class Session
+    {
+        public readonly HashSet<string> Flags=new(StringComparer.Ordinal);
+        public readonly HashSet<EntityID> DoNotLoad=new();
+    }
+    public sealed class Level : Scene
+    {
+        public readonly Camera Camera=new();
+        private readonly Session session=new();
+        public Session Session { get { Conformance.Trace.Add("session");return session; } }
+    }
+    public static class Audio
+    {
+        public static void Play(string name) => Conformance.Trace.Add("audio:"+name);
+        public static void Play(string name,Vector2 position) => Conformance.Trace.Add("audio:"+name+":"+position);
+    }
+}
+namespace Celeste.Mod
+{
+    public static class Logger
+    { public static void Log(string owner,string message)=>Conformance.Trace.Add("log:"+owner+":"+message); }
+}
+namespace Celeste.Mod.Entities
+{
+    public sealed class CustomEntityAttribute(string[] names) : Attribute { }
+}

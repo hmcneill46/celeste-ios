@@ -1,0 +1,72 @@
+{
+  "authority": "UNCHANGED_BUILD46_LEGACY_LINKED_ENTRY_AND_TYPE_CLOSURE_REFERENCE",
+  "entries": [
+    {
+      "customId": "ChronoHelper/ExplodingPinata",
+      "entrySha256": "349e0add3ad127d4c4347975a8bea151a276d5277e595d8ca01cf9eee8d9ffca",
+      "kind": "entity",
+      "linkedTypeClosureSha256": "64e23c4c1ca8f13a6c6793f3eeaef00e552f56c0b25620e8db9c76740b944330",
+      "productionCallers": [
+        "System.Boolean Celeste.Level::AppleEverestOriginal_LoadCustomEntity(Celeste.EntityData,Celeste.Level)"
+      ],
+      "provider": "ChronoHelper"
+    },
+    {
+      "customId": "DJMapHelper/colorfulFlyFeather",
+      "entrySha256": "988f6466505f37d966ee43cc9e337c7536c33ce7bac713639e1a8e963afcad7c",
+      "kind": "entity",
+      "linkedTypeClosureSha256": "8866745184a77e0b1da6048e7f73416ef23cb6d3f9791b5b33bf88886fd7f67b",
+      "productionCallers": [
+        "System.Boolean Celeste.Level::AppleEverestOriginal_LoadCustomEntity(Celeste.EntityData,Celeste.Level)"
+      ],
+      "provider": "DJMapHelper"
+    },
+    {
+      "customId": "DJMapHelper/featherBarrier",
+      "entrySha256": "3b056abac3f1e2dd09a4f13e9f21b5d583c3067da6f7036a6f6cdaaefae8c2a5",
+      "kind": "entity",
+      "linkedTypeClosureSha256": "6ce21a070d17806c7e40b2f5abad5b8501c2b9771d4d25365497ee51ec540cb3",
+      "productionCallers": [
+        "System.Boolean Celeste.Level::AppleEverestOriginal_LoadCustomEntity(Celeste.EntityData,Celeste.Level)"
+      ],
+      "provider": "DJMapHelper"
+    },
+    {
+      "customId": "appleEverest/stage25keRootState",
+      "entrySha256": "207129509d3795d3b55b7528790cff99669d9dc718d98e61a385e7b2156761c3",
+      "kind": "entity",
+      "linkedTypeClosureSha256": "4038fd777209141ae5153c8c1db77f94718663f924d344b1527ea3d1a1c28018",
+      "productionCallers": [
+        "System.Boolean Celeste.Level::AppleEverestOriginal_LoadCustomEntity(Celeste.EntityData,Celeste.Level)"
+      ],
+      "provider": "StrawberryJam2021"
+    },
+    {
+      "customId": "appleEverest/stage25kfAudio",
+      "entrySha256": "2f95c7a251d502782fbb3ee6eed8ebb9b6414ddc8a00519a04c6c12945a82c6d",
+      "kind": "entity",
+      "linkedTypeClosureSha256": "5b01ea691745d5a0808f500dc77df2142eb7b1f0ee973ae0edceba23adb006ed",
+      "productionCallers": [
+        "System.Boolean Celeste.Level::AppleEverestOriginal_LoadCustomEntity(Celeste.EntityData,Celeste.Level)"
+      ],
+      "provider": "StrawberryJam2021"
+    },
+    {
+      "customId": "appleEverest/stage25kfDepthTarget",
+      "entrySha256": "0e6496ced18c008643963758714ba194435fcfdff6b4e0f747e3895c1243d471",
+      "kind": "entity",
+      "linkedTypeClosureSha256": "a011ca8d74d9f76b2a1fc4904e853c368ea135fa12ef2235360a22617cced099",
+      "productionCallers": [
+        "System.Boolean Celeste.Level::AppleEverestOriginal_LoadCustomEntity(Celeste.EntityData,Celeste.Level)"
+      ],
+      "provider": "CrystallineHelper"
+    }
+  ],
+  "gameBaselineSource": "be8546d4ae411cb491a0c3bbc4e5343ebf9c9651",
+  "physicalAcceptanceTransferred": false,
+  "referenceSharedClosureSha256": "11e5006c72dde385ca3b41773e3d924c29e7b19979aef96e11a5ad44f211d6b9",
+  "referenceToolingSource": "b4997fa49f4f8b82f6f2984fe9047396e401ea48",
+  "schemaVersion": 1,
+  "selected73ProofScope": false,
+  "stage": "25K-N"
+}

@@ -51,8 +51,11 @@ internal static class FactoryCompilationProof
             RedirectStandardOutput = true, RedirectStandardError = true
         };
         foreach (string argument in new[] { "build", Path.Combine(target, "Celeste.Modern.csproj"),
-            "-c", "Release", "--nologo", "--no-incremental", "-p:CelesteAppleRepoRoot=" + repoRoot,
+            "-c", "Release", "--nologo", "--no-incremental", "-m:1", "-p:BuildInParallel=false",
+            "-p:UseSharedCompilation=false", "-p:CelesteAppleRepoRoot=" + repoRoot,
             "-p:CelesteManagedGeneratedRoot=" + target }) start.ArgumentList.Add(argument);
+        start.Environment["MSBUILDDISABLENODEREUSE"] = "1";
+        start.Environment["DOTNET_CLI_USE_MSBUILD_SERVER"] = "0";
         Console.WriteLine("factory preflight: fresh production compilation including static IL transformations");
         using Process process = Process.Start(start) ?? throw new InvalidDataException("could not start production compiler");
         Task<string> stdout = process.StandardOutput.ReadToEndAsync();

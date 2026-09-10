@@ -132,6 +132,42 @@ internal static partial class AotFactoryProductInspection
             string missing = Changed(request.LlvmObject, bytes =>
             { int at = bytes.AsSpan().IndexOf(Encoding.ASCII.GetBytes(root + "\0")); if (at < 0) throw new InvalidDataException("control symbol absent"); bytes[at + 1] = (byte)'X'; });
             Reject("MISSING_GUARD_HELPER_CODE", "no exact code definition", () => RequireNativeDefinitions(missing, native, [root]));
+            using var contract = SelectedFactoryContract.Load(manifest, profiles);
+            if (contract.IsSnas)
+            {
+                // This constructor belongs only to the separate legacy six,
+                // not the selected77 closure. Require it in the actual root
+                // inventory before testing its disposable native omission.
+                var constructor = linked.MainModule.GetType("Celeste.Mod.AppleEverestStage25KERootCanary")
+                    .Methods.Single(method => method.IsConstructor && !method.IsStatic);
+                string legacyRoot = Symbol(constructor);
+                using JsonDocument positive = JsonDocument.Parse(File.ReadAllText(Path.Combine(scratch, "positive.json")));
+                if (!positive.RootElement.GetProperty("exactNativeRoots").EnumerateArray().Any(value => value.GetString() == legacyRoot))
+                    throw new InvalidDataException("separate legacy constructor omitted from actual required native roots");
+                var legacyNative = Symbols(request.NativeImage, [legacyRoot]);
+                RequireNativeDefinitions(request.LlvmObject, legacyNative, [legacyRoot]);
+                string missingLegacy = Changed(request.LlvmObject, bytes =>
+                {
+                    int at = bytes.AsSpan().IndexOf(Encoding.ASCII.GetBytes(legacyRoot + "\0"));
+                    if (at < 0) throw new InvalidDataException("legacy control symbol absent");
+                    bytes[at + 1] = (byte)'X';
+                });
+                Reject("MISSING_SEPARATE_LEGACY_CONSTRUCTOR_CODE", "no exact code definition",
+                    () => RequireNativeDefinitions(missingLegacy, legacyNative, [legacyRoot]));
+                string legacyMethod = Changed(request.LinkedAssembly, bytes =>
+                {
+                    var updateLegacy = linked.MainModule.GetType("Celeste.Mod.AppleEverestStage25KERootCanary")
+                        .Methods.Single(method => method.Name == "Update");
+                    int at = RvaOffset(original, updateLegacy.RVA);
+                    int header = (bytes[at] & 3) == 2 ? 1 : (BinaryPrimitives.ReadUInt16LittleEndian(bytes.AsSpan(at)) >> 12) * 4;
+                    bytes[at + header] ^= 1;
+                });
+                receipt = JsonNode.Parse(File.ReadAllText(request.AotProvenance))!;
+                receipt["fields"]!["LinkedAssembly"] = legacyMethod;
+                File.WriteAllText(controlReceipt, receipt.ToJsonString());
+                Reject("CHANGED_LEGACY_UPDATE_WITH_STALE_AOT", "AOT provenance content changed: linked IL",
+                    () => VerifyProvenance(request with { LinkedAssembly = legacyMethod, AotProvenance = controlReceipt }));
+            }
             File.WriteAllText(output, JsonSerializer.Serialize(new { schemaVersion = 1, actualProductPositive = true,
                 disposableCopiesOnly = true, controls = results }, new JsonSerializerOptions { WriteIndented = true }) + "\n");
         }

@@ -164,21 +164,36 @@ internal static class CollabManifestGenerator
         if (mod.Metadata.Name != "StrawberryJam2021") return false;
         if (mod.StaticSemanticLowering?.Id != "strawberryjam2021-1.0.12-beginner-root-v1")
             throw new InvalidDataException("partial collab selection requires the exact reviewed SJ provider identity");
+        if (!owned.Select(map => map.Sid).Order(StringComparer.Ordinal).SequenceEqual(
+            mounts.Select(mount => mount.LogicalPath["Maps/".Length..^4]).Order(StringComparer.Ordinal)))
+            throw new InvalidDataException("selected SJ progression/mount census differs");
+        ValidatePinnedBeginnerMaps(mounts.Select(mount =>
+            (mount.LogicalPath["Maps/".Length..^4], mount.SourceSha256)).ToArray());
+        return true;
+    }
+
+    internal static void ValidatePinnedBeginnerMaps((string Sid, string SourceSha256)[] maps)
+    {
         Dictionary<string, string> expected = new(StringComparer.Ordinal)
         {
             ["StrawberryJam2021/0-Lobbies/1-Beginner"] = "a4e3e20a2f0cc878fe43b32fb8025d7650b20cc6265f69e37bf3110a7cdf47c2",
             ["StrawberryJam2021/1-Beginner/Bing_Over_Google"] = "e770a8d193f217d09a6e153fbe272813d26a04d972df947ac812aa5cfe66f347"
         };
-        if (owned.Length != 2 || owned.Any(map => !expected.ContainsKey(map.Sid)) || mounts.Any(mount =>
-            expected.GetValueOrDefault(mount.LogicalPath["Maps/".Length..^4]) != mount.SourceSha256))
-            throw new InvalidDataException("partial SJ collab selection differs from the two reviewed original identities");
-        return true;
+        // Keep the original two-map product available as a historical control.
+        // K-N adds exactly one unchanged source, never a general partial-collab
+        // allowance. Production readiness remains a separate mandatory gate.
+        if (maps.Any(map => map.Sid == SnasFlagGroups.Sid))
+            expected.Add(SnasFlagGroups.Sid, SnasFlagGroups.SourceSha256);
+        if (maps.Length != expected.Count || maps.Select(map => map.Sid).Distinct(StringComparer.Ordinal).Count() != maps.Length ||
+            maps.Any(map => expected.GetValueOrDefault(map.Sid) != map.SourceSha256))
+            throw new InvalidDataException("partial SJ collab selection differs from the exact K-L or K-N original identities");
     }
 
     private static void ValidateBeginnerEntrances(MapElementRecord[] entrances)
     {
         // Metadata-only source catalog: never create placeholder playable areas
-        // for the other 20 jars, gym or heart-side. K-J mounts none of these maps.
+        // for excluded jars, gym or heart-side. The available maps are selected
+        // independently; this source catalog always retains all 23 entrances.
         using Stream stream = typeof(SelectedFactoryProfiles).Assembly.GetManifestResourceStream("AppleEverest.SelectedFactoryProfiles")!;
         using System.Text.Json.JsonDocument profiles = System.Text.Json.JsonDocument.Parse(stream);
         string[] expected = profiles.RootElement.GetProperty("occurrences").EnumerateArray()

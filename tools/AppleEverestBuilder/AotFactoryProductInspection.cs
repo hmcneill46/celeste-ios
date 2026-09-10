@@ -29,10 +29,13 @@ internal static partial class AotFactoryProductInspection
         Request request = JsonSerializer.Deserialize<Request>(File.ReadAllText(requestPath))
             ?? throw new InvalidDataException("AOT product request absent");
         object provenance = VerifyProvenance(request);
-        var graph = SelectedFactoryTypeClosure.LoadAndValidate(manifestPath);
-        using JsonDocument profiles = JsonDocument.Parse(File.ReadAllBytes(profilesPath));
+        using var contract = SelectedFactoryContract.Load(manifestPath, profilesPath);
+        JsonDocument profiles = contract.Profiles;
         RuntimeClosureScanner.Verify(request.LinkedAssembly);
-        var factories = CompiledFactoryInspection.Inspect(request.LinkedAssembly, profiles.RootElement, graph.Manifest.Factories);
+        var factories = CompiledFactoryInspection.Inspect(request.LinkedAssembly, profiles.RootElement, contract.Factories);
+        object[] legacy = contract.IsSnas ? CompiledFactoryInspection.InspectLegacyRegressionEntries(request.LinkedAssembly) : [];
+        if (contract.IsSnas) LegacyFactoryAuthority.Verify(legacy,
+            Path.Combine(Path.GetDirectoryName(Path.GetFullPath(manifestPath))!, "sj-snas-legacy-reference-stage25kn.json"));
         object metadata = CompareManaged(request.LinkedAssembly, request.StrippedAssembly);
         EqualFile(request.StrippedAssembly, request.PackagedAssembly, "packaged stripped assembly");
         EqualFile(request.AotData, request.PackagedAotData, "packaged AOT data");
@@ -46,6 +49,16 @@ internal static partial class AotFactoryProductInspection
         resolver.AddSearchDirectory(Path.GetDirectoryName(request.LinkedAssembly)!);
         using AssemblyDefinition linked = AssemblyDefinition.ReadAssembly(request.LinkedAssembly, new ReaderParameters { AssemblyResolver = resolver });
         using AssemblyDefinition dj = AssemblyDefinition.ReadAssembly(Path.Combine(Path.GetDirectoryName(request.LinkedAssembly)!, "DJMapHelper.dll"), new ReaderParameters { AssemblyResolver = resolver });
+        using AssemblyDefinition? chrono = contract.IsSnas
+            ? AssemblyDefinition.ReadAssembly(Sibling(request.LinkedAssembly, "ChronoHelper.dll"), new ReaderParameters { AssemblyResolver = resolver }) : null;
+        AssemblyDefinition[] inspectedAssemblies = chrono is null ? [linked, dj] : [linked, dj, chrono];
+        object? legacyCompanionMetadata = null;
+        if (chrono is not null)
+        {
+            legacyCompanionMetadata = CompareManaged(chrono.MainModule.FileName, Sibling(request.StrippedAssembly, "ChronoHelper.dll"));
+            EqualFile(Sibling(request.StrippedAssembly, "ChronoHelper.dll"), Sibling(request.PackagedAssembly, "ChronoHelper.dll"), "packaged ChronoHelper stripped assembly");
+            EqualFile(Sibling(request.AotData, "ChronoHelper.aotdata"), Sibling(request.PackagedAotData, "ChronoHelper.aotdata.arm64"), "packaged ChronoHelper AOT data");
+        }
         string[] entries = factories.Select(factory => SelectedFactoryProfiles.EntryMethod(factory.Kind, factory.CustomId)).ToArray();
         TypeDefinition registry = linked.MainModule.GetType("Celeste.Mod.GeneratedAppleEverestGameplayRegistry");
         Dictionary<string, MethodDefinition> rootMethods = new(StringComparer.Ordinal);
@@ -70,23 +83,39 @@ internal static partial class AotFactoryProductInspection
             Add(registry.Methods.Single(method => method.Name == "Select" + kind));
         foreach (MethodDefinition method in Types(linked.MainModule.GetType("Celeste.Mod.AppleEverestSelectedProfileGuard"))
                      .Append(linked.MainModule.GetType("Celeste.Mod.AppleEverestFlagToggleComponent")).SelectMany(type => type.Methods).Where(method => method.HasBody)) Add(method);
-        var methods = new[] { linked, dj }.SelectMany(assembly => assembly.MainModule.Types.SelectMany(Types))
+        if (contract.IsSnas)
+        {
+            foreach (string name in new[] { "AppleEverestSnasProfileGuard", "AppleEverestPlayerBubbleRegion",
+                "AppleEverestRandomSoundTrigger", "AppleEverestFlagGroup", "AppleEverestFlagMember",
+                "AppleEverestFlagTouchSwitch", "AppleEverestFlagSwitchGate", "GeneratedAppleEverestFlagGroups" })
+            {
+                TypeDefinition type = linked.MainModule.GetType("Celeste.Mod." + name)
+                    ?? throw new InvalidDataException("linked K-N semantic/native type missing: " + name);
+                foreach (MethodDefinition method in Types(type).SelectMany(value => value.Methods).Where(method => method.HasBody)) Add(method);
+            }
+            foreach (JsonElement row in JsonSerializer.SerializeToElement(legacy).EnumerateArray())
+                Creator(registry.Methods.Single(method => method.Name == SelectedFactoryProfiles.EntryMethod("entity", row.GetProperty("customId").GetString()!)));
+        }
+        var methods = inspectedAssemblies.SelectMany(assembly => assembly.MainModule.Types.SelectMany(Types))
             .SelectMany(type => type.Methods).ToLookup(method => method.FullName, StringComparer.Ordinal);
-        foreach (var factory in factories)
-        foreach (JsonElement closure in JsonSerializer.SerializeToElement(factory.TypeClosure).EnumerateArray())
+        var selectedClosures = factories.SelectMany(factory => JsonSerializer.SerializeToElement(factory.TypeClosure).EnumerateArray());
+        var legacyClosures = JsonSerializer.SerializeToElement(legacy).EnumerateArray()
+            .SelectMany(row => row.GetProperty("linkedTypeClosure").EnumerateArray());
+        foreach (JsonElement closure in selectedClosures.Concat(legacyClosures))
         foreach (string category in new[] { "constructors", "lifecycle" })
         foreach (JsonElement method in closure.GetProperty(category).EnumerateArray())
             if (method.GetProperty("bodySha256").ValueKind != JsonValueKind.Null) Add(methods[method.GetProperty("method").GetString()!].Single());
         string[] roots = rootMethods.Keys.Order(StringComparer.Ordinal).ToArray();
-        if (entries.Length != 73 || roots.Length < 296) throw new InvalidDataException("selected native root census differs");
-        Dictionary<string, char> native = Symbols(request.NativeImage, roots.Concat(new[] { "_mono_aot_module_Celeste_info", "_mono_aot_module_DJMapHelper_info" }));
+        if (entries.Length != (contract.IsSnas ? 77 : 73) || roots.Length < 296) throw new InvalidDataException("selected native root census differs");
+        Dictionary<string, char> native = Symbols(request.NativeImage,
+            roots.Concat(inspectedAssemblies.Select(assembly => "_mono_aot_module_" + assembly.Name.Name + "_info")));
         foreach (var group in rootMethods.GroupBy(pair => pair.Value.Module.Assembly.Name.Name))
         {
             string obj = Path.Combine(Path.GetDirectoryName(request.LlvmObject)!, group.Key + ".dll.llvm.o");
             RequireNativeDefinitions(obj, native, group.Select(pair => pair.Key));
         }
         byte[] image = File.ReadAllBytes(request.NativeImage), packaged = File.ReadAllBytes(request.PackagedNativeImage);
-        foreach (AssemblyDefinition assembly in new[] { linked, dj })
+        foreach (AssemblyDefinition assembly in inspectedAssemblies)
         {
             string owner = assembly.Name.Name, module = "_mono_aot_module_" + owner + "_info";
             if (!native.TryGetValue(module, out char moduleKind) || moduleKind is not ('D' or 'd') ||
@@ -109,6 +138,9 @@ internal static partial class AotFactoryProductInspection
             llvmObjectSha256 = Hashing.FileSha256(request.LlvmObject), monoObjectSha256 = Hashing.FileSha256(request.MonoObject),
             nativeImageSha256 = Hashing.FileSha256(request.NativeImage), packagedNativeImageSha256 = Hashing.FileSha256(request.PackagedNativeImage),
             aotDataSha256 = Hashing.FileSha256(request.AotData), exactNativeRoots = roots, provenance, metadata, companionMetadata, nativeSections, factories,
+            separateLegacyLinkedEntries = legacy,
+            separateLegacyConstructorLifecycleNativeDefinitionsRequired = contract.IsSnas, legacyCompanionMetadata,
+            separateLegacyLinkedReferenceVerified = contract.IsSnas,
             semanticPhysicalAcceptance = "SEPARATE_REQUIRED_GATE" };
         File.WriteAllText(output, JsonSerializer.Serialize(report, new JsonSerializerOptions { WriteIndented = true }) + "\n");
     }

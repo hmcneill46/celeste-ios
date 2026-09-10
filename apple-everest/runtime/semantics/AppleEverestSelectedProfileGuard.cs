@@ -869,6 +869,7 @@ internal static class AppleEverestSelectedProfileGuard
 
     internal static void Entity(string id, EntityData data)
     {
+        if (AppleEverestSnasProfileGuard.Accepts(id, data)) return;
         string key = (Profiles.ContainsKey("entity:" + id) ? "entity:" : "trigger:") + id;
         if (data.Name != id || data.Origin != Vector2.Zero || !Profiles.TryGetValue(key, out Profile[] profiles))
             throw Outside(id);

@@ -1,0 +1,100 @@
+// Host-only boundaries: actual canonical/pinned parser, matcher, Generate and
+// VirtualMap sources are compiled beside these graphics-free test adapters.
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Xml;
+
+namespace Microsoft.Xna.Framework
+{
+    public struct Rectangle
+    {
+        public int X,Y,Width,Height;
+        public Rectangle(int x,int y,int width,int height) { X=x;Y=y;Width=width;Height=height; }
+        public static Rectangle Empty => default;
+        public int Left=>X; public int Right=>X+Width; public int Top=>Y; public int Bottom=>Y+Height;
+        public bool Contains(int x,int y) => x>=X && y>=Y && x<X+Width && y<Y+Height;
+    }
+    public struct Point { public int X,Y; public Point(int x,int y) { X=x;Y=y; } }
+}
+namespace Monocle
+{
+    public sealed class MTexture
+    {
+        public string Key;
+        public int Width,Height;
+        public MTexture(string key,int width,int height) { Key=key;Width=width;Height=height; }
+        public MTexture(MTexture parent,int x,int y,int width,int height) { Key=parent.Key+"#"+(x/width)+","+(y/height);Width=width;Height=height; }
+    }
+    public sealed class Atlas
+    {
+        public Dictionary<string,int[]> Dimensions=new(StringComparer.OrdinalIgnoreCase);
+        public HashSet<string> Missing=new(StringComparer.OrdinalIgnoreCase);
+        public bool Has(string key)=>Dimensions.ContainsKey(key)&&!Missing.Contains(key);
+        public MTexture this[string key] {
+            get { if(Missing.Contains(key))key="__fallback";
+                if (!Dimensions.TryGetValue(key,out var dimensions)) throw new InvalidOperationException("unknown atlas key: "+key);
+                return new(key,dimensions[0],dimensions[1]); }
+        }
+        public MTexture GetFallback() => throw new InvalidOperationException("undefined reference terrain");
+    }
+    public sealed class TileGrid
+    {
+        public readonly VirtualMap<MTexture> Tiles;
+        public TileGrid(int w,int h,int columns,int rows) { Tiles=new(columns,rows); }
+    }
+    public static class Calc
+    {
+        public static Random Random=new(0);
+        public static int Clamp(int value,int minimum,int maximum) => Math.Clamp(value,minimum,maximum);
+        public static T Choose<T>(this Random random,List<T> values) => values[random.Next(values.Count)];
+        public static XmlDocument LoadContentXML(string file) { var xml=new XmlDocument();xml.Load(file);return xml; }
+    }
+    public static class XmlRules
+    {
+        public static bool HasAttr(this XmlElement e,string name) => e.HasAttribute(name);
+        public static bool HasChild(this XmlElement e,string name) => e[name]!=null;
+        public static string Attr(this XmlElement e,string name) => e.GetAttribute(name);
+        public static char AttrChar(this XmlElement e,string name) => e.GetAttribute(name)[0];
+        public static int AttrInt(this XmlElement e,string name) => int.Parse(e.GetAttribute(name),CultureInfo.InvariantCulture);
+        public static bool AttrBool(this XmlElement e,string name) => bool.Parse(e.GetAttribute(name));
+    }
+}
+namespace Celeste
+{
+    public static class SurfaceIndex
+    {
+        public static Dictionary<char,int> TileToIndex=new();
+        public static Dictionary<int,string> IndexToCustomPath=new();
+        public static Dictionary<int,int> IndexToSoundParam=new();
+    }
+    public static class GFX
+    {
+        public static Monocle.Atlas Game=new();
+        public static Dictionary<string,int> AnimatedTilesBank=new();
+    }
+    public sealed class AnimatedTiles
+    {
+        private readonly Dictionary<string,int> bank;
+        public readonly List<string> Trace=new();
+        public AnimatedTiles(int columns,int rows,Dictionary<string,int> value) { bank=value; }
+        public void Set(int x,int y,string name)
+        {
+            if (!string.IsNullOrEmpty(name)) Trace.Add(x+","+y+":"+name+":"+Monocle.Calc.Random.Next(bank[name]));
+        }
+    }
+}
+namespace Celeste.Mod
+{
+    public static class Logger
+    {
+        public static void Debug(string area,string value) { }
+        public static void Warn(string area,string value) { }
+        public static void Error(string area,string value) { }
+    }
+}
+namespace Conformance
+{
+    public sealed record Rule(string Mask,string[] Textures,string[] Overlays,bool HasOverlays);
+    public sealed record Definition(char Id,int Width,int Height,string Ignores,string Debris,Rule[] Rules,Rule Center,Rule Padding);
+}

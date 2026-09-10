@@ -42,7 +42,9 @@ internal static class CompiledFactoryInspection
             ?? throw new InvalidDataException("actual linked factory registry is absent");
         TypeDefinition guard = compiled.MainModule.GetType("Celeste.Mod.AppleEverestSelectedProfileGuard")
             ?? throw new InvalidDataException("actual linked profile guard is absent");
-        string guardHash = Hashing.BytesSha256(Encoding.UTF8.GetBytes(string.Join("\n", guard.Methods.Where(method => method.HasBody)
+        TypeDefinition? snasGuard = compiled.MainModule.GetType("Celeste.Mod.AppleEverestSnasProfileGuard");
+        IEnumerable<TypeDefinition> guards = snasGuard == null ? [guard] : [guard, snasGuard];
+        string guardHash = Hashing.BytesSha256(Encoding.UTF8.GetBytes(string.Join("\n", guards.SelectMany(type => type.Methods).Where(method => method.HasBody)
             .OrderBy(method => method.FullName, StringComparer.Ordinal).Select(Normalize))));
         ProbeContext context = new(root);
         try
@@ -141,6 +143,76 @@ internal static class CompiledFactoryInspection
     }
 
     private static Type NeedType(Assembly assembly, string name) => assembly.GetType(name, throwOnError: true)!;
+
+    // These six controls predate the selected-profile lane. Their exact map
+    // bytes, package/frozen-IL and stage-owned runtime proofs are separate
+    // authorities. This inspection must never report a selected guard PASS.
+    internal static object[] InspectLegacyRegressionEntries(string assemblyPath)
+    {
+        (string Id, string Owner)[] expected = [
+            ("ChronoHelper/ExplodingPinata", "ChronoHelper"),
+            ("DJMapHelper/colorfulFlyFeather", "DJMapHelper"),
+            ("DJMapHelper/featherBarrier", "DJMapHelper"),
+            ("appleEverest/stage25keRootState", "StrawberryJam2021"),
+            ("appleEverest/stage25kfAudio", "StrawberryJam2021"),
+            ("appleEverest/stage25kfDepthTarget", "CrystallineHelper") ];
+        assemblyPath = Path.GetFullPath(assemblyPath);
+        string root = Path.GetDirectoryName(assemblyPath)!;
+        using DefaultAssemblyResolver resolver = new();
+        resolver.AddSearchDirectory(root);
+        resolver.AddSearchDirectory(Path.GetDirectoryName(typeof(object).Assembly.Location)!);
+        using AssemblyDefinition compiled = AssemblyDefinition.ReadAssembly(assemblyPath,
+            new ReaderParameters { AssemblyResolver = resolver, ReadSymbols = false });
+        TypeDefinition registry = compiled.MainModule.GetType("Celeste.Mod.GeneratedAppleEverestGameplayRegistry")
+            ?? throw new InvalidDataException("legacy compiled factory registry absent");
+        MethodDefinition creator = registry.Methods.Single(method => method.Name == "TryCreateEntity" && method.HasBody);
+        if (!creator.Body.Instructions.Any(instruction => instruction.Operand is MethodReference call &&
+            call.DeclaringType.FullName == registry.FullName && call.Name == "SelectEntity") ||
+            !creator.Body.Instructions.Any(instruction => instruction.Operand is MethodReference call && call.Name == "Invoke"))
+            throw new InvalidDataException("legacy production creation caller differs");
+        string[] callers = compiled.MainModule.GetType("Celeste.Level").Methods.Where(method => method.HasBody &&
+            method.Body.Instructions.Any(instruction => instruction.Operand is MethodReference call && call.FullName == creator.FullName))
+            .Select(method => method.FullName).Order(StringComparer.Ordinal).ToArray();
+        if (callers.Length == 0) throw new InvalidDataException("legacy production Level caller absent");
+        ProbeContext context = new(root);
+        try
+        {
+            Assembly runtime = context.LoadFromAssemblyPath(assemblyPath);
+            Type runtimeRegistry = NeedType(runtime, registry.FullName);
+            MethodInfo selector = runtimeRegistry.GetMethod("SelectEntity", Members)!;
+            if (selector.Invoke(null, ["__stage25kn_missing_legacy"]) != null)
+                throw new InvalidDataException("unknown legacy factory accepted");
+            List<object> rows = [];
+            foreach (var item in expected)
+            {
+                Delegate dispatch = selector.Invoke(null, [item.Id]) as Delegate
+                    ?? throw new InvalidDataException("actual legacy registration absent: " + item.Id);
+                if (dispatch.Method.DeclaringType != runtimeRegistry)
+                    throw new InvalidDataException("legacy selector escaped generated registry");
+                MethodDefinition entry = registry.Methods.Single(method => method.Name == dispatch.Method.Name && method.HasBody);
+                if (entry.Body.ExceptionHandlers.Count != 0 || entry.Body.Instructions.Any(instruction =>
+                    instruction.OpCode.FlowControl is FlowControl.Branch or FlowControl.Cond_Branch or FlowControl.Throw))
+                    throw new InvalidDataException("unreviewed legacy entry control flow");
+                Instruction[] instructions = entry.Body.Instructions.ToArray();
+                int record = Array.FindIndex(instructions, instruction => instruction.Operand is MethodReference method &&
+                    method.DeclaringType.FullName == "Celeste.Mod.AppleEverestStaticRuntime" && method.Name == "RecordCustomFactoryUse");
+                if (record < 3 || instructions[record-3].Operand as string != item.Owner ||
+                    instructions[record-2].Operand as string != item.Id || instructions[record-1].Operand as string != "entity")
+                    throw new InvalidDataException("legacy compiled provider/ID differs");
+                Dictionary<string, TypeDefinition> concrete = [];
+                FindConcrete(entry, new(StringComparer.Ordinal), concrete);
+                if (concrete.Count == 0) throw new InvalidDataException("legacy linked concrete constructor missing");
+                rows.Add(new { kind = "entity", customId = item.Id, provider = item.Owner,
+                    actualSelectorInvoked = true, actualProductionCallers = callers,
+                    selectedProfileGuardProof = false, constructorLifecycleExecution = false,
+                    entrySha256 = Hashing.BytesSha256(Encoding.UTF8.GetBytes(Normalize(entry))),
+                    linkedTypeClosure = concrete.Values.OrderBy(type => type.FullName, StringComparer.Ordinal).Select(TypeClosure).ToArray(),
+                    disposition = "SEPARATE_LEGACY_PACKAGE_FROZEN_IL_BEHAVIOR_AND_EXACT_MAP_PROOFS_REQUIRED" });
+            }
+            return rows.ToArray();
+        }
+        finally { context.Unload(); }
+    }
     private static object MakeElement(Type type, string name, JsonElement attributes, JsonElement nodes)
     {
         object value = Activator.CreateInstance(type)!;

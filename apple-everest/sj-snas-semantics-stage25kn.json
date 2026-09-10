@@ -1,0 +1,2592 @@
+{
+  "authority": "REVIEWED_SOURCE_AND_REQUIRED_FRESH_EXECUTION; NOT_A_PASS_RECEIPT",
+  "baselineSemanticAuthoritySha256": "0097f41ed546502765849d86f951925596b8ba0d61671a98ddd446cbe0f6f652",
+  "census": {
+    "customOccurrences": 1309,
+    "factories": 83,
+    "rawAuthoredProfiles": 604,
+    "regressionOccurrences": 336,
+    "selectedFactories": 77,
+    "separateLegacyFactories": 6
+  },
+  "factories": [
+    {
+      "authoredProfileSha256": [
+        "60dd21913b03437404c6661e3f6b971ffdb91961ec0965bf0dfd3ddd24317790",
+        "a16023bbb7ae24eb489c2ee297712bcb6fb2298ee7c8b0df8124f60626ee658f"
+      ],
+      "customId": "FemtoHelper/WindPetals",
+      "issues": [],
+      "kind": "backdrop",
+      "occurrences": 3,
+      "physicalAcceptance": "SEPARATE_EXACT_PRODUCT_MATRIX",
+      "provider": "FemtoHelper",
+      "requiredProofs": [
+        "baseline-source",
+        "composition",
+        "registration",
+        "regressions"
+      ],
+      "scope": "UNCHANGED_ACCEPTED_AUTHORED_PROFILES",
+      "sourceBindings": [
+        {
+          "path": "apple-everest/runtime/semantics/AppleEverestWindPetals.cs",
+          "sha256": "81594cc7f98a065eb744a16b5b7aa68448ad9d268f3d5d969424b1771837755d"
+        }
+      ]
+    },
+    {
+      "authoredProfileSha256": [
+        "827efb0a6cdac443ac904a852cbf5d86689172f6677cf5cb1693875db77d53b2"
+      ],
+      "customId": "FlaglinesAndSuch/customDreamStars",
+      "issues": [],
+      "kind": "backdrop",
+      "occurrences": 2,
+      "physicalAcceptance": "SEPARATE_EXACT_PRODUCT_MATRIX",
+      "provider": "FlaglinesAndSuch",
+      "requiredProofs": [
+        "baseline-source",
+        "composition",
+        "registration",
+        "regressions"
+      ],
+      "scope": "UNCHANGED_ACCEPTED_AUTHORED_PROFILES",
+      "sourceBindings": [
+        {
+          "path": "apple-everest/runtime/semantics/AppleEverestDreamStars.cs",
+          "sha256": "c8072ac3010baf41f1fb2dd1a6b9e37bc72fa3231f3f3c0c6e5f34dc7d187be4"
+        }
+      ]
+    },
+    {
+      "authoredProfileSha256": [
+        "74a89f4979d283d81623dfbd13065c245edd2fb045dc06ae81288b30a552f1fe"
+      ],
+      "customId": "FlaglinesAndSuch/customGodrays",
+      "issues": [],
+      "kind": "backdrop",
+      "occurrences": 2,
+      "physicalAcceptance": "SEPARATE_EXACT_PRODUCT_MATRIX",
+      "provider": "FlaglinesAndSuch",
+      "requiredProofs": [
+        "baseline-source",
+        "composition",
+        "registration",
+        "regressions"
+      ],
+      "scope": "UNCHANGED_ACCEPTED_AUTHORED_PROFILES",
+      "sourceBindings": [
+        {
+          "path": "apple-everest/runtime/semantics/AppleEverestGodrays.cs",
+          "sha256": "0425ef294ee3a45aa2cd5ca3f4c1f582c25bb666bd3b67afb0bade4b6e261a24"
+        }
+      ]
+    },
+    {
+      "authoredProfileSha256": [
+        "1a05c7f70e9b1a25f575b0febfc0d461012a6508d236a0783014f2469c4d0538",
+        "71281f241f25e6e65bded85412e4e797fceb863d072af24c9da1b80756ac308b",
+        "a0b4880daa4cdbca7e97f13ac8a0e29a415c3d9da635c07d4abaf83f2d827a9f"
+      ],
+      "customId": "LunaticHelper/CustomDust",
+      "issues": [],
+      "kind": "backdrop",
+      "occurrences": 4,
+      "physicalAcceptance": "SEPARATE_EXACT_PRODUCT_MATRIX",
+      "provider": "LunaticHelper",
+      "requiredProofs": [
+        "baseline-source",
+        "composition",
+        "registration",
+        "regressions"
+      ],
+      "scope": "UNCHANGED_ACCEPTED_AUTHORED_PROFILES",
+      "sourceBindings": [
+        {
+          "path": "apple-everest/runtime/semantics/AppleEverestCustomDust.cs",
+          "sha256": "4e6da3199d1229d37fb9387200e627fc53ed3ea10261fd201444a0814c4dee45"
+        }
+      ]
+    },
+    {
+      "authoredProfileSha256": [
+        "9a403cc1463521e2d65e672bec67c9c759ecfb649a89d760beec8897e0abdcf1"
+      ],
+      "customId": "MaxHelpingHand/HeatWaveNoColorGrade",
+      "issues": [],
+      "kind": "backdrop",
+      "occurrences": 2,
+      "physicalAcceptance": "SEPARATE_EXACT_PRODUCT_MATRIX",
+      "provider": "MaxHelpingHand",
+      "requiredProofs": [
+        "baseline-source",
+        "composition",
+        "registration",
+        "regressions"
+      ],
+      "scope": "UNCHANGED_ACCEPTED_AUTHORED_PROFILES",
+      "sourceBindings": [
+        {
+          "path": "apple-everest/runtime/semantics/AppleEverestMaxColorSemantics.cs",
+          "sha256": "94f65ea315e6469c6c99e78d780d8968cdf5c13d3b46116d3a9a22e208603ab0"
+        }
+      ]
+    },
+    {
+      "authoredProfileSha256": [
+        "b2daee8ea688a7225b8bdc4231cd8b1ddf3a0b95f9a3105e5e4eba1c7a435fc1"
+      ],
+      "customId": "BrokemiaHelper/caveWall",
+      "issues": [],
+      "kind": "entity",
+      "occurrences": 2,
+      "physicalAcceptance": "SEPARATE_EXACT_PRODUCT_MATRIX",
+      "provider": "BrokemiaHelper",
+      "requiredProofs": [
+        "baseline-source",
+        "composition",
+        "registration",
+        "regressions"
+      ],
+      "scope": "UNCHANGED_ACCEPTED_AUTHORED_PROFILES",
+      "sourceBindings": [
+        {
+          "path": "apple-everest/runtime/semantics/AppleEverestCaveWall.cs",
+          "sha256": "e8f7cfdfc5618134a6b75e74bd596c3c2dd16990962faad31bc70eb57aadb36d"
+        }
+      ]
+    },
+    {
+      "authoredProfileSha256": [
+        "41fd97cb65b6aa89c6bc4981879f51448009e767688e3902571f4a87e3ddd6a8",
+        "456e5af43f6ca8de67a0896725c20fc36e0359f8845dd3337f602986b537b15e",
+        "51412882cc327591d52382fd1ec60d98709ceddb1620bf95b1a300d161c68b5f",
+        "87c026be2a4fe3d58ed71900a66c475352690fd1f73623c72aea8d691807f654",
+        "88840c587026a66cb94f0de5690b27a484725a5e39895daaffb4bb935eb1658f",
+        "92dbbd6d35edde11c6377590ec4392fee699520868faadf7f0ed500683020214",
+        "a144cae516d96e2f6559a5b5375477f8adc587fa4901237e9dd78c4287d5569a",
+        "a9ee85ba64b6ee6f30ad248cfaec685ebd5fb856b32f086efe52596fbe37fba7",
+        "b349fde0656b032d1c3e2f8ad66ca2af8d7f09f08bb5e8fea1d703ebe7898263",
+        "e25336eae8b3579e80469f9fc2556b1e531799e0cf523225dd4280c22085b4b2",
+        "ea3ab296aede6324d5689122ebed7c0e6ed88b650e2156bfa075b9dbf7e0f045",
+        "eb2b3001a9975d325f1a13462606e5f2414d526e9abc9e259389f92b5cd97a25",
+        "eb3f9adef985bbd4240f14c1ba92708cd7c722b113755392706dd3b30fd3df60",
+        "fb660fd9cf5e4ddc297e0ea5ba7c92b2617e5f3fff152441ed8af69756f212bf"
+      ],
+      "customId": "CherryHelper/AssistRect",
+      "issues": [],
+      "kind": "entity",
+      "occurrences": 48,
+      "physicalAcceptance": "SEPARATE_EXACT_PRODUCT_MATRIX",
+      "provider": "CherryHelper",
+      "requiredProofs": [
+        "baseline-source",
+        "composition",
+        "registration",
+        "regressions"
+      ],
+      "scope": "UNCHANGED_ACCEPTED_AUTHORED_PROFILES",
+      "sourceBindings": [
+        {
+          "path": "apple-everest/runtime/semantics/AppleEverestAssistRectangle.cs",
+          "sha256": "e2ebab3cf1960c4dc1b31c48192767e9d7aef2728a41fa664cb3890c2ada78d9"
+        }
+      ]
+    },
+    {
+      "authoredProfileSha256": [
+        "4516b1f5a3f437a62f4e0b6cf5821e3276a474904d4c5c2539d8cf017dd06232"
+      ],
+      "customId": "CherryHelper/ItemCrystal",
+      "issues": [],
+      "kind": "entity",
+      "occurrences": 3,
+      "physicalAcceptance": "SEPARATE_EXACT_PRODUCT_MATRIX",
+      "provider": "CherryHelper",
+      "requiredProofs": [
+        "baseline-source",
+        "composition",
+        "registration",
+        "regressions"
+      ],
+      "scope": "UNCHANGED_ACCEPTED_AUTHORED_PROFILES",
+      "sourceBindings": [
+        {
+          "path": "apple-everest/runtime/semantics/AppleEverestItemCrystal.cs",
+          "sha256": "ab5a918fecbd00a678e66293d9ebe863b0db4b21c5fb52208b79a9d3e7b0d9cc"
+        }
+      ]
+    },
+    {
+      "authoredProfileSha256": [
+        "fedaf677ed413d3929da9ea703929bcb0bfba05d732a6623065c6bd7bc2de1fe"
+      ],
+      "customId": "CherryHelper/ItemCrystalPedestal",
+      "issues": [],
+      "kind": "entity",
+      "occurrences": 2,
+      "physicalAcceptance": "SEPARATE_EXACT_PRODUCT_MATRIX",
+      "provider": "CherryHelper",
+      "requiredProofs": [
+        "baseline-source",
+        "composition",
+        "registration",
+        "regressions"
+      ],
+      "scope": "UNCHANGED_ACCEPTED_AUTHORED_PROFILES",
+      "sourceBindings": [
+        {
+          "path": "apple-everest/runtime/semantics/AppleEverestItemCrystalPedestal.cs",
+          "sha256": "15f08c065203406b6e965c4e0e80e08925a7c61209d2eaf61d283b178ffa7c34"
+        }
+      ]
+    },
+    {
+      "authoredProfileSha256": [
+        "89964c984b46e483ea30bf4db051e12bcc4f7d2100cad1f3a7820d7d71fb084a"
+      ],
+      "customId": "ChronoHelper/ExplodingPinata",
+      "issues": [],
+      "kind": "entity",
+      "occurrences": 1,
+      "physicalAcceptance": "SEPARATE_EXACT_PRODUCT_MATRIX",
+      "provider": "ChronoHelper",
+      "requiredProofs": [
+        "composition",
+        "legacy-reference",
+        "registration",
+        "regressions"
+      ],
+      "scope": "SEPARATE_UNCHANGED_LEGACY_CONTROL",
+      "sourceBindings": []
+    },
+    {
+      "authoredProfileSha256": [
+        "4a7c17df1bbb2721bf66981592fb88d49962c72a9b499f839aee85ec97639058",
+        "c303ee48b70af631de2c2f11974de04305683947705dad84a6739cfa6b127b29"
+      ],
+      "customId": "CollabUtils2/LobbyMapController",
+      "issues": [],
+      "kind": "entity",
+      "occurrences": 5,
+      "physicalAcceptance": "SEPARATE_EXACT_PRODUCT_MATRIX",
+      "provider": "CollabUtils2",
+      "requiredProofs": [
+        "baseline-source",
+        "composition",
+        "registration",
+        "regressions"
+      ],
+      "scope": "UNCHANGED_ACCEPTED_AUTHORED_PROFILES",
+      "sourceBindings": [
+        {
+          "path": "apple-everest/runtime/semantics/AppleEverestLobbyMapController.cs",
+          "sha256": "2eb6cefb9474e827a634da1b9806b5eba9037c5c3f55b1bac6adf45f3723d6f4"
+        }
+      ]
+    },
+    {
+      "authoredProfileSha256": [
+        "fc332a8c660a833a8c719f69858179bf0651a9a43130784f012caca3fe201e70"
+      ],
+      "customId": "CollabUtils2/LobbyMapMarker",
+      "issues": [],
+      "kind": "entity",
+      "occurrences": 5,
+      "physicalAcceptance": "SEPARATE_EXACT_PRODUCT_MATRIX",
+      "provider": "CollabUtils2",
+      "requiredProofs": [
+        "baseline-source",
+        "composition",
+        "registration",
+        "regressions"
+      ],
+      "scope": "UNCHANGED_ACCEPTED_AUTHORED_PROFILES",
+      "sourceBindings": [
+        {
+          "path": "apple-everest/runtime/semantics/AppleEverestLobbyMapMarker.cs",
+          "sha256": "1095629820cd072f788f430f84ea44578447352a79b99438ab1f4a7745475dec"
+        }
+      ]
+    },
+    {
+      "authoredProfileSha256": [
+        "327a962cb3d948da9b4530fd79f3da5772a8d99dbc0c03e1077ebe71bd795130",
+        "59a87159d2ddd1b8dbff9f73ac324e22de564a45c799cfb5f69e855f0ab63a23",
+        "6066a47826ec874f4223f9b63f9a30f2195c7217103cf804949c226e9135a786",
+        "91d181db695c487d375c672cde13dbd090c4fb0cf86ff056389df8ed608dc36f",
+        "acc68753d00066860f9bc02ddb2897e611c824317be6e4402ca93a059ffdfa0d",
+        "b0b868f6dcda04912791b1340b381c41081981af22fe0e83e24153061d76f1ad",
+        "c693c3dd982e330f0a7b56a00e00f99f3aa731ddc716a79cb8d419aba75bf2e4",
+        "e46d418b096daa6b26d97c2365e42558be4800b772f01d528d66d150e1fdf996"
+      ],
+      "customId": "CollabUtils2/LobbyMapWarp",
+      "issues": [],
+      "kind": "entity",
+      "occurrences": 11,
+      "physicalAcceptance": "SEPARATE_EXACT_PRODUCT_MATRIX",
+      "provider": "CollabUtils2",
+      "requiredProofs": [
+        "baseline-source",
+        "composition",
+        "registration",
+        "regressions"
+      ],
+      "scope": "UNCHANGED_ACCEPTED_AUTHORED_PROFILES",
+      "sourceBindings": [
+        {
+          "path": "apple-everest/runtime/semantics/AppleEverestLobbyMapWarp.cs",
+          "sha256": "4c686dcddf74291ae64311fd3ed00064206ad0205f6c90d8cad0cecd9e737463"
+        }
+      ]
+    },
+    {
+      "authoredProfileSha256": [
+        "051171fad1414b3361575f4b717a031b9b948dfb7f3ff7e60fac85785de40fcb",
+        "7919d377fc3fadae118be35dd0dcc5aa9be73ed9916a8649f07f21c4346c183e"
+      ],
+      "customId": "CollabUtils2/MiniHeart",
+      "issues": [
+        "KN04"
+      ],
+      "kind": "entity",
+      "occurrences": 5,
+      "physicalAcceptance": "SEPARATE_EXACT_PRODUCT_MATRIX",
+      "provider": "CollabUtils2",
+      "requiredProofs": [
+        "baseline-source",
+        "compiled-runtime",
+        "composition",
+        "registration",
+        "regressions",
+        "source-bindings"
+      ],
+      "scope": "EXACT_PROFILE_EXTENSION",
+      "sourceBindings": [
+        {
+          "path": "apple-everest/runtime/semantics/AppleEverestCollabMiniHeart.cs",
+          "sha256": "5f51f6bc4d9e2a8955e304346c9674f551fe243d4407fdfc7aad2485a5e6c3de"
+        }
+      ]
+    },
+    {
+      "authoredProfileSha256": [
+        "17616126a0c04255e055b7876fecb284a2331c6f5c6a1ecf3a78e17e1954f6b6",
+        "3c5c4ac8b130762f22523cd938ac30688c8611fdc0c2cf33fd96599f4db37eeb"
+      ],
+      "customId": "CollabUtils2/MiniHeartDoor",
+      "issues": [],
+      "kind": "entity",
+      "occurrences": 4,
+      "physicalAcceptance": "SEPARATE_EXACT_PRODUCT_MATRIX",
+      "provider": "CollabUtils2",
+      "requiredProofs": [
+        "baseline-source",
+        "composition",
+        "registration",
+        "regressions"
+      ],
+      "scope": "UNCHANGED_ACCEPTED_AUTHORED_PROFILES",
+      "sourceBindings": [
+        {
+          "path": "apple-everest/runtime/semantics/AppleEverestCollabHeartDoor.cs",
+          "sha256": "28db26ba2391448048374c0c5bff047b28c6d16096acb7da008ec982ed47590d"
+        }
+      ]
+    },
+    {
+      "authoredProfileSha256": [
+        "5f9e58d25c72193f6982b96428ea42c2eb163dc76d76aa8324ab4d9879d7a9c3",
+        "8149ae88acdc989306cdf4315fe88d572cc1283c812991c0e9efef4d81e37343"
+      ],
+      "customId": "CollabUtils2/RainbowBerry",
+      "issues": [],
+      "kind": "entity",
+      "occurrences": 4,
+      "physicalAcceptance": "SEPARATE_EXACT_PRODUCT_MATRIX",
+      "provider": "CollabUtils2",
+      "requiredProofs": [
+        "baseline-source",
+        "composition",
+        "registration",
+        "regressions"
+      ],
+      "scope": "UNCHANGED_ACCEPTED_AUTHORED_PROFILES",
+      "sourceBindings": [
+        {
+          "path": "apple-everest/runtime/semantics/AppleEverestCollabRainbowBerry.cs",
+          "sha256": "6b62838cc178746a3cab1ea8af8ba036d7ba5e8599b2c1e36ad1677e7c62c059"
+        }
+      ]
+    },
+    {
+      "authoredProfileSha256": [
+        "fedaf677ed413d3929da9ea703929bcb0bfba05d732a6623065c6bd7bc2de1fe"
+      ],
+      "customId": "CollabUtils2/SilverBerry",
+      "issues": [
+        "KN05"
+      ],
+      "kind": "entity",
+      "occurrences": 5,
+      "physicalAcceptance": "SEPARATE_EXACT_PRODUCT_MATRIX",
+      "provider": "CollabUtils2",
+      "requiredProofs": [
+        "baseline-source",
+        "compiled-runtime",
+        "composition",
+        "registration",
+        "regressions"
+      ],
+      "scope": "UNCHANGED_ACCEPTED_AUTHORED_PROFILES",
+      "sourceBindings": [
+        {
+          "path": "apple-everest/runtime/AppleEverestSecondCollabRuntime.cs",
+          "sha256": "68bd0d6e0cc3bb81f5c0f635af29e0abb86e9dfdd97eb8bf33352d081a5e8392"
+        }
+      ]
+    },
+    {
+      "authoredProfileSha256": [
+        "05234edc2a19fceb04db6b3608e5be55aada72051f82bf9101dcb8dba1c11164"
+      ],
+      "customId": "CommunalHelper/PlayerBubbleRegion",
+      "issues": [
+        "KN01"
+      ],
+      "kind": "entity",
+      "occurrences": 1,
+      "physicalAcceptance": "SEPARATE_EXACT_PRODUCT_MATRIX",
+      "provider": "CommunalHelper",
+      "requiredProofs": [
+        "compiled-runtime",
+        "composition",
+        "random-bubble",
+        "registration",
+        "regressions",
+        "source-bindings"
+      ],
+      "scope": "NEW_FINITE_IMPLEMENTATION",
+      "sourceBindings": [
+        {
+          "path": "apple-everest/runtime/semantics/AppleEverestPlayerBubbleRegion.cs",
+          "sha256": "02084bc5458d97194a0cc63fe5420f54871bd2fd96dad9350d0f45093602bf26"
+        }
+      ]
+    },
+    {
+      "authoredProfileSha256": [
+        "67796b4e3da7818a230ea01cbbdaea2828b5d662656be54e27b650a0a5e186c2"
+      ],
+      "customId": "DJMapHelper/colorfulFlyFeather",
+      "issues": [],
+      "kind": "entity",
+      "occurrences": 1,
+      "physicalAcceptance": "SEPARATE_EXACT_PRODUCT_MATRIX",
+      "provider": "DJMapHelper",
+      "requiredProofs": [
+        "composition",
+        "legacy-reference",
+        "registration",
+        "regressions"
+      ],
+      "scope": "SEPARATE_UNCHANGED_LEGACY_CONTROL",
+      "sourceBindings": []
+    },
+    {
+      "authoredProfileSha256": [
+        "27cb35cf946c7178083ba565c02faf587236775e31161cd5dbd1235d0df0b0da"
+      ],
+      "customId": "DJMapHelper/featherBarrier",
+      "issues": [],
+      "kind": "entity",
+      "occurrences": 1,
+      "physicalAcceptance": "SEPARATE_EXACT_PRODUCT_MATRIX",
+      "provider": "DJMapHelper",
+      "requiredProofs": [
+        "composition",
+        "legacy-reference",
+        "registration",
+        "regressions"
+      ],
+      "scope": "SEPARATE_UNCHANGED_LEGACY_CONTROL",
+      "sourceBindings": []
+    },
+    {
+      "authoredProfileSha256": [
+        "063bf0d2cf038b587845ec7b126b136a473f222c9bb62aa99856674d7f5502f4",
+        "06ee633c5ff6c6324b1e9489cde3abfb331db37dead8fe81c8429d0b9b6f957f",
+        "0bc7467d5d38d6a5772cdf245d5d81023bdfb16902495b2f5eb22b8b5723ef30",
+        "0e889cd6c11727dff161fd8b0cb52c16f23a726d428162f7d2fe195c5d2dd06e",
+        "0f3776d63176a4bf802086aa4ae70761fad4c7b58d43e588f85cfb88f854ca2e",
+        "0f8135c4d2deff8dc043198c467cf7dbfb030b7abb59f0549e352bf8285186f4",
+        "12551a8c9b719e72185c541cd2f5dece94e40a9899c5876c23bf6049ac1de6be",
+        "1406df2fe9ee171cb5ac9a4b6a98e6d38079ddcef1a0b6b4ac3879a1b5ff7b98",
+        "15a01f56d5b91c31f7301c9e9f4a195048435c438f0f33ff656859205cf519bd",
+        "1fc1ada2327cc375b766b8bd78c9b5ccba409c316d36dc7accad9dfdc592d0de",
+        "27626558aced3767053ae495b25cc73194d27682b063d10349a454defde43e99",
+        "33008b53e5a019889c13699e50d13bbeb82022204169bc81ab6b112d984275b7",
+        "3687d5b045dc15ea805d2da1b904cc98b28c0fd3a8607145f829cc4828578955",
+        "376d0a5f17a831d96afc4255653cf0f4624655d774d8280858a5325a0a242683",
+        "48c74a6715f9476f787bd3e46251bcdbf2fa9ab6e1714cece397e25b0bfdd95b",
+        "4fba3968afaeb0083dea430354c92b8722b30de6985d3c87f638de5d9ddd13a4",
+        "508712f6ad1fcd00d195cd26180c982ba960f6c679d6c29e4e6165c090a8d7db",
+        "587194fc6538a74b9e44c815db07e14b09419ce831c58845670a39b6744bc83c",
+        "5977703fdfc19f8dc0704837c52a460369db6faf28e8bf9634fdf8a28e0f9a13",
+        "5c3db7ab0379fba6f1a602a491b6bd2994a24ff090e3bb0390b8d8ee18168692",
+        "691ecd217a79efc9988846bbdc457cd7d3f6f4d1e462ad9e30f5fa17159849df",
+        "6996a7669eeb0815b89885f4f42a2e7cc75bf7e9ee76164fb1a592a9187c5ec5",
+        "719fa1197bf6da86bf329afad0ed0a4e5cf95ec7aa778936064a9e128e7146ee",
+        "7512644293f5e4b90ea0413b02f822c61c7ab3788b684a98a8be9e00044737d3",
+        "7ca233a0b061da2442eef3dcaee1720f76605d68065743fc292d37f5886ad8a2",
+        "8e5a8abef32ed1eab25be2df50ec5aa9fcc72dc8c0aaf85dbd4fa13d709a3d63",
+        "8ee5ebe3c491fc82de9b0245f4dd02d05e00dab22bc3b9e89e655896ead19bac",
+        "91117ce5cfae5d26a23008e33cb46b93b717d586da155f562729bb7a47ee75e3",
+        "92895c3f9e82f41d7fb663228341a69272babf04e147f376c09598986bbb6223",
+        "9d7dd356316b8ac3b35b0b0d859680b5144200a9b3e16bbf51fa1484ee7b6c0a",
+        "a436fcb2748595073a8fb4605e94f30a97470e157a36deac1b44a075d8c78500",
+        "a7f66350ab0d3bdf02a12c7972fdabbbfdd265acb6e87771c1e34c93f657be50",
+        "b0b0a42edd7f0c617ce451406ebb2138987fb2ba81bb7eb7dc68c2771de29519",
+        "b186de7f714f4cfb2fe29eafe8d735bc85bfae9f1929930e918ea3857015e67a",
+        "b401c9e372f30151a07ae0ba8fefd899de7003302a725af94ceba0511b7b6015",
+        "b638b5856c8f4c0a7120ca950f576976667054cddc6ccf861b75992d025d8193",
+        "c8bd1a011e2c62f4c32b340c2f61c7d29a44fd16d489f8d5df384058e00c2065",
+        "da491ada85ecc1ab161a2a0999a9c675507a2cf2f5702a7fcaa9f5b746242f20",
+        "e15124a604e5669cb3e782636f20890f664591eda86049493108273dc7d33ca8",
+        "e5ad7b944f48dc1244126d5b0b5a912c0740cfdbf807a2a6d3eeaa5f035c91d7",
+        "f3cd991404cb3381642b08b25a1d80ff05e0851eef140cefcb3883cd5258f3ef"
+      ],
+      "customId": "FancyTileEntities/FancySolidTiles",
+      "issues": [],
+      "kind": "entity",
+      "occurrences": 49,
+      "physicalAcceptance": "SEPARATE_EXACT_PRODUCT_MATRIX",
+      "provider": "FancyTileEntities",
+      "requiredProofs": [
+        "baseline-source",
+        "composition",
+        "registration",
+        "regressions"
+      ],
+      "scope": "UNCHANGED_ACCEPTED_AUTHORED_PROFILES",
+      "sourceBindings": [
+        {
+          "path": "apple-everest/runtime/semantics/AppleEverestFancySolidTiles.cs",
+          "sha256": "e2944afca9f4cfca69d03f1a9c11dfcb67387ff69b22126cce0fbac00348ac4a"
+        }
+      ]
+    },
+    {
+      "authoredProfileSha256": [
+        "135834ba62f752cc299d3aeb2020599897b60d18fdbc10add2e52b2848da3e72",
+        "16feb374172e4fbe2b17307f6afd7cb247299fb0a5a636cbc7dbfb4042023534",
+        "177796ecffb22e6a59d00b11d5519b8cb5181ba9ccf6caf71273d15eadba14b8",
+        "2df7b3a6c71de5e2c85043c1391a4971357c305e7186fdcce25d09c686889f49",
+        "6178c4a31a2b7f8ca214155ad59d48630b3c0c9eb1eaf6e1e583f3dd3282c7bc",
+        "7d3dda54998aad7e7f5a818a356016bb97369590520f7a3bf88095bbf5520df2",
+        "8a71d50d1c9cdb345014a3cc2fbef5aa6dabb2fa713e721f50d82ce814944299",
+        "8dfa3afee746b66e4cf24b6a39179cf7b6f9f4b9c4f4be101ac196386b96e245",
+        "8ede157871d202cb0ccadd2368db3a1f577abf6350811c3a418d1874703291b0",
+        "9ced5dd1d9451b29e2350d4f8e73f803da786a084e13c21f5f731b473799d68d",
+        "a7a9971feac5545461c550ea0a3668ea44ba4917a769d9f848a095eee9978491",
+        "b49dde9fa1d4e4881c54a0d2e49b3d15932000ccc943ba461f11f00728efc457",
+        "baf6a3670bb3b17c593bd68a07d84274bf33bdf77af3b4e4bae01fd43e9b3063",
+        "ca2577fb743b9b0829d16374d501f7230e81cb5aa291dca5eda394063c1d6189",
+        "cb637d414afb9c925459467deb3e3561b0e545e6ebb377f2796007f80c7fb0a5",
+        "cb7cfd8d521440f7583e8963597984f30c2ce64cc34b1a152bb1912101ca8a1f",
+        "ce356594e690a03150783e877698ae1cfa46ae7e6cc888778526855c5f0d9880",
+        "e0b14da49df5d9e55e60fdb32ac6769e2efa756c0dbb6a1032492b11a13d5a59"
+      ],
+      "customId": "FemtoHelper/CustomParallaxBigWaterfall",
+      "issues": [],
+      "kind": "entity",
+      "occurrences": 26,
+      "physicalAcceptance": "SEPARATE_EXACT_PRODUCT_MATRIX",
+      "provider": "FemtoHelper",
+      "requiredProofs": [
+        "baseline-source",
+        "composition",
+        "registration",
+        "regressions"
+      ],
+      "scope": "UNCHANGED_ACCEPTED_AUTHORED_PROFILES",
+      "sourceBindings": [
+        {
+          "path": "apple-everest/runtime/semantics/AppleEverestFemtoWaterfall.cs",
+          "sha256": "2b0bd0e4600961df47ca45c9538ac1bcdf778ba185852cea28d5c94d9e30b322"
+        }
+      ]
+    },
+    {
+      "authoredProfileSha256": [
+        "ff709136a2c2f329c7d11c16c3861cbbd149903d588e52dacfbf140e4cc9d14e"
+      ],
+      "customId": "FemtoHelper/ParticleEmitter",
+      "issues": [],
+      "kind": "entity",
+      "occurrences": 7,
+      "physicalAcceptance": "SEPARATE_EXACT_PRODUCT_MATRIX",
+      "provider": "FemtoHelper",
+      "requiredProofs": [
+        "baseline-source",
+        "composition",
+        "registration",
+        "regressions"
+      ],
+      "scope": "UNCHANGED_ACCEPTED_AUTHORED_PROFILES",
+      "sourceBindings": [
+        {
+          "path": "apple-everest/runtime/semantics/AppleEverestParticleEmitter.cs",
+          "sha256": "98c75c8a582b616a9878a5cd94c577ce424e9e3c5caa6aad53559dc088c79363"
+        }
+      ]
+    },
+    {
+      "authoredProfileSha256": [
+        "4eb33c64b416f4e47c0cbb77c54b51e67978e526bb848344ab0babf4914a76ec"
+      ],
+      "customId": "FrostHelper/CustomFireBarrier",
+      "issues": [],
+      "kind": "entity",
+      "occurrences": 2,
+      "physicalAcceptance": "SEPARATE_EXACT_PRODUCT_MATRIX",
+      "provider": "FrostHelper",
+      "requiredProofs": [
+        "baseline-source",
+        "composition",
+        "registration",
+        "regressions"
+      ],
+      "scope": "UNCHANGED_ACCEPTED_AUTHORED_PROFILES",
+      "sourceBindings": [
+        {
+          "path": "apple-everest/runtime/semantics/AppleEverestFrostFireBarrier.cs",
+          "sha256": "e5ca591c5b9aed03f08345095517fef87814c24694e9af976771a8168e5152c7"
+        }
+      ]
+    },
+    {
+      "authoredProfileSha256": [
+        "0e008e88ac6167f27216e83e72f60cce42496d31a2765788f6dbdf7a452864f9",
+        "80227d79f7bf98a708262eb3c5808f4763369ef4509daf001de907343e549972"
+      ],
+      "customId": "FrostHelper/CustomFlutterBird",
+      "issues": [],
+      "kind": "entity",
+      "occurrences": 3,
+      "physicalAcceptance": "SEPARATE_EXACT_PRODUCT_MATRIX",
+      "provider": "FrostHelper",
+      "requiredProofs": [
+        "baseline-source",
+        "composition",
+        "registration",
+        "regressions"
+      ],
+      "scope": "UNCHANGED_ACCEPTED_AUTHORED_PROFILES",
+      "sourceBindings": [
+        {
+          "path": "apple-everest/runtime/semantics/AppleEverestFrostMoverSemantics.cs",
+          "sha256": "8d83ca2f5663e955917fd2fc56771b9a502c769f8943568cb6efbca7bba75b92"
+        }
+      ]
+    },
+    {
+      "authoredProfileSha256": [
+        "8bb62efad21fe79be530b129bb709920b228b842a504d560a391cd8c37f49a21"
+      ],
+      "customId": "FrostHelper/DecalContainer",
+      "issues": [],
+      "kind": "entity",
+      "occurrences": 2,
+      "physicalAcceptance": "SEPARATE_EXACT_PRODUCT_MATRIX",
+      "provider": "FrostHelper",
+      "requiredProofs": [
+        "baseline-source",
+        "composition",
+        "registration",
+        "regressions"
+      ],
+      "scope": "UNCHANGED_ACCEPTED_AUTHORED_PROFILES",
+      "sourceBindings": [
+        {
+          "path": "apple-everest/runtime/semantics/AppleEverestFrostDecalContainerMaker.cs",
+          "sha256": "70bb9876eff1fe6d943c4bbb51b9f3990d3c28ecea1a6e0e45cb6b915f78057c"
+        }
+      ]
+    },
+    {
+      "authoredProfileSha256": [
+        "6cdabc346161f70042d1927da82feaa4bb13e5fc1b4a0dc2ed5608a485ed4a1f"
+      ],
+      "customId": "FrostHelper/EntityMover",
+      "issues": [],
+      "kind": "entity",
+      "occurrences": 2,
+      "physicalAcceptance": "SEPARATE_EXACT_PRODUCT_MATRIX",
+      "provider": "FrostHelper",
+      "requiredProofs": [
+        "baseline-source",
+        "composition",
+        "registration",
+        "regressions"
+      ],
+      "scope": "UNCHANGED_ACCEPTED_AUTHORED_PROFILES",
+      "sourceBindings": [
+        {
+          "path": "apple-everest/runtime/semantics/AppleEverestFrostMoverSemantics.cs",
+          "sha256": "8d83ca2f5663e955917fd2fc56771b9a502c769f8943568cb6efbca7bba75b92"
+        }
+      ]
+    },
+    {
+      "authoredProfileSha256": [
+        "4edf04304d30909b3625f884afad3c414d52ea4f55f052a9f3844f90a13ade50",
+        "57be0202b47782d5063488b6e36fc50a09c268762aeab7a1fc23c43560340d65"
+      ],
+      "customId": "FrostHelper/IceSpinner",
+      "issues": [],
+      "kind": "entity",
+      "occurrences": 22,
+      "physicalAcceptance": "SEPARATE_EXACT_PRODUCT_MATRIX",
+      "provider": "FrostHelper",
+      "requiredProofs": [
+        "baseline-source",
+        "composition",
+        "registration",
+        "regressions"
+      ],
+      "scope": "UNCHANGED_ACCEPTED_AUTHORED_PROFILES",
+      "sourceBindings": [
+        {
+          "path": "apple-everest/runtime/semantics/AppleEverestFrostSpinner.cs",
+          "sha256": "675b41f66f5ea77bd045ccf063f44e211b497524e9c930b5cef1db5edf1ab3b4"
+        }
+      ]
+    },
+    {
+      "authoredProfileSha256": [
+        "1b4dfe13582e45d59df274d611527b82aec7cc8fd532562eeeb1d4c5e8598f64",
+        "30ac362eefcbf1af3dfa0b2bb755e4dcf053bdf4e5f1e8a15f262c0c340cef73",
+        "310aa810c2e9f287209ee781861cfce1ccbab40811ad2aef57e061ee65de2bbe",
+        "49e42adb7c54755aef99a826a2a09f46200a40ef1d74d61c878aca4fa04abac3",
+        "69cabd321e00c1dbde1b6a2a0d33d1934e7e120492bdf030d9294978c9dfcab7",
+        "7f56e7c82048d8fd866dfe00585f768cc242011d834eea74247f1215456db033",
+        "8864bba0ff5277a89b19768d497dda897dbf4182d157c46cad91ccff11fdc537",
+        "a9d8b42cbd0c43d69ae3aacff7498daaf49e8d458420045b785bcadedbfd0072",
+        "df338765138a47d8dd01b736543107e9cfbee563553c2158e373cde1b24351ea",
+        "e139aba7de017f99f0007477ced20b01a80620af496c27271718e7be8d1e2736"
+      ],
+      "customId": "FrostHelper/WireLamps",
+      "issues": [],
+      "kind": "entity",
+      "occurrences": 11,
+      "physicalAcceptance": "SEPARATE_EXACT_PRODUCT_MATRIX",
+      "provider": "FrostHelper",
+      "requiredProofs": [
+        "baseline-source",
+        "composition",
+        "registration",
+        "regressions"
+      ],
+      "scope": "UNCHANGED_ACCEPTED_AUTHORED_PROFILES",
+      "sourceBindings": [
+        {
+          "path": "apple-everest/runtime/semantics/AppleEverestFrostWireLamps.cs",
+          "sha256": "00bf63e0016553d773a3227784c45e78d2b9e27e490ad43632b8eb23961bc92c"
+        }
+      ]
+    },
+    {
+      "authoredProfileSha256": [
+        "da69a8a6438dce761d55302d425e79386316297d75ab78510d9ca88ffdd51118"
+      ],
+      "customId": "HonlyHelper/PettableCat",
+      "issues": [],
+      "kind": "entity",
+      "occurrences": 4,
+      "physicalAcceptance": "SEPARATE_EXACT_PRODUCT_MATRIX",
+      "provider": "HonlyHelper",
+      "requiredProofs": [
+        "baseline-source",
+        "composition",
+        "registration",
+        "regressions"
+      ],
+      "scope": "UNCHANGED_ACCEPTED_AUTHORED_PROFILES",
+      "sourceBindings": [
+        {
+          "path": "apple-everest/runtime/semantics/AppleEverestPettableCat.cs",
+          "sha256": "bca439059a03a19b80bb9905b1e8872cf0c837427e18d8b7e07710c41eea41a1"
+        }
+      ]
+    },
+    {
+      "authoredProfileSha256": [
+        "027bd395050bf48a73b054c180b0ad1e9e5903c334ab7fb22c7618ff7fbcfbb0",
+        "51e9284312734d5257d96edbd050faabd604df895287a6c42f82f2e37f133f8a",
+        "881985ea89581e1998cfe10b063868ca5a7b1c18026f9eb6d186c5d85e719d19",
+        "9cc6a49163e124116682a612fc36a946e14ab01c93639c02f98061e6952de684",
+        "a07a9f495cf9e33217910e245de72b770cd494a367a7417add342948788c682e",
+        "a2ed26efc71e191c75c5290f367fd249670c7aaada9eaf5e9b299dba5a01607d",
+        "c82f714cb22cc1324a9e3d74318c9d5c2920d256c4f119de7a1aaa813b3e1ea7",
+        "d8fb9ae1563f5f6f967f506353d8594b18eac8263a041b0440808509980898ea",
+        "ebf0ecb1bb428f4aed8885e9d44c733a36463e73c0fd2a6479b303b1a1a96579",
+        "f2ad59049024ff9a916154fb37dfb351bdc4634fef8b64d0b67bc7c7c4762b16",
+        "faa4490da51b6340fc59092b2adeaefe60f7511541c5fba3ee8266f1bb74135f",
+        "fd1d9021883d2b5b29e5b82ee54d6862f35989c1e7477ef4e851ef0ca757563e"
+      ],
+      "customId": "JungleHelper/MossyWall",
+      "issues": [],
+      "kind": "entity",
+      "occurrences": 211,
+      "physicalAcceptance": "SEPARATE_EXACT_PRODUCT_MATRIX",
+      "provider": "JungleHelper",
+      "requiredProofs": [
+        "baseline-source",
+        "composition",
+        "registration",
+        "regressions"
+      ],
+      "scope": "UNCHANGED_ACCEPTED_AUTHORED_PROFILES",
+      "sourceBindings": [
+        {
+          "path": "apple-everest/runtime/semantics/AppleEverestJungleSemantics.cs",
+          "sha256": "6f64fe90f080ccf96656b0bd78e7ed5e364ce5aad6a36e3d8a9d2f746154b790"
+        }
+      ]
+    },
+    {
+      "authoredProfileSha256": [
+        "2b712e03279dae68d65d04bab7346ebdb4b4e9eac306a13798ab1e17095a8d5f"
+      ],
+      "customId": "LunaticHelper/InvisibleLightSource",
+      "issues": [],
+      "kind": "entity",
+      "occurrences": 3,
+      "physicalAcceptance": "SEPARATE_EXACT_PRODUCT_MATRIX",
+      "provider": "LunaticHelper",
+      "requiredProofs": [
+        "baseline-source",
+        "composition",
+        "registration",
+        "regressions"
+      ],
+      "scope": "UNCHANGED_ACCEPTED_AUTHORED_PROFILES",
+      "sourceBindings": [
+        {
+          "path": "apple-everest/runtime/semantics/AppleEverestInvisibleLightSource.cs",
+          "sha256": "174c6adf91007b3a51228b3bd4ed629c3bb6052024467a4509ac9ccb38b1bcc4"
+        }
+      ]
+    },
+    {
+      "authoredProfileSha256": [
+        "020ae250ba9989693f4a139073f0da35b7ed1e7587b7c60f6c8622c2197639a4",
+        "c6c549194bdd0bc27a89e6385baf5d720128cb0f4c0990a75432ed1c011aa7b0"
+      ],
+      "customId": "LunaticHelper/StrawberryWithReturn",
+      "issues": [],
+      "kind": "entity",
+      "occurrences": 3,
+      "physicalAcceptance": "SEPARATE_EXACT_PRODUCT_MATRIX",
+      "provider": "LunaticHelper",
+      "requiredProofs": [
+        "baseline-source",
+        "composition",
+        "registration",
+        "regressions"
+      ],
+      "scope": "UNCHANGED_ACCEPTED_AUTHORED_PROFILES",
+      "sourceBindings": [
+        {
+          "path": "apple-everest/runtime/semantics/AppleEverestBubbleReturnBerry.cs",
+          "sha256": "2c0f38df3e74be5b1c66f00526215a9c9002dc8a9ca6ccd88fce4f8bb60c66f1"
+        }
+      ]
+    },
+    {
+      "authoredProfileSha256": [
+        "ac53e233f0a400b66887c92e98fd91a95dc0df843d9c016f702b9e96775e3d40",
+        "ef1c49ef9317d4aaf5c44bcb129ec80b708d4755893b56da272de88bf2c1375a"
+      ],
+      "customId": "MaxHelpingHand/CustomTutorialWithNoBird",
+      "issues": [],
+      "kind": "entity",
+      "occurrences": 4,
+      "physicalAcceptance": "SEPARATE_EXACT_PRODUCT_MATRIX",
+      "provider": "MaxHelpingHand",
+      "requiredProofs": [
+        "baseline-source",
+        "composition",
+        "registration",
+        "regressions"
+      ],
+      "scope": "UNCHANGED_ACCEPTED_AUTHORED_PROFILES",
+      "sourceBindings": [
+        {
+          "path": "apple-everest/runtime/semantics/AppleEverestEverestBaseEntitySemantics.cs",
+          "sha256": "ee9ece52eaafdfb306d1ad2bffaffb8907ee7f9ee17b95461b18ab9f6ee8dcdf"
+        }
+      ]
+    },
+    {
+      "authoredProfileSha256": [
+        "038a77fa7b508089f73066923084ef4a0ed98331880d809f849ce89ae4350887",
+        "326618e3b4916acd7ff24093583c1a3d3847fd24c71aa3cd5c7e5bd5042a696f",
+        "46398205e18471a33df100ad7b11a42c7ceda88fb25fdae40d8eaf84ad501bd6",
+        "98939cbfbc95364a60b3c8e3f09cecb98449e28b629b0a0bc20d7413d67b80a2",
+        "bdc4f1b78f845a848ff37dba0da003f9ccea6c17d35c1fe4094155232416c18f",
+        "c30b1ea089c876c14cd3b79637d9650e02d066b0827608738518d1a443c94879",
+        "eb5a712361ccaff6231cc74455cb90d20a8209a14ef69e83484ccffd4bdd5001"
+      ],
+      "customId": "MaxHelpingHand/FlagExitBlock",
+      "issues": [],
+      "kind": "entity",
+      "occurrences": 8,
+      "physicalAcceptance": "SEPARATE_EXACT_PRODUCT_MATRIX",
+      "provider": "MaxHelpingHand",
+      "requiredProofs": [
+        "baseline-source",
+        "composition",
+        "registration",
+        "regressions"
+      ],
+      "scope": "UNCHANGED_ACCEPTED_AUTHORED_PROFILES",
+      "sourceBindings": [
+        {
+          "path": "apple-everest/runtime/semantics/AppleEverestMaxColorSemantics.cs",
+          "sha256": "94f65ea315e6469c6c99e78d780d8968cdf5c13d3b46116d3a9a22e208603ab0"
+        }
+      ]
+    },
+    {
+      "authoredProfileSha256": [
+        "b74daaba16421995fdd9cf72096df55983170a6124266543361bb253862fcc7d"
+      ],
+      "customId": "MaxHelpingHand/FlagSwitchGate",
+      "issues": [
+        "KN03"
+      ],
+      "kind": "entity",
+      "occurrences": 1,
+      "physicalAcceptance": "SEPARATE_EXACT_PRODUCT_MATRIX",
+      "provider": "MaxHelpingHand",
+      "requiredProofs": [
+        "compiled-runtime",
+        "composition",
+        "registration",
+        "regressions",
+        "source-bindings"
+      ],
+      "scope": "NEW_FINITE_IMPLEMENTATION",
+      "sourceBindings": [
+        {
+          "path": "apple-everest/runtime/semantics/AppleEverestFlagSwitchGate.cs",
+          "sha256": "b199cef0669fbe3a9b682caef7a519f14d1d4c81b4df1673341081aad140deb4"
+        },
+        {
+          "path": "apple-everest/runtime/semantics/AppleEverestFlagGroup.cs",
+          "sha256": "b00fda31ad69088c7211beae2a133a850df38773d457056170f04787a989bcd5"
+        }
+      ]
+    },
+    {
+      "authoredProfileSha256": [
+        "175525574aeed90e1bc835f225fe21ee93f364b51ef38ada7decc178ee55c29a"
+      ],
+      "customId": "MaxHelpingHand/FlagTouchSwitch",
+      "issues": [
+        "KN03"
+      ],
+      "kind": "entity",
+      "occurrences": 1,
+      "physicalAcceptance": "SEPARATE_EXACT_PRODUCT_MATRIX",
+      "provider": "MaxHelpingHand",
+      "requiredProofs": [
+        "compiled-runtime",
+        "composition",
+        "registration",
+        "regressions",
+        "source-bindings"
+      ],
+      "scope": "NEW_FINITE_IMPLEMENTATION",
+      "sourceBindings": [
+        {
+          "path": "apple-everest/runtime/semantics/AppleEverestFlagTouchSwitch.cs",
+          "sha256": "2972f1ccbf4deb138f26cc37a953ab23e7adfe201bc566d0484e413f9058e5f3"
+        },
+        {
+          "path": "apple-everest/runtime/semantics/AppleEverestFlagGroup.cs",
+          "sha256": "b00fda31ad69088c7211beae2a133a850df38773d457056170f04787a989bcd5"
+        }
+      ]
+    },
+    {
+      "authoredProfileSha256": [
+        "07e453b375bd926dcc5b5996b115cc1643c4ba8aa21db1e272c82868cf790711"
+      ],
+      "customId": "MaxHelpingHand/GroupedTriggerSpikesUp",
+      "issues": [],
+      "kind": "entity",
+      "occurrences": 2,
+      "physicalAcceptance": "SEPARATE_EXACT_PRODUCT_MATRIX",
+      "provider": "MaxHelpingHand",
+      "requiredProofs": [
+        "baseline-source",
+        "composition",
+        "registration",
+        "regressions"
+      ],
+      "scope": "UNCHANGED_ACCEPTED_AUTHORED_PROFILES",
+      "sourceBindings": [
+        {
+          "path": "apple-everest/runtime/AppleEverestSemanticFactories.cs",
+          "sha256": "6ac6545bd10e9851bdbfc8de34598fe55097f1d7acc4eed47d2190b6a2ccac05"
+        }
+      ]
+    },
+    {
+      "authoredProfileSha256": [
+        "0962d023ece1d1e6ec125d2c9deb98a728eafb092890e6080eb47757e2d37053",
+        "cc3eb590bf5a71b239fad6b74499017b3bc84f491b1495a272e4638d84dc846b"
+      ],
+      "customId": "MaxHelpingHand/MoreCustomNPC",
+      "issues": [],
+      "kind": "entity",
+      "occurrences": 3,
+      "physicalAcceptance": "SEPARATE_EXACT_PRODUCT_MATRIX",
+      "provider": "MaxHelpingHand",
+      "requiredProofs": [
+        "baseline-source",
+        "composition",
+        "registration",
+        "regressions"
+      ],
+      "scope": "UNCHANGED_ACCEPTED_AUTHORED_PROFILES",
+      "sourceBindings": [
+        {
+          "path": "apple-everest/runtime/semantics/AppleEverestEverestBaseEntitySemantics.cs",
+          "sha256": "ee9ece52eaafdfb306d1ad2bffaffb8907ee7f9ee17b95461b18ab9f6ee8dcdf"
+        }
+      ]
+    },
+    {
+      "authoredProfileSha256": [
+        "fedaf677ed413d3929da9ea703929bcb0bfba05d732a6623065c6bd7bc2de1fe"
+      ],
+      "customId": "MaxHelpingHand/ParallaxFadeOutController",
+      "issues": [],
+      "kind": "entity",
+      "occurrences": 2,
+      "physicalAcceptance": "SEPARATE_EXACT_PRODUCT_MATRIX",
+      "provider": "MaxHelpingHand",
+      "requiredProofs": [
+        "baseline-source",
+        "composition",
+        "registration",
+        "regressions"
+      ],
+      "scope": "UNCHANGED_ACCEPTED_AUTHORED_PROFILES",
+      "sourceBindings": [
+        {
+          "path": "apple-everest/runtime/semantics/AppleEverestParallaxFadeOutController.cs",
+          "sha256": "72828f7f5e1a517a82dca657adc168d24c5aa9c64c7b5fece8200cfa2317ac17"
+        }
+      ]
+    },
+    {
+      "authoredProfileSha256": [
+        "1678ac980db342b961f51ea16d445f9aff2f119d4b18771539cbcad3647f11c7"
+      ],
+      "customId": "MaxHelpingHand/RainbowSpinnerColorAreaController",
+      "issues": [],
+      "kind": "entity",
+      "occurrences": 2,
+      "physicalAcceptance": "SEPARATE_EXACT_PRODUCT_MATRIX",
+      "provider": "MaxHelpingHand",
+      "requiredProofs": [
+        "baseline-source",
+        "composition",
+        "registration",
+        "regressions"
+      ],
+      "scope": "UNCHANGED_ACCEPTED_AUTHORED_PROFILES",
+      "sourceBindings": [
+        {
+          "path": "apple-everest/runtime/semantics/AppleEverestRainbowSpinnerColorArea.cs",
+          "sha256": "c9d6de58568804d14075149bc6502ad0b7a7ff600c53076e90ed08b188d8044a"
+        }
+      ]
+    },
+    {
+      "authoredProfileSha256": [
+        "49e1b711ec2005eba24cb04e2488ae65e7a93b5abc85ac865ec615cc0666f097",
+        "832d96a12ffe4d88bf38e5c8ee22e5df4dc90d6b93220545e9979192def46049",
+        "d332bd3515a0f9438842c281cbb92b9681b83aff56970824cbb9a72704c34def"
+      ],
+      "customId": "MaxHelpingHand/SetFlagOnSpawnController",
+      "issues": [
+        "KN04"
+      ],
+      "kind": "entity",
+      "occurrences": 6,
+      "physicalAcceptance": "SEPARATE_EXACT_PRODUCT_MATRIX",
+      "provider": "MaxHelpingHand",
+      "requiredProofs": [
+        "baseline-source",
+        "compiled-runtime",
+        "composition",
+        "registration",
+        "regressions",
+        "source-bindings"
+      ],
+      "scope": "EXACT_PROFILE_EXTENSION",
+      "sourceBindings": [
+        {
+          "path": "apple-everest/runtime/semantics/AppleEverestMaxFlagSemantics.cs",
+          "sha256": "6eded9ae72aac7917dd272eafa04e6ac98a74a884f1939464d89229a388e5def"
+        }
+      ]
+    },
+    {
+      "authoredProfileSha256": [
+        "2eea092b7198726c5fd78b37a091a5c310b938550f8534d7c3af4aa1360d53a0",
+        "385ba6254cd0a518287b09db13d286ed236704bb604db74b185e386d34f87aab",
+        "56cef924a5a57835b031ed8d5d2360c1a755f609ab81f116a84d66aa9c8041a8",
+        "7cbdc41aa91cb6bdb27b576dbfecb4fcb18ac43b0d30ffd09837431d2e96f900",
+        "994c80d8ded26d451a11d1515a6dae3d2433d4a3ad28487029ab059883007be9",
+        "c435d4adc5c844f6030ef938442236243ea96724b49f6f678bf984407be41212",
+        "f189c72fbe90ebecb968cc5b499420b7513768900a08b65199bc1e53b141de8d",
+        "fcb68386da6280db341c58ca704ec7b3c18f485988a385659a03a07270696e0d"
+      ],
+      "customId": "MaxHelpingHand/SidewaysJumpThru",
+      "issues": [
+        "KN04"
+      ],
+      "kind": "entity",
+      "occurrences": 13,
+      "physicalAcceptance": "SEPARATE_EXACT_PRODUCT_MATRIX",
+      "provider": "MaxHelpingHand",
+      "requiredProofs": [
+        "baseline-source",
+        "compiled-runtime",
+        "composition",
+        "registration",
+        "regressions",
+        "source-bindings"
+      ],
+      "scope": "EXACT_PROFILE_EXTENSION",
+      "sourceBindings": [
+        {
+          "path": "apple-everest/runtime/semantics/AppleEverestSidewaysJumpThru.cs",
+          "sha256": "6a84a479c6fc6b650b135200ad54c09a095cd4c403428a4e2ff230d808591564"
+        }
+      ]
+    },
+    {
+      "authoredProfileSha256": [
+        "0d4c6089e227c905392aee1233cd5e42b2a1fb2abf47f96e759698571bbcad67"
+      ],
+      "customId": "MaxHelpingHand/StylegroundFadeController",
+      "issues": [],
+      "kind": "entity",
+      "occurrences": 2,
+      "physicalAcceptance": "SEPARATE_EXACT_PRODUCT_MATRIX",
+      "provider": "MaxHelpingHand",
+      "requiredProofs": [
+        "baseline-source",
+        "composition",
+        "registration",
+        "regressions"
+      ],
+      "scope": "UNCHANGED_ACCEPTED_AUTHORED_PROFILES",
+      "sourceBindings": [
+        {
+          "path": "apple-everest/runtime/semantics/AppleEverestStylegroundFadeController.cs",
+          "sha256": "592e0695ddb9eb7b5f738ab60286eb385acc45f657b0a4b042e5b6ec029b77dc"
+        }
+      ]
+    },
+    {
+      "authoredProfileSha256": [
+        "00808a5ae2e50d7cc532434a303031fae9f3c9262dc73a1cf6b0b93b50a89490",
+        "2e71fdff262ed0bb1e0576985e7e8626919802a7d50c84c98c572ffaa76179c1",
+        "4afae0256b57438f98fdc60649e65dbd9d0f953244cb02b4ff9f245058f39a6d",
+        "5402bc5f87ca7cb937414c26c700e3b051c1f792b8c5530afcad289c49dea944",
+        "61b02e877b3870fd11fe564436af13aaea1263d56f90861634cda7ddf533358c",
+        "67d0c32c4790378da7085d14b8545a607c5a0378e4df50a6228f14eb5dc999d7",
+        "7a64dd886bc8e0e706dab3bbc427d34ad16500778bdc2ad7ceec50795a6465fb",
+        "b632441e4a3bc31c7ef995fb37ae4dda8d3a3d5ebd90aca2c5154b3137837a46"
+      ],
+      "customId": "SJ2021/AllInOneMask",
+      "issues": [],
+      "kind": "entity",
+      "occurrences": 9,
+      "physicalAcceptance": "SEPARATE_EXACT_PRODUCT_MATRIX",
+      "provider": "StrawberryJam2021",
+      "requiredProofs": [
+        "baseline-source",
+        "composition",
+        "registration",
+        "regressions"
+      ],
+      "scope": "UNCHANGED_ACCEPTED_AUTHORED_PROFILES",
+      "sourceBindings": [
+        {
+          "path": "apple-everest/runtime/semantics/AppleEverestStrawberryJamEntities.cs",
+          "sha256": "3cb69db7a22eb960f740474902b63ef1d9592512619b2f2a565f5adb6a10fef0"
+        }
+      ]
+    },
+    {
+      "authoredProfileSha256": [
+        "1fbe14645928027e0efc1fbf4ca87456ee45eceacad72b497815444420ad1f7f",
+        "30eb4af94e45ad378ff1dde222927aab7e3ea54fe642cce2bf93f2482d8c1943",
+        "6f4d30660999034532ffa84410ea46029fa7705ce5a5536e999cb7d10d5c7787"
+      ],
+      "customId": "SJ2021/BloomMask",
+      "issues": [],
+      "kind": "entity",
+      "occurrences": 5,
+      "physicalAcceptance": "SEPARATE_EXACT_PRODUCT_MATRIX",
+      "provider": "StrawberryJam2021",
+      "requiredProofs": [
+        "baseline-source",
+        "composition",
+        "registration",
+        "regressions"
+      ],
+      "scope": "UNCHANGED_ACCEPTED_AUTHORED_PROFILES",
+      "sourceBindings": [
+        {
+          "path": "apple-everest/runtime/semantics/AppleEverestStrawberryJamEntities.cs",
+          "sha256": "3cb69db7a22eb960f740474902b63ef1d9592512619b2f2a565f5adb6a10fef0"
+        }
+      ]
+    },
+    {
+      "authoredProfileSha256": [
+        "0be0bce110944cde77a3726cec0c25766f9a66d520115714254dfdcbfdc364bd",
+        "fedaf677ed413d3929da9ea703929bcb0bfba05d732a6623065c6bd7bc2de1fe"
+      ],
+      "customId": "SJ2021/GlowController",
+      "issues": [],
+      "kind": "entity",
+      "occurrences": 3,
+      "physicalAcceptance": "SEPARATE_EXACT_PRODUCT_MATRIX",
+      "provider": "StrawberryJam2021",
+      "requiredProofs": [
+        "baseline-source",
+        "composition",
+        "registration",
+        "regressions"
+      ],
+      "scope": "UNCHANGED_ACCEPTED_AUTHORED_PROFILES",
+      "sourceBindings": [
+        {
+          "path": "apple-everest/runtime/semantics/AppleEverestStrawberryJamEntities.cs",
+          "sha256": "3cb69db7a22eb960f740474902b63ef1d9592512619b2f2a565f5adb6a10fef0"
+        }
+      ]
+    },
+    {
+      "authoredProfileSha256": [
+        "0b5fe14310a202b1a4c75da168a840c22b2e39bacc39d7bc3b14b400b5e14d73",
+        "0e3b03098ec0a820844ce6ef7f54ec3bf40367cbc32bff8b8eb547f1ca8552ee",
+        "0e78e6f2c5b633357f0cb67f010c4f1d2a0f115156a0208966c2e734d24964c7",
+        "191eda01bc94c0274a434a4f85d95dc3e44efc44bb85e8a7116374d9d1b4a362",
+        "3bed515e36a9766db075e0ed0ce691699a7a641481101c1ffdaefa2dda777020",
+        "48b1d5960f892a23eb6ea5dc4932d28d77d07666456e91597fe3e667f3b7507b",
+        "4907aa13e9bd8aa23195ca1fd68739901b13b882cb710fdcd05a80ab902b5e7f",
+        "529e6c15b7314cd217c255ceb8a0b4ea23d1b6246152046260a02d3999f0cf5e",
+        "52c011f48863713c6c000aee50c88f395e1d0f7b1815270986ecc4d6540e6562",
+        "838d54f89dc22feb69ee65ef156b0dfa8231a52d27b981378c0f13785da92c2c",
+        "966b45f428b658ec9c2188d61172bfd87505d63e10978928f81003ab1b99b937",
+        "97742b3bd6611b84b860ba9015e4d7d8b8d5ec6dadfda456a5c751176b119c66",
+        "97e0b9c8e8f1a90d56f8c78fe5ac8f9dfeecf871d0037a8c4af07e08c336cb64",
+        "9bb7984be30ef26f039b153f01f50f96235f25cf00791b491ca8f94d02cfa36f",
+        "a001b01d56f7c39e6312b069bbc30c3023d02cfe325b38503985c450ba703f0e",
+        "a7d24b4d423358ab19ff2d98aef68734168125dbf9dbe540d07fd41eef05c9ef",
+        "ad226ae9f4753b341b15afcf6e9e55a6add1eabf1bfbe13ac2a23f93cfb0666d",
+        "bd1eaf68642b8821f7b2691b2f36762d9322e242cee4461360287910ec723d3e",
+        "db2b1523bdbe67145c0bd65fcf2b883f8814a80032f5cfae3971929d0a57ac1d",
+        "eaba2e8fb7e751fa243135413abf22576c6180df9c7a2711a3cc478fbe81e2bd",
+        "ebddec1f45f9f6a4137f0412984a7fec6db1119dffbe431981d1596264f6beeb"
+      ],
+      "customId": "SJ2021/StrawberryJamJar",
+      "issues": [],
+      "kind": "entity",
+      "occurrences": 22,
+      "physicalAcceptance": "SEPARATE_EXACT_PRODUCT_MATRIX",
+      "provider": "StrawberryJam2021",
+      "requiredProofs": [
+        "baseline-source",
+        "composition",
+        "registration",
+        "regressions"
+      ],
+      "scope": "UNCHANGED_ACCEPTED_AUTHORED_PROFILES",
+      "sourceBindings": [
+        {
+          "path": "apple-everest/runtime/semantics/AppleEverestStrawberryJamEntities.cs",
+          "sha256": "3cb69db7a22eb960f740474902b63ef1d9592512619b2f2a565f5adb6a10fef0"
+        }
+      ]
+    },
+    {
+      "authoredProfileSha256": [
+        "0481993935d02413a597a580bb63d4c46411aff6bd5b6cfa977da17765ee2f74",
+        "07931e80bc11e5c332679d4acd76820a9871d1cd1fc19c026fb35f1eac280182",
+        "098dbd8775992e8cbef1bb8be76fd328b8cb9166cea2d1c3d374c20e832a7b0e",
+        "1814187cf728898c52bff5e966878fbb5cb59c3099f8a4eae9c9f127ca81e522",
+        "22c51f1c58caf4f667528277a4702c7f3004a6148f2b8ba6a8ac9ef2da461a9e",
+        "2bf4030cf702af511079b89512c37ed4f159094d31413c54da240210c2878725",
+        "2d767d2c53cd8088675d3d719dfb38b48a1241175d4e8933d6910e27ab9aeba3",
+        "2f4a3c22e23c04423260340a6fe43d7e27f4a9c7fdfcbd1eca944abf1f5b0841",
+        "3391a68913becdd0c62246ba9603d183ab28bc7067dc08616e787b0b8ba1b1d8",
+        "3a26c3b54d1521166b57de0a77895ee1b057c4e0636ea55dfa1b0219c4c02d2c",
+        "48382ea5a15f633016d65b1f117e495af625f08b67582e6dc96b5d8cb0d8921c",
+        "53e18691823b22f3e97cd815d9b43d754986d3fa9c5333de7037d84df2d09ecf",
+        "58cb917456fbb38daf465f5275b058dcea20e32640d8d9a3e7cfe28cb1852df7",
+        "5d24c34f93e51e3e56d991a73e5c59db3405a4b5bbe120becd14e3f418d3f14f",
+        "61c2bcc7e497a7dd87a50ecd0ff5f5d17201b65bfbb2cbe524e27cee512263f9",
+        "63ec9627643ac24274ed9a1490ab58453c2a9c7e7378974767efa29400b26e4c",
+        "680186e636434baa1a2306932a904439f06fe2c1e3becaef9aabeec9013b1ca8",
+        "6984c978496fccb4ca43df4d0cf851f624fdc8ceb88dabde41ea343a785d7c12",
+        "6bcb691e5232438ff8e1c9c55020788d7e1d5500eedd3b7a02c84bda4e6b7c56",
+        "74ba2bf814021fc1d18966c388e72b63d52a055e99da9c8cf4b48fe8eda2dfa0",
+        "896828f37e5d69de91be41aa8ef53e21bba656c5657e67aaa19b7cc784d40900",
+        "89ffb9bfd0298125db69d70594a5f261c00456d721318735439cadc605af0e0d",
+        "8e58ea40e7df3c5b857b803922d9623daa67c7dea52eca84704641744f70e9d0",
+        "9dd5b620250227f1d25b9ccc4adf1840dc917ea12b07f34c0f0a868fb806bb3f",
+        "aebcde5ae48a8b5502341b5a197b33e891bdd5fb2a62a2ddd70c285f38a473db",
+        "af159e9895102282e4ebbbcb1d9fcce98aa6ebce2011264d9924bb8519d20561",
+        "b2fbb147d424bddb2445677dcbe2e782804516915a126045284aa81aa46e61f3",
+        "b4e1b8b44b736d2b7ebbf10bc879526eb32e4a46c7fa7e5fe1f0afbc4a0eeefa",
+        "bb7e0899ffcf2b77d0d5319dfd9fd20a573861ff3cf37aa17816dab85e19ea7e",
+        "c3e9721642bb53aa04d04457a0d00337cf0ff240c0ba4153e78dca7547a5124d",
+        "c7b65b0b68f49ba3fd21c8120cfa89f41e4b5441df0f4bdbb50c3b71207d7497",
+        "ce27c99c6b1e7b2b7fe2611eb252f1aa9f097c153e738d72f4a70779c4b155f1",
+        "d444b7db6b7cf59f0d1108fcbae2017837dd757686989793bb0cb49b838d5d86",
+        "d594dcf9c1eb7bee0a958b88b2923b4ded4bdb54b1ee73697ab7c8604557fb70",
+        "d9ee80e8b85a13f113e7cd0725b7782e278fe4b3157c76309c8d6bb3deb85544",
+        "e54ac5cccfefe43175f671fd12b1b4b3977141778b518d0efdfbb9b2d28e5435",
+        "e6204b20f3d06b764319e23e3aaaf29863bb591988bcd0d2aef9ff07312e9e41",
+        "ef571646145bae307d5809a46ea517ae1b5b83f4ea94c980988fd5faa6ca266e",
+        "f7812962024309491580f9f262690a8a7ef5cdb75f0ff24bb5584460051e5f9a",
+        "f88c75da5e3792c28e415292be72c3ff6ac49ad0844c5a89c6202a811bc5e521"
+      ],
+      "customId": "SJ2021/StylegroundMask",
+      "issues": [],
+      "kind": "entity",
+      "occurrences": 46,
+      "physicalAcceptance": "SEPARATE_EXACT_PRODUCT_MATRIX",
+      "provider": "StrawberryJam2021",
+      "requiredProofs": [
+        "baseline-source",
+        "composition",
+        "registration",
+        "regressions"
+      ],
+      "scope": "UNCHANGED_ACCEPTED_AUTHORED_PROFILES",
+      "sourceBindings": [
+        {
+          "path": "apple-everest/runtime/semantics/AppleEverestStrawberryJamEntities.cs",
+          "sha256": "3cb69db7a22eb960f740474902b63ef1d9592512619b2f2a565f5adb6a10fef0"
+        }
+      ]
+    },
+    {
+      "authoredProfileSha256": [
+        "1fb176a80d6aeda4f1323d31e9d2819438d84ed4a8c1546fdd12671d23cb0aba",
+        "55e0f134dd32f1fb5e40b46ea58d2766afd74d6ceed9e763055c9c8abba3dd39",
+        "6b35c2b3374c1d2715cd96c68f983eca9d2bc30f057fb0928149d7c35f5c6f4e",
+        "7521e65146d38f1694ed39168f4c5bdaf7af0cc353a3f2e511d3555f77f864f1",
+        "d37d014befc9898084584e4a5981dd51537fa1e7160a5f09388833dcac88e98b"
+      ],
+      "customId": "VivHelper/CustomHangingLamp",
+      "issues": [],
+      "kind": "entity",
+      "occurrences": 8,
+      "physicalAcceptance": "SEPARATE_EXACT_PRODUCT_MATRIX",
+      "provider": "VivHelper",
+      "requiredProofs": [
+        "baseline-source",
+        "composition",
+        "registration",
+        "regressions"
+      ],
+      "scope": "UNCHANGED_ACCEPTED_AUTHORED_PROFILES",
+      "sourceBindings": [
+        {
+          "path": "apple-everest/runtime/semantics/AppleEverestCustomHangingLamp.cs",
+          "sha256": "3076881910b8b49af6118f325c40daab632b8901659a5ef4a9d0d619eef7f256"
+        }
+      ]
+    },
+    {
+      "authoredProfileSha256": [
+        "2da7038b7e40295a144714536e93b7688200e4ead227c720c341bb11a85d0d2e",
+        "4b7140c9be9530101bb6a20caf1dd453bd5395f4d52d5a251fa7f51cd12bdc10",
+        "ba1332fbaef81fb54a8a3d7a7df36f9c31c6978b22b3f5a1f917f76949ba3d79"
+      ],
+      "customId": "VivHelper/CustomSpinner",
+      "issues": [],
+      "kind": "entity",
+      "occurrences": 16,
+      "physicalAcceptance": "SEPARATE_EXACT_PRODUCT_MATRIX",
+      "provider": "VivHelper",
+      "requiredProofs": [
+        "baseline-source",
+        "composition",
+        "registration",
+        "regressions"
+      ],
+      "scope": "UNCHANGED_ACCEPTED_AUTHORED_PROFILES",
+      "sourceBindings": [
+        {
+          "path": "apple-everest/runtime/semantics/AppleEverestVivSpinner.cs",
+          "sha256": "153105ed1cb131b2f1c15085026af3fee7c82be8c1f096177ffbe6cf25131fda"
+        }
+      ]
+    },
+    {
+      "authoredProfileSha256": [
+        "c5eb38e40560ffc87ea81bc9fca5ef0a9c4311f3cb64dc53f0e693143ae88fa6"
+      ],
+      "customId": "VortexHelper/AttachedJumpThru",
+      "issues": [],
+      "kind": "entity",
+      "occurrences": 4,
+      "physicalAcceptance": "SEPARATE_EXACT_PRODUCT_MATRIX",
+      "provider": "VortexHelper",
+      "requiredProofs": [
+        "baseline-source",
+        "composition",
+        "registration",
+        "regressions"
+      ],
+      "scope": "UNCHANGED_ACCEPTED_AUTHORED_PROFILES",
+      "sourceBindings": [
+        {
+          "path": "apple-everest/runtime/semantics/AppleEverestVortexSemantics.cs",
+          "sha256": "9fba6dbcae4ce79bb4e8a58ad3338801ad53cdb9db818e5c202b21e21f34fb0f"
+        }
+      ]
+    },
+    {
+      "authoredProfileSha256": [
+        "0eaf8a941e3be13a5a2dbd96dd21dc9880e0645e8b28736992257a7c721097ef",
+        "2b9d0b69dc52f4d40088efc6bd79b3d4f2a6570bc1dd218eddc44966cbf8074f",
+        "34834352e551fc830e2b10fedafc73c90f72a7f6d4b378b6fa033a1867338e02",
+        "368f1f9e47b3d43c32b1bb1708d576613cc326e90ea9516635c7ac33b992cdac",
+        "66a3c7b5b86bce6ab6f4b5cfbae08303eed5df71d64ebfe4c9ff8946a87ee2f5",
+        "6bb3e2c429f949d56bdca4473d5584ea96261107cfb97d1325029ed04b5f7fbc",
+        "6bbf8c8632a08c687f308dda4b75aa9c64dafccd0ec16c3fa79d2d4411d7e2c2",
+        "85a9d184fa7e9314968c29250b45eb01ed21c9e92673858a9644f7039f5f2b5b",
+        "9393c1455d49e428e329090754e7279ab51abd7e50ddb23844aa0d88f802d9e7",
+        "a27be1fdda53b5a584bc8846fce174c572e8d04d68e6add4aa621192a584c9ca"
+      ],
+      "customId": "XaphanHelper/Slope",
+      "issues": [],
+      "kind": "entity",
+      "occurrences": 15,
+      "physicalAcceptance": "SEPARATE_EXACT_PRODUCT_MATRIX",
+      "provider": "XaphanHelper",
+      "requiredProofs": [
+        "baseline-source",
+        "composition",
+        "registration",
+        "regressions"
+      ],
+      "scope": "UNCHANGED_ACCEPTED_AUTHORED_PROFILES",
+      "sourceBindings": [
+        {
+          "path": "apple-everest/runtime/semantics/AppleEverestXaphanSlope.cs",
+          "sha256": "f7d5366e06e682158f77bd0943d81af5d364c89980779f6f56f9faecb39a7039"
+        }
+      ]
+    },
+    {
+      "authoredProfileSha256": [
+        "0c5e834700bdff097199232930c54a434299a8dfdae573371dde9bc7424bf3b4",
+        "1f3d096200d3e6e5c27c45777b32d399f238b4c7b9e6b109b91fb4cd12ae00ba",
+        "9224f805b94cd62f27644ab882f03a3013da3fc7de5c3116badd0a1901de1fa5",
+        "c30083cfe3b6eda6890e6bf92a8ff805119645a089205942a6b98322d1e8b5ca",
+        "f7e437094382b79aab41bf0946a7b16fb166a099e9a64e4f987e602417947aa6"
+      ],
+      "customId": "YetAnotherHelper/BubbleField",
+      "issues": [],
+      "kind": "entity",
+      "occurrences": 6,
+      "physicalAcceptance": "SEPARATE_EXACT_PRODUCT_MATRIX",
+      "provider": "YetAnotherHelper",
+      "requiredProofs": [
+        "baseline-source",
+        "composition",
+        "registration",
+        "regressions"
+      ],
+      "scope": "UNCHANGED_ACCEPTED_AUTHORED_PROFILES",
+      "sourceBindings": [
+        {
+          "path": "apple-everest/runtime/semantics/AppleEverestBubbleSemantics.cs",
+          "sha256": "4fa6f7e429b8a708710f66455266d7eb2fe2a087500fd94c60b20bbbab153c61"
+        }
+      ]
+    },
+    {
+      "authoredProfileSha256": [
+        "103a03bc8c1e457f9d9f1516e05c51d84408f85b63ef3a9fc50483a4e68f3be9"
+      ],
+      "customId": "appleEverest/stage25keRootState",
+      "issues": [],
+      "kind": "entity",
+      "occurrences": 1,
+      "physicalAcceptance": "SEPARATE_EXACT_PRODUCT_MATRIX",
+      "provider": "StrawberryJam2021",
+      "requiredProofs": [
+        "composition",
+        "legacy-reference",
+        "registration",
+        "regressions"
+      ],
+      "scope": "SEPARATE_UNCHANGED_LEGACY_CONTROL",
+      "sourceBindings": []
+    },
+    {
+      "authoredProfileSha256": [
+        "fedaf677ed413d3929da9ea703929bcb0bfba05d732a6623065c6bd7bc2de1fe"
+      ],
+      "customId": "appleEverest/stage25kfAudio",
+      "issues": [],
+      "kind": "entity",
+      "occurrences": 1,
+      "physicalAcceptance": "SEPARATE_EXACT_PRODUCT_MATRIX",
+      "provider": "StrawberryJam2021",
+      "requiredProofs": [
+        "composition",
+        "legacy-reference",
+        "registration",
+        "regressions"
+      ],
+      "scope": "SEPARATE_UNCHANGED_LEGACY_CONTROL",
+      "sourceBindings": []
+    },
+    {
+      "authoredProfileSha256": [
+        "1a5fcc1bc00527da31e83b3391132fdae6a68d226880274191ef7eba430310bd"
+      ],
+      "customId": "appleEverest/stage25kfDepthTarget",
+      "issues": [],
+      "kind": "entity",
+      "occurrences": 1,
+      "physicalAcceptance": "SEPARATE_EXACT_PRODUCT_MATRIX",
+      "provider": "CrystallineHelper",
+      "requiredProofs": [
+        "composition",
+        "legacy-reference",
+        "registration",
+        "regressions"
+      ],
+      "scope": "SEPARATE_UNCHANGED_LEGACY_CONTROL",
+      "sourceBindings": []
+    },
+    {
+      "authoredProfileSha256": [
+        "1d80b8a0f9cf054d3cbcc8401041916fcced74dc7599b153fcdacd84b60fd166",
+        "cbfbe65dffc77812a13ec27a400e1be2d7d1a25dda138486b8b8dceefb5732f9"
+      ],
+      "customId": "pandorasBox/coloredBigWaterfall",
+      "issues": [],
+      "kind": "entity",
+      "occurrences": 3,
+      "physicalAcceptance": "SEPARATE_EXACT_PRODUCT_MATRIX",
+      "provider": "PandorasBox",
+      "requiredProofs": [
+        "baseline-source",
+        "composition",
+        "registration",
+        "regressions"
+      ],
+      "scope": "UNCHANGED_ACCEPTED_AUTHORED_PROFILES",
+      "sourceBindings": [
+        {
+          "path": "apple-everest/runtime/semantics/AppleEverestColoredBigWaterfall.cs",
+          "sha256": "b5352cc344462c25bf7c243f18a858951874cbabec6f7ba9ad2fb5a0d17d0141"
+        }
+      ]
+    },
+    {
+      "authoredProfileSha256": [
+        "01f9f467e5bd68c1f63a0126cc0c19029c90205b3ad62709b40738b99eba1858",
+        "0383923f536393557175bef4ee4cbf59475138250c1bee5737170dbcc87812c4",
+        "07b44b3ec00cf3b2b3060eae73558b3d4b680626904dd9e4f4c0f67360a35c00",
+        "088e62451eb0e3a1f225fe082726f04e12237a0bc07baebe569f11db4e291c99",
+        "08be2e33573e8903ad3cdd6144e86aa02663a55e81eba2f7de264056d77d5d64",
+        "113ffee3595f70918846a8c6dcfa36321d5307dc0a05f33a35ca46e9390c5979",
+        "13d2f632d12c51721f478c3fc8331897a1dedff3e2f1798e6e4201ed0525b7d8",
+        "14829812c312b41ab0e7683637d99592e9a02359da73115b23b1fdc60e54efb8",
+        "1fbe7c9ef8076d99e097c38698d4cc615caac2b6946b377e315ade84089e73f6",
+        "2ed84e26ac890a735cda08dfc7d3c77ccfa53f91a44689276d1c2020ca949014",
+        "3229209168f19679b48e63134a39b085fa714b6b593857ac1040ecb3cadb6812",
+        "3c7baa30a1a35ce4a9bf1d6aa90d8a4d330a5757796ad166228334e0e9bc02b9",
+        "41f96d1c192f5e1f9a15f5f494317fdabdd6b1c7f1ed83841985b71d83934f26",
+        "43cd38a4208ca12fd16a750580631aea107a34ade7c1cebefd8ea50617436790",
+        "44be2155d7c93c353f802c825c7c80921a2a20612cad79f4c0d8879e20d1e837",
+        "4547afcb5fa3e275f5f898fa368930c294b03116de89f366f421172380ac9fdc",
+        "474828a2430f11290b7925d4c2aa232fab4ba90e6610dabc68341214e3238d6b",
+        "4898578a41a434f08e0e2a0b770ac648969cf7aa2355e376e319164342d7aab7",
+        "4a7f7b5425af8f29f338890d49f2427abf593560153f4aee68f63241c233546d",
+        "4f676cbcaf4f5a1719407e93aca5c9910c7896a6628539b4abe079361b97a6b1",
+        "4f77beba986958f8c123dd82cf97547d1df74be9e10716bc16c321ac260766d3",
+        "4fab5121c5fe6e0bfb729332cff036dffce54bd4f1c620b7253065678d252073",
+        "5191007f3f6697c4d931aa5b0f459acff08c1bca1e367552b8f05a742a97b261",
+        "5b3999647a03000ddb3df11da479619c0f77542d8ac2092a670882fa86c0775d",
+        "6f5cbb50dd1ca6972005a4adb596cac7c2bfe410f919dc521a8999d1b57a2cd2",
+        "70fcd6d8e66023f63a574c1e1c83624798c90de72594fdf60d414ac279a3c558",
+        "7f4871f78fd2bcbd4eb5ec9cd1662be10b24a94bb78e7e0750a5332c3c167d29",
+        "83333e89c147206d4ca87b4622424fd5c317cd4d9338250eabc03e65fd4913b6",
+        "8763686ed89e56b846f217bc35b7ad853db74e3f3df8771f4289e14fe4092ea1",
+        "90a752c7a5e3869a64a7ea1dceb73cd15d36c21dd906c96af8122400f9916a76",
+        "99eed8c3c6e378e248ba1cca3716e57960053ac8d59be892d06a7a538758d0c0",
+        "9c2a1643be1658f78213d59ecf0836df05e42b0475e951995b9734bba008d963",
+        "a02017943cc8a4acac93acfc6599666f079d6f493b6ee76a2ef8a1a2c340310f",
+        "a60fbf7754494d315945ac80959b4ac61c002942c5634bf31a86545067f07604",
+        "ba6ebad5da1872ba21db9b10a5d9af219b8440082146c9aa953b35935915a2df",
+        "c6f53fdae3a55b0c620d71ba049e478aa192b827993549a6fa449196aa0f78ec",
+        "cd39e92619cf6dfc16f67b46c929a54b18da28ced4a3bacf042002a1babf83e3",
+        "d5ae0fa3205cc5a77f5a91873ceae29dfd2c57d255c40298e2ad4413eac23969",
+        "d85d24490f50bad8555499d832732c8a85f8b68d2915650eabf60f722b53c681",
+        "d86fd4bdaf88f4c7bb92f10c7dffbed26864343eb4b586c8ac0dccb141bb4300",
+        "de169b78052ca903565527213a6f890e8d396027a6c05140b926c7880741f000",
+        "e1522f6761325ca895852710ba925efa37434b33eb43eb70cca1586f1ad3b991",
+        "e27c53becbaf9c7e5c611417362b12b4aa9ad635a8d2484c94d0ab24c8f70ae6",
+        "e2b9a36539232facd4f9953a421de8ade65f5ff8f842da72f0d760a41a8dc4ee",
+        "e464c321ffe8ddee3e766c7dcba8dadb47046193cd35198939566cc567608092",
+        "edbe7b0c8636f8eb1a8c3412f1fc4efaf8c81751aa9403569938f3f595211adc",
+        "f245525ebe0d2c8470d24aa37b8634e37973bc7b6570f45f74e94b3a0e34861c",
+        "f480ee4fa39670d12954f4e54e92b3c3e9930f0456a955aae24e4dadc9c2b985",
+        "f9e3e9d853706bad494477e01a77aed8a7ddad2a39e20b271974e12f7151d493",
+        "fb35649d241d1a60242f5959cc6d884c804987fbefa79d4cd11cfac1b2bfcd15"
+      ],
+      "customId": "pandorasBox/coloredWater",
+      "issues": [],
+      "kind": "entity",
+      "occurrences": 55,
+      "physicalAcceptance": "SEPARATE_EXACT_PRODUCT_MATRIX",
+      "provider": "PandorasBox",
+      "requiredProofs": [
+        "baseline-source",
+        "composition",
+        "registration",
+        "regressions"
+      ],
+      "scope": "UNCHANGED_ACCEPTED_AUTHORED_PROFILES",
+      "sourceBindings": [
+        {
+          "path": "apple-everest/runtime/semantics/AppleEverestColoredWater.cs",
+          "sha256": "a3277d6cd214d122e51c263b525538326537d2b85dc57601ae64f0159b9594f1"
+        }
+      ]
+    },
+    {
+      "authoredProfileSha256": [
+        "2fce2b3fc72abadf2403e37c49a3220d091886149bca0d224e28be84732fc7bc",
+        "7796708668152b6a4481e63b393330e9637a12970152f51b7693acdad21bb0a3",
+        "c20b34bdd9c72336156d66252b83229cb22afd23b927d5906da46e9e01657f78"
+      ],
+      "customId": "pandorasBox/coloredWaterfall",
+      "issues": [],
+      "kind": "entity",
+      "occurrences": 31,
+      "physicalAcceptance": "SEPARATE_EXACT_PRODUCT_MATRIX",
+      "provider": "PandorasBox",
+      "requiredProofs": [
+        "baseline-source",
+        "composition",
+        "registration",
+        "regressions"
+      ],
+      "scope": "UNCHANGED_ACCEPTED_AUTHORED_PROFILES",
+      "sourceBindings": [
+        {
+          "path": "apple-everest/runtime/semantics/AppleEverestColoredWaterfall.cs",
+          "sha256": "296bf83485b8e08b57f8a6c140bd75f83ab20174402b875ccb2da17ec2904719"
+        }
+      ]
+    },
+    {
+      "authoredProfileSha256": [
+        "37f1c41fd9f0b01b6cf3e7a020f40db50d4c4abe80fb8c087cbf2b29b332a8c4",
+        "82f202ab0196e825cdcf0a53f4ef705cb67d27fc9c655b9c869f18944b183dfb",
+        "c67ca8b9c93c83e4043118dddc103cfa636e9343166b97243a32066202b6334f"
+      ],
+      "customId": "pandorasBox/entityActivator",
+      "issues": [],
+      "kind": "entity",
+      "occurrences": 4,
+      "physicalAcceptance": "SEPARATE_EXACT_PRODUCT_MATRIX",
+      "provider": "PandorasBox",
+      "requiredProofs": [
+        "baseline-source",
+        "composition",
+        "registration",
+        "regressions"
+      ],
+      "scope": "UNCHANGED_ACCEPTED_AUTHORED_PROFILES",
+      "sourceBindings": [
+        {
+          "path": "apple-everest/runtime/semantics/AppleEverestEntityActivator.cs",
+          "sha256": "b193a79bbb1f18b506cf361535906813b008c263c6ac8d9f6a5188776ec7f720"
+        }
+      ]
+    },
+    {
+      "authoredProfileSha256": [
+        "3226e78e37ee78a1f6e504b6df5c44ea1deabf0222e7430a78a6703af8a41bd1",
+        "822bce7981ec64e5be25aceac6aa6a6bf34e59645cf219462425d4fd00e5069a",
+        "bb604ad78b3dafb59cf4dbd2778721f06314dd8e759768268cfa20c67748b66b",
+        "e4d9088006a9bb4d9bce638588bacf23b5c4225f975c72aac5aa5c6082223a26"
+      ],
+      "customId": "CollabUtils2/ChapterPanelTrigger",
+      "issues": [],
+      "kind": "trigger",
+      "occurrences": 5,
+      "physicalAcceptance": "SEPARATE_EXACT_PRODUCT_MATRIX",
+      "provider": "CollabUtils2",
+      "requiredProofs": [
+        "baseline-source",
+        "composition",
+        "registration",
+        "regressions"
+      ],
+      "scope": "UNCHANGED_ACCEPTED_AUTHORED_PROFILES",
+      "sourceBindings": [
+        {
+          "path": "apple-everest/runtime/AppleEverestCollabRuntime.cs",
+          "sha256": "d1b440b2d05ece6515e081e223358f73acf63e7268201aca20001382f4ffe0ba"
+        }
+      ]
+    },
+    {
+      "authoredProfileSha256": [
+        "1f13682c82a1217a827cc55e23b1e3b110e3a20263c63d206c0dac2716030286",
+        "f1e087e55296d667ce7f91225b6f17e7865be5e483355992c544c370367dc9f1"
+      ],
+      "customId": "CollabUtils2/JournalTrigger",
+      "issues": [],
+      "kind": "trigger",
+      "occurrences": 11,
+      "physicalAcceptance": "SEPARATE_EXACT_PRODUCT_MATRIX",
+      "provider": "CollabUtils2",
+      "requiredProofs": [
+        "baseline-source",
+        "composition",
+        "registration",
+        "regressions"
+      ],
+      "scope": "UNCHANGED_ACCEPTED_AUTHORED_PROFILES",
+      "sourceBindings": [
+        {
+          "path": "apple-everest/runtime/AppleEverestCollabRuntime.cs",
+          "sha256": "d1b440b2d05ece6515e081e223358f73acf63e7268201aca20001382f4ffe0ba"
+        }
+      ]
+    },
+    {
+      "authoredProfileSha256": [
+        "5da4992795f43757dcd008b37547888da48b2e37b79a0ba8d0f66b688be5ef63"
+      ],
+      "customId": "CollabUtils2/MiniHeartDoorUnlockCutsceneTrigger",
+      "issues": [],
+      "kind": "trigger",
+      "occurrences": 3,
+      "physicalAcceptance": "SEPARATE_EXACT_PRODUCT_MATRIX",
+      "provider": "CollabUtils2",
+      "requiredProofs": [
+        "baseline-source",
+        "composition",
+        "registration",
+        "regressions"
+      ],
+      "scope": "UNCHANGED_ACCEPTED_AUTHORED_PROFILES",
+      "sourceBindings": [
+        {
+          "path": "apple-everest/runtime/semantics/AppleEverestCollabHeartDoor.cs",
+          "sha256": "28db26ba2391448048374c0c5bff047b28c6d16096acb7da008ec982ed47590d"
+        }
+      ]
+    },
+    {
+      "authoredProfileSha256": [
+        "c47c834f177cdda46a9c38c5e7885effdf97c1172a53cf3bdf6dbf80515f672b"
+      ],
+      "customId": "CollabUtils2/RainbowBerryUnlockCutsceneTrigger",
+      "issues": [],
+      "kind": "trigger",
+      "occurrences": 3,
+      "physicalAcceptance": "SEPARATE_EXACT_PRODUCT_MATRIX",
+      "provider": "CollabUtils2",
+      "requiredProofs": [
+        "baseline-source",
+        "composition",
+        "registration",
+        "regressions"
+      ],
+      "scope": "UNCHANGED_ACCEPTED_AUTHORED_PROFILES",
+      "sourceBindings": [
+        {
+          "path": "apple-everest/runtime/semantics/AppleEverestCollabRainbowBerryUnlockTrigger.cs",
+          "sha256": "26128f1688387348e74ad95260af858d487ea7dac5f1a3241b00744ac925a122"
+        }
+      ]
+    },
+    {
+      "authoredProfileSha256": [
+        "1bb00f9d4beca2bcb272861d554a633f7512432837ec64eb063aff0a000f0079",
+        "79ba403aad03ec73f1536e01eb00fabc9a2e31b2b1b3aff6cb18ffc85e9ff4c9",
+        "c1cd09e474d76a10e9499266e40f0b6b84845437389c81459c9a36e602833cc4",
+        "d30c14407aa8871f10d7bbf5cb384bb4fcb7c6e55397def0bfc77872d78beac2"
+      ],
+      "customId": "ContortHelper/MadelineSpotlightModifierTrigger",
+      "issues": [],
+      "kind": "trigger",
+      "occurrences": 5,
+      "physicalAcceptance": "SEPARATE_EXACT_PRODUCT_MATRIX",
+      "provider": "ContortHelper",
+      "requiredProofs": [
+        "baseline-source",
+        "composition",
+        "registration",
+        "regressions"
+      ],
+      "scope": "UNCHANGED_ACCEPTED_AUTHORED_PROFILES",
+      "sourceBindings": [
+        {
+          "path": "apple-everest/runtime/semantics/AppleEverestContortSemantics.cs",
+          "sha256": "c9b118ef46c4dd2931159009f3dece68c7b9a569705d0c9bd59d4bee591a2b47"
+        }
+      ]
+    },
+    {
+      "authoredProfileSha256": [
+        "2bf6b41e8eb4e4de5b092e4ba4e81819e33527fad004ffd298d267947eeee350",
+        "d0a84759f80a91d6c03b5583b4ec495cadce82c435fdec027a0c542e7c59e186"
+      ],
+      "customId": "ContortHelper/RandomSoundTrigger",
+      "issues": [
+        "KN02"
+      ],
+      "kind": "trigger",
+      "occurrences": 23,
+      "physicalAcceptance": "SEPARATE_EXACT_PRODUCT_MATRIX",
+      "provider": "ContortHelper",
+      "requiredProofs": [
+        "compiled-runtime",
+        "composition",
+        "random-bubble",
+        "registration",
+        "regressions",
+        "source-bindings"
+      ],
+      "scope": "NEW_FINITE_IMPLEMENTATION",
+      "sourceBindings": [
+        {
+          "path": "apple-everest/runtime/semantics/AppleEverestRandomSoundTrigger.cs",
+          "sha256": "b5c5e245abdfa437af6d37a6a20395c3eda66691a13e51f91e9d59eb3d089224"
+        }
+      ]
+    },
+    {
+      "authoredProfileSha256": [
+        "21e1c224c186ae280156de6d7e33d2e0c7f6a41f3f4735c4d31aa004d3505a04",
+        "485bdf534ef3a9980bbba3ba4ea6c0a4b1856b9d3cfd541f45196943f6fbe15b",
+        "70ac18a86d3b16e170dcf8b4c0c8452d621faa730c6a05ac07c88cada8900cc0",
+        "a09c20eed1b7198089c98cf72d25a70db4c7ad6a63c18b5474ede0bdcae1779d",
+        "a35aaeedcf6f647bcdeacc495b41f8584ae92017ea3ea051d2c3bd058f052208",
+        "b0e9a95b4b25fc01a6c2e0f9f3b752df07c89a083f27996e09a249d4b1ff042c"
+      ],
+      "customId": "DJMapHelper/colorGradeTrigger",
+      "issues": [],
+      "kind": "trigger",
+      "occurrences": 8,
+      "physicalAcceptance": "SEPARATE_EXACT_PRODUCT_MATRIX",
+      "provider": "DJMapHelper",
+      "requiredProofs": [
+        "baseline-source",
+        "composition",
+        "registration",
+        "regressions"
+      ],
+      "scope": "UNCHANGED_ACCEPTED_AUTHORED_PROFILES",
+      "sourceBindings": []
+    },
+    {
+      "authoredProfileSha256": [
+        "013c2c2ff38d88be57314477b22c322ed3d86370bd7cd69b3e2c3369f9a0b096",
+        "116a755b09d926ecfbf9841fc78f4ed91a7e3a6fe8365a59dfcf93f8f61b4d4f",
+        "ef87e4fa24d9541079cad79edac2b487a0085a903f969c61495198f6af5f6c23",
+        "f5f77917b6d1f685d66bc4105d695935ee51402b43b133e202b05650aa9c8e22"
+      ],
+      "customId": "ExtendedVariantMode/FloatExtendedVariantFadeTrigger",
+      "issues": [],
+      "kind": "trigger",
+      "occurrences": 5,
+      "physicalAcceptance": "SEPARATE_EXACT_PRODUCT_MATRIX",
+      "provider": "ExtendedVariantMode",
+      "requiredProofs": [
+        "baseline-source",
+        "composition",
+        "registration",
+        "regressions"
+      ],
+      "scope": "UNCHANGED_ACCEPTED_AUTHORED_PROFILES",
+      "sourceBindings": [
+        {
+          "path": "apple-everest/runtime/semantics/AppleEverestVariantSemantics.cs",
+          "sha256": "5356c1fa0a79d0b66fc87bfb66893d02c92683bfa2432a4e654bfdf46d70e33b"
+        }
+      ]
+    },
+    {
+      "authoredProfileSha256": [
+        "48d4c31f9debca03d3a0cceded13db9c5fb6d117c2318b0712827094ac9c55b1",
+        "b7ffc493ef6c2cc090bb09792067d98b681b200835ea4ee9d8f8fe3e0f6744fc"
+      ],
+      "customId": "ExtendedVariantMode/ResetVariantsTrigger",
+      "issues": [],
+      "kind": "trigger",
+      "occurrences": 4,
+      "physicalAcceptance": "SEPARATE_EXACT_PRODUCT_MATRIX",
+      "provider": "ExtendedVariantMode",
+      "requiredProofs": [
+        "baseline-source",
+        "composition",
+        "registration",
+        "regressions"
+      ],
+      "scope": "UNCHANGED_ACCEPTED_AUTHORED_PROFILES",
+      "sourceBindings": [
+        {
+          "path": "apple-everest/runtime/semantics/AppleEverestVariantSemantics.cs",
+          "sha256": "5356c1fa0a79d0b66fc87bfb66893d02c92683bfa2432a4e654bfdf46d70e33b"
+        }
+      ]
+    },
+    {
+      "authoredProfileSha256": [
+        "4889cb65e0a988f608c3534d1adcea403549beb703274076f718807faf853b3e"
+      ],
+      "customId": "FrostHelper/OnSpawnActivator",
+      "issues": [],
+      "kind": "trigger",
+      "occurrences": 2,
+      "physicalAcceptance": "SEPARATE_EXACT_PRODUCT_MATRIX",
+      "provider": "FrostHelper",
+      "requiredProofs": [
+        "baseline-source",
+        "composition",
+        "registration",
+        "regressions"
+      ],
+      "scope": "UNCHANGED_ACCEPTED_AUTHORED_PROFILES",
+      "sourceBindings": [
+        {
+          "path": "apple-everest/runtime/semantics/AppleEverestFrostMoverSemantics.cs",
+          "sha256": "8d83ca2f5663e955917fd2fc56771b9a502c769f8943568cb6efbca7bba75b92"
+        }
+      ]
+    },
+    {
+      "authoredProfileSha256": [
+        "25089fb41802eed4e12f23f9fb70205c70c17f63ab570878ffa6cb5e4fc8a26b",
+        "7f0b5f7354e74c2669858fe37a728fc42e02e7f74046b6ab339457ada9ed7d92",
+        "82bcef5d2559615303f9eaaad8292fd92b4287fa310c9a5f8e93377636df3014"
+      ],
+      "customId": "HonlyHelper/CameraTargetCrossfadeTrigger",
+      "issues": [],
+      "kind": "trigger",
+      "occurrences": 4,
+      "physicalAcceptance": "SEPARATE_EXACT_PRODUCT_MATRIX",
+      "provider": "HonlyHelper",
+      "requiredProofs": [
+        "baseline-source",
+        "composition",
+        "registration",
+        "regressions"
+      ],
+      "scope": "UNCHANGED_ACCEPTED_AUTHORED_PROFILES",
+      "sourceBindings": [
+        {
+          "path": "apple-everest/runtime/semantics/AppleEverestCameraTargetCrossfadeTrigger.cs",
+          "sha256": "c9dbdb5ca0cb1b16d70f4429662b78bae53509deec04a885f0f5ab8630422362"
+        }
+      ]
+    },
+    {
+      "authoredProfileSha256": [
+        "4e798476a7ef916219ce840338177555d2322eee705123afe489d53dce94da79",
+        "87bdf0d14851bcaec435edd6bfc75702124b11b34bceae359b9e0a9e4a04e1bc"
+      ],
+      "customId": "MaxHelpingHand/CameraCatchupSpeedTrigger",
+      "issues": [],
+      "kind": "trigger",
+      "occurrences": 3,
+      "physicalAcceptance": "SEPARATE_EXACT_PRODUCT_MATRIX",
+      "provider": "MaxHelpingHand",
+      "requiredProofs": [
+        "baseline-source",
+        "composition",
+        "registration",
+        "regressions"
+      ],
+      "scope": "UNCHANGED_ACCEPTED_AUTHORED_PROFILES",
+      "sourceBindings": [
+        {
+          "path": "apple-everest/runtime/AppleEverestSemanticFactories.cs",
+          "sha256": "6ac6545bd10e9851bdbfc8de34598fe55097f1d7acc4eed47d2190b6a2ccac05"
+        }
+      ]
+    },
+    {
+      "authoredProfileSha256": [
+        "00d854d0ebfd5d392118792bbd97f3498ed719b9a3e99f77f5465679aa154cf4",
+        "0272f3c3a87fb1a0e9a4441fda5e4bb17b4e87c842406c728b7c23339e7a3ec4",
+        "061e353017e66a2d78cc1729829095a1447f5833c13acc439c18a34027974ef2",
+        "064c5b132499a37c0653e8dbaaa97e56f943a1992e2e95737ae82584a645bb32",
+        "0cb5c722e2152fc41e17d880b9a903b3dd85af06623ee3d29cb1c42764ba1173",
+        "0f9302a9d410eb9c10c0ecd153d6d27a1232065fbc2f1e90778320cbf50daafc",
+        "19ed17f29e8e6d8b26947eb696c2df339638b3a002f65bb684e9dd989011ca71",
+        "23c799abbe1f2def33ef9c101db8b839e053f92ff05e25826d47d7cea96ff4af",
+        "3166cdafa5eb4313e4c37ab866bf3c16a5ac238c5f85d7c2da0648f1f4f5a396",
+        "377f1ef438f0399363207fa85e6ed45c36410059252ae76a6908c2697b109596",
+        "3d3a3d9ab44b7cd77fad2899444b58a325689dbff152a45f48c5a325a8eda63c",
+        "3e4d65dfb9dd11341a85c060802c3323704964a0e4a8e8e48021f69c9d823a7f",
+        "3f3485be588111333616212e0708d8f2b8f330c3f2bbd97b6f663fcf25bf34b7",
+        "4197d182ff3835d9cd082928b55ac62386f0f2924422de33a8ccc234a1a678c8",
+        "43485113fbc322d07b0d7e186ab4ae84640be029b29659ebfa1e4a70e4183299",
+        "4a98ac549acb24c451efdcf7e26f17346a6b1cf866da71c521e6b2738b242fb0",
+        "562a9b7cb2d36966877cc31a090196645f4165d74b94b2ebc1c9499f7712e147",
+        "5a87c6543cbac972a202d22757c19e88fbe79bfcaac26391c4ced6a0a4100fd3",
+        "5b31e55b1830c5f43c512aaf85d4a2444c11b08dc1731b361a69b61796a9f1f3",
+        "5da978e51b185e2174375fce4e35708154f7ebaa73c98d3b767e3b21a9c2ccd3",
+        "62b6343efb16e5a8cec9a4d27e48c8302ce022ea39ce6edbacce44d7758dd947",
+        "64d945fe4100341338f22697da69d2708263bad9f4c6988d07781f5c7676016f",
+        "6cae1c6ffe87a33cb5489e4710566063296b03cffca41bf8af94c2cbce4cd1dc",
+        "75127bdb882417befb785fade4846d378def041b0604cfce5561c7fdffab4d7a",
+        "775e35b40d99bfb6933706788025018e2012210a2e6c50e6d3a4ee4ea2ec947b",
+        "7832705336c3e2e5f9061cf6bf5ea2ae29135824fac66981d634e447b5b12832",
+        "79332f4cff4dc8ff465acc7ef62bd04da5c9d6f60f00c86651ea3bb03d58ee81",
+        "870381cc57e1bdeb39eeebc4613870ea31d77a6ebd46d5312a98755794187eff",
+        "9db5fa1388bfb5ab380c41d1f00e90cc8750bd10f982ab5409244434f23c602d",
+        "9f70685fc0ab7f3d9af1d2d6eb1c9c24fbc547cd659ecc188a4464f44499ae95",
+        "a545b808f682aaa1ea276ab801443db24dd0818f36a96f32915b979399338669",
+        "a774512e2d3e896a6cdd2c382ec5041ce10e39994e341a99988d8311b52091ce",
+        "ac5b5428cb39dc4b74ecc45065cbd9cd07c81d564f4815f5992b7534deec0548",
+        "b3e7dcfe051d9cfa59ece95c9fa9f17fc5397a30847faa73bd10f9d68f24e77f",
+        "b7f60c27836e5f611a5387b2b7d08a389649a26546ddbdde06799b1bcd5187a4",
+        "ba5795ce80be0352e9136fb0ae27333bc24237c810e666e2149f95666f24213c",
+        "c1ffd01b7f4a7cb45c3ca7ce96b29a889c099dc54985e9b7f0d030d95310b155",
+        "c205f7cc716732aae7a7aa314e258431d6835bb9b5fe008dcd7402e4733f322c",
+        "c3778a9fce9c6d54cf4b3574339babac65755d5e8167291a52e65958ad1d89c0",
+        "c6f3f77801b41bceda7e28fa9a31adfb242995d98c570ef1bddda3f6a53a6775",
+        "c71f4ad8abc8420e9f7ff95ca01091f6f52e66c52d6af0addf7c35f9295ec91a",
+        "cbdd5a88a8d1d893132e69bb22021eb34d52c8ce2929537062a6731656d53504",
+        "d03028c1482efd0b1cf382e0d5dc10eaa99a4c39d8871182cb8d76d6f11a560d",
+        "e774a2d47634f309ef9338dfb15d64213550fd28b0fd9994115bd937dc506d2b",
+        "f4be0012804e7d1c7e9cef2d45e0dc4932d850ff26630ee1c36c70355468c269",
+        "f8b81dfb4ef894f58b9c5440f4d998bb181d8f55b4fee0e0fa01ee984f13d5c9"
+      ],
+      "customId": "MaxHelpingHand/CameraOffsetBorder",
+      "issues": [
+        "KN04"
+      ],
+      "kind": "trigger",
+      "occurrences": 47,
+      "physicalAcceptance": "SEPARATE_EXACT_PRODUCT_MATRIX",
+      "provider": "MaxHelpingHand",
+      "requiredProofs": [
+        "baseline-source",
+        "compiled-runtime",
+        "composition",
+        "registration",
+        "regressions",
+        "source-bindings"
+      ],
+      "scope": "EXACT_PROFILE_EXTENSION",
+      "sourceBindings": [
+        {
+          "path": "apple-everest/runtime/semantics/AppleEverestCameraOffsetBorder.cs",
+          "sha256": "d5941e50ca23b4edf9ce8ec7a6509adc31f20c6d6ee0a54f386bbaa30382300b"
+        }
+      ]
+    },
+    {
+      "authoredProfileSha256": [
+        "1b5da776144996c638832d37c7b857865184c4454a585885ffad9bf6149755eb",
+        "1faa82557e38b44c1d70f4a25497cf1d8099f4c55dc2679153c5aac0c62da4fe",
+        "21d2dff8b4e8a10e0b259ecee450f3cb20ce3682eaaac5eb58f5b449ee9519b7",
+        "3bd1ebe31153c3fb76466a1e9d70a6bfab746f823a7f148022bdee0b337818f5",
+        "43528911e86ff8f624ff50e75914c62d64d33bfdab0225befbf2adccb8b6d3c6",
+        "4ce0cb69582d0ebb6958dbddfd40d909f22107db7fe8af3a28264b9fa9374528",
+        "4ebcd16150b0734baf5235d92eea0562ec5fcbfc24c1208d73e7ccab2e398342",
+        "54f61df84b9a0f3d9762a94d4cbaee7664cdb46fcfac5e283fa3faf3f62bee96",
+        "6f9639ff33ae703f4b6212dc7c17f52de0f16e5eb9c695005b75f918f8b2ea5b",
+        "757b7237a81280645cc9727d2ea554c42f263a3b90cacd0cf5b9486aa9da5f9a",
+        "79cb73ab3e6feaf01b663e0d2331109fd1efb3ef8ecb761462781141493eb8d2",
+        "9374dbd47ab60ed790281fb40f918d3e7f82845234fe611115c6baa7b25d6c39",
+        "bb8f3096f17285107a042a9a444c5ada5a004b77b4c4c2b171ecd66c5789b615",
+        "bc5f7e4d8d69f938d0b505dc2ce16ba96ac183d3d1cc5f456e670adbe1d6adc5",
+        "c64fae4f3a29abe9a0f41aacc024571300b98e015ffe38a88b388a925220af59",
+        "e1378db6e241613f8ac2d589d0d086a34fbd542f649363c7016148f98d74d6f7",
+        "e55608ba360d8425259a41ab59a21910e32334ffe8b44e96c88c916685de6aa9",
+        "f9301f8fae3923af2fdb67e7f171d1c52e66628a66f8f61fbdbb33fe3612a65c"
+      ],
+      "customId": "MaxHelpingHand/ColorGradeFadeTrigger",
+      "issues": [],
+      "kind": "trigger",
+      "occurrences": 19,
+      "physicalAcceptance": "SEPARATE_EXACT_PRODUCT_MATRIX",
+      "provider": "MaxHelpingHand",
+      "requiredProofs": [
+        "baseline-source",
+        "composition",
+        "registration",
+        "regressions"
+      ],
+      "scope": "UNCHANGED_ACCEPTED_AUTHORED_PROFILES",
+      "sourceBindings": [
+        {
+          "path": "apple-everest/runtime/semantics/AppleEverestMaxColorSemantics.cs",
+          "sha256": "94f65ea315e6469c6c99e78d780d8968cdf5c13d3b46116d3a9a22e208603ab0"
+        }
+      ]
+    },
+    {
+      "authoredProfileSha256": [
+        "097465568684fdf7f53d64efd9c70555a82f400f70c6120102a01cbc70ec8b13",
+        "126efeffc7367f63e5631ee716f324c32d2c8b4b2449998c6ec4d26e1054b7fd",
+        "286c86e4dbb217e657e4a4f02cfd2799a04fb57aeae4a31b3d3c959025545302",
+        "310ac7d0980749fbe548bdd9cd78ffe99fb6411cc2a07e480425038ae57980a0",
+        "8a656da0d24edf36139d3f8ec764fe8ff034eeb8b8d64f9886ea3fabe182aa1e",
+        "90eff2357c1269058951fd0ed8fcf54345d4f6c1642f0f3d54f60f50bf295ee8",
+        "ac747c3ab798ef30928d72457b37dbcd29b969fc266a6e2d5fb0c3b8d382f190",
+        "b277caf69e0c7e5a3d5ec6992c525edf7d80fe8154a28d9d4d7d3da522377740",
+        "cc2fff4b4d84541fb1912f6a9d2727f6584d691aa1c3c223fc070bbfdf4e7745",
+        "cdacefcf6ff5496a9798e81985fd0ac271c689de84bdf57c0781fdfc856ae874"
+      ],
+      "customId": "MaxHelpingHand/FlagToggleCameraOffsetTrigger",
+      "issues": [],
+      "kind": "trigger",
+      "occurrences": 11,
+      "physicalAcceptance": "SEPARATE_EXACT_PRODUCT_MATRIX",
+      "provider": "MaxHelpingHand",
+      "requiredProofs": [
+        "baseline-source",
+        "composition",
+        "registration",
+        "regressions"
+      ],
+      "scope": "UNCHANGED_ACCEPTED_AUTHORED_PROFILES",
+      "sourceBindings": []
+    },
+    {
+      "authoredProfileSha256": [
+        "6160ee9d01ef6319e010b8d9f73892c462266ce58e2839bc43611cb9cdddb31c",
+        "6cc7d7019dd248a64dc946a9b19193fb4e7491ff7a892ba36f464ee375443897"
+      ],
+      "customId": "MaxHelpingHand/FlagToggleCameraTargetTrigger",
+      "issues": [],
+      "kind": "trigger",
+      "occurrences": 3,
+      "physicalAcceptance": "SEPARATE_EXACT_PRODUCT_MATRIX",
+      "provider": "MaxHelpingHand",
+      "requiredProofs": [
+        "baseline-source",
+        "composition",
+        "registration",
+        "regressions"
+      ],
+      "scope": "UNCHANGED_ACCEPTED_AUTHORED_PROFILES",
+      "sourceBindings": []
+    },
+    {
+      "authoredProfileSha256": [
+        "6e71201f6edba6207f7ad744d461301aba00a0874e34bd35e0b82e87935e98b0",
+        "87a38f270b2320d2ad1e0617a5cefab79e3cd3d218a868cdca265ba1c0eff958",
+        "90ac1c28ae91c697bc3221bb31f1ecd7119ccb5a9926cec4a14af4812e7f9708",
+        "951db7afe18cdf4ef9929ae0a0a734db8d21d28dd17d2c9e28bf023cbd1c552a",
+        "9997a6c60813ff200e7c7e97b6a9eb22e78f5f07e4c6a1a0f0d89dd50d81a6ea",
+        "a2bccc630018ed080735a436c430d0a520fbc97fc079a9b18922ab27c5fb5333",
+        "e66e90a304fcfd5154a8eb96fd6ffdeec62990f310d78c9cf6f8e9268062b500",
+        "ffe8add3dc12d190f1a103c3d7a01c4eea80b9522ffc497522d7bcb41ac21150"
+      ],
+      "customId": "MaxHelpingHand/FlagToggleSmoothCameraOffsetTrigger",
+      "issues": [
+        "KN04"
+      ],
+      "kind": "trigger",
+      "occurrences": 9,
+      "physicalAcceptance": "SEPARATE_EXACT_PRODUCT_MATRIX",
+      "provider": "MaxHelpingHand",
+      "requiredProofs": [
+        "baseline-source",
+        "compiled-runtime",
+        "composition",
+        "registration",
+        "regressions",
+        "source-bindings"
+      ],
+      "scope": "EXACT_PROFILE_EXTENSION",
+      "sourceBindings": [
+        {
+          "path": "apple-everest/runtime/AppleEverestSemanticFactories.cs",
+          "sha256": "6ac6545bd10e9851bdbfc8de34598fe55097f1d7acc4eed47d2190b6a2ccac05"
+        }
+      ]
+    },
+    {
+      "authoredProfileSha256": [
+        "014a9ee35b484090450d6bca6d54e992bff707999a4b2c94d5f8509e7fc63fb4",
+        "0c721ffaf7e86c2e51ff25ec5812b52c3a69797e0235957bc5b206d61a02a770",
+        "0f6b7d99bae9b3840dc317055ded494a74bd61b8623988df8cc6ff9f4082ff41",
+        "1095d9c219d5c5c271f653fb70cdd8073e3d28cb0118e7c85e80ac291014d306",
+        "12396ea5e188d4be49c887185d95b509d6577ce19a6f7920b4fa072e0183b0fa",
+        "1411a8d5649f307d64733a8cf16268232541ebf56516c828dab35f290eed6b8c",
+        "18e095599dcfac8d6216e129d5029a68869b662c7aff83b9a60375634e64c3b6",
+        "1b257071350852c3fb71e3067f57bd3b5c888447ce27692762d2e5f4566b08aa",
+        "1cd7dff4b2b86ed045e406d64c7baaccb11d39d42a9f98941d7e14123d31a5b6",
+        "23c09607799f967d342afbe277c7ee6dcd4a016dad36dc6a502a42575a4762fd",
+        "2643a70e2af4888823ce5ac9f40c6df816417906aa4287a9fd53f766b7ac90f2",
+        "28045629d102b9563ce0ce4eb99dfe345e2df8b79c76202062f0c7e5117eb8a4",
+        "2816cadd7c625c5cc6fbe7b5991fc5debd86029bb608277ac7459d96a9525a03",
+        "2dd730dd42e504538c4380a7af9e51b42e4b8e69bcf72c1ae59a1f670dc2ec54",
+        "2e6f55cd48bc421b4843c63f5092a96625d46ff2b85e658ca5e9bfa99799c4a8",
+        "32503a034c37be39d1cc71f8d9c483ed26a1cd7deb504842ac069a99151660b0",
+        "352027f1e5cd38b57621785eebba7f9e3821f174408408060a80982a51f76662",
+        "370343140de44e6dac32ab30bb43f7adc4e00c0f725117a7994906e18e2ef5c5",
+        "379ef0c4189943b0c352a2f23ccad7506b37abe90fe9b40d2fcc137819c41ae4",
+        "38c9ec2bab45d4f6256f70cb1020b65edb800d3cf74d9aa951cf2d899755a623",
+        "446741014216a69311b4a755d414d2d55e16f04c9d115c4059ae5ebef269c119",
+        "45550ec1d3343ee5ae6e71b962ce643f2dfc42f1e73bfb680e0e6baad40e43ba",
+        "455eb16d6bb119d098f02835045e905efd90a363ad839d04e82f5d812867077c",
+        "45631aea4cefe814ad147afe8ea63cb0ab328807a7a1bc89cab3155d7aa6d565",
+        "47ed5847146c1ec10a33102615189c343a06b4b528e24e58450034ac1a819591",
+        "4873a8523dc4c2ef70ade2a43b46d76a6870366dc041328df9cec64773f8b564",
+        "48ad39bac15e7fc5ae4e2af81cb5eee76fcf157ff149b777a35aa0de2d41c1d1",
+        "4a6768e4bd20359d4d8a4904db3e57f2f10235235bdc1302cbe7546a413d8b63",
+        "4cddb345af262ced1a2c10686f8de0eb344953f3081635b339b07564e3b53d1b",
+        "4f39a65b01bc049b4456ac3cebafb46d8ab6bbb699c4f4a438eb9822dd3ec82c",
+        "55058a59992cd55af406ced2ce2f2e043503e3347ec2a45cb30e3af5a467b667",
+        "59b732d33cd30283fc03367f90a3a290418e7e62bdf2b621354d12a447064491",
+        "5f8ea4e88c0d0148a393fe65aa3348f1b1c4a12efd1be96c5c8d9bfa17589e21",
+        "5fcb5ac8db898592b190a6ed5e9dfc9913076c4172a79a21992a7059fb48fa4d",
+        "604f0f39f0e0dfd0915236b5a5415bf3254c02034bc270799cc94dc40b9a90e6",
+        "66bb2bab773faffa26d11213ea8fa0dafc752f0a6e2e5354c9f68e6212d866d8",
+        "6807a85338aabf90c4262a842216b83d54342d79d98b8c58f35ef2579cd2b3ef",
+        "6924921e417de53233cbe25928195a1ac0a27ec751fb285e79136dbc1fed0ecc",
+        "693c91557f84beacf35243a97d95f0726002672b1ca75aa84be65a01edf9fd69",
+        "694d561aa02fb872c612ef9a4853508602516afdc1ee276076ae950c55acb7ab",
+        "697e555e42d36539033e971f6e0608eb917618bf0e326a74a07f0fabd2b54be7",
+        "6a304564756f925120c337ecbeb9e2d725d7c6b4a0900f4715a6896e19ebfbfe",
+        "6f2c95a70014900b52cdb2a269c18b4154b65a75ae1952561c71a942c36d7ca8",
+        "700fb6e08714ada75ffc801ca3376c76e2d9feeb231630dc3114b88986d4bbac",
+        "70293f477267eb4574ee3ae5a13fa25c4529df3c60fb75a2482d531dbe8a5dfa",
+        "70b63285a925026a165fafa178a55638399ad3349320bb43806f2a74e69ec674",
+        "712c3b584cda6f2dacfb42e493cdc9ce8f72d48a07c5b82943282c6142f02eaf",
+        "7a0e1b0cea3e7a6c164fa49f1d8769f604c4c60f1b7ac754ed2da799f7b5dd4e",
+        "7b1cb580cf31cce099b697afd92cb4d6dd14caf6d573d6646f74ff6a1dec1346",
+        "7c51e8378c27914b3af93ac41d5bf63819de6de9e213dab4e37660b001b96152",
+        "7f52d5753fe85a06edba6cea902ec0b9007f7de70ebb854e90745b0e5438e027",
+        "813d41e927d241a2188dbaff7725dea377bba4a60edb49aef0999859cf316117",
+        "82228cbf1c3fe3515d7aef829d048094bcb3c221d7c29ed30d2e8f5a0ab759af",
+        "8339f8d5d3e72d8f92bfae433d821de3aa9289567516667eb2be1270b489af64",
+        "89adda647ac5800390c5cbd879d99efa98a77670e0e91b1165d5a2715fab5392",
+        "8a1501fd6250eba8d3e75c43fda34953ae869db6337756bb6e6f19bd0323dc53",
+        "8b194ceae8043085b20fe2b8097a52c2e7d648cca0faaa1e4113fca8b6e9ebbb",
+        "8b31dda9d76696d211d7685a47e7375ff54b279df8b247cf828727e3fab672f9",
+        "91b1351ca49b1c4eb447d3125f5c33f4a7238e08cf23cf120c9649d56dbbf8fe",
+        "999383b558e1a97aed684e5e9934d9a0def9dcf1f4a775dfa981c4162a7f856a",
+        "9a5c9870b892b6165d7b583b0dfa2bbf7007f5234e98df5c6be9f92e489b486b",
+        "a117a330384eb268b024f58260caac1e1e33f3344d4a50094a45673c92b56fd1",
+        "a13b7c208858d4d30811f8f7c96f1ab02a5e51c48b8cb8f25a2e5089f1d4ae9d",
+        "a5d77be984d40d687fc725a1164dac7255fc5998d418adc047ab6086c543e6fd",
+        "a61b71f5571b0cca565927d3936a4b3d5e0accafc2223a86408dc43f9dafce3e",
+        "a80a318db743cfe18745314c46c4135acc18b4458400657e53acd50080c022af",
+        "a94f2603a3ef1c2b2004f12e5710ff01246281048465e8268868113d507479ff",
+        "b1511ed8dbbe1c273a4a22439b77e1943624bf6dc75207ce4fd53389d0458879",
+        "b2d0c949260f22f7e15ad1cfe5c8bd41b6fabf460e3314f53fb8be8142bb1a37",
+        "b4b59dbf2e45656a73d089d70b686c993acde22be3c5d671b760c5dfd6ffc4f6",
+        "b937bc5e40a9766bdafc58cdf4c3390bd1f339964002caccaef48cbc8c13c5cc",
+        "b9829911d2ef5393fd3a3d643b3f2b9d64973b496844aa11200ebc320bfeaa9e",
+        "b9f60ea4400e6bf3c15878ece3d30c5ca6b7c4b677e52d5d64d3466fecb9452b",
+        "baf79299bd629fccc703cbf5da82de860f3509301afa833711f3bb214dfdbbf9",
+        "bb9c4445b7e64cbb6eda4522433dce1c8aeb7d5229e2bdcd2beaa5300cb3f1cc",
+        "bcf90b4780078ecd3e99e17361bf471e54b961a327569fc9310c62bd4c642624",
+        "be0870e57f0cfe2ba758c59a7ef099f83ebe17deffbd663d5e4454c63205f5f1",
+        "c0e2fa8348603dd861b04fc78d45ce9ee4531c6cb113a97229efb46cbe9ac42b",
+        "c23831cccbfcf6584b1885402c0b6a01210fc2cdcbc23af824e36eca69ade6a4",
+        "c28fc86c36a2fb86b16f367c7e7499b4c821086e0cb4e7d3a4db300bb3df13ff",
+        "c2c5b0c69e9a2d71d43e9f683a74a4fe9f9f0ec4f78349daa5646350ad9308f6",
+        "c34c974514e6d1ea81255ce9e5970d0c47c2a67f50e3a14b539b1a933d53603b",
+        "c401395488ebe8bbbe0ca746ecd5f6a3cee0f065fde795d7613dce92f5615344",
+        "c804bb4a090e0c879384f2a2002edd6accdf3ea7619066272ed8dccfecf33eac",
+        "ca74ccc26479488fda36a566fb649d7bf4941a35753af5a79d98e2630b6d142b",
+        "cb5ceaf3f6260057e8b33c1e26ecd78a9fda4708f708ac8b3fd5657d509d6326",
+        "cd1bc8f09ef95a8b051abb59ff3f25b1b846352de7201aa704a5a781673a42df",
+        "ce7b12d2889c0479b281444a521b2a6213c5d39fec1a11c84299c5533018d2ca",
+        "d3892cd03b9f3235fff89aa9af236aa1430e739a88dc876230a6d7089304132b",
+        "d3bf4a43f495173b0da02f4ae9aefe1d70e749bab28ac486170536ab42aa768b",
+        "d57dbf8c6fa2ad6a572fbf43249383b63124682b5003ddce9d454fd961e2c855",
+        "dc647d354999f1ff83b1fb745d40e14f780d30391a5476e449f8804f3ae9ede4",
+        "dee55b45d19fbb0c7e29f1fa75a4fe7411e0e976c714d294d3b3b05288e69512",
+        "e07a620a34e74a27a3d4b7540e7d81fc80fe6e0c3abeafb1282fbc96fa9fc03c",
+        "e1fd0cfd3b2e724da2375739c2c67754eaaeac4d687157600d473205c004b994",
+        "e713ea4682d31ee0c49371710ab95053f3ad48c33613851c70684b30cfb8e4ae",
+        "e8590a4d6ca93716639bf282539559b52af8829e3be89ddc9d1ddc0e53819f2f",
+        "ec51a499b607d1418bf9b357b1be09ce7d37d05480d8f550fcee1ae192025c08",
+        "ee1f4adfe237a44727e3b389a330880a308d10bb80bfa66e6c88498475371712",
+        "f5617c2f46ea65b9109720c1597ebb238c311f797ae29cf841b3ce1496ea4699",
+        "fb5b7d1dad3603c55294ac6a9f1da31aaf6beb52c22bb28d3f37b54367f056fc",
+        "fdad6fda78b81e2606ed2fd637e2fa3905a6df19834972f6cac94c0656072d37",
+        "fea900f49e357224a91d968c521c7ae33eae0c1d4f2dd422d52817685fe0e381"
+      ],
+      "customId": "everest/flagTrigger",
+      "issues": [
+        "KN04"
+      ],
+      "kind": "trigger",
+      "occurrences": 315,
+      "physicalAcceptance": "SEPARATE_EXACT_PRODUCT_MATRIX",
+      "provider": "EverestCore",
+      "requiredProofs": [
+        "baseline-source",
+        "compiled-runtime",
+        "composition",
+        "registration",
+        "regressions",
+        "source-bindings"
+      ],
+      "scope": "EXACT_PROFILE_EXTENSION",
+      "sourceBindings": [
+        {
+          "path": "apple-everest/runtime/AppleEverestSemanticFactories.cs",
+          "sha256": "6ac6545bd10e9851bdbfc8de34598fe55097f1d7acc4eed47d2190b6a2ccac05"
+        }
+      ]
+    },
+    {
+      "authoredProfileSha256": [
+        "006939768bf26240b7015365ca07d2d5e97f144b477f030fcf284f3c4fcbb2b9",
+        "0c59d73d8239b3435a7225ab8419ff5d9aef3b2f3ed6eb51830bb8404610c1cf",
+        "0edcdabaa2a3146152453dd69363ba6370cef1a2cf7bbe54944fe3415e1946a3",
+        "1552c7e5e9ae17910b0f65915c9350062a50844f2736e3665519ca1a844f163a",
+        "1f3d364913bd4d7c899241165101664a57c93d2bee0a8adff8ba7ca332ebba36",
+        "23cfeaba9064fcfc6224e625888f39f4dccbdb97a8593317f8e5410a570c5587",
+        "29404d912e486b035830e4ed47e406495e1fe30dd77d61731023365317f3433b",
+        "2d0ec942bd02973b6c1d91654498809cffb65e8bc2293a74444621a08d486365",
+        "2f223975fec3c9123c2a7246651e5a2bb6a35eeb3843a3f0d261c36516abf1ee",
+        "362d8cde66d4afc75d4e82fae6e3044f78f0d927ea50ded2c3cb83fb1894d8ef",
+        "3f0f2f6b2eb3a660d8704e2c62c9ad8267e346bfbcfb86887c9ca12f43efc68b",
+        "41a7214e9daf94e9bb5a353d956786337a13ba11a59288f046ac7b6b2ca57666",
+        "46f66691b8ff0d5570a769783cbc98e2dcb282aa72c67f6c77d990b7959933b7",
+        "593815d2e55a8c8a999c429c246ba6538d29df1dcb7dc442784f80ace81f8f8c",
+        "5bd942ee9b7f4e384030f4ea15195b1c3008782cb7edf5bf5b4630fa0a921b31",
+        "675dc564cdd6e5278e65d1b38be1b47ab145ac91943934acb3add400f6a3410c",
+        "6e1cf5fb5a13f72e23f576270ecad46aa1dd7f4d6b37f703f8b0ec4e85d8566c",
+        "6e2a5758dd636d8a86b62b9025af18c420d42b8aecd23fe4f7d2d6eb80f00a07",
+        "6e36ef95bdda846a938dd62bce5e0004a6d10e81398327734e3682dba2a63774",
+        "6ff31c7c2c33f9385dbca903e29aefaeea4f5c207cc5de8d06023f9f55f2c1bb",
+        "72dc0667a578b5e622dc3bd506727203533a89e4bd5dd5bf91f20cf9947e3f3c",
+        "74d67d5515c78074d374cfc2e17f9b9791c7cf1cf7c2367bffd570bd42b7103a",
+        "74db0811078dc830b6aca163ada68676e905567ed2dcf853a0202c97f7419919",
+        "8a0f98641ff1aa51c7e7d2a685271764576318d38cbc29095174d86ac68dc2aa",
+        "a0a941eacfd0906c8e700985c7e76cf186f07c1b28b361fe567eb5c4a9c6096e",
+        "a6756ac35e882ea31336cc999c094ad9fb5b4d7d507fb4d9970169ae5dd46022",
+        "b0b712cdb640d20245346c26a25da5350b19e0d50f28f456ca709ddc9fa49dd2",
+        "bbd7e07fceba4c49c9ca4b757f78d8ea31fb1937df48e659c7b4b905edfe1d27",
+        "beee1d7a9989a79bf2c19743f856836b85002396303905042f0a6c12c52c61cd",
+        "c15fab19b5cb86105674f828ae7f98cd76afc57ddf4d8523674b5112e4d5e8d2",
+        "c625a4f554619e3834da7ef1bc47cc41c3b3971df18386f0467b9e98314b2eb3",
+        "d42df717ebcabfa85dd8008df2162c57de79ee7cab36058f3e231f3722b54473",
+        "d912257b405fc8e431f7795b2def8a80e31c7da60ce98ca2f65eada4b308e1ab",
+        "dac744ddad160876f568da2e7567d658a013f4d695deed7f7b6a876d8c795393",
+        "ddd0c3db4be0c617806063d134e15a857796316d613dbbc3d35f49248fb0990e",
+        "ec93b950b56e9dbb6e56323f185c7bc616e068b893a0717e2f9fedf581451a3e"
+      ],
+      "customId": "everest/smoothCameraOffsetTrigger",
+      "issues": [
+        "KN04"
+      ],
+      "kind": "trigger",
+      "occurrences": 38,
+      "physicalAcceptance": "SEPARATE_EXACT_PRODUCT_MATRIX",
+      "provider": "EverestCore",
+      "requiredProofs": [
+        "baseline-source",
+        "compiled-runtime",
+        "composition",
+        "registration",
+        "regressions",
+        "source-bindings"
+      ],
+      "scope": "EXACT_PROFILE_EXTENSION",
+      "sourceBindings": [
+        {
+          "path": "apple-everest/runtime/AppleEverestSemanticFactories.cs",
+          "sha256": "6ac6545bd10e9851bdbfc8de34598fe55097f1d7acc4eed47d2190b6a2ccac05"
+        }
+      ]
+    },
+    {
+      "authoredProfileSha256": [
+        "0a7b3f51a754a476b3f80dc13b1452067cc1a969392cb82e61b3b5a1b9b78aee",
+        "0fd425b4b21970de1b48d01397868aa67a4e99a34fc9f8d53ea50f4b594afe0f",
+        "3f50b05c9cbad6eb0f340f3021aee171a478b92114596e4ff7611bf9b5dff4ab",
+        "51e095561c4ef76b3eae62582d223418975b9cc2d971cb447668ff0ccb30cd18",
+        "725bdc11a92e4897e65e195503402d5a4cc34db66e08e558037395d51f57328e",
+        "765671bf855c1fcb0cfb08cbbf502ed2de2d89c7b16ac360f5d68698c101a0a4",
+        "93d5f846b805a85953b205bcc24e4f07d17880e8ddb7afebfe0ae845f577151d",
+        "b18af370af2a80dd8e3dd9e989289e6cc2375d0d8f6090dfdba937fbfbce08da",
+        "ca47f2ff3f89159a93c9e019b70d19770fc0280ebd0e91be15f1e8e5392b863f",
+        "e14cc3a7c4ab944bfcbbb3f597155aa9bdc42d93f61bcb74ca8b07cc54213ae9",
+        "f349e86f1fb3445d26817a28c09aaa35b8af6efa1027bc0e9e9535f72751bf5f",
+        "fe23439a4f9a5f8ee4911ed4d204c3994fef4bd10d3b91750132998d6fdd8cc7"
+      ],
+      "customId": "vitellary/bloomstrengthtrigger",
+      "issues": [],
+      "kind": "trigger",
+      "occurrences": 13,
+      "physicalAcceptance": "SEPARATE_EXACT_PRODUCT_MATRIX",
+      "provider": "CrystallineHelper",
+      "requiredProofs": [
+        "baseline-source",
+        "composition",
+        "registration",
+        "regressions"
+      ],
+      "scope": "UNCHANGED_ACCEPTED_AUTHORED_PROFILES",
+      "sourceBindings": [
+        {
+          "path": "apple-everest/runtime/semantics/AppleEverestCrystallineSemantics.cs",
+          "sha256": "5289cdf375b3780452139ffc57deade70c14f367c69bfb599e89decab3ffd4ec"
+        }
+      ]
+    },
+    {
+      "authoredProfileSha256": [
+        "08398ff3c4835ee22fec1a33dc3ea6eec6841363d0e00dd509ada5103c7592c4",
+        "10d712dd984bace91245478c13651ae728c4b0121f157e4a104f3cb2481b4cd9",
+        "3b836598f2e0034940dd05a57239ec67f493c75494577c645527048bfc49dc31",
+        "6a045e348c0d32288c4e7f005a3f122bdc620d72b4630806563389e32cb6a9f6",
+        "a992daa3743e9966faa529f0527fba96e9f70a2ddbd503af1cf0e4d48b0630fc",
+        "de4c12ac9548453dcfacf3274436c87e85b39d829cc6fd758b2aec7a104bebf9",
+        "df834f06afd919cffc3ba2de2230e12c25042e9a39368279de3119deb86c50f2",
+        "e0e9e265a599f84612d39ba497b859ce2335f46cd3ab34b33bf32577d9350c05"
+      ],
+      "customId": "vitellary/editdepthtrigger",
+      "issues": [],
+      "kind": "trigger",
+      "occurrences": 45,
+      "physicalAcceptance": "SEPARATE_EXACT_PRODUCT_MATRIX",
+      "provider": "CrystallineHelper",
+      "requiredProofs": [
+        "baseline-source",
+        "composition",
+        "registration",
+        "regressions"
+      ],
+      "scope": "UNCHANGED_ACCEPTED_AUTHORED_PROFILES",
+      "sourceBindings": [
+        {
+          "path": "apple-everest/runtime/semantics/AppleEverestCrystallineSemantics.cs",
+          "sha256": "5289cdf375b3780452139ffc57deade70c14f367c69bfb599e89decab3ffd4ec"
+        }
+      ]
+    },
+    {
+      "authoredProfileSha256": [
+        "54e46b247d29b3950c2f3d85c714324bd620eb2b5eeae066b30297c5f57938d3",
+        "deec378fa82b79f9d7f2edce6f4de3ea3411004be208ad751eae754a96429034"
+      ],
+      "customId": "vitellary/triggertrigger",
+      "issues": [],
+      "kind": "trigger",
+      "occurrences": 3,
+      "physicalAcceptance": "SEPARATE_EXACT_PRODUCT_MATRIX",
+      "provider": "CrystallineHelper",
+      "requiredProofs": [
+        "baseline-source",
+        "composition",
+        "registration",
+        "regressions"
+      ],
+      "scope": "UNCHANGED_ACCEPTED_AUTHORED_PROFILES",
+      "sourceBindings": [
+        {
+          "path": "apple-everest/runtime/semantics/AppleEverestCrystallineSemantics.cs",
+          "sha256": "5289cdf375b3780452139ffc57deade70c14f367c69bfb599e89decab3ffd4ec"
+        }
+      ]
+    }
+  ],
+  "generationSourceBindings": [
+    {
+      "path": "tools/AppleEverestBuilder/ClosureGenerator.cs",
+      "sha256": "6320a02c2e6c4b1758c8bb6f3e8e9f26f718dd32ca7856a4b8de6238c46cfa69"
+    },
+    {
+      "path": "tools/AppleEverestBuilder/StaticSemanticLowering.cs",
+      "sha256": "41d48dc108ebe58fa2ed32379911565fea3fa81c1b3ec3833a731d1f4e3fc2ad"
+    },
+    {
+      "path": "tools/AppleEverestBuilder/StaticSemanticRuntimePatches.cs",
+      "sha256": "eb8224be0e393b1bfa7ba3b5eb2467c94e32edd9a233b2f3505cad0f7923b597"
+    },
+    {
+      "path": "tools/AppleEverestBuilder/SelectedSidewaysIlPlans.cs",
+      "sha256": "ca7011cfa42c61b0c1a1f00dd1ef85ea4cf8d7b63c147c8a8a3af98c90a625d0"
+    },
+    {
+      "path": "tools/AppleEverestBuilder/SelectedFactoryProfiles.cs",
+      "sha256": "8c03d9755767042c4de7d85aacac2fdbc63b3276e38d282b6df644b620c2aae9"
+    },
+    {
+      "path": "tools/AppleEverestBuilder/SnasFlagGroups.cs",
+      "sha256": "c17c274b4b3b72237cf21e0aa3798f9fafb95384119b597d8d65d4bffb6d47c9"
+    },
+    {
+      "path": "tools/AppleEverestBuilder/CollabManifestGenerator.cs",
+      "sha256": "9997d9b3f05b6984cc0d7fa7b2f686466ea38ff1a5228ff392b0ce8be295ec89"
+    },
+    {
+      "path": "tools/AppleEverestBuilder/CustomAudioManifest.cs",
+      "sha256": "b5694a716a93e7922efc51c160d4cfd4ba2ae2f3398b7b5e3d6d114e8acabe8c"
+    },
+    {
+      "path": "tools/AppleEverestIlWorker/SelectedSidewaysIlLowering.cs",
+      "sha256": "396d74a5cda52185477166ec01c460675f679d55f2dfd89f7b27bc3d66550dd8"
+    },
+    {
+      "path": "apple-everest/runtime/semantics/AppleEverestSelectedProfileGuard.cs",
+      "sha256": "833e9b59793ff8d881405d3b05052b0c23bacc75a95a2ae8699669d5d97d8f36"
+    },
+    {
+      "path": "apple-everest/runtime/semantics/AppleEverestSnasProfileGuard.cs",
+      "sha256": "16c97dc649d59cb4e07fcc4bec2134e164cbdb8feaa4434a9e78bfea73c568df"
+    }
+  ],
+  "historicalPhysicalResultsTransferred": false,
+  "issueLedger": "apple-everest/sj-snas-issues-stage25kn.json",
+  "openRequirements": [],
+  "reviewBoundaries": [
+    "The four new implementations are finite typed source lowerings with exact package/profile guards.",
+    "Seven existing-profile extensions require actual constructor/lifecycle execution; profile-guard acceptance alone is insufficient.",
+    "Six legacy controls retain their separate accepted source/type-closure proofs and are not claimed as selected73 lifecycle fixtures.",
+    "Host adapters do not establish GPU rendering, native audio playback, full route completion or on-device save authority. Those remain mandatory physical observations."
+  ],
+  "schemaVersion": 1,
+  "stage": "25K-N"
+}

@@ -1,0 +1,51 @@
+{
+  "assets": [
+    {
+      "bytes": 252,
+      "logicalPath": "Graphics/AnimatedTiles.xml",
+      "sha256": "eedb00fc3eb3186cf92b14bc6ac1f080fc0409fa00975d62e84bc400df29e189"
+    },
+    {
+      "bytes": 313334,
+      "logicalPath": "Graphics/Atlases/Gameplay.meta",
+      "sha256": "1f23b1f35544a3751ffec170b0230c7c9513000ab1549f78ebb9cb9f4203c8d9"
+    },
+    {
+      "bytes": 7094606,
+      "logicalPath": "Graphics/Atlases/Gameplay0.data",
+      "sha256": "687f3340c937e3baca71758bfb1e6b8e799ad896f2df19bef26ec64968b3490b"
+    },
+    {
+      "bytes": 16792,
+      "logicalPath": "Graphics/Atlases/Gui.meta",
+      "sha256": "884ea39e604e34e3a45b005d164a5249de9a985e58fde7ef730193c47363525b"
+    },
+    {
+      "bytes": 18423454,
+      "logicalPath": "Graphics/Atlases/Gui0.data",
+      "sha256": "5eea0c4bcb018492dbb3eff09c8380c82bb4c82525555f5d304a10feb4e6e734"
+    },
+    {
+      "bytes": 5710,
+      "logicalPath": "Graphics/BackgroundTiles.xml",
+      "sha256": "fa2c03e2b41f72778bacbe2498927a5bfce81112e9645748d371606bd4ed016b"
+    },
+    {
+      "bytes": 6336,
+      "logicalPath": "Graphics/ColorGrading/feelingdown.png",
+      "sha256": "ea9afc5da068d7ed97e0789beee160b5dbbfc6019458d639cd19ef4050cf293b"
+    },
+    {
+      "bytes": 9017,
+      "logicalPath": "Graphics/ForegroundTiles.xml",
+      "sha256": "1d31280a6ef0a81909186954648aa3e47e30de036404e3117916dbcdd0dfee65"
+    },
+    {
+      "bytes": 52292,
+      "logicalPath": "Graphics/Sprites.xml",
+      "sha256": "baec20ec28911be5ef8acc6b181c6818095aa867c692c14d57d26e42c00fc04a"
+    }
+  ],
+  "schemaVersion": 1,
+  "source": "VALIDATED_CELESTE_1_4_0_0_CANONICAL_CONTENT"
+}

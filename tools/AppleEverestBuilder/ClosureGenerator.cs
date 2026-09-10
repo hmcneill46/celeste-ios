@@ -39,7 +39,8 @@ internal static class ClosureGenerator
         bool hasSemanticRuntime = ordered.Any(mod => mod.StaticSemanticLowering?.RuntimeFiles?.Count > 0);
         foreach (string source in Directory.EnumerateFiles(runtimeRoot, "*.cs").OrderBy(Path.GetFileName, StringComparer.Ordinal))
             File.Copy(source, Path.Combine(managed, Path.GetFileName(source)), overwrite: false);
-        foreach (string name in ordered.SelectMany(mod => mod.StaticSemanticLowering?.RuntimeFiles ?? []).Append("AppleEverestSelectedProfileGuard.cs")
+        foreach (string name in ordered.SelectMany(mod => mod.StaticSemanticLowering?.RuntimeFiles ?? [])
+                     .Append("AppleEverestSelectedProfileGuard.cs").Append("AppleEverestSnasProfileGuard.cs")
                      .Distinct(StringComparer.Ordinal).OrderBy(name => name, StringComparer.Ordinal))
         {
             if (Path.GetFileName(name) != name || !name.EndsWith(".cs", StringComparison.Ordinal))
@@ -209,6 +210,14 @@ internal static class ClosureGenerator
                 value.LogicalPath, value.SourceSha256, staticallyLoweredStrawberryEntities))
             .OrderBy(value => value.Sid, StringComparer.Ordinal).ToArray();
         MapBindingsGenerator.Binding[] mapBindings = MapBindingsGenerator.Bind(progressionMaps, stagedContent, contentPlan);
+        if (ordered.Any(mod => mod.Metadata.Name == "MaxHelpingHand" && mod.StaticSemanticLowering != null))
+        {
+            SnasFlagGroups.Group[] groups = SnasFlagGroups.Create(stagedContent, content, ordered);
+            File.WriteAllText(Path.Combine(managed, "GeneratedAppleEverestFlagGroups.cs"),
+                SnasFlagGroups.Source(groups), new UTF8Encoding(false));
+            File.WriteAllText(Path.Combine(outputRoot, "flag-groups.json"),
+                JsonSerializer.Serialize(groups, new JsonSerializerOptions { WriteIndented = true }) + "\n");
+        }
         File.WriteAllText(Path.Combine(managed, "GeneratedAppleEverestMapBindings.cs"),
             MapBindingsGenerator.Source(mapBindings, ordered), new UTF8Encoding(false));
         File.WriteAllText(Path.Combine(outputRoot, "map-bindings.json"),
@@ -582,6 +591,15 @@ internal static class ClosureGenerator
 
         AppleApiSurface.Apply(managedRoot);
         PreparePinnedEverestManagedTargets(managedRoot);
+        if (File.Exists(Path.Combine(destination, "GeneratedAppleEverestFlagGroups.cs")))
+        {
+            ReplaceOnce(Path.Combine(managedRoot, "Monocle", "EntityList.cs"),
+                "\tpublic void Add(Entity entity)\n\t{",
+                "\tpublic void Add(Entity entity)\n\t{\n\t\tglobal::Celeste.Mod.AppleEverestFlagGroup.ValidateCreation(Scene, entity);");
+            ReplaceOnce(Path.Combine(managedRoot, "Monocle", "EntityList.cs"),
+                "\t\t\t\tEntity entity = toAdd[i];",
+                "\t\t\t\tEntity entity = toAdd[i];\n\t\t\t\tglobal::Celeste.Mod.AppleEverestFlagGroup.ValidateCreation(Scene, entity, beforeAdded: true);");
+        }
         ManagedDetourGenerator.RewriteTargets(managedRoot, ManagedDetourCatalog.Targets);
         StaticAotCompatibility.PatchRuntimeRequiredGameSources(managedRoot);
         if (File.Exists(Path.Combine(destination, "GeneratedAppleEverestStaticAotCompatibility.cs")))

@@ -100,12 +100,54 @@ internal static class FactoryProfilePreflight
             "apple-everest", "strawberry-jam-dependency-graph-stage25kc.json")));
         Dictionary<string, JsonElement> pins = dependencyGraph.RootElement.GetProperty("nodes").EnumerateArray()
             .ToDictionary(node => node.GetProperty("name").GetString()!, StringComparer.Ordinal);
-        HashSet<string> providers = graph.Manifest.Factories.Where(factory => factory.Provider != "EverestCore")
+        WriteVerifiedInputs(graph.Manifest.Factories, authored.RootElement, pins, modPaths, output,
+            repoRoot, profilePath, upstream, suppliedClosure, assemblyPath, authoredProfilesPath,
+            canonicalManaged, dotnet, contentPlanPath);
+    }
+
+    // Explicit K-N registration lane. This proves A/B for the source-extracted
+    // 77-factory selection. It cannot manufacture a semantic graph or Gate C/D
+    // PASS; the expanded product wrapper must require those separately.
+    internal static void WriteSnas(IReadOnlyList<string> modPaths, string output,
+        string repoRoot, string profilePath, string upstream, string suppliedClosure, string assemblyPath,
+        string authoredProfilesPath, string canonicalManaged, string dotnet, string contentPlanPath)
+    {
+        using JsonDocument authored = SnasProfileAuthority.Load(authoredProfilesPath);
+        using JsonDocument dependencyGraph = JsonDocument.Parse(File.ReadAllBytes(Path.Combine(repoRoot,
+            "apple-everest", "strawberry-jam-dependency-graph-stage25kc.json")));
+        Dictionary<string, JsonElement> pins = dependencyGraph.RootElement.GetProperty("nodes").EnumerateArray()
+            .ToDictionary(node => node.GetProperty("name").GetString()!, StringComparer.Ordinal);
+        string kmPath = Path.Combine(repoRoot, "apple-everest", "sj-beginner-expansion-inputs-stage25km.json");
+        if (Hashing.FileSha256(kmPath) != "29f2dd452bbf10e5e6d03dd19bb17a0719c3f3520ef97164e44a1e4fcadda72d")
+            throw new InvalidDataException("immutable K-M input authority differs");
+        using JsonDocument km = JsonDocument.Parse(File.ReadAllBytes(kmPath));
+        JsonElement communal = km.RootElement.GetProperty("candidateOnlyPackages").EnumerateArray()
+            .Single(row => row.GetProperty("name").GetString() == "CommunalHelper");
+        pins["CommunalHelper"] = JsonSerializer.SerializeToElement(new {
+            name = "CommunalHelper", resolvedVersion = communal.GetProperty("version").GetString(),
+            zipSha256 = communal.GetProperty("zipSha256").GetString(),
+            distributedDlls = communal.GetProperty("distributedDlls") });
+        SelectedFactoryClosureFactory[] selected = authored.RootElement.GetProperty("factories").EnumerateArray()
+            .Select(row => new SelectedFactoryClosureFactory {
+                Kind = row.GetProperty("kind").GetString()!, CustomId = row.GetProperty("customId").GetString()!,
+                Provider = row.GetProperty("provider").GetString()! }).ToArray();
+        WriteVerifiedInputs(selected, authored.RootElement, pins, modPaths, output,
+            repoRoot, profilePath, upstream, suppliedClosure, assemblyPath, authoredProfilesPath,
+            canonicalManaged, dotnet, contentPlanPath, bindCurrentSources: true);
+    }
+
+    private static void WriteVerifiedInputs(SelectedFactoryClosureFactory[] selected, JsonElement authored,
+        Dictionary<string, JsonElement> pins, IReadOnlyList<string> modPaths, string output,
+        string repoRoot, string profilePath, string upstream, string suppliedClosure, string assemblyPath,
+        string authoredProfilesPath, string canonicalManaged, string dotnet, string? contentPlanPath, bool bindCurrentSources = false)
+    {
+        FileRecord[]? sourceAuthority = bindCurrentSources ? FactorySourceAuthority.Inventory(repoRoot) : null;
+        HashSet<string> providers = selected.Where(factory => factory.Provider != "EverestCore")
             .Select(factory => factory.Provider).ToHashSet(StringComparer.Ordinal);
-        Dictionary<string, string> expectedOwners = authored.RootElement.GetProperty("factories").EnumerateArray()
+        Dictionary<string, string> expectedOwners = authored.GetProperty("factories").EnumerateArray()
             .ToDictionary(factory => factory.GetProperty("kind").GetString() + ":" + factory.GetProperty("customId").GetString(),
                 factory => factory.GetProperty("provider").GetString()!, StringComparer.Ordinal);
-        if (graph.Manifest.Factories.Length != expectedOwners.Count || graph.Manifest.Factories.Any(factory =>
+        if (selected.Length != expectedOwners.Count || selected.Any(factory =>
             expectedOwners.GetValueOrDefault(factory.Kind + ":" + factory.CustomId) != factory.Provider))
             throw new InvalidDataException("selected factory ownership/census differs from package-backed authority");
         string temporary = Path.Combine(Path.GetTempPath(), "apple-everest-production-preflight-" + Guid.NewGuid().ToString("N"));
@@ -147,7 +189,7 @@ internal static class FactoryProfilePreflight
                     throw new InvalidDataException("supplied closure tree differs from production: " + tree);
             FactoryCompilationProof.Evidence compilation = FactoryCompilationProof.CompileAndCompare(repoRoot,
                 regenerated, canonicalManaged, assemblyPath, dotnet, temporary);
-            CompiledFactoryInspection.Factory[] factories = CompiledFactoryInspection.Inspect(assemblyPath, authored.RootElement, graph.Manifest.Factories);
+            CompiledFactoryInspection.Factory[] factories = CompiledFactoryInspection.Inspect(assemblyPath, authored, selected);
             int occurrences = factories.Sum(factory => factory.AcceptedOccurrences);
             object report = new
             {
@@ -165,7 +207,16 @@ internal static class FactoryProfilePreflight
             };
             output = Path.GetFullPath(output);
             Directory.CreateDirectory(Path.GetDirectoryName(output)!);
-            File.WriteAllText(output, JsonSerializer.Serialize(report, new JsonSerializerOptions { WriteIndented = true }) + "\n");
+            string serialized = JsonSerializer.Serialize(report, new JsonSerializerOptions { WriteIndented = true });
+            if (sourceAuthority is not null)
+            {
+                if (!sourceAuthority.SequenceEqual(FactorySourceAuthority.Inventory(repoRoot)))
+                    throw new InvalidDataException("owned production transformation sources changed during compilation");
+                var document = System.Text.Json.Nodes.JsonNode.Parse(serialized)!;
+                document["productionSourceBindings"] = JsonSerializer.SerializeToNode(sourceAuthority);
+                serialized = document.ToJsonString(new JsonSerializerOptions { WriteIndented = true });
+            }
+            File.WriteAllText(output, serialized + "\n");
         }
         finally { Directory.Delete(temporary, recursive: true); }
     }

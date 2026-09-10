@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "stage": "25K-N",
+  "scope": "EXACT_THREE_MAP_COMPILED_REGISTRY_CONTRACT_NOT_SEMANTIC_AUTHORITY",
+  "authoredProfilesSha256": "1906bcec05cfb5ae5c16c471368716dd275aaf747f6b8e24eca8abd4741c6bfd",
+  "selectedFactories": 77,
+  "selectedOccurrences": 973,
+  "regressionOccurrences": 336,
+  "separateLegacyFactories": 6,
+  "semanticAndCompositionPreflightRequired": true,
+  "physicalAcceptance": "SEPARATE_EXACT_PRODUCT_GATE"
+}

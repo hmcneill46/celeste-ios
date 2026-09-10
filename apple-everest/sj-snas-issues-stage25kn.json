@@ -1,0 +1,80 @@
+{
+  "schemaVersion": 1,
+  "stage": "25K-N",
+  "authority": "IMPLEMENTATION_REVIEW; FRESH_GATES_AND_PHYSICAL_OBSERVATIONS_REMAIN_SEPARATE",
+  "openRequirements": [],
+  "issues": [
+    {
+      "id": "KN01",
+      "classification": "AUTO_IMPLEMENT_BOUNDED_COMPATIBILITY",
+      "resolution": "IMPLEMENTED_SOURCE_REVIEWED",
+      "subject": "CommunalHelper 1.25.5 PlayerBubbleRegion",
+      "behavior": "Exactly two authored nodes invoke canonical cassette flight. Dead and state-21 guards, collision callbacks and component removal preserve the finite source behavior.",
+      "proofs": ["exact package/DLL metadata and IL", "pinned-source differential with canonical queues/coroutines", "actual compiled canonical CassetteFly/Normal callback execution", "wrong node/order/profile rejection"],
+      "physical": "Authored bubble flight, landing, death/retry and re-entry on both exact products."
+    },
+    {
+      "id": "KN02",
+      "classification": "AUTO_IMPLEMENT_BOUNDED_COMPATIBILITY",
+      "resolution": "IMPLEMENTED_SOURCE_REVIEWED",
+      "subject": "ContortHelper 1.5.5 RandomSoundTrigger",
+      "behavior": "Preserve empty parsing/flags, persistent=false, Next(1), zero-delay coroutine yield, 12 oneUse and 11 repeat occurrences, queued removal and re-entry timing. No RNG or timing shortcut.",
+      "proofs": ["pinned-source differential execution", "actual canonical coroutine/component/entity queues", "recorded event/RNG schedules", "unsupported event/flag/persistence/delay rejection"],
+      "physical": "Original flourish/special events, oneUse/repeat behavior and cross-map sound restoration."
+    },
+    {
+      "id": "KN03",
+      "classification": "AUTO_IMPLEMENT_BOUNDED_COMPATIBILITY",
+      "resolution": "IMPLEMENTED_SOURCE_REVIEWED",
+      "subject": "Typed flag touch switch/gate and closed creation",
+      "behavior": "Original mode-0 room-3 flag_snasberry_switch group; legacyMode/groupPersistence true; switch 422 persistent, gate 423 nonpersistent. Preserve main/per-switch flags, ordinal membership, gate restore and original coroutine/tween schedule. Guard both queued creation and pre-Added scene binding; unrelated maps retain canonical behavior.",
+      "proofs": ["exact source/type/IL bindings", "49 construction controls", "actual compiled collision, tracker, component and tween execution", "independent 60Hz/uneven-frame timing oracle", "delayed scene binding and unproved creation rejection", "actual disposable progression codec round trips and post-restore updates"],
+      "physical": "Activate, leave/reenter, die/retry, numbered save/cold resume, Return to Lobby and cross-map flag isolation."
+    },
+    {
+      "id": "KN04",
+      "classification": "AUTO_IMPLEMENT_BOUNDED_COMPATIBILITY",
+      "resolution": "IMPLEMENTED_SOURCE_REVIEWED",
+      "subject": "Seven exact existing-profile extensions",
+      "behavior": "Bind original camera, core flag, sideways platform and MiniHeart profiles to their unchanged implementations. Execute constructor/base initialization, Added/Awake/callbacks, components and cleanup before expanding the authored guard. MiniHeart's extra authored fields resolve to the existing effective constructor defaults.",
+      "proofs": ["exact 32 snas raw profile guards", "actual compiled constructors/lifecycle", "pinned MaxHelpingHand/CollabUtils2 source metadata/IL", "unsupported attributes, widths, types and nodes fail closed"],
+      "physical": "Camera transitions, one-way collision, berry/MiniHeart collection and original chapter completion."
+    },
+    {
+      "id": "KN05",
+      "classification": "AUTO_FIX_COMPOSITION",
+      "resolution": "IMPLEMENTED_SOURCE_REVIEWED",
+      "subject": "Implicit assets and canonical construction closure",
+      "behavior": "Keep full original snas terrain XML and atlas geometry, implicit animation frames, ordinary canonical entity assets and both silver-berry sprite entries. Canonical colorgrade, atlas metadata/data and Sprites.xml receive explicit final payload checks. No texture quality or deferred-loading reduction.",
+      "proofs": ["actual constructors and SpriteBank with exact metadata", "all authored terrain cells with pinned reference autotiler", "strict texture/frame bounds", "canonical asset hashes and missing/changed-byte controls"],
+      "physical": "Rendered terrain/decorations, ordinary/silver berries, MiniHeart and modern-device visual quality."
+    },
+    {
+      "id": "KN06",
+      "classification": "AUTO_FIX_COMPOSITION",
+      "resolution": "IMPLEMENTED_SOURCE_REVIEWED",
+      "subject": "Three-map navigation, composition and AudioB bank",
+      "behavior": "Exactly lobby+Bing+snas, 18 unchanged regressions, 125 excluded SJ maps, 2/23 available lobby destinations, unchanged 21-heart threshold. Preserve source label The Squeeze, room 1, original default spawn and seed 2989. Add exact sj21_snas bank at overall ordinal 11 while preserving every prior relative bank order and one Studio system.",
+      "proofs": ["source-bound all-map composition", "actual generated bindings and restoration probes", "exact bank/GUID/event binding and duplicate controls", "actual product map/mount equality"],
+      "physical": "Real lobby jar/panel route, title/credits/icon, full chapter, lobby return position, journal/sticker and audio restoration."
+    },
+    {
+      "id": "KN07",
+      "classification": "AUTO_FIX_COMPOSITION",
+      "resolution": "IMPLEMENTED_SOURCE_REVIEWED",
+      "subject": "Existing progression and separate legacy controls",
+      "behavior": "Preserve all 20 existing progression descriptors and compatibility identities; append one snas descriptor. Keep the accepted AEVPSV1 codec byte-identical: its existing writer uses envelope 2 and reader accepts 1/2. No schema migration is introduced. Six legacy controls retain separate package/frozen-IL/type/lifecycle authorities.",
+      "proofs": ["20 exact descriptor comparisons", "accepted codec source hash", "330 selected regression occurrences plus six separate actual linked entries", "accepted legacy type/entry hashes before and after linking", "legacy-only native roots and mutation controls"],
+      "physical": "Save/quit/cold resume and previous progression; disposable slot/A-B/quarantine/lineage fixtures; both device lifecycles."
+    },
+    {
+      "id": "KN08",
+      "classification": "AUTO_FIX_COMPOSITION",
+      "resolution": "IMPLEMENTED_SOURCE_REVIEWED",
+      "subject": "Mandatory expanded verification and final product evidence",
+      "behavior": "Introduce a separate K-N wrapper, 77 selected factory contract and four-gate preflight with complete 1309/83/604 census. Refuse missing maps, stale source receipts, unsupported obligations and copied probe outputs. Require final linked/native/packaged-content checks and explicit signed/unsigned semantics. Historical K-L/K-M authorities remain unchanged.",
+      "proofs": ["fresh regeneration and full implementation-byte comparison", "current owned source inventory binding", "portable negative controls", "actual compiled provider omissions and changed-body controls", "serial final product provenance and payload equality"],
+      "physical": "No automatic gameplay PASS; user observations must identify each exact final installed product."
+    }
+  ]
+}

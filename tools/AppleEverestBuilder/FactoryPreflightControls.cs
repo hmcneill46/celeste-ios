@@ -10,11 +10,12 @@ internal static class FactoryPreflightControls
 {
     internal static void Write(string assemblyPath, string manifestPath, string profilesPath, string output)
     {
-        var graph = SelectedFactoryTypeClosure.LoadAndValidate(manifestPath);
-        using JsonDocument profiles = JsonDocument.Parse(File.ReadAllBytes(profilesPath));
-        var baseline = CompiledFactoryInspection.Inspect(assemblyPath, profiles.RootElement, graph.Manifest.Factories);
+        using var contract = SelectedFactoryContract.Load(manifestPath, profilesPath);
+        JsonDocument profiles = contract.Profiles;
+        var baseline = CompiledFactoryInspection.Inspect(assemblyPath, profiles.RootElement, contract.Factories);
         string[][] groups = [ ["MaxHelpingHand"], ["CollabUtils2"], ["FrostHelper"], ["FemtoHelper", "FlaglinesAndSuch"],
             ["CherryHelper", "FancyTileEntities", "BrokemiaHelper"], ["PandorasBox"], ["HonlyHelper", "LunaticHelper"], ["VivHelper", "XaphanHelper"] ];
+        if (contract.IsSnas) groups = [..groups, ["CommunalHelper"], ["ContortHelper"]];
         string temporary = Path.Combine(Path.GetTempPath(), "apple-everest-compiled-controls-" + Guid.NewGuid().ToString("N"));
         Directory.CreateDirectory(temporary);
         try
@@ -26,7 +27,7 @@ internal static class FactoryPreflightControls
             foreach (string[] group in groups)
             {
                 target = Path.Combine(temporary, "Celeste.omit-" + omissions.Count + ".dll");
-                var removed = graph.Manifest.Factories.Where(factory => group.Contains(factory.Provider, StringComparer.Ordinal)).ToArray();
+                var removed = contract.Factories.Where(factory => group.Contains(factory.Provider, StringComparer.Ordinal)).ToArray();
                 using (AssemblyDefinition assembly = Read(assemblyPath))
                 {
                     TypeDefinition registry = assembly.MainModule.GetType("Celeste.Mod.GeneratedAppleEverestGameplayRegistry");
@@ -43,7 +44,7 @@ internal static class FactoryPreflightControls
                     }
                     assembly.Write(target);
                 }
-                var remaining = CompiledFactoryInspection.Inspect(target, profiles.RootElement, graph.Manifest.Factories, skipMissing: true);
+                var remaining = CompiledFactoryInspection.Inspect(target, profiles.RootElement, contract.Factories, skipMissing: true);
                 var expected = baseline.Where(factory => !group.Contains(factory.Provider, StringComparer.Ordinal)).ToArray();
                 if (!remaining.Select(factory => factory.Kind + ":" + factory.CustomId).SequenceEqual(expected.Select(factory => factory.Kind + ":" + factory.CustomId)) ||
                     remaining.Where((factory, index) => factory.RegistrationSha256 != expected[index].RegistrationSha256).Any())
@@ -58,7 +59,7 @@ internal static class FactoryPreflightControls
                 target = Path.Combine(temporary, "Celeste.negative-" + rejected.Count + ".dll");
                 using (AssemblyDefinition assembly = Read(assemblyPath)) { mutate(assembly); assembly.Write(target); }
                 bool failed = false;
-                try { _ = CompiledFactoryInspection.Inspect(target, profiles.RootElement, graph.Manifest.Factories); }
+                try { _ = CompiledFactoryInspection.Inspect(target, profiles.RootElement, contract.Factories); }
                 catch (Exception exception) when (exception is InvalidDataException or System.Reflection.TargetInvocationException or TypeLoadException or MissingMethodException) { failed = true; }
                 if (!failed) throw new InvalidDataException("false-positive compiled factory control: " + name);
                 rejected.Add(name);
@@ -115,7 +116,7 @@ internal static class FactoryPreflightControls
             {
                 string probe = Path.Combine(temporary, "Celeste.binding-" + implementationRejected.Count + ".dll");
                 using (AssemblyDefinition assembly = Read(assemblyPath)) { mutate(assembly); assembly.Write(probe); }
-                var present = CompiledFactoryInspection.Inspect(probe, profiles.RootElement, graph.Manifest.Factories);
+                var present = CompiledFactoryInspection.Inspect(probe, profiles.RootElement, contract.Factories);
                 if (present.Length != baseline.Length || present.Sum(factory => factory.AcceptedOccurrences) != baseline.Sum(factory => factory.AcceptedOccurrences))
                     throw new InvalidDataException("implementation control did not preserve registrations/guards: " + name);
                 File.Copy(probe, Path.Combine(bindingRoot, "Celeste.dll"), overwrite: true);
@@ -156,9 +157,30 @@ internal static class FactoryPreflightControls
             catch (InvalidDataException) { siblingFailed = true; }
             if (!siblingFailed) throw new InvalidDataException("stale sibling DLL escaped compiler binding");
             implementationRejected.Add("CHANGED_SIBLING_DLL_BYTES");
+            List<string> legacyRejected = [];
+            if (contract.IsSnas)
+            {
+                string reference = Path.Combine(Path.GetDirectoryName(Path.GetFullPath(manifestPath))!, "sj-snas-legacy-reference-stage25kn.json");
+                LegacyFactoryAuthority.Verify(CompiledFactoryInspection.InspectLegacyRegressionEntries(assemblyPath), reference);
+                string changedLegacy = Path.Combine(temporary, "Celeste.legacy-body.dll");
+                using (AssemblyDefinition changedAssembly = Read(assemblyPath))
+                {
+                    var update = changedAssembly.MainModule.GetType("Celeste.Mod.AppleEverestStage25KERootCanary")
+                        .Methods.Single(method => method.Name == "Update");
+                    update.Body.Instructions.First(instruction => instruction.OpCode == OpCodes.Ldstr).Operand = "changed-owned-legacy-control";
+                    changedAssembly.Write(changedLegacy);
+                }
+                object[] stillRegistered = CompiledFactoryInspection.InspectLegacyRegressionEntries(changedLegacy);
+                bool rejectedLegacy = false;
+                try { LegacyFactoryAuthority.Verify(stillRegistered, reference); }
+                catch (InvalidDataException error) when (error.Message.Contains("legacy factory entry/type reference differs", StringComparison.Ordinal)) { rejectedLegacy = true; }
+                if (!rejectedLegacy) throw new InvalidDataException("changed legacy method escaped final-linked reference check");
+                legacyRejected.Add("CHANGED_LEGACY_UPDATE_WITH_VALID_REGISTRATION");
+            }
             File.WriteAllText(output, JsonSerializer.Serialize(new { schemaVersion = 2,
                 positiveFactories = baseline.Length, positiveOccurrences = baseline.Sum(factory => factory.AcceptedOccurrences), omissions,
                 rejectedCompiledControls = rejected, rejectedImplementationControls = implementationRejected,
+                rejectedLegacyControls = legacyRejected,
                 structuralGraphAloneCannotPass = true }, new JsonSerializerOptions { WriteIndented = true }) + "\n");
         }
         finally { Directory.Delete(temporary, recursive: true); }

@@ -1,0 +1,137 @@
+using System.Collections;
+using System.Reflection;
+using System.Security.Cryptography;
+using System.Text;
+using System.Text.Json;
+using Celeste;
+using Celeste.Mod;
+using Conformance;
+using Microsoft.Xna.Framework;
+using Monocle;
+
+internal static class Program
+{
+    private static int assertions;
+    private static void Require(bool condition,string description)
+    { assertions++;if(!condition)throw new Exception(description); }
+    private static void Equal<T>(T a,T b,string description) => Require(JsonSerializer.Serialize(a)==JsonSerializer.Serialize(b),description);
+    private static void Reject(Action action,string description)
+    {
+        try { action(); } catch(InvalidOperationException) { assertions++;return; }
+        throw new Exception("negative accepted: "+description);
+    }
+    private static EntityData Sound(bool oneUse,string events="event:/sj21_snas_flourish") => new()
+    {
+        Name="ContortHelper/RandomSoundTrigger",ID=101,Position=new(20,30),Width=24,Height=8,Nodes=[],
+        Values=new(StringComparer.Ordinal) { ["neededFlags"]="",["flagsAfterInvoke"]="",["delay"]=0f,
+            ["occurOnEnter"]=true,["persistent"]=false,["oneUse"]=oneUse,["audioEvents"]=events }
+    };
+    private static Trigger RandomTrigger(bool apple,EntityData data) => apple
+        ? new AppleEverestRandomSoundTrigger(data,new(5,7),new EntityID("1",data.ID))
+        : new ContortHelper.RandomSoundTrigger(data,new(5,7),new EntityID("1",data.ID));
+    private static string[] RunSound(bool apple,bool oneUse,int seed,string events,int enters,bool leave,bool removeBeforeSecondFrame)
+    {
+        Trace.Events.Clear();Calc.Random=new RecordedRandom(seed);
+        Level level=new();var trigger=RandomTrigger(apple,Sound(oneUse,events));Player player=new();
+        level.Entities.Add(trigger);level.Entities.UpdateLists();
+        Require(trigger.Position.X==25&&trigger.Position.Y==37&&trigger.Collider.Width==24&&trigger.Collider.Height==8&&!trigger.Visible,"actual Trigger constructor");
+        for(int i=0;i<enters;i++) { trigger.OnEnter(player);if(leave)trigger.OnLeave(player); }
+        Equal(trigger.PlayerIsInside,!leave,"actual enter/leave base state");
+        Require(!Trace.Events.Any(x=>x.StartsWith("audio:")||x.StartsWith("rng:")),"enter must not invoke sound inline");
+        level.Tick();Trace.Add("frame:1");
+        Require(!Trace.Events.Any(x=>x.StartsWith("audio:")||x.StartsWith("rng:")||x=="session"),"yield zero occupies one actual scheduler update");
+        if(removeBeforeSecondFrame) { level.Entities.Remove(trigger);level.Entities.UpdateLists(); }
+        level.Tick();Trace.Add("frame:2");
+        level.Tick();Trace.Add("frame:3");
+        Require(level.Session.DoNotLoad.Count==0&&level.Session.Flags.Count==0,"empty flags/nonpersistent profile writes no session authority");
+        Trace.Add("next-rng:"+Calc.Random.Next(1000000));
+        if(!removeBeforeSecondFrame)
+        {
+            Require((trigger.Scene==null)==oneUse,"one-use removal vs repeat retention");
+            Require(Trace.Events.Count(x=>x=="remove-request")== (oneUse?enters:0),"queued invocations preserve removal timing");
+        }
+        else Require(!Trace.Events.Any(x=>x.StartsWith("audio:")),"removed entity's queued sound does not run");
+        return Trace.Events.ToArray();
+    }
+    private static string[] RunBubble(bool apple,bool dead,int state,Vector2 offset)
+    {
+        Trace.Events.Clear();var data=new EntityData { Name="CommunalHelper/PlayerBubbleRegion",ID=5,
+            Position=new(1377,165),Width=14,Height=14,Nodes=[new(1580,252),new(1788,304)],Values=new() };
+        Entity bubble=apple?new AppleEverestPlayerBubbleRegion(data,offset):new Celeste.Mod.CommunalHelper.Entities.PlayerBubbleRegion(data,offset);
+        Level level=new();level.Camera.Position=new(37,91);level.Entities.Add(bubble);level.Entities.UpdateLists();
+        Require(bubble.Depth==-11001&&bubble.Collider.Width==14&&bubble.Collider.Height==14,"bubble construction shape/depth");
+        Equal(bubble.Position.ToString(),(data.Position+offset).ToString(),"bubble world offset");
+        var player=new Player { Dead=dead };player.StateMachine.State=state;
+        bubble.Components.Get<PlayerCollider>().OnCollide(player);
+        if(dead||state==21) Require(Trace.Events.Count==0,"dead/state21 must have no effect");
+        else
+        {
+            Equal(Trace.Events.ToArray(),new[]{"audio:event:/game/general/cassette_bubblereturn:197,181","cassette:"+(data.Nodes[1]+offset)+":"+(data.Nodes[0]+offset)},"sound position/order and canonical node order");
+            Require(player.StateMachine.State==21,"canonical flight called");
+            bubble.Components.Get<PlayerCollider>().OnCollide(player);
+            Require(Trace.Events.Count==2,"state21 prevents duplicate entry");
+            player.StateMachine.State=0;
+            bubble.Components.Get<PlayerCollider>().OnCollide(player);
+            Require(Trace.Events.Count==4&&player.StateMachine.State==21,"region accepts a later completed-flight reentry");
+        }
+        Require(bubble.Scene==level,"region remains available after flight");
+        return Trace.Events.ToArray();
+    }
+    private static string[] RunCompletedSoundReentry(bool apple,bool dieAfterEnter)
+    {
+        Trace.Events.Clear();Calc.Random=new RecordedRandom(2989);
+        Level level=new();Trigger trigger=RandomTrigger(apple,Sound(false));Player player=new();
+        level.Entities.Add(trigger);level.Entities.UpdateLists();
+        trigger.OnEnter(player);
+        for(int i=0;i<3;i++)level.Tick();
+        Require(Trace.Events.Count(x=>x.StartsWith("audio:"))==1,"first repeat coroutine completes once");
+        Require(!trigger.Components.Any(x=>x is Coroutine),"completed coroutine is actually removed");
+        trigger.OnLeave(player);trigger.OnEnter(player);
+        if(dieAfterEnter)player.Dead=true;
+        level.Tick();
+        Require(Trace.Events.Count(x=>x.StartsWith("audio:"))==1,"repeat reentry retains zero-delay yield");
+        level.Tick();level.Tick();
+        Require(Trace.Events.Count(x=>x.StartsWith("audio:"))==2,"later reentry runs again, including death after scheduling");
+        Require(trigger.Scene==level&&level.Session.DoNotLoad.Count==0,"repeat remains present without persistence writes");
+        Trace.Add("next-rng:"+Calc.Random.Next(1000000));
+        return Trace.Events.ToArray();
+    }
+    public static void Main(string[] args)
+    {
+        List<string> traces=[];
+        foreach(bool oneUse in new[]{false,true})foreach(int seed in new[]{0,1,2526,987654})
+        foreach(int enters in new[]{1,2})foreach(bool leave in new[]{false,true})
+        foreach(bool remove in new[]{false,true})
+        foreach(string events in new[]{"event:/sj21_snas_flourish",""," \t ",",","a, ,b"})
+        {
+            var a=RunSound(true,oneUse,seed,events,enters,leave,remove);
+            var b=RunSound(false,oneUse,seed,events,enters,leave,remove);
+            Equal(a,b,"actual production/reference coroutine event trace");traces.AddRange(a);
+        }
+        foreach(string value in new string[]{null,""," \t ","a",","," a, , b,"})
+        {
+            EntityData data=new(){Values=new()};if(value!=null)data.Values["test"]=value;
+            Equal(AppleEverestRandomSoundTrigger.ParseList(value),ContortHelper.EntityDatas.EnumerableParse(data,"test",Array.Empty<string>()).ToArray(),"exact pinned empty/comma parse");
+        }
+        foreach(bool dead in new[]{false,true})foreach(int state in new[]{0,1,2,19,21,22})
+        foreach(Vector2 offset in new[]{Vector2.Zero,new Vector2(-300,128)})
+            Equal(RunBubble(true,dead,state,offset),RunBubble(false,dead,state,offset),"bubble reference trace");
+        foreach(bool die in new[]{false,true})
+        {
+            var trace=RunCompletedSoundReentry(true,die);
+            Equal(trace,RunCompletedSoundReentry(false,die),"completed coroutine reentry and death-before-playback reference trace");
+            traces.AddRange(trace);
+        }
+        foreach(var change in new (string Key,object Value)[]{("neededFlags","flag"),("flagsAfterInvoke","flag"),("delay",1f),("delay",-1f),("occurOnEnter",false),("persistent",true)})
+        {
+            EntityData data=Sound(false);data.Values[change.Key]=change.Value;
+            Reject(()=>RandomTrigger(true,data),"unsupported random lifecycle "+change.Key);
+        }
+        foreach(int count in new[]{0,1,3})Reject(()=>new AppleEverestPlayerBubbleRegion(new(){Nodes=new Vector2[count]},Vector2.Zero),"bubble node count "+count);
+        string hash=Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(string.Join("\n",traces)))).ToLowerInvariant();
+        File.WriteAllText(args[0],JsonSerializer.Serialize(new { status="PASS",assertions,traceSha256=hash,
+            scope="ACTUAL_PRODUCTION_AND_PINNED_REFERENCE_CONSTRUCTORS_WITH_CANONICAL_COROUTINE_COMPONENT_AND_ENTITY_QUEUES_RECORDING_AUDIO_AND_PLAYER_BOUNDARIES",
+            canonicalCassetteFlightExecution=false,deviceGameplay=false },new JsonSerializerOptions{WriteIndented=true})+"\n");
+        Console.WriteLine("PASS: "+assertions+" random/bubble differential assertions");
+    }
+}

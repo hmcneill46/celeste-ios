@@ -1,0 +1,107 @@
+using System.Security.Cryptography;
+using System.Text;
+using System.Text.Json;
+using Celeste;
+using Monocle;
+using Microsoft.Xna.Framework;
+using Pinned;
+using Conformance;
+
+// Actual production/pinned autotilers and mechanically extracted canonical
+// room bounds and combined LevelLoader preparation. GPU handles are adapters.
+internal static class Program
+{
+    private static int checks;
+    private static string Json<T>(T value) => JsonSerializer.Serialize(value);
+    private static string Hash(string value) => Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(value))).ToLowerInvariant();
+    private static void Require(bool value,string label) { checks++;if(!value)throw new Exception(label); }
+    private static void Equal<T>(T a,T b,string label) => Require(Json(a)==Json(b),label);
+    private static Rectangle Rect(JsonElement value)
+    { int[] a=value.Deserialize<int[]>();return new(a[0],a[1],a[2],a[3]); }
+
+    public static void Main(string[] args)
+    {
+        var request=JsonDocument.Parse(File.ReadAllText(args[0])).RootElement;
+        foreach(var pair in request.GetProperty("textureDimensions").Deserialize<Dictionary<string,int[]>>())
+            GFX.Game.Dimensions.Add(pair.Key,pair.Value);
+        foreach(string key in request.GetProperty("missingTextures").Deserialize<string[]>())GFX.Game.Missing.Add(key);
+        Require(!GFX.Game.Has("unproved/missing"),"unknown textures must not become present");
+        bool rejected=false;
+        try { _=GFX.Game["unproved/missing"]; }
+        catch(InvalidOperationException e) when(e.Message.Contains("unknown atlas key")) { rejected=true; }
+        Require(rejected,"unknown atlas dimensions fail closed");
+        var reports=new List<object>();
+        foreach(var row in request.GetProperty("terrainCases").EnumerateArray())
+        {
+            string sid=row.GetProperty("sid").GetString();
+            GFX.AnimatedTilesBank=row.GetProperty("animations").Deserialize<Dictionary<string,int>>();
+            var map=new TerrainMap {
+                Filler=row.GetProperty("filler").EnumerateArray().Select(Rect).ToArray(),
+                Levels=row.GetProperty("levels").EnumerateArray().Select(level=>new TerrainLevel(
+                    Rect(level.GetProperty("bounds")),level.GetProperty("solids").GetString(),level.GetProperty("bg").GetString())).ToArray() };
+            map.ComputeBounds();
+            var prepared=LoaderTerrain.Prepare(map);
+            var definitions=new List<object>();
+            foreach(string layer in new[]{"background","foreground"})
+            {
+                string path=row.GetProperty(layer).GetString();
+                SurfaceIndex.TileToIndex.Clear();SurfaceIndex.TileToIndex['G']=0;
+                var apple=new Autotiler(path);var sounds=SurfaceIndex.TileToIndex.OrderBy(x=>x.Key).ToArray();
+                SurfaceIndex.TileToIndex.Clear();SurfaceIndex.TileToIndex['G']=0;
+                var reference=new ReferenceAutotiler(path);
+                Equal(sounds,SurfaceIndex.TileToIndex.OrderBy(x=>x.Key).ToArray(),"complete sound table "+sid+" "+layer);
+                var parsed=apple.Snapshot();
+                Equal(parsed,reference.Snapshot(),"complete parsed tile rules "+sid+" "+layer);
+                foreach(var definition in parsed)
+                    foreach(var rule in definition.Rules.Concat(new[]{definition.Center,definition.Padding}).Where(x=>x!=null))
+                        foreach(string overlay in rule.Overlays)
+                            Require(GFX.AnimatedTilesBank.TryGetValue(overlay,out int count)&&count>0,"overlay exists in active bank");
+                definitions.Add(new{layer,count=parsed.Length,sha256=Hash(Json(parsed)),soundSha256=Hash(Json(sounds))});
+            }
+            var runs=new List<object>();
+            foreach(int seed in new[]{row.GetProperty("seed").GetInt32(),0,2525})
+            {
+                var abg=new Autotiler(row.GetProperty("background").GetString());
+                var afg=new Autotiler(row.GetProperty("foreground").GetString());
+                var rbg=new ReferenceAutotiler(row.GetProperty("background").GetString());
+                var rfg=new ReferenceAutotiler(row.GetProperty("foreground").GetString());
+                afg.LevelBounds.AddRange(prepared.Bounds);rfg.LevelBounds.AddRange(prepared.Bounds);
+                Calc.Random=new Random(seed);
+                var generatedBackground=abg.GenerateMap(prepared.Background,false);
+                // Canonical BackgroundTiles consumes TileGrid only. The selected
+                // maps must not depend on Everest's optional BG overlay consumer.
+                Require(generatedBackground.SpriteOverlay.Trace.Count==0,"selected background has no unconsumed overlays");
+                string bg=Autotiler.View(generatedBackground);
+                var fg=afg.GenerateMap(prepared.Foreground,true);
+                string fgView=Autotiler.View(fg);int next=Calc.Random.Next();
+                Calc.Random=new Random(seed);
+                Equal(bg,ReferenceAutotiler.View(rbg.GenerateMap(prepared.Background,false)),"combined background "+sid);
+                Equal(fgView,ReferenceAutotiler.View(rfg.GenerateMap(prepared.Foreground,true)),"combined foreground and initial overlay frames "+sid);
+                Equal(next,Calc.Random.Next(),"combined background/foreground/overlay RNG "+sid);
+                int occupied=0;
+                for(int x=0;x<prepared.Foreground.Columns;x++)for(int y=0;y<prepared.Foreground.Rows;y++)
+                    if(prepared.Foreground[x,y]!='0'&&prepared.Foreground[x,y]!='\0')
+                    { occupied++;Require(fg.TileGrid.Tiles[x,y]!=null,"authored/prepared foreground has concrete texture"); }
+                var entities=new List<object>();
+                foreach(var item in row.GetProperty("terrainEntities").EnumerateArray())
+                {
+                    Require(item.GetProperty("kind").GetString()=="dashBlock","unreviewed terrain entity branch");
+                    int w=item.GetProperty("width").GetInt32()/8,h=item.GetProperty("height").GetInt32()/8;
+                    char tile=item.GetProperty("tile").GetString().Single();
+                    Calc.Random=new Random(seed);string actual=Autotiler.View(afg.GenerateBox(tile,w,h));int an=Calc.Random.Next();
+                    Calc.Random=new Random(seed);string expected=ReferenceAutotiler.View(rfg.GenerateBox(tile,w,h));int rn=Calc.Random.Next();
+                    Equal(actual,expected,"authored dash block box");Equal(an,rn,"authored dash block RNG");
+                    entities.Add(new{room=item.GetProperty("room").GetString(),id=item.GetProperty("id").GetInt32(),sha256=Hash(actual),nextRandom=an});
+                }
+                runs.Add(new{seed,backgroundSha256=Hash(bg),foregroundSha256=Hash(fgView),nextRandom=next,
+                    foregroundCells=occupied,overlayCount=fg.SpriteOverlay.Trace.Count,
+                    backgroundOverlayCount=generatedBackground.SpriteOverlay.Trace.Count,terrainEntities=entities});
+            }
+            reports.Add(new{sid,rooms=map.Levels.Length,mapBounds=new[]{map.Bounds.X,map.Bounds.Y,map.Bounds.Width,map.Bounds.Height},
+                tileBounds=new[]{map.TileBounds.X,map.TileBounds.Y,map.TileBounds.Width,map.TileBounds.Height},definitions,runs});
+        }
+        File.WriteAllText(args[1],Json(new{status="PASS",checks,maps=reports,
+            scope="COMPLETE_THREE_MAP_COMBINED_TERRAIN_PINNED_RULES_REAL_ATLAS_DIMENSIONS_BG_FG_OVERLAY_RNG_HOST_ONLY"})+"\n");
+        Console.WriteLine("PASS: "+checks+" combined terrain checks across "+reports.Count+" unchanged maps");
+    }
+}

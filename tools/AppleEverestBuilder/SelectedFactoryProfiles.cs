@@ -13,9 +13,12 @@ internal static class SelectedFactoryProfiles
         using Stream stream = typeof(SelectedFactoryProfiles).Assembly.GetManifestResourceStream("AppleEverest.SelectedFactoryProfiles")
             ?? throw new InvalidDataException("missing reviewed selected factory profiles");
         using JsonDocument document = JsonDocument.Parse(stream);
-        return document.RootElement.GetProperty("factories").EnumerateArray()
+        HashSet<string> selected = document.RootElement.GetProperty("factories").EnumerateArray()
             .Select(factory => factory.GetProperty("kind").GetString() + ":" + factory.GetProperty("customId").GetString())
             .ToHashSet(StringComparer.Ordinal);
+        selected.UnionWith(new[] { "entity:CommunalHelper/PlayerBubbleRegion", "trigger:ContortHelper/RandomSoundTrigger",
+            "entity:MaxHelpingHand/FlagTouchSwitch", "entity:MaxHelpingHand/FlagSwitchGate" });
+        return selected;
     }
     internal static bool Contains(string kind, string id) => Selected.Contains(kind + ":" + id);
     internal static string EntryMethod(string kind, string id) => "Create_" + kind + "_" +

@@ -1,0 +1,93 @@
+{
+  "baselineDescriptors": [
+    {
+      "descriptorLineSha256": "6a25c5401518385155527cab660430f9423f6416a0a96ea9c08f89dc36784ae5",
+      "sid": "AppleEverest/CustomAudio"
+    },
+    {
+      "descriptorLineSha256": "5cdfec670ac77d789bc84029f166845ab7b1d6e16caa0b1aa78b39a79a2fe610",
+      "sid": "AppleEverest/DJFrozenIl"
+    },
+    {
+      "descriptorLineSha256": "c35359b8df908fcab2cb68fd2f4efd6a921c6e2662bf70f85b4949922c53afe1",
+      "sid": "AppleEverest/Stage25KE"
+    },
+    {
+      "descriptorLineSha256": "3246ca798a191bbecc5d0882218fa3099bf20e53950cad11e0fe2c14a6f84f68",
+      "sid": "AppleEverest/Stage25KF"
+    },
+    {
+      "descriptorLineSha256": "3341237c190e2a989b479ae7248a3cd26b7367821f1a35a5e380349c6f84ce53",
+      "sid": "AppleEverest/Stage25KH"
+    },
+    {
+      "descriptorLineSha256": "236aacd44f5b07cc59b108923e7f2d0a2460ae0e5e3bbc7c1990fe9f62bfa175",
+      "sid": "AppleEverest/Stage25KJMax"
+    },
+    {
+      "descriptorLineSha256": "7ea0b40ead01e71247893e53538bba7aca783c67b86f3b60d514a9aa26bc8f8d",
+      "sid": "AppleEverestStage25KJ/0-Lobbies/1-Fixture"
+    },
+    {
+      "descriptorLineSha256": "39fb65df97535a005d2465d330a230a5bb1c0f7a68f6ea10cc1ddfb992196bc3",
+      "sid": "AppleEverestStage25KJ/1-Fixture/1-FinishA"
+    },
+    {
+      "descriptorLineSha256": "026282017ea2331911eee0a01114f4d4a9f5c0ba509470a4a0db6a1dfbd395ae",
+      "sid": "AppleEverestStage25KJ/1-Fixture/2-FinishB"
+    },
+    {
+      "descriptorLineSha256": "9cd48c34398aab98f8bdd75aa237cb2d6628fa1e0d0fca14446086ff416a0e78",
+      "sid": "AppleEverestStage25KJ/FactoryProfiles/Atmosphere"
+    },
+    {
+      "descriptorLineSha256": "3201128197bbbf0b53f29f417e48274c0dad1dafea14c3b4d39fa2d786b4c58d",
+      "sid": "AppleEverestStage25KJ/FactoryProfiles/BaseHelpers"
+    },
+    {
+      "descriptorLineSha256": "8f0f84180a85a45a16cbc6bf63093212b4d8fcdd946e529d8c2339a0c8668391",
+      "sid": "AppleEverestStage25KJ/FactoryProfiles/CameraCorridor"
+    },
+    {
+      "descriptorLineSha256": "35baad317d3d3eee074b27c0c511a83c51527796fdcad26bbd065bf04763bc55",
+      "sid": "AppleEverestStage25KJ/FactoryProfiles/Collab"
+    },
+    {
+      "descriptorLineSha256": "0fce426c95b20e685fb5b167123fe743eb0476e1aeecc289b4f45f22d9d3a712",
+      "sid": "AppleEverestStage25KJ/FactoryProfiles/CrystalCave"
+    },
+    {
+      "descriptorLineSha256": "bdb573614931c79712749c936f561fee5e10b7ab45cc58f5f35a5091d04acbdf",
+      "sid": "AppleEverestStage25KJ/FactoryProfiles/Frost"
+    },
+    {
+      "descriptorLineSha256": "bc0bfce2c6f407241f20e9451921a26bd95e7117af3eba1f750c9a102adcca0c",
+      "sid": "AppleEverestStage25KJ/FactoryProfiles/Masks"
+    },
+    {
+      "descriptorLineSha256": "e797c2cc96d4c2f7c2ca3348c3a5242b251fa1ba1fa683c62f9d364e90e7e58c",
+      "sid": "AppleEverestStage25KJ/FactoryProfiles/MaxMechanics"
+    },
+    {
+      "descriptorLineSha256": "aa53788aa496121d4cc4bcac11ef51484f6e3d39d4544d4ec9d8959c5510e918",
+      "sid": "AppleEverestStage25KJ/FactoryProfiles/WaterGarden"
+    },
+    {
+      "descriptorLineSha256": "7c10280ac32a5ab9d0d4dbedc3bd5dd216fc75847a75032ba8c94d712ff2fc21",
+      "sid": "StrawberryJam2021/0-Lobbies/1-Beginner"
+    },
+    {
+      "descriptorLineSha256": "f8431d36cf263a8fa094148b50baee4e5cf504212286e2e18a67d8f594095bbc",
+      "sid": "StrawberryJam2021/1-Beginner/Bing_Over_Google"
+    }
+  ],
+  "baselineGameRevision": "be8546d4ae411cb491a0c3bbc4e5343ebf9c9651",
+  "expandedDescriptor": {
+    "descriptorLineSha256": "75884891deafd71fe04ed46bcaf0dc262c02951025642204225567c74f8b89e3",
+    "sid": "StrawberryJam2021/1-Beginner/snas"
+  },
+  "physicalResultTransferred": false,
+  "referenceProvenance": "RETAINED_HOST_C_ACTUAL_PRODUCT_CLOSURE_VALIDATED_AGAINST_ITS_FRESH_COMPILATION_RECEIPT",
+  "referenceToolingRevision": "b4997fa49f4f8b82f6f2984fe9047396e401ea48",
+  "schemaVersion": 1
+}

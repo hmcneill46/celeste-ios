@@ -1,0 +1,770 @@
+// Host-only execution of the unchanged compiled production assembly. The
+// fixture supplies an offscreen Engine, real atlas geometry without GPU pixels,
+// and cached absent FMOD descriptions. It never creates a Studio system or
+// writes a save. Rendering, audio playback and physical play remain separate.
+using System.Collections;
+using System.Reflection;
+using System.Runtime.CompilerServices;
+using System.Runtime.Loader;
+using System.Security.Cryptography;
+using System.Text;
+using System.Text.Json;
+using System.Xml;
+using Celeste;
+using Microsoft.Xna.Framework;
+using Monocle;
+
+internal static class Program
+{
+    private const BindingFlags All=BindingFlags.Public|BindingFlags.NonPublic|BindingFlags.Static|BindingFlags.Instance;
+    private const string Sid="StrawberryJam2021/1-Beginner/snas",Flag="flag_snasberry_switch";
+    private static readonly Assembly Game=typeof(Level).Assembly;
+    private static int checks;
+    private static BinaryPacker.Element map;
+    private static BinaryPacker.Element bingMap;
+    private static readonly List<object> traces=[];
+    private static void Check(bool ok,string what){checks++;if(!ok)throw new Exception(what);}
+    private static Type T(string name)=>Game.GetType(name,true);
+    private static object Get(object target,string name)
+    {
+        Type type=target as Type??target.GetType();object instance=target is Type?null:target;
+        for(Type current=type;current!=null;current=current.BaseType)
+        {
+            FieldInfo field=current.GetField(name,All|BindingFlags.DeclaredOnly);
+            if(field!=null)return field.GetValue(instance);
+            PropertyInfo property=current.GetProperty(name,All|BindingFlags.DeclaredOnly);
+            if(property!=null)return property.GetValue(instance);
+        }
+        throw new MissingMemberException(type.FullName,name);
+    }
+    private static void Set(object target,string name,object value)
+    {
+        Type type=target as Type??target.GetType();object instance=target is Type?null:target;
+        for(Type current=type;current!=null;current=current.BaseType)
+        {
+            FieldInfo field=current.GetField(name,All|BindingFlags.DeclaredOnly);
+            if(field!=null){field.SetValue(instance,value);return;}
+            PropertyInfo property=current.GetProperty(name,All|BindingFlags.DeclaredOnly);
+            if(property!=null){property.SetValue(instance,value);return;}
+        }
+        throw new MissingMemberException(type.FullName,name);
+    }
+    private static object Call(object target,string name,params object[] args)
+    {
+        Type type=target as Type??target.GetType();object instance=target is Type?null:target;
+        try{return type.GetMethods(All).Single(m=>m.Name==name&&m.GetParameters().Length==args.Length).Invoke(instance,args);}
+        catch(TargetInvocationException ex){System.Runtime.ExceptionServices.ExceptionDispatchInfo.Capture(ex.InnerException).Throw();throw;}
+    }
+    private static void Reject(Action action,string what,string expected="")
+    {
+        try{action();}catch(InvalidOperationException error) when(expected.Length==0||error.Message.Contains(expected,StringComparison.Ordinal)){checks++;return;}
+        throw new Exception("unproved creation accepted: "+what);
+    }
+    private static BinaryPacker.Element ReadMap(string path,string expectedLabel="The Squeeze")
+    {
+        using BinaryReader input=new(File.OpenRead(path));
+        Check(input.ReadString()=="CELESTE MAP","original binary header");
+        string label=input.ReadString();int count=input.ReadInt16();string[] strings=new string[count];
+        for(int i=0;i<count;i++)strings[i]=input.ReadString();
+        Set(typeof(BinaryPacker),"stringLookup",strings);
+        var result=(BinaryPacker.Element)Call(typeof(BinaryPacker),"ReadElement",input);result.Package=label;
+        Check(label==expectedLabel,"original source label");return result;
+    }
+    private static Atlas GeometryAtlas(JsonElement sheets)
+    {
+        Atlas result=new();
+        foreach(var sheet in sheets.EnumerateArray())
+        {
+            VirtualTexture texture=(VirtualTexture)RuntimeHelpers.GetUninitializedObject(typeof(VirtualTexture));
+            typeof(VirtualAsset).GetProperty("Width",All).SetValue(texture,sheet.GetProperty("width").GetInt32());
+            typeof(VirtualAsset).GetProperty("Height",All).SetValue(texture,sheet.GetProperty("height").GetInt32());
+            MTexture parent=new(texture);
+            foreach(var item in sheet.GetProperty("frames").EnumerateArray())
+            {
+                string key=item.GetProperty("key").GetString();int[] v=item.GetProperty("rect").EnumerateArray().Select(x=>x.GetInt32()).ToArray();
+                result[key]=new MTexture(parent,key,new Rectangle(v[0],v[1],v[2],v[3]),new Vector2(-v[4],-v[5]),v[6],v[7]);
+            }
+        }
+        return result;
+    }
+    private static void Initialize(JsonElement input)
+    {
+        Set(typeof(Engine),"Instance",RuntimeHelpers.GetUninitializedObject(typeof(Engine)));
+        Set(typeof(Engine),"DeltaTime",1f/60f);Set(typeof(Engine),"RawDeltaTime",1f/60f);
+        Tracker.Initialize();Set(typeof(Engine),"Pooler",new Pooler());Tags.Initialize();
+        GFX.Game=GeometryAtlas(input.GetProperty("sheets"));GFX.Gui=GeometryAtlas(input.GetProperty("guiSheets"));
+        foreach(var item in input.GetProperty("mountedTextures").EnumerateArray())
+        {
+            VirtualTexture texture=(VirtualTexture)RuntimeHelpers.GetUninitializedObject(typeof(VirtualTexture));
+            typeof(VirtualAsset).GetProperty("Width",All).SetValue(texture,item.GetProperty("width").GetInt32());
+            typeof(VirtualAsset).GetProperty("Height",All).SetValue(texture,item.GetProperty("height").GetInt32());
+            GFX.Game[item.GetProperty("key").GetString()]=new MTexture(texture);
+        }
+        Draw.Particle=Draw.Pixel=GFX.Game["particles/fire"].GetSubtexture(0,0,1,1);
+        ParticleTypes.Load();
+        XmlDocument spriteXml=new();spriteXml.Load(input.GetProperty("spritesXml").GetString());
+        GFX.SpriteBank=new SpriteBank(GFX.Game,spriteXml);
+        // Mirror the unchanged production XML composition, with ordinary host
+        // file IO as the explicit device-IO adapter. SpriteBank itself and all
+        // referenced texture/frame reads execute in the production assembly.
+        XmlDocument composite=(XmlDocument)spriteXml.CloneNode(true);XmlElement sprites=composite["Sprites"];
+        var spriteBanks=new List<object>();
+        foreach(object descriptor in (IEnumerable)Get(T("Celeste.Mod.GeneratedAppleEverestContentManifest"),"SpriteBanks"))
+        {
+            string logical=(string)Get(descriptor,"LogicalPath");
+            XmlDocument mod=new();mod.Load(Path.Combine(input.GetProperty("contentRoot").GetString(),logical));
+            foreach(XmlElement source in mod["Sprites"].ChildNodes.OfType<XmlElement>())
+            {
+                XmlElement existing=sprites.ChildNodes.OfType<XmlElement>().FirstOrDefault(x=>string.Equals(x.Name,source.Name,StringComparison.OrdinalIgnoreCase));
+                XmlNode imported=composite.ImportNode(source,true);
+                if(existing==null)sprites.AppendChild(imported);else sprites.ReplaceChild(imported,existing);
+            }
+            spriteBanks.Add(new{owner=(string)Get(descriptor,"Owner"),logicalPath=logical});
+        }
+        var selectedBank=new SpriteBank(GFX.Game,composite);
+        foreach(string id in new[]{"CollabUtils2_silverBerry","CollabUtils2_ghostSilverBerry"})
+        {
+            Sprite silver=selectedBank.Create(id);
+            Check(silver!=null&&((IDictionary)Get(silver,"animations")).Count>0,"actual selected silver sprite bank: "+id);
+        }
+        traces.Add(new{spriteBanks,scope="ACTUAL_SPRITEBANK_AND_TEXTURE_READS; HOST_XML_IO_COMPOSITION_ADAPTER"});
+        foreach(string name in new[]{"player","player_no_backpack","badeline","player_badeline","player_playback"})
+            PlayerSprite.CreateFramesMetadata(name);
+        // Audio.GetEventDescription's actual cache lookup returns null. This
+        // explicitly tests scheduling/state with no native audio backend.
+        IDictionary descriptions=(IDictionary)Get(typeof(Audio),"cachedEventDescriptions");
+        foreach(string name in new[]{"touchswitch_any","touchswitch_last_oneshot","touchswitch_last_cutoff","touchswitch_gate_open","touchswitch_gate_finish"})
+            descriptions["event:/game/general/"+name]=null;
+        descriptions["event:/game/general/cassette_bubblereturn"]=null;
+        descriptions["event:/SC2020_heartShard_pulse"]=null;
+        descriptions["event:/game/general/crystalheart_bounce"]=null;
+        // Avoid the private Foundation diagnostic logger; constructor dispatch
+        // and RecordCustomFactoryUse still run in the production entry method.
+        var observed=(HashSet<string>)Get(T("Celeste.Mod.AppleEverestStaticRuntime"),"ObservedCustomFactories");
+        foreach(string name in new[]{"FlagTouchSwitch","FlagSwitchGate"})observed.Add("MaxHelpingHand\0entity\0MaxHelpingHand/"+name);
+        observed.Add("CommunalHelper\0entity\0CommunalHelper/PlayerBubbleRegion");
+        foreach(var factory in input.GetProperty("factories").EnumerateArray())
+            observed.Add(factory.GetProperty("owner").GetString()+"\0"+factory.GetProperty("kind").GetString()+"\0"+factory.GetProperty("id").GetString());
+    }
+    private sealed record Fixture(Level Level,LevelData Room,EntityData SwitchData,EntityData GateData);
+    private static Fixture NewFixture(params string[] flags)
+    {
+        var levels=map.Children.Single(x=>x.Name=="levels").Children.Select(x=>new LevelData(x)).ToList();
+        LevelData room=levels.Single(x=>x.Name=="3");
+        MapData data=(MapData)RuntimeHelpers.GetUninitializedObject(typeof(MapData));data.Levels=levels;
+        var mode=new ModeProperties{Path=Sid,MapData=data,AudioState=new AudioState(),Inventory=PlayerInventory.Default};
+        var area=new AreaData{Name="The Squeeze",Mode=[mode,mode,mode]};
+        AreaData.Areas=[area,new AreaData{Name="fixture-vanilla",Mode=[mode,mode,mode]}];
+        data.Area=new AreaKey(0);data.Data=area;data.ModeData=mode;
+        Type progression=T("Celeste.Mod.AppleEverestProgressionRuntime");
+        IDictionary byArea=(IDictionary)Get(progression,"ByArea");byArea.Clear();
+        object descriptor=((IEnumerable)Get(T("Celeste.Mod.GeneratedAppleEverestProgressionManifest"),"Maps")).Cast<object>().Single(x=>(string)Get(x,"Sid")==Sid);
+        Set(descriptor,"RuntimeAreaId",0);byArea.Add(0,descriptor);
+        IDictionary bySid=(IDictionary)Get(progression,"BySid");bySid.Clear();bySid.Add(Sid,descriptor);
+        var session=(Session)Activator.CreateInstance(typeof(Session),true);session.Area=new AreaKey(0);session.Level="3";
+        foreach(string flag in flags)session.SetFlag(flag);
+        Level level=new(){Session=session,Camera=new Camera(),Particles=new ParticleSystem(0,2000),
+            ParticlesBG=new ParticleSystem(0,2000),ParticlesFG=new ParticleSystem(0,2000),Displacement=new DisplacementRenderer()};
+        Set(Engine.Instance,"scene",level);Calc.Random=new Random(2989);
+        return new(level,room,room.Entities.Single(x=>x.Name=="MaxHelpingHand/FlagTouchSwitch"),room.Entities.Single(x=>x.Name=="MaxHelpingHand/FlagSwitchGate"));
+    }
+    private static Entity Create(Fixture fixture,bool gate,EntityData replacement=null)
+    {
+        EntityData data=replacement??(gate?fixture.GateData:fixture.SwitchData);
+        Delegate factory=(Delegate)Call(T("Celeste.Mod.GeneratedAppleEverestGameplayRegistry"),"SelectEntity",data.Name);
+        Check(factory!=null,"actual production selector");
+        try{return (Entity)factory.DynamicInvoke(data,fixture.Room.Position,new EntityID(fixture.Room.Name,data.ID));}
+        catch(TargetInvocationException ex){System.Runtime.ExceptionServices.ExceptionDispatchInfo.Capture(ex.InnerException).Throw();throw;}
+    }
+    private static Entity CreateAuthored(LevelData room,EntityData data,string kind="entity")
+    {
+        Delegate factory=(Delegate)Call(T("Celeste.Mod.GeneratedAppleEverestGameplayRegistry"),
+            kind=="trigger"?"SelectTrigger":"SelectEntity",data.Name);
+        Check(factory!=null,"authored production selector: "+data.Name);
+        try{return (Entity)factory.DynamicInvoke(data,room.Position,new EntityID(room.Name,data.ID));}
+        catch(TargetInvocationException ex){System.Runtime.ExceptionServices.ExceptionDispatchInfo.Capture(ex.InnerException).Throw();throw;}
+    }
+    private static Player NewPlayer(Vector2 at)
+    {
+        // The device Player constructor enters IOSTouchControls, which needs
+        // Microsoft.iOS and UIKit. Supply only its host fixture state, then
+        // execute the unchanged compiled collider/cassette methods and actual
+        // StateMachine callbacks. This does not claim Player constructor or
+        // full Player.Update execution on this host.
+        Player player=(Player)RuntimeHelpers.GetUninitializedObject(typeof(Player));
+        Actor basis=new(at);
+        foreach(Type type in new[]{typeof(Entity),typeof(Actor)})
+            foreach(FieldInfo field in type.GetFields(All|BindingFlags.DeclaredOnly).Where(f=>!f.IsStatic))
+                field.SetValue(player,field.GetValue(basis));
+        Set(player.Components,"Entity",player);
+        player.Collider=new Hitbox(8,11,-4,-11);
+        player.Sprite=new PlayerSprite(PlayerSpriteMode.Madeline);player.Add(player.Sprite);
+        player.StateMachine=new StateMachine(26);player.Add(player.StateMachine);
+        player.StateMachine.SetCallbacks(0,null,null,()=>Call(player,"NormalBegin"),()=>Call(player,"NormalEnd"));
+        player.StateMachine.SetCallbacks(21,()=> (int)Call(player,"CassetteFlyUpdate"),
+            ()=> (IEnumerator)Call(player,"CassetteFlyCoroutine"),()=>Call(player,"CassetteFlyBegin"),()=>Call(player,"CassetteFlyEnd"));
+        player.StateMachine.State=0;Set(player,"triggersInside",new HashSet<Trigger>());
+        return player;
+    }
+    private static (Entity Touch,Entity Gate) AddPair(Fixture f)
+    {
+        Entity touch=Create(f,false),gate=Create(f,true);
+        f.Level.Add(touch,gate);f.Level.Entities.UpdateLists();
+        Check(touch.Scene==f.Level&&gate.Scene==f.Level,"actual Added/Awake lifecycle");
+        Check(f.Level.Tracker.GetEntities<Solid>().Contains(gate)&&f.Level.Tracker.GetEntities<Platform>().Contains(gate),"compiled inherited Solid/Platform tracking");
+        Check(touch.Get<Switch>()==null,"flag switch has no vanilla group component");
+        Check(((Solid)gate).Safe==false&&gate.Width==32&&gate.Height==32,"actual Solid/Platform constructor contract");
+        return(touch,gate);
+    }
+    private static void Tick(Fixture f)
+    {
+        Set(typeof(Engine),"FrameCounter",Engine.FrameCounter+1);
+        f.Level.TimeActive+=Engine.DeltaTime;f.Level.RawTimeActive+=Engine.RawDeltaTime;
+        Call(f.Level.Entities,"Update");f.Level.Entities.UpdateLists();
+    }
+    private static void GroupChecks()
+    {
+        Fixture f=NewFixture();var pair=AddPair(f);
+        Check(!(bool)Get(pair.Touch,"Activated")&&!(bool)Get(pair.Touch,"Finished"),"fresh switch state");
+        Check(pair.Touch.Collider.Width==16&&pair.Touch.Collider.Height==16,"ordinary body bounds");
+        PlayerCollider player=pair.Touch.Get<PlayerCollider>();
+        Check(player.Collider==null&&player.FeatherCollider.Width==30&&player.FeatherCollider.Height==30,"actual feather collider argument");
+        Check(((Collider)Get(pair.Touch.Get<HoldableCollider>(),"collider")).Width==20,"holdable bounds");
+        Check(pair.Touch.Get<SeekerCollider>().Collider==null,"canonical SeekerCollider ignored constructor argument retained");
+        Call(pair.Touch,"TurnOn");
+        Check((bool)Get(pair.Touch,"Activated")&&(bool)Get(pair.Touch,"Finished")&&(bool)Get(pair.Gate,"Triggered"),"typed activation completes group and starts gate");
+        Check(f.Level.Session.Flags.SetEquals([Flag,Flag+"_switch422"]),"mixed persistence: main and switch flags, no gate flag");
+        object[] trace=new object[230];
+        for(int frame=0;frame<trace.Length;frame++)
+        {
+            Tick(f);var icon=pair.Gate.Get<Sprite>();
+            trace[frame]=new{frame,x=pair.Gate.X,y=pair.Gate.Y,rate=icon.Rate,tweens=pair.Gate.Components.Count(x=>x is Tween),sounds=pair.Gate.Get<SoundSource>().EventName};
+        }
+        Check(pair.Gate.Position==f.GateData.Nodes[0]+f.Room.Position,"actual eased Solid.MoveTo reaches authored node");
+        Check(pair.Gate.Get<Sprite>().Rate==0&&pair.Gate.Get<Sprite>().CurrentAnimationFrame==0,"gate finishing icon");
+        int rng=Calc.Random.Next();Call(pair.Touch,"TurnOn");
+        Check(f.Level.Session.Flags.SetEquals([Flag,Flag+"_switch422"]),"repeat activation leaves exact flags");
+        traces.Add(new{caseName="fresh",frames=trace,rngAfter=rng});
+        foreach(string[] flags in new[]{new[]{Flag},new[]{Flag+"_switch422"},new[]{Flag+"_gate423"}})
+        {
+            f=NewFixture(flags);pair=AddPair(f);
+            bool main=flags.Contains(Flag),partial=flags.Contains(Flag+"_switch422"),gateOnly=flags.Contains(Flag+"_gate423");
+            Check((bool)Get(pair.Touch,"Activated")== (main||partial)&&(bool)Get(pair.Touch,"Finished")==main,"main versus partial switch restoration");
+            Check((pair.Gate.Position==f.GateData.Nodes[0]+f.Room.Position)==(main||gateOnly),"gate restores main or independent gate state");
+            Check(f.Level.Session.Flags.SetEquals(flags),"restoration writes no extra flags");
+            f.Level.Session.Level="2";pair.Touch.Update();pair.Gate.Update();
+            Check(pair.Touch.Scene==f.Level,"departing room entity remains valid during transition");
+        }
+        f=NewFixture();Entity early=Create(f,false);early.Added(f.Level);
+        Reject(()=>Call(early,"TurnOn"),"activation before full Awake");
+        foreach(int kind in new[]{0,1,2,3})
+        {
+            f=NewFixture();Entity touch=Create(f,false),gate=Create(f,true);
+            if(kind==0)f.Level.Add(touch);
+            if(kind==1)f.Level.Add(gate);
+            if(kind==2)f.Level.Add(touch,gate,Create(f,false));
+            if(kind==3)f.Level.Add(touch,gate,Create(f,true));
+            Reject(()=>f.Level.Entities.UpdateLists(),"missing or duplicated actual tracked member "+kind);
+        }
+        f=NewFixture();var invalid=Create(f,false);f.Level.Session.Level="2";
+        Reject(()=>f.Level.Add(invalid),"wrong current room at EntityList creation boundary");
+        f=NewFixture();invalid=Create(f,true);f.Level.Session.Area=new AreaKey(1);
+        Reject(()=>f.Level.Add(invalid),"wrong source SID");
+        f=NewFixture();invalid=Create(f,true);f.Level.Session.Area=new AreaKey(0,AreaMode.BSide);
+        Reject(()=>f.Level.Add(invalid),"wrong mode");
+        foreach(Type actor in new[]{typeof(Seeker),typeof(Puffer)})
+        {
+            f=NewFixture();Entity entity=(Entity)RuntimeHelpers.GetUninitializedObject(actor);
+            Reject(()=>f.Level.Entities.Add(entity),"delayed "+actor.Name+" creation in selected SID");
+            f.Level.Session.Area=new AreaKey(1);f.Level.Entities.Add(entity);checks++;
+            f=NewFixture();Session saved=f.Level.Session;f.Level.Session=null;
+            entity=(Entity)RuntimeHelpers.GetUninitializedObject(actor);f.Level.Entities.Add(entity);checks++;
+            f.Level.Session=saved;
+            Reject(()=>f.Level.Entities.UpdateLists(),"queued actor subsequently bound to selected SID","outside the selected flag-switch closure");
+            Check(!f.Level.Tracker.GetEntities<Actor>().Contains(entity),"rejected actor never enters tracker");
+            f=NewFixture();f.Level.Session=null;entity=(Entity)RuntimeHelpers.GetUninitializedObject(actor);
+            f.Level.Entities.Add(entity);checks++;
+            Reject(()=>f.Level.Entities.UpdateLists(),"actor cannot materialize before classification","requires a bound level session");
+        }
+    }
+    private static void CollisionAndIsolationChecks()
+    {
+        foreach(bool feather in new[]{false,true})
+        foreach(float distance in new[]{-20f,-18f,-12f,-11f,0f,11f,12f,18f,19f,20f})
+        {
+            Fixture f=NewFixture();var pair=AddPair(f);Player p=NewPlayer(pair.Touch.Position+new Vector2(distance,0));
+            // Changing the state field isolates the collider's state selector;
+            // it intentionally does not claim feather-state gameplay.
+            Set(p.StateMachine,"state",feather?19:0);
+            Collider original=pair.Touch.Collider;
+            float half=feather?15:8;
+            bool expected=p.Right>pair.Touch.X-half&&p.Left<pair.Touch.X+half&&p.Bottom>pair.Touch.Y-half&&p.Top<pair.Touch.Y+half;
+            bool hit=pair.Touch.Get<PlayerCollider>().Check(p);
+            Check(hit==expected,"actual player collision boundary");
+            Check(ReferenceEquals(pair.Touch.Collider,original),"feather collision restores body collider");
+            Check((bool)Get(pair.Touch,"Activated")==expected,"actual player callback activation");
+        }
+        foreach(float distance in new[]{-12f,-11f,-10f,0f,9f,10f,11f,12f})
+        {
+            Fixture f=NewFixture();var pair=AddPair(f);
+            Entity held=new(pair.Touch.Position+new Vector2(distance,0)){Collider=new Hitbox(2,2,-1,-1)};
+            Holdable hold=new();held.Add(hold);f.Level.Add(held);f.Level.Entities.UpdateLists();
+            Collider original=pair.Touch.Collider;
+            hold.CheckAgainstColliders();
+            Check((bool)Get(pair.Touch,"Activated")== (distance>-11&&distance<11),"actual holdable collider loop/callback boundary");
+            Check(ReferenceEquals(pair.Touch.Collider,original),"holdable restores switch collider");
+        }
+        foreach(bool flagFirst in new[]{false,true})
+        {
+            Fixture f=NewFixture();var pair=AddPair(f);
+            TouchSwitch vanilla=new(new Vector2(-1000,-1000));f.Level.Add(vanilla);f.Level.Entities.UpdateLists();
+            Check(f.Level.Tracker.GetComponents<Switch>().Count==1,"only canonical switch enters canonical group");
+            if(flagFirst)
+            {
+                Call(pair.Touch,"TurnOn");Check(!vanilla.Switch.Activated&&!vanilla.Switch.Finished,"typed group cannot finish vanilla switch");
+                vanilla.Switch.Activate();
+            }
+            else
+            {
+                vanilla.Switch.Activate();
+                Check(!(bool)Get(pair.Touch,"Activated")&&!(bool)Get(pair.Gate,"Triggered"),"vanilla switch cannot finish typed group");
+                Check(!f.Level.Session.GetFlag(Flag),"vanilla group cannot set typed session flag");
+                Call(pair.Touch,"TurnOn");
+            }
+            Check(vanilla.Switch.Finished&&(bool)Get(pair.Touch,"Finished"),"independent groups both finish");
+        }
+        Fixture moving=NewFixture();Entity touch=Create(moving,false),gate=Create(moving,true);
+        Entity attached=new(gate.Position+new Vector2(4,-2)){Collider=new Hitbox(2,2)};
+        StaticMover mover=new(){SolidChecker=solid=>ReferenceEquals(solid,gate)};attached.Add(mover);
+        Actor rider=new(gate.Position+new Vector2(8,-4)){Collider=new Hitbox(4,4)};
+        moving.Level.Add(touch,gate,attached,rider);moving.Level.Entities.UpdateLists();
+        Check(ReferenceEquals(mover.Platform,gate),"actual base Awake attaches static mover");
+        Check(rider.IsRiding((Solid)gate),"actual actor begins riding selected gate");
+        Vector2 attachedOffset=attached.Position-gate.Position,riderOffset=rider.Position-gate.Position;
+        Call(touch,"TurnOn");for(int i=0;i<230;i++)Tick(moving);
+        Check(attached.Position-gate.Position==attachedOffset,"actual gate movement transports attached entity");
+        Check(rider.Position-gate.Position==riderOffset,"actual Solid movement transports rider");
+        Random random=new(917),control=new(917);Calc.Random=random;Call(touch,"TurnOn");
+        Check(random.Next()==control.Next(),"already activated switch consumes no additional RNG");
+        moving.Level.Remove(touch,gate);moving.Level.Entities.UpdateLists();
+        Check(touch.Scene==null&&gate.Scene==null,"actual removal clears scenes");
+        Check(!moving.Level.Tracker.GetEntities<Solid>().Contains(gate),"actual removal clears inherited trackers");
+        Fixture reload=NewFixture(moving.Level.Session.Flags.ToArray());var restored=AddPair(reload);
+        Check((bool)Get(restored.Touch,"Finished")&&restored.Gate.Position==reload.GateData.Nodes[0]+reload.Room.Position,
+            "new scene restores main group from copied session flags");
+        Check(!reload.Level.Session.GetFlag(Flag+"_gate423"),"reload does not manufacture nonpersistent gate flag");
+    }
+    private static void CassetteFlightChecks()
+    {
+        Fixture f=NewFixture();LevelData room=f.Level.Session.MapData.Levels.Single(r=>r.Entities.Any(e=>e.Name=="CommunalHelper/PlayerBubbleRegion"));
+        f.Level.Session.Level=room.Name;
+        EntityData data=room.Entities.Single(e=>e.Name=="CommunalHelper/PlayerBubbleRegion");
+        Entity bubble=CreateAuthored(room,data);Player p=NewPlayer(bubble.Position+new Vector2(7,7));
+        f.Level.FormationBackdrop=new FormationBackdrop();
+        f.Level.Add(bubble);f.Level.Entities.UpdateLists();
+        Set(p,"Scene",f.Level);Set(p,"level",f.Level);
+        Check(p.StateMachine.State==0&&bubble.Depth==-11001,"player state fixture and authored bubble constructor");
+        Vector2 original=p.Position;float spriteY=p.Sprite.Y;
+        Set(p,"Dead",true);bubble.Get<PlayerCollider>().OnCollide(p);
+        Check(p.StateMachine.State==0&&p.Position==original,"dead guard leaves canonical player unchanged");Set(p,"Dead",false);
+        bubble.Get<PlayerCollider>().OnCollide(p);
+        Check(p.StateMachine.State==21&&p.Speed==Vector2.Zero&&p.Sprite.CurrentAnimationID=="bubble"&&p.Sprite.Y==spriteY+5,
+            "actual canonical CassetteFly start and begin callback");
+        object curve=Get(p,"cassetteFlyCurve");bubble.Get<PlayerCollider>().OnCollide(p);
+        Check(Equals(curve,Get(p,"cassetteFlyCurve"))&&p.Sprite.Y==spriteY+5,"state21 guard cannot restart canonical flight");
+        List<object> flight=[];int frame=0;
+        while(p.StateMachine.State==21&&frame<180)
+        {
+            f.Level.TimeActive+=Engine.DeltaTime;f.Level.RawTimeActive+=Engine.RawDeltaTime;
+            Set(typeof(Engine),"FrameCounter",Engine.FrameCounter+1);
+            p.StateMachine.Update();
+            flight.Add(new{frame,x=p.X,y=p.Y,retry=f.Level.CanRetry,backdrop=f.Level.FormationBackdrop.Display,depth=p.Depth});
+            if(frame==0)Check(!f.Level.CanRetry&&f.Level.FormationBackdrop.Display&&p.Depth==-2000000,"actual flight coroutine establishes lifecycle state");
+            frame++;
+        }
+        Check(frame<180&&p.StateMachine.State==0,"actual canonical state coroutine terminates");
+        Check(p.Position==data.Nodes[1]+room.Position,"canonical flight reaches exact second authored node");
+        Check(f.Level.CanRetry&&!f.Level.FormationBackdrop.Display&&f.Level.FormationBackdrop.Alpha==.5f&&p.Depth==0,
+            "canonical completion restores retry/backdrop/depth");
+        Check(p.Sprite.Y==spriteY&&p.Sprite.CurrentAnimationID=="fallFast","canonical completion restores sprite offset/animation");
+        Check(bubble.Scene==f.Level,"bubble remains available after completion");
+        p.Position=original;bubble.Get<PlayerCollider>().OnCollide(p);
+        Check(p.StateMachine.State==21,"completed flight permits another authored entry");
+        p.Removed(f.Level);f.Level.Remove(bubble);f.Level.Entities.UpdateLists();
+        Check(p.Scene==null&&bubble.Scene==null,"actual player/region removal executes lifecycle cleanup");
+        traces.Add(new{caseName="actual-canonical-cassette-flight",frames=flight});
+    }
+    // Host-only explicit iterator states transcribed from the pinned Max gate
+    // (source c7ab870c8fa16ab93acf68cc42e65ca5164c27538abec39cb2d24befdaa0cdf2).
+    // This oracle shares the *unchanged canonical* coroutine/tween scheduler;
+    // it does not read candidate fields or call its sequence implementation.
+    private sealed class PinnedGateOracle : Solid, IEnumerator
+    {
+        private int phase;
+        private float remaining;
+        private readonly Vector2 initial,destination;
+        private readonly int mutation;
+        public float Rate;
+        public object Current { get; private set; }
+        public PinnedGateOracle(Vector2 initial,Vector2 destination,int mutation) : base(initial,32,32,false)
+        { this.initial=initial;this.destination=destination;this.mutation=mutation;Add(new Coroutine(this)); }
+        public void Reset()=>throw new NotSupportedException();
+        public bool MoveNext()
+        {
+            Current=null;
+            switch(phase)
+            {
+                case 0: phase=1;Current=.1f;return true;
+                case 1: phase=2;goto case 2;
+                case 2:
+                    if(Rate<1f){Rate+=Engine.DeltaTime/.5f;return true;}
+                    phase=3;Current=.1f;return true;
+                case 3:
+                    Tween tween=Tween.Create(Tween.TweenMode.Oneshot,mutation==1?Ease.Linear:Ease.CubeOut,mutation==2?1.8f:2f,true);
+                    tween.OnUpdate=value=>MoveTo(Vector2.Lerp(initial,destination,value.Eased));Add(tween);
+                    if(mutation==4)tween.Update();
+                    remaining=mutation==3?2f:1.8f;phase=4;return true;
+                case 4:
+                    remaining-=Engine.DeltaTime;if(remaining>0f)return true;
+                    phase=5;goto case 5;
+                case 5:
+                    if(Rate>0f){Rate-=Engine.DeltaTime*4f;return true;}
+                    Rate=0;phase=6;return false;
+                default:return false;
+            }
+        }
+    }
+    private sealed record GateFrame(float X,float Y,float ExactX,float ExactY,float Rate,
+        bool Tween,float Duration,float TimeLeft,float Percent,float Eased);
+    private static GateFrame Frame(Solid gate,float rate)
+    {
+        Tween tween=gate.Get<Tween>();Vector2 exact=gate.ExactPosition;
+        return new(gate.X,gate.Y,exact.X,exact.Y,rate,tween!=null,tween?.Duration??0,
+            tween?.TimeLeft??0,tween?.Percent??0,tween?.Eased??0);
+    }
+    private static void GateTimingChecks()
+    {
+        foreach(bool uneven in new[]{false,true})
+        foreach(int mutation in new[]{0,1,2,3,4})
+        {
+            Fixture f=NewFixture();var pair=AddPair(f);Solid actual=(Solid)pair.Gate;
+            // Separate scenes keep the oracle from colliding with candidate
+            // geometry while retaining the actual canonical EntityList rules.
+            Level reference=new(){Session=f.Level.Session};
+            var oracle=new PinnedGateOracle(actual.Position,f.GateData.Nodes[0]+f.Room.Position,mutation);
+            reference.Add(oracle);reference.Entities.UpdateLists();Call(pair.Touch,"TurnOn");
+            bool differs=false,observedCreation=false,observedOverlap=false;
+            float priorRate=0;var rows=new List<object>();
+            for(int frame=0;frame<340;frame++)
+            {
+                float dt=uneven?new[]{1f/60f,1f/90f,1f/40f,1f/55f}[frame%4]:1f/60f;
+                Set(typeof(Engine),"DeltaTime",dt);Set(typeof(Engine),"RawDeltaTime",dt);
+                Set(Engine.Instance,"scene",f.Level);Tick(f);
+                Set(Engine.Instance,"scene",reference);Call(reference.Entities,"Update");reference.Entities.UpdateLists();
+                GateFrame a=Frame(actual,actual.Get<Sprite>().Rate),b=Frame(oracle,oracle.Rate);
+                if(mutation==0)
+                {
+                    Check(a==b,"every gate phase, exact movement, easing and scheduler boundary: "+frame);
+                    if(a.Tween&&!observedCreation)
+                    { Check(a.TimeLeft==2f&&a.Percent==0&&a.Eased==0,"tween creation defers first update");observedCreation=true; }
+                    if(a.Rate<priorRate&&!observedOverlap)
+                    { Check(a.Tween&&a.TimeLeft>0&&a.TimeLeft<.25f,"finish begins while eased tween is still active");observedOverlap=true; }
+                    rows.Add(new{frame,dt,state=a});
+                }
+                else differs|=a!=b;
+                priorRate=a.Rate;
+            }
+            if(mutation==0)
+            {
+                Check(observedCreation&&observedOverlap&&!Frame(actual,0).Tween,"complete independent gate phase oracle");
+                traces.Add(new{caseName=uneven?"gate-pinned-uneven":"gate-pinned-60hz",frames=rows});
+            }
+            else Check(differs,"gate oracle detects changed easing/duration/finish/scheduler "+mutation);
+        }
+        Set(typeof(Engine),"DeltaTime",1f/60f);Set(typeof(Engine),"RawDeltaTime",1f/60f);
+    }
+    private static void ProgressionCodecChecks()
+    {
+        SaveData previous=SaveData.Instance;
+        Type progression=T("Celeste.Mod.AppleEverestProgressionRuntime"),codec=T("Celeste.Mod.AppleEverestProgressionSnapshotCodec");
+        Type snapshotType=T("Celeste.Mod.AppleEverestProgressionSnapshot");
+        try
+        {
+            foreach(bool complete in new[]{false,true})
+            {
+                Fixture f=NewFixture();var pair=AddPair(f);
+                if(complete)Call(pair.Touch,"TurnOn");else f.Level.Session.SetFlag(Flag+"_switch422");
+                f.Level.Session.RespawnPoint=f.Room.Spawns.First();f.Level.Session.Inventory=PlayerInventory.Default;
+                f.Level.Session.Audio=new AudioState();f.Level.Session.Audio.Music=new AudioTrackState("event:/sj21_snas");
+                f.Level.Session.Audio.Music.Parameters.Add(new MEP("fixture",.25f));
+                f.Level.Session.DoNotLoad.Add(new EntityID("fixture",987));f.Level.Session.LevelFlags.Add("fixture-level");
+                var save=new SaveData();save.Areas.Add(new AreaStats(0));save.CurrentSession=f.Level.Session;
+                Set(typeof(SaveData),"Instance",save);
+                object captured=Call(progression,"CaptureSession",save);
+                object snapshot=Activator.CreateInstance(snapshotType,[0,1L,new byte[32],Enumerable.Repeat((byte)17,32).ToArray(),
+                    Array.CreateInstance(T("Celeste.Mod.AppleEverestProgressionArea"),0),captured,
+                    Array.CreateInstance(T("Celeste.Mod.AppleEverestProgressionSession"),0)]);
+                byte[] encoded=(byte[])Call(codec,"Encode",snapshot);
+                object[] arguments=[encoded,0,null];
+                Check((bool)codec.GetMethod("TryDecode",All).Invoke(null,arguments),"actual progression codec decodes captured snas session");
+                object decoded=arguments[2];
+                Check(encoded.SequenceEqual((byte[])Call(codec,"Encode",decoded)),"progression byte-stable round trip");
+                Session restored=(Session)Call(progression,"RestoreSession",Get(decoded,"Session"));
+                Check(restored!=null&&restored.Flags.SetEquals(f.Level.Session.Flags)&&!restored.GetFlag(Flag+"_gate423"),"codec retains exact mixed persistence flags");
+                Check(restored.RespawnPoint==f.Level.Session.RespawnPoint&&restored.Level=="3"&&restored.Area.Mode==AreaMode.Normal,
+                    "codec retains authored room/mode and saved respawn");
+                Check(restored.Audio.Music.Event=="event:/sj21_snas"&&restored.Audio.Music.Parameters.Single().Key=="fixture"&&restored.Audio.Music.Parameters.Single().Value==.25f&&
+                    restored.DoNotLoad.SetEquals(f.Level.Session.DoNotLoad)&&restored.LevelFlags.SetEquals(f.Level.Session.LevelFlags),
+                    "actual session audio and entity state restore without playback");
+                Fixture reload=NewFixture();reload.Level.Session=restored;var restoredPair=AddPair(reload);
+                Check((bool)Get(restoredPair.Touch,"Activated")&&(bool)Get(restoredPair.Touch,"Finished")==complete,
+                    "deserialized partial versus complete switch state");
+                Check((restoredPair.Gate.Position==reload.GateData.Nodes[0]+reload.Room.Position)==complete,
+                    "deserialized mixed-persistence gate restoration");
+                var restoredFlags=new HashSet<string>(restored.Flags,StringComparer.Ordinal);
+                Vector2 restoredGatePosition=restoredPair.Gate.Position;
+                for(int i=0;i<240;i++)Tick(reload);
+                Check(restored.Flags.SetEquals(restoredFlags)&&restoredPair.Gate.Position==restoredGatePosition&&
+                    (bool)Get(restoredPair.Touch,"Activated")&&(bool)Get(restoredPair.Touch,"Finished")==complete,
+                    "deserialized partial/completed state has no delayed auto-completion or flag contamination");
+                foreach((byte[] Bytes,int Slot) bad in new[]{(encoded,1),(encoded[..^1],0),(encoded.Take(encoded.Length).Select((b,i)=>(byte)(i==30?b^1:b)).ToArray(),0)})
+                { object[] values=[bad.Bytes,bad.Slot,null];Check(!(bool)codec.GetMethod("TryDecode",All).Invoke(null,values),"wrong slot/truncation/digest rejected"); }
+                object decodedSession=Get(decoded,"Session");Set(decodedSession,"CompatibilityId",new string('0',64));
+                Check(Call(progression,"RestoreSession",decodedSession)==null,"mismatched map compatibility cannot restore");
+            }
+        }
+        finally{Set(typeof(SaveData),"Instance",previous);}
+    }
+    private static void ExistingAuthoredProfileChecks()
+    {
+        string[] names={"MaxHelpingHand/CameraOffsetBorder","MaxHelpingHand/FlagToggleSmoothCameraOffsetTrigger",
+            "MaxHelpingHand/SetFlagOnSpawnController","MaxHelpingHand/SidewaysJumpThru",
+            "everest/smoothCameraOffsetTrigger","everest/flagTrigger"};
+        int constructed=0;
+        var allRooms=map.Children.Single(x=>x.Name=="levels").Children.Select(x=>new LevelData(x)).ToList();
+        foreach(LevelData authoredRoom in allRooms)
+        foreach((EntityData source,string kind) in authoredRoom.Entities.Select(e=>(e,"entity")).Concat(authoredRoom.Triggers.Select(e=>(e,"trigger"))))
+        {
+            if(!names.Contains(source.Name))continue;
+            Fixture f=NewFixture();f.Level.Session.Level=authoredRoom.Name;
+            LevelData room=f.Level.Session.MapData.Get(authoredRoom.Name);
+            EntityData data=(kind=="trigger"?room.Triggers:room.Entities).Single(e=>e.ID==source.ID);
+            Entity entity=CreateAuthored(room,data,kind);constructed++;
+            f.Level.Add(entity);f.Level.Entities.UpdateLists();
+            if(data.Name.EndsWith("SetFlagOnSpawnController",StringComparison.Ordinal))
+            {
+                Check(f.Level.Session.GetFlag("camera_3_a"),"actual spawn-controller constructor writes authored flag");
+                Check(entity.Scene==null,"actual spawn-controller Added removes itself");continue;
+            }
+            Check(entity.Scene==f.Level&&entity.Collider.Width== (data.Name.EndsWith("SidewaysJumpThru")?5:data.Width)&&entity.Collider.Height==data.Height,
+                "actual authored constructor/base/lifecycle: "+data.Name);
+            if(data.Name.EndsWith("CameraOffsetBorder"))
+            {
+                Player p=NewPlayer(entity.Position);Set(p,"Scene",f.Level);Set(p,"level",f.Level);Call(f.Level.Tracker,"EntityAdded",p);
+                foreach(int position in new[]{0,1,2,3})
+                {
+                    p.Position=position switch {0=>new(entity.CenterX,entity.Top-1),1=>new(entity.CenterX,entity.Top+6),
+                        2=>new(entity.CenterX,entity.Bottom+12),_=>new(entity.Right+10,entity.Bottom+12)};
+                    entity.Update();bool expected=position==2||(position==1&&data.Bool("inside"));
+                    Check(entity.Collidable==expected,"authored camera-border spatial branch");
+                }
+                Call(T("Celeste.Mod.AppleEverestCameraOffsetBorder"),"BeginTransition",f.Level);
+                Check(!entity.Active&&!entity.Collidable,"camera border transition disables departing instance");
+            }
+            else if(data.Name.EndsWith("SidewaysJumpThru"))
+            {
+                Check(entity.Components.Count(c=>c is Image)==data.Height/8,"actual sideways Awake resolves authored wood frames");
+                Type helper=T("Celeste.Mod.AppleEverestSidewaysJumpThru");Call(helper,"PrepareLevel",f.Level.Session);
+                Actor actor=new(entity.Position+new Vector2(9,0)){Collider=new Hitbox(1,1)};f.Level.Add(actor);f.Level.Entities.UpdateLists();
+                Vector2 before=actor.Position;actor.MoveH(-4);Check(actor.X==entity.Right,"actual Actor.MoveH respects blocked side");
+                actor.Position=new(entity.Left-2,entity.Top);actor.MoveH(8);Check(actor.X==entity.Left+6,"actual Actor.MoveH permits authored allowed side");
+                Call(helper,"EnterOverworld",(Overworld.StartMode)0);actor.Position=before;actor.MoveH(-4);
+                Check(actor.X==before.X-4,"overworld reset restores canonical collision behavior");
+            }
+            else if(data.Name.EndsWith("smoothCameraOffsetTrigger",StringComparison.OrdinalIgnoreCase))
+            {
+                Trigger trigger=(Trigger)entity;Player p=NewPlayer(trigger.Position);
+                bool toggled=data.Name.StartsWith("MaxHelpingHand/",StringComparison.Ordinal);
+                if(toggled)
+                {
+                    Check(!entity.Collidable&&entity.Active,"flag-disabled camera stays active to observe flag changes");
+                    f.Level.Session.SetFlag("camera_3_a");entity.Update();Check(entity.Collidable,"actual flag component reenables camera");
+                }
+                foreach(float along in new[]{-.25f,0f,.5f,1f,1.25f})
+                {
+                    p.Position=new(trigger.Left+trigger.Width*along,trigger.Top+trigger.Height*along+5.5f);
+                    f.Level.CameraOffset=new Vector2(13,17);trigger.OnEnter(p);trigger.OnStay(p);
+                    float lerp=data.Attr("positionMode")=="NoEffect"?1:Math.Clamp(along,0,1);
+                    float x=data.Bool("yOnly")?13:MathHelper.Lerp(data.Float("offsetXFrom")*48,data.Float("offsetXTo")*48,lerp);
+                    float y=data.Bool("xOnly")?17:MathHelper.Lerp(data.Float("offsetYFrom")*32,data.Float("offsetYTo")*32,lerp);
+                    Check(Vector2.Distance(f.Level.CameraOffset,new Vector2(x,y))<.0001f,"actual authored interpolation and axis preservation");
+                    trigger.OnLeave(p);Check(entity.Scene==f.Level,"onlyOnce=false keeps actual camera trigger");
+                }
+                if(toggled){f.Level.Session.SetFlag("camera_3_a",false);entity.Update();Check(!entity.Collidable&&entity.Active,"camera can disable again without losing lifecycle updates");}
+            }
+            else if(data.Name=="everest/flagTrigger")
+            {
+                f.Level.Session.SetFlag("camera_3_a",!data.Bool("state"));((Trigger)entity).OnEnter(NewPlayer(entity.Position));
+                Check(f.Level.Session.GetFlag("camera_3_a")==data.Bool("state"),"actual core flag trigger enters authored state");
+                ((Trigger)entity).OnLeave(null);Check(entity.Scene==f.Level,"repeat core flag trigger remains present");
+            }
+        }
+        Check(constructed==25,"complete non-new camera/platform authored extension census");
+        foreach(bool previouslyCollected in new[]{false,true})
+        {
+            Fixture f=NewFixture();LevelData room=f.Level.Session.MapData.Levels.Single(r=>r.Entities.Any(e=>e.Name=="CollabUtils2/MiniHeart"));
+            f.Level.Session.Level=room.Name;EntityData data=room.Entities.Single(e=>e.Name=="CollabUtils2/MiniHeart");
+            Set(typeof(SaveData),"Instance",new SaveData());SaveData.Instance.Areas.Add(new AreaStats(0));
+            SaveData.Instance.Areas[0].Modes[0].HeartGem=previouslyCollected;
+            Entity heart=CreateAuthored(room,data);f.Level.Add(heart);f.Level.Entities.UpdateLists();
+            LevelData bingRoom=bingMap.Children.Single(x=>x.Name=="levels").Children.Select(x=>new LevelData(x))
+                .Single(r=>r.Entities.Any(e=>e.Name=="CollabUtils2/MiniHeart"));
+            Entity baselineHeart=CreateAuthored(bingRoom,bingRoom.Entities.Single(e=>e.Name=="CollabUtils2/MiniHeart"));
+            foreach(string field in new[]{"spriteName","refillDash","requireDashToBreak","noGhostSprite","particleColor","playPulseSound","flash"})
+                Check(Equals(Get(heart,field),Get(baselineHeart,field)),"actual MiniHeart effective profile equals accepted Bing defaults: "+field);
+            Sprite sprite=heart.Get<Sprite>();
+            Check(heart.Collider.Width==12&&heart.Collider.Height==12&&sprite.CurrentAnimationID=="idle","actual MiniHeart base constructor and Added");
+            Check(sprite.CurrentAnimationTotalFrames==23&&sprite.GetFrame("idle",22)==GFX.Game["CollabUtils2/miniheart/beginner/13"],
+                "authored noGhostSprite retains beginner animation even after prior collection");
+            Check(heart.Get<VertexLight>()!=null&&heart.Get<BloomPoint>()!=null,"actual MiniHeart light/bloom lifecycle");
+            sprite.OnLoop("idle");Check(heart.Get<Wiggler>().Active,"actual pulse callback schedules animation and displacement");
+            for(int i=0;i<4;i++)Tick(f);
+            Settings previousSettings=Settings.Instance;
+            try
+            {
+                // Disable rumble only in this disposable process fixture. No
+                // controller or native-audio execution is claimed by this test.
+                Settings.Instance=(Settings)RuntimeHelpers.GetUninitializedObject(typeof(Settings));
+                Settings.Instance.Rumble=(RumbleAmount)0;
+                f.Level.Session.Inventory=PlayerInventory.Default;
+                Player player=NewPlayer(heart.Position+new Vector2(0,4));
+                Set(player,"Scene",f.Level);Set(player,"level",f.Level);player.Facing=Facings.Right;player.Dashes=0;
+                heart.Get<PlayerCollider>().OnCollide(player);
+                Check(!(bool)Get(heart,"hasBeenBroken")&&player.Dashes==PlayerInventory.Default.Dashes&&player.Speed.Y<0&&
+                    (float)Get(heart,"bounceSfxDelay")==.1f,"actual non-dash collision bounces/refills and retains MiniHeart");
+                Set(player,"dashAttackTimer",.1f);heart.Get<PlayerCollider>().OnCollide(player);
+                Coroutine smash=(Coroutine)Get(heart,"smashRoutine");
+                Check((bool)Get(heart,"hasBeenBroken")&&smash!=null,"actual dash collision queues completion routine");
+                heart.Get<PlayerCollider>().OnCollide(player);
+                Check(ReferenceEquals(smash,Get(heart,"smashRoutine")),"repeat dash collision does not queue another completion");
+                // Full completion requires the real FMOD/UI/device path. Stop
+                // before its first update and exercise the cleanup below.
+                heart.Remove(smash);Set(heart,"smashRoutine",null);
+            }
+            finally{Settings.Instance=previousSettings;}
+            f.Level.FormationBackdrop=new FormationBackdrop{Display=true};f.Level.CanRetry=false;f.Level.Frozen=true;Engine.TimeRate=.3f;
+            Set(heart,"hasBeenBroken",true);heart.Update();
+            Check(!f.Level.Frozen&&f.Level.CanRetry&&!f.Level.FormationBackdrop.Display&&Engine.TimeRate==1,
+                "actual missing-player interrupt restores frozen/retry/backdrop/time state");
+            f.Level.Remove(heart);f.Level.Entities.UpdateLists();Check(heart.Scene==null,"actual MiniHeart removal cleanup");
+            Set(typeof(SaveData),"Instance",null);
+        }
+    }
+    private static void CanonicalAuthoredConstructionChecks()
+    {
+        SaveData previous=SaveData.Instance;
+        var counts=new SortedDictionary<string,int>(StringComparer.Ordinal);
+        try
+        {
+            foreach(LevelData originalRoom in map.Children.Single(x=>x.Name=="levels").Children.Select(x=>new LevelData(x)))
+            foreach((EntityData original,string kind) in originalRoom.Entities.Select(x=>(x,"entity")).Concat(originalRoom.Triggers.Select(x=>(x,"trigger"))))
+            {
+                // Those factories have their own full authored-profile probes.
+                if(original.Name.Contains('/')&&original.Name!="CollabUtils2/SilverBerry")continue;
+                if(original.Name=="player")continue; // exact original spawn proof is separate
+                Fixture f=NewFixture();f.Level.Session.Level=originalRoom.Name;
+                LevelData room=f.Level.Session.MapData.Get(originalRoom.Name);
+                EntityData data=(kind=="entity"?room.Entities:room.Triggers).Single(x=>x.ID==original.ID);
+                SaveData.Instance=new SaveData{CurrentSession=f.Level.Session};SaveData.Instance.Areas.Add(new AreaStats(0));
+                EntityID gid=new(room.Name,data.ID);Vector2 offset=room.Position;
+                Entity entity=data.Name switch
+                {
+                    "CollabUtils2/SilverBerry"=>CreateAuthored(room,data),
+                    "dashBlock"=>new DashBlock(data,offset,gid),
+                    "jumpThru"=>new JumpthruPlatform(data,offset),
+                    "killbox"=>new Killbox(data,offset),
+                    "refill"=>new Refill(data,offset),
+                    "spikesDown"=>new Spikes(data,offset,Spikes.Directions.Down),
+                    "spikesLeft"=>new Spikes(data,offset,Spikes.Directions.Left),
+                    "spikesRight"=>new Spikes(data,offset,Spikes.Directions.Right),
+                    "spikesUp"=>new Spikes(data,offset,Spikes.Directions.Up),
+                    "strawberry"=>new Strawberry(data,offset,gid),
+                    "switchGate"=>new SwitchGate(data,offset),
+                    "touchSwitch"=>new TouchSwitch(data,offset),
+                    "towerviewer"=>new Lookout(data,offset),
+                    "zipMover"=>new ZipMover(data,offset),
+                    "cameraOffsetTrigger"=>new CameraOffsetTrigger(data,offset),
+                    "cameraTargetTrigger"=>new CameraTargetTrigger(data,offset),
+                    "changeRespawnTrigger"=>new ChangeRespawnTrigger(data,offset),
+                    "minitextboxTrigger"=>new MiniTextboxTrigger(data,offset,gid),
+                    "spawnFacingTrigger"=>new SpawnFacingTrigger(data,offset),
+                    _=>throw new Exception("unproved original canonical constructor: "+data.Name)
+                };
+                counts[data.Name]=counts.GetValueOrDefault(data.Name)+1;
+                if(data.Name is "dashBlock" or "CollabUtils2/SilverBerry")
+                {
+                    // Its constructor runs here. Awake consumes the exact box
+                    // already executed by the source-bound terrain probe;
+                    // compiled Autotiler's file opening requires Microsoft.iOS.
+                    if(data.Name=="dashBlock")Check(entity.Width==data.Width&&entity.Height==data.Height,"actual canonical dash-block constructor");
+                    else Check(entity is Strawberry&&entity.Get<Follower>()!=null,"actual silver-berry constructor/base/follower");
+                    // Silver's selected sprite path is independently executed
+                    // above; its actual mount lookup logs via Foundation.
+                    continue;
+                }
+                f.Level.Add(entity);f.Level.Entities.UpdateLists();f.Level.Entities.UpdateLists();
+                Check(entity.Scene==f.Level,"actual original constructor/Added/Awake: "+data.Name);
+                foreach(Sprite sprite in entity.Components.OfType<Sprite>())
+                {
+                    IDictionary animations=(IDictionary)Get(sprite,"animations");
+                    Check(animations.Count>0,"actual constructor has sprite animations: "+data.Name);
+                    foreach(object animation in animations.Values)
+                    {
+                        var frames=(MTexture[])Get(animation,"Frames");
+                        Check(frames.Length>0&&frames.All(frame=>frame!=null&&frame.Width>0&&frame.Height>0),
+                            "actual implicit animation frames exist: "+data.Name);
+                    }
+                }
+                foreach(Image image in entity.Components.OfType<Image>().Where(x=>x is not Sprite))
+                    Check(image.Texture!=null&&image.Texture.Width>0&&image.Texture.Height>0,"actual constructor resolves concrete image: "+data.Name);
+                if(data.Name.StartsWith("spikes",StringComparison.Ordinal))
+                    Check(entity.Components.Count(x=>x is Image)==(data.Name is "spikesUp" or "spikesDown"?data.Width:data.Height)/8,
+                        "every authored spike segment has its actual implicit texture");
+                if(data.Name=="jumpThru")Check(entity.Components.Count(x=>x is Image)==data.Width/8,"every authored jump-through tile is populated");
+                if(data.Name=="zipMover")Check(((IEnumerable)Get(entity,"innerCogs")).Cast<object>().Any(),"actual zip-mover inner-cog frames exist");
+                f.Level.Remove(entity);f.Level.Entities.UpdateLists();f.Level.Entities.UpdateLists();
+                Check(entity.Scene==null,"actual canonical entity removal: "+data.Name);
+            }
+            traces.Add(new{canonicalConstructorOccurrences=counts,
+                scope="ACTUAL_CONSTRUCTORS_ADDED_AWAKE_IMPLICIT_SPRITES_AND_IMAGES; DASH_BLOCK_AND_SILVER_ADDED_AWAKE_REMOVAL_AND_PLAYER_SEPARATE"});
+        }
+        finally{SaveData.Instance=previous;}
+    }
+    public static void Main(string[] args)
+    {
+        // The pinned frozen helper DLLs retain their desktop FNA reference
+        // version. Resolve only the actual, separately hash-checked sibling
+        // closure, as the existing production factory inspector does.
+        AssemblyLoadContext.Default.Resolving+=(context,name)=>
+        {
+            string path=Path.Combine(AppContext.BaseDirectory,name.Name+".dll");
+            return File.Exists(path)?context.LoadFromAssemblyPath(path):null;
+        };
+        JsonElement input=JsonDocument.Parse(File.ReadAllText(args[0])).RootElement;
+        map=ReadMap(input.GetProperty("map").GetString());bingMap=ReadMap(input.GetProperty("bingMap").GetString(),"Bing_Over_Google");
+        Initialize(input);GroupChecks();CollisionAndIsolationChecks();CassetteFlightChecks();ExistingAuthoredProfileChecks();GateTimingChecks();ProgressionCodecChecks();CanonicalAuthoredConstructionChecks();
+        string traceJson=JsonSerializer.Serialize(traces);
+        File.WriteAllText(args[1],JsonSerializer.Serialize(new{status="PASS",checks,
+            assemblySha256=Convert.ToHexString(SHA256.HashData(File.ReadAllBytes(Game.Location))).ToLowerInvariant(),
+            traceSha256=Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(traceJson))).ToLowerInvariant(),
+            scope="UNCHANGED_COMPILED_PRODUCTION_FACTORIES_CONSTRUCTORS_SOLID_PLATFORM_TRACKER_COMPONENT_ENTITY_QUEUES_COROUTINE_TWEEN_PARTICLES",
+            fixtureBoundaries=new[]{"Engine/window fixture","actual atlas geometry without GPU pixels","MapData registry fixture from original parsed rooms","cached null audio descriptions","Player state fixture bypasses UIKit constructor and whole Player.Update; actual canonical CassetteFly/Normal callbacks execute",
+                "Actual SpriteBank with host XML file-I/O composition adapter; no texture decoding",
+                "DashBlock constructor here; original terrain GenerateBox in separate terrain conformance probe",
+                "SilverBerry constructor/base/follower and both SpriteBank entries here; unchanged accepted Added/lifecycle source binding separately",
+                "MiniHeart dash collision queues the original completion coroutine; native playback and chapter completion require physical acceptance",
+                "Progression codec capture/encode/decode/restore uses disposable memory, not live device saves"},
+            rendered=false,audioPlayback=false,deviceGameplay=false},new JsonSerializerOptions{WriteIndented=true})+"\n");
+        File.WriteAllText(args[1]+".trace.json",traceJson+"\n");Console.WriteLine("PASS: "+checks+" actual compiled snas runtime assertions");
+    }
+}

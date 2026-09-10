@@ -33,6 +33,7 @@ FACTORY_CLOSURE=""
 FACTORY_PREFLIGHT=""
 AUTHORED_FACTORY_PROFILES=""
 CONTENT_PLAN=""
+STAGE25KN_PACKAGE_ROOT=""
 MODS=()
 
 usage() {
@@ -59,6 +60,7 @@ Options:
   --factory-preflight JSON package-backed selected graph; requires authored profiles
   --authored-factory-profiles JSON exact extracted selected profiles for preflight
   --content-plan JSON      hash-bound selected original content union
+  --stage25kn-package-root DIR exact packages for mandatory unchanged-snas proofs
   --work-root DIRECTORY    isolated ignored build root below .build/apple-everest
   --output DIRECTORY       isolated product root below artifacts/apple-everest
   -h, --help               show this help
@@ -83,6 +85,7 @@ while (($#)); do
     --factory-preflight) FACTORY_PREFLIGHT="$2"; shift 2 ;;
     --authored-factory-profiles) AUTHORED_FACTORY_PROFILES="$2"; shift 2 ;;
     --content-plan) CONTENT_PLAN="$2"; shift 2 ;;
+    --stage25kn-package-root) STAGE25KN_PACKAGE_ROOT="$2"; shift 2 ;;
     --work-root) WORK_ROOT="$2"; shift 2 ;;
     --output) OUTPUT="$2"; shift 2 ;;
     -h|--help) usage; exit 0 ;;
@@ -258,7 +261,25 @@ required=selected<=names or bool(names & {'AppleEverestStage25KJCanary','AppleEv
 if required and not sys.argv[3]:raise SystemExit('K-J selected factory inputs require package-backed compiled preflight before any product')
 PY
 
+STAGE25KN_LANE=0
+if [[ -f "$CLOSURE/content/Content/Maps/StrawberryJam2021/1-Beginner/snas.bin" || \
+      "$FACTORY_PREFLIGHT" == "$REPO_ROOT/apple-everest/sj-snas-factory-contract-stage25kn.json" || -n "$STAGE25KN_PACKAGE_ROOT" ]]; then
+  [[ "$FACTORY_PREFLIGHT" == "$REPO_ROOT/apple-everest/sj-snas-factory-contract-stage25kn.json" && -d "$STAGE25KN_PACKAGE_ROOT" ]] || {
+    echo "error: unchanged snas requires its exact expanded contract and source package proofs" >&2; exit 1; }
+  python3 - "$SCRIPT_DIR" "$CLOSURE" <<'PY'
+import importlib.util,pathlib,sys
+spec=importlib.util.spec_from_file_location('kn_closure_gate',pathlib.Path(sys.argv[1])/'verify-apple-everest-stage25kn-product-content.py')
+gate=importlib.util.module_from_spec(spec);spec.loader.exec_module(gate)
+gate.verify_closure_maps(pathlib.Path(sys.argv[2]))
+PY
+  STAGE25KN_LANE=1
+fi
+
 if [[ -n "$FACTORY_PREFLIGHT" ]]; then
+  preflight_command=preflight-factory-closure
+  if ((STAGE25KN_LANE)); then
+    preflight_command=preflight-snas-registration
+  fi
   python3 "$SCRIPT_DIR/verify-apple-everest-chapter-icons.py" \
     --closure "$CLOSURE" --content-root "$REPO_ROOT/.build/celeste-ios/current/content/Content" \
     --output "$WORK_ROOT/chapter-icon-proof.json"
@@ -269,38 +290,58 @@ if [[ -n "$FACTORY_PREFLIGHT" ]]; then
   (cd /private/tmp && "$DOTNET8" run --project "$BUILDER_PROJECT" -- apply \
     --closure "$CLOSURE" --managed-root "$preflight_runtime")
   (cd "$REPO_ROOT" && dotnet build "$preflight_runtime/Celeste.Modern.csproj" -c Release --nologo \
+    -m:1 -p:BuildInParallel=false -p:UseSharedCompilation=false \
     -p:CelesteAppleRepoRoot="$REPO_ROOT" -p:CelesteManagedGeneratedRoot="$preflight_runtime" \
     -p:AppleEverestStaticIlDotnet="$DOTNET9")
   preflight_assembly="$preflight_runtime/bin/Release/net10.0-ios26.5/Celeste.dll"
   [[ -f "$preflight_assembly" ]] || { echo "error: compiled preflight target absent" >&2; exit 1; }
   (cd "$REPO_ROOT" && dotnet exec --fx-version 10.0.10 \
     "$REPO_ROOT/tools/AppleEverestBuilder/bin/Debug/net8.0/AppleEverestBuilder.dll" \
-    preflight-factory-closure --manifest "$FACTORY_PREFLIGHT" --authored-profiles "$AUTHORED_FACTORY_PROFILES" \
+    "$preflight_command" --manifest "$FACTORY_PREFLIGHT" --authored-profiles "$AUTHORED_FACTORY_PROFILES" \
     --assembly "$preflight_assembly" --closure "$CLOSURE" --repo-root "$REPO_ROOT" \
     --profile "$PROFILE" --upstream "$UPSTREAM" --canonical-managed-root "$REPO_ROOT/.build/celeste-ios/current/managed" \
     --dotnet "$(command -v dotnet)" --output "$WORK_ROOT/production-preflight.json" "${mod_args[@]}" "${content_plan_args[@]}")
   if [[ -d "$CLOSURE/content/Content/Maps/AppleEverestStage25KJ/FactoryProfiles" ]]; then
     python3 "$SCRIPT_DIR/inspect-apple-everest-stage25kj-canary-profiles.py" \
       --closure "$CLOSURE" --output "$WORK_ROOT/compiled-canary-profiles.json"
+    canary_contract="$FACTORY_PREFLIGHT"
+    if ((STAGE25KN_LANE)); then
+      # These unchanged canaries exercise the historical selected73 subset.
+      # The full K-N profile contract must never accept that partial document.
+      canary_contract="$REPO_ROOT/apple-everest/selected-factory-type-closure-stage25kh.json"
+    fi
     (cd "$REPO_ROOT" && dotnet exec --fx-version 10.0.10 \
       "$REPO_ROOT/tools/AppleEverestBuilder/bin/Debug/net8.0/AppleEverestBuilder.dll" \
-      inspect-compiled-factories --assembly "$preflight_assembly" --manifest "$FACTORY_PREFLIGHT" \
+      inspect-compiled-factories --assembly "$preflight_assembly" --manifest "$canary_contract" \
       --authored-profiles "$WORK_ROOT/compiled-canary-profiles.json" --output "$WORK_ROOT/compiled-canary-guards.json")
   fi
 fi
 
-if [[ -f "$CLOSURE/content/Content/Maps/StrawberryJam2021/0-Lobbies/1-Beginner.bin" ]]; then
+if ((STAGE25KN_LANE)) || [[ -f "$CLOSURE/content/Content/Maps/StrawberryJam2021/0-Lobbies/1-Beginner.bin" ]]; then
   [[ -n "$CONTENT_PLAN" && -n "$FACTORY_PREFLIGHT" && -f "$WORK_ROOT/production-preflight.json" ]] || {
     echo "error: real SJ product requires an original content plan and actual compiled factory preflight" >&2; exit 1; }
   composition_root="$WORK_ROOT/real-composition"
-  safe_replace "$composition_root" .apple-everest-real-sj-composition
-  mkdir -p "$composition_root"
-  touch "$composition_root/.apple-everest-real-sj-composition"
-  python3 "$SCRIPT_DIR/verify-apple-everest-stage25kl-composition.py" \
-    --closure "$CLOSURE" --runtime "$preflight_runtime" --content-plan "$CONTENT_PLAN" \
-    --production-preflight "$WORK_ROOT/production-preflight.json" --output "$composition_root"
-  [[ -f "$composition_root/READY_FOR_REAL_SJ_PRODUCT_BUILD" ]] || {
-    echo "error: all four real SJ gates must pass before product preparation/AOT" >&2; exit 1; }
+  if ((STAGE25KN_LANE)); then
+    [[ "$FACTORY_PREFLIGHT" == "$REPO_ROOT/apple-everest/sj-snas-factory-contract-stage25kn.json" && -d "$STAGE25KN_PACKAGE_ROOT" ]] || {
+      echo "error: expanded snas composition requires exact K-N contract and sources" >&2; exit 1; }
+    # The new preflight refuses any previous output, executes every proof itself
+    # and keeps all six legacy controls separate from the selected77 proof.
+    python3 "$SCRIPT_DIR/preflight-apple-everest-stage25kn.py" \
+      --closure "$CLOSURE" --runtime "$preflight_runtime" --content-plan "$CONTENT_PLAN" \
+      --production-preflight "$WORK_ROOT/production-preflight.json" --authored-profiles "$AUTHORED_FACTORY_PROFILES" \
+      --package-root "$STAGE25KN_PACKAGE_ROOT" --output "$composition_root"
+    [[ -f "$composition_root/READY_FOR_STAGE25KN_SNAS_PRODUCT_BUILD" ]] || {
+      echo "error: all four expanded K-N gates must pass before product preparation/AOT" >&2; exit 1; }
+  else
+    safe_replace "$composition_root" .apple-everest-real-sj-composition
+    mkdir -p "$composition_root"
+    touch "$composition_root/.apple-everest-real-sj-composition"
+    python3 "$SCRIPT_DIR/verify-apple-everest-stage25kl-composition.py" \
+      --closure "$CLOSURE" --runtime "$preflight_runtime" --content-plan "$CONTENT_PLAN" \
+      --production-preflight "$WORK_ROOT/production-preflight.json" --output "$composition_root"
+    [[ -f "$composition_root/READY_FOR_REAL_SJ_PRODUCT_BUILD" ]] || {
+      echo "error: all four real SJ gates must pass before product preparation/AOT" >&2; exit 1; }
+  fi
 fi
 
 prepare_platform() {
@@ -453,7 +494,11 @@ scan_product_runtime() {
     python3 "$REPO_ROOT/scripts/verify-apple-everest-aot-factory-product.py" \
       --app "$app" --build "$platform_build" --manifest "$FACTORY_PREFLIGHT" \
       --authored-profiles "$AUTHORED_FACTORY_PROFILES" --signing "$SIGNING" --output "$platform_build/linked-selected-factories.json"
-    if [[ -f "$WORK_ROOT/real-composition/READY_FOR_REAL_SJ_PRODUCT_BUILD" ]]; then
+    if [[ -f "$WORK_ROOT/real-composition/READY_FOR_STAGE25KN_SNAS_PRODUCT_BUILD" ]]; then
+      python3 "$SCRIPT_DIR/verify-apple-everest-stage25kn-product-content.py" \
+        --app "$app" --closure "$CLOSURE" --readiness "$WORK_ROOT/real-composition/readiness.json" \
+        --output "$platform_build/real-sj-product-content.json"
+    elif [[ -f "$WORK_ROOT/real-composition/READY_FOR_REAL_SJ_PRODUCT_BUILD" ]]; then
       python3 "$SCRIPT_DIR/verify-apple-everest-stage25kl-product-content.py" \
         --app "$app" --closure "$CLOSURE" --readiness "$WORK_ROOT/real-composition/readiness.json" \
         --output "$platform_build/real-sj-product-content.json"

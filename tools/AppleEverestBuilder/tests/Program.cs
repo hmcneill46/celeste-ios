@@ -104,6 +104,8 @@ try
     passed += SelectedCompositionTests.Run(temporary);
     passed += SelectedProfileGuardTests.Run(repository, temporary);
     passed += SelectedFactoryTypeClosureTests.Run();
+    passed += SnasFlagGroupsTests.Run();
+    passed += SnasVerificationControlsTests.Run(temporary, repository);
     passed += DialogFragmentParserTests.Run();
 
     EverestVersion required = EverestVersion.Parse("1.2.3.4");
@@ -366,6 +368,22 @@ try
         ("StrawberryJam2021AudioB", "Audio/sj21_BegLobby.bank", 11),
         ("StrawberryJam2021", "Audio/sj21_jamjars.bank", 12)
     ]), "custom FMOD order matches pinned desktop module and archive registration order");
+    var expandedOrder = CustomAudioManifest.Order([
+        (exactBank with { Owner = "HonlyHelper", SourcePath = "Audio/HonlyHelper.bank" }, 7, 14),
+        (exactBank with { Owner = "StrawberryJam2021AudioB", SourcePath = "Audio/sj21_BegLobby.bank" }, 2, 77),
+        (exactBank with { Owner = "StrawberryJam2021", SourcePath = "Audio/sj21_jamjars.bank" }, 0, 27792),
+        (exactBank with { Owner = "StrawberryJam2021AudioA", SourcePath = "Audio/sj21_shared.bank" }, 3, 64),
+        (exactBank with { Owner = "CollabUtils2", SourcePath = "Audio/SC2020_global_collectibles.bank" }, 1, 656),
+        (exactBank with { Owner = "StrawberryJam2021AudioB", SourcePath = "Audio/sj21_snas.bank" }, 2, 63),
+        (exactBank with { Owner = "StrawberryJam2021AudioA", SourcePath = "Audio/sj21_bingovergoogle.bank" }, 3, 18),
+        (exactBank, 5, 14)
+    ]);
+    Pass(expandedOrder.Select(item => (item.Plan.SourcePath, item.Ordinal)).SequenceEqual([
+        ("Audio/ExpertContestHelper.bank", 8), ("Audio/sj21_bingovergoogle.bank", 9),
+        ("Audio/sj21_shared.bank", 10), ("Audio/sj21_snas.bank", 11),
+        ("Audio/sj21_BegLobby.bank", 12), ("Audio/sj21_jamjars.bank", 13),
+        ("Audio/SC2020_global_collectibles.bank", 14), ("Audio/HonlyHelper.bank", 15)
+    ]), "K-N inserts only snas at ordinal 11 and preserves all old relative bank order");
     Pass(CustomAudioManifest.Schema == "apple-everest-custom-audio-v1" &&
          CustomAudioManifest.LoadPolicy.EndsWith("loadBankFile", StringComparison.Ordinal),
         "custom FMOD compatibility policy is locked");
